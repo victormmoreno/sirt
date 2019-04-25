@@ -12,5 +12,8 @@
 */
 
 Route::get('/', function () {
+	// $departaments = App\Departament::with(['cities'])->get();
+	// dd($departaments);
+
     return view('welcome');
 });
