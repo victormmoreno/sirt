@@ -20,6 +20,7 @@ class CreateCentroformacionTable extends Migration
             $table->string('nombre',1000);
             $table->string('direccion',100);
             $table->text('descripcion');
+            $table->tinyInteger('estado')->nullable()->default('1');
             $table->timestamps();
 
             $table->foreign('ciudad')->references('idciudad')->on('ciudad');

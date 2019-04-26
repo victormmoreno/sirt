@@ -4,3 +4,10 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,900');
 // Materialize-css
 @import "~materialize-css/sass/materialize";
+
+// SweetAlert
+@import "node_modules/sweetalert2/dist/sweetalert2";
+
+@import "node_modules/toastr/build/toastr";
+
+@import "node_modules/chart.js/dist/Chart";
