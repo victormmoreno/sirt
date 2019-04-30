@@ -41,8 +41,8 @@
         },
         methods: {
         	makeAnAlert: function () {
-        		// swal('hello word');
-        		toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!');
+        		swal('hello word');
+        		toastr.warning('hola soy developer');
             toastr.options = {
               "closeButton": false,
               "debug": false,

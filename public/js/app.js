@@ -1846,8 +1846,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     makeAnAlert: function makeAnAlert() {
-      // swal('hello word');
-      toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!');
+      swal('hello word');
+      toastr.warning('hola soy developer');
       toastr.options = {
         "closeButton": false,
         "debug": false,

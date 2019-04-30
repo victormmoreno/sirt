@@ -16,10 +16,9 @@ class CreateCentroformacionTable extends Migration
         Schema::create('centroformacion', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('ciudad')->unsigned();
-            $table->string('titulo',700);
             $table->string('nombre',1000);
-            $table->string('direccion',100);
-            $table->text('descripcion');
+            $table->text('direccion')->nullable();
+            $table->text('descripcion')->nullable();
             $table->tinyInteger('estado')->nullable()->default('1');
             $table->timestamps();
 
