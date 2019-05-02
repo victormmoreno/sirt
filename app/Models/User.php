@@ -1,14 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use Notifiable;
+
+    protected $appends = ['nombre_completo'];
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +17,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'rol', 
-        'nodo', 
-        'tipodocumento', 
-        'nombres', 
+        'rol',
+        'nodo',
+        'tipodocumento',
+        'nombres',
         'apellidos',
         'email',
         'estado',
@@ -46,5 +47,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
+
+    public function setLastnameAttribute($nombres)
+    {
+        $this->attributes['nombres'] = ucfirst($nombres);
+    }
+
+    public function getNombreCompletoAttribute()
+    {
+        return $this->nombres . ' ' . $this->apellidos;
+    }
 }

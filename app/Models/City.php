@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,8 +8,8 @@ class City extends Model
 {
     protected $table = 'ciudad';
 
-	public $primaryKey= 'idciudad';
-   /**
+    public $primaryKey = 'idciudad';
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -19,14 +19,11 @@ class City extends Model
         'departamento',
     ];
 
-
     public $timestamps = false;
 
-     public function departament()
+    public function departament()
     {
-        
-        return $this->belongsTo(Departament::class, 'iddepartamento');
-        // return $this->hasMany(Departament::class, 'iddepartamento');
+        return $this->belongsTo(Departament::class, 'departamento', 'iddepartamento');
     }
 
 }

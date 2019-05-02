@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+
     /**
      * Seed the application's database.
      *
@@ -11,12 +12,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(DepartamentsTableSeeder::class);
-        $this->call(CitiesTableSeeder::class);
-        $this->call(SectorsTableSeeder::class);
-        $this->call(ServicesTableSeeder::class);
-        $this->call(DocumentsTypesTableSeeder::class);
-        $this->call(ColcienciasClassificationsTableSeeder::class);
-        $this->call(RolesTableSeeder::class);
+        // $this->call(UsersTableSeeder::class);
+
+        $this->truncateTables([
+
+            'departamento',
+            'ciudad',
+            'sector',
+            'servicio',
+            'tipodocumento',
+            'clasificacioncolciencias',
+            'rol',
+
+        ]);
+        $this->call([
+            DepartamentsTableSeeder::class,
+            CitiesTableSeeder::class,
+            SectorsTableSeeder::class,
+            ServicesTableSeeder::class,
+            DocumentsTypesTableSeeder::class,
+            ColcienciasClassificationsTableSeeder::class,
+            RolesTableSeeder::class,
+
+        ]);
+    }
+
+    protected function truncateTables(array $tables)
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        foreach ($tables as $table) {
+            DB::table($table)->truncate();
+        }
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }
 }

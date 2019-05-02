@@ -7,6 +7,22 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import Router from 'vue-router';
+
+Vue.use(Router);
+
+let router = new Router({
+	routes: [
+		{
+			path: '/home',
+			component: {
+				template: '<h1>este es el home</h1>'
+			}
+		}
+	]
+});
+
+
 
 
 /**
@@ -31,4 +47,5 @@ Vue.component('mynew', require('./components/MyNewComponent.vue').default);
 
 const app = new Vue({
     el: '#app',
+    router
 });

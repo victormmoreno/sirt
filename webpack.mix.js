@@ -42,3 +42,15 @@ mix.scripts([
 		'resources/assets/js/libs/theme/alpha.min.js',
 		// 'resources/assets/js/libs/theme/dashboard.js',
 	],'public/js/libs.js');
+
+
+mix.browserSync({
+
+        proxy: 'http://gestion.test',
+        files: [
+            'app/**/*',
+            'resources/views/**/*',
+            'resources/lang/**/*',
+            'routes/**/*'
+        ]
+ });

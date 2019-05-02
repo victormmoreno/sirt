@@ -1,22 +1,23 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class Sector extends Model
 {
-    protected $table = 'servicio';
+    protected $table = 'sector';
 
-	public $primaryKey= 'idservicio';
-   /**
+    public $primaryKey = 'idsector';
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'nombre',
+        'name',
         'descripcion',
     ];
 
+    public $timestamps = false;
 }
