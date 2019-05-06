@@ -23,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // $this->registerPolices();
+        // \Gate::guesPolicyNameUsing(function ($model) {
+        //     $modelName = class_basename($model); //App/models/proyect
+
+        //     return "App\\Policies\\{$modelName}Policy";
+        // });
     }
 }

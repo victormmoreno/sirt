@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
-        {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}}
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">   
         {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"> --}}
 
@@ -23,8 +23,9 @@
 
        
     </head>
-    <body>
+    <body class="white">
         <div id="app">
+          <div class="mn-content">
          
         <header class="mn-header navbar-fixed">
           <nav class="cyan darken-1 bs-n">
@@ -88,10 +89,29 @@
           </div>
         </div>
       </aside>
+
+       @yield('content-auth')
+
+  <div class="page-footer white">
+    <div class="footer-grid container white">
+
+      <div class="footer-r white">&nbsp;</div>
+      <div class="footer-grid-r white">
+        <a class="footer-text">
+          <span class="direction">Derechos Reservados</span>
+          <div>
+            <img  width="170px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title">
+            <img src="{{ asset('img/logos.png') }}" >
+            <span class="direction"> {{date("Y")}}</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+      
+    <div class="left-sidebar-hover"></div>
+    </div>
           
-          @yield('content-auth')
-          
-   
   
     </div> 
     </body>

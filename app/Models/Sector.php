@@ -6,18 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sector extends Model
 {
-    protected $table = 'sector';
+    protected $table = 'sectores';
 
-    public $primaryKey = 'idsector';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
+        'nombre',
         'descripcion',
     ];
-
-    public $timestamps = false;
 }

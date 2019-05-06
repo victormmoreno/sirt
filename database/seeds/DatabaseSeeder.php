@@ -16,23 +16,25 @@ class DatabaseSeeder extends Seeder
 
         $this->truncateTables([
 
-            'departamento',
-            'ciudad',
-            'sector',
-            'servicio',
-            'tipodocumento',
-            'clasificacioncolciencias',
-            'rol',
+            'prototipos',
+            'servicios',
+            'departamentos',
+            'tiposdocumentos',
+            'ciudades',
+            'sectores',
+            'tiposmateriales',
+            'tiposvinculaciones',
 
         ]);
         $this->call([
-            DepartamentsTableSeeder::class,
-            CitiesTableSeeder::class,
-            SectorsTableSeeder::class,
-            ServicesTableSeeder::class,
-            DocumentsTypesTableSeeder::class,
-            ColcienciasClassificationsTableSeeder::class,
-            RolesTableSeeder::class,
+            PrototiposTableSeeder::class,
+            ServiciosTableSeeder::class,
+            DepartamentosTableSeeder::class,
+            TiposDocumentosTableSeeder::class,
+            CiudadesTableSeeder::class,
+            SectoresTableSeeder::class,
+            TiposMaterialesTableSeeder::class,
+            TiposVinculacionesTableSeeder::class,
 
         ]);
     }

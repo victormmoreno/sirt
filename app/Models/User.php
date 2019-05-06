@@ -11,6 +11,10 @@ class User extends Authenticatable
 
     protected $appends = ['nombre_completo'];
 
+    protected $dates = [
+        'fechanacimiento',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
