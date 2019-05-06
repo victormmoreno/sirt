@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
             'sectores',
             'tiposmateriales',
             'tiposvinculaciones',
+            'estadosideas',
+            'regionales',
+            'centrosformacion',
 
         ]);
         $this->call([
@@ -35,6 +38,9 @@ class DatabaseSeeder extends Seeder
             SectoresTableSeeder::class,
             TiposMaterialesTableSeeder::class,
             TiposVinculacionesTableSeeder::class,
+            EstadosIdeasTableSeeder::class,
+            RegionalesTableSeeder::class,
+            CentrosFormacionTableSeeder::class,
 
         ]);
     }

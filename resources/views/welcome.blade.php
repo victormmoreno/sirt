@@ -5,7 +5,7 @@
 
 @section('content-auth')
 
-{{-- <router-view></router-view> --}}
+<router-view></router-view>
 
 
 {{-- <home></home> --}}
@@ -124,8 +124,8 @@
   </main>
  --}}
 
+{{-- 
+<main-app/> --}}
 
-{{-- <main-app/>
- --}}
 @endsection
 

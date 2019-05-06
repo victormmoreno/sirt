@@ -6,20 +6,32 @@
 
 require('./bootstrap');
 
-// window.Vue = require('vue');
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
-import {routes} from './routes';
-import MainApp from './components/MainApp.vue';
+
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-	router,
-	mode: 'history'
+	routes: [
+		{
+			path: '/',
+			component: require('./views/Home.vue').default,
+		},
+		{
+			path: '/ideas',
+			component: require('./views/Ideas.vue').default,
+
+		}
+
+	],
+	'linkExactActiveClass': 'acitve'
+	
 });
+
 
 
 
@@ -48,8 +60,4 @@ Vue.component('mynew', require('./components/MyNewComponent.vue').default);
 const app = new Vue({
     el: '#app',
     router,
-    components: {
-    	MainApp
-    }
-   
 });

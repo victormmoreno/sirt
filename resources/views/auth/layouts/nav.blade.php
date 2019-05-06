@@ -1,6 +1,4 @@
-<template>
-    <div>
-         <header class="mn-header navbar-fixed">
+<header class="mn-header navbar-fixed">
           <nav class="cyan darken-1 bs-n">
             <div class="nav-wrapper row">
               <section class="material-design-hamburger navigation-toggle ">
@@ -10,17 +8,24 @@
               </section>
               <div class="col s2 m3 l3 ">
                 <a href="" class="hide-on-med-and-down">
-                  <!-- <img class="hide-on-med-and-down"  width="200px" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" ></img> -->
+                  <img class="hide-on-med-and-down"  width="200px" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" ></img>
                 </a>
               </div>
               <ul class=" col s8 m8 l7 ">
-                <li class="hide-on-med-and-down"><a href=""> IDEAS DE PROYECTOS</a></li>
-                <li class="hide-on-med-and-down"><a href="">OBJETIVOS</a></li>
-                <li class="hide-on-med-and-down"><a href="">¿QUÉ ES TECNOPARQUE? </a></li>
+                <li class="hide-on-med-and-down">
+                  <router-link to="/" >INICIO</router-link>
+                </li>
+                <li class="hide-on-med-and-down">
+                  <router-link to="/ideas" class="hide-on-med-and-down">IDEAS DE PROYECTOS</router-link>
+                </li>
+                
+                
+                <li class="hide-on-med-and-down"><a href="#objetivos">OBJETIVOS</a></li>
+                <li class="hide-on-med-and-down"><a href="#tecnoparque">¿QUÉ ES TECNOPARQUE? </a></li>
                 <li class="hide-on-med-and-down"><a href="" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Descarga TECNOPARQUE RA"> TECNOPARQUE RA</a></li>
               </ul>
               <ul class="col s2 m1 l2 nav-right-menu">
-                <li class="hide-on-med-and-down"><a href="" class="waves-effect waves-light btn">Iniciar Sesión</a></li>
+                <li class="hide-on-med-and-down"><a href="{{ route('login') }}"  class="waves-effect waves-light btn">{{ __('Login') }}</a></li>
               </ul>
 
             </div>
@@ -31,7 +36,7 @@
             <div class="sidebar-profile">
               <div class="sidebar-profile-info">
                 <a href="">
-                  <!-- <img  width="160px" height="40px" src="{{ asset('img/logonacional_Negro.png') }}" class="show-on-small chapter-title"></img> -->
+                  <img  width="160px" height="40px" src="{{ asset('img/logonacional_Negro.png') }}" class="show-on-small chapter-title"></img>
                 </a>
 
               </div>
@@ -42,7 +47,7 @@
               </li>
             </ul>
             <a href="">
-              <!-- <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title"></img> -->
+              <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title"></img>
             </a>
           </div>
           <ul class="sidebar-menu collapsible collapsible-accordion " data-collapsible="accordion">
@@ -57,17 +62,8 @@
 
           </ul>
           <div class="footer">
-            <p class="copyright">Tecnoparque  ©</p>
+            <p class="copyright">Tecnoparque <?php echo date("Y"); ?> ©</p>
             <a href="#!">Privacidad</a> &amp; <a href="#!">Terminos</a>
           </div>
         </div>
       </aside>
-    </div>
-</template>
-
-<script>
-    export default {
-        name: 'Header',
-        
-    };
-</script>

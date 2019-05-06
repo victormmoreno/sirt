@@ -23,7 +23,8 @@ class CreateRegionalesTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombre', 45);
+            $table->string('nombre', 100);
+            $table->integer('codigo_regional');
             $table->string('direccion', 100)->nullable();
             $table->string('telefono', 45)->nullable();
             $table->unique(["nombre"], 'nombre_UNIQUE');

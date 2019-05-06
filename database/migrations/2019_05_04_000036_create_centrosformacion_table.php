@@ -23,11 +23,13 @@ class CreateCentrosformacionTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombre', 45);
+            $table->string('nombre', 200);
+            $table->integer('codigo_centro');
             $table->text('direccion')->nullable();
             $table->text('descripcion')->nullable();
             $table->unsignedInteger('ciudad_id');
             $table->unsignedInteger('regional_id');
+            $table->timestamps();
 
             $table->index(["regional_id"], 'fk_centrosformacion_regionales1_idx');
 

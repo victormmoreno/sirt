@@ -18,8 +18,12 @@ Route::get('/', function () {
 
     // $city = App\Models\Ciudad::first();
     // dd($city->departament);
+    // 
+    
+    $regionals = App\Models\CentroFormacion::get()->last();
+    dd($regionals->regional);
 
-    $tiposdocumentos = App\Models\TipoDocumento::first();
+    // $tiposdocumentos = App\Models\TipoDocumento::first();
     // $tiposdocumentos->created_at->year //año
     // $tiposdocumentos->created_at->month //mes
     // $tiposdocumentos->created_at->day //dia
@@ -39,7 +43,7 @@ Route::get('/', function () {
     // dd($tiposdocumentos->created_at->subDays(3)->isoFormat('dddd MMM  YYYY'));
     // dd($tiposdocumentos->created_at->subDays(3)->diffForHumans());
 
-    return view('welcome');
+    return view('spa');
 });
 
 Auth::routes();

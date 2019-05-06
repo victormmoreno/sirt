@@ -1184,3 +1184,53 @@ INSERT INTO `TipoVinculacion` (`id`, `nombre`) VALUES
 (1, 'Planta'),
 (2, 'Planta Temporal'),
 (3, 'Contratista');
+
+
+INSERT INTO `EstadoIdea` (`id`, `nombre`, `descripcion`) VALUES
+(0, 'Inicial empresa-grupos', ''),
+(1, 'Inicio Emprendedor', ''),
+(2, 'Aprobado Emprendedor', ''),
+(3, 'Asociado Emprendedor', ''),
+(4, 'Entrenamiento Emprendedor', ''),
+(5, 'Comite Emprendedor', ''),
+(6, 'Asociado Empresa-grupos', ''),
+(7, 'No Aprobada', ''),
+(8, 'Inhabilitada', ''),
+(9, 'No Aplica', '');
+
+INSERT INTO `Regional`(`nombre`, `codigo_regional`, `direccion`)
+VALUES
+('ANTIOQUIA','5','Calle 51  57-70'),
+('ATLANTICO','8','CARRERA 43 42-40'),
+('DISTRITO CAPITAL','11','Cra 13 No 65-10, Pisos 1 7 a 21'),
+('BOLIVAR','13','Ternera, via a Turbaco; Km 1'),
+('BOYACA','15','Carrera 12 No 55 A-51'),
+('CALDAS','17','Km. 10 Vía al Magdalena'),
+('CAQUETA','18','Kilómetro 3 Vía Aeropuerto'),
+('CAUCA','19','Calle 4 #2-80'),
+('CESAR','20','Carrera 19 entre calle 14 y 15'),
+('CORDOBA','23','Av. Circunvalar Cls. 24 y 27'),
+('CUNDINAMARCA','25','AVENIDA 42 No 21A-24'),
+('CHOCO','27','CRA. 1 No28 - 71'),
+('HUILA','41','Carrera 5 Av la toma'),
+('GUAJIRA','44','Avenida aeropuerto calle 21'),
+('MAGDALENA','47','Avenida del ferrocarril # 27-97 Santa Marta'),
+('META','50','KM  1 VIA ACACIAS'),
+('NARIÑO','52','CALLE 22 11 ESTE 05-VIA A ORIENTE'),
+('NORTE S/DER','54','Calle 2N AV 4 Y 5 Barrio Pescadero'),
+('QUINDIO','63','Carrera 6 # 42Norte-02 Avenida centenario'),
+('RISARALDA','66','Cra 8a. No. 26-69'),
+('SANTANDER','68','Carrera 27 No. 15-07 Barrio San Alonso- Bucaramanga'),
+('SUCRE','70','Calle 25 b Nro. 31-260'),
+('TOLIMA','73','Cra. 4 Estadio Calle 44 Avenida Ferrocarril'),
+('VALLE','76','CL 52 2BIS-15'),
+('ARAUCA','81','Carrera 20 No. 28 - 163'),
+('CASANARE','85','Cra. 19 No.36-68'),
+('PUTUMAYO','86','Cra.23 # 16a-06 B/20 de Julio Puerto AsÍs Putumayo'),
+('SAN ANDRES','88','Avenida Franciscon Newball'),
+('AMAZONAS','91','Calle 12 No 10 - 60'),
+('GUAINIA','94','Transversal 6 Nº 29a-55, via al Coco'),
+('GUAVIARE','95','Carrera 24 # 7 - 10 Centro'),
+('VAUPES','97','Avenida 15 No 6 - 176'),
+('VICHADA','99','(Sede Nueva) Carrera 10 No 15 - 131 Barrio Tamarido');
+
