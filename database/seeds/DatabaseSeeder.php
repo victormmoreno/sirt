@@ -27,6 +27,11 @@ class DatabaseSeeder extends Seeder
             'estadosideas',
             'regionales',
             'centrosformacion',
+            'generos',
+            'nodos',
+            'estratos',
+            'rol', //tabla vieja
+            'roles'
 
         ]);
         $this->call([
@@ -41,6 +46,12 @@ class DatabaseSeeder extends Seeder
             EstadosIdeasTableSeeder::class,
             RegionalesTableSeeder::class,
             CentrosFormacionTableSeeder::class,
+            GenerosTableSeeder::class,
+            NodosTableSeeder::class,
+            EstratosTableSeeder::class,
+            RolsTableSeeder::class, //seeder de la tabla vieja
+            RolsTableSeeder::class, 
+            RoleTableSeeder::class, 
 
         ]);
     }

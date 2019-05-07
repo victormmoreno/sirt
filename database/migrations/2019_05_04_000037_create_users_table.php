@@ -74,7 +74,7 @@ class CreateUsersTable extends Migration
                 ->onUpdate('no action');
 
             $table->foreign('rol_id', 'fk_users_roles1_idx')
-                ->references('id')->on('roles')
+                ->references('id')->on('rol')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 

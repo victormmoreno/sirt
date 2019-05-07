@@ -15,13 +15,27 @@ class CentroFormacion extends Model
      */
     protected $fillable = [
         'nombre',
-        'codigo_regional',
+        'codigo_centro',
         'direccion',
-        'telefono',
+        'descripcion',
+        'ciudad_id',
+        'regional_id',
     ];
 
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'regional_id', 'id');
     }
+
+    public function city()
+    {
+        return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
+    }
+
+    public function nodos()
+    {
+        return $this->hasMany(Nodo::class, 'centroformacion_id', 'id');
+    }
+
+
 }

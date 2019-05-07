@@ -25,6 +25,7 @@ class CreateNodosTable extends Migration
             $table->increments('id');
             $table->string('nombre');
             $table->string('direccion', 200)->nullable();
+            $table->year('anho_inicio')->nullable();
             $table->unsignedInteger('centroformacion_id');
 
             $table->index(["centroformacion_id"], 'fk_nodos_centrosformacion1_idx');

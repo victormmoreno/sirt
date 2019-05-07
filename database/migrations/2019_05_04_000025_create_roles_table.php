@@ -10,7 +10,7 @@ class CreateRolesTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'roles';
+    public $tableName = 'rol';
 
     /**
      * Run the migrations.

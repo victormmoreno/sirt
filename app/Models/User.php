@@ -65,4 +65,9 @@ class User extends Authenticatable
     {
         return $this->nombres . ' ' . $this->apellidos;
     }
+
+    public function estrato()
+    {
+        return $this->belongsTo(Estrato::class, 'estrato_id', 'id');
+    }
 }

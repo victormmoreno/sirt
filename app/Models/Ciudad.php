@@ -23,4 +23,9 @@ class Ciudad extends Model
     {
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
     }
+
+    public function centrosFormaciones()
+    {
+        return $this->hasMany(CentroFormacion::class, 'ciudad_id', 'id');
+    }
 }
