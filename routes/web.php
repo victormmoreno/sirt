@@ -18,17 +18,6 @@ Route::get('/', function () {
 
     // $city = App\Models\Ciudad::first();
     // dd($city->departament);
-<<<<<<< Updated upstream
-    //
-
-    $regionals = App\Models\CentroFormacion::get()->last();
-    //dd($regionals->regional);
-=======
-    // 
-    
-    // $centros = App\Models\Nodo::first();
-    // dd($centros->centroFormacion);
->>>>>>> Stashed changes
 
     // $tiposdocumentos = App\Models\TipoDocumento::first();
     // $tiposdocumentos->created_at->year //año
