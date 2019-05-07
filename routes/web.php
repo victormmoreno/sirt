@@ -18,10 +18,10 @@ Route::get('/', function () {
 
     // $city = App\Models\Ciudad::first();
     // dd($city->departament);
-    // 
-    
+    //
+
     $regionals = App\Models\CentroFormacion::get()->last();
-    dd($regionals->regional);
+    //dd($regionals->regional);
 
     // $tiposdocumentos = App\Models\TipoDocumento::first();
     // $tiposdocumentos->created_at->year //año
