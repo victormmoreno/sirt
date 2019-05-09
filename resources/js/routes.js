@@ -1,8 +1,27 @@
-import Home from './components/Home.vue';
+
 
 export const routes = [
 	{
 		path: '/',
-		component: Home
-	}
+		component: require('./components/spa/Home.vue').default,
+		meta: {
+			requiresAuth: true
+		}
+	},
+	{
+			path: '/ideas',
+			component: require('./views/Ideas.vue').default,
+
+	},
+	{
+			path: '/login',
+			component: require('./components/auth/Login.vue').default,
+
+	},
+	{
+			path: '/home',
+			component: require('./views/Home.vue').default,
+
+	},
+
 ];

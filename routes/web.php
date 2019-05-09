@@ -11,13 +11,13 @@
 |
  */
 
-Route::get('/', function () {
+Route::get('{any}', function () {
     // $departaments = App\Models\Departamento::with(['cities'])->get();
     // $departaments = App\Models\Departamento::first();
     // dd($departaments->cities);
 
-    // $city = App\Models\Ciudad::first();
-    // dd($city->departament);
+    $users = App\User::allowed()->get();
+    dd($users->departament);
 
     // $tiposdocumentos = App\Models\TipoDocumento::first();
     // $tiposdocumentos->created_at->year //año
@@ -38,10 +38,11 @@ Route::get('/', function () {
 
     // dd($tiposdocumentos->created_at->subDays(3)->isoFormat('dddd MMM  YYYY'));
     // dd($tiposdocumentos->created_at->subDays(3)->diffForHumans());
+    //
 
     return view('spa');
-});
+})->where('any', '.*');
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');

@@ -10,54 +10,44 @@ require('./bootstrap');
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
+import {routes} from './routes';
+import StoreData from './store';
+import MainApp from './components/MainApp.vue';
 
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
+const store = new Vuex.Store(StoreData);
+
 const router = new VueRouter({
-	routes: [
-		{
-			path: '/',
-			component: require('./views/Home.vue').default,
-		},
-		{
-			path: '/ideas',
-			component: require('./views/Ideas.vue').default,
-
-		}
-
-	],
-	'linkExactActiveClass': 'acitve'
-	
+	routes,
+	mode: 'history'
 });
 
+router.beforeEach((to, from, next) => {
+        const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+        const currentUser = store.state.currentUser;
+    
+        if(requiresAuth && !currentUser) {
+            next();
+        }else if(requiresAuth && currentUser) {
+            next('/home');
+        }  
+        else if(to.path == '/login' && currentUser) {
+            next('/home');
+        } else {
+            next();
+        }
+    });
 
 
-
-
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('mynew', require('./components/MyNewComponent.vue').default);
-
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
 
 const app = new Vue({
     el: '#app',
     router,
+    store,
+    components: {
+        MainApp
+    }
 });

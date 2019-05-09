@@ -32,7 +32,7 @@
         <div id="app">
           <div class="mn-content">
          
-         @include('auth.layouts.nav')
+         {{-- @include('auth.layouts.nav') --}}
 
        @yield('content-auth')
 

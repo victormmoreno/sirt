@@ -25,4 +25,3 @@ class Regional extends Model
         return $this->hasMany(CentroFormacion::class, 'regional_id', 'id');
     }
 }
-

@@ -1,11 +1,10 @@
 <template>
-    <div >
-        <!-- <Header/> -->
-        <!-- <div class="content">
+    <div v-if="">
+
+        <Header/>
+        <div class="content">
           <router-view></router-view>
-        </div> -->
-        <h1>dasdsad</h1>
-        
+        </div>
     </div>
    
     
@@ -13,7 +12,7 @@
 
 <script>
 
-    import Header from './Header.vue';
+    import Header from './spa/Header.vue';
     export default {
         name: 'main-app',
         components: {Header}

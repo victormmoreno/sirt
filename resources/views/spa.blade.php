@@ -5,7 +5,9 @@
 @section('content-auth')
 
 
-    <router-view></router-view>
+<main-app></main-app>
+
+{{--     <router-view></router-view> --}}
 
    
 @endsection

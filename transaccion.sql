@@ -1345,3 +1345,8 @@ INSERT INTO `Rol` (`id`, `nombre`,`descripcion`) VALUES
 (5, 'Talento',''),
 (6, 'Ingreso',''),
 (7, 'Proveedor','');
+
+INSERT INTO `Ocupacion` (`id`, `nombre`,`descripcion`) VALUES
+(1, 'Estudiante',''),
+(2, 'Independiente',''),
+(3, 'Empleado','');

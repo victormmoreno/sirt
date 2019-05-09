@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
+use App\User;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     protected $appends = ['nombre_completo'];
 
@@ -21,16 +24,22 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'rol',
-        'nodo',
-        'tipodocumento',
+        'documento',
         'nombres',
         'apellidos',
         'email',
-        'estado',
-        'contacto',
-        'proveedor',
+        'direccion',
+        'telefono',
+        'celular',
+        'fechanacimiento',
+        'descripcion_ocupacion',
         'password',
+        'genero_id',
+        'tipodocumento_id',
+        'ciudad_id',
+        'rol_id',
+        'ocupacion_id',
+        'estrato_id',
     ];
 
     /**
@@ -51,10 +60,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = bcrypt($password);
-    }
+    // public function setPasswordAttribute($password)
+    // {
+    //     $this->attributes['password'] = bcrypt($password);
+    // }
 
     public function setLastnameAttribute($nombres)
     {
@@ -70,4 +79,24 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Estrato::class, 'estrato_id', 'id');
     }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
 }
