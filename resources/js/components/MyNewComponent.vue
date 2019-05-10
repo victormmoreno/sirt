@@ -1,37 +1,23 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col s12 m10 l10">
-                 <div class="row">
-                    <div class="col s12 m6">
-                      <div class="card ">
-                        <div class="card-content ">
-                          <span class="card-title">Card Title</span>
-                          <p>I am a very simple card. I am good at containing small bits of information.
-                          I am convenient because I require little markup to use effectively.</p>
-                          julianondo
-                        </div>
-                        <div class="card-action">
-                          	<button class="btn-floating btn-large waves-effect waves-light red" @click="makeAnAlert()">Alerta</button>
-                        </div>
-                        <h3 class="title is-3 shadow" v-text="message"></h3>
-    					<p class="time shadow" v-text="currentTime"></p>
-                      </div>
-                    </div>
-                    
-                  </div>
-            </div>
-        </div>
-    </div>
+   <div>
+     <span class="time shadow" v-text="date"></span>
+              <span class="time " v-text=" currentTime"></span>
+   </div>
+    					
+                     
 </template>
 
 <script>
 	import chartjs from 'chart.js'
     export default {
+      name: "clock",
     	data:  function() {
     		return{
 		    	message: 'Current Time:',
 		    	currentTime: null,
+          time: null,
+          date: null,
+          
 		    
 			}	
 		},
@@ -40,41 +26,44 @@
 
         },
         methods: {
-        	makeAnAlert: function () {
-        		swal('hello word');
-        		toastr.warning('hola soy developer');
-            toastr.options = {
-              "closeButton": false,
-              "debug": false,
-              "newestOnTop": false,
-              "progressBar": true,
-              "positionClass": "toast-top-center",
-              "preventDuplicates": false,
-              "onclick": null,
-              "showDuration": "300",
-              "hideDuration": "1000",
-              "timeOut": "5000",
-              "extendedTimeOut": "1000",
-              "showEasing": "swing",
-              "hideEasing": "linear",
-              "showMethod": "fadeIn",
-              "hideMethod": "fadeOut"
-            }
-        	},
+        	
         	updateCurrentTime() {
 		      this.currentTime = moment().format('LTS');
+          this.currentTime = moment().format('LTS');
+          this.date = moment().format("MMM Do YY");
+
+
 		    },
+        updateTime() {
+          var week = ['Domingo', 'Lunes', 'Martes', 'Miécoles', 'Jueves', 'Viernes', 'Sabado'];
+          var cd = new Date();
+          this.time = this.zeroPadding(cd.getHours(), 2) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2);
+          this.date = week[cd.getDay()] + ' ' +this.zeroPadding(cd.getDate(), 2) + '/' + this.zeroPadding(cd.getMonth()+1, 2) + '/' + this.zeroPadding(cd.getFullYear(), 4);
+      },
+        zeroPadding(num, digit) {
+            var zero = '';
+            for(var i = 0; i < digit; i++) {
+                zero += '0';
+            }
+            return (zero + num).slice(-digit);
+        }
 
         },
         created() {
 		    this.currentTime = moment().format('LTS');
 		    setInterval(() => this.updateCurrentTime(), 1 * 1000);
+        setInterval(()=>this.updateTime(), 1 *1000);
+        
 		},
 		ready: function () {
+        this.updateTime();
 	    	this.updateCurrentTime();
-	    	updateTime();
+
+        
 
 		}
+
+
     }
 
     

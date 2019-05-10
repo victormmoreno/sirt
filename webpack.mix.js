@@ -18,7 +18,7 @@ mix.styles([
 		'resources/assets/css/libs/materialize/materialize.min.css',
 		'resources/assets/css/libs/metrojs/MetroJs.min.css',
 		'resources/assets/css/libs/weather-icons-master/weather-icons.min.css',
-		'resources/assets/css/libs/theme/alpha.min.css',
+		'resources/assets/css/libs/theme/alpha.css',
 		'resources/assets/css/libs/theme/custom.css'
 	],'public/css/libs.css');
 

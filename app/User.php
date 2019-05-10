@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\User;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -72,7 +71,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getNombreCompletoAttribute()
     {
-        return $this->nombres . ' ' . $this->apellidos;
+        return ucfirst($this->nombres) . ' ' . ucfirst($this->apellidos);
     }
 
     public function estrato()

@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">   
+        {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/libs.css') }}" rel="stylesheet"> --}}
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <link href="{{ mix('css/libs.css') }}" rel="stylesheet">
+        
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')">
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <!-- Fonts -->
+        {{-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> --}}
+        <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="{{ mix('js/libs.js') }}" defer></script>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -70,11 +73,14 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav> --}}
 
-        <main class="py-4">
+       
+        <div class="mn-content fixed-sidebar">
+            @include('layouts.nav')
             @yield('content')
-        </main>
+        </div>
+        
     </div>
 </body>
 </html>

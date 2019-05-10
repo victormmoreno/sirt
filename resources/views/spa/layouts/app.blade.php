@@ -11,7 +11,11 @@
 
         <link href="{{ mix('css/app.css') }}" rel="stylesheet">
         <link href="{{ mix('css/libs.css') }}" rel="stylesheet">
-        
+        {{-- <style type="text/css">
+          .router-link-exact-active{
+            color: red;
+          }
+        </style> --}}
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -24,9 +28,22 @@
 
        
     </head>
-    <body class="signin-page">
-     
-            @yield('content-auth')
+    <body class="white">
+        <div id="app">
+          <div class="mn-content">
+         
+         @include('spa.layouts.nav')
+
+       @yield('content-spa')
+
+       @include('spa.layouts.footer')
+
+  
       
+    <div class="left-sidebar-hover"></div>
+    </div>
+          
+  
+    </div> 
     </body>
 </html>
