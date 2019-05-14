@@ -2,8 +2,11 @@
 
 namespace App;
 
+use App\Models\ActivationToken;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -33,6 +36,7 @@ class User extends Authenticatable implements JWTSubject
         'fechanacimiento',
         'descripcion_ocupacion',
         'password',
+        'estado',
         'genero_id',
         'tipodocumento_id',
         'ciudad_id',
@@ -96,6 +100,35 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function activate()
+    {
+        $this->update(['estado' => true]);
+
+        Auth::login($this);
+
+        $this->token->delete();
+    }
+
+    public function token()
+    {
+        return $this->hasOne(ActivationToken::class);
+    }
+
+    public function generateToken()
+    {
+        $this->token()->create([
+            'token' => str_random(60),
+        ]);
+
+        return $this;
+
     }
 
 }

@@ -15,10 +15,10 @@
               </div>
               <ul class=" col s8 m8 l7 ">
                 <li class="hide-on-med-and-down">
-                  <router-link to="/" >INICIO</router-link>
+                  <a href="{{route('/')}}">INICIO</a>
                 </li>
                 <li class="hide-on-med-and-down">
-                  <router-link to="/ideas" class="hide-on-med-and-down">IDEAS DE PROYECTOS</router-link>
+                  <a href="{{ route('ideas') }}"  class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
                 </li>
                 
                 

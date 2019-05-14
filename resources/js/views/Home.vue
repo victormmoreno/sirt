@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div >
 		<main class="mn-inner no-p">
 		    <div class="cyan darken-1">
 		      <div class="container">
@@ -9,7 +9,7 @@
 		              <div class="card-content  white-text">
 		                <div class="row">
 		                  <div class="col s12 m6 l12 m12  center-align">
-		                    <h1 class="truncate tooltipped" data-position="bottom" data-delay="50" data-tooltip="RED TECNOPARQUE COLOMBIA" >{{welcome}}</h1>
+		                    <h1 class="truncate tooltipped" data-position="bottom" data-delay="50" data-tooltip="RED TECNOPARQUE COLOMBIA" >RED TECNOPARQUE COLOMBIA</h1>
 		                    <img class="responsive-img" style="width: 100%; height: 500px;" v-bind:src="imageInicio"/>
 		                  </div>
 						

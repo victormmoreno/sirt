@@ -9,6 +9,7 @@ use App\Models\TipoDocumento;
 use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class UsersTableSeeder extends Seeder
@@ -20,6 +21,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        // Role::truncate();
 
         $roleAdministrador = Role::create(['name' => 'Administrador']);
         $roleDinamizador   = Role::create(['name' => 'Dinamizador']);
@@ -33,13 +35,15 @@ class UsersTableSeeder extends Seeder
             'documento'             => '1027890334',
             'nombres'               => 'julian',
             'apellidos'             => 'londoño',
-            'email'                 => 'jlondono433@gmail.com',
+            'email'                 => 'jlondono433@misena.edu.co',
             'direccion'             => 'calle 40 #45 65',
             'telefono'              => '413324',
             'celular'               => '342452323',
             'fechanacimiento'       => '1996-09-12',
             'descripcion_ocupacion' => 'desarrollador web',
             'password'              => Hash::make('12345678'),
+            'estado'                => true,
+            'remember_token'        => Str::random(10),
             'genero_id'             => Genero::where('nombre', '=', 'Masculino')->first()->id,
             'tipodocumento_id'      => TipoDocumento::where('abreviatura', '=', 'CC')->first()->id,
             'ciudad_id'             => Ciudad::all()->random()->id,
@@ -60,6 +64,8 @@ class UsersTableSeeder extends Seeder
             'celular'               => '342452323',
             'fechanacimiento'       => '1996-09-12',
             'descripcion_ocupacion' => 'desarrollador web',
+            'estado'                => true,
+            'remember_token'        => Str::random(10),
             'password'              => Hash::make('12345678'),
             'genero_id'             => Genero::where('nombre', '=', 'Masculino')->first()->id,
             'tipodocumento_id'      => TipoDocumento::where('abreviatura', '=', 'CC')->first()->id,
@@ -70,5 +76,8 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userDinamizador->assignRole($roleDinamizador);
+
+        factory(User::class, 20)->create();
+
     }
 }

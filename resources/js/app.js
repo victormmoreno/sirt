@@ -14,6 +14,7 @@ import VueRouter from 'vue-router';
 
 
 
+
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
@@ -32,12 +33,15 @@ const router = new VueRouter({
                 path: '/ideas',
                 component: require('./views/Ideas.vue').default,
 
-            }
+            },
+            
 
         ],
         'linkExactActiveClass': 'acitve',
         mode: 'history'
     });
+
+
 
 
 

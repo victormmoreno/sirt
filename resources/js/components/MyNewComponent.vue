@@ -1,14 +1,14 @@
 <template>
    <div>
      <span class="time shadow" v-text="date"></span>
-              <span class="time " v-text=" currentTime"></span>
+    <span class="time " v-text=" currentTime"></span>
    </div>
     					
                      
 </template>
 
 <script>
-	import chartjs from 'chart.js'
+
     export default {
       name: "clock",
     	data:  function() {

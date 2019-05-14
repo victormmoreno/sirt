@@ -63,7 +63,7 @@
         </div>
     </div>
 </div>
-<div class="mn-content valign-wrapper">
+<div class="mn-content valign-wrapper" id="app">
     <main class="mn-inner container">
         <div class="valign">
             <div class="row">
@@ -146,4 +146,5 @@
         </div>
     </main>
 </div>
+@endsection
 

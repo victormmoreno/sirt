@@ -1,4 +1,5 @@
-<!doctype html>
+    
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -21,12 +22,23 @@
         {{-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> --}}
         <script src="{{ mix('js/app.js') }}" defer></script>
         <script src="{{ mix('js/libs.js') }}" defer></script>
-
-       
-    </head>
+</head>
     <body class="signin-page">
-     
-            @yield('content-auth')
-      
+        @if(session()->has('info'))
+            <div class="card teal lighten-4">
+                <div class="row">
+                    <div class="col s12 m10">
+                        <div class="card-content white-text">
+                            <p>
+                                <i class="material-icons left">info_outline</i>
+                                {{session('info')}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        @yield('content-auth')
+        
     </body>
 </html>

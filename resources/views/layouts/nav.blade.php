@@ -12,16 +12,14 @@
                     <img class="chapter-title responsive-img" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
                 </a>
             </div>
-            <div class="show-on-large hide-on-med-and-down">
+            {{-- <div class="show-on-large hide-on-med-and-down">
                 <ul class="center col s10 m5 l5 nav-center-menu">
-                    {{--
                     <li>
                         <clock>
                         </clock>
                     </li>
-                    --}}
                 </ul>
-            </div>
+            </div> --}}
             {{--
             <div class="show-on-large hide-on-med-and-down">
                 --}}
@@ -33,40 +31,40 @@
                             </i>
                         </a>
                     </li>
+                    <li class="hide-on-small-and-down show-on-large">
+                        <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
+                            @guest
+        @else
+            {{ auth()->user()->nombre_completo }} 
+         @endguest
+                        </a>
+                    </li>
+                    <li class="hide-on-small-and-down">
+                        <a class="dropdown-button dropdown-right show-on-large" data-activates="dropdown1" href="javascript:void(0)">
+                            <i class="material-icons">
+                                notifications_none
+                            </i>
+                            <span class="badge">
+                                4
+                            </span>
+                        </a>
+                    </li>
+                    <li class="hide-on-med-and-up">
+                        <a class="search-toggle" href="javascript:void(0)">
+                            <i class="material-icons">
+                                search
+                            </i>
+                        </a>
+                    </li>
+                    <li class="hide-on-small-and-down show-on-large">
+                        <clock>
+                        </clock>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-<li class="hide-on-small-and-down show-on-large">
-    <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
-        @guest
-        @else
-            {{ Auth::user()->nombre_completo }}
-         @endguest
-    </a>
-</li>
-<li class="hide-on-small-and-down">
-    <a class="dropdown-button dropdown-right show-on-large" data-activates="dropdown1" href="javascript:void(0)">
-        <i class="material-icons">
-            notifications_none
-        </i>
-        <span class="badge">
-            4
-        </span>
-    </a>
-</li>
-<li class="hide-on-med-and-up">
-    <a class="search-toggle" href="javascript:void(0)">
-        <i class="material-icons">
-            search
-        </i>
-    </a>
-</li>
-<li class="hide-on-small-and-down show-on-large">
-    <clock>
-    </clock>
-</li>
 {{--
 --}}
 <ul class="dropdown-content notifications-dropdown" id="dropdown2">
@@ -124,14 +122,17 @@
                     <p>
                         @guest
                        @else
-                        {{ Auth::user()->nombre_completo }}
+                        {{ auth()->user()->nombre_completo }} 
                        @endguest
                     </p>
                     <span>
-                        Nodo Medellin
+                         @guest
+                       @else
+                        {{auth()->user()->roles->first()->name}}
                         <i class="material-icons right">
                             arrow_drop_down
                         </i>
+                        @endguest
                     </span>
                 </a>
             </div>

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
-        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">   
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"> --}}
 
@@ -30,7 +30,49 @@
     </head>
     <body class="white">
         <div id="app">
+           <div class="loader-bg"></div>
+  <div class="loader">
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
           <div class="mn-content">
+
          
          @include('spa.layouts.nav')
 

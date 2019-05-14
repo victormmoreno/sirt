@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
             $table->date('fechanacimiento')->nullable();
             $table->text('descripcion_ocupacion')->nullable();
             $table->string('password');
+            $table->boolean('estado')->default(true);
             $table->rememberToken();
             $table->integer('genero_id')->unsigned();
             $table->integer('tipodocumento_id')->unsigned();

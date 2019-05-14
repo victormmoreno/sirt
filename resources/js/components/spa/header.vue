@@ -29,7 +29,7 @@
               <ul class="col s2 m1 l2 nav-right-menu">
                 <li class="hide-on-med-and-down">
                   
-                  <router-link to="/login" class="waves-effect waves-light btn">INICIO SESIÓN</router-link>
+                  <!-- <router-link to="/login" class="waves-effect waves-light btn">INICIO SESIÓN</router-link> -->
                 </li>
               </ul>
 

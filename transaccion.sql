@@ -1350,3 +1350,15 @@ INSERT INTO `Ocupacion` (`id`, `nombre`,`descripcion`) VALUES
 (1, 'Estudiante',''),
 (2, 'Independiente',''),
 (3, 'Empleado','');
+
+INSERT INTO `TipoArticulacion` (`id`, `nombre`) VALUES
+(1, 'Proyecto I+D+I formulados'),
+(2, 'Publicaciones'),
+(3, 'Articulos A'),
+(4, 'Articulos B'),
+(5, 'Articulos C'),
+(6, 'Articulos Divulgación'),
+(7, 'Solicitudes de patentes'),
+(8, 'Vigilancias Tecnológicas'),
+(9, 'Prototipos'),
+(10, 'Eventos científicos y afines');

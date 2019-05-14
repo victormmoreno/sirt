@@ -11,13 +11,15 @@
 |
  */
 
+Route::get('/', function () {
+    // dd(config('mail.from'));
+    return view('spa');
+
+})->name('/');
+
 // Route::get('{any}', function () {
 //     return view('spa');
 // })->where('any', '.*');
-
-Route::get('/', function () {
-    return view('spa');
-});
 
 DB::listen(function ($query) {
     // echo "<pre>{$query->sql}</pre>";
@@ -59,3 +61,6 @@ DB::listen(function ($query) {
 Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/ideas', 'IdeaController@fanPage')->name('ideas');
+
+Route::get('activate/{token}', 'ActivationTokenController@activate')->name('activation');
