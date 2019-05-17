@@ -35,7 +35,8 @@
                         <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
                             @guest
         @else
-            {{ auth()->user()->nombre_completo }} 
+            {{ auth()->user()->nombre_completo}} 
+            
          @endguest
                         </a>
                     </li>
@@ -73,7 +74,14 @@
             <li class="notification-drop-title">
                 <center>
                     Lista de opciones
+                    <br>
+                    @guest
+                    @else
+                        <b>Último login: </b>{{ auth()->user()->ultimo_login->isoFormat('LLLL') }} <br>
+                        <b>Edad: </b>{{ auth()->user()->fechanacimiento->age }} 
+                    @endguest
                 </center>
+
             </li>
             <li>
                 <a href="">

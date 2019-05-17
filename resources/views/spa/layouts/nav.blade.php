@@ -18,7 +18,7 @@
                   <a href="{{route('/')}}">INICIO</a>
                 </li>
                 <li class="hide-on-med-and-down">
-                  <a href="{{ route('ideas') }}"  class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
+                  <a href="{{ route('ideas.index') }}"  class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
                 </li>
                 
                 

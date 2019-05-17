@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Nodo extends Model
 {
@@ -24,4 +25,29 @@ class Nodo extends Model
     {
         return $this->belongsTo(CentroFormacion::class, 'centroformacion_id', 'id');
     }
+
+    public function ideas()
+    {
+        return $this->hasMany(Ideas::class, 'nodo_id', 'id');
+    }
+
+    /*==============================================================
+    =            scope para consultar la lista de nodos            =
+    ==============================================================*/
+      
+    public function scopeSelectNodo($query)
+    {
+
+        return $query->select('nodos.id',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
+    
+    }
+    
+    
+    /*=====  End of scope para consultar la lista de nodos  ======*/
+    
+ 
+
+  
+
+
 }

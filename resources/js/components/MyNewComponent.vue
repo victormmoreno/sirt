@@ -35,7 +35,7 @@
 
 		    },
         updateTime() {
-          var week = ['Domingo', 'Lunes', 'Martes', 'Miécoles', 'Jueves', 'Viernes', 'Sabado'];
+          var week = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
           var cd = new Date();
           this.time = this.zeroPadding(cd.getHours(), 2) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2);
           this.date = week[cd.getDay()] + ' ' +this.zeroPadding(cd.getDate(), 2) + '/' + this.zeroPadding(cd.getMonth()+1, 2) + '/' + this.zeroPadding(cd.getFullYear(), 4);

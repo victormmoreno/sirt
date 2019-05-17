@@ -1362,3 +1362,35 @@ INSERT INTO `TipoArticulacion` (`id`, `nombre`) VALUES
 (8, 'Vigilancias Tecnológicas'),
 (9, 'Prototipos'),
 (10, 'Eventos científicos y afines');
+
+INSERT INTO `Linea` (`id`,`abreviatura`, `nombre`,`descripcion`) VALUES
+(1, 'BIO','Biotecnonlogía y Nanotecnología',''),
+(2, 'ETC','Electrónica y Telecomunicaciones',''),
+(3, 'IND','Ingenieria y Diseño',''),
+(4, 'TV','Tecnologías Virtuales','');
+
+
+#falta
+
+INSERT INTO `empresas` (`id`, `nombre`, `nit`, `contacto`,`correo`,`observaciones`,`nodo_id`) VALUES
+(1,"Enigma's",'999.880.00-4','6135940','enigma@enigma.co','',1),
+(2, 'Tropicana S.A','90125-1','tripocana@gmail.co','','',1),
+(3, 'Ramo, Friko, Suramericana de Productos Plasti','860003831 - 890922670','','','',1),
+(4, 'ARTEXTIL','890930086','','','',1),
+(5, 'ESUMER','8909817961','','','',1),
+(6, 'Centro Tecnológico del Mobiliario','899999034-1','','','',1),
+(7, 'Varias','000000','','','',1),
+(8, 'Perceptio, Cognos', '811022765-2','','','',1),
+(9, 'Placetopay-Parque Explora','​890299228-0','','','',1),
+(10, 'Universidad de Antioquia','890980040-8','','','',1),
+(11, 'Emprendedores y empresarios Universidad deAnt','890980040-8','','','',1),
+(12, 'SENA','899999034-1','','','',1),
+(13, 'Varias empresas apoyadas por UdeA','890980040-8','','','',1),
+(14, 'Hospital General de Medellín','890904646-7','','','',1),
+(15, 'Fomento Universidad de Antioquia','890980040-8','','','',1),
+(16, 'Prebel','890905032','','','',1),
+(17, 'CENTRO DE DISEÑO Y MANUFACTURA DEL CUERO','899999034-1','','','',1),
+(18, 'Personal','0000','','','',1),
+(19, 'Varias Empresas Pymes','00000','','','',1),
+(20, 'Alimentos Finca S.A','860004828','','','',1),
+

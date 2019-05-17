@@ -18,4 +18,16 @@ class EstadoIdea extends Model
         'nombre',
         'descripcion',
     ];
+
+    public function ideas()
+    {
+        return $this->hasMany(Ideas::class, 'estadoidea_id', 'id');
+    }
+
+    public function scopeFilterEstadoIdea($query,$filtro ,$name='') {
+        // if (trim($name) != '') {
+            $query->select('id','nombre')->where($filtro,'=',$name);
+        // }
+        return $query;
+    }
 }

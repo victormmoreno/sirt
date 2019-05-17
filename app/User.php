@@ -16,8 +16,12 @@ class User extends Authenticatable implements JWTSubject
 
     protected $appends = ['nombre_completo'];
 
+ 
+
+
     protected $dates = [
-        'fechanacimiento',
+        'ultimo_login',
+        'fechanacimiento'
     ];
 
     /**
@@ -104,7 +108,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $this->notify((new ResetPasswordNotification($token))->onQueue('authentication'));
+        // $this->notify((new ResetPasswordNotification($token))->onQueue('authentication')->delay(now()->addMinutes(10)));
+        // \Notification::send($this, new ResetPasswordNotification($token));
     }
 
     public function activate()

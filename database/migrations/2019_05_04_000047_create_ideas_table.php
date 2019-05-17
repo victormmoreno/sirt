@@ -23,26 +23,25 @@ class CreateIdeasTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombrec', 45)->nullable();
-            $table->string('apellidoc', 45)->nullable();
-            $table->string('correo', 100)->nullable();
+            $table->date('fecha');
+            $table->string('nombrec', 45);
+            $table->string('apellidoc', 45);
+            $table->string('correo', 100);
             $table->string('telefono', 45)->nullable();
             $table->string('nombreproyecto', 100)->nullable();
             $table->tinyInteger('aprendizsena')->nullable();
-            $table->string('pregunta1', 45)->nullable();
-            $table->string('pregunta2', 45)->nullable();
-            $table->string('pregunta3', 45)->nullable();
+            $table->integer('pregunta1');
+            $table->integer('pregunta2');
+            $table->integer('pregunta3');
             $table->text('descripcion')->nullable();
             $table->text('objetivo')->nullable();
             $table->text('alcance')->nullable();
-            $table->date('fecha')->nullable();
-            $table->tinyInteger('estado')->nullable();
+            $table->tinyInteger('tipoidea')->default(1);//1- emprendedor - 2 grupos de investigacion-empresas
             $table->integer('nodo_id')->unsigned();
-            $table->integer('tipoidea_id')->unsigned();
             $table->integer('estadoidea_id')->unsigned();
             $table->timestamps();
 
-            $table->index(["tipoidea_id"], 'fk_ideas_tiposideas1_idx');
+         
 
             $table->index(["nodo_id"], 'fk_ideas_nodos1_idx');
 
@@ -50,11 +49,6 @@ class CreateIdeasTable extends Migration
 
             $table->foreign('nodo_id', 'fk_ideas_nodos1_idx')
                 ->references('id')->on('nodos')
-                ->onDelete('no action')
-                ->onUpdate('no action');
-
-            $table->foreign('tipoidea_id', 'fk_ideas_tiposideas1_idx')
-                ->references('id')->on('tiposideas')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 

@@ -17,8 +17,9 @@
                 </h5>
                 <div class="card stats-card">
                     <div class="card-content">
-                        <div class="row">
-                            <form class="col s12 m12 l12" id="formregisteridea" method="post">
+                        <div class="row" method="post">
+                            <form class="col s12 m12 l12" method="post" action="{{ route('ideas.store') }}">
+                                @csrf
                                 <div class="card red lighten-3">
                                     <div class="row">
                                         <div class="col s12 m10">
@@ -55,22 +56,25 @@
                                                 account_circle
                                             </i>
                                             <input class="validate" id="txtnombres" name="txtnombres" type="text">
-                                                <label for="txtnombres">
-                                                    Nombres *
-                                                </label>
-                                            </input>
+                                            <label for="txtnombres">Nombres *</label>
+                                            @error('txtnombres')
+                                                <span class="helper-text">
+                                                     <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <i class="material-icons prefix">
                                                 account_circle
                                             </i>
                                             <input class="validate" id="txtapellidos" name="txtapellidos" type="text">
-                                                <label for="txtapellidos">
-                                                    Apellidos *
-                                                </label>
-                                            </input>
+                                            <label for="txtapellidos">Apellidos *</label>
+                                            @error('txtapellidos')
+                                                <span class="helper-text">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
-                                        
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12 m6 l6">
@@ -78,20 +82,24 @@
                                                 email
                                             </i>
                                             <input class="validate" id="txtcorreo" name="txtcorreo" type="email">
-                                                <label for="txtcorreo">
-                                                    Correo Electronico *
-                                                </label>
-                                            </input>
+                                            <label for="txtcorreo">Correo Electronico *</label>
+                                            @error('txtcorreo')
+                                                <span class="helper-text">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <i class="material-icons prefix">
                                                 phone
                                             </i>
-                                            <input class="validate" id="txtcontacto" name="txtcontacto" type="tel">
-                                                <label for="txtcontacto">
-                                                    Contacto
-                                                </label>
-                                            </input>
+                                            <input class="validate" id="txttelefono" name="txttelefono" type="tel">
+                                            <label for="txttelefono">Telefono</label>
+                                            @error('txttelefono')
+                                                <span class="helper-text">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="row">
@@ -100,24 +108,35 @@
                                                 library_books
                                             </i>
                                             <input class="validate" id="txtnombreproyecto" name="txtnombreproyecto" type="text">
-                                                <label for="txtnombreproyecto">
-                                                    Nombre de Proyecto *
-                                                </label>
-                                            </input>
+                                            <label for="txtnombreproyecto">Nombre de Proyecto *</label>
+                                            @error('txtnombreproyecto')
+                                                <span class="helper-text">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <i class="material-icons prefix">
                                                 domain
                                             </i>
-                                            <label class="active" for="txtnombreproyecto">
+                                            <label class="active" for="txtnodo">
                                                 Nodo *
                                             </label>
                                             <select class=" " id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
                                                 <option value="">
                                                     Seleccione Nodo *
                                                 </option>
-                                                
+                                                @foreach($nodos as $nodo)
+                                                <option value="{{$nodo->id}}">
+                                                    {{$nodo->nodos}}
+                                                </option>
+                                                @endforeach
                                             </select>
+                                            @error('txtnodo')
+                                                <span class="helper-text">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                             <div class="row">
                                                 <div class="input-field col s2 m6 l6 offset-l8 m8 s2">
                                                     <a class="waves-effect waves-light btn" href="" target="_blank">
@@ -130,6 +149,306 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="input-field col s12 m12 l12 offset-l6 m6 s6">
+                                            <div class="switch m-b-md">
+                                                <i class="material-icons prefix">
+                                                    toggle_on
+                                                </i>
+                                                <label class="active">
+                                                    ¿Es aprendiz SENA?*
+                                                </label>
+                                                <label>
+                                                    No
+                                                    <input id="txtaprendizsena" name="txtaprendizsena" type="checkbox" value="1">
+                                                        <span class="lever">
+                                                        </span>
+                                                        Si
+                                                    </input>
+                                                </label>
+                                            </div>
+                                            @error('txtaprendizsena')
+                                                <span class="helper-text">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <br>
+                                        <center>
+                                            <span class="card-title center-align">
+                                                Preguntas de Clasificación
+                                                <i class="Small material-icons prefix">
+                                                    contact_support
+                                                </i>
+                                            </span>
+                                        </center>
+                                        <p align="justify">
+                                            Por favor lea detenidamente las opciones de repuesta y elija la que más se asemeje a su situación actual. Al finalizar por favor haga clic sobre el botón de "Registrar" para enviar sus respuestas a nuestra base de datos.
+                                        </p>
+                                        <div class="divider">
+                                        </div>
+                                        <div class="input-field col s12 m12 l12">
+                                            <label for="">
+                                                ¿En qué estado se encuentra su propuesta?*
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input checked="" class="pregunta1" id="radio1" name="pregunta1" type="radio" value="1"/>
+                                                    <label align="justify" for="radio1">
+                                                        1. Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio2" name="pregunta1" type="radio" value="2"/>
+                                                    <label align="justify" for="radio2">
+                                                        2. Tengo la idea del producto que quiero desarrollar pero no sé cómo hacerlo.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio3" name="pregunta1" type="radio" value="3"/>
+                                                    <label align="justify" for="radio3">
+                                                        3. Tengo la idea del producto que quiero desarrollar, tengo los conocimientos para hacerlo, pero no se qué pasos seguir para formular el proyecto.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio4" name="pregunta1" type="radio" value="4"/>
+                                                    <label align="justify" for="radio4">
+                                                        4. Tengo formulado el proyecto para desarrollar mi producto: tengo claros los objetivos, el alcance, los recursos y las actividades que debo realizar para conseguirlo, entre otros.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio5" name="pregunta1" type="radio" value="5">
+                                                        <label align="justify" for="radio5">
+                                                            5. Mi proyecto está formulado y ya comencé la ejecución, pero necesito gestionar algunos recursos para poder avanzar.
+                                                        </label>
+                                                    </input>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio6" name="pregunta1" type="radio" value="6"/>
+                                                    <label align="justify" for="radio6">
+                                                        6. Ya tengo un prototipo avanzado de mi producto y requiero gestionar algunos recursos para concluir mi proyecto.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio7" name="pregunta1" type="radio" value="7"/>
+                                                    <label align="justify" for="radio7">
+                                                        7. Ya tengo un prototipo final, he realizado pruebas y ajustes, tengo planteada la idea de negocio y requiero gestionar algunos recursos para implementarla.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio8" name="pregunta1" type="radio" value="8"/>
+                                                    <label align="justify" for="radio8">
+                                                        8. No voy a desarrollar un producto, voy a comercializar un producto de otro fabricante.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta1" id="radio9" name="pregunta1" type="radio" value="9"/>
+                                                    <label align="justify" for="radio9">
+                                                        9. Quiero desarrollar una página web para promocionar mi negocio actual.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="divider">
+                                        </div>
+                                        <div class="input-field col s12 m12 l12">
+                                            <label>
+                                                ¿Cómo está conformado su equipo de trabajo? *
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input checked="" class="preguta2" id="rad1" name="pregunta2" type="radio" value="1"/>
+                                                    <label align="justify" for="rad1">
+                                                        1. No tengo equipo de trabajo, yo solo me encargaré de desarrollar el producto..
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="preguta2" id="rad2" name="pregunta2" type="radio" value="2"/>
+                                                    <label align="justify" for="rad2">
+                                                        2. Tengo un equipo de trabajo que cuenta con los conocimientos técnicos mínimos para el desarrollo del producto, pero no contamos con los conocimientos de mercadeo para la implementación de la idea de negocio.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="preguta2" id="rad3" name="pregunta2" type="radio" value="3"/>
+                                                    <label align="justify" for="rad3">
+                                                        3. Tengo un equipo de trabajo que cuenta con los conocimientos de mercadeo mínimos para la implementación de la idea de negocio, pero no contamos con los conocimientos técnicos para desarrollar el producto.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="preguta2" id="rad4" name="pregunta2" type="radio" value="4"/>
+                                                    <label align="justify" for="rad4">
+                                                        4. Tengo un equipo de trabajo multidisciplinar, que cuenta con los conocimientos técnicos, conocimientos de gestión y conocimientos de mercadeo necesarios para el desarrollo del producto y la implementación de la idea de negocio.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="divider">
+                                        </div>
+                                        <div class="input-field col s12 m12 l12">
+                                            <label>
+                                                Marque en cuál de las siguientes categorías clasificaría su propuesta*
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input checked="" class="pregunta3" id="r1" name="pregunta3" type="radio" value="1"/>
+                                                    <label align="justify" for="r1">
+                                                        1. Tecnologías Virtuales: desarrollo de software para diferentes dispositivos, animaciones 2D y 3D, creación de contenidos para aplicaciones, animaciones y videojuegos.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta3" id="r2" name="pregunta3" type="radio" value="2"/>
+                                                    <label align="justify" for="r2">
+                                                        2. Biotecnología: utilización de organismos vivos o sus derivados para el desarrollo de productos y/o procesos en las áreas de ambiente, alimentos y nanotecnología.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta3" id="r3" name="pregunta3" type="radio" value="3"/>
+                                                    <label align="justify" for="r3">
+                                                        3. Electrónica y Telecomunicaciones: Control de procesos, telecomunicaciones, automatización, robótica aplicada, sistemas embebidos, prototipado electrónico y televisión digital.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta3" id="r4" name="pregunta3" type="radio" value="4"/>
+                                                    <label align="justify" for="r4">
+                                                        4. Ingeniería y Diseño: diseño de productos en las áreas afines a la mecánica y el diseño industrial, como aprovechamiento de energías renovables, máquinas,mobiliario, consumo masivo y empaques.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta3" id="r5" name="pregunta3" type="radio" value="5"/>
+                                                    <label align="justify" for="r5">
+                                                        5. Nanotecnología y nuevos materiales: Modificación de superficies a escala nanométrica, síntesis de nanopartículas, evaluación a escala nanométrica, desarrollo y evaluación de nuevos materiales como materiales compuestos, materiales biodegradables y biopolímeros obtenidos a través de biotecnología.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <p class="p-v-xs">
+                                                    <input class="pregunta3" id="r6" name="pregunta3" type="radio" value="6"/>
+                                                    <label align="justify" for="r6">
+                                                        6. Otros Productos: personalización de productos, productos de moda, alimentos no tradicionales o exóticos, productos artesanales, construcción de infraestructura.
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="divider">
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m6 l6">
+                                                <i class="material-icons prefix">
+                                                    create
+                                                </i>
+                                                <textarea class="materialize-textarea" id="txtdescripcion" length="1000" name="txtdescripcion">
+                                                </textarea>
+                                                <label for="txtdescripcion">
+                                                    Descripción del Proyecto *
+                                                </label>
+                                                @error('txtdescripcion')
+                                                    <span class="helper-text">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="input-field col s12 m6 l6">
+                                                <i class="material-icons prefix">
+                                                    create
+                                                </i>
+                                                <textarea class="materialize-textarea" id="txtobjetivo" length="1000" name="txtobjetivo">
+                                                </textarea>
+                                                <label for="txtobjetivo">
+                                                    Objetivo general del Proyecto *
+                                                </label>
+                                                @error('txtobjetivo')
+                                                    <span class="helper-text">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m12 l6 offset-l3 m3 s1">
+                                                <i class="material-icons prefix">
+                                                    create
+                                                </i>
+                                                <textarea class="materialize-textarea" id="txtalcance" length="1000" name="txtalcance">
+                                                </textarea>
+                                                <label for="txtalcance">
+                                                    Alcance del Proyecto *
+                                                </label>
+                                                @error('txtalcance')
+                                                    <span class="helper-text">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            
+                                        </div>
+                                        <br>
+                                            <center>
+                                                <button class="waves-effect cyan darken-1 btn center-aling" type="submit">
+                                                    <i class="material-icons right">
+                                                        done_all
+                                                    </i>
+                                                    Registrar Idea
+                                                </button>
+                                                <a class="waves-effect red lighten-2 btn center-aling" href="">
+                                                    <i class="material-icons right">
+                                                        backspace
+                                                    </i>
+                                                    Cancelar
+                                                </a>
+                                            </center>
+                                        </br>
+                                    </br>
                                 </br>
                             </form>
                         </div>

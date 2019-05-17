@@ -12,7 +12,11 @@
  */
 
 Route::get('/', function () {
-    // dd(config('mail.from'));
+	// $now = App\Models\EstadoIdea::FilterEstadoIdea('nombre','Inicio Emprendedor')->first();
+	// dd($now->id);
+    // dd(config('mail.host'));
+    // dd($user);
+    // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
     return view('spa');
 
 })->name('/');
@@ -58,9 +62,38 @@ DB::listen(function ($query) {
 //     return view('spa');
 // });
 
+
+
+/*===================================================================================
+=            rutas modulos de login registro, recuperacion de contraseña            =
+===================================================================================*/
+
 Auth::routes(['register' => false]);
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/ideas', 'IdeaController@fanPage')->name('ideas');
+/*=====  End of rutas modulos de login registro, recuperacion de contraseña  ======*/
 
+/*===========================================================
+=            ruta principal apenas se hace login            =
+===========================================================*/
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+/*=====  End of ruta principal apenas se hace login  ======*/
+
+/*=======================================================
+=            rutas para activacion de cuenta            =
+=======================================================*/
 Route::get('activate/{token}', 'ActivationTokenController@activate')->name('activation');
+/*=====  End of rutas para activacion de cuenta  ======*/
+
+
+/*===================================================================
+=            rutas para las funcionalidades de las ideas            =
+===================================================================*/
+
+
+Route::resource('ideas', 'IdeaController');
+
+/*=====  End of rutas para las funcionalidades de las ideas  ======*/
+
+

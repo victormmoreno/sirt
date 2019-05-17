@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             'roles',
             'ocupaciones',
             'users',
+            'lineas',
 
         ]);
         $this->call([
@@ -56,6 +57,7 @@ class DatabaseSeeder extends Seeder
             RolsTableSeeder::class, //seeder de la tabla vieja
             OcupacionesTableSeeder::class,
             UsersTableSeeder::class,
+            LineasTableSeeder::class,
 
         ]);
     }
