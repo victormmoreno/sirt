@@ -22,7 +22,8 @@ class HomeController extends Controller
     public function index()
     {
         if (auth()->user()->hasRole('Administrador')) {
-        dd(auth()->user()->nombre_completo);
+        // dd(auth()->user()->nombre_completo);
+        return view('home');
         } else {
         return view('home');
         }

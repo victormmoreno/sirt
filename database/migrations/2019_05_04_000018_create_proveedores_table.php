@@ -28,7 +28,7 @@ class CreateProveedoresTable extends Migration
             $table->string('direccion', 100)->nullable();
             $table->string('telefono', 45)->nullable();
             $table->string('correo', 100)->nullable();
-            $table->tinyInteger('estado')->nullable()->default('1');
+            $table->enum('estado',['Activo','Inactivo']);
             $table->text('objeto_empresa')->nullable();
             $table->timestamps();
         });

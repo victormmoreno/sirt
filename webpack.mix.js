@@ -11,9 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+// mix.js('resources/js/app.js', 'public/js')
+//     .sass('resources/sass/app.scss', 'public/css');
 
+mix.js('resources/js/app.js', 'public/js');
 // mix.styles([
 // 		'resources/assets/css/libs/materialize/materialize.min.css',
 // 		'resources/assets/css/libs/metrojs/MetroJs.min.css',

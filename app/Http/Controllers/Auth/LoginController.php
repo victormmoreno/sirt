@@ -21,7 +21,7 @@ class LoginController extends Controller
 
 
     public $maxAttempts = 3;
-    public $decayMinutes = 30;
+    public $decayMinutes = 3;
     /**
      * Where to redirect users after login.
      *
@@ -49,7 +49,7 @@ class LoginController extends Controller
 
         $request['estado'] = true;
         return $request->only($this->username(), 'password', 'estado');
-        // // dd($request->only($this->username(), 'password', 'estado'));
+        // dd($request->only($this->username(), 'password', 'estado'));
         // // $credentials           = $request->only($this->username(), 'password');
         // // $credentials['estado'] = 1;
 

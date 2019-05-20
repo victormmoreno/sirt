@@ -25,9 +25,8 @@ class EstadoIdea extends Model
     }
 
     public function scopeFilterEstadoIdea($query,$filtro ,$name='') {
-        // if (trim($name) != '') {
-            $query->select('id','nombre')->where($filtro,'=',$name);
-        // }
-        return $query;
+        
+        return  $query->select('id','nombre')->where($filtro,'=',$name);
+
     }
 }

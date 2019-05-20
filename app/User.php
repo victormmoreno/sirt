@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -16,7 +17,6 @@ class User extends Authenticatable implements JWTSubject
 
     protected $appends = ['nombre_completo'];
 
- 
 
 
     protected $dates = [
@@ -69,7 +69,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function setPasswordAttribute($password)
     {
-        $this->attributes['password'] = bcrypt($password);
+        $this->attributes['password'] = Hash::make($password);
     }
 
     public function setNombresAttribute($nombres)

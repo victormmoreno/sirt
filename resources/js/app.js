@@ -10,17 +10,17 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import VueRouter from 'vue-router';
+
+
+ Vue.use(Vuex);
 
 
 
-
-Vue.use(Vuex);
-// Vue.use(VueRouter);
-
-
-Vue.component('clock', require('./components/MyNewComponent.vue').default);
+Vue.component('clock', require('./components/helpers/clock.vue').default);
 Vue.component('fanpage-idea', require('./components/ideas/FanPage.vue').default);
+Vue.component('home-idea', require('./components/ideas/administrador/index.vue').default);
+
+
 
 
 

@@ -42,6 +42,7 @@ class Idea extends Model
         'pregunta2',
         'pregunta3',
         'descripcion',
+        'objetivo',
         'alcance',
         'tipoidea',
         'nodo_id',

@@ -12,8 +12,8 @@
  */
 
 Route::get('/', function () {
-	// $now = App\Models\EstadoIdea::FilterEstadoIdea('nombre','Inicio Emprendedor')->first();
-	// dd($now->id);
+	// $nodo = App\Models\Nodo::all()->random()->id;
+	// dd($nodo);
     // dd(config('mail.host'));
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));

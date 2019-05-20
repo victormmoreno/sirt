@@ -2,7 +2,7 @@
     <nav class="cyan darken-1">
         <div class="nav-wrapper row">
             <section class="material-design-hamburger navigation-toggle">
-                <a class="button-collapse show-on-large material-design-hamburger__icon" data-activates="slide-out" href="javascript:void(0)">
+                <a class="button-collapse show-on-large material-design-hamburger__icon" data-activates="slide-out" href="#">
                     <span class="material-design-hamburger__layer">
                     </span>
                 </a>
@@ -12,45 +12,35 @@
                     <img class="chapter-title responsive-img" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
                 </a>
             </div>
-            {{-- <div class="show-on-large hide-on-med-and-down">
-                <ul class="center col s10 m5 l5 nav-center-menu">
-                    <li>
-                        <clock>
-                        </clock>
-                    </li>
-                </ul>
-            </div> --}}
-            {{--
-            <div class="show-on-large hide-on-med-and-down">
-                --}}
-                <ul class="right col s10 m4 l4 nav-right-menu">
-                    <li class="hide-on-small-and-down">
-                        <a class="dropdown-button dropdown-right show-on-large" href="">
-                            <i class="material-icons">
-                                live_help
-                            </i>
-                        </a>
-                    </li>
-                    <li class="hide-on-small-and-down show-on-large">
-                        <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
-                            @guest
-        @else
-            {{ auth()->user()->nombre_completo}} 
-            
-         @endguest
-                        </a>
-                    </li>
-                    <li class="hide-on-small-and-down">
-                        <a class="dropdown-button dropdown-right show-on-large" data-activates="dropdown1" href="javascript:void(0)">
-                            <i class="material-icons">
-                                notifications_none
-                            </i>
-                            <span class="badge">
-                                4
-                            </span>
-                        </a>
-                    </li>
-                    <li class="hide-on-med-and-up">
+            <ul class="right col s9 m3 nav-right-menu">
+                <li>
+                    <a class="chat-button show-on-large" data-activates="chat-sidebar" href="javascript:void(0)">
+                        <i class="material-icons">
+                            more_vert
+                        </i>
+                    </a>
+                </li>
+                
+                <li class="hide-on-small-and-down show-on-large">
+                    <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
+                        @guest
+                            @else
+                                {{ auth()->user()->nombre_completo}} 
+                                
+                             @endguest
+                    </a>
+                </li>
+                <li class="hide-on-small-and-down">
+                    <a class="dropdown-button dropdown-right show-on-large" data-activates="dropdown1" href="">
+                        <i class="material-icons">
+                            notifications_none
+                        </i>
+                        <span class="badge">
+                            4
+                        </span>
+                    </a>
+                </li>
+                <li class="hide-on-med-and-up">
                         <a class="search-toggle" href="javascript:void(0)">
                             <i class="material-icons">
                                 search
@@ -61,67 +51,103 @@
                         <clock>
                         </clock>
                     </li>
-                </ul>
-            </div>
+            </ul>
+            <ul class="dropdown-content notifications-dropdown" id="dropdown2">
+                <li class="notificatoins-dropdown-container">
+                    <ul>
+                        <li class="notification-drop-title">
+                            <center>
+                                Lista de opciones
+                                <br>
+                                    @guest
+                                    @else
+                                    <b>
+                                        Último login:
+                                    </b>
+                                    {{ auth()->user()->ultimo_login->isoFormat('LLLL') }}
+                                    <br>
+                                        <b>
+                                            Edad:
+                                        </b>
+                                        {{ auth()->user()->fechanacimiento->age }} 
+                                     @endguest
+                                    </br>
+                                </br>
+                            </center>
+                        </li>
+                        <li>
+                            <a href="">
+                                <div class="notification">
+                                    <div class="notification-icon circle teal lighten-4">
+                                        <i class="material-icons">
+                                            perm_contact_calendar
+                                        </i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <b>
+                                            Mi perfil
+                                        </b>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                <div class="notification">
+                                    <div class="notification-icon circle teal lighten-2">
+                                        <i class="material-icons">
+                                            power_settings_new
+                                        </i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <b>
+                                            {{ __('Logout') }}
+                                        </b>
+                                        <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="dropdown-content notifications-dropdown" id="dropdown1">
+                <li class="notificatoins-dropdown-container">
+                    <ul>
+                        <li class="notification-drop-title">
+                            Today
+                        </li>
+                        <li>
+                            <a href="#!">
+                                <div class="notification">
+                                    <div class="notification-icon circle cyan">
+                                        <i class="material-icons">
+                                            done
+                                        </i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <p>
+                                            <b>
+                                                Alan Grey
+                                            </b>
+                                            uploaded new theme
+                                        </p>
+                                        <span>
+                                            7 min ago
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </nav>
 </header>
-{{--
---}}
-<ul class="dropdown-content notifications-dropdown" id="dropdown2">
-    <li class="notificatoins-dropdown-container">
-        <ul>
-            <li class="notification-drop-title">
-                <center>
-                    Lista de opciones
-                    <br>
-                    @guest
-                    @else
-                        <b>Último login: </b>{{ auth()->user()->ultimo_login->isoFormat('LLLL') }} <br>
-                        <b>Edad: </b>{{ auth()->user()->fechanacimiento->age }} 
-                    @endguest
-                </center>
-
-            </li>
-            <li>
-                <a href="">
-                    <div class="notification">
-                        <div class="notification-icon circle teal lighten-4">
-                            <i class="material-icons">
-                                perm_contact_calendar
-                            </i>
-                        </div>
-                        <div class="notification-text">
-                            <b>
-                                Mi perfil
-                            </b>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                    <div class="notification">
-                        <div class="notification-icon circle teal lighten-2">
-                            <i class="material-icons">
-                                power_settings_new
-                            </i>
-                        </div>
-                        <div class="notification-text">
-                            <b>
-                                {{ __('Logout') }}
-                            </b>
-                            <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </div>
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul>
 <aside class="side-nav white fixed" id="slide-out">
     <div class="side-nav-wrapper">
         <div class="sidebar-profile">
@@ -167,7 +193,6 @@
                 </li>
             </ul>
         </div>
-        
         <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
             <li class="no-padding {{setActiveRoute('home')}}">
                 <a href="{{route('home')}}">
@@ -178,19 +203,17 @@
                 </a>
             </li>
         </ul>
-    </div>
-    <div class="footer">
-        <p class="copyright">
-            Tecnoparque
-            <?php echo date("Y"); ?>
-            ©
-        </p>
-        <a href="#!">
-            Privacidad
-        </a>
-        &
-        <a href="#!">
-            Terminos
-        </a>
+        <div class="footer">
+            <p class="copyright">
+                Steelcoders ©
+            </p>
+            <a href="#!">
+                Privacy
+            </a>
+            &
+            <a href="#!">
+                Terms
+            </a>
+        </div>
     </div>
 </aside>
