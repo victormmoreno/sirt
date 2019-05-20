@@ -10,36 +10,37 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
 
 
 
 
 Vue.use(Vuex);
-Vue.use(VueRouter);
+// Vue.use(VueRouter);
 
 
 Vue.component('clock', require('./components/MyNewComponent.vue').default);
+Vue.component('fanpage-idea', require('./components/ideas/FanPage.vue').default);
 
 
 
-const router = new VueRouter({
-    routes: [
-            {
-                path: '/',
-                component: require('./views/Home.vue').default,
-            },
-            {
-                path: '/ideas',
-                component: require('./views/Ideas.vue').default,
+// const router = new VueRouter({
+//     routes: [
+//             {
+//                 path: '/',
+//                 component: require('./views/Home.vue').default,
+//             },
+//             {
+//                 path: '/ideas',
+//                 component: require('./views/Ideas.vue').default,
 
-            },
+//             },
             
 
-        ],
-        'linkExactActiveClass': 'acitve',
-        mode: 'history'
-    });
+//         ],
+//         'linkExactActiveClass': 'acitve',
+//         mode: 'history'
+//     });
 
 
 
@@ -48,7 +49,7 @@ const router = new VueRouter({
 
 const app = new Vue({
     el: '#app',
-    router,
+    // router,
     
 });
 

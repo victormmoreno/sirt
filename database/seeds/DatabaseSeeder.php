@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             'roles',
             'ocupaciones',
             'users',
+            'permissions',
             'lineas',
 
         ]);

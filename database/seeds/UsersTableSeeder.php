@@ -11,6 +11,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class UsersTableSeeder extends Seeder
 {
@@ -30,6 +31,13 @@ class UsersTableSeeder extends Seeder
         $roleTalento       = Role::create(['name' => 'Talento']);
         $roleIngreso       = Role::create(['name' => 'Ingreso']);
         $roleProveedor     = Role::create(['name' => 'Proveedor']);
+
+        $registrarIdeaPermission = Permission::create(['name' => 'registrar idea']);
+        $consultarIdeaPermission = Permission::create(['name' => 'consultar idea']);
+        $editarIdeaPermission= Permission::create(['name' => 'editar idea']);
+        $eliminarIdeaPermission = Permission::create(['name' => 'eliminar idea']);
+
+        $roleAdministrador->givePermissionTo($consultarIdeaPermission);
 
         $userAdmin = User::create([
             'documento'             => '1027890334',
@@ -53,6 +61,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userAdmin->assignRole($roleAdministrador);
+        $userAdmin->givePermissionTo($registrarIdeaPermission);
 
         $userDinamizador = User::create([
             'documento'             => '1026890332',
@@ -76,6 +85,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userDinamizador->assignRole($roleDinamizador);
+        $userDinamizador->givePermissionTo($consultarIdeaPermission);
 
         factory(User::class, 20)->create();
 

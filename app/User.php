@@ -67,14 +67,19 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    // public function setPasswordAttribute($password)
-    // {
-    //     $this->attributes['password'] = bcrypt($password);
-    // }
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
 
-    public function setLastnameAttribute($nombres)
+    public function setNombresAttribute($nombres)
     {
         $this->attributes['nombres'] = ucfirst($nombres);
+    }
+
+    public function setApellidosAttribute($apellidos)
+    {
+        $this->attributes['apellidos'] = ucfirst($apellidos);
     }
 
     public function getNombreCompletoAttribute()
