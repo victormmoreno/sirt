@@ -46,6 +46,7 @@ mix.js('resources/js/app.js', 'public/js');
 mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.min.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
+		// 'resources/assets/css/themify-icons.css',
 		'resources/assets/plugins/material-preloader/css/materialPreloader.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',

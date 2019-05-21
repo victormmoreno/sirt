@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             'permissions',
             'lineas',
             'ideas',
+            'nivelesacademicos',
 
         ]);
         $this->call([
@@ -61,6 +62,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             LineasTableSeeder::class,
             IdeasTableSeeder::class,
+            NivelesAcademicosTableSeeder::class,
 
         ]);
     }

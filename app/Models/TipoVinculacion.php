@@ -16,4 +16,10 @@ class TipoVinculacion extends Model
     protected $fillable = [
         'nombre',
     ];
+
+
+    public function dinamizadoresInfocenters()
+    {
+        return $this->hasMany(DinamizadorInfocenter::class, 'tipovinculacion_id', 'id');
+    }
 }

@@ -3,13 +3,14 @@
 namespace App;
 
 use App\Models\ActivationToken;
+use App\Models\DinamizadorInfocenter;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -82,15 +83,30 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['apellidos'] = ucfirst($apellidos);
     }
 
+    
+    
+
     public function getNombreCompletoAttribute()
     {
         return ucfirst($this->nombres) . ' ' . ucfirst($this->apellidos);
     }
 
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
+    
     public function estrato()
     {
         return $this->belongsTo(Estrato::class, 'estrato_id', 'id');
     }
+
+     public function dinamizadorInfocenters()
+    {
+        return $this->hasMany(DinamizadorInfocenter::class, 'user_id', 'id');
+    }
+    /*=====  End of relaciones eloquent  ======*/
+
+    
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

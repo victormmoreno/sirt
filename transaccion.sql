@@ -1370,6 +1370,18 @@ INSERT INTO `Linea` (`id`,`abreviatura`, `nombre`,`descripcion`) VALUES
 (4, 'TV','Tecnologías Virtuales','');
 
 
+INSERT INTO `NivelAcademico` (`id`,`nombre`,`descripcion`) VALUES
+(1, 'Bachiller Académico',''),
+(2, 'Tecnico',''),
+(3, 'Tecnologo','');
+(4, 'Profesional','');
+(5, 'Especialización','');
+(6, 'Maestria','');
+(7, 'Doctorado','');
+(8, 'Post Doctorado','');
+
+
+
 #falta
 
 INSERT INTO `empresas` (`id`, `nombre`, `nit`, `contacto`,`correo`,`observaciones`,`nodo_id`) VALUES

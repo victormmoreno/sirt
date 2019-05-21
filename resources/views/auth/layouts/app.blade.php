@@ -6,12 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
-        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">   
-        {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/libs.css') }}" rel="stylesheet"> --}}
-
-        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-        <link href="{{ mix('css/libs.css') }}" rel="stylesheet">
+       
+        
+        <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         
 
         <!-- CSRF Token -->
@@ -20,8 +17,8 @@
 
         <!-- Fonts -->
         {{-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> --}}
-        <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="{{ mix('js/libs.js') }}" defer></script>
+        <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="{{ asset('js/libs.js') }}" defer></script>
 </head>
     <body class="signin-page">
         @if(session()->has('info'))

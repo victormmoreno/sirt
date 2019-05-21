@@ -23,7 +23,7 @@ class CreateDinamizadorinfocentersTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->decimal('salario', 11, 2);
+            $table->decimal('honorario', 11, 2)->default(0);
             $table->string('profesion', 100);
             $table->integer('tipovinculacion_id')->unsigned();
             $table->integer('user_id')->unsigned();

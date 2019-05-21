@@ -12,8 +12,8 @@
  */
 
 Route::get('/', function () {
-	// $nodo = App\Models\Nodo::all()->random()->id;
-	// dd($nodo);
+	$user = App\User::with(['dinamizadorInfocenters'])->get();
+	dd($user);
     // dd(config('mail.host'));
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
@@ -95,5 +95,15 @@ Route::get('activate/{token}', 'ActivationTokenController@activate')->name('acti
 Route::resource('ideas', 'IdeaController');
 
 /*=====  End of rutas para las funcionalidades de las ideas  ======*/
+
+/*======================================================================
+=            rutas para las funcionalidades de los usuarios            =
+======================================================================*/
+
+// Route::resource('usuarios', 'UserController',[ 'names' => [ 'index' => 'usuarios', 'create' => 'usuarios.crear']]);
+Route::resource('usuarios', 'UserController');
+
+/*=====  End of rutas para las funcionalidades de los usuarios  ======*/
+
 
 
