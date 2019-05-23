@@ -35,18 +35,14 @@
                         <i class="material-icons">
                             notifications_none
                         </i>
+                        @if($count = auth()->user()->unreadNotifications->count())
                         <span class="badge">
-                            4
+                             {{$count}}
                         </span>
+                        @endif
                     </a>
                 </li>
-                <li class="hide-on-med-and-up">
-                        <a class="search-toggle" href="javascript:void(0)">
-                            <i class="material-icons">
-                                search
-                            </i>
-                        </a>
-                    </li>
+                
                     <li class="hide-on-small-and-down show-on-large">
                         <clock>
                         </clock>
@@ -141,6 +137,12 @@
                                     </div>
                                 </div>
                             </a>
+                        </li>
+                        <li class="notification-drop-title center">
+                           
+                                 <a href="{{route('notifications.index')}}">Ver más notificationes</a>
+                            
+                           
                         </li>
                     </ul>
                 </li>

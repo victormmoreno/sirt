@@ -4,6 +4,7 @@ use App\Models\Ciudad;
 use App\Models\DinamizadorInfocenter;
 use App\Models\Estrato;
 use App\Models\Genero;
+use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Rol;
 use App\Models\TipoDocumento;
@@ -24,7 +25,6 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        // Role::truncate();
 
         $roleAdministrador = Role::create(['name' => 'Administrador']);
         $roleDinamizador   = Role::create(['name' => 'Dinamizador']);
@@ -36,8 +36,8 @@ class UsersTableSeeder extends Seeder
 
         $registrarIdeaPermission = Permission::create(['name' => 'registrar idea']);
         $consultarIdeaPermission = Permission::create(['name' => 'consultar idea']);
-        $editarIdeaPermission= Permission::create(['name' => 'editar idea']);
-        $eliminarIdeaPermission = Permission::create(['name' => 'eliminar idea']);
+        $editarIdeaPermission    = Permission::create(['name' => 'editar idea']);
+        $eliminarIdeaPermission  = Permission::create(['name' => 'eliminar idea']);
 
         $roleAdministrador->givePermissionTo($consultarIdeaPermission);
 
@@ -51,7 +51,7 @@ class UsersTableSeeder extends Seeder
             'celular'               => '342452323',
             'fechanacimiento'       => '1996-09-12',
             'descripcion_ocupacion' => 'desarrollador web',
-            'password'              => Hash::make('123456789'),
+            'password'              => '123456789',
             'estado'                => true,
             'remember_token'        => Str::random(10),
             'genero_id'             => Genero::where('nombre', '=', 'Masculino')->first()->id,
@@ -60,6 +60,7 @@ class UsersTableSeeder extends Seeder
             'rol_id'                => Rol::where('nombre', '=', 'Administrador')->first()->id,
             'ocupacion_id'          => Ocupacion::where('nombre', '=', 'Empleado')->first()->id,
             'estrato_id'            => Estrato::where('estrato', '=', 1)->first()->id,
+            'nodo_id'               => Nodo::all()->random()->id,
         ]);
 
         $userAdmin->assignRole($roleAdministrador);
@@ -77,13 +78,14 @@ class UsersTableSeeder extends Seeder
             'descripcion_ocupacion' => 'desarrollador web',
             'estado'                => true,
             'remember_token'        => Str::random(10),
-            'password'              => Hash::make('123456789'),
+            'password'              => '123456789',
             'genero_id'             => Genero::where('nombre', '=', 'Masculino')->first()->id,
             'tipodocumento_id'      => TipoDocumento::where('abreviatura', '=', 'CC')->first()->id,
             'ciudad_id'             => Ciudad::all()->random()->id,
             'rol_id'                => Rol::where('nombre', '=', 'Administrador')->first()->id,
             'ocupacion_id'          => Ocupacion::where('nombre', '=', 'Empleado')->first()->id,
             'estrato_id'            => Estrato::where('estrato', '=', 1)->first()->id,
+            'nodo_id'               => Nodo::all()->random()->id,
         ]);
 
         $userInfocenter = User::create([
@@ -98,24 +100,26 @@ class UsersTableSeeder extends Seeder
             'descripcion_ocupacion' => 'desarrollador web',
             'estado'                => true,
             'remember_token'        => Str::random(10),
-            'password'              => Hash::make('123456789'),
+            'password'              => '123456789',
             'genero_id'             => Genero::where('nombre', '=', 'Masculino')->first()->id,
             'tipodocumento_id'      => TipoDocumento::where('abreviatura', '=', 'CC')->first()->id,
             'ciudad_id'             => Ciudad::all()->random()->id,
             'rol_id'                => Rol::where('nombre', '=', 'Administrador')->first()->id,
             'ocupacion_id'          => Ocupacion::where('nombre', '=', 'Empleado')->first()->id,
             'estrato_id'            => Estrato::where('estrato', '=', 1)->first()->id,
+            // 'nodo_id'               => Nodo::all()->random()->id,
+            'nodo_id'               => Nodo::where('nombre', '=', 'Medellin')->first()->id,
         ]);
 
         $dinamizadorInfocenter = DinamizadorInfocenter::create([
-            'honorario'             => '2280000',
-            'profesion'             => 'Especialista talento humano',
-            'tipovinculacion_id'             => TipoVinculacion::where('nombre', '=', 'contratista')->first()->id,
-            'user_id'             => $userInfocenter->id,
+            'honorario'          => '2280000',
+            'profesion'          => 'Especialista talento humano',
+            'tipovinculacion_id' => TipoVinculacion::where('nombre', '=', 'contratista')->first()->id,
+            'user_id'            => $userInfocenter->id,
         ]);
 
         $userInfocenter->assignRole($roleInfocenter);
-        
+
         $userInfocenter->givePermissionTo($consultarIdeaPermission);
 
         factory(User::class, 20)->create();

@@ -7,21 +7,23 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class IdeaReceived extends Mailable
+class IdeaReceived extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $subject = 'Idea Recibida';
     public $idea;
+    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($idea)
+    public function __construct($idea, $user)
     {
         $this->idea = $idea;
+        $this->user = $user;
     }
 
     /**
@@ -31,6 +33,7 @@ class IdeaReceived extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.idea-received');
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
+                    ->markdown('emails.idea-received');
     }
 }

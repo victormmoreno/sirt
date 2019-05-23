@@ -4,6 +4,7 @@
 use App\Models\Ciudad;
 use App\Models\Estrato;
 use App\Models\Genero;
+use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Rol;
 use App\Models\TipoDocumento;
@@ -44,5 +45,6 @@ $factory->define(User::class, function (Faker $faker) {
         'rol_id'                => Rol::where('nombre', '=', 'Administrador')->first()->id,
         'ocupacion_id'          => Ocupacion::where('nombre', '=', 'Empleado')->first()->id,
         'estrato_id'            => Estrato::where('estrato', '=', 1)->first()->id,
+        'nodo_id'               => Nodo::all()->random()->id,
     ];
 });

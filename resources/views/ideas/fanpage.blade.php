@@ -56,24 +56,20 @@
                                             <i class="material-icons prefix">
                                                 account_circle
                                             </i>
-                                            <input class="validate" id="txtnombres" name="txtnombres" type="text">
+                                            <input class="validate" id="txtnombres" name="txtnombres" type="text" value="{{ old('txtnombres') }}">
                                             <label for="txtnombres">Nombres *</label>
                                             @error('txtnombres')
-                                                <span class="helper-text">
-                                                     <strong>{{ $message }}</strong>
-                                                </span>
+                                                <label id="txtnombres-error" class="error" for="txtnombres">{{ $message }}</label>
                                             @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <i class="material-icons prefix">
                                                 account_circle
                                             </i>
-                                            <input class="validate" id="txtapellidos" name="txtapellidos" type="text">
+                                            <input class="validate" id="txtapellidos" name="txtapellidos" type="text" value="{{ old('txtapellidos') }}">
                                             <label for="txtapellidos">Apellidos *</label>
                                             @error('txtapellidos')
-                                                <span class="helper-text">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                 <label id="txtapellidos-error" class="error" for="txtapellidos">{{ $message }}</label>
                                             @enderror
                                         </div>
                                     </div>
@@ -82,24 +78,20 @@
                                             <i class="material-icons prefix">
                                                 email
                                             </i>
-                                            <input class="validate" id="txtcorreo" name="txtcorreo" type="email">
+                                            <input class="validate" id="txtcorreo" name="txtcorreo" type="email" value="{{ old('txtcorreo') }}">
                                             <label for="txtcorreo">Correo Electronico *</label>
                                             @error('txtcorreo')
-                                                <span class="helper-text">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                <label id="txtcorreo-error" class="error" for="txtcorreo">{{ $message }}</label>
                                             @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <i class="material-icons prefix">
                                                 phone
                                             </i>
-                                            <input class="validate" id="txttelefono" name="txttelefono" type="tel">
+                                            <input class="validate" id="txttelefono" name="txttelefono" type="tel" value="{{ old('txttelefono') }}">
                                             <label for="txttelefono">Telefono</label>
                                             @error('txttelefono')
-                                                <span class="helper-text">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
                                             @enderror
                                         </div>
                                     </div>
@@ -108,12 +100,10 @@
                                             <i class="material-icons prefix">
                                                 library_books
                                             </i>
-                                            <input class="validate" id="txtnombreproyecto" name="txtnombreproyecto" type="text">
+                                            <input class="validate" id="txtnombreproyecto" name="txtnombreproyecto" type="text" value="{{ old('txtnombreproyecto') }}">
                                             <label for="txtnombreproyecto">Nombre de Proyecto *</label>
                                             @error('txtnombreproyecto')
-                                                <span class="helper-text">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                <label id="txtnombreproyecto-error" class="error" for="txtnombreproyecto">{{ $message }}</label>
                                             @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
@@ -123,20 +113,18 @@
                                             <label class="active" for="txtnodo">
                                                 Nodo *
                                             </label>
-                                            <select class=" " id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
+                                            <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
                                                 <option value="">
                                                     Seleccione Nodo *
                                                 </option>
                                                 @foreach($nodos as $nodo)
-                                                <option value="{{$nodo->id}}">
+                                                <option value="{{$nodo->id}}"  {{ old('txtnodo') == $nodo->id ? 'selected':'' }}>
                                                     {{$nodo->nodos}}
                                                 </option>
                                                 @endforeach
                                             </select>
                                             @error('txtnodo')
-                                                <span class="helper-text">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                <label id="txtnodo-error" class="error" for="txtnodo">{{ $message }}</label>
                                             @enderror
                                             <div class="row">
                                                 <div class="input-field col s2 m6 l6 offset-l8 m8 s2">
@@ -161,18 +149,14 @@
                                                 </label>
                                                 <label>
                                                     No
-                                                    <input id="txtaprendizsena" name="txtaprendizsena" type="checkbox" value="1">
+                                                    <input id="txtaprendizsena" name="txtaprendizsena" type="checkbox" {{ old('txtaprendizsena') == 'on' ? 'checked':'' }} >
                                                         <span class="lever">
                                                         </span>
                                                         Si
                                                     </input>
                                                 </label>
                                             </div>
-                                            @error('txtaprendizsena')
-                                                <span class="helper-text">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
+                                           
                                         </div>
                                     </div>
                                     <br>
@@ -197,7 +181,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input checked="" class="pregunta1" id="radio1" name="pregunta1" type="radio" value="1"/>
+                                                    <input checked="" class="pregunta1" id="radio1" name="pregunta1" type="radio" value="1" {{ old('pregunta1') == 1 ? 'checked':'' }}/>
                                                     <label align="justify" for="radio1">
                                                         1. Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo.
                                                     </label>
@@ -205,7 +189,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio2" name="pregunta1" type="radio" value="2"/>
+                                                    <input class="pregunta1" id="radio2" name="pregunta1" type="radio" value="2" {{ old('pregunta1') == 2 ? 'checked':'' }}/>
                                                     <label align="justify" for="radio2">
                                                         2. Tengo la idea del producto que quiero desarrollar pero no sé cómo hacerlo.
                                                     </label>
@@ -215,7 +199,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio3" name="pregunta1" type="radio" value="3"/>
+                                                    <input class="pregunta1" id="radio3" name="pregunta1" type="radio" value="3"/ {{ old('pregunta1') == 3 ? 'checked':'' }}>
                                                     <label align="justify" for="radio3">
                                                         3. Tengo la idea del producto que quiero desarrollar, tengo los conocimientos para hacerlo, pero no se qué pasos seguir para formular el proyecto.
                                                     </label>
@@ -223,17 +207,18 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio4" name="pregunta1" type="radio" value="4"/>
+                                                    <input class="pregunta1" id="radio4" name="pregunta1" type="radio" value="4"/ {{ old('pregunta1') == 4 ? 'checked':'' }}>
                                                     <label align="justify" for="radio4">
                                                         4. Tengo formulado el proyecto para desarrollar mi producto: tengo claros los objetivos, el alcance, los recursos y las actividades que debo realizar para conseguirlo, entre otros.
                                                     </label>
                                                 </p>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio5" name="pregunta1" type="radio" value="5">
+                                                    <input class="pregunta1" id="radio5" name="pregunta1" type="radio" value="5" {{ old('pregunta1') == 5 ? 'checked':'' }}>
                                                         <label align="justify" for="radio5">
                                                             5. Mi proyecto está formulado y ya comencé la ejecución, pero necesito gestionar algunos recursos para poder avanzar.
                                                         </label>
@@ -242,7 +227,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio6" name="pregunta1" type="radio" value="6"/>
+                                                    <input class="pregunta1" id="radio6" name="pregunta1" type="radio" value="6"/ {{ old('pregunta1') == 6 ? 'checked':'' }}>
                                                     <label align="justify" for="radio6">
                                                         6. Ya tengo un prototipo avanzado de mi producto y requiero gestionar algunos recursos para concluir mi proyecto.
                                                     </label>
@@ -252,7 +237,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio7" name="pregunta1" type="radio" value="7"/>
+                                                    <input class="pregunta1" id="radio7" name="pregunta1" type="radio" value="7"/ {{ old('pregunta1') == 7 ? 'checked':'' }}>
                                                     <label align="justify" for="radio7">
                                                         7. Ya tengo un prototipo final, he realizado pruebas y ajustes, tengo planteada la idea de negocio y requiero gestionar algunos recursos para implementarla.
                                                     </label>
@@ -260,7 +245,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio8" name="pregunta1" type="radio" value="8"/>
+                                                    <input class="pregunta1" id="radio8" name="pregunta1" type="radio" value="8"/ {{ old('pregunta1') == 8 ? 'checked':'' }}>
                                                     <label align="justify" for="radio8">
                                                         8. No voy a desarrollar un producto, voy a comercializar un producto de otro fabricante.
                                                     </label>
@@ -270,7 +255,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta1" id="radio9" name="pregunta1" type="radio" value="9"/>
+                                                    <input class="pregunta1" id="radio9" name="pregunta1" type="radio" value="9"/ {{ old('pregunta1') == 9 ? 'checked':'' }}>
                                                     <label align="justify" for="radio9">
                                                         9. Quiero desarrollar una página web para promocionar mi negocio actual.
                                                     </label>
@@ -279,6 +264,7 @@
                                         </div>
                                         <div class="divider">
                                         </div>
+                                        <br>
                                         <div class="input-field col s12 m12 l12">
                                             <label>
                                                 ¿Cómo está conformado su equipo de trabajo? *
@@ -320,8 +306,10 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        <br>
                                         <div class="divider">
                                         </div>
+                                        <br>
                                         <div class="input-field col s12 m12 l12">
                                             <label>
                                                 Marque en cuál de las siguientes categorías clasificaría su propuesta*
@@ -381,6 +369,7 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        <br><br><br>
                                         <div class="divider">
                                         </div>
                                         <div class="row">
@@ -388,30 +377,26 @@
                                                 <i class="material-icons prefix">
                                                     create
                                                 </i>
-                                                <textarea class="materialize-textarea" id="txtdescripcion" length="1000" name="txtdescripcion">
+                                                <textarea class="materialize-textarea" id="txtdescripcion" length="1000" name="txtdescripcion">{{ old('txtdescripcion') }}
                                                 </textarea>
                                                 <label for="txtdescripcion">
                                                     Descripción del Proyecto *
                                                 </label>
                                                 @error('txtdescripcion')
-                                                    <span class="helper-text">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
+                                                    <label id="txtdescripcion-error" class="error" for="txtdescripcion">{{ $message }}</label>
                                                 @enderror
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <i class="material-icons prefix">
                                                     create
                                                 </i>
-                                                <textarea class="materialize-textarea" id="txtobjetivo" length="1000" name="txtobjetivo">
+                                                <textarea class="materialize-textarea" id="txtobjetivo" length="1000" name="txtobjetivo">{{ old('txtobjetivo') }}
                                                 </textarea>
                                                 <label for="txtobjetivo">
                                                     Objetivo general del Proyecto *
                                                 </label>
                                                 @error('txtobjetivo')
-                                                    <span class="helper-text">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
+                                                        <label id="txtobjetivo-error" class="error" for="txtobjetivo">{{ $message }}</label>
                                                 @enderror
                                             </div>
                                         </div>
@@ -421,14 +406,13 @@
                                                     create
                                                 </i>
                                                 <textarea class="materialize-textarea" id="txtalcance" length="1000" name="txtalcance">
+                                                    {{ old('txtalcance') }}
                                                 </textarea>
                                                 <label for="txtalcance">
                                                     Alcance del Proyecto *
                                                 </label>
                                                 @error('txtalcance')
-                                                    <span class="helper-text">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
+                                                    <label id="txtalcance-error" class="error" for="txtalcance">{{ $message }}</label>
                                                 @enderror
                                             </div>
                                             

@@ -4,10 +4,12 @@ namespace App;
 
 use App\Models\ActivationToken;
 use App\Models\DinamizadorInfocenter;
+use App\Models\Nodo;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -48,6 +50,7 @@ class User extends Authenticatable implements JWTSubject
         'rol_id',
         'ocupacion_id',
         'estrato_id',
+        'nodo_id',
     ];
 
     /**
@@ -104,6 +107,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(DinamizadorInfocenter::class, 'user_id', 'id');
     }
+
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
     /*=====  End of relaciones eloquent  ======*/
 
     
@@ -156,6 +164,18 @@ class User extends Authenticatable implements JWTSubject
 
         return $this;
 
+    }
+
+
+    public function scopeInfoUserNodo($query, $role, $nodo)
+    {
+
+        // return $query->select('nodos.id',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
+        return $query->select(['users.id','users.documento','users.nombres', 'users.apellidos','users.email','users.direccion as user_direccion','users.telefono', 'users.celular','users.fechanacimiento','users.descripcion_ocupacion','users.estado',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nombre_nodo"),'nodos.direccion as nodo_direccion'])
+            ->join('nodos', 'nodos.id', '=', 'users.nodo_id')
+            ->role($role)
+            ->where('nodos.id', '=',$nodo);
+            
     }
 
 }

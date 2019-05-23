@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Nodo;
-use App\Models\Idea;
-use App\Models\EstadoIdea;
 use App\Http\Requests\IdeaFormRequest;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\IdeaReceived;
-
+use App\Models\EstadoIdea;
+use App\Models\Idea;
+use App\Models\Nodo;
+use App\Notifications\IdeaReceivedNotification;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class IdeaController extends Controller
 {
@@ -84,9 +85,9 @@ class IdeaController extends Controller
      */
     
     //IdeaFormRequest
-    public function store(Request $request)
+    public function store(IdeaFormRequest $request)
     {
-
+        
         $idea = Idea::create([
             "fecha" => Carbon::now(),
             "nombrec"  => $request->input('txtnombres'),
@@ -94,7 +95,7 @@ class IdeaController extends Controller
             "correo" => $request->input('txtcorreo'),
             "telefono" => $request->input('txttelefono'),
             "nombreproyecto" => $request->input('txtnombreproyecto'),
-            "aprendizsena" => $request->input('txtaprendizsena'),
+            "aprendizsena" => $request->input('txtaprendizsena') == 'on' ?  $request['txtaprendizsena'] = 1 : $request['txtaprendizsena'] = 0,
             "pregunta1" => $request->input('pregunta1'),
             "pregunta2" => $request->input('pregunta2'),
             "pregunta3" => $request->input('pregunta3'),
@@ -106,7 +107,19 @@ class IdeaController extends Controller
             "estadoidea_id" => EstadoIdea::FilterEstadoIdea('nombre','Inicio Emprendedor')->first()->id,
         ]);
 
-        Mail::to('jlondono433@misena.edu.co')->send(new IdeaReceived($idea));
+        $user = User::infoUserNodo('Infocenter',$idea->nodo_id)->first();
+
+        // dd($user);
+        // exit;
+
+        $user->notify(new IdeaReceivedNotification($idea));
+
+        if (isset($user) && !empty($idea->correo)) {
+            Mail::to($user->email)->queue(new IdeaReceived($idea,$user));
+        }
+
+
+        
 
          // return redirect()->route('ideas.index');
          return "Idea Enviada";

@@ -12,8 +12,22 @@
  */
 
 Route::get('/', function () {
-	$user = App\User::with(['dinamizadorInfocenters'])->get();
-	dd($user);
+	// $user = App\User::roles->first()->nombre;
+	// $user = App\User::infoUserNodo('Infocenter','Medellin')
+	// ->first()->nodo_direccion;
+
+	
+
+	// $user = App\User::with(['nodo'=>function($query){
+ //        $query->select('nombre', 'direccion');
+ //    }])->get();
+ //    
+ //    
+	// $user = App\User::select(['id','documento','nombres', 'apellidos','email','direccion','telefono', 'celular','fechanacimiento','descripcion_ocupacion','estado'])
+	// 	->with(['dinamizadorInfocenters' => function($query) {
+	// 	    $query->select('profesion');
+	// 	}])->get();
+    // dd($user);
     // dd(config('mail.host'));
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
@@ -105,5 +119,7 @@ Route::resource('usuarios', 'UserController');
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
-
+Route::get('/notificaciones', 'NotificationsController@index')->name('notifications.index');
+Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
+Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
 

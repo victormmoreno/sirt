@@ -1,7 +1,7 @@
 @component('mail::message')
-# Nueva idea Recibida
+# Nueva idea Recibida - {{$user->nombre_nodo}}
 
-Sra Matha, haz recibido una nueva idea al nodo
+{{$user->nombre_completo}}, haz recibido una nueva idea al nodo
 
 {{$idea->nombrec }} - {{$idea->apellidoc }}
 
@@ -9,6 +9,6 @@ Sra Matha, haz recibido una nueva idea al nodo
 Button Text
 @endcomponent
 
-Thanks,<br>
+Gracias,<br>
 {{ config('app.name') }}
 @endcomponent

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -21,6 +22,10 @@ class Nodo extends Model
         'centroformacion_id',
     ];
 
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
+    
     public function centroFormacion()
     {
         return $this->belongsTo(CentroFormacion::class, 'centroformacion_id', 'id');
@@ -30,6 +35,16 @@ class Nodo extends Model
     {
         return $this->hasMany(Ideas::class, 'nodo_id', 'id');
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'nodo_id', 'id');
+    }
+    
+    /*=====  End of relaciones eloquent  ======*/
+    
+
+    
 
     /*==============================================================
     =            scope para consultar la lista de nodos            =

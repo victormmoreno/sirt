@@ -42,6 +42,7 @@ class CreateUsersTable extends Migration
             $table->integer('rol_id')->unsigned();
             $table->integer('ocupacion_id')->unsigned();
             $table->integer('estrato_id')->unsigned();
+            $table->integer('nodo_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('genero_id')->references('id')->on('generos');
@@ -50,6 +51,7 @@ class CreateUsersTable extends Migration
             $table->foreign('rol_id')->references('id')->on('rol');
             $table->foreign('ocupacion_id')->references('id')->on('ocupaciones');
             $table->foreign('estrato_id')->references('id')->on('estratos');
+            $table->foreign('nodo_id')->references('id')->on('nodos');
 
         });
     }

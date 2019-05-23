@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,5 +30,9 @@ class AppServiceProvider extends ServiceProvider
 
         //     return "App\\Policies\\{$modelName}Policy";
         // });
+        
+
+        // Schema::defaultStringLength(191);
+        
     }
 }
