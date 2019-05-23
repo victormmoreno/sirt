@@ -1,8 +1,8 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+<p align="center"><img src="https://ci4.googleusercontent.com/proxy/N1TwiELk9ROqhnFRUubnvlQrOh6eSS1ktRcBU9x1IJtovs54lp_vDAjizw13S3G9mdlnbXY7bqss1h4Yg6s8Pgev7IDzs3aDSILLAABKqIp1x92j4WcAFJrvJG_N2w=s0-d-e1-ft#http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C"></p>
 
-<p align="center">
+
 # Plataforma Red Tecnoparque Colombia
-</p>
+
 
 _Plataforma desarrollada para el SENA (Servicio Nacional de Aprendizaje)_
 
