@@ -13,13 +13,14 @@
                 </a>
             </div>
             <ul class="right col s9 m3 nav-right-menu">
-                <li>
+                {{-- <li>
                     <a class="chat-button show-on-large" data-activates="chat-sidebar" href="javascript:void(0)">
                         <i class="material-icons">
                             more_vert
                         </i>
                     </a>
-                </li>
+                </li> --}}
+                <notifications></notifications>
                 
                 <li class="hide-on-small-and-down show-on-large">
                     <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
@@ -30,18 +31,7 @@
                              @endguest
                     </a>
                 </li>
-                <li class="hide-on-small-and-down">
-                    <a class="dropdown-button dropdown-right show-on-large" data-activates="dropdown1" href="">
-                        <i class="material-icons">
-                            notifications_none
-                        </i>
-                        @if($count = auth()->user()->unreadNotifications->count())
-                        <span class="badge">
-                             {{$count}}
-                        </span>
-                        @endif
-                    </a>
-                </li>
+                
                 
                     <li class="hide-on-small-and-down show-on-large">
                         <clock>
@@ -110,43 +100,7 @@
                     </ul>
                 </li>
             </ul>
-            <ul class="dropdown-content notifications-dropdown" id="dropdown1">
-                <li class="notificatoins-dropdown-container">
-                    <ul>
-                        <li class="notification-drop-title">
-                            Today
-                        </li>
-                        <li>
-                            <a href="#!">
-                                <div class="notification">
-                                    <div class="notification-icon circle cyan">
-                                        <i class="material-icons">
-                                            done
-                                        </i>
-                                    </div>
-                                    <div class="notification-text">
-                                        <p>
-                                            <b>
-                                                Alan Grey
-                                            </b>
-                                            uploaded new theme
-                                        </p>
-                                        <span>
-                                            7 min ago
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-drop-title center">
-                           
-                                 <a href="{{route('notifications.index')}}">Ver más notificationes</a>
-                            
-                           
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            
         </div>
     </nav>
 </header>

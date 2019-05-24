@@ -110,6 +110,15 @@ Route::resource('ideas', 'IdeaController');
 
 /*=====  End of rutas para las funcionalidades de las ideas  ======*/
 
+/*===================================================================
+=            rutas para las funcionalidades de los nodos            =
+===================================================================*/
+
+
+Route::resource('nodo', 'NodoController');
+
+/*=====  End of rutas para las funcionalidades de los nodos  ======*/
+
 /*======================================================================
 =            rutas para las funcionalidades de los usuarios            =
 ======================================================================*/

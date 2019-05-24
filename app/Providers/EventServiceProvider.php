@@ -24,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\LogSuccessfulLogin',
         ],
+        'App\Events\Idea\IdeaHasReceived' => [
+            'App\Listeners\IdeaHasBeenReceived'
+        ]
     ];
 
     /**

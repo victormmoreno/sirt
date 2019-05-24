@@ -20,8 +20,6 @@ class User extends Authenticatable implements JWTSubject
 
     protected $appends = ['nombre_completo'];
 
-
-
     protected $dates = [
         'ultimo_login',
         'fechanacimiento'

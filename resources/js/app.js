@@ -22,14 +22,19 @@ Vue.use(VueFormWizard)
 Vue.use(Vuelidate);
 
 
-
+//reloj
 Vue.component('clock', require('./components/helpers/clock.vue').default);
+
+//registrar idea fanpage
 Vue.component('fanpage-idea', require('./components/ideas/FanPage.vue').default);
 Vue.component('home-idea', require('./components/ideas/administrador/index.vue').default);
 Vue.component('form-register', require('./components/users/administrador/form-register.vue').default);
 Vue.component('step1', require('./components/users/administrador/step1.vue').default);
 Vue.component('step2', require('./components/users/administrador/step2.vue').default);
+Vue.component('notifications', require('./components/notifications/Notifications.vue').default);
 
+//
+Vue.component('listado-nodos', require('./components/nodos/ListadoNodos.vue').default);
 
 // Vue.component('step1', {
 //   template: ``,
@@ -127,48 +132,3 @@ const app = new Vue({
 });
 
 
-
-// import Vue from 'vue';
-// import Vuex from 'vuex';
-// import VueRouter from 'vue-router';
-// import {routes} from './routes';
-// import StoreData from './store';
-// import MainApp from './components/MainApp.vue';
-
-
-// Vue.use(Vuex);
-// Vue.use(VueRouter);
-
-// const store = new Vuex.Store(StoreData);
-
-// const router = new VueRouter({
-// 	routes,
-// 	mode: 'history'
-// });
-
-// router.beforeEach((to, from, next) => {
-//         const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-//         const currentUser = store.state.currentUser;
-    
-//         if(requiresAuth && !currentUser) {
-//             next();
-//         }else if(requiresAuth && currentUser) {
-//             next('/home');
-//         }  
-//         else if(to.path == '/login' && currentUser) {
-//             next('/home');
-//         } else {
-//             next();
-//         }
-//     });
-
-
-
-// const app = new Vue({
-//     el: '#app',
-//     router,
-//     store,
-//     components: {
-//         MainApp
-//     }
-// });

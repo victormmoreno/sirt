@@ -15,6 +15,11 @@ class NotificationsController extends Controller
 
     public function index()
     {
+
+        if (request()->ajax()) {
+            return auth()->user()->unreadNotifications;
+            // dd(auth()->user()->unreadNotifications);
+        }
     	
     	return view('notifications.index', [
     		'unreadNotifications' => auth()->user()->unreadNotifications,
@@ -25,6 +30,10 @@ class NotificationsController extends Controller
     public function read($id)
     {
     	DatabaseNotification::find($id)->markAsRead();
+
+        if (request()->ajax()) {
+            return auth()->user()->unreadNotifications;
+        }
 
     	return back();
     }
