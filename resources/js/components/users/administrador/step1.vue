@@ -3,7 +3,7 @@
           <div class="form-group" v-bind:class="{ 'has-error': $v.firstName.$error }">
             <label >First name</label>
             <input class="form-control" v-model.trim="firstName" @input="$v.firstName.$touch()">
-             <span class="help-block" v-if="$v.firstName.$error && !$v.firstName.required">First name is required</span>
+              <label id="firstName-error" class="error" v-if="$v.firstName.$error && !$v.firstName.required">First name is required</label>
           </div>
           <div class="form-group" v-bind:class="{ 'has-error': $v.lastName.$error }">
             <label>Last name</label>

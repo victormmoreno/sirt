@@ -65,10 +65,13 @@
             };
         },
 		mounted() {
-			axios.get('notificaciones').then(res =>{
-				// console.log(res.data);
-				this.notifications = res.data;
-			})
+			Echo.channel('example')
+			    .listen('IdeaSend', (e) => {
+			        console.log(e.notificacion);
+			        this.notifications.push(e.notificacion);
+
+			    });
+			this.getNofitifications();
 		},
 		methods: {
 			markAsRead(notification){
@@ -82,6 +85,12 @@
 					this.markAsRead(notification);
 				})
 			},
+			getNofitifications(){
+				axios.get('notificaciones').then(res =>{
+					// console.log(res.data);
+					this.notifications = res.data;
+				});
+			}
 
 		},
 		computed: {

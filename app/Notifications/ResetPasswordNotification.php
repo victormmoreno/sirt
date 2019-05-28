@@ -64,7 +64,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject(config('app.name') . ' | Solicitud de reestrablecimiento de contraseña')
-            ->greeting('Hola ' . $notifiable->nombre_completo)
+            ->greeting('Hola, ' . $notifiable->nombre_completo)
             ->line(Lang::getFromJson('You are receiving this email because we received a password reset request for your account.'))
             ->action(Lang::getFromJson('Reset Password'), url(config('app.url') . route('password.reset', ['token' => $this->token], false)))
             ->line(Lang::getFromJson('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.users.expire')]))

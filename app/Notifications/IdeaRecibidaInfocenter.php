@@ -7,19 +7,21 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class IdeaReceivedNotification extends Notification
+class IdeaRecibidaInfocenter extends Notification implements ShouldQueue
 {
     use Queueable;
     public $idea;
+    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($idea)
+    public function __construct($idea, $user)
     {
         $this->idea = $idea;
+        $this->user = $user;
     }
 
     /**
@@ -30,7 +32,7 @@ class IdeaReceivedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database','mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -41,10 +43,12 @@ class IdeaReceivedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+       return (new MailMessage)
+                    ->subject('Nueva Idea | '. $this->user->nombrenodo)
+                    // ->greeting('Hola, <br>' . $this->idea->nombre_completo. '<br> Cordial Saludo.')
+                    // ->line('Ha recibido este mensaje porque el señor(a) '.$this->idea->nombre_completo.' ha adjuntado una nueva idea.')
+                    // ->line('Gracias por usar nuestra aplicación!');
+                    ->markdown('emails.idea.Idea-enviada-infocenter',['user'=>$this->user,'idea'=> $this->idea]);
     }
 
     /**
@@ -57,9 +61,7 @@ class IdeaReceivedNotification extends Notification
     {
         return [
             'link' => route('ideas.show', $this->idea->id),
-            'text' => 'Haz recibido una nueva idea  '. $this->idea->nombreproyecto . ', del emprendedor '. $this->idea->nombre_completo,
+            'text' => 'Haz recibido una nueva idea  '. $this->idea->nombreproyecto,
         ];
-        // 
-        // return $this->idea->toArray();
     }
 }

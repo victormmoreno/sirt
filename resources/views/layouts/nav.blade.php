@@ -12,17 +12,11 @@
                     <img class="chapter-title responsive-img" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
                 </a>
             </div>
-            <ul class="right col s9 m3 nav-right-menu">
-                {{-- <li>
-                    <a class="chat-button show-on-large" data-activates="chat-sidebar" href="javascript:void(0)">
-                        <i class="material-icons">
-                            more_vert
-                        </i>
-                    </a>
-                </li> --}}
+            <ul class="right col s6 m6 nav-right-menu">
+                
                 <notifications></notifications>
                 
-                <li class="hide-on-small-and-down show-on-large">
+                <li >
                     <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
                         @guest
                             @else
@@ -33,7 +27,7 @@
                 </li>
                 
                 
-                    <li class="hide-on-small-and-down show-on-large">
+                    <li class="hide-on-med-and-down show-on-large">
                         <clock>
                         </clock>
                     </li>

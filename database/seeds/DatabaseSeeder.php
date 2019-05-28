@@ -12,59 +12,74 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+         if (app()->environment() == 'production') {
+            $this->truncateTables([
 
-        $this->truncateTables([
+                'prototipos',
+                'servicios',
+                'departamentos',
+                'tiposdocumentos',
+                'tiposarticulaciones',
+                'ciudades',
+                'sectores',
+                'tiposmateriales',
+                'tiposvinculaciones',
+                'estadosideas',
+                'regionales',
+                'centrosformacion',
+                'generos',
+                'nodos',
+                'estratos',
+                'rol', //tabla vieja
+                'roles',
+                'ocupaciones',
+                'users',
+                'permissions',
+                'lineas',
+                'ideas',
+                'nivelesacademicos',
 
-            'prototipos',
-            'servicios',
-            'departamentos',
-            'tiposdocumentos',
-            'tiposarticulaciones',
-            'ciudades',
-            'sectores',
-            'tiposmateriales',
-            'tiposvinculaciones',
-            'estadosideas',
-            'regionales',
-            'centrosformacion',
-            'generos',
-            'nodos',
-            'estratos',
-            'rol', //tabla vieja
-            'roles',
-            'ocupaciones',
-            'users',
-            'permissions',
-            'lineas',
-            'ideas',
-            'nivelesacademicos',
+            ]);
+        }else if(app()->environment() == 'local'){
+            $this->truncateTables([
 
-        ]);
-        $this->call([
-            PrototiposTableSeeder::class,
-            ServiciosTableSeeder::class,
-            DepartamentosTableSeeder::class,
-            TiposArticulacionesTableSeeder::class,
-            TiposDocumentosTableSeeder::class,
-            CiudadesTableSeeder::class,
-            SectoresTableSeeder::class,
-            TiposMaterialesTableSeeder::class,
-            TiposVinculacionesTableSeeder::class,
-            EstadosIdeasTableSeeder::class,
-            RegionalesTableSeeder::class,
-            CentrosFormacionTableSeeder::class,
-            GenerosTableSeeder::class,
-            NodosTableSeeder::class,
-            EstratosTableSeeder::class,
-            RolsTableSeeder::class, //seeder de la tabla vieja
-            OcupacionesTableSeeder::class,
-            UsersTableSeeder::class,
-            LineasTableSeeder::class,
-            IdeasTableSeeder::class,
-            NivelesAcademicosTableSeeder::class,
+                'prototipos',
+                'servicios',
+                'departamentos',
+                'tiposdocumentos',
+                'tiposarticulaciones',
+                'ciudades',
+                'sectores',
+                'tiposmateriales',
+                'tiposvinculaciones',
+                'estadosideas',
+                'regionales',
+                'centrosformacion',
+                'generos',
+                'nodos',
+                'estratos',
+                'rol', //tabla vieja
+                'roles',
+                'ocupaciones',
+                'users',
+                'permissions',
+                'lineas',
+                'ideas',
+                'nivelesacademicos',
 
-        ]);
+            ]);
+        }else{
+            echo "NO PUESDES TRUNCAR TABLAS";
+        }
+
+
+        
+        
+        collect(config('seeders')[app()->environment()])
+            ->where('callable', true)
+            ->each(function ($seeder){
+                $this->call($seeder['name']);
+            });
     }
 
     protected function truncateTables(array $tables)

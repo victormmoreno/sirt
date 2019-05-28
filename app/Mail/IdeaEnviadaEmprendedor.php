@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class IdeaReceived extends Mailable implements ShouldQueue
+class IdeaEnviadaEmprendedor extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -34,6 +34,6 @@ class IdeaReceived extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->from(config('mail.from.address'), config('mail.from.name'))
-                    ->markdown('emails.idea-received');
+                ->markdown('emails.idea.Idea-enviada-emprendedor');
     }
 }

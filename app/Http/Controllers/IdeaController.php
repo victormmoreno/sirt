@@ -5,29 +5,29 @@ namespace App\Http\Controllers;
 
 use App\Events\Idea\IdeaHasReceived;
 use App\Http\Requests\IdeaFormRequest;
-use App\Mail\IdeaReceived;
+use App\Mail\IdeaEnviadaEmprendedor;
 use App\Models\EstadoIdea;
 use App\Models\Idea;
 use App\Models\Nodo;
-use App\Notifications\IdeaReceivedNotification;
+use App\Notifications\IdeaRecibidaInfocenter;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use App\Events\Idea\IdeaSend;
 
 
 class IdeaController extends Controller
 {
-
 
     public $ideaRepository;
 
     public function __construct(IdeaRepository $ideaRepository)
     {
         $this->ideaRepository = $ideaRepository;
-        $this->middleware('auth',['except' =>['index']]);
+        $this->middleware('auth',['except' =>['index','store']]);
     }
 
     /*========================================================================================================
@@ -44,6 +44,8 @@ class IdeaController extends Controller
     {
               
         $nodos = $this->ideaRepository->getSelectNodo();
+        // $nodos = Idea::getAllIdeas();
+        // dd($nodos);
         return view('ideas.fanpage', compact('nodos'));
     }
 
@@ -105,14 +107,19 @@ class IdeaController extends Controller
     //IdeaFormRequest
     public function store(IdeaFormRequest $request)
     {
+
         $idea = $this->ideaRepository->Store($request);
 
         $user = User::infoUserNodo('Infocenter',$idea->nodo_id)->first();
+        
+        $notificacions = $user->unreadNotifications;     
+        
 
         if (isset($user) && !empty($idea->correo)) {
-            $user->notify(new IdeaReceivedNotification($idea));
-            Mail::to($user->email)->queue(new IdeaReceived($idea,$user));
-            event(new IdeaHasReceived($idea));
+            $user->notify(new IdeaRecibidaInfocenter($idea, $user));
+            Mail::to($idea->correo)->queue(new IdeaEnviadaEmprendedor($idea,$user));
+            // event(new IdeaHasReceived($idea));
+            event(new IdeaSend($notificacions));
         }
 
          return "Idea Enviada";

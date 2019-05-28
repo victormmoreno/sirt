@@ -76,11 +76,13 @@ class User extends Authenticatable implements JWTSubject
 
     public function setNombresAttribute($nombres)
     {
+        $this->attributes['nombres'] = strtolower($nombres);
         $this->attributes['nombres'] = ucfirst($nombres);
     }
 
     public function setApellidosAttribute($apellidos)
     {
+        $this->attributes['apellidos'] = strtolower($apellidos);
         $this->attributes['apellidos'] = ucfirst($apellidos);
     }
 
@@ -89,7 +91,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getNombreCompletoAttribute()
     {
-        return ucfirst($this->nombres) . ' ' . ucfirst($this->apellidos);
+        return ucfirst(strtolower($this->nombres)) . ' ' . ucfirst(strtolower($this->apellidos));
     }
 
     /*===========================================
@@ -168,12 +170,10 @@ class User extends Authenticatable implements JWTSubject
     public function scopeInfoUserNodo($query, $role, $nodo)
     {
 
-        // return $query->select('nodos.id',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
-        return $query->select(['users.id','users.documento','users.nombres', 'users.apellidos','users.email','users.direccion as user_direccion','users.telefono', 'users.celular','users.fechanacimiento','users.descripcion_ocupacion','users.estado',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nombre_nodo"),'nodos.direccion as nodo_direccion'])
+        return $query->select(['users.id','users.documento','users.nombres', 'users.apellidos','users.email','users.direccion as user_direccion','users.telefono', 'users.celular','users.fechanacimiento','users.descripcion_ocupacion','users.estado',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nombrenodo"),'nodos.direccion as nodo_direccion'])
             ->join('nodos', 'nodos.id', '=', 'users.nodo_id')
             ->role($role)
-            ->where('nodos.id', '=',$nodo);
-            
+            ->where('nodos.id', '=',$nodo);      
     }
 
 }

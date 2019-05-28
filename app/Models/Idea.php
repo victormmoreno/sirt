@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Idea extends Model
 {
+    use Notifiable;
 
     /*=================================================================
     =            constantes para conocer los tipos de idea            =
@@ -80,6 +82,9 @@ class Idea extends Model
     
     /*=====  End of metodos para conocer los tipos de ideas  ======*/
 
-      
-    
+    public static function getAllIdeas()    
+    {
+        return self::all();
+    }
+
 }

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <form-wizard shape="square" color="#3498db">
+    <form-wizard shape="circle" color="#3498db">
       <tab-content title="Personal details" icon="ti-user" :before-change="()=>validateStep('step1')">
         <step1 ref="step1" @on-validate="mergePartialModels"></step1>
       </tab-content>
@@ -17,7 +17,7 @@
 </template>
 
 <style scoped>
-span.error{
+label.error{
   color:#e74c3c;
   font-size:20px;
   display:flex;
