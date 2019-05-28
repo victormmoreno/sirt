@@ -1,24 +1,30 @@
 <p align="center"><img src="https://ci4.googleusercontent.com/proxy/N1TwiELk9ROqhnFRUubnvlQrOh6eSS1ktRcBU9x1IJtovs54lp_vDAjizw13S3G9mdlnbXY7bqss1h4Yg6s8Pgev7IDzs3aDSILLAABKqIp1x92j4WcAFJrvJG_N2w=s0-d-e1-ft#http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C"></p>
 
 
-# Plataforma Red Tecnoparque Colombia
+# **PLATAFORMA RED TECNOPARQUE COLOMBIA**
 
 
-_Plataforma desarrollada para el SENA (Servicio Nacional de Aprendizaje)_
+_La **PLATAFORMA RED TECNOPARQUE COLOMBIA** es un sistema de información desarrollado para gestionar los procesos que actualmente lleva a cabo los diferentes nodos del país._
 
 ## Comenzando 🚀
 
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
+_Sigue las siguientes instrucciones que te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 
-Mira **Deployment** para conocer como desplegar el proyecto.
+
+Mira  **[Styde](https://styde.net/como-instalar-proyectos-existentes-de-laravel/)** para conocer más sobre como desplegar el proyecto.
 
 
 ### Pre-requisitos 📋
 
-_Que cosas necesitas para instalar el software y como instalarlas_
+_Los siguientes programas son necesarios para el funcionamiento del proyecto en tu máquina local_
 
+##### Servidor Local
+
+_Eliga el servidor local de su preferencia, el cual incluye un servidor apache y un servidor de base de datos_
 ```
-Da un ejemplo
+[wamp](http://www.wampserver.com/en/)
+[xampp](https://www.apachefriends.org/es/index.html)
+[laragon](https://laragon.org/) -recomendado para proyectos laravel
 ```
 
 ### Instalación 🔧
@@ -107,4 +113,3 @@ Este proyecto está bajo la Licencia (MIT) - mira el archivo [LICENSE.md](LICENS
 
 ---
 ⌨️ con ❤️ por [Julilin10](https://github.com/Villanuevand) ❤️ [Vicmo](https://github.com/Villanuevand)  😊 ⌨️
-
