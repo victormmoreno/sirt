@@ -133,3 +133,13 @@ Route::get('/notificaciones', 'NotificationsController@index')->name('notificati
 Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
 Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
 
+
+/*====================================================================
+=            rutas para las funcionalidades de las lineas            =
+====================================================================*/
+
+Route::resource('lineas', 'LineaController');
+
+/*=====  End of rutas para las funcionalidades de las lineas  ======*/
+
+

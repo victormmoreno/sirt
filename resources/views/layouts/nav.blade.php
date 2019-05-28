@@ -19,7 +19,7 @@
                 <li >
                     <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
                         @guest
-                            @else
+                         @else
                                 {{ auth()->user()->nombre_completo}} 
                                 
                              @endguest
@@ -105,8 +105,9 @@
                 <a class="account-settings-link" href="javascript:void(0);">
                     <p>
                         @guest
+                     
                        @else
-                        {{ auth()->user()->nombre_completo }} 
+                        {{ auth()->user()->nombres }} 
                        @endguest
                     </p>
                     <span>
@@ -186,6 +187,14 @@
               </ul>
             </div>
           </li>
+          <li class="no-padding {{setActiveRoute('lineas.index')}}">
+                <a href="{{route('lineas.index')}}">
+                    <i class="material-icons">
+                        linear_scale
+                    </i>
+                    Lineas
+                </a>
+            </li>
         </ul>
         <div class="footer">
             <p class="copyright">

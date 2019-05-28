@@ -6,18 +6,18 @@
 
         <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
         {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}}
+        <!-- Fonts -->
         <link rel="stylesheet" href="https://rawgit.com/lykmapipo/themify-icons/master/css/themify-icons.css">
-        <link href="{{ mix('css/libs.css') }}" rel="stylesheet">
-        
+        <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
 
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
+        
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token()}}">
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')">
 
-        <!-- Fonts -->
-        {{-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> --}}
-        <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="{{ mix('js/libs.js') }}" defer></script>
+
+        
         
 </head>
 <body>
@@ -31,6 +31,10 @@
         </div>
         <div class="left-sidebar-hover"></div>
        
-    
+        <script src="{{ asset('js/app.js') }}" ></script>
+        <script src="{{ asset('js/libs.js') }}" ></script>
+        <script src="{{ asset('js/app2.js') }}"></script>
+       
+
 </body>
 </html>

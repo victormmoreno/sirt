@@ -18,4 +18,5 @@ class Linea extends Model
         'nombre',
         'descripcion',
     ];
+
 }
