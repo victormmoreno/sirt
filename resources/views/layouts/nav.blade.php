@@ -20,7 +20,7 @@
                     <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
                         @guest
                          @else
-                                {{ auth()->user()->nombre_completo}} 
+                                {{ auth()->user()->nombre_completo}}
                                 
                              @endguest
                     </a>
@@ -44,7 +44,7 @@
                                     <b>
                                         Último login:
                                     </b>
-                                    {{ auth()->user()->ultimo_login->isoFormat('LLLL') }}
+                                    {{ optional(auth()->user()->ultimo_login)->isoFormat('LLLL') }}
                                     <br>
                                         <b>
                                             Edad:
@@ -107,7 +107,7 @@
                         @guest
                      
                        @else
-                        {{ auth()->user()->nombres }} 
+                        {{ auth()->user()->nombre_completo}}
                        @endguest
                     </p>
                     <span>
@@ -161,7 +161,7 @@
             <div class="collapsible-body">
               <ul>
                 <li>
-                  <a href="{{route('usuarios.index')}}">Administrador
+                  <a href="{{route('usuario.administrador.index')}}">Administrador
                   </a>
                 </li>
                 <li>

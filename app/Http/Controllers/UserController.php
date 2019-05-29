@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,7 +14,32 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.administrador.index');
+        
+        if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
+
+            $administradores = User::
+            Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+            ->role('Administrador')->get();
+            // role('Administrador')->get();
+            dd($administradores);
+
+            if (request()->ajax()) {
+                return datatables()->of($administradores)
+                    ->addColumn('action', function ($data) {
+                        $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<a href="" class="waves-effect red lighten-3 btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">delete_sweep</i></a>';
+
+                        return $button;
+                    })->rawColumns(['action'])
+                    ->make(true);
+            }
+
+            // dd($administradores);
+            return view('users.administrador.administrador.index');
+        } else {
+            abort(403);
+        } 
     }
 
     /**
@@ -23,7 +49,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.administrador.create');
+        return view('users.administrador.administrador.create');
     }
 
     /**

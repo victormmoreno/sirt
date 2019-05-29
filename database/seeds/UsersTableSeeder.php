@@ -25,7 +25,6 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-
         $roleAdministrador = Role::create(['name' => 'Administrador']);
         $roleDinamizador   = Role::create(['name' => 'Dinamizador']);
         $roleGestor        = Role::create(['name' => 'Gestor']);
@@ -39,7 +38,13 @@ class UsersTableSeeder extends Seeder
         $editarIdeaPermission    = Permission::create(['name' => 'editar idea']);
         $eliminarIdeaPermission  = Permission::create(['name' => 'eliminar idea']);
 
+        $registrarLineaPermission = Permission::create(['name' => 'registrar linea']);
+        $consultarLineaPermission = Permission::create(['name' => 'consultar linea']);
+        $editarLineaPermission    = Permission::create(['name' => 'editar linea']);
+        $eliminarLineaPermission  = Permission::create(['name' => 'eliminar linea']);
+
         $roleAdministrador->givePermissionTo($consultarIdeaPermission);
+        $roleAdministrador->givePermissionTo($consultarLineaPermission);
 
         $userAdmin = User::create([
             'documento'             => '1027890334',
@@ -88,6 +93,8 @@ class UsersTableSeeder extends Seeder
             'nodo_id'               => Nodo::all()->random()->id,
         ]);
 
+        $userDinamizador->assignRole($roleAdministrador);
+
         $userInfocenter = User::create([
             'documento'             => '1234567890',
             'nombres'               => 'Luisa ',
@@ -121,6 +128,7 @@ class UsersTableSeeder extends Seeder
         $userInfocenter->assignRole($roleInfocenter);
 
         $userInfocenter->givePermissionTo($consultarIdeaPermission);
+        $userInfocenter->givePermissionTo($consultarLineaPermission);
 
         factory(User::class, 20)->create();
 

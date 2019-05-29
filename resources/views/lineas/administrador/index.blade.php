@@ -41,10 +41,10 @@
                             <br>
                                 <table class="display responsive-table" id="linea_table">
                                     <thead>
+                                        <th>Abreviatura</th>
                                         <th>Linea</th>
-                                        <th>Detalle</th>
-                                        <th>dadasd</th>
-                                        <th>Editar</th>
+                                        <th>Descripcion</th>
+                                        <th>Opciones</th>
                                     </thead>
                     
                                 </table>

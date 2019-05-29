@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class LineaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,18 +19,27 @@ class LineaController extends Controller
      */
     public function index()
     {
-        if (request()->ajax()) {
-            return datatables()->of(Linea::all())
-                    ->addColumn('action', function($data){
-                        $button = '<a href="'.route("lineas.edit",$data->id).'" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+        // $this->authorize('view','Administrador');
+
+        if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
+            // $lineas = Linea::select('id','abreviatura', 'nombre', 'descripcion','created_at','updated_at')->get();
+            if (request()->ajax()) {
+                return datatables()->of(Linea::all())
+                    ->addColumn('action', function ($data) {
+                        $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                         $button .= '&nbsp;&nbsp;';
                         $button .= '<a href="" class="waves-effect red lighten-3 btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">delete_sweep</i></a>';
 
                         return $button;
                     })->rawColumns(['action'])
                     ->make(true);
+            }
+            return view('lineas.administrador.index');
+        }else{
+            abort(403);
         }
-        return view('lineas.administrador.index');
+
     }
 
     /**
@@ -35,7 +49,9 @@ class LineaController extends Controller
      */
     public function create()
     {
-        return view('lineas.administrador.create');
+        // $this->authorize('create', new Linea);
+        // return view('lineas.administrador.create');
+        abort(404);
     }
 
     /**
@@ -46,7 +62,7 @@ class LineaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $this->authorize('create', new Linea);
     }
 
     /**
@@ -68,6 +84,7 @@ class LineaController extends Controller
      */
     public function edit($id)
     {
+        // $this->authorize('view',$id);
         $linea = Linea::findOrFail($id);
         return view('lineas.administrador.edit', compact('linea'));
     }

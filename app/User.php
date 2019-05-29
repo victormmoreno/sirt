@@ -18,11 +18,12 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HasRoles;
 
+    // protected $appends = ['nombre_completo','apellidos','nombres'];
     protected $appends = ['nombre_completo'];
 
     protected $dates = [
         'ultimo_login',
-        'fechanacimiento'
+        'fechanacimiento',
     ];
 
     /**
@@ -74,11 +75,26 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['password'] = Hash::make($password);
     }
 
+    /*==============================================
+    =            mutador para el nombre            =
+    ==============================================*/
+
     public function setNombresAttribute($nombres)
     {
         $this->attributes['nombres'] = strtolower($nombres);
         $this->attributes['nombres'] = ucfirst($nombres);
     }
+
+    // public function getNombresAttribute()
+    // {
+    //     return ucfirst(strtolower($this->nombres));
+    // }
+
+    /*=====  End of mutador para el nombre  ======*/
+
+    /*================================================
+    =            mutador para el apellido            =
+    ================================================*/
 
     public function setApellidosAttribute($apellidos)
     {
@@ -86,8 +102,12 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['apellidos'] = ucfirst($apellidos);
     }
 
-    
-    
+    // public function getApellidosAttribute()
+    // {
+    //     return ucfirst(strtolower($this->apellidos));
+    // }
+
+    /*=====  End of mutador para el apellido  ======*/
 
     public function getNombreCompletoAttribute()
     {
@@ -97,13 +117,13 @@ class User extends Authenticatable implements JWTSubject
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-    
+
     public function estrato()
     {
         return $this->belongsTo(Estrato::class, 'estrato_id', 'id');
     }
 
-     public function dinamizadorInfocenters()
+    public function dinamizadorInfocenters()
     {
         return $this->hasMany(DinamizadorInfocenter::class, 'user_id', 'id');
     }
@@ -113,8 +133,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
     /*=====  End of relaciones eloquent  ======*/
-
-    
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -166,14 +184,24 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
-
     public function scopeInfoUserNodo($query, $role, $nodo)
     {
 
-        return $query->select(['users.id','users.documento','users.nombres', 'users.apellidos','users.email','users.direccion as user_direccion','users.telefono', 'users.celular','users.fechanacimiento','users.descripcion_ocupacion','users.estado',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nombrenodo"),'nodos.direccion as nodo_direccion'])
+        return $query->select(['users.id', 'users.documento', 'users.nombres', 'users.apellidos', 'users.email', 'users.direccion as user_direccion', 'users.telefono', 'users.celular', 'users.fechanacimiento', 'users.descripcion_ocupacion', 'users.estado', DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nombrenodo"), 'nodos.direccion as nodo_direccion'])
             ->join('nodos', 'nodos.id', '=', 'users.nodo_id')
             ->role($role)
-            ->where('nodos.id', '=',$nodo);      
+            ->where('nodos.id', '=', $nodo);
     }
+
+    /*=================================================================
+    =            ejemplo para preguntar por fechas futuras            =
+    =================================================================*/
+
+    public function isUpdated()
+    {
+        return !is_null($this->updated_at) && $this->updated_at < today();
+    }
+
+    /*=====  End of ejemplo para preguntar por fechas futuras  ======*/
 
 }
