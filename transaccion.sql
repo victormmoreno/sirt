@@ -1406,3 +1406,14 @@ INSERT INTO `empresas` (`id`, `nombre`, `nit`, `contacto`,`correo`,`observacione
 (19, 'Varias Empresas Pymes','00000','','','',1),
 (20, 'Alimentos Finca S.A','860004828','','','',1),
 
+
+INSERT INTO `GradoEscolaridad` (`id`,`nombre`) VALUES
+(1,'Bachiller Académico'),
+(2,'Técnico'),
+(3,'Tecnologo'),
+(4, 'Profesional'),
+(5, 'Especializacion'),
+(6, 'Maestria'),
+(7, 'Doctorado'),
+(8, 'Post Doctorado');
+

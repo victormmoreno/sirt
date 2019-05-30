@@ -33,6 +33,7 @@
                                                 dns
                                             </i>
                                         </a>
+                                        {{-- <a href="{{route('lineas.create')}}" class="waves-effect green btn"><i class="material-icons right">dns</i>Nueva Linea</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -41,10 +42,10 @@
                             <br>
                                 <table class="display responsive-table" id="linea_table">
                                     <thead>
-                                        <th>Abreviatura</th>
-                                        <th>Linea</th>
-                                        <th>Descripcion</th>
-                                        <th>Opciones</th>
+                                        <th width="15%">Abreviatura</th>
+                                        <th width="30%">Linea</th>
+                                        <th width="40%">Descripcion</th>
+                                        <th width="15%">Editar</th>
                                     </thead>
                     
                                 </table>

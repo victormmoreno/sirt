@@ -46,9 +46,8 @@ mix.js('resources/js/app.js', 'public/js');
 mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.min.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
-		// 'resources/assets/css/themify-icons.css',
-		// 'resources/assets/plugins/material-preloader/css/materialPreloader.css',
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
+		'resources/assets/plugins/sweetalert/sweetalert.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
 		
@@ -102,6 +101,7 @@ mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.min.js',
+		'resources/assets/plugins/sweetalert/sweetalert.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/js/alpha.js',
 	],'public/js/libs.js');
@@ -109,6 +109,8 @@ mix.scripts([
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
 	],'public/js/app2.js');
+
+mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
 
 mix.browserSync({
 
@@ -120,3 +122,5 @@ mix.browserSync({
             'routes/**/*'
         ]
  });
+
+

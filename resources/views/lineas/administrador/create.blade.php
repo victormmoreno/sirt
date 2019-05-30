@@ -6,7 +6,7 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <h5>
-                    <a class="footer-text left-align" href="">
+                    <a class="footer-text left-align" href="{{route('lineas.index')}}">
                         <i class="material-icons arrow-l">
                             arrow_back
                         </i>

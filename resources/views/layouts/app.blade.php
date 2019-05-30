@@ -8,7 +8,9 @@
         {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}}
         <!-- Fonts -->
         <link rel="stylesheet" href="https://rawgit.com/lykmapipo/themify-icons/master/css/themify-icons.css">
+
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
+        <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet">
 
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         
@@ -34,7 +36,8 @@
         <script src="{{ asset('js/app.js') }}" ></script>
         <script src="{{ asset('js/libs.js') }}" ></script>
         <script src="{{ asset('js/app2.js') }}"></script>
+        <script src="{{ asset('sweetalert2/sweetalert2.css') }}"></script>
        
-
+        @include('sweet::alert')
 </body>
 </html>

@@ -192,7 +192,23 @@
                     <i class="material-icons">
                         linear_scale
                     </i>
+                    Nodos
+                </a>
+            </li>
+          <li class="no-padding {{setActiveRoute('lineas.index')}}">
+                <a href="{{route('lineas.index')}}">
+                    <i class="material-icons">
+                        linear_scale
+                    </i>
                     Lineas
+                </a>
+            </li>
+          <li class="no-padding {{setActiveRoute('lineas.index')}}">
+                <a href="{{route('lineas.index')}}">
+                    <i class="material-icons">
+                        linear_scale
+                    </i>
+                    Sublineas
                 </a>
             </li>
         </ul>

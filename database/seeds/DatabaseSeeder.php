@@ -42,31 +42,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }else if(app()->environment() == 'local'){
             $this->truncateTables([
-
-                'prototipos',
+                'gradosescolaridad',
                 'servicios',
-                'departamentos',
-                'tiposdocumentos',
-                'tiposarticulaciones',
-                'ciudades',
-                'sectores',
-                'tiposmateriales',
-                'tiposvinculaciones',
-                'estadosideas',
-                'regionales',
-                'centrosformacion',
-                'generos',
-                'nodos',
-                'estratos',
-                'rol', //tabla vieja
-                'roles',
-                'ocupaciones',
-                'users',
-                'permissions',
-                'lineas',
-                'ideas',
-                'nivelesacademicos',
-
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

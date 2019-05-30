@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LineaFormRequest;
 use App\Models\Linea;
 use Illuminate\Http\Request;
+use Alert;
 
 class LineaController extends Controller
 {
@@ -28,15 +30,13 @@ class LineaController extends Controller
                 return datatables()->of(Linea::all())
                     ->addColumn('action', function ($data) {
                         $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                        $button .= '<a href="" class="waves-effect red lighten-3 btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">delete_sweep</i></a>';
 
                         return $button;
                     })->rawColumns(['action'])
                     ->make(true);
             }
             return view('lineas.administrador.index');
-        }else{
+        } else {
             abort(403);
         }
 
@@ -49,9 +49,9 @@ class LineaController extends Controller
      */
     public function create()
     {
-        // $this->authorize('create', new Linea);
-        // return view('lineas.administrador.create');
-        abort(404);
+        return view('lineas.administrador.create');
+
+        // abort(404);
     }
 
     /**
@@ -60,9 +60,24 @@ class LineaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LineaFormRequest $request)
     {
-        // $this->authorize('create', new Linea);
+
+
+        $linea = Linea::create([
+            "abreviatura" => $request->input('txtabreviatura'),
+            "nombre"      => $request->input('txtnombre'),
+            "descripcion" => $request->input('txtdescripcion'),
+        ]);
+
+        if ($linea != null) {
+            Alert::success("La Linea {$linea->nombre} ha sido creado satisfactoriamente.",'Registro Exitoso',"success");
+        }else{
+            Alert::error("La linea  no se ha creado.",'Registro Erróneo', "error");
+        }
+
+        return redirect('lineas');
+
     }
 
     /**
@@ -96,9 +111,26 @@ class LineaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(LineaFormRequest $request, $id)
     {
-        //
+        $linea = Linea::findOrFail($id);
+
+        if ($linea != null) {
+            $linea->abreviatura = $request->input('txtabreviatura');
+            $linea->nombre = $request->input('txtnombre');
+            $linea->descripcion = $request->input('txtdescripcion');
+            $linea->update();
+
+            Alert::success("La Linea {$linea->nombre} ha sido actualizado modificado.",'Modificación Exitosa',"success");
+            // alert('Hello World!',"success","success","success")->autoclose(3000);
+
+        }else{
+            Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");
+        }
+        
+
+
+        return redirect('lineas');
     }
 
     /**
