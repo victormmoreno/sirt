@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 'estadosideas',
                 'regionales',
                 'centrosformacion',
-                'generos',
+                // 'generos',
                 'nodos',
                 'estratos',
                 'rol', //tabla vieja
@@ -53,15 +53,19 @@ class DatabaseSeeder extends Seeder
                 'departamentos',
                 'lineastecnologicas',
                 'productos',
-                
+                'role_has_permissions',
+                'roles',
+                'permissions',
+                'users',
+
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";
         }
 
 
-        
-        
+
+
         collect(config('seeders')[app()->environment()])
             ->where('callable', true)
             ->each(function ($seeder){

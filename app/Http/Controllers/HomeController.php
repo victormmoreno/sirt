@@ -23,17 +23,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('Administrador')) {
+        // if (auth()->user()->hasRole('Infocenter')) {
 
             // dd($administradores);
             return view('home');
-        } else if(auth()->user()->hasRole('Dinamizador')){
-            echo "Infocenter";
-        }else{
-          abort(403);  
-        }
+        // } else if(auth()->user()->hasRole('Dinamizador')){
+        //     echo "Infocenter";
+        // }else{
+        //   abort(403);
+        // }
 
-       
+
 
     }
 }

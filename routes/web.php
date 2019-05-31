@@ -12,17 +12,18 @@
  */
 
 Route::get('/', function () {
-	// $user = App\User::roles->first()->nombre;
+	// $user = App\User::with(['rol'])->get();
+	// dd($user);
 	// $user = App\User::infoUserNodo('Infocenter','Medellin')
 	// ->first()->nodo_direccion;
 
-	
+
 
 	// $user = App\User::with(['nodo'=>function($query){
  //        $query->select('nombre', 'direccion');
  //    }])->get();
- //    
- //    
+ //
+ //
 	// $user = App\User::select(['id','documento','nombres', 'apellidos','email','direccion','telefono', 'celular','fechanacimiento','descripcion_ocupacion','estado'])
 	// 	->with(['dinamizadorInfocenters' => function($query) {
 	// 	    $query->select('profesion');
@@ -150,6 +151,22 @@ Route::group([
 	}
 );
 
+//-------------------Route group para el módulo de ideas
+Route::group([
+	'prefix' => 'idea',
+	'middleware' => 'auth'],
+	function(){
+
+		Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+		// Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
+		// Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
+		// Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
+		// Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
+		// Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
+		// Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
+	}
+);
+
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
@@ -165,5 +182,3 @@ Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('
 Route::resource('lineas', 'LineaController');
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
-
-

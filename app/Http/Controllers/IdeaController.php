@@ -39,26 +39,32 @@ class IdeaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function index()
     {
-              
+
         $nodos = $this->ideaRepository->getSelectNodo();
         // $nodos = Idea::getAllIdeas();
         // dd($nodos);
         return view('ideas.fanpage', compact('nodos'));
     }
 
-    
+    //---------------
+    public function ideas()
+    {
+      return 'Msj';
+    }
+
+
     /*=====  End of metodo para mostrar el registro de ideas en la pagina principal de la aplicacion  ======*/
 
     /*=============================================================================
     =            metodo para mostrar el listado de ideas al infocenter            =
     =============================================================================*/
-    
+
     public function getIdeas(Request $request)
     {
-       
+
         if ( $request->input('client') ) {
             return Idea::all()->get();
         }
@@ -79,14 +85,14 @@ class IdeaController extends Controller
         $ideas = $query->paginate($length);
 
 
-        
+
          return ['data' => $ideas, 'draw' => $request->input('draw')];
     }
-    
+
     /*=====  End of metodo para mostrar el listado de ideas al infocenter  ======*/
-    
-    
-    
+
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -103,7 +109,7 @@ class IdeaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
+
     //IdeaFormRequest
     public function store(IdeaFormRequest $request)
     {
@@ -111,9 +117,9 @@ class IdeaController extends Controller
         $idea = $this->ideaRepository->Store($request);
 
         $user = User::infoUserNodo('Infocenter',$idea->nodo_id)->first();
-        
-        $notificacions = $user->unreadNotifications;     
-        
+
+        $notificacions = $user->unreadNotifications;
+
 
         if (isset($user) && !empty($idea->correo)) {
             $user->notify(new IdeaRecibidaInfocenter($idea, $user));

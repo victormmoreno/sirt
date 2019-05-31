@@ -21,6 +21,7 @@ return [
         ['name' => DepartamentosTableSeeder::class, 'callable' => true],
         ['name' => LineasTecnologicasTableSeeder::class, 'callable' => true],
         ['name' => ProductoTableSeeder::class, 'callable' => true],
-    
+        ['name' => UsersTableSeeder::class, 'callable' => true],
+
     ],
 ];
