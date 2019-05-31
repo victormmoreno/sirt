@@ -18,6 +18,12 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HasRoles;
 
+    const IS_MASCULINO = 1;
+    const IS_FEMENINO = 0;
+    const IS_ACTIVE   = true;
+    const IS_INACTIVE = false;
+    // const ESTRATO = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6');
+
     // protected $appends = ['nombre_completo','apellidos','nombres'];
     protected $appends = ['nombre_completo'];
 
@@ -32,24 +38,21 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'documento',
+        'rol_id',
+        'gradosescolaridad_id',
+        'tipodocumento_id',
         'nombres',
         'apellidos',
+        'documento',
         'email',
         'direccion',
         'telefono',
         'celular',
         'fechanacimiento',
-        'descripcion_ocupacion',
-        'password',
+        'genero',
         'estado',
-        'genero_id',
-        'tipodocumento_id',
-        'ciudad_id',
-        'rol_id',
-        'ocupacion_id',
-        'estrato_id',
-        'nodo_id',
+        'password',
+        'estrato',
     ];
 
     /**
@@ -69,6 +72,24 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function IsMasculino()
+    {
+        return User::IS_MASCULINO;
+    }
+    public static function IsFemenino()
+    {
+        return User::IS_FEMENINO;
+    }
+
+    public static function IsActive()
+    {
+        return User::IS_ACTIVE;
+    }
+    public static function IsInactive()
+    {
+        return User::IS_INACTIVE;
+    }
 
     public function setPasswordAttribute($password)
     {

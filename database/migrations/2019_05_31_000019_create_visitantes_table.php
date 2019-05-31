@@ -23,16 +23,20 @@ class CreateVisitantesTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedInteger('persona_id');
+            $table->integer('tipodocumento_id')->unsigned();
+            $table->integer('documento');
+            $table->string('nombres', 45);
+            $table->string('apellidos', 45);
             $table->string('correo', 100)->nullable();
             $table->string('contacto', 45)->nullable();
             $table->tinyInteger('estado')->nullable();
             $table->timestamps();
-            $table->index(["persona_id"], 'fk_visitantes_personas1_idx');
+            $table->index(["tipodocumento_id"], 'fk_visitantes_tiposdocumentos1_idx');
 
+    
 
-            $table->foreign('persona_id', 'fk_visitantes_personas1_idx')
-                ->references('id')->on('personas')
+            $table->foreign('tipodocumento_id', 'fk_visitantes_tiposdocumentos1_idx')
+                ->references('id')->on('tiposdocumentos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });

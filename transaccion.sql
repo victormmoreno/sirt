@@ -27,11 +27,11 @@ INSERT INTO `Servicio` (`id`, `nombre`,`descripcion`) VALUES
 (16, 'Charla Contrato de Aprendizaje', ''),
 (17, 'Trabajo en Proyecto', '');
 
-INSERT INTO `TipoDocumento` (`id`,`abreviatura`, `nombre`, `estado`) VALUES
-(1,'CC'. 'Cédula de Ciudadanía', 1),
-(2,'TI', 'Tarjeta de Identidad', 1),
-(3,'CE' ,'Cédula de Extranjería', 1);
-(4, 'RC','Registro Civil', 1);
+INSERT INTO `TipoDocumento` (`id`, `nombre`) VALUES
+(1, 'Cédula de Ciudadanía'),
+(2, 'Tarjeta de Identidad'),
+(3,'Cédula de Extranjería');
+(4, 'Registro Civil');
 
 
 
@@ -1415,7 +1415,9 @@ INSERT INTO `GradoEscolaridad` (`id`,`nombre`) VALUES
 (5, 'Especializacion'),
 (6, 'Maestria'),
 (7, 'Doctorado'),
-(8, 'Post Doctorado');
+(8, 'Post Doctorado'),
+(9, 'No aplica');
+
 
 INSERT INTO `Perfil` (`id`,`nombre`) VALUES
 (1,'Egresado SENA'),
