@@ -18,9 +18,8 @@ Route::get('/', function () {
 
 	
 
-	// $user = App\User::with(['nodo'=>function($query){
- //        $query->select('nombre', 'direccion');
- //    }])->get();
+	// $user = App\User::with(['rol'])->get();
+	// dd($user);
  //    
  //    
 	// $user = App\User::select(['id','documento','nombres', 'apellidos','email','direccion','telefono', 'celular','fechanacimiento','descripcion_ocupacion','estado'])

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\GradoEscolaridad;
-use App\Models\Rol;
+use App\Models\Rols;
 use App\Models\TipoDocumento;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -40,8 +40,8 @@ class UsersTableSeeder extends Seeder
         $roleAdministrador->givePermissionTo($consultarLineaPermission);
 
         $userAdmin = User::create([
-            'rol_id'               => Rol::where('nombre', '=', 'Administrador')->first()->id,
-            'gradosescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnologo')->first()->id,
+            'rol_id'               => Rols::where('nombre', '=', 'Administrador')->first()->id,
+            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
             'tipodocumento_id'     => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'nombres'              => 'julian',
             'apellidos'            => 'londoño',
@@ -118,7 +118,7 @@ class UsersTableSeeder extends Seeder
         // $userInfocenter->givePermissionTo($consultarIdeaPermission);
         // $userInfocenter->givePermissionTo($consultarLineaPermission);
 
-        factory(User::class, 20)->create();
+        // factory(User::class, 20)->create();
 
     }
 }

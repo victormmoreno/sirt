@@ -45,15 +45,20 @@ class DatabaseSeeder extends Seeder
                 'gradosescolaridad',
                 'servicios',
                 'tiposdocumentos',
-                // 'sectores',
+                'sectores',
                 'tiposarticulaciones',
                 'perfiles',
-                'rols',
+                'rols',//tabla vieja
                 'estadosproyecto',
                 'departamentos',
                 'lineastecnologicas',
                 'productos',
-                
+                'role_has_permissions',
+                'roles',
+                'permissions',
+                'sublineas',
+                'ciudades',
+                'users',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

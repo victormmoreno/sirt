@@ -33,8 +33,8 @@ class LineaFormRequest extends FormRequest
     {
         
         return [
-            'txtabreviatura' => 'required|alpha|min:1|max:3|unique:lineas,abreviatura,' . $this->route->parameter('linea'),
-            'txtnombre'      => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:1|max:45|unique:lineas,nombre,' . $this->route->parameter('linea'),
+            'txtabreviatura' => 'required|alpha|min:1|max:3|unique:lineastecnologicas,abreviatura,' . $this->route->parameter('linea'),
+            'txtnombre'      => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:1|max:45|unique:lineastecnologicas,nombre,' . $this->route->parameter('linea'),
             'txtdescripcion' => 'max:2000',
         ];
     }

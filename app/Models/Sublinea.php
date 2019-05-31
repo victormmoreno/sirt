@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Genero extends Model
+class Sublinea extends Model
 {
-    protected $table = 'generos';
+    protected $table = 'sublineas';
 
     /**
      * The attributes that are mass assignable.
@@ -14,9 +14,7 @@ class Genero extends Model
      * @var array
      */
     protected $fillable = [
-        'abreviatura',
+        'lineatecnologica_id',
         'nombre',
     ];
-
-    public $timestamps = false;
 }

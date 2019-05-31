@@ -5,6 +5,7 @@ namespace App;
 use App\Models\ActivationToken;
 use App\Models\DinamizadorInfocenter;
 use App\Models\Nodo;
+use App\Models\Rols;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -139,19 +140,10 @@ class User extends Authenticatable implements JWTSubject
     =            relaciones eloquent            =
     ===========================================*/
 
-    public function estrato()
-    {
-        return $this->belongsTo(Estrato::class, 'estrato_id', 'id');
-    }
 
-    public function dinamizadorInfocenters()
+    public function rol()
     {
-        return $this->hasMany(DinamizadorInfocenter::class, 'user_id', 'id');
-    }
-
-    public function nodo()
-    {
-        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+        return $this->belongsTo(Rols::class, 'rol_id', 'id');
     }
     /*=====  End of relaciones eloquent  ======*/
 

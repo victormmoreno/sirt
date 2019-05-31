@@ -33,7 +33,6 @@ class CreateVisitantesTable extends Migration
             $table->timestamps();
             $table->index(["tipodocumento_id"], 'fk_visitantes_tiposdocumentos1_idx');
 
-    
 
             $table->foreign('tipodocumento_id', 'fk_visitantes_tiposdocumentos1_idx')
                 ->references('id')->on('tiposdocumentos')

@@ -24,7 +24,7 @@ class CreateSublineasTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('lineatecnologica_id');
-            $table->string('nombre', 45);
+            $table->string('nombre', 100);
             $table->timestamps();
 
             $table->index(["lineatecnologica_id"], 'fk_sublineas_lineastecnologicas1_idx');

@@ -15,25 +15,21 @@ class SectoresTableSeeder extends Seeder
         Sector::create([
             'id'          => 1,
             'nombre'      => 'Sector primario o agropecuario',
-            'descripcion' => '',
         ]);
 
         Sector::create([
             'id'          => 2,
             'nombre'      => 'Sector secundario o industrial',
-            'descripcion' => '',
         ]);
 
         Sector::create([
             'id'          => 3,
             'nombre'      => 'Sector terciario o de servicios',
-            'descripcion' => '',
         ]);
 
         Sector::create([
             'id'          => 4,
             'nombre'      => 'No aplica',
-            'descripcion' => '',
         ]);
 
         // factory(Sector::class, 10)->create();

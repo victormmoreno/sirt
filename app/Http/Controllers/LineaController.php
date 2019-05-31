@@ -63,7 +63,6 @@ class LineaController extends Controller
     public function store(LineaFormRequest $request)
     {
 
-
         $linea = LineaTecnologica::create([
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),

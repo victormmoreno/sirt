@@ -15,6 +15,5 @@ class Sector extends Model
      */
     protected $fillable = [
         'nombre',
-        'descripcion',
     ];
 }
