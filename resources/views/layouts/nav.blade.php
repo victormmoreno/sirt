@@ -155,29 +155,306 @@
           Inicio
         </a>
       </li>
-      <li class="no-padding {{setActiveRoute('lineas.index')}}">
-        <a href="{{route('idea.ideas')}}">
-          <i class="material-icons">
-            linear_scale
-          </i>
-          Ideas
+      <li class="no-padding">
+        <a class="collapsible-header waves-effect waves-grey ">
+          <i class="material-icons">lightbulb_outline</i>Ideas de Proyecto
+          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
+        </a>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="{{route('idea.ideas')}}">
+                <i class="material-icons">lightbulb</i>Ideas
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <i class="material-icons">library_books</i>Entrenamientos
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <i class="material-icons">gavel</i>CSIBT's
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="no-padding">
+        <a href="">
+          <i class="material-icons">record_voice_over</i>Charlas Informativas
         </a>
       </li>
-      <li class="no-padding {{setActiveRoute('lineas.index')}}">
-        <a href="{{route('lineas.index')}}">
-          <i class="material-icons">
-            linear_scale
-          </i>
-          Lineas
+      <li class="no-padding">
+        <a href="">
+          <i class="material-icons">description</i>Reportes
         </a>
       </li>
-      <li class="no-padding {{setActiveRoute('lineas.index')}}">
-        <a href="{{route('lineas.index')}}">
+    </ul>
+    @break
+
+    @case('Gestor')
+    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
+      <li class="no-padding {{setActiveRoute('home')}}">
+        <a href="{{route('home')}}">
           <i class="material-icons">
-            linear_scale
+            home
           </i>
-          Sublineas
+          Inicio
         </a>
+      </li>
+      <li class="teal lighten-2 no-padding">
+        <a href="" class="waves-effect waves-grey">
+          <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
+        </a>
+      </li>
+      <li class="teal lighten-2 no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">toll</i>Articulaciones
+        </a>
+      </li>
+      <li class="teal lighten-2 no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">record_voice_over</i>EDT's
+        </a>
+      </li>
+      <li class="no-padding">
+        <a href="" class="waves-effect waves-grey">
+          <i class="material-icons">supervisor_account</i>Talentos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">domain</i>Uso de Infraestructura
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">business</i>Empresas
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">group_work</i>Grupos de Investigación
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">attach_money</i>Costos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">lightbulb</i>Ideas
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">gavel</i>Comité
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">search</i>Seguimiento
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">description</i>Reportes
+        </a>
+      </li>
+    </ul>
+    @break
+
+    @case('Talento')
+    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
+      <li class="no-padding {{setActiveRoute('home')}}">
+        <a href="{{route('home')}}">
+          <i class="material-icons">
+            home
+          </i>
+          Inicio
+        </a>
+      </li>
+      <li class="no-padding">
+        <a href="">
+          <i class="material-icons">domain</i>Uso de Infraestructura
+        </a>
+      </li>
+    </ul>
+    @break
+
+    @case('Ingreso')
+    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
+      <li class="no-padding {{setActiveRoute('home')}}">
+        <a href="{{route('home')}}">
+          <i class="material-icons">
+            home
+          </i>
+          Inicio
+        </a>
+      </li>
+      <li class="no-padding">
+        <a href="" class="waves-effect waves-grey">
+          <i class="material-icons">transit_enterexit</i>Ingresos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a href="" class="waves-effect waves-grey">
+          <i class="material-icons">supervisor_account</i>Visitantes
+        </a>
+      </li>
+      <li class="no-padding">
+        <a href="" class="waves-effect waves-grey">
+          <i class="material-icons">description</i>Reportes
+        </a>
+      </li>
+    </ul>
+    @break
+
+    @case('Dinamizador')
+    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
+      <li class="no-padding {{setActiveRoute('home')}}">
+        <a href="{{route('home')}}">
+          <i class="material-icons">
+            home
+          </i>
+          Inicio
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="collapsible-header waves-effect waves-grey">
+          <i class="material-icons">supervised_user_circle</i> Usuarios
+          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
+        </a>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="">
+                Gestores
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Infocenter
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Talentos
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Ingreso
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="teal lighten-2 no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
+        </a>
+      </li>
+      <li class="teal lighten-2 no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">toll</i>Articulaciones
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">settings_input_svideo</i>Costos Administrativos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">filter_center_focus</i>Focos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">lightbulb</i>Ideas de Proyecto
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">group_work</i>Grupos de Investigación
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">business</i>Empresas
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">local_drink</i>Laboratorios
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">trending_down</i>Depreciación
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">build</i>Mantenimiento
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">local_library</i>Materiales de Formación
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">attachment</i>Link's de Drive
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">attach_money</i>Costos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">show_chart</i>Indicadores
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">search</i>Seguimiento
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="collapsible-header waves-effect waves-grey">
+          <i class="material-icons">description</i> Reportes<i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
+        </a>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="">
+                Infocenter
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Ingresos
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Gestor
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Dinamizador
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
     </ul>
     @break
@@ -192,59 +469,110 @@
           Inicio
         </a>
       </li>
-      <li class="no-padding ">
-        <a class="collapsible-header waves-effect waves-grey ">
+      <li class="no-padding">
+        <a class="collapsible-header waves-effect waves-grey">
           <i class="material-icons">supervised_user_circle</i>Usuarios
           <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
         </a>
         <div class="collapsible-body">
           <ul>
             <li>
-              <a href="{{route('usuario.administrador.index')}}">
+              <a href="">
                 Administrador
               </a>
             </li>
             <li>
-              <a href="">Dinamizador
+              <a href="">
+                Dinamizador
               </a>
             </li>
             <li>
-              <a href="">Gestores
+              <a href="">
+                Gestores
               </a>
             </li>
             <li>
-              <a href="">Infocenter
+              <a href="">
+                Infocenter
               </a>
             </li>
             <li>
-              <a href="">Talentos
+              <a href="">
+                Talentos
               </a>
             </li>
           </ul>
         </div>
       </li>
-      <li class="no-padding {{setActiveRoute('lineas.index')}}">
-        <a href="{{route('lineas.index')}}">
-          <i class="material-icons">
-            linear_scale
-          </i>
-          Nodos
+      <li class="no-padding">
+        <a class="collapsible-header waves-effect waves-grey">
+          <i class="material-icons">location_city</i>Nodos
+          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
+        </a>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="">Nodos</a>
+            </li>
+            <li>
+              <a href="">Mapa</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">linear_scale</i>Lineas
         </a>
       </li>
-      <li class="no-padding {{setActiveRoute('lineas.index')}}">
-        <a href="{{route('lineas.index')}}">
-          <i class="material-icons">
-            linear_scale
-          </i>
-          Lineas
+      <li class="no-padding">
+        <a href="">
+          <i class="material-icons">settings_input_svideo</i>Costos Administrativos
         </a>
       </li>
-      <li class="no-padding {{setActiveRoute('lineas.index')}}">
-        <a href="{{route('lineas.index')}}">
-          <i class="material-icons">
-            linear_scale
-          </i>
-          Sublineas
+      <li class="no-padding">
+        <a href="">
+          <i class="material-icons">library_books</i>Proyectos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">filter_center_focus</i>Focos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">local_drink</i>Laboratorios
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">group_work</i>Grupos de Investigación
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">business</i>Empresas
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">local_library</i>Materiales de Formación
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">attachment</i>Link's de Drive
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">attach_money</i>Costos
+        </a>
+      </li>
+      <li class="no-padding">
+        <a class="waves-effect waves-grey" href="">
+          <i class="material-icons">show_chart</i>Indicadores
         </a>
       </li>
     </ul>
