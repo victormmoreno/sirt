@@ -4,11 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TipoDocumento extends Model
+class Rols extends Model
 {
-
-    protected $table = 'tiposdocumentos';
-
+    protected $table = 'rols';
     /**
      * The attributes that are mass assignable.
      *
@@ -17,5 +15,6 @@ class TipoDocumento extends Model
     protected $fillable = [
         'nombre',
     ];
+
     
 }

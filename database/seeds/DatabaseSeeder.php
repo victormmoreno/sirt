@@ -44,6 +44,16 @@ class DatabaseSeeder extends Seeder
             $this->truncateTables([
                 'gradosescolaridad',
                 'servicios',
+                'tiposdocumentos',
+                // 'sectores',
+                'tiposarticulaciones',
+                'perfiles',
+                'rols',
+                'estadosproyecto',
+                'departamentos',
+                'lineastecnologicas',
+                'productos',
+                
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

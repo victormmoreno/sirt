@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LineaFormRequest;
-use App\Models\Linea;
-use Illuminate\Http\Request;
 use Alert;
+use App\Http\Requests\LineaFormRequest;
+use App\Models\LineaTecnologica;
+use Illuminate\Http\Request;
 
 class LineaController extends Controller
 {
@@ -27,7 +27,7 @@ class LineaController extends Controller
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
             // $lineas = Linea::select('id','abreviatura', 'nombre', 'descripcion','created_at','updated_at')->get();
             if (request()->ajax()) {
-                return datatables()->of(Linea::all())
+                return datatables()->of(LineaTecnologica::all())
                     ->addColumn('action', function ($data) {
                         $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
@@ -64,7 +64,7 @@ class LineaController extends Controller
     {
 
 
-        $linea = Linea::create([
+        $linea = LineaTecnologica::create([
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),
             "descripcion" => $request->input('txtdescripcion'),
@@ -100,7 +100,7 @@ class LineaController extends Controller
     public function edit($id)
     {
         // $this->authorize('view',$id);
-        $linea = Linea::findOrFail($id);
+        $linea = LineaTecnologica::findOrFail($id);
         return view('lineas.administrador.edit', compact('linea'));
     }
 
@@ -113,7 +113,7 @@ class LineaController extends Controller
      */
     public function update(LineaFormRequest $request, $id)
     {
-        $linea = Linea::findOrFail($id);
+        $linea = LineaTecnologica::findOrFail($id);
 
         if ($linea != null) {
             $linea->abreviatura = $request->input('txtabreviatura');

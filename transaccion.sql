@@ -1417,3 +1417,37 @@ INSERT INTO `GradoEscolaridad` (`id`,`nombre`) VALUES
 (7, 'Doctorado'),
 (8, 'Post Doctorado');
 
+INSERT INTO `Perfil` (`id`,`nombre`) VALUES
+(1,'Egresado SENA'),
+(2,'Aprendiz SENA'),
+(3,'Funcionario empresa púbilca'),
+(4, 'Estudiante Universitario de Pregrado'),
+(5, 'Estudiante Universitario de Postgrado'),
+(6, 'Funcionario microempresa'),
+(7, 'Funcionario mediana empresa'),
+(8, 'Funcionario grande empresa'),
+(9, 'Empleador independiente'),
+(10, 'Otro');
+
+INSERT INTO `EstadoProyecto` (`id`,`nombre`) VALUES
+(1,'Inicio'),
+(2,'Planeacion'),
+(3,'En ejecución'),
+(4,'Ejecutado'),
+(5,'Cierre PMV'),
+(6,'Cierre PF'),
+(7, 'Finalizado'),
+(8, 'Suspendido');
+
+
+INSERT INTO `Producto` (`id`,`nombre`) VALUES
+(1,'Articulo'),
+(2,'Cartilla'),
+(3,'Libro'),
+(4,'Capitulo de libro'),
+(5,'Prototipo'),
+(6,'Patente'),
+(7, 'Sin Producto'),
+(8, 'Software Registrado'),
+(9, 'Diseño Industrial'),
+(10, 'Otro');

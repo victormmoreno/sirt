@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Rol;
+use App\Models\Rols;
 use Illuminate\Database\Seeder;
 
 class RolsTableSeeder extends Seeder
@@ -12,45 +12,45 @@ class RolsTableSeeder extends Seeder
      */
     public function run()
     {
-        Rol::create([
+        Rols::create([
             'id'          => 1,
             'nombre'      => 'Administrador',
-            'descripcion' => '',
+            
         ]);
 
-        Rol::create([
+        Rols::create([
             'id'          => 2,
             'nombre'      => 'Dinamizador',
-            'descripcion' => '',
+            
         ]);
 
-        Rol::create([
+        Rols::create([
             'id'          => 3,
             'nombre'      => 'Gestor',
-            'descripcion' => '',
+            
         ]);
 
-        Rol::create([
+        Rols::create([
             'id'     => 4,
             'nombre' => 'Infocenter',
         ]);
 
-        Rol::create([
+        Rols::create([
             'id'          => 5,
             'nombre'      => 'Talento',
-            'descripcion' => '',
+            
         ]);
 
-        Rol::create([
+        Rols::create([
             'id'          => 6,
             'nombre'      => 'Ingreso',
-            'descripcion' => '',
+            
         ]);
 
-        Rol::create([
+        Rols::create([
             'id'          => 7,
             'nombre'      => 'Proveedor',
-            'descripcion' => '',
+            
         ]);
     }
 }
