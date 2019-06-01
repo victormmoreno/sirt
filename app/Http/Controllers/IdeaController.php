@@ -52,6 +52,13 @@ class IdeaController extends Controller
     
     /*=====  End of metodo para mostrar el registro de ideas en la pagina principal de la aplicacion  ======*/
 
+    //---------------
+    public function ideas()
+    {
+      return 'Msj';
+    }
+
+
     /*=============================================================================
     =            metodo para mostrar el listado de ideas al infocenter            =
     =============================================================================*/

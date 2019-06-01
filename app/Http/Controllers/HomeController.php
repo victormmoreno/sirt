@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-
 class HomeController extends Controller
 {
     /**
@@ -23,17 +21,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('Administrador')) {
-
-            // dd($administradores);
-            return view('home');
-        } else if(auth()->user()->hasRole('Dinamizador')){
-            echo "Infocenter";
-        }else{
-          abort(403);  
-        }
-
-       
-
+        return view('home');
     }
 }
