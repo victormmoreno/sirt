@@ -149,7 +149,7 @@
     <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
       <li class="no-padding {{setActiveRoute('home')}}">
         <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}">
-          <i class="large material-icons">
+          <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">
             home
           </i>
           Inicio
@@ -295,14 +295,24 @@
         </a>
       </li>
       <li class="no-padding">
-        <a href="" class="waves-effect waves-grey">
-          <i class="material-icons">transit_enterexit</i>Ingresos
+        <a class="collapsible-header waves-effect waves-grey ">
+          <i class="material-icons">directions_walk</i>Ingresos
+          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
         </a>
-      </li>
-      <li class="no-padding">
-        <a href="" class="waves-effect waves-grey">
-          <i class="material-icons">supervisor_account</i>Visitantes
-        </a>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="">
+                <i class="material-icons">transit_enterexit</i>Ingreso a Tecnoparque
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <i class="material-icons">accessibility</i>Visitantes
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li class="no-padding">
         <a href="" class="waves-effect waves-grey">
