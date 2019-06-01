@@ -150,8 +150,9 @@ Route::group([
 	'middleware' => 'auth'],
 	function(){
 
-		Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
-		Route::get('/', 'IdeaController@store')->name('idea.store');
+		// Route::get('/', 'IdeaController@ideas')->name('idea.infocenter');
+    Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+		Route::post('/', 'IdeaController@store')->name('idea.store');
 		// Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
 		// Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
 		// Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
