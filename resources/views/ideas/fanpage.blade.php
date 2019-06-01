@@ -7,7 +7,6 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <fanpage-idea></fanpage-idea>
                 <h5>
                     <a class="footer-text left-align" href="">
                         <i class="material-icons arrow-l">
@@ -19,7 +18,7 @@
                 <div class="card stats-card">
                     <div class="card-content">
                         <div class="row" method="post">
-                            <form class="col s12 m12 l12" method="post" action="{{ route('ideas.store') }}">
+                            <form class="col s12 m12 l12" method="post" action="{{ route('idea.store') }}">
                                 @csrf
                                 <div class="card red lighten-3">
                                     <div class="row">

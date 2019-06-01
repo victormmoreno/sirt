@@ -103,14 +103,7 @@ Route::get('activate/{token}', 'ActivationTokenController@activate')->name('acti
 /*=====  End of rutas para activacion de cuenta  ======*/
 
 
-/*===================================================================
-=            rutas para las funcionalidades de las ideas            =
-===================================================================*/
 
-
-Route::resource('ideas', 'IdeaController');
-
-/*=====  End of rutas para las funcionalidades de las ideas  ======*/
 
 /*===================================================================
 =            rutas para las funcionalidades de los nodos            =
@@ -133,7 +126,7 @@ Route::group([
 
 		Route::get('/administrador', 'UserController@index')->name('usuario.administrador.index');
 		Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
-		Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
+		Route::post('administrador', 'UserController@store')->name('usuario.administrador.store');
 		Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
 		Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
 		Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
@@ -158,6 +151,7 @@ Route::group([
 	function(){
 
 		Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+		Route::get('/', 'IdeaController@store')->name('idea.store');
 		// Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
 		// Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
 		// Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
@@ -166,6 +160,15 @@ Route::group([
 		// Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
 	}
 );
+
+/*===================================================================
+=            rutas para las funcionalidades de las ideas            =
+===================================================================*/
+
+
+Route::get('ideas', 'IdeaController@index')->name('ideas.index');
+
+/*=====  End of rutas para las funcionalidades de las ideas  ======*/
 
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
