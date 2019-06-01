@@ -25,7 +25,7 @@ class Nodo extends Model
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-    
+
     public function centroFormacion()
     {
         return $this->belongsTo(CentroFormacion::class, 'centroformacion_id', 'id');
@@ -40,29 +40,33 @@ class Nodo extends Model
     {
         return $this->hasMany(User::class, 'nodo_id', 'id');
     }
-    
-    /*=====  End of relaciones eloquent  ======*/
-    
 
-    
+    public function infocenter() {
+        return$this->belongsTo(Infocenter::class, 'users_id', 'id');
+    }
+
+    /*=====  End of relaciones eloquent  ======*/
+
+
+
 
     /*==============================================================
     =            scope para consultar la lista de nodos            =
     ==============================================================*/
-      
+
     public function scopeSelectNodo($query)
     {
 
         return $query->select('nodos.id',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
-    
-    }
-    
-    
-    /*=====  End of scope para consultar la lista de nodos  ======*/
-    
- 
 
-  
+    }
+
+
+    /*=====  End of scope para consultar la lista de nodos  ======*/
+
+
+
+
 
 
 }

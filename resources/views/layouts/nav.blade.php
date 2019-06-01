@@ -156,15 +156,15 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey ">
+        <a class="collapsible-header waves-effect waves-grey {{ setActiveRoutePadding('idea') }}">
           <i class="material-icons">lightbulb_outline</i>Ideas de Proyecto
           <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
         </a>
         <div class="collapsible-body">
           <ul>
             <li>
-              <a href="{{route('idea.ideas')}}">
-                <i class="material-icons">lightbulb</i>Ideas
+              <a href=" {{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}">
+                <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} ">lightbulb</i>Ideas
               </a>
             </li>
             <li>
