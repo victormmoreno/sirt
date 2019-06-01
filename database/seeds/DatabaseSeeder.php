@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
                 'estadosideas',
                 'regionales',
                 'centrosformacion',
-                // 'generos',
                 'nodos',
                 'estratos',
                 'rol', //tabla vieja
@@ -56,14 +55,9 @@ class DatabaseSeeder extends Seeder
                 'role_has_permissions',
                 'roles',
                 'permissions',
-<<<<<<< HEAD
                 'sublineas',
                 'ciudades',
                 'users',
-=======
-                'users',
-
->>>>>>> 6dd3e63e62a96183c85d29f48571d5e51212673e
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

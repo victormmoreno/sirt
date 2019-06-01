@@ -19,16 +19,10 @@ return [
         ['name' => EstadosProyectoTableSeeder::class, 'callable' => true],
         ['name' => DepartamentosTableSeeder::class, 'callable' => true],
         ['name' => LineasTecnologicasTableSeeder::class, 'callable' => true],
-<<<<<<< HEAD
         ['name' => ProductosTableSeeder::class, 'callable' => true],
         ['name' => SublineasTableSeeder::class, 'callable' => true],
         ['name' => CiudadesTableSeeder::class, 'callable' => true],
         ['name' => UsersTableSeeder::class, 'callable' => true],
     
-=======
-        ['name' => ProductoTableSeeder::class, 'callable' => true],
-        ['name' => UsersTableSeeder::class, 'callable' => true],
-
->>>>>>> 6dd3e63e62a96183c85d29f48571d5e51212673e
     ],
 ];

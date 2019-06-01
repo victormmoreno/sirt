@@ -21,9 +21,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-<<<<<<< HEAD
-        return view('home');
-=======
+
         // if (auth()->user()->hasRole('Infocenter')) {
 
             // dd($administradores);
@@ -34,8 +32,5 @@ class HomeController extends Controller
         //   abort(403);
         // }
 
-
-
->>>>>>> 6dd3e63e62a96183c85d29f48571d5e51212673e
     }
 }

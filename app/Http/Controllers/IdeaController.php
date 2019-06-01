@@ -49,11 +49,6 @@ class IdeaController extends Controller
         return view('ideas.fanpage', compact('nodos'));
     }
 
-    //---------------
-    public function ideas()
-    {
-      return 'Msj';
-    }
 
 
     /*=====  End of metodo para mostrar el registro de ideas en la pagina principal de la aplicacion  ======*/

@@ -21,8 +21,4 @@ class Rols extends Model
       return $this->hasMany(User::class, 'rol_id', 'id');
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6dd3e63e62a96183c85d29f48571d5e51212673e
 }
