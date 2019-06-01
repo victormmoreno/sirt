@@ -13,6 +13,5 @@ function setActiveRouteActivePage($name){
 }
 
 function setActiveRouteActiveIcon($name){
-    return request()->is($name) ? 'color="#008981"':'';
+    return request()->is($name) ? 'active-icon':'';
 }
-
