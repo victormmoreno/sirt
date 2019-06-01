@@ -148,8 +148,8 @@
     @case('Infocenter')
     <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
       <li class="no-padding {{setActiveRoute('home')}}">
-        <a href="{{route('home')}}">
-          <i class="material-icons">
+        <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}">
+          <i class="large material-icons">
             home
           </i>
           Inicio
@@ -583,16 +583,8 @@
     @endswitch
 
     <div class="footer">
-      <p class="copyright">
-        Steelcoders ©
-      </p>
-      <a href="#!">
-        Privacy
-      </a>
-      &
-      <a href="#!">
-        Terms
-      </a>
+      <p class="copyright">Tecnoparque <?php echo date("Y"); ?> © </p>
+      <a href="#!">Privacidad</a> &amp; <a href="#!">Terminos</a>
     </div>
   </div>
 </aside>
