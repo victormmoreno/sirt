@@ -168,7 +168,7 @@
               </a>
             </li>
             <li>
-              <a href="">
+              <a href="{{route('idea.ideas')}}">
                 <i class="material-icons">library_books</i>Entrenamientos
               </a>
             </li>

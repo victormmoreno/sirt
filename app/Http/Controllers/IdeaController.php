@@ -60,40 +60,6 @@ class IdeaController extends Controller
     }
 
 
-    /*=============================================================================
-    =            metodo para mostrar el listado de ideas al infocenter            =
-    =============================================================================*/
-
-    public function getIdeas(Request $request)
-    {
-
-        if ( $request->input('client') ) {
-            return Idea::all()->get();
-        }
-
-        $columns = ['fecha', 'nombrec', 'apellidoc','correo','telefono','nombreproyecto'];
-        $length = $request->input('length');
-        $column = $request->input('column'); //Index
-        $dir = $request->input('dir');
-        $searchValue = $request->input('search');
-
-        $query = Idea::select('id', 'fecha', 'nombrec','apellidoc','correo','telefono','nombreproyecto')->orderBy($columns[$column], $dir);
-        if ($searchValue) {
-            $query->where(function($query) use ($searchValue) {
-                $query->where('nombrec', 'like', '%' . $searchValue . '%')
-                ->orWhere('nombrec', 'like', '%' . $searchValue . '%');
-            });
-        }
-        $ideas = $query->paginate($length);
-
-
-
-         return ['data' => $ideas, 'draw' => $request->input('draw')];
-    }
-
-    /*=====  End of metodo para mostrar el listado de ideas al infocenter  ======*/
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -102,7 +68,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -115,6 +81,8 @@ class IdeaController extends Controller
     //IdeaFormRequest
     public function store(IdeaFormRequest $request)
     {
+
+        dd($request->all());
 
         $idea = $this->ideaRepository->Store($request);
 

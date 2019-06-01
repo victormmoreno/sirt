@@ -132,15 +132,6 @@ Route::group([
 		Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
 		Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
 
-
-		// Route::get('dinamizador', 'UserController@indexDinamizador')->name('usuario.dinamizador.index');
-		// Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
-		// Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
-		// Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
-		// Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
-		// Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
-		// Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
-		// Route::get('/', 'UserController@index')->name('administrador');
 	}
 );
 
@@ -151,7 +142,7 @@ Route::group([
 	function(){
 
 		Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
-		Route::get('/', 'IdeaController@store')->name('idea.store');
+		Route::post('/', 'IdeaController@store')->name('idea.store');
 		// Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
 		// Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
 		// Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');

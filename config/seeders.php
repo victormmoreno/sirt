@@ -22,6 +22,9 @@ return [
         ['name' => ProductosTableSeeder::class, 'callable' => true],
         ['name' => SublineasTableSeeder::class, 'callable' => true],
         ['name' => CiudadesTableSeeder::class, 'callable' => true],
+        ['name' => RegionalesTableSeeder::class, 'callable' => true],
+        ['name' => CentrosTableSeeder::class, 'callable' => true],
+        ['name' => NodosTableSeeder::class, 'callable' => true],
         ['name' => UsersTableSeeder::class, 'callable' => true],
     
     ],

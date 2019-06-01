@@ -26,6 +26,7 @@ class CreateNodosTable extends Migration
             $table->unsignedInteger('centro_id');
             $table->string('nombre',100);
             $table->string('direccion', 200)->nullable();
+            $table->year('anho_inicio');
             $table->timestamps();
             $table->index(["centro_id"], 'fk_nodos_centros1_idx');
 
@@ -33,9 +34,7 @@ class CreateNodosTable extends Migration
 
 
             $table->foreign('centro_id', 'fk_nodos_centros1_idx')
-                ->references('id')->on('centros')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->references('id')->on('centros');
         });
     }
 
