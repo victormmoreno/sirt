@@ -140,11 +140,20 @@ class User extends Authenticatable implements JWTSubject
     =            relaciones eloquent            =
     ===========================================*/
 
+<<<<<<< HEAD
 
     public function rol()
     {
         return $this->belongsTo(Rols::class, 'rol_id', 'id');
     }
+=======
+    public function rol()
+    {
+      return $this->belongsTo(Rols::class, 'rol_id', 'id');
+    }
+
+
+>>>>>>> 6dd3e63e62a96183c85d29f48571d5e51212673e
     /*=====  End of relaciones eloquent  ======*/
 
     /**
