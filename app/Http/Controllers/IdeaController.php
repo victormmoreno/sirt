@@ -53,10 +53,10 @@ class IdeaController extends Controller
 
     /*=====  End of metodo para mostrar el registro de ideas en la pagina principal de la aplicacion  ======*/
 
-    //---------------
+    //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
-      return 'Msj';
+      return view('ideas.infocenter.index');;
     }
 
 
