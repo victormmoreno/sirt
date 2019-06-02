@@ -57,6 +57,9 @@ class DatabaseSeeder extends Seeder
                 'permissions',
                 'sublineas',
                 'ciudades',
+                'regionales',
+                'centros',
+                'nodos',
                 'users',
             ]);
         }else{

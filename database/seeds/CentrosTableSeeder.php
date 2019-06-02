@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\CentroFormacion;
+use App\Models\Centro;
 use Illuminate\Database\Seeder;
 
-class CentrosFormacionTableSeeder extends Seeder
+class CentrosTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class CentrosFormacionTableSeeder extends Seeder
      */
     public function run()
     {
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 1,
             'nombre'        => 'CENTRO AGROEMPRESARIAL',
             'codigo_centro' => 9520,
@@ -24,7 +24,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:25',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 2,
             'nombre'        => 'COMPLEJO TECNOLÓGICO AGROINDUSTRIAL, PECUARIO Y TURÍSTICO ',
             'codigo_centro' => 9504,
@@ -36,7 +36,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:25',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 3,
             'nombre'        => 'CENTRO DE GESTIÓN Y DESARROLLO AGROINDUSTRIAL DE ARAUCA',
             'codigo_centro' => 9530,
@@ -48,7 +48,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:25',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 4,
             'nombre'        => 'CENTRO DE COMERCIO, INDUSTRIA Y TURISMO',
             'codigo_centro' => 9538,
@@ -60,7 +60,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:25',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 5,
             'nombre'        => 'CENTRO INDUSTRIAL Y DEL DESARROLLO TECNOLÓGICO',
             'codigo_centro' => 9540,
@@ -72,7 +72,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:25',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 6,
             'nombre'        => 'CENTRO PARA EL DESARROLLO AGROECOLÓGICO Y AGROINDUSTRIAL',
             'codigo_centro' => 9103,
@@ -84,7 +84,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:25',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 7,
             'nombre'        => 'CENTRO DE COMERCIO Y SERVICIOS',
             'codigo_centro' => 9302,
@@ -96,7 +96,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 8,
             'nombre'        => 'CENTRO NACIONAL COLOMBO ALEMAN',
             'codigo_centro' => 9207,
@@ -108,7 +108,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 9,
             'nombre'        => 'CENTRO INDUSTRIAL Y DE AVIACIÓN',
             'codigo_centro' => 9208,
@@ -120,7 +120,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 10,
             'nombre'        => 'CENTRO DE SERVICIOS FINANCIEROS',
             'codigo_centro' => 9405,
@@ -132,7 +132,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 11,
             'nombre'        => 'CENTRO DE TECNOLOGIAS PARA LA CONSTRUCCIÓN Y LA MADERA',
             'codigo_centro' => 9209,
@@ -144,7 +144,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 12,
             'nombre'        => 'CENTRO DE ELECTRICIDAD, ELECTRÓNICA Y TELECOMUNICACIONES',
             'codigo_centro' => 9210,
@@ -156,7 +156,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 13,
             'nombre'        => 'CENTRO DE MANUFACTURA EN TEXTILES Y CUERO',
             'codigo_centro' => 9212,
@@ -168,7 +168,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 14,
             'nombre'        => 'CENTRO METALMECÁNICO',
             'codigo_centro' => 9214,
@@ -180,7 +180,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 15,
             'nombre'        => 'CENTRO DE MATERIALES Y ENSAYOS',
             'codigo_centro' => 9215,
@@ -192,7 +192,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 16,
             'nombre'        => 'CENTRO DE GESTIÓN INDUSTRIAL',
             'codigo_centro' => 9211,
@@ -204,7 +204,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 17,
             'nombre'        => 'CENTRO DE DISEÑO Y METROLOGIA ',
             'codigo_centro' => 9216,
@@ -216,7 +216,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 18,
             'nombre'        => 'CENTRO PARA LA INDUSTRIA DE LA COMUNICACIÓN GRÁFICA',
             'codigo_centro' => 9217,
@@ -228,7 +228,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 19,
             'nombre'        => 'CENTRO NACIONAL DE HOTELERIA, TURISMO Y ALIMENTOS',
             'codigo_centro' => 9406,
@@ -240,7 +240,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 20,
             'nombre'        => 'CENTRO DE FORMACIÓN DE TALENTO HUMANO EN SALUD',
             'codigo_centro' => 9403,
@@ -252,7 +252,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 21,
             'nombre'        => 'CENTRO DE GESTIÓN ADMINISTRATIVA',
             'codigo_centro' => 9404,
@@ -264,7 +264,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 22,
             'nombre'        => 'CENTRO DE GESTIÓN Y FORTALECIMIENTO SOCIO EMPRESARIAL',
             'codigo_centro' => 9508,
@@ -276,7 +276,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 23,
             'nombre'        => 'CENTRO DE GESTIÓN DE MERCADOS, LOGÍSITICA Y TECNOLOGIAS DE LA INFORMACIÓN',
             'codigo_centro' => 9303,
@@ -288,7 +288,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 24,
             'nombre'        => 'CENTRO DE SERVICIOS EMPRESARIALES Y TURÍSTICOS',
             'codigo_centro' => 9309,
@@ -300,7 +300,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 25,
             'nombre'        => 'CENTRO NÁUTICO PESQUERO DE BUENAVENTURA',
             'codigo_centro' => 9126,
@@ -312,7 +312,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 26,
             'nombre'        => 'CENTRO AGROPECUARIO DE BUGA',
             'codigo_centro' => 9124,
@@ -324,7 +324,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 27,
             'nombre'        => 'CENTRO DE LOS RECURSOS NATURALES RENOVABLES - LA SALADA',
             'codigo_centro' => 9101,
@@ -336,7 +336,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 28,
             'nombre'        => 'CENTRO DE ELECTRICIDAD Y AUTOMATIZACIÓN INDUSTRIAL - CEAI',
             'codigo_centro' => 9227,
@@ -348,7 +348,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 29,
             'nombre'        => 'CENTRO DE DISEÑO TECNOLÓGICO INDUSTRIAL',
             'codigo_centro' => 9229,
@@ -360,7 +360,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 30,
             'nombre'        => 'CENTRO NACIONAL DE ASISTENCIA TÉCNICA A LA INDUSTRIA - ASTIN',
             'codigo_centro' => 9230,
@@ -372,7 +372,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 31,
             'nombre'        => 'CENTRO DE GESTIÓN TECNOLÓGICA DE SERVICIOS',
             'codigo_centro' => 9311,
@@ -384,7 +384,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 32,
             'nombre'        => 'CENTRO DE LA CONSTRUCCIÓN',
             'codigo_centro' => 9228,
@@ -396,7 +396,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 33,
             'nombre'        => 'CENTRO DE FORMACIÓN AGROINDUSTRIAL',
             'codigo_centro' => 9116,
@@ -408,7 +408,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 34,
             'nombre'        => 'CENTRO AGROEMPRESARIAL Y MINERO',
             'codigo_centro' => 9104,
@@ -420,7 +420,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 35,
             'nombre'        => 'CENTRO DE COMERCIO Y SERVICIOS',
             'codigo_centro' => 9304,
@@ -432,7 +432,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 36,
             'nombre'        => 'CENTRO  NAUTICO INTERNACIONAL, FLUVIAL Y PORTUARIO',
             'codigo_centro' => 9105,
@@ -444,7 +444,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:26',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 37,
             'nombre'        => 'CENTRO PARA LA INDUSTRIA PETROQUÍMICA',
             'codigo_centro' => 9218,
@@ -456,7 +456,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 38,
             'nombre'        => 'CENTRO DE TECNOLOGÍAS AGROINDUSTRIALES',
             'codigo_centro' => 9543,
@@ -468,7 +468,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 39,
             'nombre'        => 'COMPLEJO TECNOLÓGICO PARA LA GESTIÓN AGROEMPRESARIAL',
             'codigo_centro' => 9501,
@@ -480,7 +480,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 40,
             'nombre'        => 'CENTRO DE DESARROLLO AGROEMPRESARIAL',
             'codigo_centro' => 9513,
@@ -492,7 +492,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 41,
             'nombre'        => 'CENTRO ATENCIÓN SECTOR AGROPECUARIO',
             'codigo_centro' => 9119,
@@ -504,7 +504,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 42,
             'nombre'        => 'CENTRO DE LA INDUSTRIA, LA EMPRESA Y LOS SERVICIOS',
             'codigo_centro' => 9537,
@@ -516,7 +516,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 43,
             'nombre'        => 'CENTRO DE DISEÑO E INNOVACIÓN TECNOLÓGICA INDUSTRIAL',
             'codigo_centro' => 9223,
@@ -528,7 +528,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 44,
             'nombre'        => 'CENTRO DE DESARROLLO AGROPECUARIO Y AGROINDUSTRIAL',
             'codigo_centro' => 9110,
@@ -540,7 +540,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 45,
             'nombre'        => 'CENTRO AGROPECUARIO LA GRANJA',
             'codigo_centro' => 9123,
@@ -552,7 +552,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 46,
             'nombre'        => 'CENTRO TECNOLÓGICO DE LA AMAZONÍA',
             'codigo_centro' => 9516,
@@ -564,7 +564,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 47,
             'nombre'        => 'CENTRO INDUSTRIAL DEL DISEÑO Y LA MANUFACTURA',
             'codigo_centro' => 9225,
@@ -576,7 +576,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 48,
             'nombre'        => 'CENTRO AGROEMPRESARIAL Y ACUÍCOLA',
             'codigo_centro' => 9524,
@@ -588,7 +588,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 49,
             'nombre'        => 'CENTRO AGROECOLÓGICO Y EMPRESARIAL',
             'codigo_centro' => 9510,
@@ -600,7 +600,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 50,
             'nombre'        => 'CENTRO ACUÍCOLA Y AGROINDUSTRIAL DE GAIRA',
             'codigo_centro' => 9118,
@@ -612,7 +612,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 51,
             'nombre'        => 'CENTRO AGROEMPRESARIAL Y DESARROLLO PECUARIO DEL HUILA',
             'codigo_centro' => 9525,
@@ -624,7 +624,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 52,
             'nombre'        => 'CENTRO DE LA TECNOLOGÍA DEL DISEÑO Y LA PRODUCTIVIDAD EMPRESARIAL',
             'codigo_centro' => 9511,
@@ -636,7 +636,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:27',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 53,
             'nombre'        => 'CENTRO INDUSTRIAL DE MANTENIMIENTO INTEGRAL',
             'codigo_centro' => 9224,
@@ -648,7 +648,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 54,
             'nombre'        => 'CENTRO DE INDUSTRIA Y CONSTRUCCIÓN',
             'codigo_centro' => 9226,
@@ -660,7 +660,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 55,
             'nombre'        => 'CENTRO DE COMERCIO Y SERVICIOS',
             'codigo_centro' => 9310,
@@ -672,7 +672,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 56,
             'nombre'        => 'CENTRO SUR COLOMBIANO DE LOGÍSTICA INTERNACIONAL',
             'codigo_centro' => 9534,
@@ -684,7 +684,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 57,
             'nombre'        => 'CENTRO DEL DISEÑO Y MANUFACTURA DE CUERO',
             'codigo_centro' => 9201,
@@ -696,7 +696,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 58,
             'nombre'        => 'CENTRO DE FORMACIÓN EN DISEÑO, CONFECCION Y MODA',
             'codigo_centro' => 9202,
@@ -708,7 +708,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 59,
             'nombre'        => 'CENTRO TECNOLÓGICO DEL MOBILIARIO',
             'codigo_centro' => 9205,
@@ -720,7 +720,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 60,
             'nombre'        => 'CENTRO AGROPECUARIO Y DE BIOTECNOLOGÍA EL PORVENIR',
             'codigo_centro' => 9115,
@@ -732,7 +732,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 61,
             'nombre'        => 'CENTRO PECUARIO Y AGROEMPRESARIAL',
             'codigo_centro' => 9515,
@@ -744,7 +744,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 62,
             'nombre'        => 'CENTRO DE DESARROLLO AGROEMPRESARIAL Y TURÍSTICO DEL HUILA',
             'codigo_centro' => 9526,
@@ -756,7 +756,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 63,
             'nombre'        => 'CENTRO PARA LA BIODIVERSIDAD Y EL TURISMO DEL AMAZONAS',
             'codigo_centro' => 9517,
@@ -768,7 +768,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 64,
             'nombre'        => 'CENTRO AGROEMPRESARIAL Y TURÍSITICO DE LOS ANDES',
             'codigo_centro' => 9545,
@@ -780,7 +780,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 65,
             'nombre'        => 'CENTRO PARA LA FORMACIÓN CAFETERA',
             'codigo_centro' => 9112,
@@ -792,7 +792,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 66,
             'nombre'        => 'CENTRO DE AUTOMATIZACIÓN INDUSTRIAL',
             'codigo_centro' => 9219,
@@ -804,7 +804,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 67,
             'nombre'        => 'CENTRO DE PROCESOS INDUSTRIALES',
             'codigo_centro' => 9220,
@@ -816,7 +816,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 68,
             'nombre'        => 'CENTRO DE COMERCIO Y SERVICIOS',
             'codigo_centro' => 9306,
@@ -828,7 +828,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 69,
             'nombre'        => 'CENTRO DE COMERCIO',
             'codigo_centro' => 9301,
@@ -840,7 +840,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 70,
             'nombre'        => 'CENTRO DE SERVICIOS DE SALUD',
             'codigo_centro' => 9401,
@@ -852,7 +852,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 71,
             'nombre'        => 'CENTRO DE SERVICIOS Y GESTIÓN EMPRESARIAL ',
             'codigo_centro' => 9402,
@@ -864,7 +864,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 72,
             'nombre'        => 'CENTRO PARA EL DESARROLLO DEL HABITAT Y LA CONSTRUCCIÓN',
             'codigo_centro' => 9203,
@@ -876,7 +876,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 73,
             'nombre'        => 'CENTRO DE TECNOLOGÍA DE LA MANUFACTURA AVANZADA',
             'codigo_centro' => 9204,
@@ -888,7 +888,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 74,
             'nombre'        => 'TECNOLÓGICO DE GESTIÓN INDUSTRIAL',
             'codigo_centro' => 9206,
@@ -900,7 +900,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 75,
             'nombre'        => 'CENTRO AGROPECUARIO Y DE SERVICIOS AMBIENTALES JIRI-JIRIMO',
             'codigo_centro' => 9548,
@@ -912,7 +912,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 76,
             'nombre'        => 'CENTRO DE COMERCIO, INDUSTRIA Y TURISMO DE CÓRDOBA',
             'codigo_centro' => 9523,
@@ -924,7 +924,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 77,
             'nombre'        => 'CENTRO MINERO',
             'codigo_centro' => 9111,
@@ -936,7 +936,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 78,
             'nombre'        => 'CENTRO DE BIOTECNOLOGÍA AGROPECUARIA',
             'codigo_centro' => 9512,
@@ -948,7 +948,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:28',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 79,
             'nombre'        => 'CENTRO DE LA INDUSTRIA, LA EMPRESA Y LOS SERVICIOS',
             'codigo_centro' => 9527,
@@ -960,7 +960,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 80,
             'nombre'        => 'CENTRO DE BIOTECNOLOGÍA INDUSTRIAL',
             'codigo_centro' => 9544,
@@ -972,7 +972,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 81,
             'nombre'        => 'CENTRO INTERNACIONAL DE PRODUCCION LIMPIA - LOPE',
             'codigo_centro' => 9536,
@@ -984,7 +984,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 82,
             'nombre'        => 'CENTRO ATENCIÓN SECTOR AGROPECUARIO',
             'codigo_centro' => 9121,
@@ -996,7 +996,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 83,
             'nombre'        => 'CENTRO DE COMERCIO Y SERVICIOS',
             'codigo_centro' => 9308,
@@ -1008,7 +1008,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 84,
             'nombre'        => 'CENTRO ATENCIÓN SECTOR AGROPECUARIO',
             'codigo_centro' => 9122,
@@ -1020,7 +1020,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 85,
             'nombre'        => 'CENTRO DE GESTIÓN Y DESARROLLO SOSTENIBLE SURCOLOMBIANO',
             'codigo_centro' => 9528,
@@ -1032,7 +1032,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 86,
             'nombre'        => 'CENTRO AGROPECUARIO',
             'codigo_centro' => 9113,
@@ -1044,7 +1044,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 87,
             'nombre'        => 'CENTRO DE TELEINFORMÁTICA Y PRODUCCIÓN INDUSTRIAL',
             'codigo_centro' => 9221,
@@ -1056,7 +1056,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 88,
             'nombre'        => 'CENTRO DE COMERCIO Y SERVICIOS',
             'codigo_centro' => 9307,
@@ -1068,7 +1068,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 89,
             'nombre'        => 'CENTRO AGROFORESTAL Y ACUÍCOLA ARAPAIMA',
             'codigo_centro' => 9518,
@@ -1080,7 +1080,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 90,
             'nombre'        => 'COMPLEJO TECNOLÓGICO MINERO AGROEMPRESARIAL',
             'codigo_centro' => 9502,
@@ -1092,7 +1092,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 91,
             'nombre'        => 'CENTRO DE PRODUCCIÓN Y TRANSFORMACIÓN AGROINDUSTRIAL DE LA ORINOQUÍA',
             'codigo_centro' => 9531,
@@ -1104,7 +1104,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 92,
             'nombre'        => 'CENTRO AMBIENTAL Y ECOTURÍSTICO DEL NORORIENTE AMAZÓNICO',
             'codigo_centro' => 9547,
@@ -1116,7 +1116,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 93,
             'nombre'        => 'CENTRO AGROINDUSTRIAL DEL META',
             'codigo_centro' => 9117,
@@ -1128,7 +1128,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 94,
             'nombre'        => 'CENTRO DE RECURSOS NATURALES, INDUSTRIA Y BIODIVERSIDAD',
             'codigo_centro' => 9522,
@@ -1140,7 +1140,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 95,
             'nombre'        => 'CENTRO INDUSTRIAL Y DE ENERGÍAS ALTERNATIVAS',
             'codigo_centro' => 9222,
@@ -1152,7 +1152,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 96,
             'nombre'        => 'CENTRO DE LA INNOVACIÓN, LA AGROINDUSTRIA Y EL TURISMO',
             'codigo_centro' => 9503,
@@ -1164,7 +1164,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 97,
             'nombre'        => 'CENTRO DE FORMACION TURISTICA, GENTE DE MAR Y DE SERVICIOS ',
             'codigo_centro' => 9539,
@@ -1176,7 +1176,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 98,
             'nombre'        => 'CENTRO AGROTURÍSTICO',
             'codigo_centro' => 9541,
@@ -1188,7 +1188,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 99,
             'nombre'        => 'CENTRO DE DESARROLLO AGROINDUSTRIAL, TURÍSTICO Y TECNOLÓGICO DEL GUAVIARE',
             'codigo_centro' => 9533,
@@ -1200,7 +1200,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 100,
             'nombre'        => 'CENTRO DE LOGÍSTICA Y PROMOCIÓN ECOTURÍSTICA DEL MAGDALENA',
             'codigo_centro' => 9529,
@@ -1212,7 +1212,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 101,
             'nombre'        => 'CENTRO DE LA INNOVACIÓN, LA TECNOLOGÍA Y LOS SERVICIOS',
             'codigo_centro' => 9542,
@@ -1224,7 +1224,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:29',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 102,
             'nombre'        => 'CENTRO DE TECNOLOGÍAS PARA LA CONSTRUCCIÓN Y LA MADERA',
             'codigo_centro' => 9209,
@@ -1236,7 +1236,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 103,
             'nombre'        => 'CENTRO DE TECNOLOGÍAS DEL TRANSPORTE',
             'codigo_centro' => 9213,
@@ -1248,7 +1248,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 104,
             'nombre'        => 'CENTRO INDUSTRIAL Y DESARROLLO EMPRESARIAL DE SOACHA',
             'codigo_centro' => 9406,
@@ -1260,7 +1260,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 105,
             'nombre'        => 'CENTRO INDUSTRIAL Y DESARROLLO EMPRESARIAL DE SOACHA',
             'codigo_centro' => 9232,
@@ -1272,7 +1272,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 106,
             'nombre'        => 'CENTRO NACIONAL DE HOTELERÍA, TURISMO Y ALIMENTOS',
             'codigo_centro' => 9232,
@@ -1284,7 +1284,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 107,
             'nombre'        => 'CENTRO INDUSTRIAL DE MANTENIMIENTO Y MANUFACTURA',
             'codigo_centro' => 9514,
@@ -1296,7 +1296,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 108,
             'nombre'        => 'CENTRO LATINOAMERICANO DE  ESERVICIO PUBLICO DE EMPLEOCIES MENORES',
             'codigo_centro' => 9125,
@@ -1308,7 +1308,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 109,
             'nombre'        => 'CENTRO AGROINDUSTRIAL Y PESQUERO DE LA COSTA PACÍFICA',
             'codigo_centro' => 9535,
@@ -1320,7 +1320,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 110,
             'nombre'        => 'CENTRO DE GESTIÓN ADMINISTRATIVA Y FORTALECIMIENTO EMPRESARIAL',
             'codigo_centro' => 9305,
@@ -1332,7 +1332,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 111,
             'nombre'        => 'CENTRO DE OPERACIÓN Y MANTENIMIENTO MINERO',
             'codigo_centro' => 9521,
@@ -1344,7 +1344,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 112,
             'nombre'        => 'CENTRO BIOTECNOLÓGICO DEL CARIBE',
             'codigo_centro' => 9114,
@@ -1356,7 +1356,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 113,
             'nombre'        => 'CENTRO DE GESTIÓN AGROEMPRESARIAL DEL ORIENTE',
             'codigo_centro' => 9546,
@@ -1368,7 +1368,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 114,
             'nombre'        => 'CENTRO AGROINDUSTRIAL',
             'codigo_centro' => 9120,
@@ -1380,7 +1380,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 115,
             'nombre'        => 'CENTRO PARA EL DESARROLLO TECNOLÓGICO DE LA CONSTRUCCIÓN',
             'codigo_centro' => 9231,
@@ -1392,7 +1392,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 116,
             'nombre'        => 'CENTRO DE INDUSTRIA Y SERVICIOS DEL META',
             'codigo_centro' => 9532,
@@ -1404,7 +1404,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 117,
             'nombre'        => 'CENTRO DE DESARROLLO AGROINDUSTRIAL Y EMPRESARIAL',
             'codigo_centro' => 9509,
@@ -1416,7 +1416,7 @@ class CentrosFormacionTableSeeder extends Seeder
             'updated_at'    => '2019-05-07 08:20:30',
         ]);
 
-        CentroFormacion::create([
+        Centro::create([
             'id'            => 118,
             'nombre'        => 'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE',
             'codigo_centro' => 9519,

@@ -14,9 +14,7 @@
                     <span class="card-title">
                         Checkboxes
                     </span>
-                    <br>
-                        <home-idea></home-idea>
-                    </br>
+                    
                 </div>
             </div>
         </div>

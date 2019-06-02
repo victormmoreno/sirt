@@ -24,6 +24,7 @@ class CreateRegionalesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 45);
+            $table->string('codigo_regional', 11);
             $table->string('direccion', 200)->nullable();
             $table->integer('telefono')->nullable();
             $table->unique(["nombre"], 'nombre_UNIQUE');
