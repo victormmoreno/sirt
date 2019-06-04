@@ -176,5 +176,6 @@ Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('
 ====================================================================*/
 
 Route::resource('lineas', 'LineaController');
+Route::resource('ideas', 'IdeaController');
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/

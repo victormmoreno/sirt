@@ -5,53 +5,107 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <div class="row">
-          <div class="col s10 m10 l10">
-            <h5 class="left-align">
-              <i class="material-icons left">
-                lightbulb
-              </i>
-              Ideas
-            </h5>
-          </div>
-        </div>
-        <div class="card ">
+        <h5><i class="material-icons">lightbulb</i>Ideas de Proyecto</h5>
+        <div class="card">
           <div class="card-content">
             <div class="row">
-              <div class="row">
-                <div class="col s12 m12 l10">
-                  <div class="center-align">
-                    <span class="card-title center-align">
-                      Ideas Tecnoparque nodo 
-                    </span>
+              <div class="col s12 m12 l12">
+                <div class="row">
+                  <div class="col s12 m8 l8">
+                    <div class="center-align">
+                      <span class="card-title center-align">Ideas de Tecnoparque nodo "FALTA"</span>
+                    </div>
+                  </div>
+                  <div class="col s12 m2 l2">
+                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                      <a href="{{ route('ideas.index') }}" target="_blank" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nueva Idea de Proyecto (Emprendedor)">
+                        <i class="material-icons">lightbulb</i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col s12 m2 l2">
+                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                      <a href="" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nueva Idea de Proyecto (Empresa/Grupo de Investigación)">
+                        <i class="material-icons">business</i>
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <div class="col s12 l2">
-                  <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                    <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nueva Linea" href="{{route('lineas.create')}}">
-                      <i class="material-icons">
-                        dns
-                      </i>
-                    </a>
-                    {{-- <a href="{{route('lineas.create')}}" class="waves-effect green btn"><i class="material-icons right">dns</i>Nueva Linea</a> --}}
-                  </div>
-                </div>
-              </div>
-              <div class="divider">
-              </div>
-              <br>
-              <table class="display responsive-table" id="linea_table">
-                <thead>
-                  <th width="15%">Abreviatura</th>
-                  <th width="30%">Linea</th>
-                  <th width="40%">Descripcion</th>
-                  <th width="15%">Editar</th>
-                </thead>
+                <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                  <li class="tab col s3"><a href="#ideasProyecto" class="active">Ideas de Proyecto (emprendedor)</a></li>
+                  <li class="tab col s3"><a href="#ideasProyectoEmpresa">Ideas de Proyecto (empresa/grupo de investigación)</a></li>
+                  <div class="indicator" style="right: 580.5px; left: 0px;"></div>
+                </ul>
+                <div class="divider"></div>
+                <div id="ideasProyecto">
+                  <table id="ideas_emprendedores_table" style="width: 100%">
+                    <thead>
+                      <tr>
+                        <th>Consecutivo de la Idea</th>
+                        <th>Fecha de Registro</th>
+                        <th>Persona</th>
+                        <th>Correo</th>
+                        <th>Contacto</th>
+                        <th>Nombre de la Idea</th>
+                        <th>Estado</th>
+                        <th>Detalles</th>
+                        <th>Editar</th>
+                        <th>Inhabilitar</th>
+                        <th>No aplica</th>
+                      </tr>
+                    </thead>
+                    <tbody>
 
-              </table>
+                    </tbody>
+                  </table>
+                </div>
+                <div id="ideasProyectoEmpresa">
+                  <table id="tblideasempresas" class="display responsive-table datatable-example">
+                    <thead>
+                      <tr>
+                        <th>Consecutivo de la Idea</th>
+                        <th>Fecha de Registro</th>
+                        <th>Nit</th>
+                        <th>Razón Social</th>
+                        <th>Nombre de la Idea</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div id="modal1" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <center><h4 id="titulo" class="center-aling"></h4></center>
+            <div class="divider"></div>
+            <div id="detalle_idea"></div>
+          </div>
+          <div class="modal-footer  white-text">
+            <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
+          </div>
+        </div>
+      </div>
+      <div class="fixed-action-btn horizontal click-to-toggle show-on-medium-and-down hide-on-med-and-up">
+        <a class="btn-floating btn-large red">
+          <i class="material-icons">menu</i>
+        </a>
+        <ul>
+          <li>
+            <a class="btn-floating green" href="{{ route('ideas.index') }}" target="_blank">
+              <i class="material-icons">lightbulb</i>
+            </a>
+          </li>
+          <li>
+            <a class="btn-floating green" href="">
+              <i class="material-icons">business</i>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
