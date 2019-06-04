@@ -12,22 +12,20 @@
  */
 
 Route::get('/', function () {
-	// $user = App\User::with(['rol'])->get();
-	// dd($user);
-	// $user = App\User::infoUserNodo('Infocenter','Medellin')
-	// ->first()->nodo_direccion;
+    $user = App\Models\Regional::with(['centros'])->first();
+    dd($user);
+    // $user = App\User::infoUserNodo('Infocenter','Medellin')
+    // ->first()->nodo_direccion;
 
-
-
-	// $user = App\User::with(['nodo'=>function($query){
- //        $query->select('nombre', 'direccion');
- //    }])->get();
- //
- //
-	// $user = App\User::select(['id','documento','nombres', 'apellidos','email','direccion','telefono', 'celular','fechanacimiento','descripcion_ocupacion','estado'])
-	// 	->with(['dinamizadorInfocenters' => function($query) {
-	// 	    $query->select('profesion');
-	// 	}])->get();
+    // $user = App\User::with(['nodo'=>function($query){
+    //        $query->select('nombre', 'direccion');
+    //    }])->get();
+    //
+    //
+    // $user = App\User::select(['id','documento','nombres', 'apellidos','email','direccion','telefono', 'celular','fechanacimiento','descripcion_ocupacion','estado'])
+    //     ->with(['dinamizadorInfocenters' => function($query) {
+    //         $query->select('profesion');
+    //     }])->get();
     // dd($user);
     // dd(config('mail.host'));
     // dd($user);
@@ -78,8 +76,6 @@ DB::listen(function ($query) {
 //     return view('spa');
 // });
 
-
-
 /*===================================================================================
 =            rutas modulos de login registro, recuperacion de contraseña            =
 ===================================================================================*/
@@ -102,13 +98,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('activate/{token}', 'ActivationTokenController@activate')->name('activation');
 /*=====  End of rutas para activacion de cuenta  ======*/
 
-
-
-
 /*===================================================================
 =            rutas para las funcionalidades de los nodos            =
 ===================================================================*/
-
 
 Route::resource('nodo', 'NodoController');
 
@@ -120,56 +112,53 @@ Route::resource('nodo', 'NodoController');
 
 // Route::resource('usuarios', 'UserController',[ 'names' => [ 'index' => 'usuarios', 'create' => 'usuarios.crear']]);
 Route::group([
-	'prefix' => 'usuario',
-	'middleware' => 'auth'],
-	function(){
+    'prefix'     => 'usuario',
+    'middleware' => 'auth'],
+    function () {
 
-		Route::get('/administrador', 'UserController@index')->name('usuario.administrador.index');
-		Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
-		Route::post('administrador', 'UserController@store')->name('usuario.administrador.store');
-		Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
-		Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
-		Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
-		Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
+        Route::get('/administrador', 'UserController@index')->name('usuario.administrador.index');
+        Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
+        Route::post('administrador', 'UserController@store')->name('usuario.administrador.store');
+        Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
+        Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
+        Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
+        Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
 
-	}
+    }
 );
 
 //-------------------Route group para el módulo de ideas
 Route::group([
-	'prefix' => 'idea',
-	'middleware' => 'auth'],
-	function(){
+    	'prefix' => 'idea'
+	],
+    function () {
 
-		// Route::get('/', 'IdeaController@ideas')->name('idea.infocenter');
-    Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+        // Route::get('/', 'IdeaController@ideas')->name('idea.infocenter');
+        Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
 
-		Route::post('/', 'IdeaController@store')->name('idea.store');
-		// Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
-		// Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
-		// Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
-		// Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
-		// Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
-		// Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
-	}
+        Route::post('/', 'IdeaController@store')->name('idea.store');
+        // Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
+        // Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
+        // Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
+        // Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
+        // Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
+        // Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
+    }
 );
 
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
 ===================================================================*/
 
-
 Route::get('ideas', 'IdeaController@index')->name('ideas.index');
 
 /*=====  End of rutas para las funcionalidades de las ideas  ======*/
-
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
 Route::get('/notificaciones', 'NotificationsController@index')->name('notifications.index');
 Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
 Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
-
 
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =

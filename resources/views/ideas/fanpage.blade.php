@@ -88,7 +88,7 @@
                                                 phone
                                             </i>
                                             <input class="validate" id="txttelefono" name="txttelefono" type="tel" value="{{ old('txttelefono') }}">
-                                            <label for="txttelefono">Telefono</label>
+                                            <label for="txttelefono">Telefono *</label>
                                             @error('txttelefono')
                                                 <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
                                             @enderror
@@ -99,10 +99,10 @@
                                             <i class="material-icons prefix">
                                                 library_books
                                             </i>
-                                            <input class="validate" id="txtnombreproyecto" name="txtnombreproyecto" type="text" value="{{ old('txtnombreproyecto') }}">
-                                            <label for="txtnombreproyecto">Nombre de Proyecto *</label>
-                                            @error('txtnombreproyecto')
-                                                <label id="txtnombreproyecto-error" class="error" for="txtnombreproyecto">{{ $message }}</label>
+                                            <input class="validate" id="txtnombrep_royecto" name="txtnombre_proyecto" type="text" value="{{ old('txtnombre_proyecto') }}">
+                                            <label for="txtnombre_proyecto">Nombre de Proyecto *</label>
+                                            @error('txtnombre_proyecto')
+                                                <label id="txtnombre_proyecto-error" class="error" for="txtnombre_proyecto">{{ $message }}</label>
                                             @enderror
                                         </div>
                                         <div class="input-field col s12 m6 l6">
@@ -148,7 +148,7 @@
                                                 </label>
                                                 <label>
                                                     No
-                                                    <input id="txtaprendizsena" name="txtaprendizsena" type="checkbox" {{ old('txtaprendizsena') == 'on' ? 'checked':'' }} >
+                                                    <input id="txtaprendiz_sena" name="txtaprendiz_sena" type="checkbox" {{ old('txtaprendiz_sena') == 'on' ? 'checked':'' }} >
                                                         <span class="lever">
                                                         </span>
                                                         Si

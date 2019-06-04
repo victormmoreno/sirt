@@ -61,6 +61,7 @@ class DatabaseSeeder extends Seeder
                 'entidades',
                 'centros',
                 'nodos',
+                'tecnoacademias',
                 'users',
             ]);
         }else{

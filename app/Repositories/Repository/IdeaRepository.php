@@ -2,13 +2,10 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\EstadoIdea;
 use App\Models\Idea;
 use App\Models\Nodo;
-// use App\Repositories\Interface\IdeaInterface;
-use Carbon\Carbon;
 
-class IdeaRepository 
+class IdeaRepository
 {
 
     public function getSelectNodo()
@@ -18,23 +15,24 @@ class IdeaRepository
 
     public function Store($request)
     {
+
+        // dd($request->all());
         $idea = Idea::create([
-            "fecha"          => Carbon::now(),
-            "nombrec"        => $request->input('txtnombres'),
-            "apellidoc"      => $request->input('txtapellidos'),
-            "correo"         => $request->input('txtcorreo'),
-            "telefono"       => $request->input('txttelefono'),
-            "nombreproyecto" => $request->input('txtnombreproyecto'),
-            "aprendizsena"   => $request->input('txtaprendizsena') == 'on' ? $request['txtaprendizsena'] = 1 : $request['txtaprendizsena'] = 0,
-            "pregunta1"      => $request->input('pregunta1'),
-            "pregunta2"      => $request->input('pregunta2'),
-            "pregunta3"      => $request->input('pregunta3'),
-            "descripcion"    => $request->input('txtdescripcion'),
-            "objetivo"       => $request->input('txtobjetivo'),
-            "alcance"        => $request->input('txtalcance'),
-            "tipoidea"       => Idea::IsEmprendedor(),
-            "nodo_id"        => $request->input('txtnodo'),
-            "estadoidea_id"  => EstadoIdea::FilterEstadoIdea('nombre', 'Inicio Emprendedor')->first()->id,
+            "nodo_id"            => $request->input('txtnodo'),
+            "nombres_contacto"   => $request->input('txtnombres'),
+            "apellidos_contacto" => $request->input('txtapellidos'),
+            "correo_contacto"    => $request->input('txtcorreo'),
+            "telefono_contacto"  => $request->input('txttelefono'),
+            "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
+            "aprendiz_sena"      => $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0,
+            "pregunta1"          => $request->input('pregunta1'),
+            "pregunta2"          => $request->input('pregunta2'),
+            "pregunta3"          => $request->input('pregunta3'),
+            "descripcion"        => $request->input('txtdescripcion'),
+            "objetivo"           => $request->input('txtobjetivo'),
+            "alcance"            => $request->input('txtalcance'),
+            "tipo_idea"           => Idea::IsEmprendedor(),
+
         ]);
 
         return $idea;

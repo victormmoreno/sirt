@@ -26,6 +26,7 @@ return [
         ['name' => EntidadesTableSeeder::class, 'callable' => true],
         ['name' => CentrosTableSeeder::class, 'callable' => true],
         ['name' => NodosTableSeeder::class, 'callable' => true],
+        ['name' => TecnoacademiasTableSeeder::class, 'callable' => true],
         ['name' => UsersTableSeeder::class, 'callable' => true],
     
     ],

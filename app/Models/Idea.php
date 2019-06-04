@@ -14,7 +14,8 @@ class Idea extends Model
     =================================================================*/
     
     const IS_EMPRENDEDOR   = 1;
-    const IS_GRUPOINVESTIGACION_EMPRESA = 2;
+    const IS_EMPRESA = 2;
+    const IS_GRUPOINVESTIGACION = 3;
     
     /*=====  End of constantes para conocer los tipos de idea  ======*/
     
@@ -33,22 +34,21 @@ class Idea extends Model
      * @var array
      */
     protected $fillable = [
-        'fecha',
-        'nombrec',
-        'apellidoc',
-        'correo',
-        'telefono',
-        'nombreproyecto',
-        'aprendizsena',
+        'nodo_id',
+        'nombres_contacto',
+        'apellidos_contacto',
+        'correo_contacto',
+        'telefono_contacto',
+        'nombre_proyecto',
+        'aprendiz_sena',
         'pregunta1',
         'pregunta2',
         'pregunta3',
         'descripcion',
         'objetivo',
         'alcance',
-        'tipoidea',
-        'nodo_id',
-        'estadoidea_id',
+        'tipo_idea',
+    
     ];
 
     public function estadoIdea()
@@ -74,9 +74,14 @@ class Idea extends Model
         return Idea::IS_EMPRENDEDOR;
     }
 
-    public static function IsGrupoInvestigacionEmpresa()
+    public static function IsEmpresa()
     {
-        return Idea::IS_GRUPOINVESTIGACION_EMPRESA;
+        return Idea::IS_EMPRESA;
+    }
+
+    public static function IsGrupoInvestigacion()
+    {
+        return Idea::IS_GRUPOINVESTIGACION;
     }
     
     
