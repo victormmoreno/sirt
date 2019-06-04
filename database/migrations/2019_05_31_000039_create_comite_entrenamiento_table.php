@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEntrenamientoComiteTable extends Migration
+class CreateComiteEntrenamientoTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'entrenamiento_comite';
+    public $tableName = 'comite_entrenamiento';
 
     /**
      * Run the migrations.

@@ -26,17 +26,17 @@ class CreateTalentosTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('perfil_id');
             $table->unsignedInteger('entidad_id');
-            $table->unsignedInteger('ciudades_id');
+            $table->unsignedInteger('ciudad_id');
             $table->string('programa', 75)->default('No Aplica');
             $table->timestamps();
 
             $table->index(["entidad_id"], 'fk_talentos_entidades1_idx');
 
-            $table->index(["user_id"], 'fk_talentos_users1_idx');
+            $table->index(["user_id"], 'fk_talentos_user1_idx');
 
             $table->index(["perfil_id"], 'fk_talento_perfil1_idx');
 
-            $table->index(["ciudades_id"], 'fk_talentos_ciudades1_idx');
+            $table->index(["ciudad_id"], 'fk_talentos_ciudad1_idx');
 
 
             $table->foreign('perfil_id', 'fk_talento_perfil1_idx')
@@ -49,12 +49,12 @@ class CreateTalentosTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('ciudades_id', 'fk_talentos_ciudades1_idx')
+            $table->foreign('ciudad_id', 'fk_talentos_ciudad1_idx')
                 ->references('id')->on('ciudades')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('user_id', 'fk_talentos_users1_idx')
+            $table->foreign('user_id', 'fk_talentos_user1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')
                 ->onUpdate('no action');
