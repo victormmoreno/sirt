@@ -24,7 +24,8 @@ class CreateEntidadesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('ciudad_id');
-            $table->string('nombre', 45);
+            $table->string('nombre', 300);
+            $table->string('direccion', 300);
             $table->string('contacto', 45)->nullable();
             $table->timestamps();
             $table->index(["ciudad_id"], 'fk_entidad_ciudad1_idx');

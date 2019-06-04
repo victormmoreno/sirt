@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
                 'sublineas',
                 'ciudades',
                 'regionales',
+                'entidades',
                 'centros',
                 'nodos',
                 'users',
