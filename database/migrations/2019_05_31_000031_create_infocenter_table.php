@@ -24,12 +24,12 @@ class CreateInfocenterTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('nodo_id');
-            $table->unsignedInteger('users_id');
+            $table->unsignedInteger('user_id');
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_infocenter_nodos1_idx');
 
-            $table->index(["users_id"], 'fk_infocenter_users1_idx');
+            $table->index(["user_id"], 'fk_infocenter_user1_idx');
 
 
             $table->foreign('nodo_id', 'fk_infocenter_nodos1_idx')
@@ -37,7 +37,7 @@ class CreateInfocenterTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('users_id', 'fk_infocenter_users1_idx')
+            $table->foreign('user_id', 'fk_infocenter_user1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')
                 ->onUpdate('no action');
