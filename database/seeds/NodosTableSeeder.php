@@ -54,10 +54,10 @@ class NodosTableSeeder extends Seeder
 
         Nodo::create([
             'id'          => 6,
+            'centro_id'   => 43,
             'nombre'      => 'Pereira',
             'direccion'   => 'Carrera 10 No. 17 - 15 Piso 2',
             'anho_inicio' => '2007',
-            'centro_id'   => 43,
         ]);
 
         Nodo::create([
@@ -131,5 +131,6 @@ class NodosTableSeeder extends Seeder
             'direccion'   => 'Calle 16 No. 14-28',
             'anho_inicio' => '2012',
         ]);
+
     }
 }
