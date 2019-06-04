@@ -24,8 +24,8 @@ return [
         ['name' => CiudadesTableSeeder::class, 'callable' => true],
         ['name' => RegionalesTableSeeder::class, 'callable' => true],
         ['name' => EntidadesTableSeeder::class, 'callable' => true],
-        ['name' => CentrosTableSeeder::class, 'callable' => false],
-        ['name' => NodosTableSeeder::class, 'callable' => false],
+        ['name' => CentrosTableSeeder::class, 'callable' => true],
+        ['name' => NodosTableSeeder::class, 'callable' => true],
         ['name' => UsersTableSeeder::class, 'callable' => true],
     
     ],
