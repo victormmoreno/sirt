@@ -27,12 +27,14 @@ class CreateVisitantesTable extends Migration
             $table->integer('documento');
             $table->string('nombres', 45);
             $table->string('apellidos', 45);
-            $table->string('correo', 100)->nullable();
+            $table->string('email', 100)->nullable();
             $table->string('contacto', 45)->nullable();
-            $table->tinyInteger('estado')->nullable();
+            $table->tinyInteger('estado')->default(1);
             $table->timestamps();
             $table->index(["tipodocumento_id"], 'fk_visitantes_tiposdocumentos1_idx');
 
+            $table->unique(["documento"], 'documento_UNIQUE');
+            $table->unique(["email"], 'email_UNIQUE');
 
             $table->foreign('tipodocumento_id', 'fk_visitantes_tiposdocumentos1_idx')
                 ->references('id')->on('tiposdocumentos')
