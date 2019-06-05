@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Events\Idea\IdeaSend;
 use Alert;
+use Illuminate\Support\Facades\DB;
+
 
 
 class IdeaController extends Controller
@@ -47,6 +49,7 @@ class IdeaController extends Controller
         $nodos = $this->ideaRepository->getSelectNodo();
         // $nodos = Idea::getAllIdeas();
         // dd($nodos);
+
         return view('ideas.fanpage', compact('nodos'));
     }
 
@@ -57,7 +60,20 @@ class IdeaController extends Controller
     //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
-      return view('ideas.infocenter.index');;
+      $consultaIdeas = Idea::select(DB::raw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona, id AS consecutivo, created_at AS fecha_registro, correo_contacto AS correo,
+      telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, 1 AS estado"))
+      ->where('nodo_id', 1)->get();
+      // dd($consultaIdeas->toArray());
+      if (request()->ajax()) {
+        return datatables()->of($consultaIdeas)
+        ->addColumn('action', function ($data) {
+          $button = '<a href="" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+          return $button;
+        })->rawColumns(['action'])
+        ->make(true);
+      }
+      return view('ideas.infocenter.index');
     }
 
 
@@ -69,7 +85,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**

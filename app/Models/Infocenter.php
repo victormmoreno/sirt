@@ -18,9 +18,9 @@ class Infocenter extends Model
     return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
   }
 
-  public function users()
+  public function user()
   {
-    return $this->hasMany(User::class, 'users_id', 'id');
+    return $this->hasOne(User::class, 'user_id', 'user_id');
   }
 
 }
