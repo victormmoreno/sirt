@@ -108,6 +108,7 @@ mix.scripts([
 
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
+		'resources/app/nodo/administrador/index.js',
 	],'public/js/app2.js');
 
 mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');

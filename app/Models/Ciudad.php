@@ -19,13 +19,19 @@ class Ciudad extends Model
 
     public $timestamps = false;
 
-    public function departament()
+    public function departamento()
     {
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
     }
 
-    public function centrosFormaciones()
+    public function centros()
     {
-        return $this->hasMany(CentroFormacion::class, 'ciudad_id', 'id');
+        return $this->hasMany(Centro::class, 'entidad_id', 'id');
     }
+
+    public function regionales()
+    {
+        return $this->hasMany(Regional::class, 'ciudad_id', 'id');
+    }
+
 }

@@ -23,12 +23,22 @@ class CreateRegionalesTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->unsignedInteger('ciudad_id');
             $table->string('nombre', 45);
             $table->string('codigo_regional', 11);
             $table->string('direccion', 200)->nullable();
             $table->integer('telefono')->nullable();
             $table->unique(["nombre"], 'nombre_UNIQUE');
+            $table->unique(["codigo_regional"], 'codigo_regional_UNIQUE');
             $table->nullableTimestamps();
+
+
+            $table->index(["ciudad_id"], 'fk_regionales_ciudad1_idx');
+
+            $table->foreign('ciudad_id', 'fk_regionales_ciudad1_idx')
+                ->references('id')->on('ciudades')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 

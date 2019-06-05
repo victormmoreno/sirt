@@ -25,7 +25,15 @@ class Nodo extends Model
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
+    public function centro()
+    {
+        return $this->belongsTo(Centro::class, 'centro_id', 'id');
+    }
 
+    // public function centros()
+    // {
+    //   return $this->hasMany(Centro::class, 'centro_id', 'id');
+    // }
   
 
     /*=====  End of relaciones eloquent  ======*/

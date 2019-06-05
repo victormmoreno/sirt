@@ -28,7 +28,7 @@ class IdeaFormRequest extends FormRequest
             'txtnombres'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtapellidos'       => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtcorreo'          => 'required|email|min:1|max:100',
-            'txttelefono'        => 'required|numeric|min:6',
+            'txttelefono'        => 'required|digits_between:6,11|numeric',
             'txtnombre_proyecto' => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'pregunta1'          => 'required',
             'pregunta2'          => 'required',
@@ -59,9 +59,10 @@ class IdeaFormRequest extends FormRequest
             'txtcorreo.max'                   => 'El :attribute debe ser máximo 100 caracteres',
 
             'txttelefono.required'            => 'El :attribute es obligatorio.',
-            'txttelefono.integer'             => 'El :attribute debe ser numérico',
+            'txttelefono.numeric'             => 'El :attribute debe ser numérico',
             'txttelefono.min'                 => 'El :attribute debe ser minimo 6 caracteres',
             'txttelefono.max'                 => 'El :attribute debe ser máximo 11 caracteres',
+            'txttelefono.digits_between'      => 'El :attribute debe tener entre 6 y 11 digitos',
 
             'txtnombre_proyecto.required'     => 'El :attribute es obligatorio.',
             'txtnombre_proyecto.min'          => 'El :attribute debe ser minimo 1 caracter',

@@ -522,7 +522,7 @@
         <div class="collapsible-body">
           <ul>
             <li>
-              <a href="">Nodos</a>
+              <a href="{{route('nodo.index')}}">Nodos</a>
             </li>
             <li>
               <a href="">Mapa</a>

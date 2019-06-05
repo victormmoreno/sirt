@@ -14,11 +14,17 @@ class Regional extends Model
      * @var array
      */
     protected $fillable = [
+        'ciudad_id',
         'nombre',
         'codigo_regional',
         'direccion',
         'telefono',
     ];
+
+    public function ciudad()
+    {
+        return $this->belongsTo(Ciudad::class, 'centro_id', 'id');
+    }
 
     public function tecnoacademias()
     {
@@ -29,4 +35,6 @@ class Regional extends Model
     {
       return $this->hasMany(Centro::class, 'regional_id', 'id');
     }
+
+    
 }
