@@ -19,8 +19,22 @@ class Departamento extends Model
 
     public $timestamps = false;
 
-    public function cities()
+    public function ciudades()
     {
         return $this->hasMany(Ciudad::class, 'departamento_id', 'id');
     }
+
+    /*===============================================================
+    =            metodo para consultar los departamentos            =
+    ===============================================================*/
+    
+    public function scopeAllDepartamentos($query)
+    {
+
+        return $query->select('departamentos.id','departamentos.nombre');
+
+    }
+    
+    /*=====  End of metodo para consultar los departamentos  ======*/
+    
 }

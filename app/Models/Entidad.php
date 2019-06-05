@@ -34,4 +34,6 @@ class Entidad extends Model
       return $this->hasMany(Tecnoacademia::class, 'entidad_id', 'id');
     }
 
+    
+
 }

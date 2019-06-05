@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -11,25 +12,19 @@
                             arrow_back
                         </i>
                     </a>
-                    Nodo
+                    Lineas
                 </h5>
                 <div class="card stats-card">
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <center>
-                                    <span class="card-title center-align">
-                                        Nuevo Nodo
-                                    </span>
-                                    <i class="Small material-icons prefix">
-                                        location_city
-                                    </i>
-                                </center>
-                                <form action="{{ route('nodo.store')}}" method="POST">
-                                    {{-- @include('lineas.administrador.form', [
-                                        'btnText' => 'Guardar',
-                                    ]) --}}
-                                </form>
+                                <center><span class="card-title center-align">Editar Nodo <b>{{$nodo->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
+                                <form action="{{ route('nodo.update', $nodo->id)}}" method="POST">
+                                	{!! method_field('PUT')!!}
+	                                @include('lineas.administrador.form', [
+								    	'btnText' => 'Actualizar',
+								   	])
+							   	</form>  
                             </div>
                         </div>
                     </div>

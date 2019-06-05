@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use App\User;
+use Illuminate\Database\Eloquent\Model;
+
+class Gestor extends Model
+{
+    protected $table = 'gestores';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'nodo_id',
+        'lineatecnologica_id',
+        'honorarios',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id', 'id');
+    }
+}

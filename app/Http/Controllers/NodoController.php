@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Repository\NodoRepository;
 use Illuminate\Http\Request;
 
 class NodoController extends Controller
 {
+
+    public $nodoRepository;
+
+    public function __construct(NodoRepository $nodoRepository)
+    {
+        $this->middleware('auth');
+        $this->nodoRepository = $nodoRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,6 +22,22 @@ class NodoController extends Controller
      */
     public function index()
     {
+        
+        if (request()->ajax()) {
+            return datatables()->of($this->nodoRepository->getAlltNodo())
+                ->addColumn('detail', function ($data) {
+                    $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" onclick="" data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })
+                ->addColumn('edit', function ($data) {
+                    $button = '<a href="' . route("nodo.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+                    return $button;
+                })
+                ->rawColumns(['detail','edit'])
+                ->make(true);
+        }
         return view('nodos.administrador.index');
     }
 
@@ -23,6 +48,7 @@ class NodoController extends Controller
      */
     public function create()
     {
+        $departamentos = $this->nodoRepository->getAllDepartamentos();
         return view('nodos.administrador.create');
     }
 
@@ -56,7 +82,8 @@ class NodoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $nodo = $this->nodoRepository->findByid($id);
+        return view('nodos.administrador.edit', compact('nodo'));
     }
 
     /**

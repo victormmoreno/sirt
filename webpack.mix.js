@@ -109,7 +109,11 @@ mix.scripts([
 
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
+<<<<<<< HEAD
+		'resources/app/nodo/administrador/index.js',
+=======
 		'resources/app/ideas/infocenter/index.js',
+>>>>>>> 8bcc5064af569d4172d238c0a3ae7a48356c5d39
 	],'public/js/app2.js');
 
 mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');

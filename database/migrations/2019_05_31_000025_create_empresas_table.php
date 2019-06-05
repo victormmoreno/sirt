@@ -25,14 +25,18 @@ class CreateEmpresasTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('entidad_id');
             $table->unsignedInteger('sector_id');
+            $table->unsignedInteger('ciudad_id');
             $table->string('nit', 45);
             $table->string('direccion', 45);
             $table->string('nombre_contacto', 45)->nullable();
             $table->string('telefono_contacto', 45)->nullable();
             $table->timestamps();
+            $table->index(["entidad_id"], 'fk_empresa_entidad1_idx');
+
             $table->index(["sector_id"], 'fk_empresas_sectores1_idx');
 
-            $table->index(["entidad_id"], 'fk_empresa_entidad1_idx');
+
+            $table->index(["ciudad_id"], 'fk_empresa_ciudad1_idx');
 
             $table->unique(["nit"], 'nit_UNIQUE');
 
@@ -44,6 +48,11 @@ class CreateEmpresasTable extends Migration
 
             $table->foreign('sector_id', 'fk_empresas_sectores1_idx')
                 ->references('id')->on('sectores')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('ciudad_id', 'fk_empresa_ciudad1_idx')
+                ->references('id')->on('ciudades')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });
