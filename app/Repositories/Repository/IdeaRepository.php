@@ -38,6 +38,24 @@ class IdeaRepository
         return $idea;
     }
 
+    public function Update($request, $idea)
+    {
+
+        // dd($request->all());
+        $idea->nodo_id            = $request->input('txtnodo_id');
+        $idea->nombres_contacto   = $request->input('txtnombres_contacto');
+        $idea->apellidos_contacto = $request->input('txtapellidos_contacto');
+        $idea->correo_contacto    = $request->input('txtcorreo_contacto');
+        $idea->telefono_contacto  = $request->input('txttelefono_contacto');
+        $idea->nombre_proyecto    = $request->input('txtnombre_proyecto');
+        $idea->descripcion        = $request->input('txtdescripcion');
+        $idea->objetivo           = $request->input('txtobjetivo');
+        $idea->alcance            = $request->input('txtalcance');
+
+        $idea = $idea->update();
+        return $idea;
+    }
+
     public function findByid($id)
     {
 

@@ -132,17 +132,11 @@ Route::group([
     	'prefix' => 'idea'
 	],
     function () {
-
-        // Route::get('/', 'IdeaController@ideas')->name('idea.infocenter');
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
-
+        Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
+        Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
+        Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
         Route::post('/', 'IdeaController@store')->name('idea.store');
-        // Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
-        // Route::post('administrador', 'UserController@create')->name('usuario.administrador.store');
-        // Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
-        // Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
-        // Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
-        // Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
     }
 );
 
@@ -165,6 +159,6 @@ Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('
 ====================================================================*/
 
 Route::resource('lineas', 'LineaController');
-Route::resource('ideas', 'IdeaController');
+// Route::resource('ideas', 'IdeaController');
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/

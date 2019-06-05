@@ -104,6 +104,7 @@ mix.scripts([
 		'resources/assets/plugins/sweetalert/sweetalert.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/js/alpha.js',
+		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
 
 mix.scripts([
