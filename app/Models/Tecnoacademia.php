@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Centro extends Model
+class Tecnoacademia extends Model
 {
-    protected $table = 'centros';
+    protected $table = 'tecnoacademias';
 
     /**
      * The attributes that are mass assignable.
@@ -16,25 +16,27 @@ class Centro extends Model
     protected $fillable = [
         'regional_id',
         'entidad_id',
-        'codigo_centro',
-        'descripcion',
+        'centro_id',
     ];
 
+    
+    
+    public function regional()
+    {
+        return $this->belongsTo(Tecnoacademia::class, 'regional_id', 'id');
+    }
 
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
     }
 
-    public function tecnoacademias()
+
+    public function centro()
     {
-      return $this->hasMany(Tecnoacademia::class, 'centro_id', 'id');
+        return $this->belongsTo(Centro::class, 'centro_id', 'id');
     }
 
-    public function regional()
-    {
-        return $this->belongsTo(Regional::class, 'regional_id', 'id');
-    }
 
 
 }

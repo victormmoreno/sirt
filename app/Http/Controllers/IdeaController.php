@@ -17,7 +17,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Events\Idea\IdeaSend;
+use Alert;
 use Illuminate\Support\Facades\DB;
+
 
 
 class IdeaController extends Controller
@@ -97,23 +99,28 @@ class IdeaController extends Controller
     public function store(IdeaFormRequest $request)
     {
 
-        dd($request->all());
 
         $idea = $this->ideaRepository->Store($request);
 
-        $user = User::infoUserNodo('Infocenter',$idea->nodo_id)->first();
+        // $user = User::infoUserNodo('Infocenter',$idea->nodo_id)->first();
 
-        $notificacions = $user->unreadNotifications;
-
-
-        if (isset($user) && !empty($idea->correo)) {
-            $user->notify(new IdeaRecibidaInfocenter($idea, $user));
-            Mail::to($idea->correo)->queue(new IdeaEnviadaEmprendedor($idea,$user));
-            // event(new IdeaHasReceived($idea));
-            event(new IdeaSend($notificacions));
+        if ($idea != null) {
+            Alert::success("La idea {$idea->nombreproyecto} ha sido creado satisfactoriamente.",'Registro Exitoso',"success");
+        }else{
+            Alert::error("La idea  no se ha creado.",'Registro Erróneo', "error");
         }
 
-         return "Idea Enviada";
+        // $notificacions = $user->unreadNotifications;
+
+
+        // if (isset($user) && !empty($idea->correo)) {
+        //     $user->notify(new IdeaRecibidaInfocenter($idea, $user));
+        //     Mail::to($idea->correo)->queue(new IdeaEnviadaEmprendedor($idea,$user));
+        //     // event(new IdeaHasReceived($idea));
+        //     event(new IdeaSend($notificacions));
+        // }
+
+         return redirect('ideas');
     }
 
     /**

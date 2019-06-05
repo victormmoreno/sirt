@@ -6,6 +6,8 @@ use App\Models\ActivationToken;
 use App\Models\DinamizadorInfocenter;
 use App\Models\Nodo;
 use App\Models\Rols;
+use App\Models\GradoEscolaridad;
+use App\Models\TipoDocumento;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -147,10 +149,15 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
+    public function gradoEscolaridad()
+    {
+        return $this->belongsTo(GradoEscolaridad::class, 'gradoescolaridad_id', 'id');
+    }
 
-
-
-
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'tipodocumento_id', 'id');
+    }
 
     /*=====  End of relaciones eloquent  ======*/
 

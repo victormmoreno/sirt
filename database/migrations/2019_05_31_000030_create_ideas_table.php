@@ -36,7 +36,7 @@ class CreateIdeasTable extends Migration
             $table->string('descripcion',2000)->nullable();
             $table->string('objetivo',2000)->nullable();
             $table->string('alcance',2000)->nullable();
-            $table->tinyInteger('tipo_idea')->default(1);
+            $table->tinyInteger('tipo_idea')->default(1); //1- emprendedor - 2- empresa - 3- grupo de investigacion
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_ideas_nodo1_idx');

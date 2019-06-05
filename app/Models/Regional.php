@@ -20,8 +20,13 @@ class Regional extends Model
         'telefono',
     ];
 
-    public function centrosFormaciones()
+    public function tecnoacademias()
     {
-        return $this->hasMany(CentroFormacion::class, 'regional_id', 'id');
+      return $this->hasMany(Tecnoacademia::class, 'regional_id', 'id');
+    }
+
+    public function centros()
+    {
+      return $this->hasMany(Centro::class, 'regional_id', 'id');
     }
 }

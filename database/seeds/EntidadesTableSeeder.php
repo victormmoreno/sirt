@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Entidad;
 use Illuminate\Database\Seeder;
+use App\Models\Entidad;
 
 class EntidadesTableSeeder extends Seeder
 {
@@ -836,6 +836,76 @@ class EntidadesTableSeeder extends Seeder
             'ciudad_id' => 388,
             'nombre'    => 'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE',
             'direccion' => 'Cra. 19 No.36-68',
+        ]);
+
+        Entidad::create([
+            'id'        => 119,
+            'ciudad_id' => 902,
+            'nombre'    => 'TECNOACADEMIA BUCARAMANGA',
+            'direccion' => 'Carrera 19 Nº 31-65 centro cultural del oriente',
+        ]);
+
+        Entidad::create([
+            'id'        => 120,
+            'ciudad_id' => 1064,
+            'nombre'    => 'TECNOACADEMIA CALI',
+            'direccion' => '  Carrera 5. Nº 11-68 Plaza de Caicedo',
+        ]);
+
+        Entidad::create([
+            'id'        => 121,
+            'ciudad_id' => 603,
+            'nombre'    => 'TECNOACADEMIA CAZUCA',
+            'direccion' => '  Autopista Sur Transversal 7 Nº 8 – 40, Entrada  3, Soacha',
+        ]);
+
+        Entidad::create([
+            'id'        => 122,
+            'ciudad_id' => 1028,
+            'nombre'    => 'TECNOACADEMIA IBAGUE',
+            'direccion' => '  Carrera 45 Sur Nº 141 - 05 Sector Picaleña, Contiguo a la Casa de la Moneda',
+        ]);
+
+        Entidad::create([
+            'id'        => 123,
+            'ciudad_id' => 336,
+            'nombre'    => 'TECNOACADEMIA MANIZALES',
+            'direccion' => 'Calle 56 Nº 55B - 150 Colegio INEM, Bloque C',
+        ]);
+
+        Entidad::create([
+            'id'        => 124,
+            'ciudad_id' => 70,
+            'nombre'    => 'TECNOACADEMIA MEDELLIN',
+            'direccion' => 'Carrera 64 AA Nº 113A-04 Barrio Toscana - Dentro de la IE Colegio Loyola',
+        ]);
+
+        Entidad::create([
+            'id'        => 125,
+            'ciudad_id' => 655,
+            'nombre'    => 'TECNOACADEMIA NEIVA',
+            'direccion' => 'Calle 40 Nº 1 - 16 , Barrio Cándido',
+        ]);
+
+        Entidad::create([
+            'id'        => 126,
+            'ciudad_id' => 888,
+            'nombre'    => 'TECNOACADEMIA PEREIRA',
+            'direccion' => 'Calle 73 Bis con Cra. 21 Comuna 9 barrio Cesar Augusto Lopez – Dosquebradas Risaralda',
+        ]);
+
+        Entidad::create([
+            'id'        => 127,
+            'ciudad_id' => 801,
+            'nombre'    => 'TECNOACADEMIA TUQUERRES',
+            'direccion' => 'Calle 24 Nº 13B - 62 Barrio la Reconstrucción: Instalaciones de la Universidad de Nariño Túquerres',
+        ]);
+
+        Entidad::create([
+            'id'        => 128,
+            'ciudad_id' => 823,
+            'nombre'    => 'TECNOACADEMIA CUCÚTA',
+            'direccion' => 'Calle 2N Avenida 4 y 5 Barrio Pescadero',
         ]);
 
     }

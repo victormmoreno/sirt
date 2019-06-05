@@ -17,5 +17,10 @@ class TipoDocumento extends Model
     protected $fillable = [
         'nombre',
     ];
+
+    public function users()
+    {
+      return $this->hasMany(User::class, 'tipodocumento_id', 'id');
+    }
     
 }

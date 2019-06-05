@@ -1724,7 +1724,17 @@ INSERT INTO `Entidad` (`id`,`ciudad_id`, `nombre`, `direccion`) VALUES
 (115, 867,'CENTRO PARA EL DESARROLLO TECNOLÓGICO DE LA CONSTRUCCIÓN', 'Carrera 6 # 42 Norte-02 Avenida centenario'),
 (116, 748,'CENTRO DE INDUSTRIA Y SERVICIOS DEL META', 'KM  1 VIA ACACIAS'),
 (117, 628,'CENTRO DE DESARROLLO AGROINDUSTRIAL Y EMPRESARIAL', 'Calle 2 No.13-03 Barrio San Rafael '),
-(118, 388,'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE', 'Cra. 19 No.36-68'); 
+(118, 388,'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE', 'Cra. 19 No.36-68'),
+(119, 902,'TECNOACADEMIA BUCARAMANGA', 'Carrera 19 Nº 31-65 centro cultural del oriente'),
+(120, 1064,'TECNOACADEMIA CALI', '	Carrera 5. Nº 11-68 Plaza de Caicedo'),
+(121, 603,'TECNOACADEMIA CAZUCA', '	Autopista Sur Transversal 7 Nº 8 – 40, Entrada  3, Soacha'),
+(122, 1028,'TECNOACADEMIA IBAGUE', '	Carrera 45 Sur Nº 141 - 05 Sector Picaleña, Contiguo a la Casa de la Moneda'),
+(123, 336,'TECNOACADEMIA MANIZALES', 'Calle 56 Nº 55B - 150 Colegio INEM, Bloque C'),
+(124, 70,'TECNOACADEMIA MEDELLIN', 'Carrera 64 AA Nº 113A-04 Barrio Toscana - Dentro de la IE Colegio Loyola'),
+(125, 655,'TECNOACADEMIA NEIVA', 'Calle 40 Nº 1 - 16 , Barrio Cándido'),
+(126, 888,'TECNOACADEMIA PEREIRA', 'Calle 73 Bis con Cra. 21 Comuna 9 barrio Cesar Augusto Lopez – Dosquebradas Risaralda'),
+(127, 801,'TECNOACADEMIA TUQUERRES', 'Calle 24 Nº 13B - 62 Barrio la Reconstrucción: Instalaciones de la Universidad de Nariño Túquerres'),
+(128, 823,'TECNOACADEMIA CUCÚTA', 'Calle 2N Avenida 4 y 5 Barrio Pescadero'),
 
 
 INSERT INTO `Centro` (`id`, `regional_id`, `entidad_id`,  `codigo_centro`) VALUES
@@ -1845,7 +1855,9 @@ INSERT INTO `Centro` (`id`, `regional_id`, `entidad_id`,  `codigo_centro`) VALUE
 (115, 19,115, 9231),
 (116, 16,116, 9532),
 (117, 11,117, 9509),
-(118, 26,118, 9519); 
+(118, 26,118, 9519);
+
+
 
 
 INSERT INTO `Nodo` (`id`,`centro_id`, `nombre`, `direccion`, `anho_inicio`) VALUES
@@ -1864,3 +1876,15 @@ INSERT INTO `Nodo` (`id`,`centro_id`, `nombre`, `direccion`, `anho_inicio`) VALU
 (13, 42,'Ocaña', 'Transversal 30 N° 7-110 La Primavera','2009'),
 (14,33,'Angostura', 'Km 38 Vía Neiva al Sur - Campo Alegre','2009'),
 (15,  98,'Socorro', 'Calle 16 No. 14-28','2012');
+
+INSERT INTO `Tecnoacademia` (`id`,`regional_id`, `entidad_id`, `centro_id`) VALUES
+(1, 21,119,24),
+(2, 24,120,30),
+(3, 11,121,104),
+(4, 23,122,54),
+(5, 6,123,66),
+(6, 1,124,72),
+(7, 13,125,79),
+(8, 20,126,43),
+(9, 17,127,56),
+(10, 18,128,42);

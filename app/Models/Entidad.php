@@ -19,4 +19,19 @@ class Entidad extends Model
         'direccion',
         'contacto',
     ];
+
+
+
+    public function centros()
+    {
+      return $this->hasMany(Centro::class, 'entidad_id', 'id');
+    }
+
+    
+
+    public function tecnoacademias()
+    {
+      return $this->hasMany(Tecnoacademia::class, 'entidad_id', 'id');
+    }
+
 }
