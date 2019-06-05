@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Idea\IdeaHasReceived;
 use App\Http\Requests\IdeaFormRequest;
+use App\Http\Requests\IdeaEditFormRequest;
 use App\Mail\IdeaEnviadaEmprendedor;
 use App\Models\EstadoIdea;
 use App\Models\Idea;
@@ -60,17 +61,39 @@ class IdeaController extends Controller
     //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
-      $consultaIdeas = Idea::select(DB::raw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona, id AS consecutivo, created_at AS fecha_registro, correo_contacto AS correo,
-      telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, 1 AS estado"))
-      ->where('nodo_id', 1)->get();
-      // dd($consultaIdeas->toArray());
-      if (request()->ajax()) {
-        return datatables()->of($consultaIdeas)
-        ->addColumn('action', function ($data) {
-          $button = '<a href="" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
+      if (request()->ajax()) {
+        $consultaIdeas = Idea::select(DB::raw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona, ideas.id AS consecutivo, created_at AS fecha_registro,
+        correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
+        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+        ->where('nodo_id', 1)->get();
+        return datatables()->of($consultaIdeas)
+        ->addColumn('details', function ($data) {
+          $button = '
+          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detalles('. $data->consecutivo .')" data-position="left" data-delay="50" data-tooltip="Detalles>">
+          <i class="material-icons">info</i>
+          </a>
+          ';
           return $button;
-        })->rawColumns(['action'])
+        })
+        // ->make(true);
+        ->addColumn('edit', function ($data) {
+          $edit = '<a class="btn m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+          return $edit;
+        })
+        ->addColumn('soft_delete', function ($data) {
+          $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
+          return $delete;
+        })
+        ->addColumn('dont_apply', function ($data) {
+          $notapply = '<a class="btn brown lighten-3 m-b-xs"><i class="material-icons">thumb_down</i></a>';
+          return $notapply;
+        })
+        ->addColumn('edit', function ($data) {
+          $edit = '<a href="' . route("idea.edit", $data->consecutivo) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+          return $edit;
+        })
+        ->rawColumns(['details', 'edit', 'soft_delete', 'dont_apply'])
         ->make(true);
       }
       return view('ideas.infocenter.index');
@@ -110,16 +133,6 @@ class IdeaController extends Controller
             Alert::error("La idea  no se ha creado.",'Registro Erróneo', "error");
         }
 
-        // $notificacions = $user->unreadNotifications;
-
-
-        // if (isset($user) && !empty($idea->correo)) {
-        //     $user->notify(new IdeaRecibidaInfocenter($idea, $user));
-        //     Mail::to($idea->correo)->queue(new IdeaEnviadaEmprendedor($idea,$user));
-        //     // event(new IdeaHasReceived($idea));
-        //     event(new IdeaSend($notificacions));
-        // }
-
          return redirect('ideas');
     }
 
@@ -143,7 +156,10 @@ class IdeaController extends Controller
      */
     public function edit($id)
     {
-        //
+      $idea = Idea::ConsultarIdeaId($id)->first();
+      $nodos = Nodo::SelectNodo()->get();
+      // dd($nodos);
+      return view('ideas.infocenter.edit', compact('idea', 'nodos'));
     }
 
     /**
@@ -153,9 +169,25 @@ class IdeaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+
+    public function update(IdeaEditFormRequest $request, $id)
     {
-        //
+      $idea = $this->ideaRepository->findByid($id);
+      $updateIdea = $this->ideaRepository->Update($request, $idea);
+      if ($updateIdea == true) {
+        Alert::success("La Idea se ha modificado.", 'Modificación Exitosa', "success");
+      } else {
+        Alert::error("La Idea no se ha modificado.", 'Modificación Errónea', "error");
+      }
+
+      return redirect('idea');
+
+      // if ($updateIdea != null) {
+      //   Alert::success("La idea {$idea->nombreproyecto} ha sido actualizada satisfactoriamente.",'Actualización Exitoso',"success");
+      // } else {
+      //   Alert::error("La idea  no se ha creado.",'Registro Erróneo', "error");
+      // }
+
     }
 
     /**
@@ -167,5 +199,13 @@ class IdeaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // Se muestra los detalles de una idea según su id
+    public function details($id)
+    {
+      $idea = Idea::ConsultarIdeaId($id)->first();
+      echo json_encode($idea);
+
     }
 }
