@@ -39,7 +39,7 @@ mix.js('resources/js/app.js', 'public/js');
 // 		'resources/assets/css/custom.css',
 // 		'resources/assets/plugins/bootstrap-datapicker/css/bootstrap-material-datetimepicker.css',
 // 		'resources/assets/plugins/materialize-clockpicker-master/dist/css/materialize.clockpicker.css',
-		
+
 // 	],'public/css/libs.css');
 
 
@@ -50,8 +50,8 @@ mix.styles([
 		'resources/assets/plugins/sweetalert/sweetalert.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
-		
-		
+
+
 	],'public/css/libs.css');
 
 
@@ -74,7 +74,7 @@ mix.styles([
 // 		'resources/assets/js/libs/theme/alpha.min.js',
 // 		// 'resources/assets/js/libs/theme/dashboard.js',
 // 	],'public/js/libs.js');
-// 	
+//
 
 
 // mix.scripts([
@@ -94,9 +94,9 @@ mix.styles([
 // 		'resources/assets/plugins/materialize-clockpicker-master/dist/js/materialize.clockpicker.js',
 // 		'resources/assets/plugins/jquery-idletimer/idle-timer.js',
 // 		'resources/assets/js/alpha.min.js',
-		
+
 // 	],'public/js/libs.js');
-// 	
+//
 mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
@@ -108,7 +108,11 @@ mix.scripts([
 
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
+<<<<<<< HEAD
 		'resources/app/nodo/administrador/index.js',
+=======
+		'resources/app/ideas/infocenter/index.js',
+>>>>>>> 8bcc5064af569d4172d238c0a3ae7a48356c5d39
 	],'public/js/app2.js');
 
 mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
@@ -123,5 +127,3 @@ mix.browserSync({
             'routes/**/*'
         ]
  });
-
-

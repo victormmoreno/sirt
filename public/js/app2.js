@@ -60,6 +60,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
+<<<<<<< HEAD
     
     $('#nodos_table').DataTable({
         language: {
@@ -85,11 +86,16 @@ $(document).ready(function() {
             //     "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
             //     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             // }
+=======
+    $('#ideas_emprendedores_table').DataTable({
+        language: {
+>>>>>>> 8bcc5064af569d4172d238c0a3ae7a48356c5d39
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         processing: true,
         serverSide: true,
         ajax:{
+<<<<<<< HEAD
         	url: "nodo",
         },
         columns: [
@@ -119,11 +125,56 @@ $(document).ready(function() {
                 name: 'edit',
                 orderable: false
             },
+=======
+        	url: "idea",
+          type: "get",
+        },
+        columns: [
+        	{
+        		data: 'consecutivo',
+        		name: 'consecutivo',
+        	},
+        	{
+        		data: 'fecha_registro',
+        		name: 'fecha_registro',
+        	},
+        	{
+        		data: 'persona',
+        		name: 'persona',
+        	},
+        	{
+        		data: 'correo',
+        		name: 'correo',
+        	},
+        	{
+        		data: 'contacto',
+        		name: 'contacto',
+        	},
+        	{
+        		data: 'nombre_idea',
+        		name: 'nombre_idea',
+        	},
+        	{
+        		data: 'estado',
+        		name: 'estado',
+        	},
+        	// {
+        	// 	data: 'action',
+        	// 	name: 'action',
+        	// 	orderable: false
+        	// },
+>>>>>>> 8bcc5064af569d4172d238c0a3ae7a48356c5d39
 
         ],
     });
 
 
+<<<<<<< HEAD
             
 
 });
+=======
+
+
+});
+>>>>>>> 8bcc5064af569d4172d238c0a3ae7a48356c5d39
