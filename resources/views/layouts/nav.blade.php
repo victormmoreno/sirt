@@ -163,7 +163,7 @@
         <div class="collapsible-body">
           <ul>
             <li>
-              <a href=" {{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}">
+              <a href="{{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}">
                 <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} ">lightbulb</i>Ideas
               </a>
             </li>
@@ -244,8 +244,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">lightbulb</i>Ideas
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.ideas')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas
         </a>
       </li>
       <li class="no-padding">
