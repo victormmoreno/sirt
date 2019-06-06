@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Events\Idea\IdeaSend;
 use Alert;
-use Illuminate\Support\Facades\DB;
 
 
 
@@ -61,45 +60,38 @@ class IdeaController extends Controller
     //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
-
       if (request()->ajax()) {
-        $consultaIdeas = Idea::select(DB::raw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona, ideas.id AS consecutivo, created_at AS fecha_registro,
-        correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
-        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-        ->where('nodo_id', 1)->get();
+        $consultaIdeas = Idea::ConsultarIdeasDelNodo(1)->get();
         return datatables()->of($consultaIdeas)
         ->addColumn('details', function ($data) {
           $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detalles('. $data->consecutivo .')" data-position="left" data-delay="50" data-tooltip="Detalles>">
+          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detalles('. $data->consecutivo .')">
           <i class="material-icons">info</i>
           </a>
           ';
           return $button;
-        })
-        // ->make(true);
-        ->addColumn('edit', function ($data) {
+        })->addColumn('edit', function ($data) {
           $edit = '<a class="btn m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
           return $edit;
-        })
-        ->addColumn('soft_delete', function ($data) {
+        })->addColumn('soft_delete', function ($data) {
           $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
           return $delete;
-        })
-        ->addColumn('dont_apply', function ($data) {
+        })->addColumn('dont_apply', function ($data) {
           $notapply = '<a class="btn brown lighten-3 m-b-xs"><i class="material-icons">thumb_down</i></a>';
           return $notapply;
-        })
-        ->addColumn('edit', function ($data) {
+        })->addColumn('edit', function ($data) {
           $edit = '<a href="' . route("idea.edit", $data->consecutivo) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
-        })
-        ->rawColumns(['details', 'edit', 'soft_delete', 'dont_apply'])
-        ->make(true);
+        })->rawColumns(['details', 'edit', 'soft_delete', 'dont_apply'])->make(true);
+        // $consultaIdeasEmpGI = Idea::select
       }
-      return view('ideas.infocenter.index');
+
+      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+        return view('ideas.infocenter.index');
+      } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+        return view('ideas.gestor.index');
+      }
     }
-
-
 
     /**
      * Show the form for creating a new resource.

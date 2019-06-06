@@ -63,7 +63,7 @@ $(document).ready(function() {
     ],
   });
   $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
-  $('.modal').modal();
+  // $('.modal').modal();
 });
 
 function detalles(id){
@@ -136,68 +136,3 @@ function detalles(id){
     }
     })
 }
-//     console.log(respuesta);
-//     $("#titulo").empty();
-//     $("#detalle_idea").empty();
-//     if (respuesta == null) {
-//       swal('Ups!!', 'Ha ocurrido un error', 'warning');
-//     } else {
-//       $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.nombreproyecto+"");
-//       $("#detalle_idea").append('<div class="row">'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
-//       +'</div>'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="black-text">'+respuesta.aprendizsena+'</span>'
-//       +'</div>'
-//       +'</div>'
-//       +'<div class="divider"></div>'
-//       +'<div class="row">'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
-//       +'</div>'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="black-text">'+respuesta.pregunta1+'</span>'
-//       +'</div>'
-//       +'</div>'
-//       +'<div class="divider"></div>'
-//       +'<div class="row">'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
-//       +'</div>'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="black-text">'+respuesta.pregunta2+'</span>'
-//       +'</div>'
-//       +'</div>'
-//       +'<div class="divider"></div>'
-//       +'<div class="row">'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-//       +'</div>'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="black-text">'+respuesta.descripcion+'</span>'
-//       +'</div>'
-//       +'</div>'
-//       +'<div class="divider"></div>'
-//       +'<div class="row">'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="cyan-text text-darken-3">Objetivo: </span>'
-//       +'</div>'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="black-text">'+respuesta.objetivo+'</span>'
-//       +'</div>'
-//       +'</div>'
-//       +'<div class="divider"></div>'
-//       +'<div class="row">'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="cyan-text text-darken-3">Alcance: </span>'
-//       +'</div>'
-//       +'<div class="col s12 m6 l6">'
-//       +'<span class="black-text">'+respuesta.alcance+'</span>'
-//       +'</div>'
-//       +'</div>'
-//     );
-//     $('.modal-trigger').leanModal();
-//   }
-// });
-// }
