@@ -50,6 +50,7 @@ class Idea extends Model
         'objetivo',
         'alcance',
         'tipo_idea',
+        'estadoidea_id',
 
     ];
 

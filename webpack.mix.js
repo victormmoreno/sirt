@@ -100,7 +100,7 @@ mix.styles([
 mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
-		'resources/assets/plugins/datatables/js/jquery.dataTables.min.js',
+		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/sweetalert/sweetalert.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/js/alpha.js',
@@ -112,6 +112,7 @@ mix.scripts([
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
 		'resources/app/ideas/gestor/index.js',
+		'resources/app/user/administrador/index-administrador.js',
 	],'public/js/app2.js');
 
 mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');

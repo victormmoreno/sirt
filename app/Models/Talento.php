@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 
-class Infocenter extends Model
+class Talento extends Model
 {
-    protected $table = 'infocenter';
+    protected $table = 'talentos';
 
     /**
      * The attributes that are mass assignable.
@@ -15,18 +14,15 @@ class Infocenter extends Model
      * @var array
      */
     protected $fillable = [
-        'nodo_id',
         'user_id',
+        'perfil_id',
+        'entidad_id',
+        'ciudad_id',
+        'programa',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
-    public function nodo()
-    {
-        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
-    }
-
 }

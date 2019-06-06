@@ -487,7 +487,7 @@
         <div class="collapsible-body">
           <ul>
             <li>
-              <a href="">
+              <a href="{{route('usuario.administrador.index')}}">
                 Administrador
               </a>
             </li>
@@ -531,7 +531,7 @@
         </div>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
+        <a class="waves-effect waves-grey" href="{{route('lineas.index')}}">
           <i class="material-icons">linear_scale</i>Lineas
         </a>
       </li>

@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rols;
 use App\User;
 use Illuminate\Http\Request;
+use App\Repositories\Repository\UserRepository;
 
 class UserController extends Controller
 {
+
+
+    public $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->middleware('auth');
+        $this->userRepository = $userRepository;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -17,25 +30,34 @@ class UserController extends Controller
         
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
 
-            $administradores = User::
-            Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-            ->role('Administrador')->get();
-            // role('Administrador')->get();
-            dd($administradores);
+            // $administradores = User::
+            // Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+            // ->role('Administrador')->get();
+            // dd($this->userRepository->getAllAdministradores());
+            
 
             if (request()->ajax()) {
-                return datatables()->of($administradores)
-                    ->addColumn('action', function ($data) {
-                        $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                        $button .= '&nbsp;&nbsp;';
-                        $button .= '<a href="" class="waves-effect red lighten-3 btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">delete_sweep</i></a>';
+                return datatables()->of($this->userRepository->getAllAdministradores())
+                    ->addColumn('detail', function ($data) {
+                         $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalles('. $data->id .')"><i class="material-icons">info_outline</i></a>';
 
+                    return $button;
+                    })
+                    ->addColumn('edit', function ($data) {
+                        $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                         return $button;
-                    })->rawColumns(['action'])
+                    })
+                    ->editColumn('estado', function ($data) {
+                        if ($data->estado == User::IsActive()) {
+                            return $data->estado = 'Habilitado';
+                        } else {
+                            return $data->estado = 'Inhabilitado ';
+                        }
+                    })
+                    ->rawColumns(['detail','edit'])
                     ->make(true);
             }
 
-            // dd($administradores);
             return view('users.administrador.administrador.index');
         } else {
             abort(403);
@@ -71,7 +93,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json([
+            'user' => $this->userRepository->findByid($id),
+        ]);
     }
 
     /**

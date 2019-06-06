@@ -12,6 +12,7 @@ return [
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
         ['name' => ServiciosTableSeeder::class, 'callable' => true],
         ['name' => TiposDocumentosTableSeeder::class, 'callable' => true],
+        ['name' => EstadosIdeasTableSeeder::class, 'callable' => true],
         ['name' => SectoresTableSeeder::class, 'callable' => true],
         ['name' => TiposArticulacionesTableSeeder::class, 'callable' => true],
         ['name' => PerfilesTableSeeder::class, 'callable' => true],

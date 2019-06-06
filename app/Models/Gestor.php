@@ -25,4 +25,9 @@ class Gestor extends Model
     {
         return $this->belongsTo(User::class,'user_id', 'id');
     }
+
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Repository;
 
+use App\Models\EstadoIdea;
 use App\Models\Idea;
 use App\Models\Nodo;
 
@@ -16,7 +17,6 @@ class IdeaRepository
     public function Store($request)
     {
 
-        // dd($request->all());
         $idea = Idea::create([
             "nodo_id"            => $request->input('txtnodo'),
             "nombres_contacto"   => $request->input('txtnombres'),
@@ -31,7 +31,8 @@ class IdeaRepository
             "descripcion"        => $request->input('txtdescripcion'),
             "objetivo"           => $request->input('txtobjetivo'),
             "alcance"            => $request->input('txtalcance'),
-            "tipo_idea"           => Idea::IsEmprendedor(),
+            "tipo_idea"          => Idea::IsEmprendedor(),
+            "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
 
         ]);
 
@@ -41,7 +42,6 @@ class IdeaRepository
     public function Update($request, $idea)
     {
 
-        // dd($request->all());
         $idea->nodo_id            = $request->input('txtnodo_id');
         $idea->nombres_contacto   = $request->input('txtnombres_contacto');
         $idea->apellidos_contacto = $request->input('txtapellidos_contacto');
@@ -62,6 +62,5 @@ class IdeaRepository
         return Idea::findOrFail($id);
 
     }
-
 
 }

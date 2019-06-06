@@ -24,9 +24,10 @@ class CreateIdeasTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('nodo_id');
+            $table->unsignedInteger('estadoidea_id');
             $table->string('nombres_contacto', 45);
             $table->string('apellidos_contacto', 45);
-            $table->string('correo_contacto',100);
+            $table->string('correo_contacto',100)->nullable();
             $table->string('telefono_contacto',11)->nullable();
             $table->string('nombre_proyecto', 200);
             $table->tinyInteger('aprendiz_sena')->default(1);
@@ -37,13 +38,19 @@ class CreateIdeasTable extends Migration
             $table->string('objetivo',2000)->nullable();
             $table->string('alcance',2000)->nullable();
             $table->tinyInteger('tipo_idea')->default(1); //1- emprendedor - 2- empresa - 3- grupo de investigacion
+             //1- emprendedor - 2- empresa - 3- grupo de investigacion
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_ideas_nodo1_idx');
+            $table->index(["estadoidea_id"], 'fk_ideas_estadosidea1_idx');
 
 
             $table->foreign('nodo_id', 'fk_ideas_nodo1_idx')
                 ->references('id')->on('nodos');
+
+            $table->foreign('estadoidea_id', 'fk_ideas_estadosidea1_idx')
+                ->references('id')->on('estadosidea');
+    
     
         });
     }

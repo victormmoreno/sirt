@@ -6,9 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class EstadoIdea extends Model
 {
-    protected $table = 'estadosideas';
 
-    public $primaryKey = 'id';
+    const IS_INICIO = 'Inicio';
+    const IS_CONVOCADO = 'Convocado';
+    const IS_ADMITIDO  = 'Admitido';
+    const IS_NO_ADMITIDO  = 'No Admitido';
+    const IS_NO_CONVOCADO  = 'No Convocado';
+    const IS_INHABILITADO  = 'Inhabilitado';
+
+    protected $table = 'estadosidea';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -16,8 +23,9 @@ class EstadoIdea extends Model
      */
     protected $fillable = [
         'nombre',
-        'descripcion',
     ];
+
+    public $timestamps = false;
 
     public function ideas()
     {

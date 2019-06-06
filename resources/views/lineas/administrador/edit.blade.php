@@ -22,7 +22,7 @@
                                 <form action="{{ route('lineas.update', $linea->id)}}" method="POST">
                                 	{!! method_field('PUT')!!}
 	                                @include('lineas.administrador.form', [
-								    	'btnText' => 'Actualizar',
+								    	'btnText' => 'Modificar',
 								   	])
 							   	</form>  
                             </div>
