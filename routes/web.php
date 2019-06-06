@@ -133,10 +133,13 @@ Route::group([
 	],
     function () {
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+        Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
+        Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
         Route::post('/', 'IdeaController@store')->name('idea.store');
+        Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
     }
 );
 

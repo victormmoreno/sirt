@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Events\Idea\IdeaHasReceived;
 use App\Http\Requests\IdeaFormRequest;
 use App\Http\Requests\IdeaEditFormRequest;
+use App\Http\Requests\IdeaEGIFormRequest;
 use App\Mail\IdeaEnviadaEmprendedor;
 use App\Models\EstadoIdea;
 use App\Models\Idea;
@@ -53,6 +54,28 @@ class IdeaController extends Controller
         return view('ideas.fanpage', compact('nodos'));
     }
 
+    // ------------------------------- Método registrar una idea de proyecto con empresas o grupos de investigación
+    public function empresasGI()
+    {
+      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+        return view('ideas.infocenter.egi');
+      }
+    }
+
+    //------------------ Datatable que muestra las ideas con grupos de investigación/empresas
+    public function ideasEmpGI()
+    {
+      if (request()->ajax()) {
+        $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo(auth()->user()->infocenter->nodo_id);
+        return datatables()->of($consultaIdeasEmpGI)->make(true);
+      }
+      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+        return view('ideas.infocenter.index');
+      } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+        return view('ideas.gestor.index');
+      }
+    }
+
 
 
     /*=====  End of metodo para mostrar el registro de ideas en la pagina principal de la aplicacion  ======*/
@@ -60,8 +83,10 @@ class IdeaController extends Controller
     //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
+      $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
       if (request()->ajax()) {
-        $consultaIdeas = Idea::ConsultarIdeasDelNodo(1)->get();
+        $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
+
         return datatables()->of($consultaIdeas)
         ->addColumn('details', function ($data) {
           $button = '
@@ -83,13 +108,13 @@ class IdeaController extends Controller
           $edit = '<a href="' . route("idea.edit", $data->consecutivo) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
         })->rawColumns(['details', 'edit', 'soft_delete', 'dont_apply'])->make(true);
-        // $consultaIdeasEmpGI = Idea::select
+        // $this->ideasEmpGI();
       }
 
       if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
-        return view('ideas.infocenter.index');
+        return view('ideas.infocenter.index', compact('nodo'));
       } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
-        return view('ideas.gestor.index');
+        return view('ideas.gestor.index', compact('nodo'));
       }
     }
 
@@ -126,6 +151,19 @@ class IdeaController extends Controller
         }
 
          return redirect('ideas');
+    }
+
+    public function storeEGI(IdeaEGIFormRequest $request)
+    {
+      // dd($request->txttipo_idea[1]);
+      // $request1 = $request;
+      $idea = $this->ideaRepository->StoreIdeaEmpGI($request);
+      if ($idea != null) {
+          Alert::success('this is success alert');
+      }else{
+          Alert::error("La idea  no se ha creado.",'Registro Erróneo', "error");
+      }
+      return redirect('idea');
     }
 
     /**

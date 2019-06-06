@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('meta-title', 'Ideas')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
   <div class="content">
@@ -13,7 +13,7 @@
                 <div class="row">
                   <div class="col s12 m8 l8">
                     <div class="center-align">
-                      <span class="card-title center-align">Ideas de Tecnoparque nodo "FALTA"</span>
+                      <span class="card-title center-align">Ideas de Tecnoparque nodo {{$nodo}}</span>
                     </div>
                   </div>
                   <div class="col s12 m2 l2">
@@ -25,7 +25,7 @@
                   </div>
                   <div class="col s12 m2 l2">
                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nueva Idea de Proyecto (Empresa/Grupo de Investigación)">
+                      <a href="{{route('idea.egi')}}" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nueva Idea de Proyecto (Empresa/Grupo de Investigación)">
                         <i class="material-icons">business</i>
                       </a>
                     </div>
@@ -33,7 +33,7 @@
                 </div>
                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                   <li class="tab col s3"><a href="#ideasProyecto" class="active">Ideas de Proyecto (emprendedor)</a></li>
-                  <li class="tab col s3"><a href="#ideasProyectoEmpresa">Ideas de Proyecto (empresa/grupo de investigación)</a></li>
+                  <li class="tab col s3"><a href="#ideasProyectoEmpresa" onclick="secondDataTable();">Ideas de Proyecto (empresa/grupo de investigación)</a></li>
                   <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                 </ul>
                 <div class="divider"></div>
@@ -60,7 +60,7 @@
                   </table>
                 </div>
                 <div id="ideasProyectoEmpresa">
-                  <table id="tblideasempresas" class="display responsive-table datatable-example">
+                  <table id="tblideasempresas" class="dataTable js-state browser-default">
                     <thead>
                       <tr>
                         <th>Consecutivo de la Idea</th>
@@ -101,7 +101,7 @@
             </a>
           </li>
           <li>
-            <a class="btn-floating green" href="">
+            <a class="btn-floating green" href="{{route('idea.egi')}}">
               <i class="material-icons">business</i>
             </a>
           </li>

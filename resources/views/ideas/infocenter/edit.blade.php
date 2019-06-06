@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('meta-title', 'Ideas')
 @section('content')
 
 <main class="mn-inner inner-active-sidebar">

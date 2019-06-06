@@ -31,8 +31,25 @@ class IdeaRepository
             "descripcion"        => $request->input('txtdescripcion'),
             "objetivo"           => $request->input('txtobjetivo'),
             "alcance"            => $request->input('txtalcance'),
+            'estadoidea_id' => 1,
             "tipo_idea"           => Idea::IsEmprendedor(),
 
+        ]);
+
+        return $idea;
+    }
+
+    public function StoreIdeaEmpGI($request)
+    {
+
+        // dd($request->all());
+        $idea = Idea::create([
+          "nodo_id"            => auth()->user()->infocenter->nodo_id,
+          "nombres_contacto"   => $request->input('txtnidcod'),
+          "apellidos_contacto" => $request->input('txtnombreempgi'),
+          "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
+          "tipo_idea"    => $request->txttipo_idea[1],
+          "estadoidea_id" => 1,
         ]);
 
         return $idea;
