@@ -63,7 +63,8 @@ $(document).ready(function() {
     ],
   });
   $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
-  // $('.modal').modal();
+<<<<<<< HEAD
+  $('.modal').modal();
 });
 
 function detalles(id){

@@ -4,11 +4,12 @@ namespace App;
 
 use App\Models\ActivationToken;
 use App\Models\DinamizadorInfocenter;
+use App\Models\Gestor;
+use App\Models\GradoEscolaridad;
+use App\Models\Infocenter;
 use App\Models\Nodo;
 use App\Models\Rols;
-use App\Models\GradoEscolaridad;
 use App\Models\TipoDocumento;
-use App\Models\Gestor;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -163,6 +164,11 @@ class User extends Authenticatable implements JWTSubject
     public function gestor()
     {
         return $this->hasOne(Gestor::class,'user_id', 'id');
+    }
+
+    public function infocenter()
+    {
+        return $this->hasOne(Infocenter::class,'user_id', 'id');
     }
 
     /*=====  End of relaciones eloquent  ======*/
