@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\GradoEscolaridad;
+use App\Models\Nodo;
 use App\Models\Rols;
 use App\Models\TipoDocumento;
 use App\User;
@@ -59,7 +60,7 @@ class UsersTableSeeder extends Seeder
             'estrato'             => 3,
         ]);
 
-        $gestorRamiro =$userRamiro->gestor()->create([
+        $userRamiro->gestor()->create([
             'user_id' => 1,
             'nodo_id' => 1,
             'lineatecnologica_id' => 1,
@@ -236,23 +237,28 @@ class UsersTableSeeder extends Seeder
         //     'estrato'             => 3,
         // ]);
 
-        $userAdmin = User::create([
+        $userInfocenter = User::create([
             'rol_id'              => Rols::where('nombre', '=', 'Infocenter')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnologo')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'nombres'             => 'julian',
-            'apellidos'           => 'londoño',
-            'documento'           => '1027890334',
-            'email'               => 'jlondono433@misena.edu.co',
+            'nombres'             => 'Nathalia',
+            'apellidos'           => 'Lopez',
+            'documento'           => '435442232',
+            'email'               => 'nataliainfo@misena.edu.co',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => '413324',
             'celular'             => '342452323',
-            'fechanacimiento'     => '1996-09-12',
-            'genero'              => User::IsMasculino(),
+            'fechanacimiento'     => '1980-09-12',
+            'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
             'remember_token'      => Str::random(10),
             'password'            => '123456789',
-            'estrato'             => 1,
+            'estrato'             => rand(1, 6),
+        ]);
+
+        $userInfocenter->infocenter()->create([
+            'nodo_id' => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'user_id' => $userInfocenter->id,
         ]);
 
          $userAdmin = User::create([
@@ -271,7 +277,7 @@ class UsersTableSeeder extends Seeder
             'estado'              => User::IsActive(),
             'remember_token'      => Str::random(10),
             'password'            => '123456789',
-            'estrato'             => 1,
+            'estrato'             => rand(1, 6),
         ]);
 
         $userAdmin->assignRole($roleAdministrador);

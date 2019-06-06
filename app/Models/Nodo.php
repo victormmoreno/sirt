@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -30,16 +29,12 @@ class Nodo extends Model
         return $this->belongsTo(Centro::class, 'centro_id', 'id');
     }
 
-    // public function centros()
-    // {
-    //   return $this->hasMany(Centro::class, 'centro_id', 'id');
-    // }
-  
+    public function infocenter()
+    {
+        return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
+    }
 
     /*=====  End of relaciones eloquent  ======*/
-
-
-
 
     /*==============================================================
     =            scope para consultar la lista de nodos            =
@@ -48,16 +43,22 @@ class Nodo extends Model
     public function scopeSelectNodo($query)
     {
 
-        return $query->select('nodos.id',DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
+        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
 
     }
 
-
     /*=====  End of scope para consultar la lista de nodos  ======*/
 
+    /*====================================================================================================
+    =            scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso            =
+    ====================================================================================================*/
+    public function scopeUserNodo($query, $nodo_id)
+    {
 
+        return $query->where('id', '=', $nodo_id);
 
+    }
 
-
+    /*=====  End of scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso  ======*/
 
 }

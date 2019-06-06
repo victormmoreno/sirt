@@ -12,8 +12,8 @@
  */
 
 Route::get('/', function () {
-    // $user = App\Models\Ciudad::with(['departamento'])->first();
-    // dd($user);
+    // $user = App\Models\Nodo::with(['infocenter'])->first();
+    // dd($user->infocenter);
     // $user = App\User::infoUserNodo('Infocenter','Medellin')
     // ->first()->nodo_direccion;
 
