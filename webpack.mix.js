@@ -104,13 +104,14 @@ mix.scripts([
 		'resources/assets/plugins/sweetalert/sweetalert.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/js/alpha.js',
+		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
 
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
-
+		'resources/app/ideas/gestor/index.js',
 	],'public/js/app2.js');
 
 mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
