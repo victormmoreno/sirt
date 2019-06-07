@@ -86,7 +86,6 @@ class IdeaController extends Controller
       $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
       if (request()->ajax()) {
         $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
-
         return datatables()->of($consultaIdeas)
         ->addColumn('details', function ($data) {
           $button = '

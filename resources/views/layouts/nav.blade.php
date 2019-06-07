@@ -20,7 +20,7 @@
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
             @else
-            {{ auth()->user()->nombre_completo}}
+            {{ auth()->user()->nombres}} {{ auth()->user()->apellidos}}
 
             @endguest
           </a>
@@ -106,7 +106,7 @@
             @guest
 
             @else
-            {{ auth()->user()->nombre_completo}}
+            {{ auth()->user()->nombres}} {{auth()->user()->apellidos}}
             @endguest
           </p>
           <span>
