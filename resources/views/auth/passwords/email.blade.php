@@ -37,8 +37,19 @@
                                     Ingresa tu email aquí debajo para enviarte tu nueva contraseña
                                 </p>
                                 @if (session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
+                                <div class="card green darken-1">
+                                    <div class="row">
+                                        <div class="col s12 m10">
+                                            <div class="card-content white-text">
+                                                <p>
+                                                    <i class="material-icons left">
+                                                        info_outline
+                                                    </i>
+                                                    {{ session('status') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 @endif
                             </div>
@@ -54,9 +65,7 @@
                                             {{ __('E-Mail Address') }}
                                          </label>
                                         @error('email')
-                                            <span class="helper-text">
-                                                 <strong>{{ $message }}</strong>
-                                           </span>
+                                            <label id="email-error" class="error" for="email">{{ $message }}</label>
                                         @enderror
                                         
                                     </div>

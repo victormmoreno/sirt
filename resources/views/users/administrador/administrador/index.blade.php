@@ -61,9 +61,9 @@
 </main>
 <div id="modal1" class="modal">
   <div class="modal-content">
-    <center><h4 id="titulo" class="center-aling"></h4></center>
+    <center><h4 id="titulo_administrador" class="center-aling"></h4></center>
     <div class="divider"></div>
-    <div id="detalle_idea"></div>
+    <div id="detalle_administrador"></div>
   </div>
   <div class="modal-footer">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>

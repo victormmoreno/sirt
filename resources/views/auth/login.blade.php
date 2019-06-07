@@ -2,31 +2,30 @@
 
 @section('content-auth')
   
-    <div class="mn-content valign-wrapper" id="app">
-        <main class="mn-inner container">
-            <div class="valign">
-                <div class="row">
-                    <div class="col s12 m6 l6 offset-l3 offset-m3">
-                        <div class="card white darken-1">
-                            <div class="card-content ">
-                                <span class="card-title center-align">
-                                    <div class="row">
-                                        <div class="col s12 m12 l12">
-                                            <a href="">
-                                                <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title responsive-img"></img>
-                                            </a>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <div class="col s12 m12 l12">
-                                            <div class="divider" style="background:#008981;"></div>
-                                            <a class="footer-text left-align" href="">
-                                                <i class="material-icons arrow-l">arrow_back</i>
-                                            </a>INICIAR SESIÓN
-                                        </div>
-                                    </div>
-                                </span>
-                
+<div class="mn-content valign-wrapper" id="app">
+    <main class="mn-inner container">
+      <div class="valign">
+          <div class="row">
+              <div class="col s12 m6 l6 offset-l3 offset-m3">
+                  <div class="card white darken-1">
+                      <div class="card-content ">
+                          <span class="card-title center-align">
+                              <div class="row">
+                                  <div class="col s12 m12 l12">
+                                      <a href="">
+                                          <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title responsive-img"></img>
+                                      </a>
+                                  </div>
+                                  <br>
+                                  <br>
+                                  <div class="col s12 m12 l12">
+                                      <div class="divider" style="background:#008981;"></div>
+                                        <a class="footer-text left-align" href="">
+                                            <i class="material-icons arrow-l">arrow_back</i>
+                                        </a>INICIAR SESIÓN
+                                  </div>
+                              </div>
+                            </span>
                 <div class="row">
                   <form   method="POST" action="{{ route('login') }}">
                     @csrf
@@ -36,9 +35,7 @@
                       <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Ingresa tu correo">
                       <label for="email" class="active">{{ __('E-Mail Address') }}</label>
                       @error('email')
-                       <span class="helper-text">
-                             <strong>{{ $message }}</strong>
-                       </span>
+                       <label id="email-error" class="error" for="email">{{ $message }}</label>
                      @enderror
                     </div>
                     <div class="input-field col s12">
@@ -47,9 +44,7 @@
                       <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Ingresa tu contraseña">
                       <label for="password" class="active">{{ __('Password') }}</label>
                       @error('password')
-                            <span class="helper-text">
-                             <strong>{{ $message }}</strong>
-                       </span>
+                           <label id="password-error" class="error" for="password">{{ $message }}</label>
                         @enderror
                     </div>
 

@@ -25,6 +25,7 @@ class CreateArticulacionesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('entidades_id');
             $table->unsignedInteger('tipoarticulacion_id');
+            $table->unsignedInteger('gestor_id');
             $table->string('nombre', 100);
             $table->tinyInteger('revisado_final')->default('0');
             $table->tinyInteger('tipo_articulacion');
@@ -63,6 +64,10 @@ class CreateArticulacionesTable extends Migration
                 ->references('id')->on('tiposarticulaciones')
                 ->onDelete('no action')
                 ->onUpdate('no action');
+
+            $table->foreign('gestor_id')
+                ->references('id')->on('gestores');
+            
         });
     }
 
