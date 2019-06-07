@@ -32,6 +32,11 @@ class DatabaseSeeder extends Seeder
                 'rol', //tabla vieja
                 'roles',
                 'ocupaciones',
+                'ingresos',
+                'infocenter',
+                'dinamizador',
+                'gestores',
+                'talentos',
                 'users',
                 'permissions',
                 'lineas',
@@ -44,6 +49,7 @@ class DatabaseSeeder extends Seeder
                 'gradosescolaridad',
                 'servicios',
                 'tiposdocumentos',
+                'estadosidea',
                 'sectores',
                 'tiposarticulaciones',
                 'perfiles',
@@ -62,6 +68,11 @@ class DatabaseSeeder extends Seeder
                 'centros',
                 'nodos',
                 'tecnoacademias',
+                'ingresos',
+                'infocenter',
+                'dinamizador',
+                'gestores',
+                'talentos',
                 'users',
             ]);
         }else{

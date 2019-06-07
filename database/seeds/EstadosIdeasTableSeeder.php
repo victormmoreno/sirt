@@ -15,64 +15,34 @@ class EstadosIdeasTableSeeder extends Seeder
 
         EstadoIdea::create([
             'id'          => 1,
-            'nombre'      => 'Inicio Emprendedor',
-            'descripcion' => '',
+            'nombre'      => 'Inicio',
         ]);
 
         EstadoIdea::create([
             'id'          => 2,
-            'nombre'      => 'Aprobado Emprendedor',
-            'descripcion' => '',
+            'nombre'      => 'Convocado',
         ]);
 
         EstadoIdea::create([
             'id'          => 3,
-            'nombre'      => 'Asociado Emprendedor',
-            'descripcion' => '',
+            'nombre'      => 'Admitido',
         ]);
 
         EstadoIdea::create([
             'id'          => 4,
-            'nombre'      => 'Entrenamiento Emprendedor',
-            'descripcion' => '',
+            'nombre'      => 'No Admitido',
         ]);
 
         EstadoIdea::create([
             'id'          => 5,
-            'nombre'      => 'Comite Emprendedor',
-            'descripcion' => '',
+            'nombre'      => 'No Convocado',
         ]);
 
         EstadoIdea::create([
             'id'          => 6,
-            'nombre'      => 'Asociado Empresa-grupos',
-            'descripcion' => '',
+            'nombre'      => 'Inhabilitado',
         ]);
 
-        EstadoIdea::create([
-            'id'          => 7,
-            'nombre'      => 'No Aprobada',
-            'descripcion' => '',
-        ]);
-
-        EstadoIdea::create([
-            'id'          => 8,
-            'nombre'      => 'Inhabilitada',
-            'descripcion' => '',
-        ]);
-
-        EstadoIdea::create([
-            'id'          => 9,
-            'nombre'      => 'No Aplica',
-            'descripcion' => '',
-        ]);
-
-        EstadoIdea::create([
-            'id'          => 10,
-            'nombre'      => 'Inicial empresa-grupos',
-            'descripcion' => '',
-        ]);
-
-        // factory(EstadoIdea::class, 5)->create();
+        
     }
 }

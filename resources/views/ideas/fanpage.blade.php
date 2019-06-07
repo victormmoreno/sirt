@@ -20,6 +20,7 @@
                         <div class="row" method="post">
                             <form class="col s12 m12 l12" method="post" action="{{ route('idea.store') }}">
                                 @csrf
+                                @if ($errors->any())
                                 <div class="card red lighten-3">
                                     <div class="row">
                                         <div class="col s12 m10">
@@ -34,6 +35,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                                 <center>
                                     <p align="center" class="description text-center">
                                         Ingresa tu idea de proyecto aquí debajo.

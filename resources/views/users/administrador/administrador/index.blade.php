@@ -22,7 +22,7 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Administradores Red Tecnoparque
+                                            Administradores {{ config('app.name')}}
                                         </span>
                                     </div>
                                 </div>
@@ -41,10 +41,14 @@
                             <br>
                                 <table class="display responsive-table" id="administrador_table">
                                     <thead>
-                                        <th>Abreviatura</th>
-                                        <th>Linea</th>
-                                        <th>Descripcion</th>
-                                        <th>Opciones</th>
+                                        <th>Tipo Documento</th>
+                                        <th>Docuemento</th>
+                                        <th>Administrador</th>
+                                        <th>Correo</th>
+                                        <th>Telefono</th>
+                                        <th>Estado Sistema</th>
+                                        <th>Detalles</th>
+                                        <th>Editar</th>
                                     </thead>
                     
                                 </table>
@@ -55,4 +59,14 @@
         </div>
     </div>
 </main>
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    <center><h4 id="titulo" class="center-aling"></h4></center>
+    <div class="divider"></div>
+    <div id="detalle_idea"></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
+  </div>
+</div>
 @endsection
