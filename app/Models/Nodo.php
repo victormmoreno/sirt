@@ -70,7 +70,7 @@ class Nodo extends Model
     /*====================================================================================================
     =            scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso            =
     ====================================================================================================*/
-    
+
 
     public function scopeListNodos($query)
     {
