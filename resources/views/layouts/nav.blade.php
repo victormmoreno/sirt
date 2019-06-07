@@ -20,7 +20,7 @@
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
             @else
-            {{ auth()->user()->nombres}} {{ auth()->user()->apellidos}}
+            {{auth()->user()->nombres}} {{ auth()->user()->apellidos}}
 
             @endguest
           </a>
@@ -156,20 +156,20 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey {{ setActiveRoutePadding('idea') }}">
-          <i class="material-icons">lightbulb_outline</i>Ideas de Proyecto
-          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
+        <a class="collapsible-header waves-effect waves-grey {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
+          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
         </a>
         <div class="collapsible-body">
           <ul>
             <li>
               <a href="{{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}">
-                <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} ">lightbulb</i>Ideas
+                <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
               </a>
             </li>
             <li>
-              <a href="{{route('idea.ideas')}}">
-                <i class="material-icons">library_books</i>Entrenamientos
+              <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+                <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Entrenamientos
               </a>
             </li>
             <li>

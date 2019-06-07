@@ -143,6 +143,26 @@ Route::group([
     }
 );
 
+//-------------------Route group para el módulo de ideas
+Route::group([
+    	'prefix' => 'entrenamientos'
+	],
+    function () {
+        Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
+        Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create');
+        Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit');
+        Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
+        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store');
+        // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
+        // Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
+        // Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
+        // Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
+        // Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
+        // Route::post('/', 'IdeaController@store')->name('idea.store');
+        // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
+    }
+);
+
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
 ===================================================================*/

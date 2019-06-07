@@ -19,12 +19,12 @@
                         <div class="row">
                             <div class="row">
                                 <center><span class="card-title center-align">Editar Linea <b>{{$linea->nombre}}</b></span> <i class="Small material-icons prefix">dns </i></center>
-                                <form action="{{ route('lineas.update', $linea->id)}}" method="POST">
+                                <form action="{{ route('lineas.update', $linea->id)}}" method="POST" onsubmit="return checkSubmit()">
                                 	{!! method_field('PUT')!!}
 	                                @include('lineas.administrador.form', [
 								    	'btnText' => 'Modificar',
 								   	])
-							   	</form>  
+							   	</form>
                             </div>
                         </div>
                     </div>

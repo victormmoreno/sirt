@@ -15847,6 +15847,4845 @@ var b=a(this).index();c(k,b,d),i.find("li").eq(b).find(":checkbox").prop("checke
 
 })();
 
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+ *
+ * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
+ *
+ * Copyright (c) 2012, Matias Meno
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
+// The Emitter class provides the ability to call `.on()` on Dropzone to listen
+// to events.
+// It is strongly based on component's emitter class, and I removed the
+// functionality because of the dependency hell with different frameworks.
+var Emitter = function () {
+  function Emitter() {
+    _classCallCheck(this, Emitter);
+  }
+
+  _createClass(Emitter, [{
+    key: "on",
+
+    // Add an event listener for given event
+    value: function on(event, fn) {
+      this._callbacks = this._callbacks || {};
+      // Create namespace for this event
+      if (!this._callbacks[event]) {
+        this._callbacks[event] = [];
+      }
+      this._callbacks[event].push(fn);
+      return this;
+    }
+  }, {
+    key: "emit",
+    value: function emit(event) {
+      this._callbacks = this._callbacks || {};
+      var callbacks = this._callbacks[event];
+
+      if (callbacks) {
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        for (var _iterator = callbacks, _isArray = true, _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+          var _ref;
+
+          if (_isArray) {
+            if (_i >= _iterator.length) break;
+            _ref = _iterator[_i++];
+          } else {
+            _i = _iterator.next();
+            if (_i.done) break;
+            _ref = _i.value;
+          }
+
+          var callback = _ref;
+
+          callback.apply(this, args);
+        }
+      }
+
+      return this;
+    }
+
+    // Remove event listener for given event. If fn is not provided, all event
+    // listeners for that event will be removed. If neither is provided, all
+    // event listeners will be removed.
+
+  }, {
+    key: "off",
+    value: function off(event, fn) {
+      if (!this._callbacks || arguments.length === 0) {
+        this._callbacks = {};
+        return this;
+      }
+
+      // specific event
+      var callbacks = this._callbacks[event];
+      if (!callbacks) {
+        return this;
+      }
+
+      // remove all handlers
+      if (arguments.length === 1) {
+        delete this._callbacks[event];
+        return this;
+      }
+
+      // remove specific handler
+      for (var i = 0; i < callbacks.length; i++) {
+        var callback = callbacks[i];
+        if (callback === fn) {
+          callbacks.splice(i, 1);
+          break;
+        }
+      }
+
+      return this;
+    }
+  }]);
+
+  return Emitter;
+}();
+
+var Dropzone = function (_Emitter) {
+  _inherits(Dropzone, _Emitter);
+
+  _createClass(Dropzone, null, [{
+    key: "initClass",
+    value: function initClass() {
+
+      // Exposing the emitter class, mainly for tests
+      this.prototype.Emitter = Emitter;
+
+      /*
+       This is a list of all available events you can register on a dropzone object.
+        You can register an event handler like this:
+        dropzone.on("dragEnter", function() { });
+        */
+      this.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
+
+      this.prototype.defaultOptions = {
+        /**
+         * Has to be specified on elements other than form (or when the form
+         * doesn't have an `action` attribute). You can also
+         * provide a function that will be called with `files` and
+         * must return the url (since `v3.12.0`)
+         */
+        url: null,
+
+        /**
+         * Can be changed to `"put"` if necessary. You can also provide a function
+         * that will be called with `files` and must return the method (since `v3.12.0`).
+         */
+        method: "post",
+
+        /**
+         * Will be set on the XHRequest.
+         */
+        withCredentials: false,
+
+        /**
+         * The timeout for the XHR requests in milliseconds (since `v4.4.0`).
+         */
+        timeout: 30000,
+
+        /**
+         * How many file uploads to process in parallel (See the
+         * Enqueuing file uploads* documentation section for more info)
+         */
+        parallelUploads: 2,
+
+        /**
+         * Whether to send multiple files in one request. If
+         * this it set to true, then the fallback file input element will
+         * have the `multiple` attribute as well. This option will
+         * also trigger additional events (like `processingmultiple`). See the events
+         * documentation section for more information.
+         */
+        uploadMultiple: false,
+
+        /**
+         * Whether you want files to be uploaded in chunks to your server. This can't be
+         * used in combination with `uploadMultiple`.
+         *
+         * See [chunksUploaded](#config-chunksUploaded) for the callback to finalise an upload.
+         */
+        chunking: false,
+
+        /**
+         * If `chunking` is enabled, this defines whether **every** file should be chunked,
+         * even if the file size is below chunkSize. This means, that the additional chunk
+         * form data will be submitted and the `chunksUploaded` callback will be invoked.
+         */
+        forceChunking: false,
+
+        /**
+         * If `chunking` is `true`, then this defines the chunk size in bytes.
+         */
+        chunkSize: 2000000,
+
+        /**
+         * If `true`, the individual chunks of a file are being uploaded simultaneously.
+         */
+        parallelChunkUploads: false,
+
+        /**
+         * Whether a chunk should be retried if it fails.
+         */
+        retryChunks: false,
+
+        /**
+         * If `retryChunks` is true, how many times should it be retried.
+         */
+        retryChunksLimit: 3,
+
+        /**
+         * If not `null` defines how many files this Dropzone handles. If it exceeds,
+         * the event `maxfilesexceeded` will be called. The dropzone element gets the
+         * class `dz-max-files-reached` accordingly so you can provide visual feedback.
+         */
+        maxFilesize: 256,
+
+        /**
+         * The name of the file param that gets transferred.
+         * **NOTE**: If you have the option  `uploadMultiple` set to `true`, then
+         * Dropzone will append `[]` to the name.
+         */
+        paramName: "file",
+
+        /**
+         * Whether thumbnails for images should be generated
+         */
+        createImageThumbnails: true,
+
+        /**
+         * In MB. When the filename exceeds this limit, the thumbnail will not be generated.
+         */
+        maxThumbnailFilesize: 10,
+
+        /**
+         * If `null`, the ratio of the image will be used to calculate it.
+         */
+        thumbnailWidth: 120,
+
+        /**
+         * The same as `thumbnailWidth`. If both are null, images will not be resized.
+         */
+        thumbnailHeight: 120,
+
+        /**
+         * How the images should be scaled down in case both, `thumbnailWidth` and `thumbnailHeight` are provided.
+         * Can be either `contain` or `crop`.
+         */
+        thumbnailMethod: 'crop',
+
+        /**
+         * If set, images will be resized to these dimensions before being **uploaded**.
+         * If only one, `resizeWidth` **or** `resizeHeight` is provided, the original aspect
+         * ratio of the file will be preserved.
+         *
+         * The `options.transformFile` function uses these options, so if the `transformFile` function
+         * is overridden, these options don't do anything.
+         */
+        resizeWidth: null,
+
+        /**
+         * See `resizeWidth`.
+         */
+        resizeHeight: null,
+
+        /**
+         * The mime type of the resized image (before it gets uploaded to the server).
+         * If `null` the original mime type will be used. To force jpeg, for example, use `image/jpeg`.
+         * See `resizeWidth` for more information.
+         */
+        resizeMimeType: null,
+
+        /**
+         * The quality of the resized images. See `resizeWidth`.
+         */
+        resizeQuality: 0.8,
+
+        /**
+         * How the images should be scaled down in case both, `resizeWidth` and `resizeHeight` are provided.
+         * Can be either `contain` or `crop`.
+         */
+        resizeMethod: 'contain',
+
+        /**
+         * The base that is used to calculate the filesize. You can change this to
+         * 1024 if you would rather display kibibytes, mebibytes, etc...
+         * 1024 is technically incorrect, because `1024 bytes` are `1 kibibyte` not `1 kilobyte`.
+         * You can change this to `1024` if you don't care about validity.
+         */
+        filesizeBase: 1000,
+
+        /**
+         * Can be used to limit the maximum number of files that will be handled by this Dropzone
+         */
+        maxFiles: null,
+
+        /**
+         * An optional object to send additional headers to the server. Eg:
+         * `{ "My-Awesome-Header": "header value" }`
+         */
+        headers: null,
+
+        /**
+         * If `true`, the dropzone element itself will be clickable, if `false`
+         * nothing will be clickable.
+         *
+         * You can also pass an HTML element, a CSS selector (for multiple elements)
+         * or an array of those. In that case, all of those elements will trigger an
+         * upload when clicked.
+         */
+        clickable: true,
+
+        /**
+         * Whether hidden files in directories should be ignored.
+         */
+        ignoreHiddenFiles: true,
+
+        /**
+         * The default implementation of `accept` checks the file's mime type or
+         * extension against this list. This is a comma separated list of mime
+         * types or file extensions.
+         *
+         * Eg.: `image/*,application/pdf,.psd`
+         *
+         * If the Dropzone is `clickable` this option will also be used as
+         * [`accept`](https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept)
+         * parameter on the hidden file input as well.
+         */
+        acceptedFiles: null,
+
+        /**
+         * **Deprecated!**
+         * Use acceptedFiles instead.
+         */
+        acceptedMimeTypes: null,
+
+        /**
+         * If false, files will be added to the queue but the queue will not be
+         * processed automatically.
+         * This can be useful if you need some additional user input before sending
+         * files (or if you want want all files sent at once).
+         * If you're ready to send the file simply call `myDropzone.processQueue()`.
+         *
+         * See the [enqueuing file uploads](#enqueuing-file-uploads) documentation
+         * section for more information.
+         */
+        autoProcessQueue: true,
+
+        /**
+         * If false, files added to the dropzone will not be queued by default.
+         * You'll have to call `enqueueFile(file)` manually.
+         */
+        autoQueue: true,
+
+        /**
+         * If `true`, this will add a link to every file preview to remove or cancel (if
+         * already uploading) the file. The `dictCancelUpload`, `dictCancelUploadConfirmation`
+         * and `dictRemoveFile` options are used for the wording.
+         */
+        addRemoveLinks: false,
+
+        /**
+         * Defines where to display the file previews – if `null` the
+         * Dropzone element itself is used. Can be a plain `HTMLElement` or a CSS
+         * selector. The element should have the `dropzone-previews` class so
+         * the previews are displayed properly.
+         */
+        previewsContainer: null,
+
+        /**
+         * This is the element the hidden input field (which is used when clicking on the
+         * dropzone to trigger file selection) will be appended to. This might
+         * be important in case you use frameworks to switch the content of your page.
+         *
+         * Can be a selector string, or an element directly.
+         */
+        hiddenInputContainer: "body",
+
+        /**
+         * If null, no capture type will be specified
+         * If camera, mobile devices will skip the file selection and choose camera
+         * If microphone, mobile devices will skip the file selection and choose the microphone
+         * If camcorder, mobile devices will skip the file selection and choose the camera in video mode
+         * On apple devices multiple must be set to false.  AcceptedFiles may need to
+         * be set to an appropriate mime type (e.g. "image/*", "audio/*", or "video/*").
+         */
+        capture: null,
+
+        /**
+         * **Deprecated**. Use `renameFile` instead.
+         */
+        renameFilename: null,
+
+        /**
+         * A function that is invoked before the file is uploaded to the server and renames the file.
+         * This function gets the `File` as argument and can use the `file.name`. The actual name of the
+         * file that gets used during the upload can be accessed through `file.upload.filename`.
+         */
+        renameFile: null,
+
+        /**
+         * If `true` the fallback will be forced. This is very useful to test your server
+         * implementations first and make sure that everything works as
+         * expected without dropzone if you experience problems, and to test
+         * how your fallbacks will look.
+         */
+        forceFallback: false,
+
+        /**
+         * The text used before any files are dropped.
+         */
+        dictDefaultMessage: "Drop files here to upload",
+
+        /**
+         * The text that replaces the default message text it the browser is not supported.
+         */
+        dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+
+        /**
+         * The text that will be added before the fallback form.
+         * If you provide a  fallback element yourself, or if this option is `null` this will
+         * be ignored.
+         */
+        dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+
+        /**
+         * If the filesize is too big.
+         * `{{filesize}}` and `{{maxFilesize}}` will be replaced with the respective configuration values.
+         */
+        dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+
+        /**
+         * If the file doesn't match the file type.
+         */
+        dictInvalidFileType: "You can't upload files of this type.",
+
+        /**
+         * If the server response was invalid.
+         * `{{statusCode}}` will be replaced with the servers status code.
+         */
+        dictResponseError: "Server responded with {{statusCode}} code.",
+
+        /**
+         * If `addRemoveLinks` is true, the text to be used for the cancel upload link.
+         */
+        dictCancelUpload: "Cancel upload",
+
+        /**
+         * The text that is displayed if an upload was manually canceled
+         */
+        dictUploadCanceled: "Upload canceled.",
+
+        /**
+         * If `addRemoveLinks` is true, the text to be used for confirmation when cancelling upload.
+         */
+        dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+
+        /**
+         * If `addRemoveLinks` is true, the text to be used to remove a file.
+         */
+        dictRemoveFile: "Remove file",
+
+        /**
+         * If this is not null, then the user will be prompted before removing a file.
+         */
+        dictRemoveFileConfirmation: null,
+
+        /**
+         * Displayed if `maxFiles` is st and exceeded.
+         * The string `{{maxFiles}}` will be replaced by the configuration value.
+         */
+        dictMaxFilesExceeded: "You can not upload any more files.",
+
+        /**
+         * Allows you to translate the different units. Starting with `tb` for terabytes and going down to
+         * `b` for bytes.
+         */
+        dictFileSizeUnits: { tb: "TB", gb: "GB", mb: "MB", kb: "KB", b: "b" },
+        /**
+         * Called when dropzone initialized
+         * You can add event listeners here
+         */
+        init: function init() {},
+
+
+        /**
+         * Can be an **object** of additional parameters to transfer to the server, **or** a `Function`
+         * that gets invoked with the `files`, `xhr` and, if it's a chunked upload, `chunk` arguments. In case
+         * of a function, this needs to return a map.
+         *
+         * The default implementation does nothing for normal uploads, but adds relevant information for
+         * chunked uploads.
+         *
+         * This is the same as adding hidden input fields in the form element.
+         */
+        params: function params(files, xhr, chunk) {
+          if (chunk) {
+            return {
+              dzuuid: chunk.file.upload.uuid,
+              dzchunkindex: chunk.index,
+              dztotalfilesize: chunk.file.size,
+              dzchunksize: this.options.chunkSize,
+              dztotalchunkcount: chunk.file.upload.totalChunkCount,
+              dzchunkbyteoffset: chunk.index * this.options.chunkSize
+            };
+          }
+        },
+
+
+        /**
+         * A function that gets a [file](https://developer.mozilla.org/en-US/docs/DOM/File)
+         * and a `done` function as parameters.
+         *
+         * If the done function is invoked without arguments, the file is "accepted" and will
+         * be processed. If you pass an error message, the file is rejected, and the error
+         * message will be displayed.
+         * This function will not be called if the file is too big or doesn't match the mime types.
+         */
+        accept: function accept(file, done) {
+          return done();
+        },
+
+
+        /**
+         * The callback that will be invoked when all chunks have been uploaded for a file.
+         * It gets the file for which the chunks have been uploaded as the first parameter,
+         * and the `done` function as second. `done()` needs to be invoked when everything
+         * needed to finish the upload process is done.
+         */
+        chunksUploaded: function chunksUploaded(file, done) {
+          done();
+        },
+
+        /**
+         * Gets called when the browser is not supported.
+         * The default implementation shows the fallback input field and adds
+         * a text.
+         */
+        fallback: function fallback() {
+          // This code should pass in IE7... :(
+          var messageElement = void 0;
+          this.element.className = this.element.className + " dz-browser-not-supported";
+
+          for (var _iterator2 = this.element.getElementsByTagName("div"), _isArray2 = true, _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+            var _ref2;
+
+            if (_isArray2) {
+              if (_i2 >= _iterator2.length) break;
+              _ref2 = _iterator2[_i2++];
+            } else {
+              _i2 = _iterator2.next();
+              if (_i2.done) break;
+              _ref2 = _i2.value;
+            }
+
+            var child = _ref2;
+
+            if (/(^| )dz-message($| )/.test(child.className)) {
+              messageElement = child;
+              child.className = "dz-message"; // Removes the 'dz-default' class
+              break;
+            }
+          }
+          if (!messageElement) {
+            messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
+            this.element.appendChild(messageElement);
+          }
+
+          var span = messageElement.getElementsByTagName("span")[0];
+          if (span) {
+            if (span.textContent != null) {
+              span.textContent = this.options.dictFallbackMessage;
+            } else if (span.innerText != null) {
+              span.innerText = this.options.dictFallbackMessage;
+            }
+          }
+
+          return this.element.appendChild(this.getFallbackForm());
+        },
+
+
+        /**
+         * Gets called to calculate the thumbnail dimensions.
+         *
+         * It gets `file`, `width` and `height` (both may be `null`) as parameters and must return an object containing:
+         *
+         *  - `srcWidth` & `srcHeight` (required)
+         *  - `trgWidth` & `trgHeight` (required)
+         *  - `srcX` & `srcY` (optional, default `0`)
+         *  - `trgX` & `trgY` (optional, default `0`)
+         *
+         * Those values are going to be used by `ctx.drawImage()`.
+         */
+        resize: function resize(file, width, height, resizeMethod) {
+          var info = {
+            srcX: 0,
+            srcY: 0,
+            srcWidth: file.width,
+            srcHeight: file.height
+          };
+
+          var srcRatio = file.width / file.height;
+
+          // Automatically calculate dimensions if not specified
+          if (width == null && height == null) {
+            width = info.srcWidth;
+            height = info.srcHeight;
+          } else if (width == null) {
+            width = height * srcRatio;
+          } else if (height == null) {
+            height = width / srcRatio;
+          }
+
+          // Make sure images aren't upscaled
+          width = Math.min(width, info.srcWidth);
+          height = Math.min(height, info.srcHeight);
+
+          var trgRatio = width / height;
+
+          if (info.srcWidth > width || info.srcHeight > height) {
+            // Image is bigger and needs rescaling
+            if (resizeMethod === 'crop') {
+              if (srcRatio > trgRatio) {
+                info.srcHeight = file.height;
+                info.srcWidth = info.srcHeight * trgRatio;
+              } else {
+                info.srcWidth = file.width;
+                info.srcHeight = info.srcWidth / trgRatio;
+              }
+            } else if (resizeMethod === 'contain') {
+              // Method 'contain'
+              if (srcRatio > trgRatio) {
+                height = width / srcRatio;
+              } else {
+                width = height * srcRatio;
+              }
+            } else {
+              throw new Error("Unknown resizeMethod '" + resizeMethod + "'");
+            }
+          }
+
+          info.srcX = (file.width - info.srcWidth) / 2;
+          info.srcY = (file.height - info.srcHeight) / 2;
+
+          info.trgWidth = width;
+          info.trgHeight = height;
+
+          return info;
+        },
+
+
+        /**
+         * Can be used to transform the file (for example, resize an image if necessary).
+         *
+         * The default implementation uses `resizeWidth` and `resizeHeight` (if provided) and resizes
+         * images according to those dimensions.
+         *
+         * Gets the `file` as the first parameter, and a `done()` function as the second, that needs
+         * to be invoked with the file when the transformation is done.
+         */
+        transformFile: function transformFile(file, done) {
+          if ((this.options.resizeWidth || this.options.resizeHeight) && file.type.match(/image.*/)) {
+            return this.resizeImage(file, this.options.resizeWidth, this.options.resizeHeight, this.options.resizeMethod, done);
+          } else {
+            return done(file);
+          }
+        },
+
+
+        /**
+         * A string that contains the template used for each dropped
+         * file. Change it to fulfill your needs but make sure to properly
+         * provide all elements.
+         *
+         * If you want to use an actual HTML element instead of providing a String
+         * as a config option, you could create a div with the id `tpl`,
+         * put the template inside it and provide the element like this:
+         *
+         *     document
+         *       .querySelector('#tpl')
+         *       .innerHTML
+         *
+         */
+        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>",
+
+        // END OPTIONS
+        // (Required by the dropzone documentation parser)
+
+
+        /*
+         Those functions register themselves to the events on init and handle all
+         the user interface specific stuff. Overwriting them won't break the upload
+         but can break the way it's displayed.
+         You can overwrite them if you don't like the default behavior. If you just
+         want to add an additional event handler, register it on the dropzone object
+         and don't overwrite those options.
+         */
+
+        // Those are self explanatory and simply concern the DragnDrop.
+        drop: function drop(e) {
+          return this.element.classList.remove("dz-drag-hover");
+        },
+        dragstart: function dragstart(e) {},
+        dragend: function dragend(e) {
+          return this.element.classList.remove("dz-drag-hover");
+        },
+        dragenter: function dragenter(e) {
+          return this.element.classList.add("dz-drag-hover");
+        },
+        dragover: function dragover(e) {
+          return this.element.classList.add("dz-drag-hover");
+        },
+        dragleave: function dragleave(e) {
+          return this.element.classList.remove("dz-drag-hover");
+        },
+        paste: function paste(e) {},
+
+
+        // Called whenever there are no files left in the dropzone anymore, and the
+        // dropzone should be displayed as if in the initial state.
+        reset: function reset() {
+          return this.element.classList.remove("dz-started");
+        },
+
+
+        // Called when a file is added to the queue
+        // Receives `file`
+        addedfile: function addedfile(file) {
+          var _this2 = this;
+
+          if (this.element === this.previewsContainer) {
+            this.element.classList.add("dz-started");
+          }
+
+          if (this.previewsContainer) {
+            file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+            file.previewTemplate = file.previewElement; // Backwards compatibility
+
+            this.previewsContainer.appendChild(file.previewElement);
+            for (var _iterator3 = file.previewElement.querySelectorAll("[data-dz-name]"), _isArray3 = true, _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
+              var _ref3;
+
+              if (_isArray3) {
+                if (_i3 >= _iterator3.length) break;
+                _ref3 = _iterator3[_i3++];
+              } else {
+                _i3 = _iterator3.next();
+                if (_i3.done) break;
+                _ref3 = _i3.value;
+              }
+
+              var node = _ref3;
+
+              node.textContent = file.name;
+            }
+            for (var _iterator4 = file.previewElement.querySelectorAll("[data-dz-size]"), _isArray4 = true, _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
+              if (_isArray4) {
+                if (_i4 >= _iterator4.length) break;
+                node = _iterator4[_i4++];
+              } else {
+                _i4 = _iterator4.next();
+                if (_i4.done) break;
+                node = _i4.value;
+              }
+
+              node.innerHTML = this.filesize(file.size);
+            }
+
+            if (this.options.addRemoveLinks) {
+              file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
+              file.previewElement.appendChild(file._removeLink);
+            }
+
+            var removeFileEvent = function removeFileEvent(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (file.status === Dropzone.UPLOADING) {
+                return Dropzone.confirm(_this2.options.dictCancelUploadConfirmation, function () {
+                  return _this2.removeFile(file);
+                });
+              } else {
+                if (_this2.options.dictRemoveFileConfirmation) {
+                  return Dropzone.confirm(_this2.options.dictRemoveFileConfirmation, function () {
+                    return _this2.removeFile(file);
+                  });
+                } else {
+                  return _this2.removeFile(file);
+                }
+              }
+            };
+
+            for (var _iterator5 = file.previewElement.querySelectorAll("[data-dz-remove]"), _isArray5 = true, _i5 = 0, _iterator5 = _isArray5 ? _iterator5 : _iterator5[Symbol.iterator]();;) {
+              var _ref4;
+
+              if (_isArray5) {
+                if (_i5 >= _iterator5.length) break;
+                _ref4 = _iterator5[_i5++];
+              } else {
+                _i5 = _iterator5.next();
+                if (_i5.done) break;
+                _ref4 = _i5.value;
+              }
+
+              var removeLink = _ref4;
+
+              removeLink.addEventListener("click", removeFileEvent);
+            }
+          }
+        },
+
+
+        // Called whenever a file is removed.
+        removedfile: function removedfile(file) {
+          if (file.previewElement != null && file.previewElement.parentNode != null) {
+            file.previewElement.parentNode.removeChild(file.previewElement);
+          }
+          return this._updateMaxFilesReachedClass();
+        },
+
+
+        // Called when a thumbnail has been generated
+        // Receives `file` and `dataUrl`
+        thumbnail: function thumbnail(file, dataUrl) {
+          if (file.previewElement) {
+            file.previewElement.classList.remove("dz-file-preview");
+            for (var _iterator6 = file.previewElement.querySelectorAll("[data-dz-thumbnail]"), _isArray6 = true, _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : _iterator6[Symbol.iterator]();;) {
+              var _ref5;
+
+              if (_isArray6) {
+                if (_i6 >= _iterator6.length) break;
+                _ref5 = _iterator6[_i6++];
+              } else {
+                _i6 = _iterator6.next();
+                if (_i6.done) break;
+                _ref5 = _i6.value;
+              }
+
+              var thumbnailElement = _ref5;
+
+              thumbnailElement.alt = file.name;
+              thumbnailElement.src = dataUrl;
+            }
+
+            return setTimeout(function () {
+              return file.previewElement.classList.add("dz-image-preview");
+            }, 1);
+          }
+        },
+
+
+        // Called whenever an error occurs
+        // Receives `file` and `message`
+        error: function error(file, message) {
+          if (file.previewElement) {
+            file.previewElement.classList.add("dz-error");
+            if (typeof message !== "String" && message.error) {
+              message = message.error;
+            }
+            for (var _iterator7 = file.previewElement.querySelectorAll("[data-dz-errormessage]"), _isArray7 = true, _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : _iterator7[Symbol.iterator]();;) {
+              var _ref6;
+
+              if (_isArray7) {
+                if (_i7 >= _iterator7.length) break;
+                _ref6 = _iterator7[_i7++];
+              } else {
+                _i7 = _iterator7.next();
+                if (_i7.done) break;
+                _ref6 = _i7.value;
+              }
+
+              var node = _ref6;
+
+              node.textContent = message;
+            }
+          }
+        },
+        errormultiple: function errormultiple() {},
+
+
+        // Called when a file gets processed. Since there is a cue, not all added
+        // files are processed immediately.
+        // Receives `file`
+        processing: function processing(file) {
+          if (file.previewElement) {
+            file.previewElement.classList.add("dz-processing");
+            if (file._removeLink) {
+              return file._removeLink.innerHTML = this.options.dictCancelUpload;
+            }
+          }
+        },
+        processingmultiple: function processingmultiple() {},
+
+
+        // Called whenever the upload progress gets updated.
+        // Receives `file`, `progress` (percentage 0-100) and `bytesSent`.
+        // To get the total number of bytes of the file, use `file.size`
+        uploadprogress: function uploadprogress(file, progress, bytesSent) {
+          if (file.previewElement) {
+            for (var _iterator8 = file.previewElement.querySelectorAll("[data-dz-uploadprogress]"), _isArray8 = true, _i8 = 0, _iterator8 = _isArray8 ? _iterator8 : _iterator8[Symbol.iterator]();;) {
+              var _ref7;
+
+              if (_isArray8) {
+                if (_i8 >= _iterator8.length) break;
+                _ref7 = _iterator8[_i8++];
+              } else {
+                _i8 = _iterator8.next();
+                if (_i8.done) break;
+                _ref7 = _i8.value;
+              }
+
+              var node = _ref7;
+
+              node.nodeName === 'PROGRESS' ? node.value = progress : node.style.width = progress + "%";
+            }
+          }
+        },
+
+
+        // Called whenever the total upload progress gets updated.
+        // Called with totalUploadProgress (0-100), totalBytes and totalBytesSent
+        totaluploadprogress: function totaluploadprogress() {},
+
+
+        // Called just before the file is sent. Gets the `xhr` object as second
+        // parameter, so you can modify it (for example to add a CSRF token) and a
+        // `formData` object to add additional information.
+        sending: function sending() {},
+        sendingmultiple: function sendingmultiple() {},
+
+
+        // When the complete upload is finished and successful
+        // Receives `file`
+        success: function success(file) {
+          if (file.previewElement) {
+            return file.previewElement.classList.add("dz-success");
+          }
+        },
+        successmultiple: function successmultiple() {},
+
+
+        // When the upload is canceled.
+        canceled: function canceled(file) {
+          return this.emit("error", file, this.options.dictUploadCanceled);
+        },
+        canceledmultiple: function canceledmultiple() {},
+
+
+        // When the upload is finished, either with success or an error.
+        // Receives `file`
+        complete: function complete(file) {
+          if (file._removeLink) {
+            file._removeLink.innerHTML = this.options.dictRemoveFile;
+          }
+          if (file.previewElement) {
+            return file.previewElement.classList.add("dz-complete");
+          }
+        },
+        completemultiple: function completemultiple() {},
+        maxfilesexceeded: function maxfilesexceeded() {},
+        maxfilesreached: function maxfilesreached() {},
+        queuecomplete: function queuecomplete() {},
+        addedfiles: function addedfiles() {}
+      };
+
+      this.prototype._thumbnailQueue = [];
+      this.prototype._processingThumbnail = false;
+    }
+
+    // global utility
+
+  }, {
+    key: "extend",
+    value: function extend(target) {
+      for (var _len2 = arguments.length, objects = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        objects[_key2 - 1] = arguments[_key2];
+      }
+
+      for (var _iterator9 = objects, _isArray9 = true, _i9 = 0, _iterator9 = _isArray9 ? _iterator9 : _iterator9[Symbol.iterator]();;) {
+        var _ref8;
+
+        if (_isArray9) {
+          if (_i9 >= _iterator9.length) break;
+          _ref8 = _iterator9[_i9++];
+        } else {
+          _i9 = _iterator9.next();
+          if (_i9.done) break;
+          _ref8 = _i9.value;
+        }
+
+        var object = _ref8;
+
+        for (var key in object) {
+          var val = object[key];
+          target[key] = val;
+        }
+      }
+      return target;
+    }
+  }]);
+
+  function Dropzone(el, options) {
+    _classCallCheck(this, Dropzone);
+
+    var _this = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this));
+
+    var fallback = void 0,
+        left = void 0;
+    _this.element = el;
+    // For backwards compatibility since the version was in the prototype previously
+    _this.version = Dropzone.version;
+
+    _this.defaultOptions.previewTemplate = _this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+
+    _this.clickableElements = [];
+    _this.listeners = [];
+    _this.files = []; // All files
+
+    if (typeof _this.element === "string") {
+      _this.element = document.querySelector(_this.element);
+    }
+
+    // Not checking if instance of HTMLElement or Element since IE9 is extremely weird.
+    if (!_this.element || _this.element.nodeType == null) {
+      throw new Error("Invalid dropzone element.");
+    }
+
+    if (_this.element.dropzone) {
+      throw new Error("Dropzone already attached.");
+    }
+
+    // Now add this dropzone to the instances.
+    Dropzone.instances.push(_this);
+
+    // Put the dropzone inside the element itself.
+    _this.element.dropzone = _this;
+
+    var elementOptions = (left = Dropzone.optionsForElement(_this.element)) != null ? left : {};
+
+    _this.options = Dropzone.extend({}, _this.defaultOptions, elementOptions, options != null ? options : {});
+
+    // If the browser failed, just call the fallback and leave
+    if (_this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+      var _ret;
+
+      return _ret = _this.options.fallback.call(_this), _possibleConstructorReturn(_this, _ret);
+    }
+
+    // @options.url = @element.getAttribute "action" unless @options.url?
+    if (_this.options.url == null) {
+      _this.options.url = _this.element.getAttribute("action");
+    }
+
+    if (!_this.options.url) {
+      throw new Error("No URL provided.");
+    }
+
+    if (_this.options.acceptedFiles && _this.options.acceptedMimeTypes) {
+      throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+    }
+
+    if (_this.options.uploadMultiple && _this.options.chunking) {
+      throw new Error('You cannot set both: uploadMultiple and chunking.');
+    }
+
+    // Backwards compatibility
+    if (_this.options.acceptedMimeTypes) {
+      _this.options.acceptedFiles = _this.options.acceptedMimeTypes;
+      delete _this.options.acceptedMimeTypes;
+    }
+
+    // Backwards compatibility
+    if (_this.options.renameFilename != null) {
+      _this.options.renameFile = function (file) {
+        return _this.options.renameFilename.call(_this, file.name, file);
+      };
+    }
+
+    _this.options.method = _this.options.method.toUpperCase();
+
+    if ((fallback = _this.getExistingFallback()) && fallback.parentNode) {
+      // Remove the fallback
+      fallback.parentNode.removeChild(fallback);
+    }
+
+    // Display previews in the previewsContainer element or the Dropzone element unless explicitly set to false
+    if (_this.options.previewsContainer !== false) {
+      if (_this.options.previewsContainer) {
+        _this.previewsContainer = Dropzone.getElement(_this.options.previewsContainer, "previewsContainer");
+      } else {
+        _this.previewsContainer = _this.element;
+      }
+    }
+
+    if (_this.options.clickable) {
+      if (_this.options.clickable === true) {
+        _this.clickableElements = [_this.element];
+      } else {
+        _this.clickableElements = Dropzone.getElements(_this.options.clickable, "clickable");
+      }
+    }
+
+    _this.init();
+    return _this;
+  }
+
+  // Returns all files that have been accepted
+
+
+  _createClass(Dropzone, [{
+    key: "getAcceptedFiles",
+    value: function getAcceptedFiles() {
+      return this.files.filter(function (file) {
+        return file.accepted;
+      }).map(function (file) {
+        return file;
+      });
+    }
+
+    // Returns all files that have been rejected
+    // Not sure when that's going to be useful, but added for completeness.
+
+  }, {
+    key: "getRejectedFiles",
+    value: function getRejectedFiles() {
+      return this.files.filter(function (file) {
+        return !file.accepted;
+      }).map(function (file) {
+        return file;
+      });
+    }
+  }, {
+    key: "getFilesWithStatus",
+    value: function getFilesWithStatus(status) {
+      return this.files.filter(function (file) {
+        return file.status === status;
+      }).map(function (file) {
+        return file;
+      });
+    }
+
+    // Returns all files that are in the queue
+
+  }, {
+    key: "getQueuedFiles",
+    value: function getQueuedFiles() {
+      return this.getFilesWithStatus(Dropzone.QUEUED);
+    }
+  }, {
+    key: "getUploadingFiles",
+    value: function getUploadingFiles() {
+      return this.getFilesWithStatus(Dropzone.UPLOADING);
+    }
+  }, {
+    key: "getAddedFiles",
+    value: function getAddedFiles() {
+      return this.getFilesWithStatus(Dropzone.ADDED);
+    }
+
+    // Files that are either queued or uploading
+
+  }, {
+    key: "getActiveFiles",
+    value: function getActiveFiles() {
+      return this.files.filter(function (file) {
+        return file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED;
+      }).map(function (file) {
+        return file;
+      });
+    }
+
+    // The function that gets called when Dropzone is initialized. You
+    // can (and should) setup event listeners inside this function.
+
+  }, {
+    key: "init",
+    value: function init() {
+      var _this3 = this;
+
+      // In case it isn't set already
+      if (this.element.tagName === "form") {
+        this.element.setAttribute("enctype", "multipart/form-data");
+      }
+
+      if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
+        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+      }
+
+      if (this.clickableElements.length) {
+        var setupHiddenFileInput = function setupHiddenFileInput() {
+          if (_this3.hiddenFileInput) {
+            _this3.hiddenFileInput.parentNode.removeChild(_this3.hiddenFileInput);
+          }
+          _this3.hiddenFileInput = document.createElement("input");
+          _this3.hiddenFileInput.setAttribute("type", "file");
+          if (_this3.options.maxFiles === null || _this3.options.maxFiles > 1) {
+            _this3.hiddenFileInput.setAttribute("multiple", "multiple");
+          }
+          _this3.hiddenFileInput.className = "dz-hidden-input";
+
+          if (_this3.options.acceptedFiles !== null) {
+            _this3.hiddenFileInput.setAttribute("accept", _this3.options.acceptedFiles);
+          }
+          if (_this3.options.capture !== null) {
+            _this3.hiddenFileInput.setAttribute("capture", _this3.options.capture);
+          }
+
+          // Not setting `display="none"` because some browsers don't accept clicks
+          // on elements that aren't displayed.
+          _this3.hiddenFileInput.style.visibility = "hidden";
+          _this3.hiddenFileInput.style.position = "absolute";
+          _this3.hiddenFileInput.style.top = "0";
+          _this3.hiddenFileInput.style.left = "0";
+          _this3.hiddenFileInput.style.height = "0";
+          _this3.hiddenFileInput.style.width = "0";
+          Dropzone.getElement(_this3.options.hiddenInputContainer, 'hiddenInputContainer').appendChild(_this3.hiddenFileInput);
+          return _this3.hiddenFileInput.addEventListener("change", function () {
+            var files = _this3.hiddenFileInput.files;
+
+            if (files.length) {
+              for (var _iterator10 = files, _isArray10 = true, _i10 = 0, _iterator10 = _isArray10 ? _iterator10 : _iterator10[Symbol.iterator]();;) {
+                var _ref9;
+
+                if (_isArray10) {
+                  if (_i10 >= _iterator10.length) break;
+                  _ref9 = _iterator10[_i10++];
+                } else {
+                  _i10 = _iterator10.next();
+                  if (_i10.done) break;
+                  _ref9 = _i10.value;
+                }
+
+                var file = _ref9;
+
+                _this3.addFile(file);
+              }
+            }
+            _this3.emit("addedfiles", files);
+            return setupHiddenFileInput();
+          });
+        };
+        setupHiddenFileInput();
+      }
+
+      this.URL = window.URL !== null ? window.URL : window.webkitURL;
+
+      // Setup all event listeners on the Dropzone object itself.
+      // They're not in @setupEventListeners() because they shouldn't be removed
+      // again when the dropzone gets disabled.
+      for (var _iterator11 = this.events, _isArray11 = true, _i11 = 0, _iterator11 = _isArray11 ? _iterator11 : _iterator11[Symbol.iterator]();;) {
+        var _ref10;
+
+        if (_isArray11) {
+          if (_i11 >= _iterator11.length) break;
+          _ref10 = _iterator11[_i11++];
+        } else {
+          _i11 = _iterator11.next();
+          if (_i11.done) break;
+          _ref10 = _i11.value;
+        }
+
+        var eventName = _ref10;
+
+        this.on(eventName, this.options[eventName]);
+      }
+
+      this.on("uploadprogress", function () {
+        return _this3.updateTotalUploadProgress();
+      });
+
+      this.on("removedfile", function () {
+        return _this3.updateTotalUploadProgress();
+      });
+
+      this.on("canceled", function (file) {
+        return _this3.emit("complete", file);
+      });
+
+      // Emit a `queuecomplete` event if all files finished uploading.
+      this.on("complete", function (file) {
+        if (_this3.getAddedFiles().length === 0 && _this3.getUploadingFiles().length === 0 && _this3.getQueuedFiles().length === 0) {
+          // This needs to be deferred so that `queuecomplete` really triggers after `complete`
+          return setTimeout(function () {
+            return _this3.emit("queuecomplete");
+          }, 0);
+        }
+      });
+
+      var noPropagation = function noPropagation(e) {
+        e.stopPropagation();
+        if (e.preventDefault) {
+          return e.preventDefault();
+        } else {
+          return e.returnValue = false;
+        }
+      };
+
+      // Create the listeners
+      this.listeners = [{
+        element: this.element,
+        events: {
+          "dragstart": function dragstart(e) {
+            return _this3.emit("dragstart", e);
+          },
+          "dragenter": function dragenter(e) {
+            noPropagation(e);
+            return _this3.emit("dragenter", e);
+          },
+          "dragover": function dragover(e) {
+            // Makes it possible to drag files from chrome's download bar
+            // http://stackoverflow.com/questions/19526430/drag-and-drop-file-uploads-from-chrome-downloads-bar
+            // Try is required to prevent bug in Internet Explorer 11 (SCRIPT65535 exception)
+            var efct = void 0;
+            try {
+              efct = e.dataTransfer.effectAllowed;
+            } catch (error) {}
+            e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+
+            noPropagation(e);
+            return _this3.emit("dragover", e);
+          },
+          "dragleave": function dragleave(e) {
+            return _this3.emit("dragleave", e);
+          },
+          "drop": function drop(e) {
+            noPropagation(e);
+            return _this3.drop(e);
+          },
+          "dragend": function dragend(e) {
+            return _this3.emit("dragend", e);
+          }
+
+          // This is disabled right now, because the browsers don't implement it properly.
+          // "paste": (e) =>
+          //   noPropagation e
+          //   @paste e
+        } }];
+
+      this.clickableElements.forEach(function (clickableElement) {
+        return _this3.listeners.push({
+          element: clickableElement,
+          events: {
+            "click": function click(evt) {
+              // Only the actual dropzone or the message element should trigger file selection
+              if (clickableElement !== _this3.element || evt.target === _this3.element || Dropzone.elementInside(evt.target, _this3.element.querySelector(".dz-message"))) {
+                _this3.hiddenFileInput.click(); // Forward the click
+              }
+              return true;
+            }
+          }
+        });
+      });
+
+      this.enable();
+
+      return this.options.init.call(this);
+    }
+
+    // Not fully tested yet
+
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.disable();
+      this.removeAllFiles(true);
+      if (this.hiddenFileInput != null ? this.hiddenFileInput.parentNode : undefined) {
+        this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+        this.hiddenFileInput = null;
+      }
+      delete this.element.dropzone;
+      return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
+    }
+  }, {
+    key: "updateTotalUploadProgress",
+    value: function updateTotalUploadProgress() {
+      var totalUploadProgress = void 0;
+      var totalBytesSent = 0;
+      var totalBytes = 0;
+
+      var activeFiles = this.getActiveFiles();
+
+      if (activeFiles.length) {
+        for (var _iterator12 = this.getActiveFiles(), _isArray12 = true, _i12 = 0, _iterator12 = _isArray12 ? _iterator12 : _iterator12[Symbol.iterator]();;) {
+          var _ref11;
+
+          if (_isArray12) {
+            if (_i12 >= _iterator12.length) break;
+            _ref11 = _iterator12[_i12++];
+          } else {
+            _i12 = _iterator12.next();
+            if (_i12.done) break;
+            _ref11 = _i12.value;
+          }
+
+          var file = _ref11;
+
+          totalBytesSent += file.upload.bytesSent;
+          totalBytes += file.upload.total;
+        }
+        totalUploadProgress = 100 * totalBytesSent / totalBytes;
+      } else {
+        totalUploadProgress = 100;
+      }
+
+      return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
+    }
+
+    // @options.paramName can be a function taking one parameter rather than a string.
+    // A parameter name for a file is obtained simply by calling this with an index number.
+
+  }, {
+    key: "_getParamName",
+    value: function _getParamName(n) {
+      if (typeof this.options.paramName === "function") {
+        return this.options.paramName(n);
+      } else {
+        return "" + this.options.paramName + (this.options.uploadMultiple ? "[" + n + "]" : "");
+      }
+    }
+
+    // If @options.renameFile is a function,
+    // the function will be used to rename the file.name before appending it to the formData
+
+  }, {
+    key: "_renameFile",
+    value: function _renameFile(file) {
+      if (typeof this.options.renameFile !== "function") {
+        return file.name;
+      }
+      return this.options.renameFile(file);
+    }
+
+    // Returns a form that can be used as fallback if the browser does not support DragnDrop
+    //
+    // If the dropzone is already a form, only the input field and button are returned. Otherwise a complete form element is provided.
+    // This code has to pass in IE7 :(
+
+  }, {
+    key: "getFallbackForm",
+    value: function getFallbackForm() {
+      var existingFallback = void 0,
+          form = void 0;
+      if (existingFallback = this.getExistingFallback()) {
+        return existingFallback;
+      }
+
+      var fieldsString = "<div class=\"dz-fallback\">";
+      if (this.options.dictFallbackText) {
+        fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
+      }
+      fieldsString += "<input type=\"file\" name=\"" + this._getParamName(0) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : undefined) + " /><input type=\"submit\" value=\"Upload!\"></div>";
+
+      var fields = Dropzone.createElement(fieldsString);
+      if (this.element.tagName !== "FORM") {
+        form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
+        form.appendChild(fields);
+      } else {
+        // Make sure that the enctype and method attributes are set properly
+        this.element.setAttribute("enctype", "multipart/form-data");
+        this.element.setAttribute("method", this.options.method);
+      }
+      return form != null ? form : fields;
+    }
+
+    // Returns the fallback elements if they exist already
+    //
+    // This code has to pass in IE7 :(
+
+  }, {
+    key: "getExistingFallback",
+    value: function getExistingFallback() {
+      var getFallback = function getFallback(elements) {
+        for (var _iterator13 = elements, _isArray13 = true, _i13 = 0, _iterator13 = _isArray13 ? _iterator13 : _iterator13[Symbol.iterator]();;) {
+          var _ref12;
+
+          if (_isArray13) {
+            if (_i13 >= _iterator13.length) break;
+            _ref12 = _iterator13[_i13++];
+          } else {
+            _i13 = _iterator13.next();
+            if (_i13.done) break;
+            _ref12 = _i13.value;
+          }
+
+          var el = _ref12;
+
+          if (/(^| )fallback($| )/.test(el.className)) {
+            return el;
+          }
+        }
+      };
+
+      var _arr = ["div", "form"];
+      for (var _i14 = 0; _i14 < _arr.length; _i14++) {
+        var tagName = _arr[_i14];
+        var fallback;
+        if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
+          return fallback;
+        }
+      }
+    }
+
+    // Activates all listeners stored in @listeners
+
+  }, {
+    key: "setupEventListeners",
+    value: function setupEventListeners() {
+      return this.listeners.map(function (elementListeners) {
+        return function () {
+          var result = [];
+          for (var event in elementListeners.events) {
+            var listener = elementListeners.events[event];
+            result.push(elementListeners.element.addEventListener(event, listener, false));
+          }
+          return result;
+        }();
+      });
+    }
+
+    // Deactivates all listeners stored in @listeners
+
+  }, {
+    key: "removeEventListeners",
+    value: function removeEventListeners() {
+      return this.listeners.map(function (elementListeners) {
+        return function () {
+          var result = [];
+          for (var event in elementListeners.events) {
+            var listener = elementListeners.events[event];
+            result.push(elementListeners.element.removeEventListener(event, listener, false));
+          }
+          return result;
+        }();
+      });
+    }
+
+    // Removes all event listeners and cancels all files in the queue or being processed.
+
+  }, {
+    key: "disable",
+    value: function disable() {
+      var _this4 = this;
+
+      this.clickableElements.forEach(function (element) {
+        return element.classList.remove("dz-clickable");
+      });
+      this.removeEventListeners();
+      this.disabled = true;
+
+      return this.files.map(function (file) {
+        return _this4.cancelUpload(file);
+      });
+    }
+  }, {
+    key: "enable",
+    value: function enable() {
+      delete this.disabled;
+      this.clickableElements.forEach(function (element) {
+        return element.classList.add("dz-clickable");
+      });
+      return this.setupEventListeners();
+    }
+
+    // Returns a nicely formatted filesize
+
+  }, {
+    key: "filesize",
+    value: function filesize(size) {
+      var selectedSize = 0;
+      var selectedUnit = "b";
+
+      if (size > 0) {
+        var units = ['tb', 'gb', 'mb', 'kb', 'b'];
+
+        for (var i = 0; i < units.length; i++) {
+          var unit = units[i];
+          var cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
+
+          if (size >= cutoff) {
+            selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
+            selectedUnit = unit;
+            break;
+          }
+        }
+
+        selectedSize = Math.round(10 * selectedSize) / 10; // Cutting of digits
+      }
+
+      return "<strong>" + selectedSize + "</strong> " + this.options.dictFileSizeUnits[selectedUnit];
+    }
+
+    // Adds or removes the `dz-max-files-reached` class from the form.
+
+  }, {
+    key: "_updateMaxFilesReachedClass",
+    value: function _updateMaxFilesReachedClass() {
+      if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        if (this.getAcceptedFiles().length === this.options.maxFiles) {
+          this.emit('maxfilesreached', this.files);
+        }
+        return this.element.classList.add("dz-max-files-reached");
+      } else {
+        return this.element.classList.remove("dz-max-files-reached");
+      }
+    }
+  }, {
+    key: "drop",
+    value: function drop(e) {
+      if (!e.dataTransfer) {
+        return;
+      }
+      this.emit("drop", e);
+
+      // Convert the FileList to an Array
+      // This is necessary for IE11
+      var files = [];
+      for (var i = 0; i < e.dataTransfer.files.length; i++) {
+        files[i] = e.dataTransfer.files[i];
+      }
+
+      this.emit("addedfiles", files);
+
+      // Even if it's a folder, files.length will contain the folders.
+      if (files.length) {
+        var items = e.dataTransfer.items;
+
+        if (items && items.length && items[0].webkitGetAsEntry != null) {
+          // The browser supports dropping of folders, so handle items instead of files
+          this._addFilesFromItems(items);
+        } else {
+          this.handleFiles(files);
+        }
+      }
+    }
+  }, {
+    key: "paste",
+    value: function paste(e) {
+      if (__guard__(e != null ? e.clipboardData : undefined, function (x) {
+        return x.items;
+      }) == null) {
+        return;
+      }
+
+      this.emit("paste", e);
+      var items = e.clipboardData.items;
+
+
+      if (items.length) {
+        return this._addFilesFromItems(items);
+      }
+    }
+  }, {
+    key: "handleFiles",
+    value: function handleFiles(files) {
+      for (var _iterator14 = files, _isArray14 = true, _i15 = 0, _iterator14 = _isArray14 ? _iterator14 : _iterator14[Symbol.iterator]();;) {
+        var _ref13;
+
+        if (_isArray14) {
+          if (_i15 >= _iterator14.length) break;
+          _ref13 = _iterator14[_i15++];
+        } else {
+          _i15 = _iterator14.next();
+          if (_i15.done) break;
+          _ref13 = _i15.value;
+        }
+
+        var file = _ref13;
+
+        this.addFile(file);
+      }
+    }
+
+    // When a folder is dropped (or files are pasted), items must be handled
+    // instead of files.
+
+  }, {
+    key: "_addFilesFromItems",
+    value: function _addFilesFromItems(items) {
+      var _this5 = this;
+
+      return function () {
+        var result = [];
+        for (var _iterator15 = items, _isArray15 = true, _i16 = 0, _iterator15 = _isArray15 ? _iterator15 : _iterator15[Symbol.iterator]();;) {
+          var _ref14;
+
+          if (_isArray15) {
+            if (_i16 >= _iterator15.length) break;
+            _ref14 = _iterator15[_i16++];
+          } else {
+            _i16 = _iterator15.next();
+            if (_i16.done) break;
+            _ref14 = _i16.value;
+          }
+
+          var item = _ref14;
+
+          var entry;
+          if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
+            if (entry.isFile) {
+              result.push(_this5.addFile(item.getAsFile()));
+            } else if (entry.isDirectory) {
+              // Append all files from that directory to files
+              result.push(_this5._addFilesFromDirectory(entry, entry.name));
+            } else {
+              result.push(undefined);
+            }
+          } else if (item.getAsFile != null) {
+            if (item.kind == null || item.kind === "file") {
+              result.push(_this5.addFile(item.getAsFile()));
+            } else {
+              result.push(undefined);
+            }
+          } else {
+            result.push(undefined);
+          }
+        }
+        return result;
+      }();
+    }
+
+    // Goes through the directory, and adds each file it finds recursively
+
+  }, {
+    key: "_addFilesFromDirectory",
+    value: function _addFilesFromDirectory(directory, path) {
+      var _this6 = this;
+
+      var dirReader = directory.createReader();
+
+      var errorHandler = function errorHandler(error) {
+        return __guardMethod__(console, 'log', function (o) {
+          return o.log(error);
+        });
+      };
+
+      var readEntries = function readEntries() {
+        return dirReader.readEntries(function (entries) {
+          if (entries.length > 0) {
+            for (var _iterator16 = entries, _isArray16 = true, _i17 = 0, _iterator16 = _isArray16 ? _iterator16 : _iterator16[Symbol.iterator]();;) {
+              var _ref15;
+
+              if (_isArray16) {
+                if (_i17 >= _iterator16.length) break;
+                _ref15 = _iterator16[_i17++];
+              } else {
+                _i17 = _iterator16.next();
+                if (_i17.done) break;
+                _ref15 = _i17.value;
+              }
+
+              var entry = _ref15;
+
+              if (entry.isFile) {
+                entry.file(function (file) {
+                  if (_this6.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+                    return;
+                  }
+                  file.fullPath = path + "/" + file.name;
+                  return _this6.addFile(file);
+                });
+              } else if (entry.isDirectory) {
+                _this6._addFilesFromDirectory(entry, path + "/" + entry.name);
+              }
+            }
+
+            // Recursively call readEntries() again, since browser only handle
+            // the first 100 entries.
+            // See: https://developer.mozilla.org/en-US/docs/Web/API/DirectoryReader#readEntries
+            readEntries();
+          }
+          return null;
+        }, errorHandler);
+      };
+
+      return readEntries();
+    }
+
+    // If `done()` is called without argument the file is accepted
+    // If you call it with an error message, the file is rejected
+    // (This allows for asynchronous validation)
+    //
+    // This function checks the filesize, and if the file.type passes the
+    // `acceptedFiles` check.
+
+  }, {
+    key: "accept",
+    value: function accept(file, done) {
+      if (this.options.maxFilesize && file.size > this.options.maxFilesize * 1024 * 1024) {
+        return done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
+      } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
+        return done(this.options.dictInvalidFileType);
+      } else if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
+        return this.emit("maxfilesexceeded", file);
+      } else {
+        return this.options.accept.call(this, file, done);
+      }
+    }
+  }, {
+    key: "addFile",
+    value: function addFile(file) {
+      var _this7 = this;
+
+      file.upload = {
+        uuid: Dropzone.uuidv4(),
+        progress: 0,
+        // Setting the total upload size to file.size for the beginning
+        // It's actual different than the size to be transmitted.
+        total: file.size,
+        bytesSent: 0,
+        filename: this._renameFile(file),
+        chunked: this.options.chunking && (this.options.forceChunking || file.size > this.options.chunkSize),
+        totalChunkCount: Math.ceil(file.size / this.options.chunkSize)
+      };
+      this.files.push(file);
+
+      file.status = Dropzone.ADDED;
+
+      this.emit("addedfile", file);
+
+      this._enqueueThumbnail(file);
+
+      return this.accept(file, function (error) {
+        if (error) {
+          file.accepted = false;
+          _this7._errorProcessing([file], error); // Will set the file.status
+        } else {
+          file.accepted = true;
+          if (_this7.options.autoQueue) {
+            _this7.enqueueFile(file);
+          } // Will set .accepted = true
+        }
+        return _this7._updateMaxFilesReachedClass();
+      });
+    }
+
+    // Wrapper for enqueueFile
+
+  }, {
+    key: "enqueueFiles",
+    value: function enqueueFiles(files) {
+      for (var _iterator17 = files, _isArray17 = true, _i18 = 0, _iterator17 = _isArray17 ? _iterator17 : _iterator17[Symbol.iterator]();;) {
+        var _ref16;
+
+        if (_isArray17) {
+          if (_i18 >= _iterator17.length) break;
+          _ref16 = _iterator17[_i18++];
+        } else {
+          _i18 = _iterator17.next();
+          if (_i18.done) break;
+          _ref16 = _i18.value;
+        }
+
+        var file = _ref16;
+
+        this.enqueueFile(file);
+      }
+      return null;
+    }
+  }, {
+    key: "enqueueFile",
+    value: function enqueueFile(file) {
+      var _this8 = this;
+
+      if (file.status === Dropzone.ADDED && file.accepted === true) {
+        file.status = Dropzone.QUEUED;
+        if (this.options.autoProcessQueue) {
+          return setTimeout(function () {
+            return _this8.processQueue();
+          }, 0); // Deferring the call
+        }
+      } else {
+        throw new Error("This file can't be queued because it has already been processed or was rejected.");
+      }
+    }
+  }, {
+    key: "_enqueueThumbnail",
+    value: function _enqueueThumbnail(file) {
+      var _this9 = this;
+
+      if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
+        this._thumbnailQueue.push(file);
+        return setTimeout(function () {
+          return _this9._processThumbnailQueue();
+        }, 0); // Deferring the call
+      }
+    }
+  }, {
+    key: "_processThumbnailQueue",
+    value: function _processThumbnailQueue() {
+      var _this10 = this;
+
+      if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
+        return;
+      }
+
+      this._processingThumbnail = true;
+      var file = this._thumbnailQueue.shift();
+      return this.createThumbnail(file, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, true, function (dataUrl) {
+        _this10.emit("thumbnail", file, dataUrl);
+        _this10._processingThumbnail = false;
+        return _this10._processThumbnailQueue();
+      });
+    }
+
+    // Can be called by the user to remove a file
+
+  }, {
+    key: "removeFile",
+    value: function removeFile(file) {
+      if (file.status === Dropzone.UPLOADING) {
+        this.cancelUpload(file);
+      }
+      this.files = without(this.files, file);
+
+      this.emit("removedfile", file);
+      if (this.files.length === 0) {
+        return this.emit("reset");
+      }
+    }
+
+    // Removes all files that aren't currently processed from the list
+
+  }, {
+    key: "removeAllFiles",
+    value: function removeAllFiles(cancelIfNecessary) {
+      // Create a copy of files since removeFile() changes the @files array.
+      if (cancelIfNecessary == null) {
+        cancelIfNecessary = false;
+      }
+      for (var _iterator18 = this.files.slice(), _isArray18 = true, _i19 = 0, _iterator18 = _isArray18 ? _iterator18 : _iterator18[Symbol.iterator]();;) {
+        var _ref17;
+
+        if (_isArray18) {
+          if (_i19 >= _iterator18.length) break;
+          _ref17 = _iterator18[_i19++];
+        } else {
+          _i19 = _iterator18.next();
+          if (_i19.done) break;
+          _ref17 = _i19.value;
+        }
+
+        var file = _ref17;
+
+        if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
+          this.removeFile(file);
+        }
+      }
+      return null;
+    }
+
+    // Resizes an image before it gets sent to the server. This function is the default behavior of
+    // `options.transformFile` if `resizeWidth` or `resizeHeight` are set. The callback is invoked with
+    // the resized blob.
+
+  }, {
+    key: "resizeImage",
+    value: function resizeImage(file, width, height, resizeMethod, callback) {
+      var _this11 = this;
+
+      return this.createThumbnail(file, width, height, resizeMethod, true, function (dataUrl, canvas) {
+        if (canvas == null) {
+          // The image has not been resized
+          return callback(file);
+        } else {
+          var resizeMimeType = _this11.options.resizeMimeType;
+
+          if (resizeMimeType == null) {
+            resizeMimeType = file.type;
+          }
+          var resizedDataURL = canvas.toDataURL(resizeMimeType, _this11.options.resizeQuality);
+          if (resizeMimeType === 'image/jpeg' || resizeMimeType === 'image/jpg') {
+            // Now add the original EXIF information
+            resizedDataURL = ExifRestore.restore(file.dataURL, resizedDataURL);
+          }
+          return callback(Dropzone.dataURItoBlob(resizedDataURL));
+        }
+      });
+    }
+  }, {
+    key: "createThumbnail",
+    value: function createThumbnail(file, width, height, resizeMethod, fixOrientation, callback) {
+      var _this12 = this;
+
+      var fileReader = new FileReader();
+
+      fileReader.onload = function () {
+
+        file.dataURL = fileReader.result;
+
+        // Don't bother creating a thumbnail for SVG images since they're vector
+        if (file.type === "image/svg+xml") {
+          if (callback != null) {
+            callback(fileReader.result);
+          }
+          return;
+        }
+
+        return _this12.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
+      };
+
+      return fileReader.readAsDataURL(file);
+    }
+  }, {
+    key: "createThumbnailFromUrl",
+    value: function createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback, crossOrigin) {
+      var _this13 = this;
+
+      // Not using `new Image` here because of a bug in latest Chrome versions.
+      // See https://github.com/enyo/dropzone/pull/226
+      var img = document.createElement("img");
+
+      if (crossOrigin) {
+        img.crossOrigin = crossOrigin;
+      }
+
+      img.onload = function () {
+        var loadExif = function loadExif(callback) {
+          return callback(1);
+        };
+        if (typeof EXIF !== 'undefined' && EXIF !== null && fixOrientation) {
+          loadExif = function loadExif(callback) {
+            return EXIF.getData(img, function () {
+              return callback(EXIF.getTag(this, 'Orientation'));
+            });
+          };
+        }
+
+        return loadExif(function (orientation) {
+          file.width = img.width;
+          file.height = img.height;
+
+          var resizeInfo = _this13.options.resize.call(_this13, file, width, height, resizeMethod);
+
+          var canvas = document.createElement("canvas");
+          var ctx = canvas.getContext("2d");
+
+          canvas.width = resizeInfo.trgWidth;
+          canvas.height = resizeInfo.trgHeight;
+
+          if (orientation > 4) {
+            canvas.width = resizeInfo.trgHeight;
+            canvas.height = resizeInfo.trgWidth;
+          }
+
+          switch (orientation) {
+            case 2:
+              // horizontal flip
+              ctx.translate(canvas.width, 0);
+              ctx.scale(-1, 1);
+              break;
+            case 3:
+              // 180° rotate left
+              ctx.translate(canvas.width, canvas.height);
+              ctx.rotate(Math.PI);
+              break;
+            case 4:
+              // vertical flip
+              ctx.translate(0, canvas.height);
+              ctx.scale(1, -1);
+              break;
+            case 5:
+              // vertical flip + 90 rotate right
+              ctx.rotate(0.5 * Math.PI);
+              ctx.scale(1, -1);
+              break;
+            case 6:
+              // 90° rotate right
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(0, -canvas.width);
+              break;
+            case 7:
+              // horizontal flip + 90 rotate right
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(canvas.height, -canvas.width);
+              ctx.scale(-1, 1);
+              break;
+            case 8:
+              // 90° rotate left
+              ctx.rotate(-0.5 * Math.PI);
+              ctx.translate(-canvas.height, 0);
+              break;
+          }
+
+          // This is a bugfix for iOS' scaling bug.
+          drawImageIOSFix(ctx, img, resizeInfo.srcX != null ? resizeInfo.srcX : 0, resizeInfo.srcY != null ? resizeInfo.srcY : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, resizeInfo.trgX != null ? resizeInfo.trgX : 0, resizeInfo.trgY != null ? resizeInfo.trgY : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+
+          var thumbnail = canvas.toDataURL("image/png");
+
+          if (callback != null) {
+            return callback(thumbnail, canvas);
+          }
+        });
+      };
+
+      if (callback != null) {
+        img.onerror = callback;
+      }
+
+      return img.src = file.dataURL;
+    }
+
+    // Goes through the queue and processes files if there aren't too many already.
+
+  }, {
+    key: "processQueue",
+    value: function processQueue() {
+      var parallelUploads = this.options.parallelUploads;
+
+      var processingLength = this.getUploadingFiles().length;
+      var i = processingLength;
+
+      // There are already at least as many files uploading than should be
+      if (processingLength >= parallelUploads) {
+        return;
+      }
+
+      var queuedFiles = this.getQueuedFiles();
+
+      if (!(queuedFiles.length > 0)) {
+        return;
+      }
+
+      if (this.options.uploadMultiple) {
+        // The files should be uploaded in one request
+        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
+      } else {
+        while (i < parallelUploads) {
+          if (!queuedFiles.length) {
+            return;
+          } // Nothing left to process
+          this.processFile(queuedFiles.shift());
+          i++;
+        }
+      }
+    }
+
+    // Wrapper for `processFiles`
+
+  }, {
+    key: "processFile",
+    value: function processFile(file) {
+      return this.processFiles([file]);
+    }
+
+    // Loads the file, then calls finishedLoading()
+
+  }, {
+    key: "processFiles",
+    value: function processFiles(files) {
+      for (var _iterator19 = files, _isArray19 = true, _i20 = 0, _iterator19 = _isArray19 ? _iterator19 : _iterator19[Symbol.iterator]();;) {
+        var _ref18;
+
+        if (_isArray19) {
+          if (_i20 >= _iterator19.length) break;
+          _ref18 = _iterator19[_i20++];
+        } else {
+          _i20 = _iterator19.next();
+          if (_i20.done) break;
+          _ref18 = _i20.value;
+        }
+
+        var file = _ref18;
+
+        file.processing = true; // Backwards compatibility
+        file.status = Dropzone.UPLOADING;
+
+        this.emit("processing", file);
+      }
+
+      if (this.options.uploadMultiple) {
+        this.emit("processingmultiple", files);
+      }
+
+      return this.uploadFiles(files);
+    }
+  }, {
+    key: "_getFilesWithXhr",
+    value: function _getFilesWithXhr(xhr) {
+      var files = void 0;
+      return files = this.files.filter(function (file) {
+        return file.xhr === xhr;
+      }).map(function (file) {
+        return file;
+      });
+    }
+
+    // Cancels the file upload and sets the status to CANCELED
+    // **if** the file is actually being uploaded.
+    // If it's still in the queue, the file is being removed from it and the status
+    // set to CANCELED.
+
+  }, {
+    key: "cancelUpload",
+    value: function cancelUpload(file) {
+      if (file.status === Dropzone.UPLOADING) {
+        var groupedFiles = this._getFilesWithXhr(file.xhr);
+        for (var _iterator20 = groupedFiles, _isArray20 = true, _i21 = 0, _iterator20 = _isArray20 ? _iterator20 : _iterator20[Symbol.iterator]();;) {
+          var _ref19;
+
+          if (_isArray20) {
+            if (_i21 >= _iterator20.length) break;
+            _ref19 = _iterator20[_i21++];
+          } else {
+            _i21 = _iterator20.next();
+            if (_i21.done) break;
+            _ref19 = _i21.value;
+          }
+
+          var groupedFile = _ref19;
+
+          groupedFile.status = Dropzone.CANCELED;
+        }
+        if (typeof file.xhr !== 'undefined') {
+          file.xhr.abort();
+        }
+        for (var _iterator21 = groupedFiles, _isArray21 = true, _i22 = 0, _iterator21 = _isArray21 ? _iterator21 : _iterator21[Symbol.iterator]();;) {
+          var _ref20;
+
+          if (_isArray21) {
+            if (_i22 >= _iterator21.length) break;
+            _ref20 = _iterator21[_i22++];
+          } else {
+            _i22 = _iterator21.next();
+            if (_i22.done) break;
+            _ref20 = _i22.value;
+          }
+
+          var _groupedFile = _ref20;
+
+          this.emit("canceled", _groupedFile);
+        }
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", groupedFiles);
+        }
+      } else if (file.status === Dropzone.ADDED || file.status === Dropzone.QUEUED) {
+        file.status = Dropzone.CANCELED;
+        this.emit("canceled", file);
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", [file]);
+        }
+      }
+
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    }
+  }, {
+    key: "resolveOption",
+    value: function resolveOption(option) {
+      if (typeof option === 'function') {
+        for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+          args[_key3 - 1] = arguments[_key3];
+        }
+
+        return option.apply(this, args);
+      }
+      return option;
+    }
+  }, {
+    key: "uploadFile",
+    value: function uploadFile(file) {
+      return this.uploadFiles([file]);
+    }
+  }, {
+    key: "uploadFiles",
+    value: function uploadFiles(files) {
+      var _this14 = this;
+
+      this._transformFiles(files, function (transformedFiles) {
+        if (files[0].upload.chunked) {
+          // This file should be sent in chunks!
+
+          // If the chunking option is set, we **know** that there can only be **one** file, since
+          // uploadMultiple is not allowed with this option.
+          var file = files[0];
+          var transformedFile = transformedFiles[0];
+          var startedChunkCount = 0;
+
+          file.upload.chunks = [];
+
+          var handleNextChunk = function handleNextChunk() {
+            var chunkIndex = 0;
+
+            // Find the next item in file.upload.chunks that is not defined yet.
+            while (file.upload.chunks[chunkIndex] !== undefined) {
+              chunkIndex++;
+            }
+
+            // This means, that all chunks have already been started.
+            if (chunkIndex >= file.upload.totalChunkCount) return;
+
+            startedChunkCount++;
+
+            var start = chunkIndex * _this14.options.chunkSize;
+            var end = Math.min(start + _this14.options.chunkSize, file.size);
+
+            var dataBlock = {
+              name: _this14._getParamName(0),
+              data: transformedFile.webkitSlice ? transformedFile.webkitSlice(start, end) : transformedFile.slice(start, end),
+              filename: file.upload.filename,
+              chunkIndex: chunkIndex
+            };
+
+            file.upload.chunks[chunkIndex] = {
+              file: file,
+              index: chunkIndex,
+              dataBlock: dataBlock, // In case we want to retry.
+              status: Dropzone.UPLOADING,
+              progress: 0,
+              retries: 0 // The number of times this block has been retried.
+            };
+
+            _this14._uploadData(files, [dataBlock]);
+          };
+
+          file.upload.finishedChunkUpload = function (chunk) {
+            var allFinished = true;
+            chunk.status = Dropzone.SUCCESS;
+
+            // Clear the data from the chunk
+            chunk.dataBlock = null;
+            // Leaving this reference to xhr intact here will cause memory leaks in some browsers
+            chunk.xhr = null;
+
+            for (var i = 0; i < file.upload.totalChunkCount; i++) {
+              if (file.upload.chunks[i] === undefined) {
+                return handleNextChunk();
+              }
+              if (file.upload.chunks[i].status !== Dropzone.SUCCESS) {
+                allFinished = false;
+              }
+            }
+
+            if (allFinished) {
+              _this14.options.chunksUploaded(file, function () {
+                _this14._finished(files, '', null);
+              });
+            }
+          };
+
+          if (_this14.options.parallelChunkUploads) {
+            for (var i = 0; i < file.upload.totalChunkCount; i++) {
+              handleNextChunk();
+            }
+          } else {
+            handleNextChunk();
+          }
+        } else {
+          var dataBlocks = [];
+          for (var _i23 = 0; _i23 < files.length; _i23++) {
+            dataBlocks[_i23] = {
+              name: _this14._getParamName(_i23),
+              data: transformedFiles[_i23],
+              filename: files[_i23].upload.filename
+            };
+          }
+          _this14._uploadData(files, dataBlocks);
+        }
+      });
+    }
+
+    /// Returns the right chunk for given file and xhr
+
+  }, {
+    key: "_getChunk",
+    value: function _getChunk(file, xhr) {
+      for (var i = 0; i < file.upload.totalChunkCount; i++) {
+        if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].xhr === xhr) {
+          return file.upload.chunks[i];
+        }
+      }
+    }
+
+    // This function actually uploads the file(s) to the server.
+    // If dataBlocks contains the actual data to upload (meaning, that this could either be transformed
+    // files, or individual chunks for chunked upload).
+
+  }, {
+    key: "_uploadData",
+    value: function _uploadData(files, dataBlocks) {
+      var _this15 = this;
+
+      var xhr = new XMLHttpRequest();
+
+      // Put the xhr object in the file objects to be able to reference it later.
+      for (var _iterator22 = files, _isArray22 = true, _i24 = 0, _iterator22 = _isArray22 ? _iterator22 : _iterator22[Symbol.iterator]();;) {
+        var _ref21;
+
+        if (_isArray22) {
+          if (_i24 >= _iterator22.length) break;
+          _ref21 = _iterator22[_i24++];
+        } else {
+          _i24 = _iterator22.next();
+          if (_i24.done) break;
+          _ref21 = _i24.value;
+        }
+
+        var file = _ref21;
+
+        file.xhr = xhr;
+      }
+      if (files[0].upload.chunked) {
+        // Put the xhr object in the right chunk object, so it can be associated later, and found with _getChunk
+        files[0].upload.chunks[dataBlocks[0].chunkIndex].xhr = xhr;
+      }
+
+      var method = this.resolveOption(this.options.method, files);
+      var url = this.resolveOption(this.options.url, files);
+      xhr.open(method, url, true);
+
+      // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
+      xhr.timeout = this.resolveOption(this.options.timeout, files);
+
+      // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
+      xhr.withCredentials = !!this.options.withCredentials;
+
+      xhr.onload = function (e) {
+        _this15._finishedUploading(files, xhr, e);
+      };
+
+      xhr.onerror = function () {
+        _this15._handleUploadError(files, xhr);
+      };
+
+      // Some browsers do not have the .upload property
+      var progressObj = xhr.upload != null ? xhr.upload : xhr;
+      progressObj.onprogress = function (e) {
+        return _this15._updateFilesUploadProgress(files, xhr, e);
+      };
+
+      var headers = {
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        "X-Requested-With": "XMLHttpRequest"
+      };
+
+      if (this.options.headers) {
+        Dropzone.extend(headers, this.options.headers);
+      }
+
+      for (var headerName in headers) {
+        var headerValue = headers[headerName];
+        if (headerValue) {
+          xhr.setRequestHeader(headerName, headerValue);
+        }
+      }
+
+      var formData = new FormData();
+
+      // Adding all @options parameters
+      if (this.options.params) {
+        var additionalParams = this.options.params;
+        if (typeof additionalParams === 'function') {
+          additionalParams = additionalParams.call(this, files, xhr, files[0].upload.chunked ? this._getChunk(files[0], xhr) : null);
+        }
+
+        for (var key in additionalParams) {
+          var value = additionalParams[key];
+          formData.append(key, value);
+        }
+      }
+
+      // Let the user add additional data if necessary
+      for (var _iterator23 = files, _isArray23 = true, _i25 = 0, _iterator23 = _isArray23 ? _iterator23 : _iterator23[Symbol.iterator]();;) {
+        var _ref22;
+
+        if (_isArray23) {
+          if (_i25 >= _iterator23.length) break;
+          _ref22 = _iterator23[_i25++];
+        } else {
+          _i25 = _iterator23.next();
+          if (_i25.done) break;
+          _ref22 = _i25.value;
+        }
+
+        var _file = _ref22;
+
+        this.emit("sending", _file, xhr, formData);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("sendingmultiple", files, xhr, formData);
+      }
+
+      this._addFormElementData(formData);
+
+      // Finally add the files
+      // Has to be last because some servers (eg: S3) expect the file to be the last parameter
+      for (var i = 0; i < dataBlocks.length; i++) {
+        var dataBlock = dataBlocks[i];
+        formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+      }
+
+      this.submitRequest(xhr, formData, files);
+    }
+
+    // Transforms all files with this.options.transformFile and invokes done with the transformed files when done.
+
+  }, {
+    key: "_transformFiles",
+    value: function _transformFiles(files, done) {
+      var _this16 = this;
+
+      var transformedFiles = [];
+      // Clumsy way of handling asynchronous calls, until I get to add a proper Future library.
+      var doneCounter = 0;
+
+      var _loop = function _loop(i) {
+        _this16.options.transformFile.call(_this16, files[i], function (transformedFile) {
+          transformedFiles[i] = transformedFile;
+          if (++doneCounter === files.length) {
+            done(transformedFiles);
+          }
+        });
+      };
+
+      for (var i = 0; i < files.length; i++) {
+        _loop(i);
+      }
+    }
+
+    // Takes care of adding other input elements of the form to the AJAX request
+
+  }, {
+    key: "_addFormElementData",
+    value: function _addFormElementData(formData) {
+      // Take care of other input elements
+      if (this.element.tagName === "FORM") {
+        for (var _iterator24 = this.element.querySelectorAll("input, textarea, select, button"), _isArray24 = true, _i26 = 0, _iterator24 = _isArray24 ? _iterator24 : _iterator24[Symbol.iterator]();;) {
+          var _ref23;
+
+          if (_isArray24) {
+            if (_i26 >= _iterator24.length) break;
+            _ref23 = _iterator24[_i26++];
+          } else {
+            _i26 = _iterator24.next();
+            if (_i26.done) break;
+            _ref23 = _i26.value;
+          }
+
+          var input = _ref23;
+
+          var inputName = input.getAttribute("name");
+          var inputType = input.getAttribute("type");
+          if (inputType) inputType = inputType.toLowerCase();
+
+          // If the input doesn't have a name, we can't use it.
+          if (typeof inputName === 'undefined' || inputName === null) continue;
+
+          if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
+            // Possibly multiple values
+            for (var _iterator25 = input.options, _isArray25 = true, _i27 = 0, _iterator25 = _isArray25 ? _iterator25 : _iterator25[Symbol.iterator]();;) {
+              var _ref24;
+
+              if (_isArray25) {
+                if (_i27 >= _iterator25.length) break;
+                _ref24 = _iterator25[_i27++];
+              } else {
+                _i27 = _iterator25.next();
+                if (_i27.done) break;
+                _ref24 = _i27.value;
+              }
+
+              var option = _ref24;
+
+              if (option.selected) {
+                formData.append(inputName, option.value);
+              }
+            }
+          } else if (!inputType || inputType !== "checkbox" && inputType !== "radio" || input.checked) {
+            formData.append(inputName, input.value);
+          }
+        }
+      }
+    }
+
+    // Invoked when there is new progress information about given files.
+    // If e is not provided, it is assumed that the upload is finished.
+
+  }, {
+    key: "_updateFilesUploadProgress",
+    value: function _updateFilesUploadProgress(files, xhr, e) {
+      var progress = void 0;
+      if (typeof e !== 'undefined') {
+        progress = 100 * e.loaded / e.total;
+
+        if (files[0].upload.chunked) {
+          var file = files[0];
+          // Since this is a chunked upload, we need to update the appropriate chunk progress.
+          var chunk = this._getChunk(file, xhr);
+          chunk.progress = progress;
+          chunk.total = e.total;
+          chunk.bytesSent = e.loaded;
+          var fileProgress = 0,
+              fileTotal = void 0,
+              fileBytesSent = void 0;
+          file.upload.progress = 0;
+          file.upload.total = 0;
+          file.upload.bytesSent = 0;
+          for (var i = 0; i < file.upload.totalChunkCount; i++) {
+            if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].progress !== undefined) {
+              file.upload.progress += file.upload.chunks[i].progress;
+              file.upload.total += file.upload.chunks[i].total;
+              file.upload.bytesSent += file.upload.chunks[i].bytesSent;
+            }
+          }
+          file.upload.progress = file.upload.progress / file.upload.totalChunkCount;
+        } else {
+          for (var _iterator26 = files, _isArray26 = true, _i28 = 0, _iterator26 = _isArray26 ? _iterator26 : _iterator26[Symbol.iterator]();;) {
+            var _ref25;
+
+            if (_isArray26) {
+              if (_i28 >= _iterator26.length) break;
+              _ref25 = _iterator26[_i28++];
+            } else {
+              _i28 = _iterator26.next();
+              if (_i28.done) break;
+              _ref25 = _i28.value;
+            }
+
+            var _file2 = _ref25;
+
+            _file2.upload.progress = progress;
+            _file2.upload.total = e.total;
+            _file2.upload.bytesSent = e.loaded;
+          }
+        }
+        for (var _iterator27 = files, _isArray27 = true, _i29 = 0, _iterator27 = _isArray27 ? _iterator27 : _iterator27[Symbol.iterator]();;) {
+          var _ref26;
+
+          if (_isArray27) {
+            if (_i29 >= _iterator27.length) break;
+            _ref26 = _iterator27[_i29++];
+          } else {
+            _i29 = _iterator27.next();
+            if (_i29.done) break;
+            _ref26 = _i29.value;
+          }
+
+          var _file3 = _ref26;
+
+          this.emit("uploadprogress", _file3, _file3.upload.progress, _file3.upload.bytesSent);
+        }
+      } else {
+        // Called when the file finished uploading
+
+        var allFilesFinished = true;
+
+        progress = 100;
+
+        for (var _iterator28 = files, _isArray28 = true, _i30 = 0, _iterator28 = _isArray28 ? _iterator28 : _iterator28[Symbol.iterator]();;) {
+          var _ref27;
+
+          if (_isArray28) {
+            if (_i30 >= _iterator28.length) break;
+            _ref27 = _iterator28[_i30++];
+          } else {
+            _i30 = _iterator28.next();
+            if (_i30.done) break;
+            _ref27 = _i30.value;
+          }
+
+          var _file4 = _ref27;
+
+          if (_file4.upload.progress !== 100 || _file4.upload.bytesSent !== _file4.upload.total) {
+            allFilesFinished = false;
+          }
+          _file4.upload.progress = progress;
+          _file4.upload.bytesSent = _file4.upload.total;
+        }
+
+        // Nothing to do, all files already at 100%
+        if (allFilesFinished) {
+          return;
+        }
+
+        for (var _iterator29 = files, _isArray29 = true, _i31 = 0, _iterator29 = _isArray29 ? _iterator29 : _iterator29[Symbol.iterator]();;) {
+          var _ref28;
+
+          if (_isArray29) {
+            if (_i31 >= _iterator29.length) break;
+            _ref28 = _iterator29[_i31++];
+          } else {
+            _i31 = _iterator29.next();
+            if (_i31.done) break;
+            _ref28 = _i31.value;
+          }
+
+          var _file5 = _ref28;
+
+          this.emit("uploadprogress", _file5, progress, _file5.upload.bytesSent);
+        }
+      }
+    }
+  }, {
+    key: "_finishedUploading",
+    value: function _finishedUploading(files, xhr, e) {
+      var response = void 0;
+
+      if (files[0].status === Dropzone.CANCELED) {
+        return;
+      }
+
+      if (xhr.readyState !== 4) {
+        return;
+      }
+
+      if (xhr.responseType !== 'arraybuffer' && xhr.responseType !== 'blob') {
+        response = xhr.responseText;
+
+        if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+          try {
+            response = JSON.parse(response);
+          } catch (error) {
+            e = error;
+            response = "Invalid JSON response from server.";
+          }
+        }
+      }
+
+      this._updateFilesUploadProgress(files);
+
+      if (!(200 <= xhr.status && xhr.status < 300)) {
+        this._handleUploadError(files, xhr, response);
+      } else {
+        if (files[0].upload.chunked) {
+          files[0].upload.finishedChunkUpload(this._getChunk(files[0], xhr));
+        } else {
+          this._finished(files, response, e);
+        }
+      }
+    }
+  }, {
+    key: "_handleUploadError",
+    value: function _handleUploadError(files, xhr, response) {
+      if (files[0].status === Dropzone.CANCELED) {
+        return;
+      }
+
+      if (files[0].upload.chunked && this.options.retryChunks) {
+        var chunk = this._getChunk(files[0], xhr);
+        if (chunk.retries++ < this.options.retryChunksLimit) {
+          this._uploadData(files, [chunk.dataBlock]);
+          return;
+        } else {
+          console.warn('Retried this chunk too often. Giving up.');
+        }
+      }
+
+      for (var _iterator30 = files, _isArray30 = true, _i32 = 0, _iterator30 = _isArray30 ? _iterator30 : _iterator30[Symbol.iterator]();;) {
+        var _ref29;
+
+        if (_isArray30) {
+          if (_i32 >= _iterator30.length) break;
+          _ref29 = _iterator30[_i32++];
+        } else {
+          _i32 = _iterator30.next();
+          if (_i32.done) break;
+          _ref29 = _i32.value;
+        }
+
+        var file = _ref29;
+
+        this._errorProcessing(files, response || this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr);
+      }
+    }
+  }, {
+    key: "submitRequest",
+    value: function submitRequest(xhr, formData, files) {
+      xhr.send(formData);
+    }
+
+    // Called internally when processing is finished.
+    // Individual callbacks have to be called in the appropriate sections.
+
+  }, {
+    key: "_finished",
+    value: function _finished(files, responseText, e) {
+      for (var _iterator31 = files, _isArray31 = true, _i33 = 0, _iterator31 = _isArray31 ? _iterator31 : _iterator31[Symbol.iterator]();;) {
+        var _ref30;
+
+        if (_isArray31) {
+          if (_i33 >= _iterator31.length) break;
+          _ref30 = _iterator31[_i33++];
+        } else {
+          _i33 = _iterator31.next();
+          if (_i33.done) break;
+          _ref30 = _i33.value;
+        }
+
+        var file = _ref30;
+
+        file.status = Dropzone.SUCCESS;
+        this.emit("success", file, responseText, e);
+        this.emit("complete", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("successmultiple", files, responseText, e);
+        this.emit("completemultiple", files);
+      }
+
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    }
+
+    // Called internally when processing is finished.
+    // Individual callbacks have to be called in the appropriate sections.
+
+  }, {
+    key: "_errorProcessing",
+    value: function _errorProcessing(files, message, xhr) {
+      for (var _iterator32 = files, _isArray32 = true, _i34 = 0, _iterator32 = _isArray32 ? _iterator32 : _iterator32[Symbol.iterator]();;) {
+        var _ref31;
+
+        if (_isArray32) {
+          if (_i34 >= _iterator32.length) break;
+          _ref31 = _iterator32[_i34++];
+        } else {
+          _i34 = _iterator32.next();
+          if (_i34.done) break;
+          _ref31 = _i34.value;
+        }
+
+        var file = _ref31;
+
+        file.status = Dropzone.ERROR;
+        this.emit("error", file, message, xhr);
+        this.emit("complete", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("errormultiple", files, message, xhr);
+        this.emit("completemultiple", files);
+      }
+
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    }
+  }], [{
+    key: "uuidv4",
+    value: function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : r & 0x3 | 0x8;
+        return v.toString(16);
+      });
+    }
+  }]);
+
+  return Dropzone;
+}(Emitter);
+
+Dropzone.initClass();
+
+Dropzone.version = "5.5.0";
+
+// This is a map of options for your different dropzones. Add configurations
+// to this object for your different dropzone elemens.
+//
+// Example:
+//
+//     Dropzone.options.myDropzoneElementId = { maxFilesize: 1 };
+//
+// To disable autoDiscover for a specific element, you can set `false` as an option:
+//
+//     Dropzone.options.myDisabledElementId = false;
+//
+// And in html:
+//
+//     <form action="/upload" id="my-dropzone-element-id" class="dropzone"></form>
+Dropzone.options = {};
+
+// Returns the options for an element or undefined if none available.
+Dropzone.optionsForElement = function (element) {
+  // Get the `Dropzone.options.elementId` for this element if it exists
+  if (element.getAttribute("id")) {
+    return Dropzone.options[camelize(element.getAttribute("id"))];
+  } else {
+    return undefined;
+  }
+};
+
+// Holds a list of all dropzone instances
+Dropzone.instances = [];
+
+// Returns the dropzone for given element if any
+Dropzone.forElement = function (element) {
+  if (typeof element === "string") {
+    element = document.querySelector(element);
+  }
+  if ((element != null ? element.dropzone : undefined) == null) {
+    throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+  }
+  return element.dropzone;
+};
+
+// Set to false if you don't want Dropzone to automatically find and attach to .dropzone elements.
+Dropzone.autoDiscover = true;
+
+// Looks for all .dropzone elements and creates a dropzone for them
+Dropzone.discover = function () {
+  var dropzones = void 0;
+  if (document.querySelectorAll) {
+    dropzones = document.querySelectorAll(".dropzone");
+  } else {
+    dropzones = [];
+    // IE :(
+    var checkElements = function checkElements(elements) {
+      return function () {
+        var result = [];
+        for (var _iterator33 = elements, _isArray33 = true, _i35 = 0, _iterator33 = _isArray33 ? _iterator33 : _iterator33[Symbol.iterator]();;) {
+          var _ref32;
+
+          if (_isArray33) {
+            if (_i35 >= _iterator33.length) break;
+            _ref32 = _iterator33[_i35++];
+          } else {
+            _i35 = _iterator33.next();
+            if (_i35.done) break;
+            _ref32 = _i35.value;
+          }
+
+          var el = _ref32;
+
+          if (/(^| )dropzone($| )/.test(el.className)) {
+            result.push(dropzones.push(el));
+          } else {
+            result.push(undefined);
+          }
+        }
+        return result;
+      }();
+    };
+    checkElements(document.getElementsByTagName("div"));
+    checkElements(document.getElementsByTagName("form"));
+  }
+
+  return function () {
+    var result = [];
+    for (var _iterator34 = dropzones, _isArray34 = true, _i36 = 0, _iterator34 = _isArray34 ? _iterator34 : _iterator34[Symbol.iterator]();;) {
+      var _ref33;
+
+      if (_isArray34) {
+        if (_i36 >= _iterator34.length) break;
+        _ref33 = _iterator34[_i36++];
+      } else {
+        _i36 = _iterator34.next();
+        if (_i36.done) break;
+        _ref33 = _i36.value;
+      }
+
+      var dropzone = _ref33;
+
+      // Create a dropzone unless auto discover has been disabled for specific element
+      if (Dropzone.optionsForElement(dropzone) !== false) {
+        result.push(new Dropzone(dropzone));
+      } else {
+        result.push(undefined);
+      }
+    }
+    return result;
+  }();
+};
+
+// Since the whole Drag'n'Drop API is pretty new, some browsers implement it,
+// but not correctly.
+// So I created a blacklist of userAgents. Yes, yes. Browser sniffing, I know.
+// But what to do when browsers *theoretically* support an API, but crash
+// when using it.
+//
+// This is a list of regular expressions tested against navigator.userAgent
+//
+// ** It should only be used on browser that *do* support the API, but
+// incorrectly **
+//
+Dropzone.blacklistedBrowsers = [
+// The mac os and windows phone version of opera 12 seems to have a problem with the File drag'n'drop API.
+/opera.*(Macintosh|Windows Phone).*version\/12/i];
+
+// Checks if the browser is supported
+Dropzone.isBrowserSupported = function () {
+  var capableBrowser = true;
+
+  if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+    if (!("classList" in document.createElement("a"))) {
+      capableBrowser = false;
+    } else {
+      // The browser supports the API, but may be blacklisted.
+      for (var _iterator35 = Dropzone.blacklistedBrowsers, _isArray35 = true, _i37 = 0, _iterator35 = _isArray35 ? _iterator35 : _iterator35[Symbol.iterator]();;) {
+        var _ref34;
+
+        if (_isArray35) {
+          if (_i37 >= _iterator35.length) break;
+          _ref34 = _iterator35[_i37++];
+        } else {
+          _i37 = _iterator35.next();
+          if (_i37.done) break;
+          _ref34 = _i37.value;
+        }
+
+        var regex = _ref34;
+
+        if (regex.test(navigator.userAgent)) {
+          capableBrowser = false;
+          continue;
+        }
+      }
+    }
+  } else {
+    capableBrowser = false;
+  }
+
+  return capableBrowser;
+};
+
+Dropzone.dataURItoBlob = function (dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0, end = byteString.length, asc = 0 <= end; asc ? i <= end : i >= end; asc ? i++ : i--) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  // write the ArrayBuffer to a blob
+  return new Blob([ab], { type: mimeString });
+};
+
+// Returns an array without the rejected item
+var without = function without(list, rejectedItem) {
+  return list.filter(function (item) {
+    return item !== rejectedItem;
+  }).map(function (item) {
+    return item;
+  });
+};
+
+// abc-def_ghi -> abcDefGhi
+var camelize = function camelize(str) {
+  return str.replace(/[\-_](\w)/g, function (match) {
+    return match.charAt(1).toUpperCase();
+  });
+};
+
+// Creates an element from string
+Dropzone.createElement = function (string) {
+  var div = document.createElement("div");
+  div.innerHTML = string;
+  return div.childNodes[0];
+};
+
+// Tests if given element is inside (or simply is) the container
+Dropzone.elementInside = function (element, container) {
+  if (element === container) {
+    return true;
+  } // Coffeescript doesn't support do/while loops
+  while (element = element.parentNode) {
+    if (element === container) {
+      return true;
+    }
+  }
+  return false;
+};
+
+Dropzone.getElement = function (el, name) {
+  var element = void 0;
+  if (typeof el === "string") {
+    element = document.querySelector(el);
+  } else if (el.nodeType != null) {
+    element = el;
+  }
+  if (element == null) {
+    throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
+  }
+  return element;
+};
+
+Dropzone.getElements = function (els, name) {
+  var el = void 0,
+      elements = void 0;
+  if (els instanceof Array) {
+    elements = [];
+    try {
+      for (var _iterator36 = els, _isArray36 = true, _i38 = 0, _iterator36 = _isArray36 ? _iterator36 : _iterator36[Symbol.iterator]();;) {
+        if (_isArray36) {
+          if (_i38 >= _iterator36.length) break;
+          el = _iterator36[_i38++];
+        } else {
+          _i38 = _iterator36.next();
+          if (_i38.done) break;
+          el = _i38.value;
+        }
+
+        elements.push(this.getElement(el, name));
+      }
+    } catch (e) {
+      elements = null;
+    }
+  } else if (typeof els === "string") {
+    elements = [];
+    for (var _iterator37 = document.querySelectorAll(els), _isArray37 = true, _i39 = 0, _iterator37 = _isArray37 ? _iterator37 : _iterator37[Symbol.iterator]();;) {
+      if (_isArray37) {
+        if (_i39 >= _iterator37.length) break;
+        el = _iterator37[_i39++];
+      } else {
+        _i39 = _iterator37.next();
+        if (_i39.done) break;
+        el = _i39.value;
+      }
+
+      elements.push(el);
+    }
+  } else if (els.nodeType != null) {
+    elements = [els];
+  }
+
+  if (elements == null || !elements.length) {
+    throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
+  }
+
+  return elements;
+};
+
+// Asks the user the question and calls accepted or rejected accordingly
+//
+// The default implementation just uses `window.confirm` and then calls the
+// appropriate callback.
+Dropzone.confirm = function (question, accepted, rejected) {
+  if (window.confirm(question)) {
+    return accepted();
+  } else if (rejected != null) {
+    return rejected();
+  }
+};
+
+// Validates the mime type like this:
+//
+// https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept
+Dropzone.isValidFile = function (file, acceptedFiles) {
+  if (!acceptedFiles) {
+    return true;
+  } // If there are no accepted mime types, it's OK
+  acceptedFiles = acceptedFiles.split(",");
+
+  var mimeType = file.type;
+  var baseMimeType = mimeType.replace(/\/.*$/, "");
+
+  for (var _iterator38 = acceptedFiles, _isArray38 = true, _i40 = 0, _iterator38 = _isArray38 ? _iterator38 : _iterator38[Symbol.iterator]();;) {
+    var _ref35;
+
+    if (_isArray38) {
+      if (_i40 >= _iterator38.length) break;
+      _ref35 = _iterator38[_i40++];
+    } else {
+      _i40 = _iterator38.next();
+      if (_i40.done) break;
+      _ref35 = _i40.value;
+    }
+
+    var validType = _ref35;
+
+    validType = validType.trim();
+    if (validType.charAt(0) === ".") {
+      if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+        return true;
+      }
+    } else if (/\/\*$/.test(validType)) {
+      // This is something like a image/* mime type
+      if (baseMimeType === validType.replace(/\/.*$/, "")) {
+        return true;
+      }
+    } else {
+      if (mimeType === validType) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+// Augment jQuery
+if (typeof jQuery !== 'undefined' && jQuery !== null) {
+  jQuery.fn.dropzone = function (options) {
+    return this.each(function () {
+      return new Dropzone(this, options);
+    });
+  };
+}
+
+if (typeof module !== 'undefined' && module !== null) {
+  module.exports = Dropzone;
+} else {
+  window.Dropzone = Dropzone;
+}
+
+// Dropzone file status codes
+Dropzone.ADDED = "added";
+
+Dropzone.QUEUED = "queued";
+// For backwards compatibility. Now, if a file is accepted, it's either queued
+// or uploading.
+Dropzone.ACCEPTED = Dropzone.QUEUED;
+
+Dropzone.UPLOADING = "uploading";
+Dropzone.PROCESSING = Dropzone.UPLOADING; // alias
+
+Dropzone.CANCELED = "canceled";
+Dropzone.ERROR = "error";
+Dropzone.SUCCESS = "success";
+
+/*
+
+ Bugfix for iOS 6 and 7
+ Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+ based on the work of https://github.com/stomita/ios-imagefile-megapixel
+
+ */
+
+// Detecting vertical squash in loaded image.
+// Fixes a bug which squash image vertically while drawing into canvas for some images.
+// This is a bug in iOS6 devices. This function from https://github.com/stomita/ios-imagefile-megapixel
+var detectVerticalSquash = function detectVerticalSquash(img) {
+  var iw = img.naturalWidth;
+  var ih = img.naturalHeight;
+  var canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = ih;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  var _ctx$getImageData = ctx.getImageData(1, 0, 1, ih),
+      data = _ctx$getImageData.data;
+
+  // search image edge pixel position in case it is squashed vertically.
+
+
+  var sy = 0;
+  var ey = ih;
+  var py = ih;
+  while (py > sy) {
+    var alpha = data[(py - 1) * 4 + 3];
+
+    if (alpha === 0) {
+      ey = py;
+    } else {
+      sy = py;
+    }
+
+    py = ey + sy >> 1;
+  }
+  var ratio = py / ih;
+
+  if (ratio === 0) {
+    return 1;
+  } else {
+    return ratio;
+  }
+};
+
+// A replacement for context.drawImage
+// (args are for source and destination).
+var drawImageIOSFix = function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+  var vertSquashRatio = detectVerticalSquash(img);
+  return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+};
+
+// Based on MinifyJpeg
+// Source: http://www.perry.cz/files/ExifRestorer.js
+// http://elicon.blog57.fc2.com/blog-entry-206.html
+
+var ExifRestore = function () {
+  function ExifRestore() {
+    _classCallCheck(this, ExifRestore);
+  }
+
+  _createClass(ExifRestore, null, [{
+    key: "initClass",
+    value: function initClass() {
+      this.KEY_STR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    }
+  }, {
+    key: "encode64",
+    value: function encode64(input) {
+      var output = '';
+      var chr1 = undefined;
+      var chr2 = undefined;
+      var chr3 = '';
+      var enc1 = undefined;
+      var enc2 = undefined;
+      var enc3 = undefined;
+      var enc4 = '';
+      var i = 0;
+      while (true) {
+        chr1 = input[i++];
+        chr2 = input[i++];
+        chr3 = input[i++];
+        enc1 = chr1 >> 2;
+        enc2 = (chr1 & 3) << 4 | chr2 >> 4;
+        enc3 = (chr2 & 15) << 2 | chr3 >> 6;
+        enc4 = chr3 & 63;
+        if (isNaN(chr2)) {
+          enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+          enc4 = 64;
+        }
+        output = output + this.KEY_STR.charAt(enc1) + this.KEY_STR.charAt(enc2) + this.KEY_STR.charAt(enc3) + this.KEY_STR.charAt(enc4);
+        chr1 = chr2 = chr3 = '';
+        enc1 = enc2 = enc3 = enc4 = '';
+        if (!(i < input.length)) {
+          break;
+        }
+      }
+      return output;
+    }
+  }, {
+    key: "restore",
+    value: function restore(origFileBase64, resizedFileBase64) {
+      if (!origFileBase64.match('data:image/jpeg;base64,')) {
+        return resizedFileBase64;
+      }
+      var rawImage = this.decode64(origFileBase64.replace('data:image/jpeg;base64,', ''));
+      var segments = this.slice2Segments(rawImage);
+      var image = this.exifManipulation(resizedFileBase64, segments);
+      return "data:image/jpeg;base64," + this.encode64(image);
+    }
+  }, {
+    key: "exifManipulation",
+    value: function exifManipulation(resizedFileBase64, segments) {
+      var exifArray = this.getExifArray(segments);
+      var newImageArray = this.insertExif(resizedFileBase64, exifArray);
+      var aBuffer = new Uint8Array(newImageArray);
+      return aBuffer;
+    }
+  }, {
+    key: "getExifArray",
+    value: function getExifArray(segments) {
+      var seg = undefined;
+      var x = 0;
+      while (x < segments.length) {
+        seg = segments[x];
+        if (seg[0] === 255 & seg[1] === 225) {
+          return seg;
+        }
+        x++;
+      }
+      return [];
+    }
+  }, {
+    key: "insertExif",
+    value: function insertExif(resizedFileBase64, exifArray) {
+      var imageData = resizedFileBase64.replace('data:image/jpeg;base64,', '');
+      var buf = this.decode64(imageData);
+      var separatePoint = buf.indexOf(255, 3);
+      var mae = buf.slice(0, separatePoint);
+      var ato = buf.slice(separatePoint);
+      var array = mae;
+      array = array.concat(exifArray);
+      array = array.concat(ato);
+      return array;
+    }
+  }, {
+    key: "slice2Segments",
+    value: function slice2Segments(rawImageArray) {
+      var head = 0;
+      var segments = [];
+      while (true) {
+        var length;
+        if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 218) {
+          break;
+        }
+        if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 216) {
+          head += 2;
+        } else {
+          length = rawImageArray[head + 2] * 256 + rawImageArray[head + 3];
+          var endPoint = head + length + 2;
+          var seg = rawImageArray.slice(head, endPoint);
+          segments.push(seg);
+          head = endPoint;
+        }
+        if (head > rawImageArray.length) {
+          break;
+        }
+      }
+      return segments;
+    }
+  }, {
+    key: "decode64",
+    value: function decode64(input) {
+      var output = '';
+      var chr1 = undefined;
+      var chr2 = undefined;
+      var chr3 = '';
+      var enc1 = undefined;
+      var enc2 = undefined;
+      var enc3 = undefined;
+      var enc4 = '';
+      var i = 0;
+      var buf = [];
+      // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+      var base64test = /[^A-Za-z0-9\+\/\=]/g;
+      if (base64test.exec(input)) {
+        console.warn('There were invalid base64 characters in the input text.\nValid base64 characters are A-Z, a-z, 0-9, \'+\', \'/\',and \'=\'\nExpect errors in decoding.');
+      }
+      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+      while (true) {
+        enc1 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc2 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc3 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc4 = this.KEY_STR.indexOf(input.charAt(i++));
+        chr1 = enc1 << 2 | enc2 >> 4;
+        chr2 = (enc2 & 15) << 4 | enc3 >> 2;
+        chr3 = (enc3 & 3) << 6 | enc4;
+        buf.push(chr1);
+        if (enc3 !== 64) {
+          buf.push(chr2);
+        }
+        if (enc4 !== 64) {
+          buf.push(chr3);
+        }
+        chr1 = chr2 = chr3 = '';
+        enc1 = enc2 = enc3 = enc4 = '';
+        if (!(i < input.length)) {
+          break;
+        }
+      }
+      return buf;
+    }
+  }]);
+
+  return ExifRestore;
+}();
+
+ExifRestore.initClass();
+
+/*
+ * contentloaded.js
+ *
+ * Author: Diego Perini (diego.perini at gmail.com)
+ * Summary: cross-browser wrapper for DOMContentLoaded
+ * Updated: 20101020
+ * License: MIT
+ * Version: 1.2
+ *
+ * URL:
+ * http://javascript.nwbox.com/ContentLoaded/
+ * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+ */
+
+// @win window reference
+// @fn function reference
+var contentLoaded = function contentLoaded(win, fn) {
+  var done = false;
+  var top = true;
+  var doc = win.document;
+  var root = doc.documentElement;
+  var add = doc.addEventListener ? "addEventListener" : "attachEvent";
+  var rem = doc.addEventListener ? "removeEventListener" : "detachEvent";
+  var pre = doc.addEventListener ? "" : "on";
+  var init = function init(e) {
+    if (e.type === "readystatechange" && doc.readyState !== "complete") {
+      return;
+    }
+    (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+    if (!done && (done = true)) {
+      return fn.call(win, e.type || e);
+    }
+  };
+
+  var poll = function poll() {
+    try {
+      root.doScroll("left");
+    } catch (e) {
+      setTimeout(poll, 50);
+      return;
+    }
+    return init("poll");
+  };
+
+  if (doc.readyState !== "complete") {
+    if (doc.createEventObject && root.doScroll) {
+      try {
+        top = !win.frameElement;
+      } catch (error) {}
+      if (top) {
+        poll();
+      }
+    }
+    doc[add](pre + "DOMContentLoaded", init, false);
+    doc[add](pre + "readystatechange", init, false);
+    return win[add](pre + "load", init, false);
+  }
+};
+
+// As a single function to be able to write tests.
+Dropzone._autoDiscoverFunction = function () {
+  if (Dropzone.autoDiscover) {
+    return Dropzone.discover();
+  }
+};
+contentLoaded(window, Dropzone._autoDiscoverFunction);
+
+function __guard__(value, transform) {
+  return typeof value !== 'undefined' && value !== null ? transform(value) : undefined;
+}
+function __guardMethod__(obj, methodName, transform) {
+  if (typeof obj !== 'undefined' && obj !== null && typeof obj[methodName] === 'function') {
+    return transform(obj, methodName);
+  } else {
+    return undefined;
+  }
+}
+
+(function ($, moment)
+{
+   var pluginName = "bootstrapMaterialDatePicker";
+   var pluginDataName = "plugin_" + pluginName;
+
+   moment.locale('es', {
+    months : 'enero_febrero_marzo_abril_mayo_junio_julio_agosto_septiembre_octubre_noviembre_diciembre'.split('_'),
+    monthsShort : 'ene._feb._mar._abr._may._jun._jul._ago._sep._oct._nov._dic.'.split('_'),
+    monthsParseExact : true,
+    weekdays : 'domingo_lunes_martes_miércoles_jueves_viernes_sabado'.split('_'),
+    weekdaysShort : 'dom._lun._mar._mie._jue._vie._sab.'.split('_'),
+    weekdaysMin : 'Do_Lu_Ma_Xi_Ju_Vi_Sa'.split('_'),
+    weekdaysParseExact : true,
+    week : {
+        dow : 1, // Monday is the first day of the week.
+        doy : 4  // The week that contains Jan 4th is the first week of the year.
+    }
+});
+
+   function Plugin(element, options)
+   {
+      this.currentView = 0;
+
+      this.minDate;
+      this.maxDate;
+
+      this._attachedEvents = [];
+
+      this.element = element;
+      this.$element = $(element);
+
+
+      this.params = {date: true, time: true, format: 'YYYY-MM-DD', minDate: null, maxDate: null, currentDate: null, lang: 'es', weekStart: 0, disabledDays: [], shortTime: false, clearButton: false, nowButton: false, cancelText: 'Cancel', okText: 'OK', clearText: 'Clear', nowText: 'Now', switchOnClick: false, triggerEvent: 'focus', monthPicker: false, year:true};
+      this.params = $.fn.extend(this.params, options);
+
+      this.name = "dtp_" + this.setName();
+      this.$element.attr("data-dtp", this.name);
+
+      moment.locale(this.params.lang);
+
+      this.init();
+   }
+
+   $.fn[pluginName] = function (options, p)
+   {
+      this.each(function ()
+      {
+         if (!$.data(this, pluginDataName))
+         {
+            $.data(this, pluginDataName, new Plugin(this, options));
+         } else
+         {
+            if (typeof ($.data(this, pluginDataName)[options]) === 'function')
+            {
+               $.data(this, pluginDataName)[options](p);
+            }
+            if (options === 'destroy')
+            {
+               delete $.data(this, pluginDataName);
+            }
+         }
+      });
+      return this;
+   };
+
+   Plugin.prototype =
+           {
+              init: function ()
+              {
+                 this.initDays();
+                 this.initDates();
+
+                 this.initTemplate();
+
+                 this.initButtons();
+
+                 this._attachEvent($(window), 'resize', this._centerBox.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-content'), 'click', this._onElementClick.bind(this));
+                 this._attachEvent(this.$dtpElement, 'click', this._onBackgroundClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-close > a'), 'click', this._onCloseClick.bind(this));
+                 this._attachEvent(this.$element, this.params.triggerEvent, this._fireCalendar.bind(this));
+              },
+              initDays: function ()
+              {
+                 this.days = [];
+                 for (var i = this.params.weekStart; this.days.length < 7; i++)
+                 {
+                    if (i > 6)
+                    {
+                       i = 0;
+                    }
+                    this.days.push(i.toString());
+                 }
+              },
+              initDates: function ()
+              {
+                 if (this.$element.val().length > 0)
+                 {
+                    if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                    {
+                       this.currentDate = moment(this.$element.val(), this.params.format).locale(this.params.lang);
+                    } else
+                    {
+                       this.currentDate = moment(this.$element.val()).locale(this.params.lang);
+                    }
+                 } else
+                 {
+                    if (typeof (this.$element.attr('value')) !== 'undefined' && this.$element.attr('value') !== null && this.$element.attr('value') !== "")
+                    {
+                       if (typeof (this.$element.attr('value')) === 'string')
+                       {
+                          if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                          {
+                             this.currentDate = moment(this.$element.attr('value'), this.params.format).locale(this.params.lang);
+                          } else
+                          {
+                             this.currentDate = moment(this.$element.attr('value')).locale(this.params.lang);
+                          }
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.currentDate) !== 'undefined' && this.params.currentDate !== null)
+                       {
+                          if (typeof (this.params.currentDate) === 'string')
+                          {
+                             if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                             {
+                                this.currentDate = moment(this.params.currentDate, this.params.format).locale(this.params.lang);
+                             } else
+                             {
+                                this.currentDate = moment(this.params.currentDate).locale(this.params.lang);
+                             }
+                          } else
+                          {
+                             if (typeof (this.params.currentDate.isValid) === 'undefined' || typeof (this.params.currentDate.isValid) !== 'function')
+                             {
+                                var x = this.params.currentDate.getTime();
+                                this.currentDate = moment(x, "x").locale(this.params.lang);
+                             } else
+                             {
+                                this.currentDate = this.params.currentDate;
+                             }
+                          }
+                          this.$element.val(this.currentDate.format(this.params.format));
+                       } else
+                          this.currentDate = moment();
+                    }
+                 }
+
+                 if (typeof (this.params.minDate) !== 'undefined' && this.params.minDate !== null)
+                 {
+                    if (typeof (this.params.minDate) === 'string')
+                    {
+                       if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                       {
+                          this.minDate = moment(this.params.minDate, this.params.format).locale(this.params.lang);
+                       } else
+                       {
+                          this.minDate = moment(this.params.minDate).locale(this.params.lang);
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.minDate.isValid) === 'undefined' || typeof (this.params.minDate.isValid) !== 'function')
+                       {
+                          var x = this.params.minDate.getTime();
+                          this.minDate = moment(x, "x").locale(this.params.lang);
+                       } else
+                       {
+                          this.minDate = this.params.minDate;
+                       }
+                    }
+                 } else if (this.params.minDate === null)
+                 {
+                    this.minDate = null;
+                 }
+
+                 if (typeof (this.params.maxDate) !== 'undefined' && this.params.maxDate !== null)
+                 {
+                    if (typeof (this.params.maxDate) === 'string')
+                    {
+                       if (typeof (this.params.format) !== 'undefined' && this.params.format !== null)
+                       {
+                          this.maxDate = moment(this.params.maxDate, this.params.format).locale(this.params.lang);
+                       } else
+                       {
+                          this.maxDate = moment(this.params.maxDate).locale(this.params.lang);
+                       }
+                    } else
+                    {
+                       if (typeof (this.params.maxDate.isValid) === 'undefined' || typeof (this.params.maxDate.isValid) !== 'function')
+                       {
+                          var x = this.params.maxDate.getTime();
+                          this.maxDate = moment(x, "x").locale(this.params.lang);
+                       } else
+                       {
+                          this.maxDate = this.params.maxDate;
+                       }
+                    }
+                 } else if (this.params.maxDate === null)
+                 {
+                    this.maxDate = null;
+                 }
+
+                 if (!this.isAfterMinDate(this.currentDate))
+                 {
+                    this.currentDate = moment(this.minDate);
+                 }
+                 if (!this.isBeforeMaxDate(this.currentDate))
+                 {
+                    this.currentDate = moment(this.maxDate);
+                 }
+              },
+              initTemplate: function ()
+              {
+                  var yearPicker = "";
+                  var y =this.currentDate.year();
+                  for (var i = y-3; i < y + 4; i++) {
+                      yearPicker += '<div class="year-picker-item" data-year="' + i + '">' + i + '</div>';
+                  }
+                  this.midYear=y;
+                  var yearHtml =
+                      '<div class="dtp-picker-year hidden" >' +
+                      '<div><a href="javascript:void(0);" class="btn btn-default dtp-select-year-range before" style="margin: 0;"><i class="material-icons">keyboard_arrow_up</i></a></div>' +
+                      yearPicker +
+                      '<div><a href="javascript:void(0);" class="btn btn-default dtp-select-year-range after" style="margin: 0;"><i class="material-icons">keyboard_arrow_down</i></a></div>' +
+                      '</div>';
+
+                 this.template = '<div class="dtp hidden" id="' + this.name + '">' +
+                         '<div class="dtp-content">' +
+                         '<div class="dtp-date-view">' +
+                         '<header class="dtp-header">' +
+                         '<div class="dtp-actual-day">Lundi</div>' +
+                         '<div class="dtp-close"><a href="javascript:void(0);"><i class="material-icons">clear</i></a></div>' +
+                         '</header>' +
+                         '<div class="dtp-date hidden">' +
+                         '<div>' +
+                         '<div class="left center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-before"><i class="material-icons">chevron_left</i></a>' +
+                         '</div>' +
+                         '<div class="dtp-actual-month p80">MAR</div>' +
+                         '<div class="right center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-after"><i class="material-icons">chevron_right</i></a>' +
+                         '</div>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '<div class="dtp-actual-num">13</div>' +
+                         '<div>' +
+                         '<div class="left center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-before"><i class="material-icons">chevron_left</i></a>' +
+                         '</div>' +
+                         '<div class="dtp-actual-year p80'+(this.params.year?"":" disabled")+'">2014</div>' +
+                         '<div class="right center p10">' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-after"><i class="material-icons">chevron_right</i></a>' +
+                         '</div>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '</div>' +
+                         '<div class="dtp-time hidden">' +
+                         '<div class="dtp-actual-maxtime">23:55</div>' +
+                         '</div>' +
+                         '<div class="dtp-picker">' +
+                         '<div class="dtp-picker-calendar"></div>' +
+                         '<div class="dtp-picker-datetime hidden">' +
+                         '<div class="dtp-actual-meridien">' +
+                         '<div class="left p20">' +
+                         '<a class="dtp-meridien-am" href="javascript:void(0);">AM</a>' +
+                         '</div>' +
+                         '<div class="dtp-actual-time p60"></div>' +
+                         '<div class="right p20">' +
+                         '<a class="dtp-meridien-pm" href="javascript:void(0);">PM</a>' +
+                         '</div>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '<div id="dtp-svg-clock">' +
+                         '</div>' +
+                         '</div>' +
+                         yearHtml+
+                         '</div>' +
+                         '</div>' +
+                         '<div class="dtp-buttons">' +
+                         '<button class="dtp-btn-now btn btn-flat hidden">' + this.params.nowText + '</button>' +
+                         '<button class="dtp-btn-clear btn btn-flat hidden">' + this.params.clearText + '</button>' +
+                         '<button class="dtp-btn-cancel btn btn-flat">' + this.params.cancelText + '</button>' +
+                         '<button class="dtp-btn-ok btn btn-flat">' + this.params.okText + '</button>' +
+                         '<div class="clearfix"></div>' +
+                         '</div>' +
+                         '</div>' +
+                         '</div>';
+
+                 if ($('body').find("#" + this.name).length <= 0)
+                 {
+                    $('body').append(this.template);
+
+                    if (this)
+                       this.dtpElement = $('body').find("#" + this.name);
+                    this.$dtpElement = $(this.dtpElement);
+                 }
+              },
+              initButtons: function ()
+              {
+                 this._attachEvent(this.$dtpElement.find('.dtp-btn-cancel'), 'click', this._onCancelClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-btn-ok'), 'click', this._onOKClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-month-before'), 'click', this._onMonthBeforeClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-month-after'), 'click', this._onMonthAfterClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-year-before'), 'click', this._onYearBeforeClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-year-after'), 'click', this._onYearAfterClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('.dtp-actual-year'), 'click', this._onActualYearClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-year-range.before'), 'click', this._onYearRangeBeforeClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('a.dtp-select-year-range.after'), 'click', this._onYearRangeAfterClick.bind(this));
+                 this._attachEvent(this.$dtpElement.find('div.year-picker-item'), 'click', this._onYearItemClick.bind(this));
+
+                 if (this.params.clearButton === true)
+                 {
+                    this._attachEvent(this.$dtpElement.find('.dtp-btn-clear'), 'click', this._onClearClick.bind(this));
+                    this.$dtpElement.find('.dtp-btn-clear').removeClass('hidden');
+                 }
+
+                 if (this.params.nowButton === true)
+                 {
+                    this._attachEvent(this.$dtpElement.find('.dtp-btn-now'), 'click', this._onNowClick.bind(this));
+                    this.$dtpElement.find('.dtp-btn-now').removeClass('hidden');
+                 }
+
+                 if ((this.params.nowButton === true) && (this.params.clearButton === true))
+                 {
+                    this.$dtpElement.find('.dtp-btn-clear, .dtp-btn-now, .dtp-btn-cancel, .dtp-btn-ok').addClass('btn-xs');
+                 } else if ((this.params.nowButton === true) || (this.params.clearButton === true))
+                 {
+                    this.$dtpElement.find('.dtp-btn-clear, .dtp-btn-now, .dtp-btn-cancel, .dtp-btn-ok').addClass('btn-sm');
+                 }
+              },
+              initMeridienButtons: function ()
+              {
+                 this.$dtpElement.find('a.dtp-meridien-am').off('click').on('click', this._onSelectAM.bind(this));
+                 this.$dtpElement.find('a.dtp-meridien-pm').off('click').on('click', this._onSelectPM.bind(this));
+              },
+              initDate: function (d)
+              {
+                 this.currentView = 0;
+
+                 if (this.params.monthPicker === false)
+                 {
+                    this.$dtpElement.find('.dtp-picker-calendar').removeClass('hidden');
+                 }
+                 this.$dtpElement.find('.dtp-picker-datetime').addClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-year').addClass('hidden');
+
+                 var _date = ((typeof (this.currentDate) !== 'undefined' && this.currentDate !== null) ? this.currentDate : null);
+                 var _calendar = this.generateCalendar(this.currentDate);
+
+                 if (typeof (_calendar.week) !== 'undefined' && typeof (_calendar.days) !== 'undefined')
+                 {
+                    var _template = this.constructHTMLCalendar(_date, _calendar);
+
+                    this.$dtpElement.find('a.dtp-select-day').off('click');
+                    this.$dtpElement.find('.dtp-picker-calendar').html(_template);
+
+                    this.$dtpElement.find('a.dtp-select-day').on('click', this._onSelectDate.bind(this));
+
+                    this.toggleButtons(_date);
+                 }
+
+                 this._centerBox();
+                 this.showDate(_date);
+              },
+              initHours: function ()
+              {
+                 this.currentView = 1;
+
+                 this.showTime(this.currentDate);
+                 this.initMeridienButtons();
+
+                 if (this.currentDate.hour() < 12)
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-am').click();
+                 } else
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-pm').click();
+                 }
+
+                 var hFormat = ((this.params.shortTime) ? 'h' : 'H');
+
+                 this.$dtpElement.find('.dtp-picker-datetime').removeClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-calendar').addClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-year').addClass('hidden');
+
+                 var svgClockElement = this.createSVGClock(true);
+
+                 for (var i = 0; i < 12; i++)
+                 {
+                    var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 12))));
+                    var y = -(162 * (Math.cos(-Math.PI * 2 * (i / 12))));
+
+                    var fill = ((this.currentDate.format(hFormat) == i) ? "#8BC34A" : 'transparent');
+                    var color = ((this.currentDate.format(hFormat) == i) ? "#fff" : '#000');
+
+                    var svgHourCircle = this.createSVGElement("circle", {'id': 'h-' + i, 'class': 'dtp-select-hour', 'style': 'cursor:pointer', r: '30', cx: x, cy: y, fill: fill, 'data-hour': i});
+
+                    var svgHourText = this.createSVGElement("text", {'id': 'th-' + i, 'class': 'dtp-select-hour-text', 'text-anchor': 'middle', 'style': 'cursor:pointer', 'font-weight': 'bold', 'font-size': '20', x: x, y: y + 7, fill: color, 'data-hour': i});
+                    svgHourText.textContent = ((i === 0) ? ((this.params.shortTime) ? 12 : i) : i);
+
+                    if (!this.toggleTime(i, true))
+                    {
+                       svgHourCircle.className += " disabled";
+                       svgHourText.className += " disabled";
+                       svgHourText.setAttribute('fill', '#bdbdbd');
+                    } else
+                    {
+                       svgHourCircle.addEventListener('click', this._onSelectHour.bind(this));
+                       svgHourText.addEventListener('click', this._onSelectHour.bind(this));
+                    }
+
+                    svgClockElement.appendChild(svgHourCircle)
+                    svgClockElement.appendChild(svgHourText)
+                 }
+
+                 if (!this.params.shortTime)
+                 {
+                    for (var i = 0; i < 12; i++)
+                    {
+                       var x = -(110 * (Math.sin(-Math.PI * 2 * (i / 12))));
+                       var y = -(110 * (Math.cos(-Math.PI * 2 * (i / 12))));
+
+                       var fill = ((this.currentDate.format(hFormat) == (i + 12)) ? "#8BC34A" : 'transparent');
+                       var color = ((this.currentDate.format(hFormat) == (i + 12)) ? "#fff" : '#000');
+
+                       var svgHourCircle = this.createSVGElement("circle", {'id': 'h-' + (i + 12), 'class': 'dtp-select-hour', 'style': 'cursor:pointer', r: '30', cx: x, cy: y, fill: fill, 'data-hour': (i + 12)});
+
+                       var svgHourText = this.createSVGElement("text", {'id': 'th-' + (i + 12), 'class': 'dtp-select-hour-text', 'text-anchor': 'middle', 'style': 'cursor:pointer', 'font-weight': 'bold', 'font-size': '22', x: x, y: y + 7, fill: color, 'data-hour': (i + 12)});
+                       svgHourText.textContent = i + 12;
+
+                       if (!this.toggleTime(i + 12, true))
+                       {
+                          svgHourCircle.className += " disabled";
+                          svgHourText.className += " disabled";
+                          svgHourText.setAttribute('fill', '#bdbdbd');
+                       } else
+                       {
+                          svgHourCircle.addEventListener('click', this._onSelectHour.bind(this));
+                          svgHourText.addEventListener('click', this._onSelectHour.bind(this));
+                       }
+
+                       svgClockElement.appendChild(svgHourCircle)
+                       svgClockElement.appendChild(svgHourText)
+                    }
+
+                    this.$dtpElement.find('a.dtp-meridien-am').addClass('hidden');
+                    this.$dtpElement.find('a.dtp-meridien-pm').addClass('hidden');
+                 }
+
+                 this._centerBox();
+              },
+              initMinutes: function ()
+              {
+                 this.currentView = 2;
+
+                 this.showTime(this.currentDate);
+
+                 this.initMeridienButtons();
+
+                 if (this.currentDate.hour() < 12)
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-am').click();
+                 } else
+                 {
+                    this.$dtpElement.find('a.dtp-meridien-pm').click();
+                 }
+
+                 this.$dtpElement.find('.dtp-picker-year').addClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-calendar').addClass('hidden');
+                 this.$dtpElement.find('.dtp-picker-datetime').removeClass('hidden');
+
+                 var svgClockElement = this.createSVGClock(false);
+
+                 for (var i = 0; i < 60; i++)
+                 {
+                    var s = ((i % 5 === 0) ? 162 : 158);
+                    var r = ((i % 5 === 0) ? 30 : 20);
+
+                    var x = -(s * (Math.sin(-Math.PI * 2 * (i / 60))));
+                    var y = -(s * (Math.cos(-Math.PI * 2 * (i / 60))));
+
+                    var color = ((this.currentDate.format("m") == i) ? "#8BC34A" : 'transparent');
+
+                    var svgMinuteCircle = this.createSVGElement("circle", {'id': 'm-' + i, 'class': 'dtp-select-minute', 'style': 'cursor:pointer', r: r, cx: x, cy: y, fill: color, 'data-minute': i});
+
+                    if (!this.toggleTime(i, false))
+                    {
+                       svgMinuteCircle.className += " disabled";
+                    } else
+                    {
+                       svgMinuteCircle.addEventListener('click', this._onSelectMinute.bind(this));
+                    }
+
+                    svgClockElement.appendChild(svgMinuteCircle)
+                 }
+
+                 for (var i = 0; i < 60; i++)
+                 {
+                    if ((i % 5) === 0)
+                    {
+                       var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 60))));
+                       var y = -(162 * (Math.cos(-Math.PI * 2 * (i / 60))));
+
+                       var color = ((this.currentDate.format("m") == i) ? "#fff" : '#000');
+
+                       var svgMinuteText = this.createSVGElement("text", {'id': 'tm-' + i, 'class': 'dtp-select-minute-text', 'text-anchor': 'middle', 'style': 'cursor:pointer', 'font-weight': 'bold', 'font-size': '20', x: x, y: y + 7, fill: color, 'data-minute': i});
+                       svgMinuteText.textContent = i;
+
+                       if (!this.toggleTime(i, false))
+                       {
+                          svgMinuteText.className += " disabled";
+                          svgMinuteText.setAttribute('fill', '#bdbdbd');
+                       } else
+                       {
+                          svgMinuteText.addEventListener('click', this._onSelectMinute.bind(this));
+                       }
+
+                       svgClockElement.appendChild(svgMinuteText)
+                    }
+                 }
+
+                 this._centerBox();
+              },
+              animateHands: function ()
+              {
+                 var H = this.currentDate.hour();
+                 var M = this.currentDate.minute();
+
+                 var hh = this.$dtpElement.find('.hour-hand');
+                 hh[0].setAttribute('transform', "rotate(" + 360 * H / 12 + ")");
+
+                 var mh = this.$dtpElement.find('.minute-hand');
+                 mh[0].setAttribute('transform', "rotate(" + 360 * M / 60 + ")");
+              },
+              createSVGClock: function (isHour)
+              {
+                 var hl = ((this.params.shortTime) ? -120 : -90);
+
+                 var svgElement = this.createSVGElement("svg", {class: 'svg-clock', viewBox: '0,0,400,400'});
+                 var svgGElement = this.createSVGElement("g", {transform: 'translate(200,200) '});
+                 var svgClockFace = this.createSVGElement("circle", {r: '192', fill: '#eee', stroke: '#bdbdbd', 'stroke-width': 2});
+                 var svgClockCenter = this.createSVGElement("circle", {r: '15', fill: '#757575'});
+
+                 svgGElement.appendChild(svgClockFace)
+
+                 if (isHour)
+                 {
+                    var svgMinuteHand = this.createSVGElement("line", {class: 'minute-hand', x1: 0, y1: 0, x2: 0, y2: -150, stroke: '#bdbdbd', 'stroke-width': 2});
+                    var svgHourHand = this.createSVGElement("line", {class: 'hour-hand', x1: 0, y1: 0, x2: 0, y2: hl, stroke: '#8BC34A', 'stroke-width': 8});
+
+                    svgGElement.appendChild(svgMinuteHand);
+                    svgGElement.appendChild(svgHourHand);
+                 } else
+                 {
+                    var svgMinuteHand = this.createSVGElement("line", {class: 'minute-hand', x1: 0, y1: 0, x2: 0, y2: -150, stroke: '#8BC34A', 'stroke-width': 2});
+                    var svgHourHand = this.createSVGElement("line", {class: 'hour-hand', x1: 0, y1: 0, x2: 0, y2: hl, stroke: '#bdbdbd', 'stroke-width': 8});
+
+                    svgGElement.appendChild(svgHourHand);
+                    svgGElement.appendChild(svgMinuteHand);
+                 }
+
+                 svgGElement.appendChild(svgClockCenter)
+
+                 svgElement.appendChild(svgGElement)
+
+                 this.$dtpElement.find("#dtp-svg-clock").empty();
+                 this.$dtpElement.find("#dtp-svg-clock")[0].appendChild(svgElement);
+
+                 this.animateHands();
+
+                 return svgGElement;
+              },
+              createSVGElement: function (tag, attrs)
+              {
+                 var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+                 for (var k in attrs)
+                 {
+                    el.setAttribute(k, attrs[k]);
+                 }
+                 return el;
+              },
+              isAfterMinDate: function (date, checkHour, checkMinute)
+              {
+                 var _return = true;
+
+                 if (typeof (this.minDate) !== 'undefined' && this.minDate !== null)
+                 {
+                    var _minDate = moment(this.minDate);
+                    var _date = moment(date);
+
+                    if (!checkHour && !checkMinute)
+                    {
+                       _minDate.hour(0);
+                       _minDate.minute(0);
+
+                       _date.hour(0);
+                       _date.minute(0);
+                    }
+
+                    _minDate.second(0);
+                    _date.second(0);
+                    _minDate.millisecond(0);
+                    _date.millisecond(0);
+
+                    if (!checkMinute)
+                    {
+                       _date.minute(0);
+                       _minDate.minute(0);
+
+                       _return = (parseInt(_date.format("X")) >= parseInt(_minDate.format("X")));
+                    } else
+                    {
+                       _return = (parseInt(_date.format("X")) >= parseInt(_minDate.format("X")));
+                    }
+                 }
+
+                 return _return;
+              },
+              isBeforeMaxDate: function (date, checkTime, checkMinute)
+              {
+                 var _return = true;
+
+                 if (typeof (this.maxDate) !== 'undefined' && this.maxDate !== null)
+                 {
+                    var _maxDate = moment(this.maxDate);
+                    var _date = moment(date);
+
+                    if (!checkTime && !checkMinute)
+                    {
+                       _maxDate.hour(0);
+                       _maxDate.minute(0);
+
+                       _date.hour(0);
+                       _date.minute(0);
+                    }
+
+                    _maxDate.second(0);
+                    _date.second(0);
+                    _maxDate.millisecond(0);
+                    _date.millisecond(0);
+
+                    if (!checkMinute)
+                    {
+                       _date.minute(0);
+                       _maxDate.minute(0);
+
+                       _return = (parseInt(_date.format("X")) <= parseInt(_maxDate.format("X")));
+                    } else
+                    {
+                       _return = (parseInt(_date.format("X")) <= parseInt(_maxDate.format("X")));
+                    }
+                 }
+
+                 return _return;
+              },
+              rotateElement: function (el, deg)
+              {
+                 $(el).css
+                         ({
+                            WebkitTransform: 'rotate(' + deg + 'deg)',
+                            '-moz-transform': 'rotate(' + deg + 'deg)'
+                         });
+              },
+              showDate: function (date)
+              {
+                 if (date)
+                 {
+                    this.$dtpElement.find('.dtp-actual-day').html(date.locale(this.params.lang).format('dddd'));
+                    this.$dtpElement.find('.dtp-actual-month').html(date.locale(this.params.lang).format('MMM').toUpperCase());
+                    this.$dtpElement.find('.dtp-actual-num').html(date.locale(this.params.lang).format('DD'));
+                    this.$dtpElement.find('.dtp-actual-year').html(date.locale(this.params.lang).format('YYYY'));
+                 }
+              },
+              showTime: function (date)
+              {
+                 if (date)
+                 {
+                    var minutes = date.minute();
+                    var content = ((this.params.shortTime) ? date.format('hh') : date.format('HH')) + ':' + ((minutes.toString().length == 2) ? minutes : '0' + minutes) + ((this.params.shortTime) ? ' ' + date.format('A') : '');
+
+                    if (this.params.date)
+                       this.$dtpElement.find('.dtp-actual-time').html(content);
+                    else
+                    {
+                       if (this.params.shortTime)
+                          this.$dtpElement.find('.dtp-actual-day').html(date.format('A'));
+                       else
+                          this.$dtpElement.find('.dtp-actual-day').html('&nbsp;');
+
+                       this.$dtpElement.find('.dtp-actual-maxtime').html(content);
+                    }
+                 }
+              },
+              selectDate: function (date)
+              {
+                 if (date)
+                 {
+                    this.currentDate.date(date);
+
+                    this.showDate(this.currentDate);
+                    this.$element.trigger('dateSelected', this.currentDate);
+                 }
+              },
+              generateCalendar: function (date)
+              {
+                 var _calendar = {};
+
+                 if (date !== null)
+                 {
+                    var startOfMonth = moment(date).locale(this.params.lang).startOf('month');
+                    var endOfMonth = moment(date).locale(this.params.lang).endOf('month');
+
+                    var iNumDay = startOfMonth.format('d');
+
+                    _calendar.week = this.days;
+                    _calendar.days = [];
+
+                    for (var i = startOfMonth.date(); i <= endOfMonth.date(); i++)
+                    {
+                       if (i === startOfMonth.date())
+                       {
+                          var iWeek = _calendar.week.indexOf(iNumDay.toString());
+                          if (iWeek > 0)
+                          {
+                             for (var x = 0; x < iWeek; x++)
+                             {
+                                _calendar.days.push(0);
+                             }
+                          }
+                       }
+                       _calendar.days.push(moment(startOfMonth).locale(this.params.lang).date(i));
+                    }
+                 }
+
+                 return _calendar;
+              },
+              constructHTMLCalendar: function (date, calendar)
+              {
+                 var _template = "";
+
+                 _template += '<div class="dtp-picker-month">' + date.locale(this.params.lang).format('MMMM YYYY') + '</div>';
+                 _template += '<table class="table dtp-picker-days"><thead>';
+                 for (var i = 0; i < calendar.week.length; i++)
+                 {
+                    _template += '<th>' + moment(parseInt(calendar.week[i]), "d").locale(this.params.lang).format("dd").substring(0, 1) + '</th>';
+                 }
+
+                 _template += '</thead>';
+                 _template += '<tbody><tr>';
+
+                 for (var i = 0; i < calendar.days.length; i++)
+                 {
+                    if (i % 7 == 0)
+                       _template += '</tr><tr>';
+                    _template += '<td data-date="' + moment(calendar.days[i]).locale(this.params.lang).format("D") + '">';
+                    if (calendar.days[i] != 0)
+                    {
+                        if (this.isBeforeMaxDate(moment(calendar.days[i]), false, false) === false
+                            || this.isAfterMinDate(moment(calendar.days[i]), false, false) === false
+                            || this.params.disabledDays.indexOf(calendar.days[i].isoWeekday()) !== -1)
+                        {
+                            _template += '<span class="dtp-select-day">' + moment(calendar.days[i]).locale(this.params.lang).format("DD") + '</span>';
+                        } else
+                        {
+                            if (moment(calendar.days[i]).locale(this.params.lang).format("DD") === moment(this.currentDate).locale(this.params.lang).format("DD"))
+                            {
+                                _template += '<a href="javascript:void(0);" class="dtp-select-day selected">' + moment(calendar.days[i]).locale(this.params.lang).format("DD") + '</a>';
+                            } else
+                            {
+                                _template += '<a href="javascript:void(0);" class="dtp-select-day">' + moment(calendar.days[i]).locale(this.params.lang).format("DD") + '</a>';
+                            }
+                        }
+
+                        _template += '</td>';
+                    }
+                 }
+                 _template += '</tr></tbody></table>';
+
+                 return _template;
+              },
+              setName: function ()
+              {
+                 var text = "";
+                 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                 for (var i = 0; i < 5; i++)
+                 {
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+                 }
+
+                 return text;
+              },
+              isPM: function ()
+              {
+                 return this.$dtpElement.find('a.dtp-meridien-pm').hasClass('selected');
+              },
+              setElementValue: function ()
+              {
+                 this.$element.trigger('beforeChange', this.currentDate);
+                 if (typeof ($.material) !== 'undefined')
+                 {
+                    this.$element.removeClass('empty');
+                 }
+                 this.$element.val(moment(this.currentDate).locale(this.params.lang).format(this.params.format));
+                 this.$element.trigger('change', this.currentDate);
+              },
+              toggleButtons: function (date)
+              {
+                 if (date && date.isValid())
+                 {
+                    var startOfMonth = moment(date).locale(this.params.lang).startOf('month');
+                    var endOfMonth = moment(date).locale(this.params.lang).endOf('month');
+
+                    if (!this.isAfterMinDate(startOfMonth, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-before').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-before').removeClass('invisible');
+                    }
+
+                    if (!this.isBeforeMaxDate(endOfMonth, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-after').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-month-after').removeClass('invisible');
+                    }
+
+                    var startOfYear = moment(date).locale(this.params.lang).startOf('year');
+                    var endOfYear = moment(date).locale(this.params.lang).endOf('year');
+
+                    if (!this.isAfterMinDate(startOfYear, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-before').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-before').removeClass('invisible');
+                    }
+
+                    if (!this.isBeforeMaxDate(endOfYear, false, false))
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-after').addClass('invisible');
+                    } else
+                    {
+                       this.$dtpElement.find('a.dtp-select-year-after').removeClass('invisible');
+                    }
+                 }
+              },
+              toggleTime: function (value, isHours)
+              {
+                 var result = false;
+
+                 if (isHours)
+                 {
+                    var _date = moment(this.currentDate);
+                    _date.hour(this.convertHours(value)).minute(0).second(0);
+
+                    result = !(this.isAfterMinDate(_date, true, false) === false || this.isBeforeMaxDate(_date, true, false) === false);
+                 } else
+                 {
+                    var _date = moment(this.currentDate);
+                    _date.minute(value).second(0);
+
+                    result = !(this.isAfterMinDate(_date, true, true) === false || this.isBeforeMaxDate(_date, true, true) === false);
+                 }
+
+                 return result;
+              },
+              _attachEvent: function (el, ev, fn)
+              {
+                 el.on(ev, null, null, fn);
+                 this._attachedEvents.push([el, ev, fn]);
+              },
+              _detachEvents: function ()
+              {
+                 for (var i = this._attachedEvents.length - 1; i >= 0; i--)
+                 {
+                    this._attachedEvents[i][0].off(this._attachedEvents[i][1], this._attachedEvents[i][2]);
+                    this._attachedEvents.splice(i, 1);
+                 }
+              },
+              _fireCalendar: function ()
+              {
+                 this.currentView = 0;
+                 this.$element.blur();
+
+                 this.initDates();
+
+                 this.show();
+
+                 if (this.params.date)
+                 {
+                    this.$dtpElement.find('.dtp-date').removeClass('hidden');
+                    this.initDate();
+                 } else
+                 {
+                    if (this.params.time)
+                    {
+                       this.$dtpElement.find('.dtp-time').removeClass('hidden');
+                       this.initHours();
+                    }
+                 }
+              },
+              _onBackgroundClick: function (e)
+              {
+                 e.stopPropagation();
+                 this.hide();
+              },
+              _onElementClick: function (e)
+              {
+                 e.stopPropagation();
+              },
+              _onKeydown: function (e)
+              {
+                 if (e.which === 27)
+                 {
+                    this.hide();
+                 }
+              },
+              _onCloseClick: function ()
+              {
+                 this.hide();
+              },
+              _onClearClick: function ()
+              {
+                 this.currentDate = null;
+                 this.$element.trigger('beforeChange', this.currentDate);
+                 this.hide();
+                 if (typeof ($.material) !== 'undefined')
+                 {
+                    this.$element.addClass('empty');
+                 }
+                 this.$element.val('');
+                 this.$element.trigger('change', this.currentDate);
+              },
+              _onNowClick: function ()
+              {
+                 this.currentDate = moment();
+
+                 if (this.params.date === true)
+                 {
+                    this.showDate(this.currentDate);
+
+                    if (this.currentView === 0)
+                    {
+                       this.initDate();
+                    }
+                 }
+
+                 if (this.params.time === true)
+                 {
+                    this.showTime(this.currentDate);
+
+                    switch (this.currentView)
+                    {
+                       case 1 :
+                          this.initHours();
+                          break;
+                       case 2 :
+                          this.initMinutes();
+                          break;
+                    }
+
+                    this.animateHands();
+                 }
+              },
+              _onOKClick: function ()
+              {
+                 switch (this.currentView)
+                 {
+                    case 0:
+                       if (this.params.time === true)
+                       {
+                          this.initHours();
+                       } else
+                       {
+                          this.setElementValue();
+                          this.hide();
+                       }
+                       break;
+                    case 1:
+                       this.initMinutes();
+                       break;
+                    case 2:
+                       this.setElementValue();
+                       this.hide();
+                       break;
+                 }
+              },
+              _onCancelClick: function ()
+              {
+                 if (this.params.time)
+                 {
+                    switch (this.currentView)
+                    {
+                       case 0:
+                          this.hide();
+                          break;
+                       case 1:
+                          if (this.params.date)
+                          {
+                             this.initDate();
+                          } else
+                          {
+                             this.hide();
+                          }
+                          break;
+                       case 2:
+                          this.initHours();
+                          break;
+                    }
+                 } else
+                 {
+                    this.hide();
+                 }
+              },
+              _onMonthBeforeClick: function ()
+              {
+                 this.currentDate.subtract(1, 'months');
+                 this.initDate(this.currentDate);
+                  this._closeYearPicker();
+              },
+              _onMonthAfterClick: function ()
+              {
+                 this.currentDate.add(1, 'months');
+                 this.initDate(this.currentDate);
+                  this._closeYearPicker();
+              },
+              _onYearBeforeClick: function ()
+              {
+                 this.currentDate.subtract(1, 'years');
+                 this.initDate(this.currentDate);
+                  this._closeYearPicker();
+              },
+              _onYearAfterClick: function ()
+              {
+                 this.currentDate.add(1, 'years');
+                 this.initDate(this.currentDate);
+                  this._closeYearPicker();
+              },
+               refreshYearItems:function () {
+                  var curYear=this.currentDate.year(),midYear=this.midYear;
+                   var minYear=1850;
+                   if (typeof (this.minDate) !== 'undefined' && this.minDate !== null){
+                       minYear=moment(this.minDate).year();
+                   }
+
+                   var maxYear=2200;
+                   if (typeof (this.maxDate) !== 'undefined' && this.maxDate !== null){
+                       maxYear=moment(this.maxDate).year();
+                   }
+
+                   this.$dtpElement.find(".dtp-picker-year .invisible").removeClass("invisible");
+                   this.$dtpElement.find(".year-picker-item").each(function (i, el) {
+                       var newYear = midYear - 3 + i;
+                       $(el).attr("data-year", newYear).text(newYear).data("year", newYear);
+                       if (curYear == newYear) {
+                           $(el).addClass("active");
+                       } else {
+                           $(el).removeClass("active");
+                       }
+                       if(newYear<minYear || newYear>maxYear){
+                           $(el).addClass("invisible")
+                       }
+                   });
+                   if(minYear>=midYear-3){
+                       this.$dtpElement.find(".dtp-select-year-range.before").addClass('invisible');
+                   }
+                   if(maxYear<=midYear+3){
+                       this.$dtpElement.find(".dtp-select-year-range.after").addClass('invisible');
+                   }
+
+                   this.$dtpElement.find(".dtp-select-year-range").data("mid", midYear);
+               },
+               _onActualYearClick:function(){
+                  if(this.params.year){
+                      if(this.$dtpElement.find('.dtp-picker-year.hidden').length>0) {
+                          this.$dtpElement.find('.dtp-picker-datetime').addClass("hidden");
+                          this.$dtpElement.find('.dtp-picker-calendar').addClass("hidden");
+                          this.$dtpElement.find('.dtp-picker-year').removeClass("hidden");
+                          this.midYear = this.currentDate.year();
+                          this.refreshYearItems();
+                      }else{
+                          this._closeYearPicker();
+                      }
+                  }
+               },
+               _onYearRangeBeforeClick:function(){
+                   this.midYear-=7;
+                   this.refreshYearItems();
+               },
+               _onYearRangeAfterClick:function(){
+                   this.midYear+=7;
+                   this.refreshYearItems();
+               },
+               _onYearItemClick:function (e) {
+                   var newYear = $(e.currentTarget).data('year');
+                   var oldYear = this.currentDate.year();
+                   var diff = newYear - oldYear;
+                   this.currentDate.add(diff, 'years');
+                   this.initDate(this.currentDate);
+
+                   this._closeYearPicker();
+                   this.$element.trigger("yearSelected",this.currentDate);
+               },
+               _closeYearPicker:function(){
+                   this.$dtpElement.find('.dtp-picker-calendar').removeClass("hidden");
+                   this.$dtpElement.find('.dtp-picker-year').addClass("hidden");
+               },
+               enableYearPicker:function () {
+                    this.params.year=true;
+                    this.$dtpElement.find(".dtp-actual-year").reomveClass("disabled");
+               },
+               disableYearPicker:function () {
+                   this.params.year=false;
+                   this.$dtpElement.find(".dtp-actual-year").addClass("disabled");
+                   this._closeYearPicker();
+               },
+              _onSelectDate: function (e)
+              {
+                 this.$dtpElement.find('a.dtp-select-day').removeClass('selected');
+                 $(e.currentTarget).addClass('selected');
+
+                 this.selectDate($(e.currentTarget).parent().data("date"));
+
+                 if (this.params.switchOnClick === true && this.params.time === true)
+                    setTimeout(this.initHours.bind(this), 200);
+
+                 if(this.params.switchOnClick === true && this.params.time === false) {
+                    setTimeout(this._onOKClick.bind(this), 200);
+                 }
+
+              },
+              _onSelectHour: function (e)
+              {
+                 if (!$(e.target).hasClass('disabled'))
+                 {
+                    var value = $(e.target).data('hour');
+                    var parent = $(e.target).parent();
+
+                    var h = parent.find('.dtp-select-hour');
+                    for (var i = 0; i < h.length; i++)
+                    {
+                       $(h[i]).attr('fill', 'transparent');
+                    }
+                    var th = parent.find('.dtp-select-hour-text');
+                    for (var i = 0; i < th.length; i++)
+                    {
+                       $(th[i]).attr('fill', '#000');
+                    }
+
+                    $(parent.find('#h-' + value)).attr('fill', '#8BC34A');
+                    $(parent.find('#th-' + value)).attr('fill', '#fff');
+
+                    this.currentDate.hour(parseInt(value));
+
+                    if (this.params.shortTime === true && this.isPM())
+                    {
+                       this.currentDate.add(12, 'hours');
+                    }
+
+                    this.showTime(this.currentDate);
+
+                    this.animateHands();
+
+                    if (this.params.switchOnClick === true)
+                       setTimeout(this.initMinutes.bind(this), 200);
+                 }
+              },
+              _onSelectMinute: function (e)
+              {
+                 if (!$(e.target).hasClass('disabled'))
+                 {
+                    var value = $(e.target).data('minute');
+                    var parent = $(e.target).parent();
+
+                    var m = parent.find('.dtp-select-minute');
+                    for (var i = 0; i < m.length; i++)
+                    {
+                       $(m[i]).attr('fill', 'transparent');
+                    }
+                    var tm = parent.find('.dtp-select-minute-text');
+                    for (var i = 0; i < tm.length; i++)
+                    {
+                       $(tm[i]).attr('fill', '#000');
+                    }
+
+                    $(parent.find('#m-' + value)).attr('fill', '#8BC34A');
+                    $(parent.find('#tm-' + value)).attr('fill', '#fff');
+
+                    this.currentDate.minute(parseInt(value));
+                    this.showTime(this.currentDate);
+
+                    this.animateHands();
+
+                    if (this.params.switchOnClick === true)
+                       setTimeout(function ()
+                       {
+                          this.setElementValue();
+                          this.hide();
+                       }.bind(this), 200);
+                 }
+              },
+              _onSelectAM: function (e)
+              {
+                 $('.dtp-actual-meridien').find('a').removeClass('selected');
+                 $(e.currentTarget).addClass('selected');
+
+                 if (this.currentDate.hour() >= 12)
+                 {
+                    if (this.currentDate.subtract(12, 'hours'))
+                       this.showTime(this.currentDate);
+                 }
+                 this.toggleTime((this.currentView === 1));
+              },
+              _onSelectPM: function (e)
+              {
+                 $('.dtp-actual-meridien').find('a').removeClass('selected');
+                 $(e.currentTarget).addClass('selected');
+
+                 if (this.currentDate.hour() < 12)
+                 {
+                    if (this.currentDate.add(12, 'hours'))
+                       this.showTime(this.currentDate);
+                 }
+                 this.toggleTime((this.currentView === 1));
+              },
+              _hideCalendar: function() {
+                 this.$dtpElement.find('.dtp-picker-calendar').addClass('hidden');
+              },
+              convertHours: function (h)
+              {
+                 var _return = h;
+
+                 if (this.params.shortTime === true)
+                 {
+                    if ((h < 12) && this.isPM())
+                    {
+                       _return += 12;
+                    }
+                 }
+
+                 return _return;
+              },
+              setDate: function (date)
+              {
+                 this.params.currentDate = date;
+                 this.initDates();
+              },
+              setMinDate: function (date)
+              {
+                 this.params.minDate = date;
+                 this.initDates();
+              },
+              setMaxDate: function (date)
+              {
+                 this.params.maxDate = date;
+                 this.initDates();
+              },
+              destroy: function ()
+              {
+                 this._detachEvents();
+                 this.$dtpElement.remove();
+              },
+              show: function ()
+              {
+                 this.$dtpElement.removeClass('hidden');
+                 this._attachEvent($(window), 'keydown', this._onKeydown.bind(this));
+                 this._centerBox();
+                 this.$element.trigger('open');
+                 if (this.params.monthPicker === true)
+                 {
+                    this._hideCalendar();
+                 }
+              },
+              hide: function ()
+              {
+                 $(window).off('keydown', null, null, this._onKeydown.bind(this));
+                 this.$dtpElement.addClass('hidden');
+                 this.$element.trigger('close');
+              },
+              _centerBox: function ()
+              {
+                 var h = (this.$dtpElement.height() - this.$dtpElement.find('.dtp-content').height()) / 2;
+                 this.$dtpElement.find('.dtp-content').css('marginLeft', -(this.$dtpElement.find('.dtp-content').width() / 2) + 'px');
+                 this.$dtpElement.find('.dtp-content').css('top', h + 'px');
+              },
+              enableDays: function ()
+              {
+                 var enableDays = this.params.enableDays;
+                 if (enableDays) {
+                    $(".dtp-picker-days tbody tr td").each(function () {
+                       if (!(($.inArray($(this).index(), enableDays)) >= 0)) {
+                          $(this).find('a').css({
+                             "background": "#e3e3e3",
+                             "cursor": "no-drop",
+                             "opacity": "0.5"
+                          }).off("click");
+                       }
+                    });
+                 }
+              }
+
+           };
+})(jQuery, moment);
+
 $( document ).ready(function() {
 
     $('.dataTables_length select').addClass('browser-default');
@@ -16091,234 +20930,21 @@ $( document ).ready(function() {
 $( document ).ready(function() {
   // $('.dataTables_length select').addClass('browser-default');
   function logoTecnoparque() {
-  let logoTecnoparque = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAABLCAYAAAAGeD98AAAACXBIWXMAAC4jAAAuIwF4pT92AAA7M2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMwMTQgNzkuMTU2Nzk3LCAyMDE0LzA4LzIwLTA5OjUzOjAyICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNCAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTgtMTEtMDZUMTQ6MTk6MTctMDU6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOC0xMS0wNlQxNjowMzo0NC0wNTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMTgtMTEtMDZUMTY6MDM6NDQtMDU6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgICAgIDxwaG90b3Nob3A6VGV4dExheWVycz4KICAgICAgICAgICAgPHJkZjpCYWc+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8cGhvdG9zaG9wOkxheWVyTmFtZT5Db2xvbWJpYTwvcGhvdG9zaG9wOkxheWVyTmFtZT4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllclRleHQ+Q29sb21iaWE8L3Bob3Rvc2hvcDpMYXllclRleHQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6NjBjOGEwMGUtNDQxNC1kZjRmLTkxNWYtNzE2NzBjNjFkNmE0PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6NmEwZWFmZGQtZTIwNy0xMWU4LTkwNjYtYzZjYzY3NjZiYjk0PC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6OTljY2U1OTQtOWZlNS0xNDQ4LTgzNjctM2UwMGIzMmY5Njc2PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjk5Y2NlNTk0LTlmZTUtMTQ0OC04MzY3LTNlMDBiMzJmOTY3Njwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxOC0xMS0wNlQxNDoxOToxNy0wNTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo2MGM4YTAwZS00NDE0LWRmNGYtOTE1Zi03MTY3MGM2MWQ2YTQ8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTgtMTEtMDZUMTY6MDM6NDQtMDU6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE0IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj4zMDAwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj4zMDAwMDAwLzEwMDAwPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpSZXNvbHV0aW9uVW5pdD4yPC90aWZmOlJlc29sdXRpb25Vbml0PgogICAgICAgICA8ZXhpZjpDb2xvclNwYWNlPjY1NTM1PC9leGlmOkNvbG9yU3BhY2U+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj41MTI8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NzU8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PhwU4cwAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOgAAFIIAAEVWAAAOpcAABdv11ofkAAALddJREFUeNrsfWtwHNd15jcgwZdIYSCStixKnBGl1liS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';
+    let logoTecnoparque = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAABLCAYAAAAGeD98AAAACXBIWXMAAC4jAAAuIwF4pT92AAA7M2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMwMTQgNzkuMTU2Nzk3LCAyMDE0LzA4LzIwLTA5OjUzOjAyICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNCAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTgtMTEtMDZUMTQ6MTk6MTctMDU6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOC0xMS0wNlQxNjowMzo0NC0wNTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMTgtMTEtMDZUMTY6MDM6NDQtMDU6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgICAgIDxwaG90b3Nob3A6VGV4dExheWVycz4KICAgICAgICAgICAgPHJkZjpCYWc+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8cGhvdG9zaG9wOkxheWVyTmFtZT5Db2xvbWJpYTwvcGhvdG9zaG9wOkxheWVyTmFtZT4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllclRleHQ+Q29sb21iaWE8L3Bob3Rvc2hvcDpMYXllclRleHQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6NjBjOGEwMGUtNDQxNC1kZjRmLTkxNWYtNzE2NzBjNjFkNmE0PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6NmEwZWFmZGQtZTIwNy0xMWU4LTkwNjYtYzZjYzY3NjZiYjk0PC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6OTljY2U1OTQtOWZlNS0xNDQ4LTgzNjctM2UwMGIzMmY5Njc2PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjk5Y2NlNTk0LTlmZTUtMTQ0OC04MzY3LTNlMDBiMzJmOTY3Njwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxOC0xMS0wNlQxNDoxOToxNy0wNTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo2MGM4YTAwZS00NDE0LWRmNGYtOTE1Zi03MTY3MGM2MWQ2YTQ8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTgtMTEtMDZUMTY6MDM6NDQtMDU6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE0IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj4zMDAwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj4zMDAwMDAwLzEwMDAwPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpSZXNvbHV0aW9uVW5pdD4yPC90aWZmOlJlc29sdXRpb25Vbml0PgogICAgICAgICA8ZXhpZjpDb2xvclNwYWNlPjY1NTM1PC9leGlmOkNvbG9yU3BhY2U+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj41MTI8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NzU8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PhwU4cwAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOgAAFIIAAEVWAAAOpcAABdv11ofkAAALddJREFUeNrsfWtwHNd15jcgwZdIYSCStixKnBGl1liS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';
 
-  return logoTecnoparque;
-}
+    return logoTecnoparque;
+  }
 });
 
-// //   $('#LogOutAppend').append("  <div id='modalLogOut' class='modal'>"+
-// //   "<div class='modal-content'>"+
-// //   "<h4>Advertencia de Cierre de Sesión</h4>"+
-// //   "<p>Has estado inactivo un tiempo. Por su seguridad, te desconectaremos automáticamente. Hacer clic en 'Continuar en línea' para seguir logeado. </p>"+
-// //   "<p>Su sesión expira en <span class='bold' id='sessionSecondsRemaining'>10</span> segundos.</p>"+
-// //   "</div>"+
-// //   "<div class='modal-footer'>"+
-// //   "<a href="+uri+'authlogin/salir'+" id='logoutSession' class='modal-action modal-close waves-effect waves-green btn-flat'>Salir</a>"+
-// //   "<a href='javascript:void(0);' id='extendSession' class='modal-action modal-close waves-effect waves-green btn-flat'>Continuar en línea</a>"+
-// //   "</div>"+
-// //   "</div>");
+function checkSubmit() {
+  console.log('Clickeando');
+  $('input[type="text"]').keypress(function(){
+    if($(this).val() != ''){
 
-// // // 900000
-// //   // Set idle time
-// //   $( document ).idleTimer( 900000 );
+      $('button[type="submit"]').removeAttr('disabled');
+    }
+  });
 
-// //   $( document ).on( "idle.idleTimer", function(event, elem, obj) {
-// //     $('#modalLogOut').openModal({
-// //       dismissible: false
-// //     });
-// //     $( document ).idleTimer( 5000 );
-// //     var logOut = setTimeout(function() {
-// //       window.location.href = uri+"authlogin/salir";
-// //     }, 10000);
-
-// //     var sec = 10;
-// //     var timer = setInterval(function() {
-// //       $('#sessionSecondsRemaining').text(--sec);
-// //       if (sec == 0) {
-// //         $('#hideMsg').fadeOut('fast');
-// //         clearInterval(timer);
-// //       }
-// //     }, 1000);
-// //     document.querySelector('#extendSession').onclick = function(){
-// //       clearTimeout(logOut);
-// //       clearInterval(timer);
-// //       setTimeout(function() {
-// //         $('#sessionSecondsRemaining').text(10);
-// //       }, 5000);
-// //     };
-// //   });
-
-
-
-// //   $('.datepicker').pickadate({
-// //     selectMonths: true,
-// //     selectYears: 60,
-// //     // Título dos botões de navegação
-// //     labelMonthNext: 'Próximo Mes',
-// //     labelMonthPrev: 'Mes anterior',
-// //     // Título dos seletores de mês e ano
-// //     labelMonthSelect: 'Selecione Mes',
-// //     labelYearSelect: 'Selecione Año',
-// //     // Meses e dias da semana
-// //     monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-// //     monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-// //     weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-// //     weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-// //     // Letras da semana
-// //     weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
-// //     //Botões
-// //     today: 'Hoy',
-// //     clear: 'Limpiar',
-// //     close: 'Cerrar',
-// //     // max: new Date(((new Date()).getFullYear()), 12, 31),
-// //     // min: -10,
-// //     max: true,
-// //     // Formato da data que aparece no input
-// //     format: 'yyyy-mm-dd',
-// //     // format: 'dddd, dd mmm, yyyy',
-// //     // formatSubmit: 'yyyy/mm/dd',
-// //     // hiddenPrefix: 'prefix__',
-// //     // hiddenSuffix: '__suffix',
-// //     // disable: [
-// //     //   1, 7
-// //     // ],
-// //     onClose: function() {
-// //       $(document.activeElement).blur()
-// //     }
-
-// //   });
-
-// //   $('.atepic').pickadate({
-// //         selectMonths: true,
-// // 		  selectYears: 60,
-// // 		  // Título dos botões de navegação
-// // 		  labelMonthNext: 'Próximo Mes',
-// // 		  labelMonthPrev: 'Mes anterior',
-// // 		  // Título dos seletores de mês e ano
-// // 		  labelMonthSelect: 'Selecione Mes',
-// // 		  labelYearSelect: 'Selecione Año',
-// // 		  // Meses e dias da semana
-// // 		  monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-// // 		  monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-// // 		  weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-// // 		  weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-// // 		  // Letras da semana
-// // 		  weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
-// // 		  //Botões
-// // 		  today: 'Hoy',
-// // 		  clear: 'Limpiar',
-// // 		  close: 'Cerrar',
-// // 		//   max: new Date(((new Date()).getFullYear()), 12, 31),
-// // 		   min: -10,
-// //             // max: true,
-// // 		  // Formato da data que aparece no input
-// // 		  format: 'yyyy-mm-dd',
-// // 		  // format: 'dddd, dd mmm, yyyy',
-// // 		  // formatSubmit: 'yyyy/mm/dd',
-// // 		  // hiddenPrefix: 'prefix__',
-// // 		  // hiddenSuffix: '__suffix',
-// // 		  // disable: [
-// // 		  //   1, 7
-// // 		  // ],
-// // 		  onClose: function() {
-// // 		    $(document.activeElement).blur()
-// // 		  }
-
-// //     });
-
-// //   $( ".datepicker" ).keypress(function (evt) {  return false; });
-
-//   // $('#añoterminacion').pickadate({
-//   //  //     selectMonths: false, // Creates a dropdown to control month
-//   //  //     selectYears: 15, // Creates a dropdown of 15 years to control year
-//   //  //     format: 'yyyy',
-//   //  //     formatSubmit: 'yyyy',
-//   //  // //     datesDisabled: [
-//   //  // //     1, 7,
-//   //  // //     [ 2018, 8, 2 ],
-//   //  // //     [ 2018, 8, 5 ],
-//   //  // //     [ 2018, 8, 28 ]
-//   //  // // ]
-//   //  selectMonths: true, // Creates a dropdown to control month
-//   //          selectYears: 10, // Creates a dropdown of 10 years to control year
-//   //          format: 'dd/mm/yyyy',
-//   //          min: -10,
-//   //          max: true,
-//   //          closeOnSelect: true,
-//   //          closeOnClear: true,
-
-//   //  });
-
-
-
-//   $('.timepicker').pickatime({
-//     autoclose: false,
-//     twelvehour: false,
-//     default: '14:20:00'
-//   });
-
-//   $('.passdatepicker').pickadate({
-//     selectMonths: true,
-//     selectYears: 60,
-//     // Título dos botões de navegação
-//     labelMonthNext: 'Próximo Mes',
-//     labelMonthPrev: 'Mes anterior',
-//     // Título dos seletores de mês e ano
-//     labelMonthSelect: 'Selecione Mes',
-//     labelYearSelect: 'Selecione Año',
-//     // Meses e dias da semana
-//     monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-//     monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-//     weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-//     weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-//     // Letras da semana
-//     weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
-//     //Botões
-//     today: 'Hoy',
-//     clear: 'Limpiar',
-//     close: 'Cerrar',
-//     // max: new Date(((new Date()).getFullYear()), 12, 31),
-//     min: true,
-//     // max: true,
-//     // Formato da data que aparece no input
-//     format: 'yyyy-mm-dd',
-//     // format: 'dddd, dd mmm, yyyy',
-//     // formatSubmit: 'yyyy/mm/dd',
-//     // hiddenPrefix: 'prefix__',
-//     // hiddenSuffix: '__suffix',
-//     // disable: [
-//     //   1, 7
-//     // ],
-//     onClose: function() {
-//       $(document.activeElement).blur()
-//     }
-
-//   });
-
-//   $( ".passdatepicker" ).keypress(function (evt) {  return false; });
-
-//   $('.dataTable').DataTable({
-//     language: {
-//       "decimal": "",
-//       "emptyTable": "No hay información",
-//       "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-//       "infoEmpty": "Mostrando 0 al 0 de 0 entradas",
-//       "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-//       "infoPostFix": "",
-//       "thousands": ",",
-//       "lengthMenu": "Mostrar _MENU_ Entradas",
-//       "loadingRecords": "Cargando...",
-//       "processing": "Procesando...",
-//       "search": "Buscar:",
-//       responsive: true,
-//       "zeroRecords": "Sin resultados encontrados",
-//       oPaginate: {
-//         sFirst: '<i class="material-icons">chevron_left</i>',
-//         sPrevious: '<i class="material-icons">chevron_left</i>',
-//         sNext: '<i class="material-icons">chevron_right</i>',
-//         sLast: '<i class="material-icons">chevron_right</i>'
-//       }
-//     },
-//     order: [],
-//   });
-//   $('.dataTables_length select').addClass('browser-default');
-
-
-// });
-
-// function logoTecnoparque() {
-//   let logoTecnoparque = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAABLCAYAAAAGeD98AAAACXBIWXMAAC4jAAAuIwF4pT92AAA7M2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMwMTQgNzkuMTU2Nzk3LCAyMDE0LzA4LzIwLTA5OjUzOjAyICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIgogICAgICAgICAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgICAgICAgICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmV4aWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgMjAxNCAoV2luZG93cyk8L3htcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhtcDpDcmVhdGVEYXRlPjIwMTgtMTEtMDZUMTQ6MTk6MTctMDU6MDA8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOC0xMS0wNlQxNjowMzo0NC0wNTowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6TWV0YWRhdGFEYXRlPjIwMTgtMTEtMDZUMTY6MDM6NDQtMDU6MDA8L3htcDpNZXRhZGF0YURhdGU+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgICAgIDxwaG90b3Nob3A6VGV4dExheWVycz4KICAgICAgICAgICAgPHJkZjpCYWc+CiAgICAgICAgICAgICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICAgICAgICA8cGhvdG9zaG9wOkxheWVyTmFtZT5Db2xvbWJpYTwvcGhvdG9zaG9wOkxheWVyTmFtZT4KICAgICAgICAgICAgICAgICAgPHBob3Rvc2hvcDpMYXllclRleHQ+Q29sb21iaWE8L3Bob3Rvc2hvcDpMYXllclRleHQ+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICA8L3JkZjpCYWc+CiAgICAgICAgIDwvcGhvdG9zaG9wOlRleHRMYXllcnM+CiAgICAgICAgIDx4bXBNTTpJbnN0YW5jZUlEPnhtcC5paWQ6NjBjOGEwMGUtNDQxNC1kZjRmLTkxNWYtNzE2NzBjNjFkNmE0PC94bXBNTTpJbnN0YW5jZUlEPgogICAgICAgICA8eG1wTU06RG9jdW1lbnRJRD5hZG9iZTpkb2NpZDpwaG90b3Nob3A6NmEwZWFmZGQtZTIwNy0xMWU4LTkwNjYtYzZjYzY3NjZiYjk0PC94bXBNTTpEb2N1bWVudElEPgogICAgICAgICA8eG1wTU06T3JpZ2luYWxEb2N1bWVudElEPnhtcC5kaWQ6OTljY2U1OTQtOWZlNS0xNDQ4LTgzNjctM2UwMGIzMmY5Njc2PC94bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y3JlYXRlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjk5Y2NlNTk0LTlmZTUtMTQ0OC04MzY3LTNlMDBiMzJmOTY3Njwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxOC0xMS0wNlQxNDoxOToxNy0wNTowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDo2MGM4YTAwZS00NDE0LWRmNGYtOTE1Zi03MTY3MGM2MWQ2YTQ8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDp3aGVuPjIwMTgtMTEtMDZUMTY6MDM6NDQtMDU6MDA8L3N0RXZ0OndoZW4+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE0IChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpYUmVzb2x1dGlvbj4zMDAwMDAwLzEwMDAwPC90aWZmOlhSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj4zMDAwMDAwLzEwMDAwPC90aWZmOllSZXNvbHV0aW9uPgogICAgICAgICA8dGlmZjpSZXNvbHV0aW9uVW5pdD4yPC90aWZmOlJlc29sdXRpb25Vbml0PgogICAgICAgICA8ZXhpZjpDb2xvclNwYWNlPjY1NTM1PC9leGlmOkNvbG9yU3BhY2U+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj41MTI8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NzU8L2V4aWY6UGl4ZWxZRGltZW5zaW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAKPD94cGFja2V0IGVuZD0idyI/PhwU4cwAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOgAAFIIAAEVWAAAOpcAABdv11ofkAAALddJREFUeNrsfWtwHNd15jcgwZdIYSCStixKnBGl1liS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';
-
-//   return logoTecnoparque;
-// }
+  $('button[type="submit"]').attr('disabled','disabled');
+  return true;
+}

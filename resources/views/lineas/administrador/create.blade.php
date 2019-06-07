@@ -25,7 +25,7 @@
                                         dns
                                     </i>
                                 </center>
-                                <form action="{{ route('lineas.store')}}" method="POST">
+                                <form action="{{ route('lineas.store')}}" method="POST" onsubmit="return checkSubmit()">
                                 	@include('lineas.administrador.form', [
 								    	'btnText' => 'Guardar',
 								   	])

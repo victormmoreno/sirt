@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class Idea extends Model
 {
-    use Notifiable;
+    // use Notifiable;
 
     /*=================================================================
     =            constantes para conocer los tipos de idea            =
