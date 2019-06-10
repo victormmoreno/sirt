@@ -20,7 +20,7 @@
 
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Administrador
+                                        Editar Administrador: {{$user->nombres}} {{$user->apellidos}} 
                                     </span>
                                     <i class="Small material-icons prefix">
                                         supervised_user_circle
@@ -42,12 +42,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.administrador.store')}}" method="POST" onsubmit="return checkSubmit()">
-                                    @include('users.administrador.administrador.form', [
-                                        'btnText' => 'Guardar',
-                                    ])
-                                </form>
-                            
+                                        <form action="{{ route('usuario.administrador.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                            {!! method_field('PUT')!!}
+                                            @include('users.administrador.administrador.form', [
+                                                'btnText' => 'Modificar',
+                                            ])
+                                        </form>
                                     </div>
                                 </div>
                             </div>

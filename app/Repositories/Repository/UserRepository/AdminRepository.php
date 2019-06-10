@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Repositories\Repository;
+namespace App\Repositories\Repository\UserRepository;
 
+use App\Models\GradoEscolaridad;
 use App\Models\Rols;
+use App\Models\TipoDocumento;
 use App\User;
 use Illuminate\Support\Facades\DB;
 
-class UserRepository
+class AdminRepository
 {
 	/*=======================================================================
 	=            metodo para consultar todos los administradores            =
@@ -24,11 +26,23 @@ class UserRepository
 	
 	/*=====  End of metodo para consultar todos los administradores  ======*/
 
+	/*===========================================================================
+	=            metodo para consultar todos los tipos de documentos            =
+	===========================================================================*/
+	
+	public function getAllTipoDocumento()
+    {
+    	return TipoDocumento::allTipoDocumento()->get();
+    }
+	
+	/*=====  End of metodo para consultar todos los tipos de documentos  ======*/
+	
+
 	/*==================================================================
-	=            metodo para consultar el usuario por su id            =
+	=            metodo para consultar todo el detalle del usuario por su id            =
 	==================================================================*/
 	
-	public function findByid($id)
+	public function getFindDetailByid($id)
     {
 
         return User::select('users.id','tiposdocumentos.nombre as tipodocumento', 'users.documento','rols.nombre as rol','users.email','users.direccion','users.celular','users.telefono','users.estado')
@@ -40,7 +54,31 @@ class UserRepository
     }
 	
 	
-	/*=====  End of metodo para consultar el usuario por su id  ======*/
+	/*=====  End of metodo para consultar todo el detalle del usuario por su id  ======*/
+
+	/*=============================================================================
+	=            metodo para consultar todos los grados de escolaridad            =
+	=============================================================================*/
+	
+	public function getSelectAllGradosEscolaridad()
+	{
+		return GradoEscolaridad::allGradosEscolaridad()->get();
+	}
+	
+	/*=====  End of metodo para consultar todos los grados de escolaridad  ======*/
+	
+
+	/*===============================================================
+	=            metodo para consultar el usuario por id            =
+	===============================================================*/
+	
+	public function findById($id)
+	{
+		return User::findOrFail($id);
+	}
+	
+	/*=====  End of metodo para consultar el usuario por id  ======*/
+	
 	
 	
 } 

@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Models\Rols;
 use App\User;
 use Illuminate\Http\Request;
-use App\Repositories\Repository\UserRepository;
+use App\Http\Controllers\Controller;
+use App\Repositories\Repository\UserRepository\AdminRepository;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
 
 
-    public $userRepository;
+    public $adminRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(AdminRepository $adminRepository)
     {
         $this->middleware('auth');
-        $this->userRepository = $userRepository;
+        $this->adminRepository = $adminRepository;
     }
 
 
@@ -25,7 +26,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function administradorIndex()
     {
         
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
@@ -37,7 +38,7 @@ class UserController extends Controller
             
 
             if (request()->ajax()) {
-                return datatables()->of($this->userRepository->getAllAdministradores())
+                return datatables()->of($this->adminRepository->getAllAdministradores())
                     ->addColumn('detail', function ($data) {
                          $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador('. $data->id .')"><i class="material-icons">info_outline</i></a>';
 
@@ -69,9 +70,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function administradorCreate()
     {
-        return view('users.administrador.administrador.create');
+        $tiposdocumentos = $this->adminRepository->getAllTipoDocumento();
+        return view('users.administrador.administrador.create',compact('tiposdocumentos'));
     }
 
     /**
@@ -80,9 +82,10 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function administradorStore(Request $request)
     {
-        //
+
+        dd($request->all());
     }
 
     /**
@@ -94,7 +97,7 @@ class UserController extends Controller
     public function show($id)
     {
         return response()->json([
-            'user' => $this->userRepository->findByid($id),
+            'user' => $this->adminRepository->getFindDetailByid($id),
         ]);
     }
 
@@ -104,9 +107,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function administradorEdit($id)
     {
-        //
+        
+        // $user = $this->adminRepository->findById($id);
+        // $user['fechanacimiento'] = $user->fechanacimiento->format('Y-m-d');
+        // dd($user->fechanacimiento);
+        return view('users.administrador.administrador.edit',[
+            'tiposdocumentos' => $this->adminRepository->getAllTipoDocumento(),
+            'user' => $this->adminRepository->findById($id),
+            'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
+        ]);
     }
 
     /**
@@ -116,7 +127,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function administradorUpdate(Request $request, $id)
     {
         //
     }
@@ -127,7 +138,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function administradorDelete($id)
     {
         //
     }

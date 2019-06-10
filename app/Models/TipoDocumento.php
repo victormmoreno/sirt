@@ -22,5 +22,19 @@ class TipoDocumento extends Model
     {
       return $this->hasMany(User::class, 'tipodocumento_id', 'id');
     }
+
+    /*==========================================================================
+    =            scope para consultar todos los tipos de documentos            =
+    ==========================================================================*/
+    
+    public function scopeAllTipoDocumento($query)
+    {
+
+        return $query->select('tiposdocumentos.id','tiposdocumentos.nombre');
+
+    }
+    
+    /*=====  End of scope para consultar todos los tipos de documentos  ======*/
+    
     
 }

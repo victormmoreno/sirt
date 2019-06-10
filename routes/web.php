@@ -12,8 +12,8 @@
  */
 
 Route::get('/', function () {
-    // $user = App\Models\Nodo::with(['infocenter'])->first();
-    // dd($user->infocenter);
+    // $user = App\Models\Departamento::allDepartamentos()->pluck('id','nombre');
+    // dd($user);
     // $user = App\User::infoUserNodo('Infocenter','Medellin')
     // ->first()->nodo_direccion;
 
@@ -116,13 +116,13 @@ Route::group([
     'middleware' => 'auth'],
     function () {
 
-        Route::get('/administrador', 'UserController@index')->name('usuario.administrador.index');
-        Route::get('/administrador/create', 'UserController@create')->name('usuario.administrador.create');
-        Route::post('administrador', 'UserController@store')->name('usuario.administrador.store');
-        Route::get('administrador/{id}', 'UserController@show')->name('usuario.administrador.show');
-        Route::get('administrador/{id}/edit', 'UserController@edit')->name('usuario.administrador.edit');
-        Route::put('administrador/{id}', 'UserController@update')->name('usuario.administrador.update');
-        Route::delete('administrador/{id}', 'UserController@delete')->name('usuario.administrador.delete');
+        Route::get('/administrador', 'User\AdminController@administradorIndex')->name('usuario.administrador.index');
+        Route::get('/administrador/create', 'User\AdminController@administradorCreate')->name('usuario.administrador.create');
+        Route::post('administrador', 'User\AdminController@administradorStore')->name('usuario.administrador.store');
+        Route::get('administrador/{id}', 'User\AdminController@show')->name('usuario.administrador.show');
+        Route::get('administrador/{id}/edit', 'User\AdminController@administradorEdit')->name('usuario.administrador.edit');
+        Route::put('administrador/{id}', 'User\AdminController@administradorUpdate')->name('usuario.administrador.update');
+        Route::delete('administrador/{id}', 'User\AdminController@administradorDelete')->name('usuario.administrador.delete');
 
     }
 );
