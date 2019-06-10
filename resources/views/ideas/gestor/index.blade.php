@@ -19,7 +19,7 @@
                 </div>
                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                   <li class="tab col s3"><a href="#ideasProyecto" class="active">Ideas de Proyecto (emprendedor)</a></li>
-                  <li class="tab col s3"><a href="#ideasProyectoEmpresa">Ideas de Proyecto (empresa/grupo de investigación)</a></li>
+                  <li class="tab col s3"><a href="#ideasProyectoEmpresa" onclick="secondDataTable()">Ideas de Proyecto (empresa/grupo de investigación)</a></li>
                   <li class="tab col s3"><a href="#ideaUnica">Buscar Idea</a></li>
                   <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                 </ul>
