@@ -145,4 +145,13 @@ class Idea extends Model
       ->where('ideas.id', $id);
     }
 
+    // -------------------------------- Método para consulta el detalle de una idea de proyecto
+    public function scopeConsultarIdeasEnInicio($query)
+    {
+      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id',
+      'telefono_contacto', 'ideas.id', 'estadosidea.nombre AS estado_idea')
+      ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+      ->where('estadosidea.nombre', 'Inicio');
+    }
+
 }

@@ -67,9 +67,13 @@ class EntrenamientoController extends Controller
   public function create()
   {
     $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+    $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
+    // $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
+    // dd(session("ideasEntrenamiento"));
     if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
-      return view('entrenamientos.infocenter.create', compact('nodo'));
+      return view('entrenamientos.infocenter.create', compact('nodo' ,'ideas'));
     }
+
   }
 
   /**
@@ -78,9 +82,9 @@ class EntrenamientoController extends Controller
   * @param  \Illuminate\Http\Request  $request
   * @return \Illuminate\Http\Response
   */
-  public function store(EntrenamientoFormRequest $request)
+  public function store(Request $request)
   {
-    //
+    dd($request->all());
   }
 
   /**
@@ -127,4 +131,151 @@ class EntrenamientoController extends Controller
   {
     //
   }
+  //Manejo de sesiones para la lista de las ideas de un entrenamiento
+  public function add_idea(Request $request)
+  {
+    $input = $request->all();
+
+    $idea = Idea::ConsultarIdeaId($input['Idea'])->get($input['Idea'])->last();
+    // echo $idea->estado_idea;
+
+    if ($idea->estado_idea == 'Inicio') {
+
+      if (session("ideasEntrenamiento") != null) {
+
+        $existe = false;
+        $dato   = null;
+
+        $ideas = session("ideasEntrenamiento");
+        // var_dump(session("ideasEntrenamiento"));
+        foreach ($ideas as $key => $value) {
+          if ($value["id"] == $input["Idea"]) {
+            $dato = $value;
+
+            unset($ideas[$key]);
+
+            $existe = true;
+          }
+        }
+
+        if (!$existe) {
+          array_push($ideas, $idea);
+        } else {
+          return json_encode(['data' => 3]);
+        }
+        session(["ideasEntrenamiento" => $ideas]);
+      } else {
+        session(["ideasEntrenamiento" => [$idea]] );
+      }
+
+      return json_encode(['data' => 2]);
+    } else {
+      return json_encode(['data' => 1]);
+    }
+  }
+
+  // Devuelve los elemento de la sesion de las ideas del entrenamiento
+  public function get_ideasEntrenamiento()
+  {
+      return json_encode(session("ideasEntrenamiento"));
+  }
+
+  // Elimina la idea de la tabla de las ideas en el formulario para registrar un neuvo entrenamiento
+  public function eliminar_idea($id)
+  {
+    $var = session("ideasEntrenamiento");
+
+    foreach ($var as $key => $value) {
+
+      $new = $value->id;
+
+      if ($new == $id) {
+        unset($var[$key]);
+      }
+    }
+    session(["ideasEntrenamiento" => $var]);
+    return json_encode(['data' => 1]);
+  }
+
+  // Carga si se convocó o no la idea a la sesion (Los siguientes métodos hacen lo mismo pero para los diferentes checkboxes)
+  public function getConfirm($id, $estado)
+  {
+    $ideas = session("ideasEntrenamiento");
+    foreach ($ideas as $key => $value) {
+      if ($value["id"] == $id) {
+        $dato = $value;
+        if ($estado == 1) {
+          $dato['Confirm'] = 0;
+        } else {
+          $dato['Confirm'] = 1;
+        }
+      }
+    }
+    return json_encode(['data' => 1]);
+  }
+
+  public function getCanvas($id, $estado)
+  {
+    $ideas = session("ideasEntrenamiento");
+    foreach ($ideas as $key => $value) {
+      if ($value["id"] == $id) {
+        $dato = $value;
+        if ($estado == 1) {
+          $dato['Canvas'] = 0;
+        } else {
+          $dato['Canvas'] = 1;
+        }
+      }
+    }
+    return json_encode(['data' => 1]);
+  }
+
+  public function getAssistF($id, $estado)
+  {
+    $ideas = session("ideasEntrenamiento");
+    foreach ($ideas as $key => $value) {
+      if ($value["id"] == $id) {
+        $dato = $value;
+        if ($estado == 1) {
+          $dato['AssistF'] = 0;
+        } else {
+          $dato['AssistF'] = 1;
+        }
+      }
+    }
+    return json_encode(['data' => 1]);
+  }
+
+  public function getAssistS($id, $estado)
+  {
+    $ideas = session("ideasEntrenamiento");
+    foreach ($ideas as $key => $value) {
+      if ($value["id"] == $id) {
+        $dato = $value;
+        if ($estado == 1) {
+          $dato['AssistS'] = 0;
+        } else {
+          $dato['AssistS'] = 1;
+        }
+      }
+    }
+    return json_encode(['data' => 1]);
+  }
+
+  public function getConvocado($id, $estado)
+  {
+    $ideas = session("ideasEntrenamiento");
+    foreach ($ideas as $key => $value) {
+      if ($value["id"] == $id) {
+        $dato = $value;
+        if ($estado == 1) {
+          $dato['Convocado'] = 0;
+        } else {
+          $dato['Convocado'] = 1;
+        }
+      }
+    }
+    return json_encode(['data' => 1]);
+  }
+
 }

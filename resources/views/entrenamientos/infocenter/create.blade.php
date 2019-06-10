@@ -34,7 +34,7 @@
                     </div>
                   @endif
                 </div>
-                <form action="{{route('entrenamientos.store')}}" method="post">
+                <form action="{{route('entrenamientos.store')}}" method="post" id="formEntrenamientos">
                   {!! csrf_field() !!}
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
@@ -55,9 +55,11 @@
                   </div>
                   <div class="row">
                     <div class="input-field col s10 m10 l10">
-                      <select class="js-states select2" id="txtidea" name="txtidea" onchange="agregar()">
+                      <select class="js-states select2" id="txtidea" name="txtidea" onchange="entrenamiento.addIdea()">
                         <option value="0">Seleccione una Idea de Proyecto</option>
-
+                        @foreach ($ideas as $key => $value)
+                          <option value="{{$value['id']}}">{{$value['nombre_proyecto']}}</option>
+                        @endforeach
                       </select>
                       <label>Idea de Proyecto <span class="red-text">*</span></label>
                     </div>
@@ -66,7 +68,7 @@
                     <div class="col s10 m9 l9">
                       <div class="card blue-grey lighten-5">
                         <div class="card-content">
-                          <table id="detalles" class="highlight centered responsive-table">
+                          <table class="highlight centered responsive-table">
                             <thead>
                               <tr>
                                 <th style="width: 20%">Idea de Proyecto</th>
@@ -79,7 +81,7 @@
                                 <th style="width: 10%">Eliminar</th>
                               </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tblIdeasEntrenamientoCreate">
 
                             </tbody>
                           </table>
@@ -161,9 +163,6 @@
                     <a href="{{route('entrenamientos')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                   </center>
                 </form>
-                {{-- <form class="dropzone" action="">
-
-                </form> --}}
               </div>
             </div>
           </div>
