@@ -53,6 +53,7 @@ class CreateArticulacionesTable extends Migration
             $table->index(["entidades_id"], 'fk_articulaciones_entidades1_idx');
 
             $table->index(["tipoarticulacion_id"], 'fk_articulaciones_tiposarticulacion1_idx');
+            $table->index(["gestor_id"], 'fk_articulaciones_gestores1_idx');
 
 
             $table->foreign('entidades_id', 'fk_articulaciones_entidades1_idx')
@@ -65,8 +66,10 @@ class CreateArticulacionesTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('gestor_id')
-                ->references('id')->on('gestores');
+            $table->foreign('gestor_id', 'fk_articulaciones_gestores1_idx')
+                ->references('id')->on('gestores')
+                ->onDelete('no action')
+                ->onUpdate('no action');
             
         });
     }
