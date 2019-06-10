@@ -27,9 +27,9 @@ class HomeController extends Controller
         // if (auth()->user()->hasRole('Infocenter')) {
         // $nodo = Nodo::where('id','=',auth()->user()->infocenter->nodo_id)->first()->nombre;
 
-       
 
         // $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+
 
         // $user  = auth()->user()->infocenter->nodo_id;
 

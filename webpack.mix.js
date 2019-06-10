@@ -48,6 +48,9 @@ mix.styles([
 		'resources/assets/plugins/materialize/css/material-icons.css',
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
 		'resources/assets/plugins/sweetalert/sweetalert.css',
+		'resources/assets/plugins/bootstrap-datapicker/css/bootstrap-material-datetimepicker.css',
+		'resources/assets/plugins/dropzone/dropzone.css',
+		'resources/assets/plugins/dropzone/basic.min.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
 
@@ -103,6 +106,8 @@ mix.scripts([
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/sweetalert/sweetalert.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
+		'resources/assets/plugins/dropzone/dropzone.js',
+		'resources/assets/plugins/bootstrap-datapicker/js/bootstrap-material-datetimepicker.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
@@ -112,6 +117,9 @@ mix.scripts([
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
 		'resources/app/ideas/gestor/index.js',
+		'resources/app/entrenamientos/index.js',
+		'resources/app/entrenamientos/infocenter/index.js',
+		'resources/app/ideas/infocenter/create.js',
 		'resources/app/user/administrador/index-administrador.js',
 	],'public/js/app2.js');
 

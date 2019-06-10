@@ -13,5 +13,5 @@ function setActiveRouteActivePage($name){
 }
 
 function setActiveRouteActiveIcon($name){
-    return request()->is($name) ? 'active-icon':'';
+    return request()->is($name) ? 'teal-text lighten-2':'';
 }

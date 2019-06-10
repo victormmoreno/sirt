@@ -126,7 +126,7 @@ class LineaController extends Controller
         }else{
             Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");
         }
-        
+
 
 
         return redirect('lineas');

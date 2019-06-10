@@ -86,18 +86,14 @@ class IdeaController extends Controller
       $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
       if (request()->ajax()) {
         $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
-
         return datatables()->of($consultaIdeas)
         ->addColumn('details', function ($data) {
           $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detalles('. $data->consecutivo .')">
+          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId('. $data->consecutivo .')">
           <i class="material-icons">info</i>
           </a>
           ';
           return $button;
-        })->addColumn('edit', function ($data) {
-          $edit = '<a class="btn m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-          return $edit;
         })->addColumn('soft_delete', function ($data) {
           $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
           return $delete;
@@ -234,8 +230,8 @@ class IdeaController extends Controller
     // Se muestra los detalles de una idea según su id
     public function details($id)
     {
-      $idea = Idea::ConsultarIdeaId($id)->first();
-      echo json_encode($idea);
+      // echo json_encode(Idea::ConsultarIdeaId($id)->first());
+      return response()->json([ 'detalles' => Idea::ConsultarIdeaId($id)->first()]);
 
     }
 }
