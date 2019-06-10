@@ -51,75 +51,58 @@ $(document).ready(function() {
     });
 });
 
-function detalles(id){
+function detalleAdministrador(id){
   $.ajax({
     dataType:'json',
     type:'get',
     url:"/usuario/administrador/"+id
   }).done(function(respuesta){
-    $("#titulo").empty();
-    $("#detalle_idea").empty();
+    $("#titulo_administrador").empty();
+    $("#detalle_administrador").empty();
 
     console.log(respuesta);
-    // if (respuesta == null) {
-    //   swal('Ups!!!', 'Ha ocurrido un error', 'warning');
-    // } else {
-    //   $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.nombre_proyecto+"");
-    //         $("#detalle_idea").append('<div class="row">'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
-    //         +'</div>'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="black-text">'+respuesta.aprendiz_sena+'</span>'
-    //         +'</div>'
-    //         +'</div>'
-    //         +'<div class="divider"></div>'
-    //         +'<div class="row">'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
-    //         +'</div>'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="black-text">'+respuesta.pregunta1String+'</span>'
-    //         +'</div>'
-    //         +'</div>'
-    //         +'<div class="divider"></div>'
-    //         +'<div class="row">'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
-    //         +'</div>'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="black-text">'+respuesta.pregunta2String+'</span>'
-    //         +'</div>'
-    //         +'</div>'
-    //         +'<div class="divider"></div>'
-    //         +'<div class="row">'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-    //         +'</div>'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="black-text">'+respuesta.descripcion+'</span>'
-    //         +'</div>'
-    //         +'</div>'
-    //         +'<div class="divider"></div>'
-    //         +'<div class="row">'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="cyan-text text-darken-3">Objetivo: </span>'
-    //         +'</div>'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="black-text">'+respuesta.objetivo+'</span>'
-    //         +'</div>'
-    //         +'</div>'
-    //         +'<div class="divider"></div>'
-    //         +'<div class="row">'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="cyan-text text-darken-3">Alcance: </span>'
-    //         +'</div>'
-    //         +'<div class="col s12 m6 l6">'
-    //         +'<span class="black-text">'+respuesta.alcance+'</span>'
-    //         +'</div>'
-    //         +'</div>'
-    //       );
+    if (respuesta == null) {
+      swal('Ups!!!', 'Ha ocurrido un error', 'warning');
+    } else {
+      $("#titulo_administrador").append("<span class='cyan-text text-darken-3'>Usuario </span>"+respuesta.user.nombre);
+            $("#detalle_administrador").append('<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="cyan-text text-darken-3">Nombre Completo: </span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.user.nombre+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+            +'<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="cyan-text text-darken-3">Tipo Documento: </span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.user.tipodocumento+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+            +'<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="cyan-text text-darken-3">Documento</span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.user.documento+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+            +'<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="cyan-text text-darken-3">Descripcion: </span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.user.rol+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+          );
       $('#modal1').openModal();
-    // }
+    }
     })
 }

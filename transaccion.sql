@@ -74,7 +74,7 @@ INSERT INTO `Departamento` (`id`, `nombre`) VALUES
 INSERT INTO `Ciudad` (`id`, `nombre`, `departamento_id`) VALUES
 (1, 'Leticia', 1),
 (2, 'Puerto Nariño', 1),
-(3, 'Abejorral', 2),
+(3, 'Abejorral', 2),+
 (4, 'Abriaquí', 2),
 (5, 'Alejandria', 2),
 (6, 'Amagá', 2),

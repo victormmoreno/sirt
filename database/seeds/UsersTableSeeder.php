@@ -2,7 +2,9 @@
 
 use App\Models\Ciudad;
 use App\Models\Entidad;
+use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
+use App\Models\Infocenter;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Perfil;
@@ -370,6 +372,8 @@ class UsersTableSeeder extends Seeder
         // ]);
         // 
         factory(User::class, 20)->create();
+        factory(Gestor::class, 5)->create();
+        factory(Infocenter::class, 2)->create();
 
     }
 

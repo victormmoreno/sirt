@@ -22,7 +22,8 @@ class CreateEntrenamientoIdeaTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('idea_id');
+            $table->increments('id');
+            $table->unsignedInteger('idea_id');
             $table->unsignedInteger('entrenamiento_id');
             $table->tinyInteger('confirmacion')->nullable()->default('0');
             $table->tinyInteger('canvas')->nullable()->default('0');

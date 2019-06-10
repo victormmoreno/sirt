@@ -39,12 +39,12 @@ class UserController extends Controller
             if (request()->ajax()) {
                 return datatables()->of($this->userRepository->getAllAdministradores())
                     ->addColumn('detail', function ($data) {
-                         $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalles('. $data->id .')"><i class="material-icons">info_outline</i></a>';
+                         $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador('. $data->id .')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                     })
                     ->addColumn('edit', function ($data) {
-                        $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                         return $button;
                     })
                     ->editColumn('estado', function ($data) {

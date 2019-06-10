@@ -34,9 +34,7 @@
                                       
                                       <label for="email" >{{ __('E-Mail Address') }}</label>
                                       @error('email')
-                                       <span class="helper-text">
-                                             <strong>{{ $message }}</strong>
-                                       </span>
+                                       <label id="email-error" class="error" for="email">{{ $message }}</label>
                                      @enderror
                                     </div>
                                     <div class="input-field col s12">
@@ -45,9 +43,7 @@
                                      
                                       <label for="password" >{{ __('Password') }}</label>
                                       @error('password')
-                                            <span class="helper-text">
-                                             <strong>{{ $message }}</strong>
-                                       </span>
+                                            <label id="password-error" class="error" for="password">{{ $message }}</label>
                                         @enderror
                                     </div>
 

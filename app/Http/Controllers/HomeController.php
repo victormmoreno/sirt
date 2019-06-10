@@ -28,14 +28,14 @@ class HomeController extends Controller
         // $nodo = Nodo::where('id','=',auth()->user()->infocenter->nodo_id)->first()->nombre;
 
 
-
         // $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+
 
         // $user  = auth()->user()->infocenter->nodo_id;
 
 
             // dd($administradores);
-            return view('home');
+            return view('home.home');
         // } else if(auth()->user()->hasRole('Dinamizador')){
         //     echo "Infocenter";
         // }else{
