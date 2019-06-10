@@ -65,15 +65,17 @@ class IdeaController extends Controller
     //------------------ Datatable que muestra las ideas con grupos de investigación/empresas
     public function ideasEmpGI()
     {
-      if (request()->ajax()) {
-        $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo(auth()->user()->infocenter->nodo_id);
-        return datatables()->of($consultaIdeasEmpGI)->make(true);
-      }
-      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
-        return view('ideas.infocenter.index');
-      } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
-        return view('ideas.gestor.index');
-      }
+
+      // if (request()->ajax()) {
+      //   $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo(auth()->user()->infocenter->nodo_id);
+      //   return datatables()->of($consultaIdeasEmpGI)->make(true);
+      // }
+
+      // if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+      //   return view('ideas.infocenter.index');
+      // } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+      //   return view('ideas.gestor.index');
+      // }
     }
 
 
@@ -84,6 +86,7 @@ class IdeaController extends Controller
     public function ideas()
     {
       $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+
       if (request()->ajax()) {
         $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
         return datatables()->of($consultaIdeas)
@@ -216,6 +219,24 @@ class IdeaController extends Controller
 
     }
 
+    public function detallesIdeas($id)
+    {
+      return response()->json([
+          'detalles' => Idea::ConsultarIdeaId($id)->first(),
+      ]);
+      // return reponse()->json([ 'user' => Idea::ConsultarIdeaId($id)->first()]);
+    }
+
+    // Se muestra los detalles de una idea según su id
+    public function details($id)
+    {
+      if (request()->ajax()) {
+        $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo(auth()->user()->infocenter->nodo_id);
+        return datatables()->of($consultaIdeasEmpGI)->make(true);
+      }
+      // echo json_encode(Idea::ConsultarIdeaId($id)->first());
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -225,13 +246,5 @@ class IdeaController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    // Se muestra los detalles de una idea según su id
-    public function details($id)
-    {
-      // echo json_encode(Idea::ConsultarIdeaId($id)->first());
-      return response()->json([ 'detalles' => Idea::ConsultarIdeaId($id)->first()]);
-
     }
 }

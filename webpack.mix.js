@@ -119,7 +119,7 @@ mix.scripts([
 		'resources/app/ideas/gestor/index.js',
 		'resources/app/entrenamientos/index.js',
 		'resources/app/entrenamientos/infocenter/index.js',
-		'resources/app/ideas/infocenter/create.js',
+		'resources/app/entrenamientos/infocenter/create.js',
 		'resources/app/user/administrador/index-administrador.js',
 	],'public/js/app2.js');
 

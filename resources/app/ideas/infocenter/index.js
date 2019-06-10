@@ -1,71 +1,71 @@
-// $(document).ready(function() {
-//   $('#ideas_emprendedores_table').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     processing: true,
-//     serverSide: true,
-//     ajax:{
-//       url: "idea",
-//       type: "get",
-//     },
-//     columns: [
-//       {
-//         data: 'consecutivo',
-//         name: 'consecutivo',
-//       },
-//       {
-//         data: 'fecha_registro',
-//         name: 'fecha_registro',
-//       },
-//       {
-//         data: 'persona',
-//         name: 'persona',
-//       },
-//       {
-//         data: 'correo',
-//         name: 'correo',
-//       },
-//       {
-//         data: 'contacto',
-//         name: 'contacto',
-//       },
-//       {
-//         data: 'nombre_idea',
-//         name: 'nombre_idea',
-//       },
-//       {
-//         data: 'estado',
-//         name: 'estado',
-//       },
-//       {
-//         data: 'details',
-//         name: 'details',
-//         orderable: false
-//       },
-//       {
-//         data: 'edit',
-//         name: 'edit',
-//         orderable: false
-//       },
-//       {
-//         data: 'soft_delete',
-//         name: 'soft_delete',
-//         orderable: false
-//       },
-//       {
-//         data: 'dont_apply',
-//         name: 'dont_apply',
-//         orderable: false
-//       },
-//
-//     ],
-//   });
-//
-//   $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
-//
-//
-// });
+$(document).ready(function() {
+  $('#ideas_emprendedores_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "idea",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'consecutivo',
+        name: 'consecutivo',
+      },
+      {
+        data: 'fecha_registro',
+        name: 'fecha_registro',
+      },
+      {
+        data: 'persona',
+        name: 'persona',
+      },
+      {
+        data: 'correo',
+        name: 'correo',
+      },
+      {
+        data: 'contacto',
+        name: 'contacto',
+      },
+      {
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+      {
+        data: 'estado',
+        name: 'estado',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+      {
+        data: 'soft_delete',
+        name: 'soft_delete',
+        orderable: false
+      },
+      {
+        data: 'dont_apply',
+        name: 'dont_apply',
+        orderable: false
+      },
+
+    ],
+  });
+
+  $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
+
+
+});
 
 function secondDataTable() {
   if (!$.fn.dataTable.isDataTable('#tblideasempresas')) {
@@ -79,7 +79,11 @@ function secondDataTable() {
       // buttons: [
         //     'csv', 'excel', 'pdf', 'print', 'reset', 'reload'
         // ],
-        ajax: 'idea/ideasEmpGI',
+            ajax:{
+              url: "idea/ideasEmpGI",
+              type: "get",
+            },
+        // ajax: 'idea/ideasEmpGI',
         columns: [
           {
             data: 'consecutivo',
@@ -113,7 +117,7 @@ function detallesIdeaPorId(id){
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"idea/"+id
+    url:"/idea/detallesIdea/"+id
   }).done(function(respuesta){
     // console.log(respuesta);
     $("#titulo").empty();
