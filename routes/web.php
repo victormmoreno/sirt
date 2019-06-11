@@ -30,14 +30,11 @@ Route::get('/', function () {
     // dd(config('mail.host'));
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
-
+   
     return view('spa');
 
 })->name('/');
 
-// Route::get('{any}', function () {
-//     return view('spa');
-// })->where('any', '.*');
 
 DB::listen(function ($query) {
     // echo "<pre>{$query->sql}</pre>";

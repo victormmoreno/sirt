@@ -26,7 +26,11 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\Idea\IdeaHasReceived' => [
             'App\Listeners\IdeaHasBeenReceived'
-        ]
+        ],
+        'App\Events\User\UserWasRegistered' => [
+            'App\Listeners\User\UserWelcome',
+            'App\Listeners\User\SendNotificationPasswordEmail',
+        ],
     ];
 
     /**

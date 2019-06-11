@@ -177,7 +177,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        UxWeb\SweetAlert\SweetAlertServiceProvider::class,
+        // UxWeb\SweetAlert\SweetAlertServiceProvider::class,
 
     ],
 
@@ -231,7 +231,7 @@ return [
         'View'         => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Alert' => UxWeb\SweetAlert\SweetAlert::class,
+        // 'Alert' => UxWeb\SweetAlert\SweetAlert::class,
 
     ],
 

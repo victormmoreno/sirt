@@ -13,7 +13,7 @@
                     </a>
                     Usuarios
                 </h5>
-                <div class="card stats-card">
+                <div class="card">
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
