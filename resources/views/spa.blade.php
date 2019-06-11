@@ -109,6 +109,7 @@
 
 		                    <img class="responsive-img img-home" style="width: 100%; height: 500px; background-color: rgba(0,0,0,0.8);" src="{{asset('img/tecno.jpg')}}">
 		                  </div>
+		                  
 		                </div>
 		              </div>
 		            </div>

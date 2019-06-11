@@ -23,63 +23,67 @@ class AdminFormRequest extends FormRequest
      */
     public function rules()
     {
+     
         return [
-            'txttipo_documento'  => 'required',
-            'txtnombres'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtapellidos'       => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtcorreo'          => 'required|email|min:1|max:100',
-            'txttelefono'        => 'required|digits_between:6,11|numeric',
-            'txtnombre_proyecto' => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'pregunta1'          => 'required',
-            'pregunta2'          => 'required',
-            'pregunta3'          => 'required',
-            'txtdescripcion'     => 'required|min:1|max:2000',
-            'txtobjetivo'        => 'required|min:1|max:2000',
-            'txtalcance'         => 'required|min:1|max:2000',
+            'txttipo_documento'    => 'required',
+            'txtdocumento'         => 'required|digits_between:6,11|numeric|unique:users,documento,'.$this->route('id'),
+            'txtnombres'           => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'txtestrato'           => 'required',
+            'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,'.$this->route('id'),
+            'txtdireccion'         => 'required|min:1|max:200',
+            'txttelefono'          => 'digits_between:6,11|numeric',
+            'txtcelular'           => 'digits_between:10,11|numeric',
+            'txtgrado_escolaridad' => 'required',
+
         ];
     }
 
     public function messages()
     {
         return $messages = [
-            'txtnodo.required'                => 'El :attribute es obligatorio.',
+            'txttipo_documento.required'          => 'El :attribute es obligatorio.',
 
-            'txtnombres.required'             => 'Los :attribute son obligatorios.',
-            'txtnombres.min'                  => 'Los :attribute deben ser minimo 1 caracter',
-            'txtnombres.max'                  => 'Los :attribute deben ser máximo 45 caracteres',
-            'txtnombres.regex'                => 'El formato del campo :attribute es incorrecto',
+            'txtdocumento.required'               => 'El :attribute es obligatorio.',
+            'txtdocumento.digits_between'         => 'El :attribute debe tener entre 6 y 11 digitos',
+            'txtdocumento.numeric'                => 'El :attribute debe ser numérico',
+            'txtdocumento.unique'                => 'El :attribute ya ha sido registrado',
 
-            'txtapellidos.required'           => 'Los :attribute son obligatorios.',
-            'txtapellidos.min'                => 'Los :attribute deben ser minimo 1 caracter',
-            'txtapellidos.max'                => 'Los :attribute deben ser máximo 45 caracteres',
-            'txtapellidos.regex'              => 'El formato del campo :attribute es incorrecto',
+            'txtnombres.required'                 => 'Los :attribute son obligatorios.',
+            'txtnombres.min'                      => 'Los :attribute deben ser minimo 1 caracter',
+            'txtnombres.max'                      => 'Los :attribute deben ser máximo 45 caracteres',
+            'txtnombres.regex'                    => 'El formato del campo :attribute es incorrecto',
 
-            'txtcorreo.required'              => 'El :attribute es obligatorio.',
-            'txtcorreo.min'                   => 'El :attribute debe ser minimo 1 caracter',
-            'txtcorreo.max'                   => 'El :attribute debe ser máximo 100 caracteres',
+            'txtapellidos.required'               => 'Los :attribute son obligatorios.',
+            'txtapellidos.min'                    => 'Los :attribute deben ser minimo 1 caracter',
+            'txtapellidos.max'                    => 'Los :attribute deben ser máximo 45 caracteres',
+            'txtapellidos.regex'                  => 'El formato del campo :attribute es incorrecto',
 
-            'txttelefono.required'            => 'El :attribute es obligatorio.',
-            'txttelefono.numeric'             => 'El :attribute debe ser numérico',
-            'txttelefono.min'                 => 'El :attribute debe ser minimo 6 caracteres',
-            'txttelefono.max'                 => 'El :attribute debe ser máximo 11 caracteres',
-            'txttelefono.digits_between'      => 'El :attribute debe tener entre 6 y 11 digitos',
+            'txtfecha_nacimiento.required'        => 'La :attribute es obligatoria.',
+            'txtfecha_nacimiento.date'            => 'La :attribute no es una fecha válida.',
+            'txtfecha_nacimiento.before_or_equal' => 'La :attribute  debe ser una fecha anterior o igual a 2019-06-11.',
 
-            'txtnombre_proyecto.required'     => 'El :attribute es obligatorio.',
-            'txtnombre_proyecto.min'          => 'El :attribute debe ser minimo 1 caracter',
-            'txtnombre_proyecto.required.max' => 'El :attribute debe ser máximo 200 caracteres',
-            'txtnombre_proyecto.regex'        => 'El formato del campo :attribute es incorrecto',
+            'txtestrato.required'                 => 'El :attribute es obligatorio.',
 
-            'txtdescripcion.required'         => 'La :attribute es obligatoria.',
-            'txtdescripcion.min'              => 'La :attribute debe ser minimo 1 caracter',
-            'txtdescripcion.max'              => 'La :attribute debe ser máximo 2000 caracteres',
+            'txtemail.required'                   => 'El :attribute es obligatorio.',
+            'txtemail.min'                        => 'El :attribute debe ser minimo 1 caracter',
+            'txtemail.max'                        => 'El :attribute debe ser máximo 100 caracteres',
+            'txtemail.unique'                => 'El :attribute ya ha sido registrado',
 
-            'txtobjetivo.required'            => 'El :attribute es obligatorio.',
-            'txtobjetivo.min'                 => 'El :attribute debe ser minimo 1 caracter',
-            'txtobjetivo.max'                 => 'El :attribute debe ser máximo 2000 caracteres',
+            'txtdireccion.required'               => 'La :attribute es obligatoria.',
+            'txtdireccion.min'                    => 'La :attribute debe ser minimo 1 caracter',
+            'txtdireccion.max'                    => 'La :attribute debe ser máximo 200 caracteres',
+            // 'txtdireccion.regex'                  => 'El formato del campo :attribute es incorrecto',
 
-            'txtalcance.required'             => 'El :attribute es obligatorio.',
-            'txtalcance.min'                  => 'El :attribute debe ser minimo 1 caracter',
-            'txtalcance.max'                  => 'El :attribute debe ser máximo 2000 caracteres',
+            'txttelefono.numeric'                 => 'El :attribute debe ser numérico',
+            'txttelefono.digits_between'          => 'El :attribute debe tener entre 6 y 11 digitos',
+
+            'txtcelular.numeric'                  => 'El :attribute debe ser numérico',
+            'txtcelular.digits_between'           => 'El :attribute debe tener entre 10 y 11 digitos',
+
+            'txtgenero.required'                  => 'El :attribute es obligatorio.',
+            'txtgrado_escolaridad.required'       => 'El :attribute es obligatorio.',
 
         ];
     }
@@ -87,15 +91,18 @@ class AdminFormRequest extends FormRequest
     public function attributes()
     {
         return [
-            'txtnodo'            => 'Nodo',
-            'txtnombres'         => 'Nombres',
-            'txtapellidos'       => 'Apellidos',
-            'txtcorreo'          => 'Correo Electrónico',
-            'txttelefono'        => 'Telefono',
-            'txtnombre_proyecto' => 'Nombre de proyecto',
-            'txtdescripcion'     => 'Descripcion',
-            'txtobjetivo'        => 'Objetivo',
-            'txtalcance'         => 'Alcance',
+            'txttipo_documento'    => 'tipo de documento',
+            'txtdocumento'         => 'número de documento',
+            'txtnombres'           => 'nombres',
+            'txtapellidos'         => 'apellidos',
+            'txtfecha_nacimiento'  => 'fecha de nacimiento',
+            'txtestrato'           => 'estrato',
+            'txtemail'             => 'correo electrónico',
+            'txtdireccion'         => 'dirección',
+            'txttelefono'          => 'telefono',
+            'txtcelular'           => 'celular',
+            'txtgenero'            => 'genero',
+            'txtgrado_escolaridad' => 'grado de escolaridad',
         ];
     }
 }
