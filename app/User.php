@@ -79,6 +79,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'fechanacimiento' => 'date:Y-m-d',
     ];
 
     public static function IsMasculino()
@@ -146,6 +147,7 @@ class User extends Authenticatable implements JWTSubject
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
+   
 
 
     public function rol()
