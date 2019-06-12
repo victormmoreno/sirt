@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Models\Rols;
-use App\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UsersRequests\AdminFormRequest;
 use App\Repositories\Repository\UserRepository\AdminRepository;
+use App\User;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use App\Events\User\UserWasRegistered;
 
 class AdminController extends Controller
 {
 
+    // use RegistersUsers;
+
+    /**
+     * Where to redirect users after registration.
+     *
+     * @var string
+     */
+    // protected $redirectTo = '/home';
 
     public $adminRepository;
 
@@ -20,7 +30,6 @@ class AdminController extends Controller
         $this->adminRepository = $adminRepository;
     }
 
-
     /**
      * Display a listing of the resource.
      *
@@ -28,21 +37,20 @@ class AdminController extends Controller
      */
     public function administradorIndex()
     {
-        
+
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
 
             // $administradores = User::
             // Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
             // ->role('Administrador')->get();
             // dd($this->userRepository->getAllAdministradores());
-            
 
             if (request()->ajax()) {
                 return datatables()->of($this->adminRepository->getAllAdministradores())
                     ->addColumn('detail', function ($data) {
-                         $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador('. $data->id .')"><i class="material-icons">info_outline</i></a>';
+                        $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
-                    return $button;
+                        return $button;
                     })
                     ->addColumn('edit', function ($data) {
                         $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
@@ -55,14 +63,14 @@ class AdminController extends Controller
                             return $data->estado = 'Inhabilitado ';
                         }
                     })
-                    ->rawColumns(['detail','edit'])
+                    ->rawColumns(['detail', 'edit'])
                     ->make(true);
             }
 
             return view('users.administrador.administrador.index');
         } else {
             abort(403);
-        } 
+        }
     }
 
     /**
@@ -72,8 +80,11 @@ class AdminController extends Controller
      */
     public function administradorCreate()
     {
-        $tiposdocumentos = $this->adminRepository->getAllTipoDocumento();
-        return view('users.administrador.administrador.create',compact('tiposdocumentos'));
+
+        return view('users.administrador.administrador.create', [
+            'tiposdocumentos'   => $this->adminRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
+        ]);
     }
 
     /**
@@ -82,11 +93,28 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function administradorStore(Request $request)
+    public function administradorStore(AdminFormRequest $request)
     {
+        // dd($request->all());
+        $password = User::generatePasswordRamdom();
+        $administrador = $this->adminRepository->Store($request, $password);
+        event(new UserWasRegistered($administrador, $password));
 
-        dd($request->all());
+        // event(new Registered($user = $this->create($request->all())));
+        // dd(User::generatePasswordRamdom());
     }
+
+    // public function register(Request $request)
+    // {
+    //     $this->validator($request->all())->validate();
+
+    //     event(new Registered($user = $this->create($request->all())));
+
+    //     $this->guard()->login($user);
+
+    //     return $this->registered($request, $user)
+    //                     ?: redirect($this->redirectPath());
+    // }
 
     /**
      * Display the specified resource.
@@ -109,13 +137,13 @@ class AdminController extends Controller
      */
     public function administradorEdit($id)
     {
-        
-        // $user = $this->adminRepository->findById($id);
-        // $user['fechanacimiento'] = $user->fechanacimiento->format('Y-m-d');
-        // dd($user->fechanacimiento);
-        return view('users.administrador.administrador.edit',[
-            'tiposdocumentos' => $this->adminRepository->getAllTipoDocumento(),
-            'user' => $this->adminRepository->findById($id),
+
+        $user = $this->adminRepository->findById($id);
+
+        // dd($user);
+        return view('users.administrador.administrador.edit', [
+            'user'              => $this->adminRepository->findById($id),
+            'tiposdocumentos'   => $this->adminRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
         ]);
     }
@@ -127,7 +155,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorUpdate(Request $request, $id)
+    public function administradorUpdate(AdminFormRequest $request, $id)
     {
         //
     }

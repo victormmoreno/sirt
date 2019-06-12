@@ -33,9 +33,6 @@
         "pusher-js": "^4.4.0",
         "select2": "^4.0.7-rc.0",
         "toastr": "^2.1.4",
-        "vue-form-wizard": "^0.8.4",
-        "vue-sweetalert2": "^1.6.4",
-        "vuelidate": "^0.7.4",
         "vuex": "^3.1.1"
     }
 }

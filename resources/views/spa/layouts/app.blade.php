@@ -7,8 +7,8 @@
             {{config('app.name')}} | @yield('meta-tittle',   config('app.name') )
         </title>
         <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href="{{ mix('css/libs.css') }}" rel="stylesheet">
-        <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
+
                         <!-- CSRF Token -->
         <meta content="{{ csrf_token() }}" name="csrf-token">
         <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description">
@@ -30,6 +30,5 @@
         </div>
         <script  src="{{ mix('js/app.js') }}"></script>
         <script  src="{{ mix('js/libs.js') }}"></script>
-        {{-- @include('sweet::alert') --}}
-    </body>
+        {{-- @include('sweet::alert') --}}    </body>
 </html>

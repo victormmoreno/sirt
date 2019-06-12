@@ -4,12 +4,10 @@ namespace App;
 
 use App\Models\ActivationToken;
 use App\Models\Dinamizador;
-use App\Models\DinamizadorInfocenter;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
-use App\Models\Nodo;
 use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
@@ -27,9 +25,9 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable, HasRoles;
 
     const IS_MASCULINO = 1;
-    const IS_FEMENINO = 0;
-    const IS_ACTIVE   = true;
-    const IS_INACTIVE = false;
+    const IS_FEMENINO  = 0;
+    const IS_ACTIVE    = true;
+    const IS_INACTIVE  = false;
     // const ESTRATO = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6');
 
     // protected $appends = ['nombre_completo','apellidos','nombres'];
@@ -79,7 +77,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'fechanacimiento' => 'date:Y-m-d',
+        'fechanacimiento'   => 'date:Y-m-d',
     ];
 
     public static function IsMasculino()
@@ -147,14 +145,11 @@ class User extends Authenticatable implements JWTSubject
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-   
-
 
     public function rol()
     {
         return $this->belongsTo(Rols::class, 'rol_id', 'id');
     }
-
 
     public function gradoEscolaridad()
     {
@@ -168,27 +163,27 @@ class User extends Authenticatable implements JWTSubject
 
     public function gestor()
     {
-        return $this->hasOne(Gestor::class,'user_id', 'id');
+        return $this->hasOne(Gestor::class, 'user_id', 'id');
     }
 
     public function dinamizador()
     {
-        return $this->hasOne(Dinamizador::class,'user_id', 'id');
+        return $this->hasOne(Dinamizador::class, 'user_id', 'id');
     }
 
     public function infocenter()
     {
-        return $this->hasOne(Infocenter::class,'user_id', 'id');
+        return $this->hasOne(Infocenter::class, 'user_id', 'id');
     }
 
     public function ingreso()
     {
-        return $this->hasOne(Ingreso::class,'user_id', 'id');
+        return $this->hasOne(Ingreso::class, 'user_id', 'id');
     }
 
     public function talento()
     {
-        return $this->hasOne(Talento::class,'user_id', 'id');
+        return $this->hasOne(Talento::class, 'user_id', 'id');
     }
 
     /*=====  End of relaciones eloquent  ======*/
@@ -242,6 +237,16 @@ class User extends Authenticatable implements JWTSubject
         return $this;
 
     }
+
+    /*================================================================
+    =            metodo para generar contraseña aleatoria            =
+    ================================================================*/
+    public static function generatePasswordRamdom()
+    {
+        return str_random(9);       
+    }
+
+    /*=====  End of metodo para generar contraseña aleatoria  ======*/
 
     public function scopeInfoUserNodo($query, $role, $nodo)
     {

@@ -38,8 +38,8 @@ Vue.component('listado-nodos', require('./components/nodos/ListadoNodos.vue').de
 //             <label >Country</label>
 //             <select class="form-control" v-model.trim="country" @input="$v.country.$touch()">
 //               <option>USA</option>
-//   					   <option>United Kingdom</option>
-//   						<option>France</option>
+//               <option>United Kingdom</option>
+//              <option>France</option>
 //             </select>
 //              <span class="help-block" v-if="$v.country.$error && !$v.country.required">Country is required</span>
 //           </div>
@@ -104,20 +104,8 @@ Vue.component('listado-nodos', require('./components/nodos/ListadoNodos.vue').de
 const app = new Vue({
     el: '#app',
     data: {
-    finalModel: {},
+
   },
-  methods: {
-    validateStep(name) {
-      var refToValidate = this.$refs[name];
-      return refToValidate.validate();
-    },
-    mergePartialModels(model, isValid){
-      if(isValid){
-      // merging each step model into the final model
-       this.finalModel = Object.assign({},this.finalModel, model)
-      }
-    }
-  }
-    // router,
+});
 
 });

@@ -121,7 +121,6 @@ class LineaController extends Controller
             $linea->update();
 
             Alert::success("La Linea {$linea->nombre} ha sido actualizado modificado.",'Modificación Exitosa',"success");
-            // alert('Hello World!',"success","success","success")->autoclose(3000);
 
         }else{
             Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");
