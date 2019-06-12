@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             $this->truncateTables([
 
                 'prototipos',
+                'gruposanguineos',
+                'eps',
                 'servicios',
                 'departamentos',
                 'tiposdocumentos',
@@ -47,6 +49,8 @@ class DatabaseSeeder extends Seeder
         }else if(app()->environment() == 'local'){
             $this->truncateTables([
                 'gradosescolaridad',
+                'gruposanguineos',
+                'eps',
                 'servicios',
                 'tiposdocumentos',
                 'estadosidea',

@@ -10,6 +10,8 @@ return [
 
     'local'      => [
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
+        ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],
+        ['name' => EpsTableSeeder::class, 'callable' => true],
         ['name' => ServiciosTableSeeder::class, 'callable' => true],
         ['name' => TiposDocumentosTableSeeder::class, 'callable' => true],
         ['name' => EstadosIdeasTableSeeder::class, 'callable' => true],

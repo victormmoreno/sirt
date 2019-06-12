@@ -40,10 +40,8 @@ class AdminController extends Controller
 
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
 
-            // $administradores = User::
-            // Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-            // ->role('Administrador')->get();
-            // dd($this->userRepository->getAllAdministradores());
+
+            $admin = $this->adminRepository->getAllAdministradores();
 
             if (request()->ajax()) {
                 return datatables()->of($this->adminRepository->getAllAdministradores())
@@ -95,13 +93,22 @@ class AdminController extends Controller
      */
     public function administradorStore(AdminFormRequest $request)
     {
-        // dd($request->all());
+        //generar contraseña
         $password = User::generatePasswordRamdom();
+        //guardar registro
         $administrador = $this->adminRepository->Store($request, $password);
-        event(new UserWasRegistered($administrador, $password));
-
-        // event(new Registered($user = $this->create($request->all())));
-        // dd(User::generatePasswordRamdom());
+        $activationToken = $this->adminRepository->activationToken($administrador->id);
+        //envio de email con contraseña
+        if ($administrador != null) {
+            // event(new UserWasRegistered($administrador, $password));
+            alert()->success('El Entrenamiento ha sido creado satisfactoriamente','Registro Exitoso.')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario '. $administrador->nombre_completo.'</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+        }else{
+            alert()->error('El Entrenamiento no se ha creado.','Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
+        }
+        //redireccion
+        
+        return redirect()->route('usuario.administrador.index');
+        
     }
 
     // public function register(Request $request)

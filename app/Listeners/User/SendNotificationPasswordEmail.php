@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Log;
 class SendNotificationPasswordEmail
 {
 
-   
     /**
      * Create the event listener.
      *
@@ -20,7 +19,7 @@ class SendNotificationPasswordEmail
      */
     public function __construct()
     {
-        //
+        
     }
 
     /**
@@ -31,7 +30,8 @@ class SendNotificationPasswordEmail
      */
     public function handle(UserWasRegistered $event)
     {
-        Mail::to($event->user->email)->send(new SendNotificationPassoword($event->user));
-        Log::info('correo usuario '.$event->user->email);
+        
+        Mail::to($event->user->email)->send(new SendNotificationPassoword($event->user, $event->password));
+        
     }
 }

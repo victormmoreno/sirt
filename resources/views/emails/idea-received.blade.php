@@ -1,5 +1,5 @@
 @component('mail::message')
-# Nueva idea Recibida - {{dd($u->nombre_nodo)}}
+# Nueva idea Recibida 
 
 {{-- {{dd($user)}} --}}
 
