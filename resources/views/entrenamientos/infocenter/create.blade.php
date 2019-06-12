@@ -102,11 +102,11 @@
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <p class="p-v-xs">
-                          <input type="checkbox" id="txtcorreos" name="txtcorreos" value="1"/>
+                          <input type="checkbox" id="txtcorreos" {{ old('txtcorreos') ? 'checked' : '' }} name="txtcorreos" value="1"/>
                           <label for="txtcorreos">Correos</label>
                         </p>
                       </div>
-                      <div class="col s12 m6 l6">
+                      {{-- <div class="col s12 m6 l6">
                         <div class="file-field input-field">
                           <div class="btn">
                             <span>File</span>
@@ -116,16 +116,16 @@
                             <input class="file-path validate" type="text" placeholder="Subir un archivo">
                           </div>
                         </div>
-                      </div>
+                      </div> --}}
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <p class="p-v-xs">
-                          <input type="checkbox" id="txtfotos" name="txtfotos" value="1"/>
+                          <input type="checkbox" id="txtfotos" {{ old('txtfotos') ? 'checked' : '' }} name="txtfotos" value="1"/>
                           <label for="txtfotos">Evidencias Fotográficas</label>
                         </p>
                       </div>
-                      <div class="col s12 m6 l6">
+                      {{-- <div class="col s12 m6 l6">
                         <div class="file-field input-field">
                           <div class="btn">
                             <span>File</span>
@@ -135,16 +135,16 @@
                             <input class="file-path validate" type="text" placeholder="Subir un archivo">
                           </div>
                         </div>
-                      </div>
+                      </div> --}}
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <p class="p-v-xs">
-                          <input type="checkbox" id="txtlistado_asistencia" name="txtlistado_asistencia" value="1"/>
+                          <input type="checkbox" id="txtlistado_asistencia" {{ old('txtlistado_asistencia') ? 'checked' : '' }} name="txtlistado_asistencia" value="1"/>
                           <label for="txtlistado_asistencia">Listado de Asistencia</label>
                         </p>
                       </div>
-                      <div class="col s12 m6 l6">
+                      {{-- <div class="col s12 m6 l6">
                         <div class="file-field input-field">
                           <div class="btn">
                             <span>File</span>
@@ -154,7 +154,7 @@
                             <input class="file-path validate" type="text" placeholder="Subir un archivo">
                           </div>
                         </div>
-                      </div>
+                      </div> --}}
                     </div>
                   </div>
                   <div class="divider"></div>

@@ -16,7 +16,6 @@ import Vuex from 'vuex';
  Vue.use(Vuex);
 
 
-
 //reloj
 Vue.component('clock', require('./components/helpers/clock.vue').default);
 
@@ -30,7 +29,7 @@ Vue.component('listado-nodos', require('./components/nodos/ListadoNodos.vue').de
 
 // Vue.component('step1', {
 //   template: ``,
-  
+
 // })
 
 // Vue.component('step2', {
@@ -90,7 +89,7 @@ Vue.component('listado-nodos', require('./components/nodos/ListadoNodos.vue').de
 //                 component: require('./views/Ideas.vue').default,
 
 //             },
-            
+
 
 //         ],
 //         'linkExactActiveClass': 'acitve',
@@ -105,9 +104,8 @@ Vue.component('listado-nodos', require('./components/nodos/ListadoNodos.vue').de
 const app = new Vue({
     el: '#app',
     data: {
-   
+
   },
-    
 });
 
-
+});

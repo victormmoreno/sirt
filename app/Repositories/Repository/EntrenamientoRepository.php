@@ -3,13 +3,15 @@
 namespace App\Repositories\Repository;
 
 use App\Models\EstadoIdea;
-use App\Models\Idea;
+// use App\Models\Idea;
 use App\Models\Entrenamiento;
+use App\Models\EntrenamientoIdea;
 use App\Models\Nodo;
+use Illuminate\Support\Facades\DB;
 
 class EntrenamientoRepository
 {
-// Consulta todos los entrenamientos por nodo
+  // Consulta todos los entrenamientos por nodo
   public function consultarEntrenamientosPorNodo($id)
   {
     return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2' , 'entrenamientos.id')
@@ -37,36 +39,51 @@ class EntrenamientoRepository
     ->get();
   }
 
-    // public function getSelectNodo()
-    // {
-    //     return Nodo::SelectNodo()->get();
-    // }
+  // public function getSelectNodo()
+  // {
+  //     return Nodo::SelectNodo()->get();
+  // }
 
-    // public function Store($request)
-    // {
-    //
-    //     $idea = Idea::create([
-    //         "nodo_id"            => $request->input('txtnodo'),
-    //         "nombres_contacto"   => $request->input('txtnombres'),
-    //         "apellidos_contacto" => $request->input('txtapellidos'),
-    //         "correo_contacto"    => $request->input('txtcorreo'),
-    //         "telefono_contacto"  => $request->input('txttelefono'),
-    //         "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
-    //         "aprendiz_sena"      => $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0,
-    //         "pregunta1"          => $request->input('pregunta1'),
-    //         "pregunta2"          => $request->input('pregunta2'),
-    //         "pregunta3"          => $request->input('pregunta3'),
-    //         "descripcion"        => $request->input('txtdescripcion'),
-    //         "objetivo"           => $request->input('txtobjetivo'),
-    //         "alcance"            => $request->input('txtalcance'),
-    //         "tipo_idea"          => Idea::IsEmprendedor(),
-    //         "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
-    //
-    //
-    //     ]);
-    //
-    //     return $idea;
-    // }
+  // Hace el registro del entrenamiento
+  public function store($request)
+  {
+    return Entrenamiento::create([
+      "fecha_sesion1"            => $request->input('txtfecha_sesion1'),
+      "fecha_sesion2"   => $request->input('txtfecha_sesion2'),
+      "correos" => $request->txtcorreos,
+      "fotos" => $request->txtfotos,
+      "listado_asistencia" => $request->txtlistado_asistencia,
+      ]);
+    }
+
+    // Hace el registro en la tabla entrenamiento_idea
+    // Se hace la validacion con operadores ternarios para evitar que el campo quede null
+    public function storeEntrenamientoIdea($value, $idEntrenamiento)
+    {
+      return EntrenamientoIdea::create([
+        "entrenamiento_id"   => $idEntrenamiento,
+        "idea_id"            => $value['id'],
+        "confirmacion" => isset($value['Confirm']) ? 1 : 0,
+        "canvas" => isset($value['Canvas']) ? 1 : 0,
+        "asistencia1" => isset($value['AssistF']) ? 1 : 0,
+        "asistencia2" => isset($value['AssistS']) ? 1 : 0,
+        "convocado_csibt" => isset($value['Convocado']) ? 1 : 0,
+      ]);
+    }
+
+    // Consulta los entrenamientos que se hicieron en la fecha de la primera y segunda sesion
+    public function consultarEntrenamientoPorFechas($nodo_id, $fecha_sesion1, $fecha_sesion2)
+    {
+      return Entrenamiento::select('entrenamientos.id', 'fecha_sesion1', 'fecha_sesion2')
+      ->join('entrenamiento_idea', 'entrenamiento_idea.entrenamiento_id', '=', 'entrenamientos.id')
+      ->join('ideas', 'ideas.id', '=', 'entrenamiento_idea.idea_id')
+      ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+      ->where('nodos.id', $nodo_id)
+      ->where('fecha_sesion1', $fecha_sesion1)
+      ->where('fecha_sesion2', $fecha_sesion2)
+      ->get();
+    }
+
     //
     // public function StoreIdeaEmpGI($request)
     // {
@@ -108,4 +125,4 @@ class EntrenamientoRepository
     //
     // }
 
-}
+  }

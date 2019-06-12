@@ -36,7 +36,9 @@
         <script src="{{ asset('js/app.js') }}" ></script>
         <script src="{{ asset('js/libs.js') }}" ></script>
         <script src="{{ asset('js/app2.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
-        @include('sweet::alert')
+        {{-- @include('sweet::alert') --}}
+        @include('sweetalert::alert')
 </body>
 </html>

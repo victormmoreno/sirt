@@ -8,15 +8,15 @@
         </title>
         <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
-        
+
                         <!-- CSRF Token -->
         <meta content="{{ csrf_token() }}" name="csrf-token">
         <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description">
-        
+
     </head>
     <body class="white">
         <div id="app">
-            
+
             <div class="mn-content">
                 @include('spa.layouts.nav')
 
@@ -26,10 +26,9 @@
                 <div class="left-sidebar-hover">
                 </div>
             </div>
-        
+
         </div>
-        <script  src="{{ asset('js/app.js') }}"></script>
-        <script  src="{{ asset('js/libs.js') }}"></script>
-        @include('sweet::alert')
-    </body>
+        <script  src="{{ mix('js/app.js') }}"></script>
+        <script  src="{{ mix('js/libs.js') }}"></script>
+        {{-- @include('sweet::alert') --}}    </body>
 </html>
