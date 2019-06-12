@@ -4,14 +4,17 @@ namespace App;
 
 use App\Models\ActivationToken;
 use App\Models\Dinamizador;
+use App\Models\Eps;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanquineo;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
 use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +50,7 @@ class User extends Authenticatable implements JWTSubject
         'rol_id',
         'gradoescolaridad_id',
         'tipodocumento_id',
+        'gruposanquineo_id',
         'nombres',
         'apellidos',
         'documento',
@@ -159,6 +163,16 @@ class User extends Authenticatable implements JWTSubject
     public function tipoDocumento()
     {
         return $this->belongsTo(TipoDocumento::class, 'tipodocumento_id', 'id');
+    }
+
+    public function grupoSanguineo()
+    {
+        return $this->belongsTo(GrupoSanquineo::class, 'gruposanquineo_id', 'id');
+    }
+
+    public function eps()
+    {
+        return $this->belongsTo(Eps::class, 'eps_id', 'id');
     }
 
     public function gestor()

@@ -2,10 +2,12 @@
 
 namespace App\Repositories\Repository\UserRepository;
 
+use App\Models\ActivationToken;
 use App\Models\GradoEscolaridad;
 use App\Models\Rols;
 use App\Models\TipoDocumento;
 use App\User;
+use Carbon\Carbon;
 
 class AdminRepository
 {
@@ -18,7 +20,7 @@ class AdminRepository
         return User::select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'rols.nombre as rol', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
             ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.rol_id')
-            ->Join('rols', 'rols.id', '=', 'users.tipodocumento_id')
+            ->Join('rols', 'rols.id', '=', 'users.rol_id')
             ->where('rols.nombre', '=', Rols::IsAdministrador())
             ->get();
     }
@@ -93,7 +95,7 @@ class AdminRepository
             "telefono"            => $request->input('txttelefono'),
             "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
             "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
-            "estado"              => User::IsActive(),
+            "estado"              => User::IsInactive(),
             "password"            => $password,
             "estrato"           => $request->input('txtestrato'),
         ]);
@@ -101,5 +103,22 @@ class AdminRepository
     }
 
     /*=====  End of metodo para guardar un nuevo administrador  ======*/
+
+    /*===============================================
+    =            metodod para registrar  token de activacion           =
+    ===============================================*/
+    
+    public function activationToken($user)
+    {
+        return ActivationToken::create([
+            'user_id' => $user,
+            'token' =>str_random(60),
+            'created_at' => Carbon::now(),
+        ]);
+    }
+    
+    
+    /*=====  End of metodod para registrar   ======*/
+    
 
 }

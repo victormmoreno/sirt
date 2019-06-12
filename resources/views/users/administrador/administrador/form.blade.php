@@ -78,7 +78,7 @@
         <i class="material-icons prefix">
             date_range
         </i>
-        <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento : old('txtfecha_nacimiento')}}">
+        <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfecha_nacimiento')}}">
         <label for="txtfecha_nacimiento">Fecha de Nacimiento *</label>
         @error('txtfecha_nacimiento')
             <label id="txtfecha_nacimiento-error" class="error" for="txtfecha_nacimiento">{{ $message }}</label>

@@ -2,8 +2,10 @@
 
 use App\Models\Ciudad;
 use App\Models\Entidad;
+use App\Models\Eps;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
@@ -52,6 +54,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Administrador')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'victor',
             'apellidos'           => 'perez',
             'documento'           => '523422321',
@@ -74,6 +78,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Dinamizador')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'juan',
             'apellidos'           => 'Benitez',
             'documento'           => '53244223',
@@ -98,6 +104,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Profesional')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'Ramiro Antonio',
             'apellidos'           => 'Isaza Escobar',
             'documento'           => 3414298,
@@ -123,6 +131,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
             'gradoescolaridad_id' => 4,
             'tipodocumento_id'    => 1,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'Julian Alberto',
             'apellidos'           => 'Patiño',
             'documento'           => 8102363,
@@ -147,6 +157,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Infocenter')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnologo')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'Nathalia',
             'apellidos'           => 'Lopez',
             'documento'           => '435442232',
@@ -171,6 +183,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Ingreso')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnico')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'Ana',
             'apellidos'           => 'Fernandez',
             'documento'           => '54224442',
@@ -195,6 +209,8 @@ class UsersTableSeeder extends Seeder
             'rol_id'              => Rols::where('nombre', '=', 'Talento')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnico')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
+            'eps_id'              => Eps::all()->random()->id,
             'nombres'             => 'Luisa',
             'apellidos'           => 'Restrepo',
             'documento'           => '75434533',
@@ -211,166 +227,14 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userTalento->talento()->create([
-            'user_id'   => $userTalento->id,
-            'perfil_id' => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
+            'user_id'    => $userTalento->id,
+            'perfil_id'  => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
             'entidad_id' => Entidad::all()->random()->id,
-            'ciudad_id' => Ciudad::all()->random()->id,
-            'programa' => 'Analsis y desarrollo de sistemas de información',
+            'ciudad_id'  => Ciudad::all()->random()->id,
+            'programa'   => 'Analsis y desarrollo de sistemas de información',
         ]);
 
-        // User::create([
-        //     'id'                  => 3,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Catherine',
-        //     'apellidos'           => 'Gomez',
-        //     'password'            => 34001081,
-        //     'documento'           => 34001081,
-        //     'email'               => 'katherinegom@misena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 4,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Jorge',
-        //     'apellidos'           => 'Bolaños',
-        //     'password'            => 72164827,
-        //     'documento'           => 72164827,
-        //     'email'               => 'jybolanos@sena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 5,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Laura',
-        //     'apellidos'           => 'Rojas Bedoya',
-        //     'password'            => 1037604426,
-        //     'documento'           => 1037604426,
-        //     'email'               => 'lcrojasb@sena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 6,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Nathalia',
-        //     'apellidos'           => 'Marín Pareja',
-        //     'password'            => 43255643,
-        //     'documento'           => 43255643,
-        //     'email'               => 'nmarinp@sena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 7,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Ruth Zorayda',
-        //     'apellidos'           => 'Osorio Gutierrez',
-        //     'password'            => 43270192,
-        //     'documento'           => 43270192,
-        //     'email'               => 'rzosorio@misena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 8,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Dily Alexandra',
-        //     'apellidos'           => 'Castillo Carvajal',
-        //     'password'            => 60379425,
-        //     'documento'           => 60379425,
-        //     'email'               => 'dilycastilloc@misena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 9,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Camilo Andrés',
-        //     'apellidos'           => 'Páramo Velásquez',
-        //     'password'            => 71378444,
-        //     'documento'           => 71378444,
-        //     'email'               => 'cparamov@sena.edu.co',
-        //     'telefono'            => 3002154480,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 10,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'Alexander',
-        //     'apellidos'           => 'Florian',
-        //     'password'            => 71795328,
-        //     'documento'           => 71795328,
-        //     'email'               => 'aflorian@sena.edu.co',
-        //     'telefono'            => null,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-
-        // User::create([
-        //     'id'                  => 671,
-        //     'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
-        //     'gradoescolaridad_id' => 4,
-        //     'tipodocumento_id'    => 1,
-        //     'nombres'             => 'GUSTAVO ADOLFO',
-        //     'apellidos'           => 'SERNA LÓPEZ',
-        //     'password'            => 1128052442,
-        //     'documento'           => 1128052442,
-        //     'email'               => 'gsst400@gmail.com',
-        //     'telefono'            => 3006441372,
-        //     'fechanacimiento'     => '1999-01-19',
-        //     'genero'              => 0,
-        //     'estado'              => 1,
-        //     'estrato'             => 3,
-        // ]);
-        // 
+        //
         factory(User::class, 20)->create();
         factory(Gestor::class, 5)->create();
         factory(Infocenter::class, 2)->create();

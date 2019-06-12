@@ -24,8 +24,10 @@ class CreateUsersTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('rol_id');
-            $table->unsignedInteger('gradoescolaridad_id');
             $table->integer('tipodocumento_id')->unsigned();
+            $table->unsignedInteger('gradoescolaridad_id');
+            $table->unsignedInteger('gruposanguineo_id');
+            $table->unsignedInteger('eps_id');
             $table->string('nombres', 45);
             $table->string('apellidos', 45);
             $table->string('documento', 45);
@@ -48,6 +50,10 @@ class CreateUsersTable extends Migration
 
             $table->index(["gradoescolaridad_id"], 'fk_users_gradoescolaridad1_idx');
 
+            $table->index(["gruposanguineo_id"], 'fk_users_gruposanquineo1_idx');
+
+            $table->index(["eps_id"], 'fk_users_eps1_idx');
+
             $table->unique(["email"], 'email_UNIQUE');
 
             $table->foreign('rol_id', 'fk_users_rols1_idx')
@@ -62,6 +68,18 @@ class CreateUsersTable extends Migration
 
             $table->foreign('tipodocumento_id')->references('id')
                 ->on('tiposdocumentos')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('gruposanguineo_id', 'fk_users_gruposanquineo1_idx')
+                ->references('id')
+                ->on('gruposanguineos')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('eps_id', 'fk_users_eps1_idx')
+                ->references('id')
+                ->on('gruposanguineos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });
