@@ -7,18 +7,23 @@ use App\Http\Requests\EntrenamientoFormRequest;
 use App\Models\Idea;
 use App\Models\Nodo;
 use App\Repositories\Repository\EntrenamientoRepository;
+use App\Repositories\Repository\IdeaRepository;
+use Illuminate\Support\Facades\DB;
 use App\User;
 use Carbon\Carbon;
 use Alert;
+// use Alert2;
 
 class EntrenamientoController extends Controller
 {
 
   public $entrenamientoRepository;
+  public $ideaRepository;
 
-  public function __construct(EntrenamientoRepository $entrenamientoRepository)
+  public function __construct(EntrenamientoRepository $entrenamientoRepository, IdeaRepository $ideaRepository)
   {
     $this->entrenamientoRepository = $entrenamientoRepository;
+    $this->ideaRepository = $ideaRepository;
     $this->middleware('auth');
   }
   /**
@@ -41,7 +46,7 @@ class EntrenamientoController extends Controller
         ';
         return $button;
       })->addColumn('update_state', function ($data) {
-        $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
+        $delete = '<a class="btn red lighten-3 m-b-xs" onclick="inhabilitarEntrenamientoPorId('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';
         return $delete;
       })->addColumn('edit', function ($data) {
         $edit = '<a href="' . route("entrenamientos.edit", $data->id) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
@@ -66,6 +71,17 @@ class EntrenamientoController extends Controller
   */
   public function create()
   {
+    // alert()->warning('WarningAlert','Lorem ipsum dolor sit amet.');
+    // Alert::success('dwdasdw', 'awdawd');
+    // dd(alert()->success('Title','Lorem Lorem Lorem'));
+    // alert()->success('SuccessAlert','Lorem ipsum dolor sit amet.')->showConfirmButton('Confirm', '#3085d6');
+    // alert('Title','Lorem Lorem Lorem', 'success')->position('top-left');
+    // toast('Success Toast','success','top-right')->autoClose(5000);
+    // dd(toast('Question Toast','question','top-right'));
+    // dd(Alert::success('Success Title', 'Success Message'));
+    // alert()->message('Message', 'Optional Title');
+    // alert()->error('Error Message', 'Optional Title');
+    // Alert::error('Error Title', 'Error Message');
     $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
     $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
     // $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
@@ -76,15 +92,59 @@ class EntrenamientoController extends Controller
 
   }
 
+  // Inhabilita el entrenamiento, pero se puede elegir si las ideas asociadas al mismo se cambien el estado a Inicio o se inhabiliten al igual que las ideas
+  public function inhabilitarEntrenamiento($id)
+  {
+    // return json_encode('<script>console.log(2)</script>');
+    // alert()->warning('Advertencia!','Ya se encuentra un entrenamiento registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
+  }
+
   /**
   * Store a newly created resource in storage.
   *
   * @param  \Illuminate\Http\Request  $request
   * @return \Illuminate\Http\Response
   */
-  public function store(Request $request)
+  public function store(EntrenamientoFormRequest $request)
   {
-    dd($request->all());
+    // $valor = $this->ideaRepository->updateEstadoIdea(5, 'Convocado');
+    // dd($valor);
+    // exit;
+    // alert()->warning('WarningAlert','Lorem ipsum dolor sit amet.');
+    if(session('ideasEntrenamiento') == false){
+      alert()->warning('Advertencia!','Para registrar el entrenamiento debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
+      return back()->withInput();
+    } else {
+      if (count($this->entrenamientoRepository->consultarEntrenamientoPorFechas(auth()->user()->infocenter->nodo_id, $request->txtfecha_sesion1, $request->txtfecha_sesion2)) != 0 ) {
+        alert()->warning('Advertencia!','Ya se encuentra un entrenamiento registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
+        return back()->withInput();
+      } else {
+        DB::transaction(function () use ($request) {
+          if (!isset($request->txtcorreos)) {
+            $request->txtcorreos = "0";
+          }
+          if (!isset($request->txtfotos)) {
+            $request->txtfotos = "0";
+          }
+          if (!isset($request->txtlistado_asistencia)) {
+            $request->txtlistado_asistencia = "0";
+          }
+          $entrenamiento = $this->entrenamientoRepository->store($request);
+          foreach (session('ideasEntrenamiento') as $key => $value) {
+            $this->entrenamientoRepository->storeEntrenamientoIdea($value, $entrenamiento->id);
+            // $value['Convocado'] == 1 ? $this->ideaRepository->updateEstadoIdea($value->id, 'Convocado') : $this->ideaRepository->updateEstadoIdea($value->id, 'No Convocado');
+            if ($value['Convocado'] == 1) {
+              $this->ideaRepository->updateEstadoIdea($value['id'], 'Convocado');
+            } else {
+              $this->ideaRepository->updateEstadoIdea($value['id'], 'No Convocado');
+            }
+          }
+        });
+        session(['ideasEntrenamiento' => []]);
+        alert()->success('El Entrenamiento ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
+        return redirect('entrenamientos');
+      }
+    }
   }
 
   /**

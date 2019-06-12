@@ -3,6 +3,7 @@
 namespace App\Repositories\Repository;
 
 use App\Models\EstadoIdea;
+use Illuminate\Support\Facades\DB;
 use App\Models\Idea;
 use App\Models\Nodo;
 
@@ -71,6 +72,22 @@ class IdeaRepository
 
         $idea = $idea->update();
         return $idea;
+    }
+
+
+    // Cambiar el estado de una idea según el parametro que se le envia, (el parametro es el NOMBRE DEL ESTADO DE IDEAS)
+    public function updateEstadoIdea($idIdea, $estadoACambiar)
+    {
+      return DB::update("UPDATE ideas SET estadoidea_id = (
+        CASE
+        WHEN '$estadoACambiar' = 'Inicio' THEN 1
+        WHEN '$estadoACambiar' = 'Convocado' THEN 2
+        WHEN '$estadoACambiar' = 'Admitido' THEN 3
+        WHEN '$estadoACambiar' = 'No Admitido' THEN 4
+        WHEN '$estadoACambiar' = 'No Convocado' THEN 5
+        WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
+        END
+      ) WHERE id = $idIdea ");
     }
 
     public function findByid($id)

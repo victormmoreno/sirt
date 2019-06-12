@@ -153,6 +153,7 @@ Route::group([
         Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create');
         Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
+        Route::get('/inhabilitarEntrenamiento/{id}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
         Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento');
         Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm');
         Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas');
