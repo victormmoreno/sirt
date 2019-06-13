@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
   $('#ideas_emprendedores_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -60,10 +61,17 @@ $(document).ready(function() {
       },
 
     ],
+    initComplete: function () {
+      this.api().columns().every(function () {
+        var column = this;
+        var input = document.createElement("input");
+        $(input).appendTo($(column.footer()).empty())
+        .on('change', function () {
+          column.search($(this).val(), false, false, true).draw();
+        });
+      });
+    }
   });
-
-  $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
-
 
 });
 

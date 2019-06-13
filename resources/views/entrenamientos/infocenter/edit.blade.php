@@ -16,7 +16,7 @@
               <div class="col s12 m12 l12">
                 <br>
                 <center>
-                  <span class="card-title center-align">Nuevo Entrenamiento - Tecnoparque nodo {{$nodo}}</span>
+                  <span class="card-title center-align">Modificar Entrenamiento - Tecnoparque nodo {{$nodo}}</span>
                 </center>
                 <div class="divider"></div>
                 <div class="row">
@@ -34,20 +34,22 @@
                     </div>
                   @endif
                 </div>
-                <form action="{{route('entrenamientos.store')}}" method="post" id="formEntrenamientos" onsubmit="return checkSubmit()">
+                <form action="{{route('entrenamientos.update', $entrenamiento->id)}}" method="post" id="formEntrenamientosEdit" onsubmit="return checkSubmit()">
+                  {!! method_field('PUT')!!}
                   {!! csrf_field() !!}
+                  <input type="text" id="xxx" value="{{$entrenamiento->id}}">
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
-                      <input type="text" name="txtfecha_sesion1" id="txtfecha_sesion1" value="{{ old('txtfecha_sesion1') }}">
-                      <label for="txtfecha_sesion1" {{-- id="labelprimerasesion" --}}>Primera Sesión <span class="red-text">*</span></label>
+                      <input type="text" name="txtfecha_sesion1" id="txtfecha_sesion1" value="{{ old('txtfecha_sesion1', $entrenamiento->fecha_sesion1->toDateString()) }}">
+                      <label for="txtfecha_sesion1">Primera Sesión <span class="red-text">*</span></label>
                       @error('txtfecha_sesion1')
                         <label id="txtfecha_sesion1-error" class="error" for="txtfecha_sesion1">{{ $message }}</label>
                       @enderror
                     </div>
                     <div class="input-field col s12 m6 l6">
                       <!-- <i class="material-icons prefix">phone</i> -->
-                      <input id="txtfecha_sesion2" type="text" name="txtfecha_sesion2" value="{{ old('txtfecha_sesion2') }}">
-                      <label for="txtfecha_sesion2" {{-- id="labelsegundasesion" --}}>Segunda Sesión <span class="red-text">*</span></label>
+                      <input id="txtfecha_sesion2" type="text" name="txtfecha_sesion2" value="{{ old('txtfecha_sesion2', $entrenamiento->fecha_sesion2->toDateString()) }}">
+                      <label for="txtfecha_sesion2">Segunda Sesión <span class="red-text">*</span></label>
                       @error('txtfecha_sesion2')
                         <label id="txtfecha_sesion2-error" class="error" for="txtfecha_sesion2">{{ $message }}</label>
                       @enderror
@@ -81,7 +83,7 @@
                                 <th style="width: 10%">Eliminar</th>
                               </tr>
                             </thead>
-                            <tbody id="tblIdeasEntrenamientoCreate">
+                            <tbody id="tblIdeasEntrenamientoCreateEdit">
 
                             </tbody>
                           </table>
@@ -102,7 +104,7 @@
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <p class="p-v-xs">
-                          <input type="checkbox" id="txtcorreos" {{ old('txtcorreos') ? 'checked' : '' }} name="txtcorreos" value="1"/>
+                          <input type="checkbox" id="txtcorreos" {{ old('txtcorreos') ? 'checked' : '' }} {{ $entrenamiento->correos == 'Si' ? 'checked' : '' }} name="txtcorreos" value="1"/>
                           <label for="txtcorreos">Correos</label>
                         </p>
                       </div>
@@ -121,7 +123,7 @@
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <p class="p-v-xs">
-                          <input type="checkbox" id="txtfotos" {{ old('txtfotos') ? 'checked' : '' }} name="txtfotos" value="1"/>
+                          <input type="checkbox" id="txtfotos" {{ old('txtfotos') ? 'checked' : '' }} {{ $entrenamiento->fotos == 'Si' ? 'checked' : '' }} name="txtfotos" value="1"/>
                           <label for="txtfotos">Evidencias Fotográficas</label>
                         </p>
                       </div>
@@ -140,7 +142,7 @@
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <p class="p-v-xs">
-                          <input type="checkbox" id="txtlistado_asistencia" {{ old('txtlistado_asistencia') ? 'checked' : '' }} name="txtlistado_asistencia" value="1"/>
+                          <input type="checkbox" id="txtlistado_asistencia" {{ old('txtlistado_asistencia') ? 'checked' : '' }} {{ $entrenamiento->listado_asistencia == 'Si' ? 'checked' : '' }} name="txtlistado_asistencia" value="1"/>
                           <label for="txtlistado_asistencia">Listado de Asistencia</label>
                         </p>
                       </div>

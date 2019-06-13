@@ -85,10 +85,47 @@ class IdeaController extends Controller
     //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
-      $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
 
-      if (request()->ajax()) {
-        $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
+
+      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+        if (request()->ajax()) {
+          $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
+          return datatables()->of($consultaIdeas)
+          ->addColumn('details', function ($data) {
+            $button = '
+            <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId('. $data->consecutivo .')">
+            <i class="material-icons">info</i>
+            </a>
+            ';
+            return $button;
+          })->addColumn('soft_delete', function ($data) {
+            $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
+            return $delete;
+          })->addColumn('dont_apply', function ($data) {
+            $notapply = '<a class="btn brown lighten-3 m-b-xs"><i class="material-icons">thumb_down</i></a>';
+            return $notapply;
+          })->addColumn('edit', function ($data) {
+            $edit = '<a href="' . route("idea.edit", $data->consecutivo) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+            return $edit;
+          })->rawColumns(['details', 'edit', 'soft_delete', 'dont_apply'])->make(true);
+          // $this->ideasEmpGI();
+        }
+        $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+        return view('ideas.infocenter.index', compact('nodo'));
+      } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+        return view('ideas.gestor.index', compact('nodo'));
+      } else if ( auth()->user()->rol()->first()->nombre == 'Administrador' ) {
+        $nodos = Nodo::SelectNodo()->get();
+        return view('ideas.administrador.index', compact('nodos'));
+      }
+    }
+
+
+    // Datatable que muestra las ideas de proyecto por nodo
+    public function dataTableIdeasEmprendedoresPorNodo($id)
+    {
+      // if (request()->ajax()) {
+        $consultaIdeas = Idea::ConsultarIdeasDelNodo($id)->get();
         return datatables()->of($consultaIdeas)
         ->addColumn('details', function ($data) {
           $button = '
@@ -97,23 +134,15 @@ class IdeaController extends Controller
           </a>
           ';
           return $button;
-        })->addColumn('soft_delete', function ($data) {
-          $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
-          return $delete;
-        })->addColumn('dont_apply', function ($data) {
-          $notapply = '<a class="btn brown lighten-3 m-b-xs"><i class="material-icons">thumb_down</i></a>';
-          return $notapply;
-        })->addColumn('edit', function ($data) {
-          $edit = '<a href="' . route("idea.edit", $data->consecutivo) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
-          return $edit;
-        })->rawColumns(['details', 'edit', 'soft_delete', 'dont_apply'])->make(true);
-        // $this->ideasEmpGI();
-      }
+        })->rawColumns(['details'])->make(true);
+      // }
+    }
 
-      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
-        return view('ideas.infocenter.index', compact('nodo'));
-      } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
-        return view('ideas.gestor.index', compact('nodo'));
+    public function dataTableIdeasEmpresasGIPorNodo($id)
+    {
+      if (request()->ajax()) {
+        $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo($id);
+        return datatables()->of($consultaIdeasEmpGI)->make(true);
       }
     }
 

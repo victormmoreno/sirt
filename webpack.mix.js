@@ -118,10 +118,12 @@ mix.scripts([
 		'resources/app/linea/administrador/index.js',
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
+		'resources/app/ideas/administrador/index.js',
 		'resources/app/ideas/gestor/index.js',
 		'resources/app/entrenamientos/index.js',
 		'resources/app/entrenamientos/infocenter/index.js',
 		'resources/app/entrenamientos/infocenter/create.js',
+		'resources/app/entrenamientos/infocenter/edit.js',
 		'resources/app/user/administrador/index-administrador.js',
 	],'public/js/app2.js');
 

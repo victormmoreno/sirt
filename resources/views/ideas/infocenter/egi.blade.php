@@ -12,7 +12,7 @@
           <div class="card-content">
             <div class="row">
               <div class="row">
-                <form method="post" action="{{ route('idea.storeegi')}}">
+                <form method="post" action="{{route('idea.storeegi')}}" onsubmit="return checkSubmit()">
                   {!! csrf_field() !!}
                   @if($errors->any())
                   <div class="card red lighten-3">

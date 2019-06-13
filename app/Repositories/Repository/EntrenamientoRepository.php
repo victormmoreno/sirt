@@ -24,10 +24,21 @@ class EntrenamientoRepository
     ->groupBy('entrenamientos.id')
     ->get();
   }
+  // Consulta el entrenamiento por id
+  public function consultarEntrenamientoPorId($id)
+  {
+    return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2' , 'entrenamientos.id')
+    ->selectRaw('IF(correos = 0, "No", "Si") AS correos')
+    ->selectRaw('IF(fotos = 0, "No", "Si") AS fotos')
+    ->selectRaw('IF(listado_asistencia = 0, "No", "Si") AS listado_asistencia')
+    ->where('id', $id)
+    ->get()
+    ->last();
+  }
 
   public function consultarIdeasDelEntrenamiento($id)
   {
-    return Entrenamiento::select('nombre_proyecto', 'fecha_sesion1', 'fecha_sesion2')
+    return Entrenamiento::select('nombre_proyecto', 'fecha_sesion1', 'fecha_sesion2', 'ideas.id')
     ->selectRaw('IF(confirmacion = 0,"No", "Si") AS confirmacion')
     ->selectRaw('IF(convocado_csibt = 0,"No", "Si") AS convocado')
     ->selectRaw('IF(canvas = 0,"No", "Si") AS canvas')
