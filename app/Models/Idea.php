@@ -97,11 +97,13 @@ class Idea extends Model
 
     public function scopeConsultarIdeasDelNodo($query, $id)
     {
-      return $query->select(DB::raw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona, ideas.id AS consecutivo, created_at AS fecha_registro,
-      correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
+      return $query->select('ideas.id AS consecutivo', 'created_at AS fecha_registro',
+      'correo_contacto AS correo', 'telefono_contacto AS contacto', 'nombre_proyecto AS nombre_idea', 'estadosidea.nombre AS estado')
+      ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
-      ->where('tipo_idea', $this->IsEmprendedor());
+      ->where('tipo_idea', $this->IsEmprendedor())
+      ->orderBy('ideas.id', 'desc');
     }
 
     public function scopeConsultarIdeasEmpGIDelNodo($query, $id)
@@ -110,7 +112,8 @@ class Idea extends Model
       correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
-      ->where('tipo_idea', '!=', $this->IsEmprendedor());
+      ->where('tipo_idea', '!=', $this->IsEmprendedor())
+      ->orderBy('ideas.id', 'desc');
     }
 
     // -------------------------------- Método para consulta el detalle de una idea de proyecto

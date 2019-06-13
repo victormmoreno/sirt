@@ -12,6 +12,7 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
+    order: false,
     ajax:{
       url: "/idea/consultarIdeasEmprendedoresPorNodo/"+idNodo,
       type: "get",
@@ -63,6 +64,7 @@ function consultarIdeasEmpresasGIPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
+    order: false,
     ajax:{
       url: "/idea/consultarIdeasEmpresasGIPorNodo/"+idNodo,
       type: "get",

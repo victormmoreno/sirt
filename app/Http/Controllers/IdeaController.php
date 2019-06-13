@@ -31,6 +31,8 @@ class IdeaController extends Controller
     public function __construct(IdeaRepository $ideaRepository)
     {
         $this->ideaRepository = $ideaRepository;
+        // $nodo = Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+        // dd(auth()->user()->gestor->nodo_id);
         $this->middleware('auth',['except' =>['index','store']]);
     }
 
@@ -85,8 +87,7 @@ class IdeaController extends Controller
     //--------------- Index para las ideas para los roles de Infocenter,
     public function ideas()
     {
-
-
+      // var_dump( Idea::ConsultarIdeasDelNodo(auth()->user()->gestor->nodo_id)->get());
       if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
         if (request()->ajax()) {
           $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
@@ -113,7 +114,7 @@ class IdeaController extends Controller
         $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
         return view('ideas.infocenter.index', compact('nodo'));
       } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
-        return view('ideas.gestor.index', compact('nodo'));
+        return view('ideas.gestor.index');
       } else if ( auth()->user()->rol()->first()->nombre == 'Administrador' ) {
         $nodos = Nodo::SelectNodo()->get();
         return view('ideas.administrador.index', compact('nodos'));
@@ -121,25 +122,34 @@ class IdeaController extends Controller
     }
 
 
-    // Datatable que muestra las ideas de proyecto por nodo
+    // Datatable que muestra las ideas de proyecto (emprendedores) por nodo
     public function dataTableIdeasEmprendedoresPorNodo($id)
     {
-      // if (request()->ajax()) {
-        $consultaIdeas = Idea::ConsultarIdeasDelNodo($id)->get();
-        return datatables()->of($consultaIdeas)
-        ->addColumn('details', function ($data) {
-          $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId('. $data->consecutivo .')">
-          <i class="material-icons">info</i>
-          </a>
-          ';
-          return $button;
-        })->rawColumns(['details'])->make(true);
-      // }
+
+      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        $id = auth()->user()->gestor->nodo_id;
+      }
+
+      $consultaIdeas = Idea::ConsultarIdeasDelNodo($id)->get();
+      return datatables()->of($consultaIdeas)
+      ->addColumn('details', function ($data) {
+        $button = '
+        <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId('. $data->consecutivo .')">
+        <i class="material-icons">info</i>
+        </a>
+        ';
+        return $button;
+      })->rawColumns(['details'])->make(true);
     }
+
+    // Datatable que muestra las ideas de proyecto con empresas o grupos de investigación
 
     public function dataTableIdeasEmpresasGIPorNodo($id)
     {
+      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        $id = auth()->user()->gestor->nodo_id;
+      }
+
       if (request()->ajax()) {
         $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo($id);
         return datatables()->of($consultaIdeasEmpGI)->make(true);
@@ -214,10 +224,14 @@ class IdeaController extends Controller
      */
     public function edit($id)
     {
-      $idea = Idea::ConsultarIdeaId($id)->first();
-      $nodos = Nodo::SelectNodo()->get();
-      // dd($nodos);
-      return view('ideas.infocenter.edit', compact('idea', 'nodos'));
+      if (auth()->user()->rol()->first()->nombre == 'Infocenter') {
+        $idea = Idea::ConsultarIdeaId($id)->first();
+        $nodos = Nodo::SelectNodo()->get();
+        return view('ideas.infocenter.edit', compact('idea', 'nodos'));
+      } else {
+        alert()->error('Error!','No tienes permisos para realizar esta acción.')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
     }
 
     /**

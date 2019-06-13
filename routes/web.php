@@ -143,7 +143,7 @@ Route::group([
     }
 );
 
-//-------------------Route group para el módulo de ideas
+//-------------------Route group para el módulo de Entrenamientos
 Route::group([
     	'prefix' => 'entrenamientos'
 	],
@@ -171,6 +171,19 @@ Route::group([
         // Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
         // Route::post('/', 'IdeaController@store')->name('idea.store');
         // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
+    }
+);
+
+//-------------------Route group para el módulo de Comité
+Route::group([
+    	'prefix' => 'csibt'
+	],
+    function () {
+        Route::get('/', 'ComiteController@index')->name('csibt');
+        Route::get('/create', 'ComiteController@create')->name('csibt.create');
+        Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit');
+        Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
+        Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
     }
 );
 
