@@ -13,7 +13,7 @@
                 <div class="row">
                   <div class="col s12 m12 l12">
                     <div class="center-align">
-                      <span class="card-title center-align">Ideas de Tecnoparque nodo "FALTA"</span>
+                      <span class="card-title center-align">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNodoUsuario() }}</span>
                     </div>
                   </div>
                 </div>
@@ -60,7 +60,7 @@
                   </table>
                 </div>
                 <div id="ideasProyecto">
-                  <table id="tblideas" class="display responsive-table datatable-example">
+                  <table id="ideasEmprendedoresPorNodo_table" class="display responsive-table datatable-example" style="width: 100%">
                     <thead>
                       <tr>
                         <th>Consecutivo de la Idea</th>
@@ -70,8 +70,6 @@
                         <th>Contacto</th>
                         <th>Nombre de la Idea</th>
                         <th>Estado</th>
-                        <!-- <th>Primera Sesion</th> -->
-                        <!-- <th>Segunda Sesion</th> -->
                         <th>Detalles</th>
                       </tr>
                     </thead>
@@ -81,7 +79,7 @@
                   </table>
                 </div>
                 <div id="ideasProyectoEmpresa">
-                  <table id="tblideasempresas" class="display responsive-table datatable-example">
+                  <table id="ideasEmpresasGIPorNodo_table" class="display responsive-table datatable-example" style="width: 100%">
                     <thead>
                       <tr>
                         <th>Consecutivo de la Idea</th>

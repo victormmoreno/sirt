@@ -124,6 +124,9 @@ mix.scripts([
 		'resources/app/entrenamientos/infocenter/index.js',
 		'resources/app/entrenamientos/infocenter/create.js',
 		'resources/app/entrenamientos/infocenter/edit.js',
+		'resources/app/comite/infocenter/index.js',
+		'resources/app/comite/gestor/index.js',
+		'resources/app/comite/administrador/index.js',
 		'resources/app/user/administrador/index-administrador.js',
 	],'public/js/app2.js');
 

@@ -6,6 +6,7 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
+    order: false,
     ajax:{
       url: "idea",
       type: "get",
@@ -83,6 +84,7 @@ function secondDataTable() {
       },
       processing: true,
       serverSide: true,
+      order: false,
       // order: [[0, 'desc']],
       // buttons: [
         //     'csv', 'excel', 'pdf', 'print', 'reset', 'reload'

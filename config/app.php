@@ -179,6 +179,9 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
+        //Providers Personalizados
+        App\Providers\NodoServiceProvider::class,
+
     ],
 
     /*
@@ -232,6 +235,8 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+        // Aliases Personalizados
+        'NodoHelper' => App\Helpers\NodoHelper::class,
 
     ],
 

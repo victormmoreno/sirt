@@ -21,7 +21,6 @@
             @guest
             @else
             {{auth()->user()->nombres}} {{ auth()->user()->apellidos}}
-
             @endguest
           </a>
         </li>
@@ -49,7 +48,7 @@
                 <b>
                   Edad:
                 </b>
-                {{ auth()->user()->fechanacimiento->age }}
+                {{ auth()->user()->fechanacimiento->age }} años
                 @endguest
               </br>
             </br>
@@ -112,8 +111,11 @@
           <span>
             @guest
             @else
-
-            {{ auth()->user()->rol->nombre }}
+              @if(auth()->user()->rol->nombre != 'Administrador' && auth()->user()->rol->nombre != 'Talento')
+                {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }}
+              @else
+                {{ auth()->user()->rol->nombre }} Tecnoparques
+              @endif
             <i class="material-icons right">
               arrow_drop_down
             </i>
@@ -156,9 +158,9 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
-          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
+        <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}} {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('csibt/create') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
+          <i class="nav-drop-icon material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
         </a>
         <div class="collapsible-body">
           <ul>
@@ -173,8 +175,8 @@
               </a>
             </li>
             <li>
-              <a href="">
-                <i class="material-icons">gavel</i>CSIBT's
+              <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
+                <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
               </a>
             </li>
           </ul>
@@ -249,8 +251,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">gavel</i>Comité
+        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
         </a>
       </li>
       <li class="no-padding">
@@ -383,9 +385,29 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">lightbulb</i>Ideas de Proyecto
+        <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
+          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
         </a>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="" class="{{setActiveRouteActivePage('idea')}}">
+                <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
+              </a>
+            </li>
+            <li>
+              <a href="" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+                <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Entrenamientos
+              </a>
+            </li>
+            <li class="no-padding">
+              <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
+                <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li class="no-padding">
         <a class="waves-effect waves-grey" href="">
@@ -541,9 +563,9 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
-          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
+        <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
+          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
         </a>
         <div class="collapsible-body">
           <ul>
@@ -557,9 +579,9 @@
                 <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Entrenamientos
               </a>
             </li>
-            <li>
-              <a href="">
-                <i class="material-icons">gavel</i>CSIBT's
+            <li class="no-padding">
+              <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
+                <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
               </a>
             </li>
           </ul>
