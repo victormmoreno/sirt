@@ -19,7 +19,7 @@
             </center>
             <div class="divider"></div>
             <div class="row">
-              <form action="{{ route('idea.update', $idea->id)}}" method="POST">
+              <form action="{{ route('idea.update', $idea->id)}}" method="POST" onsubmit="return checkSubmit()">
                 {!! method_field('PUT')!!}
                 {!! csrf_field() !!}
                 <div class="card-panel red lighten-3">

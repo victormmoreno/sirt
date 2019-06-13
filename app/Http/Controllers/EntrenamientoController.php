@@ -19,12 +19,16 @@ class EntrenamientoController extends Controller
 
   public $entrenamientoRepository;
   public $ideaRepository;
+  public $cont = 0;
 
   public function __construct(EntrenamientoRepository $entrenamientoRepository, IdeaRepository $ideaRepository)
   {
     $this->entrenamientoRepository = $entrenamientoRepository;
     $this->ideaRepository = $ideaRepository;
     $this->middleware('auth');
+    // if (url()->current() == route('entrenamientos.edit', $entrenamiento->id)) {
+    //   dd(url()->current());
+    // }
   }
   /**
   * Display a listing of the resource.
@@ -71,21 +75,8 @@ class EntrenamientoController extends Controller
   */
   public function create()
   {
-    // alert()->warning('WarningAlert','Lorem ipsum dolor sit amet.');
-    // Alert::success('dwdasdw', 'awdawd');
-    // dd(alert()->success('Title','Lorem Lorem Lorem'));
-    // alert()->success('SuccessAlert','Lorem ipsum dolor sit amet.')->showConfirmButton('Confirm', '#3085d6');
-    // alert('Title','Lorem Lorem Lorem', 'success')->position('top-left');
-    // toast('Success Toast','success','top-right')->autoClose(5000);
-    // dd(toast('Question Toast','question','top-right'));
-    // dd(Alert::success('Success Title', 'Success Message'));
-    // alert()->message('Message', 'Optional Title');
-    // alert()->error('Error Message', 'Optional Title');
-    // Alert::error('Error Title', 'Error Message');
     $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
     $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
-    // $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
-    // dd(session("ideasEntrenamiento"));
     if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
       return view('entrenamientos.infocenter.create', compact('nodo' ,'ideas'));
     }
@@ -93,10 +84,12 @@ class EntrenamientoController extends Controller
   }
 
   // Inhabilita el entrenamiento, pero se puede elegir si las ideas asociadas al mismo se cambien el estado a Inicio o se inhabiliten al igual que las ideas
-  public function inhabilitarEntrenamiento($id)
+  public function inhabilitarEntrenamiento($id, $estado)
   {
-    // return json_encode('<script>console.log(2)</script>');
-    // alert()->warning('Advertencia!','Ya se encuentra un entrenamiento registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
+    $ideasDelEntrenamiento = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id);
+    return json_encode([
+      'respuesta' => 1
+    ]);
   }
 
   /**
@@ -107,10 +100,6 @@ class EntrenamientoController extends Controller
   */
   public function store(EntrenamientoFormRequest $request)
   {
-    // $valor = $this->ideaRepository->updateEstadoIdea(5, 'Convocado');
-    // dd($valor);
-    // exit;
-    // alert()->warning('WarningAlert','Lorem ipsum dolor sit amet.');
     if(session('ideasEntrenamiento') == false){
       alert()->warning('Advertencia!','Para registrar el entrenamiento debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
       return back()->withInput();
@@ -166,7 +155,86 @@ class EntrenamientoController extends Controller
   */
   public function edit($id)
   {
-    //
+    // exit;
+    if (url()->previous() == route('entrenamientos.edit', $id)) {
+      $this->cont++;
+    }
+
+
+    $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+    $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
+    $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
+    // $detalles = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id);
+    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+      return view('entrenamientos.infocenter.edit', compact('nodo' ,'ideas', 'entrenamiento'));
+    }
+  }
+
+  public function cargarIdeasDelEntrenamientoEnLaSesion(Request $request)
+  {
+    $detalles = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($request->entrenamiento);
+
+    foreach ($detalles as $key => $value) {
+
+      $idea = Idea::ConsultarIdeaId($value['id'])->get($value['id'])->last();
+      if (session("ideasEntrenamientoEdit") != null) {
+        $existe = false;
+        $dato   = null;
+        $ideas = session("ideasEntrenamientoEdit");
+        foreach ($ideas as $key => $value) {
+          if ($value["id"] == $input["Idea"]) {
+            $dato = $value;
+            unset($ideas[$key]);
+            $existe = true;
+          }
+        }
+        if (!$existe) {
+          array_push($ideas, $idea);
+        } else {
+          return json_encode(['data' => 3]);
+        }
+        session(["ideasEntrenamientoEdit" => $ideas]);
+      } else {
+        session(["ideasEntrenamientoEdit" => [$idea]] );
+      }
+
+    }
+
+
+  }
+
+  // Devuelve los elemento de la sesion de las ideas del entrenamiento
+  public function get_ideasEntrenamientoEdit()
+  {
+      return json_encode(session("ideasEntrenamientoEdit"));
+  }
+
+  // Carga las ideas del entrenamiento a una sesion (Esta sesion es diferente a la del registro del entrenamiento)
+  public function add_IdeasEdit(Request $request)
+  {
+    $input = $request->all();
+    $idea = Idea::ConsultarIdeaId($request['Idea'])->get($request['Idea'])->last();
+      if (session("ideasEntrenamientoEdit") != null) {
+        $existe = false;
+        $dato   = null;
+        $ideas = session("ideasEntrenamientoEdit");
+        foreach ($ideas as $key => $value) {
+          if ($value["id"] == $input["Idea"]) {
+            $dato = $value;
+            unset($ideas[$key]);
+            $existe = true;
+          }
+        }
+        if (!$existe) {
+          array_push($ideas, $idea);
+        } else {
+          return json_encode(['data' => 3]);
+        }
+        session(["ideasEntrenamientoEdit" => $ideas]);
+      } else {
+        session(["ideasEntrenamientoEdit" => [$idea]] );
+      }
+      return json_encode(['data' => 2]);
   }
 
   /**

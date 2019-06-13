@@ -30,7 +30,7 @@ Route::get('/', function () {
     // dd(config('mail.host'));
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
-   
+
     return view('spa');
 
 })->name('/');
@@ -132,6 +132,8 @@ Route::group([
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
         Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
+        Route::get('/consultarIdeasEmprendedoresPorNodo/{idea}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
+        Route::get('/consultarIdeasEmpresasGIPorNodo/{idea}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
         Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
@@ -150,8 +152,9 @@ Route::group([
         Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create');
         Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
-        Route::get('/inhabilitarEntrenamiento/{id}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
+        Route::get('/inhabilitarEntrenamiento/{id}/{tipoCambioEstado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
         Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento');
+        Route::get('/getideasEntrenamientoEdit', 'EntrenamientoController@get_ideasEntrenamientoEdit');
         Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm');
         Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas');
         Route::get('/getAssistF/{id}/{estado}', 'EntrenamientoController@getAssistF');
@@ -160,11 +163,12 @@ Route::group([
         Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea');
         Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store');
         Route::post('/addidea', 'EntrenamientoController@add_idea');
+        Route::post('/cargarIdeas', 'EntrenamientoController@cargarIdeasDelEntrenamientoEnLaSesion');
+        Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
         // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         // Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         // Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
         // Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
-        // Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
         // Route::post('/', 'IdeaController@store')->name('idea.store');
         // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
     }

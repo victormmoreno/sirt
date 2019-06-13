@@ -128,6 +128,7 @@ $(document).ready(function() {
 
 });
 $(document).ready(function() {
+
   $('#ideas_emprendedores_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -189,10 +190,17 @@ $(document).ready(function() {
       },
 
     ],
+    initComplete: function () {
+      this.api().columns().every(function () {
+        var column = this;
+        var input = document.createElement("input");
+        $(input).appendTo($(column.footer()).empty())
+        .on('change', function () {
+          column.search($(this).val(), false, false, true).draw();
+        });
+      });
+    }
   });
-
-  $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
-
 
 });
 
@@ -312,6 +320,100 @@ function detallesIdeaPorId(id){
     $('#modal1').openModal();
   }
 })
+}
+
+function consultarIdeasPorNodo() {
+  let idNodo = $('#txtnodo').val();
+  consultarIdeasEmprendedoresPorNodo(idNodo);
+  consultarIdeasEmpresasGIPorNodo(idNodo);
+}
+
+function consultarIdeasEmprendedoresPorNodo(idNodo) {
+  $('#ideasEmprendedoresPorNodo_table').dataTable().fnDestroy();
+  $('#ideasEmprendedoresPorNodo_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/idea/consultarIdeasEmprendedoresPorNodo/"+idNodo,
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'consecutivo',
+        name: 'consecutivo',
+      },
+      {
+        data: 'fecha_registro',
+        name: 'fecha_registro',
+      },
+      {
+        data: 'persona',
+        name: 'persona',
+      },
+      {
+        data: 'correo',
+        name: 'correo',
+      },
+      {
+        data: 'contacto',
+        name: 'contacto',
+      },
+      {
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+      {
+        data: 'estado',
+        name: 'estado',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+
+    ],
+  });
+}
+//--- Server side de la datatable que muestra las
+function consultarIdeasEmpresasGIPorNodo(idNodo) {
+  $('#ideasEmpresasGIPorNodo_table').dataTable().fnDestroy();
+  $('#ideasEmpresasGIPorNodo_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/idea/consultarIdeasEmpresasGIPorNodo/"+idNodo,
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'consecutivo',
+        name: 'consecutivo',
+      },
+      {
+        data: 'fecha_registro',
+        name: 'fecha_registro',
+      },
+      {
+        data: 'nit',
+        name: 'nit',
+      },
+      {
+        data: 'razon_social',
+        name: 'razon_social',
+      },
+      {
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+    ],
+  });
 }
 
 $(document).ready(function() {
@@ -477,57 +579,45 @@ function inhabilitarEntrenamientoPorId(id, e) {
     confirmButtonText: 'Sí, inhabilitar'
   }).then((result) => {
     if (result.value) {
-      console.log(result);
       Swal.fire({
-        title: '¿Que desea hacer?',
+        // confirmButtonColor: '#3085d6',
+        // cancelButtonText: 'Regresar las ideas de proyecto al estado de Inicio',
+        // confirmButtonAriaLabel: 'Thumbs up, great!',
+        // cancelButtonAriaLabel: 'Thumbs down',
+        // confirmButtonText: 'Inhabilitar las ideas de proyecto',
+        title: '¿Qué desea hacer?',
         text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
         type: 'warning',
         footer: '<a onclick="Swal.close()" href="#">Cancelar</a>',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonText: '<a class="white-text" onclick="meth('+id+',6); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Inhabilitar las ideas',
-        cancelButtonText: 'Regresar las ideas al estado de Inicio',
-      }).then((result) => {
-
+        showCancelButton: true,
+        cancelButtonText: '<a class="white-text" onclick="meth('+id+',1); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
+        focusConfirm: false,
       })
     }
   })
-  // e.preventDefault();
-  //   {
-  //     swal({
-  //       title: "¿Desea inhabilitar elentrenamiento?",
-  //       type: "warning",
-  //       html: true,
-  //       showCancelButton: true,
-  //       confirmButtonColor: "#E57373",
-  //       confirmButtonText: "Si",
-  //       cancelButtonText: "Cancelar",
-  //       closeOnConfirm: false
-  //     },
-  //     function(isConfirm){
-  //       if (isConfirm) {
-  //         $.ajax({
-  //           url:"entrenamientos/inhabilitarEntrenamiento/"+id,
-  //           dataType:'json',
-  //           type:'get',
-  //         }).done(function(response){
-  //           setTimeout(function(){
-  //           },1500 );
-  //           if (response == true) {
-  //             swal("Inhabilitar","La charla informativa se ha inhabilitado con éxito", "success");
-  //             setTimeout(function(){
-  //               window.location.href = uri + "charlas";
-  //             },1500 );
-  //           }
-  //         }).fail(function(error) {
-  //           swal("ups!!","El grupo de investigación no se ha inhabilitado.", "error");
-  //         });
-  //       } else {
-  //         alert('Por otro lado');
-  //       }
-  //     });
-  //   }
+}
+
+function meth(idea, estado) {
+  // console.log(idea+', '+estado);
+    $.ajax({
+       dataType:'json',
+       type:'get',
+       url:"entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
+    }).done(function(respuesta){
+      // $("#ideasEntrenamiento").empty();
+      // if (respuesta != null ) {
+      //   $("#fechasEntrenamiento").empty();
+      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
+      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
+      //   $.each(respuesta, function(i, item) {
+      //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
+      //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
+      //   });
+      //   $('#modalIdeasEntrenamiento').openModal();
+      // }
+    });
 }
 
 $(document).ready(function() {
@@ -660,6 +750,113 @@ entrenamiento = {
       entrenamiento.getIdeas();
     });
   }
+}
+
+$(document).ready(function() {
+  entrenamientoEdit.cargarIdeasEdit();
+});
+entrenamientoEdit = {
+  cargarIdeasEdit:function(){
+    let entrenamiento = $("#xxx").val();
+    let token = $("#formEntrenamientosEdit input[name=_token]").val();
+
+    $.ajax({
+      dataType:'json',
+      type:'post',
+      url:'/entrenamientos/cargarIdeas',
+      data: {
+        'entrenamiento':entrenamiento,
+        '_token':token
+      }
+    }).done(function(response){
+      if (response.data == 3) {
+        swal("Error!", "La idea de proyecto ya está asociada al entrenamiento!", "warning");
+      } else {
+        entrenamientoEdit.getIdeasEdit();
+      }
+    })
+  },
+  getIdeasEdit:function(){
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:'/entrenamientos/getideasEntrenamientoEdit'
+    }).done(function(respuesta){
+      $('#tblIdeasEntrenamientoCreateEdit').empty();
+      $.each(respuesta, function (i,elemento){
+        let confirm = elemento.Confirm == 1 ? "checked" : "";
+        let canvas = elemento.Canvas == 1 ? "checked" : "";
+        let assistf = elemento.AssistF == 1 ? "checked" : "";
+        let assists = elemento.AssistS == 1 ? "checked" : "";
+        let convocado = elemento.Convocado == 1 ? "checked" : "";
+        $('#tblIdeasEntrenamientoCreate').append('<tr>'
+        +'<td>'+elemento.nombre_proyecto+'</td>'
+        +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
+        +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
+        +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'
+        +'<td><p class="center p-v-xs"><input type="checkbox" '+assistf+' onclick="entrenamiento.getAssistF('+elemento.id+', '+(elemento.AssistF == 1 ? 1 : 0)+')" name="asistencia_primera_sesion" id="asistencia_primera_sesion'+elemento.id+'" value="1"/><label for="asistencia_primera_sesion'+elemento.id+'"></label></p></td>'
+        +'<td><p class="center p-v-xs"><input type="checkbox" '+assists+' onclick="entrenamiento.getAssistS('+elemento.id+', '+(elemento.AssistS == 1 ? 1 : 0)+')" name="asistencia_segunda_sesion" id="asistencia_segunda_sesion'+elemento.id+'" value="1"/><label for="asistencia_segunda_sesion'+elemento.id+'"></label></p></td>'
+        +'<td><p class="center p-v-xs"><input type="checkbox" '+convocado+' onclick="entrenamiento.getConvocado('+elemento.id+', '+(elemento.Convocado == 1 ? 1 : 0)+')" name="csibt_convocado" id="csibt_convocado'+elemento.id+'" value="1"/><label for="csibt_convocado'+elemento.id+'"></label></p></td>'
+        +'<td><a class="waves-effect red lighten-3 btn" onclick="entrenamiento.getEliminar('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
+        +'</tr>');
+      })
+    })
+  },
+  // <p class="p-v-xs"><input type="checkbox" id="txtfotos" name="txtfotos" value="1"/><label for="txtfotos">Evidencias Fotográficas</label></p>
+  // getEliminar:function (idIdea) {
+  //   $.ajax({
+  //     type:'get',
+  //     dataType:'json',
+  //     url:'/entrenamientos/eliminar/'+idIdea,
+  //   }).done(function(respuesta){
+  //     entrenamiento.getIdeas();
+  //   })
+  // },
+  // getConfirm:function (idIdea, estado) {
+  //   $.ajax({
+  //     type:'get',
+  //     dataType:'json',
+  //     url:'/entrenamientos/getConfirm/'+idIdea+'/'+estado,
+  //   }).done(function(respuesta){
+  //     entrenamiento.getIdeas();
+  //   });
+  // },
+  // getCanvas:function (idIdea, estado) {
+  //   $.ajax({
+  //     type:'get',
+  //     dataType:'json',
+  //     url:'/entrenamientos/getCanvas/'+idIdea+'/'+estado,
+  //   }).done(function(respuesta){
+  //     entrenamiento.getIdeas();
+  //   });
+  // },
+  // getAssistF:function (idIdea, estado) {
+  //   $.ajax({
+  //     type:'get',
+  //     dataType:'json',
+  //     url:'/entrenamientos/getAssistF/'+idIdea+'/'+estado,
+  //   }).done(function(respuesta){
+  //     entrenamiento.getIdeas();
+  //   });
+  // },
+  // getAssistS:function (idIdea, estado) {
+  //   $.ajax({
+  //     type:'get',
+  //     dataType:'json',
+  //     url:'/entrenamientos/getAssistS/'+idIdea+'/'+estado,
+  //   }).done(function(respuesta){
+  //     entrenamiento.getIdeas();
+  //   });
+  // },
+  // getConvocado:function (idIdea, estado) {
+  //   $.ajax({
+  //     type:'get',
+  //     dataType:'json',
+  //     url:'/entrenamientos/getConvocado/'+idIdea+'/'+estado,
+  //   }).done(function(respuesta){
+  //     entrenamiento.getIdeas();
+  //   });
+  // }
 }
 
 $(document).ready(function() {
