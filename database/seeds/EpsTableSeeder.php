@@ -63,18 +63,8 @@ class EpsTableSeeder extends Seeder
         ]);
 
         Eps::create([
-            'codigo' => 'EPS033',
-            'nombre' => 'SALUDVIDA E.P.S. S.A',
-        ]);
-
-        Eps::create([
             'codigo' => 'EPS023',
             'nombre' => 'CRUZ BLANCA EPS S.A.',
-        ]);
-
-        Eps::create([
-            'codigo' => 'EPS003',
-            'nombre' => 'CAFESALUD EPS',
         ]);
 
         Eps::create([
@@ -179,7 +169,7 @@ class EpsTableSeeder extends Seeder
         ]);
 
         Eps::create([
-            'codigo' => 'EPS025',
+            'codigo' => 'CCF102',
             'nombre' => 'COMFAMILIAR CHOCO',
         ]);
 

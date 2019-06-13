@@ -1,6 +1,8 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+use App\Models\Ciudad;
+use App\Models\Eps;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
 use App\Models\Rols;
@@ -30,10 +32,12 @@ $factory->define(User::class, function (Faker $faker) {
         'tipodocumento_id'    => TipoDocumento::all()->random()->id,
         'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
         'eps_id'              => Eps::all()->random()->id,
+        'ciudad_id'           => Ciudad::all()->random()->id,
         'nombres'             => $faker->firstName,
         'apellidos'           => $faker->lastName,
         'documento'           => $faker->unique()->numberBetween($min = 1, $max = 9000000),
         'email'               => $faker->unique()->safeEmail,
+        'barrio'              => $faker->text($maxNbChars = 100),
         'direccion'           => $faker->address,
         'telefono'            => $faker->numerify('######'),
         'celular'             => $faker->numberBetween($min = 1, $max = 900000),

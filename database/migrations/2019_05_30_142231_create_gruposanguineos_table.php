@@ -18,7 +18,6 @@ class CreateGruposanguineosTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre',3)->unique();
-            $table->boolean('estado')->default(1);
         });
     }
 

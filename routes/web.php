@@ -120,6 +120,7 @@ Route::group([
         Route::get('administrador/{id}/edit', 'User\AdminController@administradorEdit')->name('usuario.administrador.edit');
         Route::put('administrador/{id}', 'User\AdminController@administradorUpdate')->name('usuario.administrador.update');
         Route::delete('administrador/{id}', 'User\AdminController@administradorDelete')->name('usuario.administrador.delete');
+        Route::get('getciudad/{departamento}', 'User\AdminController@getCiudad');
 
     }
 );

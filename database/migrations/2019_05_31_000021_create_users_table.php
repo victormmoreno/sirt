@@ -28,11 +28,13 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('gradoescolaridad_id');
             $table->unsignedInteger('gruposanguineo_id');
             $table->unsignedInteger('eps_id');
+            $table->unsignedInteger('ciudad_id');
             $table->string('nombres', 45);
             $table->string('apellidos', 45);
-            $table->string('documento', 45);
+            $table->string('documento', 11)->unique();
             $table->string('email', 100);
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('barrio', 100);
             $table->string('direccion', 200)->nullable();
             $table->string('celular', 11)->nullable();
             $table->string('telefono', 11)->nullable();
@@ -53,6 +55,8 @@ class CreateUsersTable extends Migration
             $table->index(["gruposanguineo_id"], 'fk_users_gruposanquineo1_idx');
 
             $table->index(["eps_id"], 'fk_users_eps1_idx');
+            $table->index(["ciudad_id"], 'fk_users_ciudad1_idx');
+
 
             $table->unique(["email"], 'email_UNIQUE');
 
@@ -79,7 +83,13 @@ class CreateUsersTable extends Migration
 
             $table->foreign('eps_id', 'fk_users_eps1_idx')
                 ->references('id')
-                ->on('gruposanguineos')
+                ->on('eps')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('ciudad_id', 'fk_users_ciudad1_idx')
+                ->references('id')
+                ->on('ciudades')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });

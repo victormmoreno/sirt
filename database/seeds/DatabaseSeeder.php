@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
                 'gruposanguineos',
                 'eps',
                 'servicios',
+                'ocupaciones',
                 'tiposdocumentos',
                 'estadosidea',
                 'sectores',

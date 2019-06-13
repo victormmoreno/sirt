@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateComiteEntrenamientoTable extends Migration
+class CreateComiteIdeaTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'comite_entrenamiento';
+    public $tableName = 'comite_idea';
 
     /**
      * Run the migrations.
@@ -22,7 +22,8 @@ class CreateComiteEntrenamientoTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('idea_id');
+            $table->increments('id');
+            $table->unsignedInteger('idea_id');
             $table->unsignedInteger('comite_id');
             $table->time('hora');
             $table->tinyInteger('admitido')->default('0');

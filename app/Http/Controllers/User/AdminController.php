@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\AdminFormRequest;
 use App\Repositories\Repository\UserRepository\AdminRepository;
 use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use App\Events\User\UserWasRegistered;
 
 class AdminController extends Controller
 {
@@ -39,7 +37,6 @@ class AdminController extends Controller
     {
 
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
-
 
             $admin = $this->adminRepository->getAllAdministradores();
 
@@ -82,6 +79,9 @@ class AdminController extends Controller
         return view('users.administrador.administrador.create', [
             'tiposdocumentos'   => $this->adminRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->adminRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->adminRepository->getAllEpsActivas(),
+            'departamentos'     => $this->adminRepository->getAllDepartamentos(),
         ]);
     }
 
@@ -96,32 +96,35 @@ class AdminController extends Controller
         //generar contraseña
         $password = User::generatePasswordRamdom();
         //guardar registro
-        $administrador = $this->adminRepository->Store($request, $password);
+        $administrador   = $this->adminRepository->Store($request, $password);
         $activationToken = $this->adminRepository->activationToken($administrador->id);
         //envio de email con contraseña
         if ($administrador != null) {
             // event(new UserWasRegistered($administrador, $password));
-            alert()->success('El Entrenamiento ha sido creado satisfactoriamente','Registro Exitoso.')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario '. $administrador->nombre_completo.'</p>')->showConfirmButton('Ok', '#009891')->toHtml();
-        }else{
-            alert()->error('El Entrenamiento no se ha creado.','Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
+            alert()->success('El Entrenamiento ha sido creado satisfactoriamente', 'Registro Exitoso.')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+        } else {
+            alert()->error('El Entrenamiento no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
         }
         //redireccion
-        
+
         return redirect()->route('usuario.administrador.index');
-        
+
     }
 
-    // public function register(Request $request)
-    // {
-    //     $this->validator($request->all())->validate();
-
-    //     event(new Registered($user = $this->create($request->all())));
-
-    //     $this->guard()->login($user);
-
-    //     return $this->registered($request, $user)
-    //                     ?: redirect($this->redirectPath());
-    // }
+    /*================================================================================
+    =            metodo para consultar las ciudedes segun el departamento            =
+    ================================================================================*/
+    
+    public function getCiudad($departamento)
+    {
+       
+        return response()->json([
+            'ciudades' => $this->adminRepository->getAllCiudadDepartamento($departamento),
+        ]);
+    }
+    
+    /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
+    
 
     /**
      * Display the specified resource.
@@ -145,13 +148,16 @@ class AdminController extends Controller
     public function administradorEdit($id)
     {
 
-        $user = $this->adminRepository->findById($id);
-
-        // dd($user);
+        $user = $this->adminRepository->findInfoUserById($id);
+        
         return view('users.administrador.administrador.edit', [
-            'user'              => $this->adminRepository->findById($id),
+            'user'              => $user,
             'tiposdocumentos'   => $this->adminRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->adminRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->adminRepository->getAllEpsActivas(),
+            'departamentos'     => $this->adminRepository->getAllDepartamentos(),
+            'ciudades' => $this->adminRepository->getAllCiudadDepartamento($user->iddepartamento),
         ]);
     }
 
@@ -164,7 +170,7 @@ class AdminController extends Controller
      */
     public function administradorUpdate(AdminFormRequest $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**

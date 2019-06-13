@@ -967,3 +967,24 @@ function detalleAdministrador(id){
     }
     })
 }
+
+
+ var UserAdministrador = {
+        getCiudad:function(e){
+            let id = $(e).val();
+           
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/usuario/getciudad/'+id
+            }).done(function(response){
+                $('#txtciudad').empty();
+                $('#txtciudad').append('<option value="">Seleccione Ciudad</option>')
+                $.each(response.ciudades, function(i, e) {
+                    console.log(e.id);
+                    $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+                })
+                $('#txtciudad').material_select();
+            });
+        },
+ }

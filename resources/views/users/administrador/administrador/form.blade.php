@@ -73,6 +73,7 @@
         @enderror
     </div>
 </div>
+
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
@@ -84,6 +85,49 @@
             <label id="txtfecha_nacimiento-error" class="error" for="txtfecha_nacimiento">{{ $message }}</label>
         @enderror
     </div>
+   <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            details
+        </i>
+        <select class="" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione grupo sanguíneo </option>
+            @foreach($gruposanguineos as $value)
+                @if(isset($user->gruposanguineo_id))
+                <option value="{{$value->id}}" {{old('txtgruposanguineo',$user->gruposanguineo_id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                @else
+                    <option value="{{$value->id}}" {{old('txtgruposanguineo') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                @endif
+            @endforeach
+        </select>
+        <label for="txtgruposanguineo">Grupo Sanguíneo *</label>
+        @error('txtgruposanguineo')
+            <label id="txtgruposanguineo-error" class="error" for="txtgruposanguineo">{{ $message }}</label>
+        @enderror 
+    </div>
+    
+</div>
+
+<div class="row">
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            details
+        </i>
+        <select class="" id="txteps" name="txteps" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione eps</option>
+            @foreach($eps as $value)
+                @if(isset($user->eps_id))
+                    <option value="{{$value->id}}" {{old('txteps',$user->eps_id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                @else
+                    <option value="{{$value->id}}" {{old('txteps') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                @endif
+            @endforeach
+        </select>
+        <label for="txteps">Esp *</label>
+        @error('txteps')
+            <label id="txteps-error" class="error" for="txteps">{{ $message }}</label>
+        @enderror 
+    </div>
+    
    
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
@@ -107,14 +151,61 @@
 </div>
 <div class="row">
     <div class="input-field col s12 m6 l6">
+
         <i class="material-icons prefix">
-            mail_outline
+            details
         </i>
-        <input class="validate" id="txtemail" name="txtemail" type="email" value="{{ isset($user->email) ? $user->email : old('txtemail')}}">
-        <label for="txtemail">Correo *</label>
-        @error('txtemail')
-            <label id="txtemail-error" class="error" for="txtemail">{{ $message }}</label>
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministrador.getCiudad(this)" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione departamento</option>
+            @foreach($departamentos as $value)
+                @if(isset($user->iddepartamento))
+                    <option value="{{$value->id}}" {{old('txtdepartamento',$user->iddepartamento) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                @else
+                    <option value="{{$value->id}}" {{old('txtdepartamento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                @endif
+            @endforeach
+        </select>
+        <label for="txtdepartamento">Departamento de Residencia *</label>
+        @error('txtdepartamento')
+            <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
+        @enderror 
+    </div>
+    
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            details
+        </i>
+        @if(isset($user->ciudad_id))
+        <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione Ciudad</option>
+            @foreach($ciudades as $value)
+                <option value="{{$value->id}}" {{old('txtciudad',$user->ciudad_id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+            @endforeach
+        </select>
+        @else
+        <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione Ciudad</option>
+            
+        </select>
+        @endif
+        
+        <label for="txtciudad">Ciudad de Residencia *</label>
+        @error('txtciudad')
+            <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
+        @enderror 
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            room
+        </i>
+        <input class="validate" id="txtbarrio" name="txtbarrio" type="text"  value="{{ isset($user->barrio) ? $user->barrio : old('txtbarrio')}}">
+        <label for="txtbarrio">Barrio *</label>
+        @error('txtbarrio')
+            <label id="txtbarrio-error" class="error" for="txtbarrio">{{ $message }}</label>
         @enderror
+        
     </div>
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
@@ -129,7 +220,20 @@
     </div>
 </div>
 <div class="row">
-    <div class="input-field col s12 m6 l6">
+    
+</div>
+<div class="row">
+    <div class="input-field col s12 m4 l4">
+        <i class="material-icons prefix">
+            mail_outline
+        </i>
+        <input class="validate" id="txtemail" name="txtemail" type="email" value="{{ isset($user->email) ? $user->email : old('txtemail')}}">
+        <label for="txtemail">Correo *</label>
+        @error('txtemail')
+            <label id="txtemail-error" class="error" for="txtemail">{{ $message }}</label>
+        @enderror
+    </div>
+    <div class="input-field col s12 m4 l4">
         <i class="material-icons prefix">
             contact_phone
         </i>
@@ -139,7 +243,7 @@
             <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
         @enderror
     </div>
-    <div class="input-field col s12 m6 l6">
+    <div class="input-field col s12 m4 l4">
         <i class="material-icons prefix">
             settings_cell
         </i>

@@ -34,4 +34,19 @@ class Ciudad extends Model
         return $this->hasMany(Regional::class, 'ciudad_id', 'id');
     }
 
+
+    /*================================================================================
+    =            metodo para consultar las ciudades según el departamento            =
+    ================================================================================*/
+    
+    public function scopeAllCiudadDepartamento($query,$departamento)
+    {
+
+        return $query->select('ciudades.id','ciudades.nombre')->where('ciudades.departamento_id',$departamento);
+
+    }
+    
+    /*=====  End of metodo para consultar las ciudades según el departamento  ======*/
+    
+
 }

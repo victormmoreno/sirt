@@ -15,7 +15,6 @@ class GrupoSanguineo extends Model
      */
     protected $fillable = [
         'nombre',
-        'estado',
     ];
 
     public $timestamps = false;
@@ -23,5 +22,12 @@ class GrupoSanguineo extends Model
     public function users()
     {
       return $this->hasMany(User::class, 'gruposanguineo_id', 'id');
+    }
+
+    public function scopeAllGrupoSanguineos($query, $OrderBy)
+    {
+
+        return $query->select('gruposanguineos.id','gruposanguineos.nombre')->orderby($OrderBy);
+
     }
 }
