@@ -40,7 +40,12 @@ entrenamiento = {
       }
     }).done(function(response){
       if (response.data == 3) {
-        swal("Error!", "La idea de proyecto ya está asociada al entrenamiento!", "warning");
+        Swal.fire({
+          title: 'Error!',
+          text: 'La idea de proyecto ya está asociada al entrenamiento!',
+          type: 'warning',
+          confirmButtonText: 'Cool'
+        })
       } else {
         entrenamiento.getIdeas();
       }

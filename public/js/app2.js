@@ -451,6 +451,109 @@ function detallesIdeasDelEntrenamiento(id){
 }
 
 $(document).ready(function() {
+  $('#entrenamientosPorNodo_tableDinamizador').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'id',
+        name: 'id',
+      },
+      {
+        data: 'fecha_sesion1',
+        name: 'fecha_sesion1',
+      },
+      {
+        data: 'fecha_sesion2',
+        name: 'fecha_sesion2',
+      },
+      {
+        data: 'correos',
+        name: 'correos',
+      },
+      {
+        data: 'fotos',
+        name: 'fotos',
+      },
+      {
+        data: 'listado_asistencia',
+        name: 'listado_asistencia',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+    ],
+  });
+});
+
+function consultarEntrenamientosPorNodo_Administrador(id) {
+  $('#entrenamientosPorNodo_tableAdministrador').dataTable().fnDestroy();
+  $('#entrenamientosPorNodo_tableAdministrador').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/entrenamientos/consultarEntrenamientosPorNodo/"+id.value,
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'id',
+        name: 'id',
+      },
+      {
+        data: 'fecha_sesion1',
+        name: 'fecha_sesion1',
+      },
+      {
+        data: 'fecha_sesion2',
+        name: 'fecha_sesion2',
+      },
+      {
+        data: 'correos',
+        name: 'correos',
+      },
+      {
+        data: 'fotos',
+        name: 'fotos',
+      },
+      {
+        data: 'listado_asistencia',
+        name: 'listado_asistencia',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+    ],
+  });
+}
+
+function noSeEncontraronResultados() {
+  Swal.fire({
+    title: '¿Desea inhabilitar elentrenamiento?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí, inhabilitar'
+  })
+}
+
+$(document).ready(function() {
   $('#entrenamientos_nodo_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -620,7 +723,12 @@ entrenamiento = {
       }
     }).done(function(response){
       if (response.data == 3) {
-        swal("Error!", "La idea de proyecto ya está asociada al entrenamiento!", "warning");
+        Swal.fire({
+          title: 'Error!',
+          text: 'La idea de proyecto ya está asociada al entrenamiento!',
+          type: 'warning',
+          confirmButtonText: 'Cool'
+        })
       } else {
         entrenamiento.getIdeas();
       }
@@ -967,6 +1075,203 @@ csibt = {
   }
 
 
+}
+
+$(document).ready(function() {
+  csibt_create.getIdeasEnLaSesionDelComite();
+  $('#txtfechacomite_create').bootstrapMaterialDatePicker({
+    time:false,
+    date:true,
+    shortTime:true,
+    format: 'YYYY-MM-DD',
+    // minDate : new Date(),
+    language: 'es',
+    weekStart : 1, cancelText : 'Cancelar',
+    okText: 'Guardar'
+  });
+  $('#txthoraidea').bootstrapMaterialDatePicker({
+  time:true,
+  date:false,
+  shortTime:true,
+  format: 'HH:mm',
+  // minDate : new Date(),
+  language: 'es',
+  weekStart : 1, cancelText : 'Cancelar',
+  okText: 'Guardar'
+});
+});
+
+function reInitCamposDeLaIdea() {
+  $("#txtideaproyecto").val('0');
+  $("#txtideaproyecto").select2();
+  $('#txthoraidea').val('');
+  $("#txtobservacionesidea").val('');
+  $("#labelobservacionesidea").removeClass('active');
+  $('input:checkbox').removeAttr('checked');
+}
+
+csibt_create = {
+  addIdeaDeProyectoAlComite:function(){
+    let idIdea = $("#txtideaproyecto").val();
+    if (idIdea == 0) {
+      Swal.fire({
+        title: 'Por favor seleccione por la idea de proyecto que se asociará al comité',
+        type: 'warning',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        // cancelButtonColor: '#d33',
+        // cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Entendido!'
+      })
+    } else {
+      let horaCitacionDeLaIdea = $('#txthoraidea').val();
+      let asistenciaAlComite = 0;
+      let ideaAdmitida = 0;
+      let observacionesIdea = $('#txtobservacionesidea').val();
+      if (horaCitacionDeLaIdea == "") {
+        Swal.fire({
+          title: 'Por favor seleccione la hora que se presentará la idea de proyecto',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Entendido!'
+        })
+      } else {
+        if ( $('#txtasistencia').is(":checked") ) {
+          asistenciaAlComite = 1
+        }
+
+        if ( $('#txtadmitido').is(":checked") ) {
+          ideaAdmitida = 1;
+        }
+        console.log('Asistencia');
+        console.log(asistenciaAlComite);
+        console.log('Admitido');
+        console.log(ideaAdmitida);
+
+        let token = $("#formComiteCreate input[name=_token]").val();
+
+        $.ajax({
+          dataType:'json',
+          type:'post',
+          url:'/csibt/addIdeaComite',
+          data: {
+            'Idea':idIdea,
+            'hora':horaCitacionDeLaIdea,
+            'asistencia':asistenciaAlComite,
+            'observaciones':observacionesIdea,
+            'admitido':ideaAdmitida,
+            '_token':token
+          }
+        }).done(function(response){
+          if (response.data == 3) {
+            Swal.fire({
+              title: 'Error!',
+              text: 'La idea de proyecto ya está asociada al comité!',
+              type: 'warning',
+              confirmButtonText: 'Cool'
+            })
+          } else if (response.data == 2) {
+            // Alerta de notificación de que si se agregó la idea de proyecto a la sesion del comité
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              type: 'success',
+              title: 'La idea de proyecto se asoció con éxito al comité'
+            })
+            csibt_create.getIdeasEnLaSesionDelComite();
+          } else {
+
+          }
+        })
+      }
+    }
+  },
+  getIdeasEnLaSesionDelComite:function(){
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:'/csibt/getideasComiteCreate'
+    }).done(function(respuesta){
+      $('#tblIdeasComiteCreate').empty();
+      $.each(respuesta, function (i,elemento){
+        let asistencia = "No";
+        let admitido = "No";
+        if(elemento.Asistencia == 1) {
+          asistencia = "Si";
+        }
+
+        if(elemento.Admitido == 1) {
+          admitido = "Si";
+        }
+        $('#tblIdeasComiteCreate').append('<tr>'
+        +'<td>'+elemento.nombre_proyecto+'</td>'
+        +'<td>'+asistencia+'</td>'
+        +'<td>'+elemento.Hora+'</td>'
+        +'<td>'+elemento.Observaciones+'</td>'
+        +'<td>'+admitido+'</td>'
+        +'<td><a class="waves-effect red lighten-3 btn" onclick="entrenamiento.getEliminar('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
+        +'</tr>');
+      })
+    })
+  },
+  // <p class="p-v-xs"><input type="checkbox" id="txtfotos" name="txtfotos" value="1"/><label for="txtfotos">Evidencias Fotográficas</label></p>
+  getEliminar:function (idIdea) {
+    $.ajax({
+      type:'get',
+      dataType:'json',
+      url:'/entrenamientos/eliminar/'+idIdea,
+    }).done(function(respuesta){
+      entrenamiento.getIdeas();
+    })
+  },
+  getConfirm:function (idIdea, estado) {
+    $.ajax({
+      type:'get',
+      dataType:'json',
+      url:'/entrenamientos/getConfirm/'+idIdea+'/'+estado,
+    }).done(function(respuesta){
+      entrenamiento.getIdeas();
+    });
+  },
+  getCanvas:function (idIdea, estado) {
+    $.ajax({
+      type:'get',
+      dataType:'json',
+      url:'/entrenamientos/getCanvas/'+idIdea+'/'+estado,
+    }).done(function(respuesta){
+      entrenamiento.getIdeas();
+    });
+  },
+  getAssistF:function (idIdea, estado) {
+    $.ajax({
+      type:'get',
+      dataType:'json',
+      url:'/entrenamientos/getAssistF/'+idIdea+'/'+estado,
+    }).done(function(respuesta){
+      entrenamiento.getIdeas();
+    });
+  },
+  getAssistS:function (idIdea, estado) {
+    $.ajax({
+      type:'get',
+      dataType:'json',
+      url:'/entrenamientos/getAssistS/'+idIdea+'/'+estado,
+    }).done(function(respuesta){
+      entrenamiento.getIdeas();
+    });
+  },
+  getConvocado:function (idIdea, estado) {
+    $.ajax({
+      type:'get',
+      dataType:'json',
+      url:'/entrenamientos/getConvocado/'+idIdea+'/'+estado,
+    }).done(function(respuesta){
+      entrenamiento.getIdeas();
+    });
+  }
 }
 
 $(document).ready(function() {

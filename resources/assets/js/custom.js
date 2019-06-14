@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  $('.select2').select2();
     $('.datepicker').pickadate({
         selectMonths: true,
         selectYears: 60,

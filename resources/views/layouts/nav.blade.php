@@ -392,12 +392,12 @@
         <div class="collapsible-body">
           <ul>
             <li>
-              <a href="" class="{{setActiveRouteActivePage('idea')}}">
+              <a href="{{route('idea.ideas')}}" class="{{setActiveRouteActivePage('idea')}}">
                 <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
               </a>
             </li>
             <li>
-              <a href="" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
+              <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
                 <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Entrenamientos
               </a>
             </li>
