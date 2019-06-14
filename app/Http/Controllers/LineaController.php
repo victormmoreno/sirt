@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use Alert;
 use App\Http\Requests\LineaFormRequest;
 use App\Models\LineaTecnologica;
+use App\Models\Rols;
 use Illuminate\Http\Request;
 
 class LineaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
+        $this->middleware([
+            'auth',
+            'role:'.Rols::IsAdministrador(),
+            'permission:'.config('laravelpermission.permissions.linea.index').'|'.config('laravelpermission.permissions.linea.register').'|'.config('laravelpermission.permissions.linea.edit').'|'.config('laravelpermission.permissions.linea.delete')
+        ]);
     }
 
     /**
@@ -22,23 +28,17 @@ class LineaController extends Controller
     public function index()
     {
 
-        // $this->authorize('view','Administrador');
+        if (request()->ajax()) {
+            return datatables()->of(LineaTecnologica::all())
+                ->addColumn('action', function ($data) {
+                    $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
-        if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
-            // $lineas = Linea::select('id','abreviatura', 'nombre', 'descripcion','created_at','updated_at')->get();
-            if (request()->ajax()) {
-                return datatables()->of(LineaTecnologica::all())
-                    ->addColumn('action', function ($data) {
-                        $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-
-                        return $button;
-                    })->rawColumns(['action'])
-                    ->make(true);
-            }
-            return view('lineas.administrador.index');
-        } else {
-            abort(403);
+                    return $button;
+                })->rawColumns(['action'])
+                ->make(true);
         }
+
+        return view('lineas.administrador.index');
 
     }
 
@@ -51,7 +51,7 @@ class LineaController extends Controller
     {
         return view('lineas.administrador.create');
 
-        // abort(404);
+
     }
 
     /**
@@ -98,7 +98,6 @@ class LineaController extends Controller
      */
     public function edit($id)
     {
-        // $this->authorize('view',$id);
         $linea = LineaTecnologica::findOrFail($id);
         return view('lineas.administrador.edit', compact('linea'));
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\AdminFormRequest;
 use App\Repositories\Repository\UserRepository\AdminRepository;
@@ -40,15 +41,21 @@ class AdminController extends Controller
 
             $admin = $this->adminRepository->getAllAdministradores();
 
+
             if (request()->ajax()) {
                 return datatables()->of($this->adminRepository->getAllAdministradores())
                     ->addColumn('detail', function ($data) {
+                        
                         $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                         return $button;
                     })
                     ->addColumn('edit', function ($data) {
-                        $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        if ($data->id != auth()->user()->id) {
+                            $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        }else{
+                            $button = '';
+                        }
                         return $button;
                     })
                     ->editColumn('estado', function ($data) {
@@ -100,10 +107,10 @@ class AdminController extends Controller
         $activationToken = $this->adminRepository->activationToken($administrador->id);
         //envio de email con contraseña
         if ($administrador != null) {
-            // event(new UserWasRegistered($administrador, $password));
-            alert()->success('El Entrenamiento ha sido creado satisfactoriamente', 'Registro Exitoso.')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+            event(new UserWasRegistered($administrador, $password));
+            alert()->success('El Usuario ha sido creado satisfactoriamente', 'Registro Exitoso.')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
         } else {
-            alert()->error('El Entrenamiento no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
+            alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
         }
         //redireccion
 
@@ -149,6 +156,7 @@ class AdminController extends Controller
     {
 
         $user = $this->adminRepository->findInfoUserById($id);
+        // dd($user->genero);
         
         return view('users.administrador.administrador.edit', [
             'user'              => $user,
@@ -170,7 +178,15 @@ class AdminController extends Controller
      */
     public function administradorUpdate(AdminFormRequest $request, $id)
     {
-        dd($request->all());
+        $user = $this->adminRepository->findById($id);
+        if ($user != null) {
+            $userUpdate = $this->adminRepository->Update($request, $user);
+            alert()->success("El Usuario {$userUpdate->nombre_completo } ha sido  modificado.",'Modificación Exitosa',"success");
+        }else{
+            alert()->error("El Usuario no se ha modificado.", 'Modificación Errónea', "error");
+        }
+
+        return redirect()->route('usuario.administrador.index');        
     }
 
     /**

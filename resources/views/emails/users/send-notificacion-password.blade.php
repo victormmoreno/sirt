@@ -10,7 +10,7 @@ Cordial Saludo.
 Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar al sistema {{config('app.name')}}
 
 <h3><b>Correo Electrónico: </b> {{$user->email}}</h3> 
-<h3><b>Pasword: </b> {{$password}}</h3> 
+<h3><b>Contraseña: </b> {{$password}}</h3> 
 <br>
 Con las anteriores credenciales podrás iniciar sesión mediante el siguiente boton.
 <br>

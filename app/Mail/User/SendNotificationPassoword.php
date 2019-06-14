@@ -37,9 +37,9 @@ class SendNotificationPassoword extends Mailable implements ShouldQueue
                     ->subject('Contraseña de ingreso a  '.config('app.name'))
                     
                     // ->attach(public_path('\images\favicon.ico'));
-                    ->attach(public_path('/images/favicon.ico'), [
-                        'as' => 'name.pdf',
-                        'mime' => 'application/pdf',
+                    ->attach(public_path('\images\favicon.ico'), [
+                        'as' => 'name.png',
+                        'mime' => 'application/png',
                     ]);
 
     }
