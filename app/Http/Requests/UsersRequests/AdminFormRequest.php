@@ -26,16 +26,21 @@ class AdminFormRequest extends FormRequest
      
         return [
             'txttipo_documento'    => 'required',
+            'txtgrado_escolaridad'    => 'required',
+            'txtgruposanguineo'    => 'required',
+            'txteps'    => 'required',
+            'txtciudad'    => 'required',
+            'txtdepartamento'    => 'required',
             'txtdocumento'         => 'required|digits_between:6,11|numeric|unique:users,documento,'.$this->route('id'),
             'txtnombres'           => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'           => 'required',
             'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,'.$this->route('id'),
+            'txtbarrio'         => 'required|min:1|max:100',
             'txtdireccion'         => 'required|min:1|max:200',
             'txttelefono'          => 'digits_between:6,11|numeric',
             'txtcelular'           => 'digits_between:10,11|numeric',
-            'txtgrado_escolaridad' => 'required',
 
         ];
     }
@@ -44,6 +49,11 @@ class AdminFormRequest extends FormRequest
     {
         return $messages = [
             'txttipo_documento.required'          => 'El :attribute es obligatorio.',
+            'txtgrado_escolaridad.required'          => 'El :attribute es obligatorio.',
+            'txtgruposanguineo.required'          => 'El :attribute es obligatorio.',
+            'txteps.required'          => 'La :attribute es obligatoria.',
+            'txtciudad.required'          => 'El :attribute es obligatorio.',
+            'txtdepartamento.required'          => 'El :attribute es obligatorio.',
 
             'txtdocumento.required'               => 'El :attribute es obligatorio.',
             'txtdocumento.digits_between'         => 'El :attribute debe tener entre 6 y 11 digitos',
@@ -74,7 +84,10 @@ class AdminFormRequest extends FormRequest
             'txtdireccion.required'               => 'La :attribute es obligatoria.',
             'txtdireccion.min'                    => 'La :attribute debe ser minimo 1 caracter',
             'txtdireccion.max'                    => 'La :attribute debe ser máximo 200 caracteres',
-            // 'txtdireccion.regex'                  => 'El formato del campo :attribute es incorrecto',
+            
+            'txtbarrio.required'               => 'El :attribute es obligatori.',
+            'txtbarrio.min'                    => 'El :attribute debe ser minimo 1 caracter',
+            'txtbarrio.max'                    => 'El :attribute debe ser máximo 100 caracteres',
 
             'txttelefono.numeric'                 => 'El :attribute debe ser numérico',
             'txttelefono.digits_between'          => 'El :attribute debe tener entre 6 y 11 digitos',
@@ -83,7 +96,6 @@ class AdminFormRequest extends FormRequest
             'txtcelular.digits_between'           => 'El :attribute debe tener entre 10 y 11 digitos',
 
             'txtgenero.required'                  => 'El :attribute es obligatorio.',
-            'txtgrado_escolaridad.required'       => 'El :attribute es obligatorio.',
 
         ];
     }
@@ -92,6 +104,11 @@ class AdminFormRequest extends FormRequest
     {
         return [
             'txttipo_documento'    => 'tipo de documento',
+            'txtgrado_escolaridad' => 'grado escolaridad',
+            'txtgruposanguineo'    => 'grupo sanguíneo',
+            'txteps'    => 'eps',
+            'txtciudad'    => 'ciudad',
+            'txtdepartamento'    => 'departamento',
             'txtdocumento'         => 'número de documento',
             'txtnombres'           => 'nombres',
             'txtapellidos'         => 'apellidos',
@@ -99,10 +116,10 @@ class AdminFormRequest extends FormRequest
             'txtestrato'           => 'estrato',
             'txtemail'             => 'correo electrónico',
             'txtdireccion'         => 'dirección',
+            'txtbarrio'         => 'barrio',
             'txttelefono'          => 'telefono',
             'txtcelular'           => 'celular',
             'txtgenero'            => 'genero',
-            'txtgrado_escolaridad' => 'grado de escolaridad',
         ];
     }
 }

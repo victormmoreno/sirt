@@ -3,7 +3,11 @@
 namespace App\Repositories\Repository\UserRepository;
 
 use App\Models\ActivationToken;
+use App\Models\Ciudad;
+use App\Models\Departamento;
+use App\Models\Eps;
 use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanguineo;
 use App\Models\Rols;
 use App\Models\TipoDocumento;
 use App\User;
@@ -55,6 +59,39 @@ class AdminRepository
 
     /*=====  End of metodo para consultar todo el detalle del usuario por su id  ======*/
 
+    /*=====================================================================
+    =            metodo para consultar todos los departamentos            =
+    =====================================================================*/
+
+    public function getAllDepartamentos()
+    {
+        return Departamento::allDepartamentos()->get();
+    }
+
+    /*=====  End of metodo para consultar todos los departamentos  ======*/
+
+    /*============================================================================
+    =            metodo para consultar las ciudades por departmamento            =
+    ============================================================================*/
+
+    public function getAllCiudadDepartamento($departamento)
+    {
+        return Ciudad::allCiudadDepartamento($departamento)->get();
+    }
+
+    /*=====  End of metodo para consultar las ciudades por departmamento  ======*/
+
+    /*=================================================================
+    =            metodo para consultar todoas las ciudades            =
+    =================================================================*/
+
+    public function getAllCiudades()
+    {
+        return Ciudad::all();
+    }
+
+    /*=====  End of metodo para consultar todoas las ciudades  ======*/
+
     /*=============================================================================
     =            metodo para consultar todos los grados de escolaridad            =
     =============================================================================*/
@@ -65,6 +102,28 @@ class AdminRepository
     }
 
     /*=====  End of metodo para consultar todos los grados de escolaridad  ======*/
+
+    /*=========================================================================
+    =            metodo para consultar todos los grupos sanguineos            =
+    =========================================================================*/
+
+    public function getAllGrupoSanguineos()
+    {
+        return GrupoSanguineo::allGrupoSanguineos('gruposanguineos.nombre')->get();
+    }
+
+    /*=====  End of metodo para consultar todos los grupos sanguineos  ======*/
+
+    /*===========================================================================
+    =            metodo para consultar todos las eps segun su estado            =
+    ===========================================================================*/
+
+    public function getAllEpsActivas()
+    {
+        return Eps::allEps(Eps::IsActive(), 'eps.nombre')->get();
+    }
+
+    /*=====  End of metodo para consultar todos las eps segun su estado  ======*/
 
     /*===============================================================
     =            metodo para consultar el usuario por id            =
@@ -77,6 +136,20 @@ class AdminRepository
 
     /*=====  End of metodo para consultar el usuario por id  ======*/
 
+    /*=======================================================================================
+    =            metodo para consultar toda la infomcacion del usuario por el id            =
+    =======================================================================================*/
+
+    public function findInfoUserById($id)
+    {
+        return User::select('users.id', 'users.rol_id', 'users.tipodocumento_id', 'users.gradoescolaridad_id','users.gruposanguineo_id', 'users.eps_id', 'users.ciudad_id', 'users.nombres', 'users.apellidos', 'users.documento', 'users.email','users.barrio', 'users.direccion', 'users.celular', 'users.telefono', 'users.fechanacimiento', 'users.genero', 'users.estado', 'users.estrato', 'ciudades.id as idciudad', 'ciudades.nombre as nombreciudad', 'departamentos.id as iddepartamento', 'departamentos.nombre as nombredepartamento')
+            ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
+            ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+            ->findOrFail($id);
+    }
+
+    /*=====  End of metodo para consultar toda la infomcacion del usuario por el id  ======*/
+
     /*==================================================================
     =            metodo para guardar un nuevo administrador            =
     ==================================================================*/
@@ -84,12 +157,16 @@ class AdminRepository
     {
         return User::create([
             "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
-            "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
             "tipodocumento_id"    => $request->input('txttipo_documento'),
+            "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
+            "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
+            "eps_id"              => $request->input('txteps'),
+            "ciudad_id"           => $request->input('txtciudad'),
             "nombres"             => $request->input('txtnombres'),
             "apellidos"           => $request->input('txtapellidos'),
             "documento"           => $request->input('txtdocumento'),
             "email"               => $request->input('txtemail'),
+            "barrio"               => $request->input('txtbarrio'),
             "direccion"           => $request->input('txtdireccion'),
             "celular"             => $request->input('txtcelular'),
             "telefono"            => $request->input('txttelefono'),
@@ -97,7 +174,7 @@ class AdminRepository
             "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
             "estado"              => User::IsInactive(),
             "password"            => $password,
-            "estrato"           => $request->input('txtestrato'),
+            "estrato"             => $request->input('txtestrato'),
         ]);
 
     }
@@ -107,17 +184,16 @@ class AdminRepository
     /*===============================================
     =            metodod para registrar  token de activacion           =
     ===============================================*/
-    
+
     public function activationToken($user)
     {
         return ActivationToken::create([
-            'user_id' => $user,
-            'token' =>str_random(60),
+            'user_id'    => $user,
+            'token'      => str_random(60),
             'created_at' => Carbon::now(),
         ]);
     }
-    
-    
+
     /*=====  End of metodod para registrar   ======*/
     
 

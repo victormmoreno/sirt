@@ -38,7 +38,7 @@
                                                     </i>               
                                                 </div>
                                                 <div class="center">
-                                                    <span class="mailbox-title">Información Personal</span>
+                                                    <span class="mailbox-title">Información Básica</span>
                                                 </div>
                                             </div>
                                         </div>

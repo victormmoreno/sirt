@@ -13,6 +13,7 @@ return [
         ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],
         ['name' => EpsTableSeeder::class, 'callable' => true],
         ['name' => ServiciosTableSeeder::class, 'callable' => true],
+        ['name' => OcupacionesTableSeeder::class, 'callable' => true],
         ['name' => TiposDocumentosTableSeeder::class, 'callable' => true],
         ['name' => EstadosIdeasTableSeeder::class, 'callable' => true],
         ['name' => SectoresTableSeeder::class, 'callable' => true],

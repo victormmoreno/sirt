@@ -12,6 +12,7 @@ class CiudadesTableSeeder extends Seeder
      */
     public function run()
     {
+
         Ciudad::create([
             'id'              => 1,
             'nombre'          => 'Leticia',

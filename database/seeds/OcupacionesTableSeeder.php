@@ -13,21 +13,17 @@ class OcupacionesTableSeeder extends Seeder
     public function run()
     {
         Ocupacion::create([
-            'id'          => 1,
-            'nombre'      => 'Estudiante',
-            'descripcion' => '',
+            'nombre' => 'Estudiante',
         ]);
 
         Ocupacion::create([
-            'id'          => 2,
-            'nombre'      => 'Independiente',
-            'descripcion' => '',
+            'nombre' => 'Independiente',
         ]);
 
         Ocupacion::create([
-            'id'          => 3,
-            'nombre'      => 'Empleado',
-            'descripcion' => '',
+            'nombre' => 'Empleado',
         ]);
+
+        factory(Ocupacion::class, 20)->create();
     }
 }
