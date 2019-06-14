@@ -255,13 +255,18 @@
     </div>
 </div>
 <div class="row">
+
     <div class="input-field col s12 m12 l12 offset-l5 m5 s5">
         <div class="switch m-b-md">
           <i class="material-icons prefix">wc</i>
           <label class="active">Genero*</label>
             <label>
                 Masculino
-                <input type="checkbox" id="txtgenero" name="txtgenero" {{isset($user->genero) == 1 ? 'checked' : ''}}>
+                @if(isset($user->genero))
+                <input type="checkbox" id="txtgenero" name="txtgenero" {{$user->genero != 1 ? 'checked' : old('txtgenero')}}>
+                @else
+                <input type="checkbox" id="txtgenero" name="txtgenero" {{old('txtgenero') == 1 ? 'checked' : ''}}>
+                @endif
                 <span class="lever"></span>
                 Femenino
             </label>

@@ -60,7 +60,6 @@ function detalleAdministrador(id){
     $("#titulo_administrador").empty();
     $("#detalle_administrador").empty();
 
-    console.log(respuesta);
     if (respuesta == null) {
       swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
