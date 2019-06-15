@@ -40,7 +40,7 @@
                  data: 'edit',
                  name: 'edit',
                  orderable: false,
-             }, 
+             },
              ],
          });
      }
