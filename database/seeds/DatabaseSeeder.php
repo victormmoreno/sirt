@@ -51,6 +51,7 @@ class DatabaseSeeder extends Seeder
                 'gradosescolaridad',
                 'gruposanguineos',
                 'eps',
+                'clasificacionescolciencias',
                 'servicios',
                 'ocupaciones',
                 'tiposdocumentos',

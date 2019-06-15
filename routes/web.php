@@ -132,6 +132,8 @@ Route::group([
         Route::get('getciudad/{departamento}', 'User\AdminController@getCiudad');
 
         Route::get('dinamizador', 'User\DinamizadorController@index')->name('usuario.dinamizador.index');
+        Route::get('/dinamizador/create', 'User\DinamizadorController@create')->name('usuario.dinamizador.create');
+        Route::post('/dinamizador', 'User\DinamizadorController@store')->name('usuario.dinamizador.store');
         Route::get('dinamizador/getDinamizador/{id}', 'User\DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
     }

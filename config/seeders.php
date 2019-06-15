@@ -12,6 +12,7 @@ return [
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
         ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],
         ['name' => EpsTableSeeder::class, 'callable' => true],
+        ['name' => ClasificacionesColcienciasTableSeeder::class, 'callable' => true],
         ['name' => ServiciosTableSeeder::class, 'callable' => true],
         ['name' => OcupacionesTableSeeder::class, 'callable' => true],
         ['name' => TiposDocumentosTableSeeder::class, 'callable' => true],

@@ -70,7 +70,7 @@ class DinamizadorController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.administrador.dinamizador.create');
     }
 
     /**
