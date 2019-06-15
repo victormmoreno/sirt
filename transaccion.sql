@@ -8,6 +8,16 @@ INSERT INTO `GrupoSanguineo` (`nombre`) VALUES
 ('AB−'),
 ('AB+');
 
+INSERT INTO `ClasificacionColciencias` (`nombre`) VALUES
+('A1'),
+('A'),
+('B'),
+('C'),
+('Reconocido'),
+('Avalado por la institución'),
+('Internacional');
+
+
 INSERT INTO `Eps` (`codigo`,`nombre`) VALUES
 ('EPS010','EPS SURAMERICANA S.A'),
 ('EPS001',' ALIANSALUD EPS S.A.'),

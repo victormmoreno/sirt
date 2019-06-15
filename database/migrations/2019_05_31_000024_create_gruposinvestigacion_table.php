@@ -24,14 +24,21 @@ class CreateGruposinvestigacionTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('entidad_id');
+            $table->unsignedInteger('clasificacioncolciencias_id');
             $table->string('codigo_grupo', 15);
             $table->timestamps();
             $table->index(["entidad_id"], 'fk_gruposinvestigacion_entidades1_idx');
+            $table->index(["clasificacioncolciencias_id"], 'fk_gruposinvestigacion_clasificacionescolciencias1_idx');
 
             $table->unique(["codigo_grupo"], 'codigo_grupo_UNIQUE');
 
             $table->foreign('entidad_id', 'fk_gruposinvestigacion_entidades1_idx')
                 ->references('id')->on('entidades')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('clasificacioncolciencias_id', 'fk_gruposinvestigacion_clasificacionescolciencias1_idx')
+                ->references('id')->on('clasificacionescolciencias')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });
