@@ -155,6 +155,7 @@ Route::group([
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
         Route::post('/', 'IdeaController@store')->name('idea.store');
         Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
+        Route::post('/addIdeaDeProyectoAlComite', 'IdeaController@addIdeaDeProyectoCreate');
     }
 );
 
@@ -164,6 +165,8 @@ Route::group([
 	],
     function () {
         Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
+        Route::get('/consultarEntrenamientosPorNodo/{id}', 'EntrenamientoController@datatableEntrenamientosPorNodo');
+        Route::get('/consultarEntrenamientosPorNodo', 'EntrenamientoController@datatableEntrenamientosPorNodo_Dinamizador');
         Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create');
         Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
@@ -180,12 +183,6 @@ Route::group([
         Route::post('/addidea', 'EntrenamientoController@add_idea');
         Route::post('/cargarIdeas', 'EntrenamientoController@cargarIdeasDelEntrenamientoEnLaSesion');
         Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
-        // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
-        // Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
-        // Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
-        // Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
-        // Route::post('/', 'IdeaController@store')->name('idea.store');
-        // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
     }
 );
 
@@ -199,6 +196,11 @@ Route::group([
         Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
+        Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
+        Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
+        Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
+        Route::post('/', 'ComiteController@store')->name('csibt.store');
+        Route::post('/store/filesComite', 'ArchivoController@store')->name('csibt.files.store');
     }
 );
 

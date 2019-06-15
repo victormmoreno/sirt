@@ -39,6 +39,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
         {{-- @include('sweet::alert') --}}
+        @stack('script')
         @include('sweetalert::alert')
 </body>
 </html>

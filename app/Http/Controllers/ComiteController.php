@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ComiteFormRequest;
 use App\Repositories\Repository\ComiteRepository;
 use App\Models\Nodo;
+use App\Models\Idea;
+use App\Models\Comite;
+use App\Models\ComiteIdea;
+use App\Http\Controllers\ArchivoController;
 
 class ComiteController extends Controller
 {
@@ -98,7 +102,13 @@ class ComiteController extends Controller
   */
   public function create()
   {
-    //
+    // session(['ideasComiteCreate' => []]);
+
+    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+       $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
+       // dd($ideas);
+      return view('comite.infocenter.create', compact('ideas'));
+    }
   }
 
   /**
@@ -109,7 +119,8 @@ class ComiteController extends Controller
   */
   public function store(Request $request)
   {
-    //
+    // dd(request()->file());
+    // ArchivoController::store();
   }
 
   /**
@@ -159,5 +170,78 @@ class ComiteController extends Controller
   public function destroy($id)
   {
     //
+  }
+
+  // Métodos que manejar la sesion del comité
+  public function addIdeaDeProyectoCreate(Request $request)
+  {
+    $input = $request->all();
+
+    $idea = Idea::ConsultarIdeaId($input['Idea'])->get($input['Idea'])->last();
+
+    if ($idea->estado_idea == 'Convocado') {
+
+      // Aquí se agregan los campos de las ideas de proyecto
+      $idea['Hora'] = $input['hora'];
+      $idea['Asistencia'] = $input['asistencia'];
+      // $idea['Observaciones'] = $input['observaciones'];
+      $input['observaciones'] == null ? $idea['Observaciones'] = '' : $idea['Observaciones'] = $input['observaciones'];
+      $idea['Admitido'] = $input['admitido'];
+
+      if (session("ideasComiteCreate") != null) {
+
+        $existe = false;
+        $dato   = null;
+
+        $ideas = session("ideasComiteCreate");
+        foreach ($ideas as $key => $value) {
+          if ($value["id"] == $input["Idea"]) {
+            $dato = $value;
+
+            unset($ideas[$key]);
+
+            $existe = true;
+          }
+        }
+
+        if (!$existe) {
+          array_push($ideas, $idea);
+        } else {
+          return json_encode(['data' => 3]);
+        }
+        session(["ideasComiteCreate" => $ideas]);
+      } else {
+        session(["ideasComiteCreate" => [$idea]] );
+      }
+
+      return json_encode(['data' => 2]);
+    } else {
+      return json_encode(['data' => 1]);
+    }
+  }
+
+  // Devuelve los elemento de la sesion de las ideas del comité (Create)
+  public function get_ideasComiteCreate()
+  {
+    return json_encode(session("ideasComiteCreate"));
+  }
+
+  // Elimina la idea de la tabla de las ideas en el formulario para registrar un nuevo comité
+  public function get_eliminarIdeaComiteCreate($id)
+  {
+    $var = session("ideasComiteCreate");
+
+    foreach ($var as $key => $value) {
+
+      $new = $value->id;
+
+      if ($new == $id) {
+        unset($var[$key]);
+      }
+    }
+    session(["ideasComiteCreate" => $var]);
+    return json_encode([
+      'data' => 1
+    ]);
   }
 }

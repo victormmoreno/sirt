@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+$('.dataTables_length select').addClass('browser-default');
   $('#comitesDelNodo_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

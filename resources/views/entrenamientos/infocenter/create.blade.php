@@ -55,7 +55,7 @@
                   </div>
                   <div class="row">
                     <div class="input-field col s10 m10 l10">
-                      <select class="js-states select2" id="txtidea" name="txtidea" onchange="entrenamiento.addIdea()">
+                      <select class="browser-default select2" id="txtidea" name="txtidea" onchange="entrenamiento.addIdea()">
                         <option value="0">Seleccione una Idea de Proyecto</option>
                         @foreach ($ideas as $key => $value)
                           <option value="{{$value['id']}}">{{$value['nombre_proyecto']}}</option>

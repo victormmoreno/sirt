@@ -37,10 +37,40 @@ class EntrenamientoController extends Controller
   */
   public function index()
   {
-    $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
 
+    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+      if (request()->ajax()) {
+        $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo( auth()->user()->infocenter->nodo_id );
+        return datatables()->of($entrenamientos)
+        ->addColumn('details', function ($data) {
+          $button = '
+          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeasDelEntrenamiento('. $data->id .')">
+          <i class="material-icons">info</i>
+          </a>
+          ';
+          return $button;
+        })->addColumn('update_state', function ($data) {
+          $delete = '<a class="btn red lighten-3 m-b-xs" onclick="inhabilitarEntrenamientoPorId('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';
+          return $delete;
+        })->addColumn('edit', function ($data) {
+          $edit = '<a href="' . route("entrenamientos.edit", $data->id) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+          return $edit;
+        })->rawColumns(['details', 'edit', 'update_state'])->make(true);
+      }
+      $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+      return view('entrenamientos.infocenter.index', compact('nodo'));
+    } else if (auth()->user()->rol()->first()->nombre == 'Administrador') {
+      $nodos = Nodo::SelectNodo()->get();
+      return view('entrenamientos.administrador.index', compact('nodos'));
+    } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      return view('entrenamientos.dinamizador.index');
+    }
+  }
+  // Datatable para los entrenamientos del nodo (Tabla del dinamizador)
+  public function datatableEntrenamientosPorNodo_Dinamizador()
+  {
     if (request()->ajax()) {
-      $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo( auth()->user()->infocenter->nodo_id );
+      $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo( auth()->user()->dinamizador->nodo_id );
       return datatables()->of($entrenamientos)
       ->addColumn('details', function ($data) {
         $button = '
@@ -49,19 +79,27 @@ class EntrenamientoController extends Controller
         </a>
         ';
         return $button;
-      })->addColumn('update_state', function ($data) {
-        $delete = '<a class="btn red lighten-3 m-b-xs" onclick="inhabilitarEntrenamientoPorId('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';
-        return $delete;
-      })->addColumn('edit', function ($data) {
-        $edit = '<a href="' . route("entrenamientos.edit", $data->id) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
-        return $edit;
-      })->rawColumns(['details', 'edit', 'update_state'])->make(true);
-    }
-
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
-      return view('entrenamientos.infocenter.index', compact('nodo'));
+      })->rawColumns(['details'])->make(true);
     }
   }
+
+  // Datatable para los entrenamientos por nodo, (Por parte del administrador)
+  public function datatableEntrenamientosPorNodo($id)
+  {
+    if (request()->ajax()) {
+      $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo( $id );
+      return datatables()->of($entrenamientos)
+      ->addColumn('details', function ($data) {
+        $button = '
+        <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeasDelEntrenamiento('. $data->id .')">
+        <i class="material-icons">info</i>
+        </a>
+        ';
+        return $button;
+      })->rawColumns(['details'])->make(true);
+    }
+  }
+
   // Consulta las ideas que asistieron al entrenamiento
   public function details($id)
   {

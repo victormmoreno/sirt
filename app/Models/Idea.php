@@ -95,6 +95,21 @@ class Idea extends Model
         return self::all();
     }
 
+    public function scopeConsultarIdeasConvocadasAComite($query, $id)
+    {
+      return $query->select('ideas.id', 'ideas.created_at AS fecha_registro',
+      'correo_contacto AS correo', 'telefono_contacto AS contacto', 'nombre_proyecto AS nombre_idea', 'estadosidea.nombre AS estado')
+      ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
+      ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+      ->join('entrenamiento_idea', 'entrenamiento_idea.idea_id', '=', 'ideas.id')
+      ->join('entrenamientos', 'entrenamientos.id', '=', 'entrenamiento_idea.entrenamiento_id')
+      ->where('nodo_id', $id)
+      ->where('tipo_idea', $this->IsEmprendedor())
+      ->where('estadosidea.nombre', 'Convocado')
+      ->groupBy('ideas.id')
+      ->orderBy('ideas.id', 'desc');
+    }
+
     public function scopeConsultarIdeasDelNodo($query, $id)
     {
       return $query->select('ideas.id AS consecutivo', 'created_at AS fecha_registro',
@@ -103,7 +118,8 @@ class Idea extends Model
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
       ->where('tipo_idea', $this->IsEmprendedor())
-      ->orderBy('ideas.id', 'desc');
+      ->orderBy('ideas.id', 'desc')
+      ->groupBy('ideas.id');
     }
 
     public function scopeConsultarIdeasEmpGIDelNodo($query, $id)

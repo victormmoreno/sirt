@@ -118,6 +118,8 @@ class IdeaController extends Controller
       } else if ( auth()->user()->rol()->first()->nombre == 'Administrador' ) {
         $nodos = Nodo::SelectNodo()->get();
         return view('ideas.administrador.index', compact('nodos'));
+      } else if ( auth()->user()->rol()->first()->nombre == 'Dinamizador' ) {
+        return view('ideas.dinamizador.index');
       }
     }
 
@@ -128,6 +130,8 @@ class IdeaController extends Controller
 
       if (auth()->user()->rol()->first()->nombre == 'Gestor') {
         $id = auth()->user()->gestor->nodo_id;
+      } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+        $id = auth()->user()->dinamizador->nodo_id;
       }
 
       $consultaIdeas = Idea::ConsultarIdeasDelNodo($id)->get();
@@ -148,6 +152,8 @@ class IdeaController extends Controller
     {
       if (auth()->user()->rol()->first()->nombre == 'Gestor') {
         $id = auth()->user()->gestor->nodo_id;
+      } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+        $id = auth()->user()->dinamizador->nodo_id;
       }
 
       if (request()->ajax()) {
