@@ -926,6 +926,7 @@ entrenamientoEdit = {
 }
 
 $(document).ready(function() {
+<<<<<<< HEAD
 $('.dataTables_length select').addClass('browser-default');
   $('#comitesDelNodo_table').DataTable({
     language: {
@@ -1326,6 +1327,8 @@ function consultarCsibtPorNodo() {
 }
 
 $(document).ready(function() {
+=======
+>>>>>>> 27c4c67c7883714041110de630e2b72e3f16a783
     
     $('#administrador_table').DataTable({
         language: {
@@ -1387,7 +1390,6 @@ function detalleAdministrador(id){
     $("#titulo_administrador").empty();
     $("#detalle_administrador").empty();
 
-    console.log(respuesta);
     if (respuesta == null) {
       swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
@@ -1453,4 +1455,51 @@ function detalleAdministrador(id){
                 $('#txtciudad').material_select();
             });
         },
+ }
+ var UserAdministradorDinamizador = {
+     selectDinamizadoresPorNodo: function() {
+         let nodo = $('#selectnodo').val();
+         $('#dinamizador_table').dataTable().fnDestroy();
+         $('#dinamizador_table').DataTable({
+             language: {
+                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+             },
+             processing: true,
+             serverSide: true,
+             order: false,
+             ajax: {
+                 url: "/usuario/dinamizador/getDinamizador/" + nodo,
+                 type: "get",
+             },
+             columns: [
+             {
+                 data: 'tipodocumento',
+                 name: 'tipodocumento',
+             }, {
+                 data: 'documento',
+                 name: 'documento',
+             }, {
+                 data: 'nombre',
+                 name: 'nombre',
+             }, {
+                 data: 'email',
+                 name: 'email',
+             }, {
+                 data: 'telefono',
+                 name: 'telefono',
+             }, {
+                 data: 'estado',
+                 name: 'estado',
+             }, {
+                 data: 'detail',
+                 name: 'detail',
+                 orderable: false,
+             }, {
+                 data: 'edit',
+                 name: 'edit',
+                 orderable: false,
+             }, 
+             ],
+         });
+     }
  }

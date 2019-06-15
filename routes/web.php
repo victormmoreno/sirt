@@ -12,6 +12,14 @@
  */
 
 Route::get('/', function () {
+
+    // dd(config('laravelpermission.permissions.linea.index'));
+    // 
+    // $user = App\User::all()->last();
+
+    // dd($user->getRoleNames()[0]);
+
+    
     // $user = App\Models\Departamento::allDepartamentos()->pluck('id','nombre');
     // dd($user);
     // $user = App\User::infoUserNodo('Infocenter','Medellin')
@@ -110,7 +118,8 @@ Route::resource('nodo', 'NodoController');
 // Route::resource('usuarios', 'UserController',[ 'names' => [ 'index' => 'usuarios', 'create' => 'usuarios.crear']]);
 Route::group([
     'prefix'     => 'usuario',
-    'middleware' => 'auth'],
+    // 'middleware' => 'auth'
+    ],
     function () {
 
         Route::get('/administrador', 'User\AdminController@administradorIndex')->name('usuario.administrador.index');
@@ -121,6 +130,11 @@ Route::group([
         Route::put('administrador/{id}', 'User\AdminController@administradorUpdate')->name('usuario.administrador.update');
         Route::delete('administrador/{id}', 'User\AdminController@administradorDelete')->name('usuario.administrador.delete');
         Route::get('getciudad/{departamento}', 'User\AdminController@getCiudad');
+
+        Route::get('dinamizador', 'User\DinamizadorController@index')->name('usuario.dinamizador.index');
+        Route::get('/dinamizador/create', 'User\DinamizadorController@create')->name('usuario.dinamizador.create');
+        Route::post('/dinamizador', 'User\DinamizadorController@store')->name('usuario.dinamizador.store');
+        Route::get('dinamizador/getDinamizador/{id}', 'User\DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
     }
 );

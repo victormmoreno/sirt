@@ -514,7 +514,7 @@
               </a>
             </li>
             <li>
-              <a href="">
+              <a href="{{route('usuario.dinamizador.index')}}">
                 Dinamizador
               </a>
             </li>

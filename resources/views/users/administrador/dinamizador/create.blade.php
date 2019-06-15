@@ -13,7 +13,7 @@
                             arrow_back
                         </i>
                     </a>
-                    Usuarios
+                    Usuarios | Dinamizadores
                 </h5>
                 <div class="card">
                     <div class="card-content">
@@ -22,7 +22,7 @@
 
                                 <center>
                                     <span class="card-title center-align">
-                                        Editar Administrador: {{$user->nombres}} {{$user->apellidos}} 
+                                        Nuevo Dinamizador
                                     </span>
                                     <i class="Small material-icons prefix">
                                         supervised_user_circle
@@ -44,12 +44,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <form action="{{ route('usuario.administrador.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
-                                            {!! method_field('PUT')!!}
-                                            @include('users.administrador.administrador.form', [
-                                                'btnText' => 'Modificar',
-                                            ])
-                                        </form>
+                                <form action="{{ route('usuario.dinamizador.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                    {{-- @include('users.administrador.administrador.form', [
+                                        'btnText' => 'Guardar',
+                                    ]) --}}
+                                </form>
+                            
                                     </div>
                                 </div>
                             </div>

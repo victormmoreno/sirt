@@ -29,23 +29,23 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
 
-        $roleAdministrador = Role::create(['name' => 'Administrador']);
-        $roleDinamizador   = Role::create(['name' => 'Dinamizador']);
-        $roleGestor        = Role::create(['name' => 'Gestor']);
-        $roleInfocenter    = Role::create(['name' => 'Infocenter']);
-        $roleTalento       = Role::create(['name' => 'Talento']);
-        $roleIngreso       = Role::create(['name' => 'Ingreso']);
-        $roleProveedor     = Role::create(['name' => 'Proveedor']);
+        $roleAdministrador = Role::create(['name' => config('laravelpermission.roles.roleAdministrador')]);
+        $roleDinamizador   = Role::create(['name' => config('laravelpermission.roles.roleDinamizador')]);
+        $roleGestor        = Role::create(['name' => config('laravelpermission.roles.roleGestor')]);
+        $roleInfocenter    = Role::create(['name' => config('laravelpermission.roles.roleInfocenter')]);
+        $roleTalento       = Role::create(['name' => config('laravelpermission.roles.roleTalento')]);
+        $roleIngreso       = Role::create(['name' => config('laravelpermission.roles.roleIngreso')]);
+        $roleProveedor     = Role::create(['name' => config('laravelpermission.roles.roleProveedor')]);
 
-        $registrarIdeaPermission = Permission::create(['name' => 'registrar idea']);
-        $consultarIdeaPermission = Permission::create(['name' => 'consultar idea']);
-        $editarIdeaPermission    = Permission::create(['name' => 'editar idea']);
-        $eliminarIdeaPermission  = Permission::create(['name' => 'eliminar idea']);
+        $consultarIdeaPermission = Permission::create(['name' => config('laravelpermission.permissions.idea.index')]);
+        $registrarIdeaPermission = Permission::create(['name' => config('laravelpermission.permissions.idea.create')]);
+        $editarIdeaPermission    = Permission::create(['name' => config('laravelpermission.permissions.idea.edit')]);
+        $eliminarIdeaPermission  = Permission::create(['name' => config('laravelpermission.permissions.idea.delete')]);
 
-        $registrarLineaPermission = Permission::create(['name' => 'registrar linea']);
-        $consultarLineaPermission = Permission::create(['name' => 'consultar linea']);
-        $editarLineaPermission    = Permission::create(['name' => 'editar linea']);
-        $eliminarLineaPermission  = Permission::create(['name' => 'eliminar linea']);
+        $consultarLineaPermission = Permission::create(['name' => config('laravelpermission.permissions.linea.index')]);
+        $registrarLineaPermission = Permission::create(['name' => config('laravelpermission.permissions.linea.create')]);
+        $editarLineaPermission    = Permission::create(['name' => config('laravelpermission.permissions.linea.edit')]);
+        $eliminarLineaPermission  = Permission::create(['name' => config('laravelpermission.permissions.linea.delete')]);
 
         $roleAdministrador->givePermissionTo($consultarIdeaPermission);
         $roleAdministrador->givePermissionTo($consultarLineaPermission);
@@ -103,6 +103,9 @@ class UsersTableSeeder extends Seeder
             'user_id' => $userDinamizador->id,
             'nodo_id' => Nodo::where('nombre', '=', 'Medellin')->first()->id,
         ]);
+
+        $userDinamizador->assignRole($roleDinamizador);
+        $userDinamizador->givePermissionTo($consultarLineaPermission);
 
         $userGestorRamiro = User::create([
             'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,

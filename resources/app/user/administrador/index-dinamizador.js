@@ -1,4 +1,4 @@
-var UserAdministradorDinamizador = {
+ var UserAdministradorDinamizador = {
      selectDinamizadoresPorNodo: function() {
          let nodo = $('#selectnodo').val();
          $('#dinamizador_table').dataTable().fnDestroy();
