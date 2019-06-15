@@ -183,7 +183,10 @@ Route::group([
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
         Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
+        Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
         Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
+        Route::post('/', 'ComiteController@store')->name('csibt.store');
+        Route::post('/store/filesComite', 'ArchivoController@store')->name('csibt.files.store');
     }
 );
 

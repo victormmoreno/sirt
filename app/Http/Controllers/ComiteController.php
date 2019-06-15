@@ -9,6 +9,7 @@ use App\Models\Nodo;
 use App\Models\Idea;
 use App\Models\Comite;
 use App\Models\ComiteIdea;
+use App\Http\Controllers\ArchivoController;
 
 class ComiteController extends Controller
 {
@@ -118,7 +119,8 @@ class ComiteController extends Controller
   */
   public function store(Request $request)
   {
-    //
+    // dd(request()->file());
+    // ArchivoController::store();
   }
 
   /**
@@ -222,5 +224,24 @@ class ComiteController extends Controller
   public function get_ideasComiteCreate()
   {
     return json_encode(session("ideasComiteCreate"));
+  }
+
+  // Elimina la idea de la tabla de las ideas en el formulario para registrar un nuevo comité
+  public function get_eliminarIdeaComiteCreate($id)
+  {
+    $var = session("ideasComiteCreate");
+
+    foreach ($var as $key => $value) {
+
+      $new = $value->id;
+
+      if ($new == $id) {
+        unset($var[$key]);
+      }
+    }
+    session(["ideasComiteCreate" => $var]);
+    return json_encode([
+      'data' => 1
+    ]);
   }
 }

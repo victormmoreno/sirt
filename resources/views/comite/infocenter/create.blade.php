@@ -18,7 +18,7 @@
             </center>
             <div class="divider"></div>
             <div class="row">
-              <form id="formComiteCreate" method="post" onsubmit="return checkSubmit()">
+              <form action="{{route('csibt.store')}}" id="formComiteCreate" method="post" onsubmit="return checkSubmit()">
                 {!! csrf_field() !!}
                 @if($errors->any())
                   <div class="card red lighten-3">
@@ -169,6 +169,8 @@
                  </div>
                </div>
                <div class="divider"></div>
+               <div class="dropzone"></div>
+               <div class="divider"></div>
                <div class="row">
                  <center>
                    <button type="submit" class="btn waves-effect cyan darken-1 center-aling"><i class="material-icons right">done_all</i>Registrar</button>
@@ -185,3 +187,22 @@
   </div>
 </main>
 @endsection
+@push('script')
+  <script>
+  var DropzoneComite = new Dropzone('.dropzone', {
+    url: '/csibt/store/filesComite',
+    headers: {
+      'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    },
+    dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
+    paramName: 'nombreArchivo'
+  });
+
+  DropzoneComite.on('error', function (file, res) {
+    var msg = res.errors.nombreArchivo[0];
+    $('.dz-error-message:last > span').text(msg);
+
+  })
+  Dropzone.autoDiscover = false;
+  </script>
+@endpush
