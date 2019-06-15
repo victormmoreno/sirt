@@ -44,6 +44,7 @@ mix.scripts([
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
 
+
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
 		'resources/app/nodo/administrador/index.js',
@@ -51,9 +52,14 @@ mix.scripts([
 		'resources/app/ideas/administrador/index.js',
 		'resources/app/ideas/gestor/index.js',
 		'resources/app/entrenamientos/index.js',
+		'resources/app/entrenamientos/administrador/index.js',
 		'resources/app/entrenamientos/infocenter/index.js',
 		'resources/app/entrenamientos/infocenter/create.js',
 		'resources/app/entrenamientos/infocenter/edit.js',
+		'resources/app/comite/infocenter/index.js',
+		'resources/app/comite/infocenter/create.js',
+		'resources/app/comite/gestor/index.js',
+		'resources/app/comite/administrador/index.js',
 		'resources/app/user/administrador/index-administrador.js',
 		'resources/app/user/administrador/index-dinamizador.js',
 	],'public/js/app2.js');
