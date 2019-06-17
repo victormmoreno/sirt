@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 
 
@@ -36,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
         
 
         Schema::defaultStringLength(191);
+
+        Route::pattern('id', '[0-9]+');
+
+        Route::resourceVerbs([
+            'create' => 'crear',
+            'edit' => 'editar',
+        ]);
         
     }
 }

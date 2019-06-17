@@ -118,26 +118,34 @@ Route::resource('nodo', 'NodoController');
 // Route::resource('usuarios', 'UserController',[ 'names' => [ 'index' => 'usuarios', 'create' => 'usuarios.crear']]);
 Route::group([
     'prefix'     => 'usuario',
-    // 'middleware' => 'auth'
+    'namespace' => 'User',
+    'middleware' => 'auth'
     ],
     function () {
 
-        Route::get('/administrador', 'User\AdminController@administradorIndex')->name('usuario.administrador.index');
-        Route::get('/administrador/create', 'User\AdminController@administradorCreate')->name('usuario.administrador.create');
-        Route::post('administrador', 'User\AdminController@administradorStore')->name('usuario.administrador.store');
-        Route::get('administrador/{id}', 'User\AdminController@show')->name('usuario.administrador.show');
-        Route::get('administrador/{id}/edit', 'User\AdminController@administradorEdit')->name('usuario.administrador.edit');
-        Route::put('administrador/{id}', 'User\AdminController@administradorUpdate')->name('usuario.administrador.update');
-        Route::delete('administrador/{id}', 'User\AdminController@administradorDelete')->name('usuario.administrador.delete');
-        Route::get('getciudad/{departamento}', 'User\AdminController@getCiudad');
+        Route::get('/administrador', 'AdminController@administradorIndex')->name('usuario.administrador.index');
+        Route::get('/administrador/create', 'AdminController@administradorCreate')->name('usuario.administrador.create');
+        Route::post('administrador', 'AdminController@administradorStore')->name('usuario.administrador.store');
+        Route::get('administrador/{id}', 'AdminController@show')->name('usuario.administrador.show');
+        Route::get('administrador/{id}/edit', 'AdminController@administradorEdit')->name('usuario.administrador.edit');
 
-        Route::get('dinamizador', 'User\DinamizadorController@index')->name('usuario.dinamizador.index');
-        Route::get('/dinamizador/create', 'User\DinamizadorController@create')->name('usuario.dinamizador.create');
-        Route::post('/dinamizador', 'User\DinamizadorController@store')->name('usuario.dinamizador.store');
-        Route::get('dinamizador/getDinamizador/{id}', 'User\DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
+        Route::put('administrador/{id}', 'AdminController@administradorUpdate')->name('usuario.administrador.update');
+        Route::delete('administrador/{id}', 'AdminController@administradorDelete')->name('usuario.administrador.delete');
+        Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
+
+        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
+
+        // Route::get('dinamizador/show/{nombre}.{apellido}', 'DinamizadorController@show')->name('usuario.dinamizador.show');
+        Route::resource('dinamizador', 'DinamizadorController',['except'=>'show','as'=>'usuario']);
+
+
+        Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
 
     }
 );
+
+
+Route::resource('perfil', 'User\ProfileController',['except'=>'show']);
 
 //-------------------Route group para el módulo de ideas
 Route::group([

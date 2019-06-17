@@ -926,7 +926,6 @@ entrenamientoEdit = {
 }
 
 $(document).ready(function() {
-<<<<<<< HEAD
 $('.dataTables_length select').addClass('browser-default');
   $('#comitesDelNodo_table').DataTable({
     language: {
@@ -1327,8 +1326,6 @@ function consultarCsibtPorNodo() {
 }
 
 $(document).ready(function() {
-=======
->>>>>>> 27c4c67c7883714041110de630e2b72e3f16a783
     
     $('#administrador_table').DataTable({
         language: {
@@ -1498,7 +1495,7 @@ function detalleAdministrador(id){
                  data: 'edit',
                  name: 'edit',
                  orderable: false,
-             }, 
+             },
              ],
          });
      }

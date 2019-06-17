@@ -87,6 +87,11 @@ class User extends Authenticatable implements JWTSubject
         'fechanacimiento'   => 'date:Y-m-d',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'nombres'; // db column name
+    }
+
     public static function IsMasculino()
     {
         return User::IS_MASCULINO;
