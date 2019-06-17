@@ -34,7 +34,7 @@ class ComiteFormRequest extends FormRequest
       return $messages = [
         'txtfechacomite_create.required'             => 'La :attribute es obligatoria.',
         'txtfechacomite_create.date_format'             => 'La :attribute no tiene un formato válido.',
-        'txtobservacionescomite.max'                  => 'Las :attribute debe ser máximo 1000 caracteres',,
+        'txtobservacionescomite.max'                  => 'Las :attribute debe ser máximo 1000 caracteres',
       ];
     }
 

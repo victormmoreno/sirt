@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  csibt_create.getIdeasEnLaSesionDelComite();
   $('#txtfechacomite_create').bootstrapMaterialDatePicker({
     time:false,
     date:true,

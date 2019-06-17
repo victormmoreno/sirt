@@ -34,6 +34,11 @@ $('.dataTables_length select').addClass('browser-default');
         name: 'edit',
         orderable: false
       },
+      {
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
 
     ],
     initComplete: function () {

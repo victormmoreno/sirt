@@ -14,7 +14,7 @@
           <div class="card-content">
             <br>
             <center>
-              <span class="card-title center-align">Nuevo Comité de Selección de Ideas - Tecnoparque nodo{{ \NodoHelper::returnNodoUsuario() }}</span>
+              <span class="card-title center-align">Nuevo Comité de Selección de Ideas - Tecnoparque nodo {{ \NodoHelper::returnNodoUsuario() }}</span>
             </center>
             <div class="divider"></div>
             <div class="row">
@@ -43,14 +43,17 @@
                   </div>
                   <div class="input-field col s12 m6 l6">
                     <i class="material-icons prefix">date_range</i>
-                    <input id="txtfechacomite_create" type="text" name="txtfechacomite_create" value="{{Carbon\Carbon::now()->toDateString()}}">
+                    <input id="txtfechacomite_create" type="text" name="txtfechacomite_create" value="{{old('txtfechacomite_create', Carbon\Carbon::now()->toDateString()) }}">
                     <label for="txtfechacomite_create" class="active">Fecha del Comité <span class="red-text">*</span></label>
+                    @error('txtfechacomite_create')
+                      <label id="txtfechacomite_create-error" class="error" for="txtfechacomite_create">{{ $message }}</label>
+                    @enderror
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">speaker_notes</i>
-                    <textarea name="txtobservacionescomite" class="materialize-textarea" length="1000" maxlength="1000" id="txtobservacionescomite" ></textarea>
+                    <textarea name="txtobservacionescomite" class="materialize-textarea" length="1000" maxlength="1000" id="txtobservacionescomite" >{{ old('txtobservacionescomite') }}</textarea>
                     <label for="txtobservacionescomite">Observaciones del Comité</label>
                   </div>
                 </div>
@@ -114,16 +117,15 @@
                               <div class="row">
                                 <div class="input-field col s12 m12 l12">
                                   <i class="material-icons prefix">speaker_notes</i>
-                                  <textarea name="txtobservacionesidea" class="materialize-textarea" length="1000" maxlength="1000" id="txtobservacionesidea" ></textarea>
+                                  <textarea name="txtobservacionesidea" class="materialize-textarea" length="2000" maxlength="2000" id="txtobservacionesidea" ></textarea>
                                   <label for="txtobservacionesidea" id="labelobservacionesidea">Observaciones de la Idea de Proyecto</label>
                                 </div>
                               </div>
                               <center>
                                 <a onclick="csibt_create.addIdeaDeProyectoAlComite()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al comité"><i class="material-icons left">add</i>Agregar</a>
-                                {{-- <a onclick="agregar()" class="btn-floating btn-large waves-effect waves-light indigo lighten-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al comité"><i class="material-icons">add</i></a> --}}
                               </center>
                               <div class="card-content">
-                                <table>
+                                <table class="responsive-table" style="width: 100%">
                                   <thead>
                                     <tr>
                                       <th style="width: 30%">Idea de Proyecto</th>
@@ -147,7 +149,7 @@
                   </div>
                 </div>
                 <div class="divider"></div>
-               <div class="row">
+               {{-- <div class="row">
                  <h5>Entregables Fase Inicio</h5>
                  <div class="input-field col s6 m3 l3">
                    <p class="p-v-xs">
@@ -170,7 +172,7 @@
                </div>
                <div class="divider"></div>
                <div class="dropzone"></div>
-               <div class="divider"></div>
+               <div class="divider"></div> --}}
                <div class="row">
                  <center>
                    <button type="submit" class="btn waves-effect cyan darken-1 center-aling"><i class="material-icons right">done_all</i>Registrar</button>
@@ -187,22 +189,3 @@
   </div>
 </main>
 @endsection
-@push('script')
-  <script>
-  var DropzoneComite = new Dropzone('.dropzone', {
-    url: '/csibt/store/filesComite',
-    headers: {
-      'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    },
-    dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
-    paramName: 'nombreArchivo'
-  });
-
-  DropzoneComite.on('error', function (file, res) {
-    var msg = res.errors.nombreArchivo[0];
-    $('.dz-error-message:last > span').text(msg);
-
-  })
-  Dropzone.autoDiscover = false;
-  </script>
-@endpush
