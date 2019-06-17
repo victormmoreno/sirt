@@ -37,6 +37,8 @@
                                 </div>
                                 @endif
                                 <center>
+                                    
+
                                     <p align="center" class="description text-center">
                                         Ingresa tu idea de proyecto aquí debajo.
                                     </p>

@@ -6,6 +6,7 @@ use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\AdminFormRequest;
 use App\Repositories\Repository\UserRepository\AdminRepository;
+use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -22,11 +23,13 @@ class AdminController extends Controller
     // protected $redirectTo = '/home';
 
     public $adminRepository;
+    public $userRepository;
 
-    public function __construct(AdminRepository $adminRepository)
+    public function __construct(AdminRepository $adminRepository, UserRepository $userRepository)
     {
         $this->middleware('auth');
         $this->adminRepository = $adminRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -84,11 +87,11 @@ class AdminController extends Controller
     {
 
         return view('users.administrador.administrador.create', [
-            'tiposdocumentos'   => $this->adminRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->adminRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->adminRepository->getAllEpsActivas(),
-            'departamentos'     => $this->adminRepository->getAllDepartamentos(),
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
         ]);
     }
 
@@ -104,7 +107,7 @@ class AdminController extends Controller
         $password = User::generatePasswordRamdom();
         //guardar registro
         $administrador   = $this->adminRepository->Store($request, $password);
-        $activationToken = $this->adminRepository->activationToken($administrador->id);
+        $activationToken = $this->userRepository->activationToken($administrador->id);
         //envio de email con contraseña
         if ($administrador != null) {
             event(new UserWasRegistered($administrador, $password));
@@ -126,7 +129,7 @@ class AdminController extends Controller
     {
        
         return response()->json([
-            'ciudades' => $this->adminRepository->getAllCiudadDepartamento($departamento),
+            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
         ]);
     }
     
@@ -160,12 +163,12 @@ class AdminController extends Controller
         
         return view('users.administrador.administrador.edit', [
             'user'              => $user,
-            'tiposdocumentos'   => $this->adminRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->adminRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->adminRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->adminRepository->getAllEpsActivas(),
-            'departamentos'     => $this->adminRepository->getAllDepartamentos(),
-            'ciudades' => $this->adminRepository->getAllCiudadDepartamento($user->iddepartamento),
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ciudades' => $this->userRepository->getAllCiudadDepartamento($user->iddepartamento),
         ]);
     }
 

@@ -15,7 +15,7 @@ Route::get('/', function () {
 
     // dd(config('laravelpermission.permissions.linea.index'));
     // 
-    // $user = App\User::all()->last();
+    // $user = App\User::()->last();
 
     // dd($user->getRoleNames()[0]);
 
@@ -38,6 +38,9 @@ Route::get('/', function () {
     // dd(config('mail.host'));
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
+    
+    // $entidad = App\Models\Entidad::whereBetween('id', [119, 128])->get()->random()->id;
+    // dd($entidad);
 
     return view('spa');
 

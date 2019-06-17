@@ -1,4 +1,3 @@
-    
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -7,7 +6,7 @@
 
         <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
        
-        
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         
 
@@ -35,6 +34,7 @@
                 </div>
             </div>
         @endif
+        
         @yield('content-auth')
         
     </body>

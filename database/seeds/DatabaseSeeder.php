@@ -80,6 +80,8 @@ class DatabaseSeeder extends Seeder
                 'gestores',
                 'talentos',
                 'users',
+                'gruposinvestigacion',
+                'empresas',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

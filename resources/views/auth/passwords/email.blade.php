@@ -12,7 +12,7 @@
                             <span class="card-title center-align">
                                 <div class="row">
                                     <div class="col s12 m12 l12">
-                                        <a href="">
+                                        <a href="{{route('/')}}">
                                             <img class="chapter-title responsive-img" width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}"/>
                                         </a>
                                     </div>
@@ -54,7 +54,7 @@
                                 @endif
                             </div>
                             <div class="row">
-                                <form action="{{ route('password.email') }}" method="POST">
+                                <form action="{{ route('password.email') }}" method="POST" onsubmit="return checkSubmit()">
                                     @csrf
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">
