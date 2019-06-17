@@ -5,20 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ComiteFormRequest;
 use App\Repositories\Repository\ComiteRepository;
+use App\Repositories\Repository\IdeaRepository;
 use App\Models\Nodo;
 use App\Models\Idea;
 use App\Models\Comite;
 use App\Models\ComiteIdea;
 use App\Http\Controllers\ArchivoController;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ComiteController extends Controller
 {
 
   public $comiteRepository;
+  public $ideaRepository;
 
-  public function __construct(ComiteRepository $comiteRepository)
+  public function __construct(ComiteRepository $comiteRepository, IdeaRepository $ideaRepository)
   {
     $this->comiteRepository = $comiteRepository;
+    $this->ideaRepository = $ideaRepository;
     $this->middleware('auth');
   }
 
@@ -43,7 +48,14 @@ class ComiteController extends Controller
         })->addColumn('edit', function ($data) {
           $edit = '<a href="'. route("csibt.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
-        })->rawColumns(['details', 'edit'])->make(true);
+        })->addColumn('evidencias', function ($data) {
+          $button = '
+          <a class="btn blue-grey m-b-xs" href="' . route('csibt.evidencias', $data->id) . '">
+          <i class="material-icons">library_books</i>
+          </a>
+          ';
+          return $button;
+        })->rawColumns(['details', 'edit', 'evidencias'])->make(true);
       }
       return view('comite.infocenter.index');
     } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
@@ -77,6 +89,42 @@ class ComiteController extends Controller
         })->rawColumns(['details'])->make(true);
       }
       return view('comite.dinamizador.index');
+    }
+  }
+
+  // Datatable para mostrar los archivos de un comité
+  public function datatableArchivosDeUnComite($id)
+  {
+    if (request()->ajax()) {
+      $archivosComite = $this->comiteRepository->consultarRutasArchivosDeUnComite( $id );
+      return datatables()->of($archivosComite)
+      ->addColumn('see', function ($data) {
+        $button = '
+        <a class="btn light-red m-b-xs modal-trigger">
+        <i class="material-icons">remove_red_eye</i>
+        </a>
+        ';
+        return $button;
+      })->addColumn('download', function ($data) {
+        $download = '
+        <a class="btn info m-b-xs">
+        <i class="material-icons">file_download</i>
+        </a>
+        ';
+        return $download;
+      })->addColumn('delete', function ($data) {
+        $delete = '
+        <a class="btn light-red m-b-xs">
+        <i class="material-icons">delete</i>
+        </a>
+        ';
+        return $delete;
+      })->addColumn('file', function ($data) {
+        $file = '
+        <img class="materialboxed" data-caption="A picture of a way with a group of trees in a park" width="250" src="' . url($data->ruta) . '">
+        ';
+        return $file;
+      })->rawColumns(['see', 'download', 'delete', 'file'])->make(true);
     }
   }
 
@@ -117,10 +165,45 @@ class ComiteController extends Controller
   * @param  \Illuminate\Http\Request  $request
   * @return \Illuminate\Http\Response
   */
-  public function store(Request $request)
+  public function store(ComiteFormRequest $request)
   {
-    // dd(request()->file());
-    // ArchivoController::store();
+    if ( session('ideasComiteCreate') == false ) {
+      alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
+      return back()->withInput();
+    } else {
+      $contComites = COUNT($this->comiteRepository->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
+      if ( $contComites != 0 ) {
+        alert()->warning('Advertencia!','Ya se encuentra un comité registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
+        return back()->withInput();
+      } else {
+        DB::transaction(function () use ($request) {
+          $codigoComite = Carbon::parse($request['txtfechacomite_create']);
+          $codigoComite = 'CSIBT' . $codigoComite->isoFormat('YY') . $codigoComite->format('m') . $codigoComite->format('d') . '-' . auth()->user()->infocenter->nodo_id;
+          $comite = $this->comiteRepository->store($request, $codigoComite);
+          foreach (session('ideasComiteCreate') as $key => $value) {
+            $this->comiteRepository->storeComiteIdea($value, $comite->id);
+            if ($value['Admitido'] == 1) {
+              $this->ideaRepository->updateEstadoIdea($value['id'], 'Admitido');
+            } else {
+              $this->ideaRepository->updateEstadoIdea($value['id'], 'No Admitido');
+            }
+          }
+        });
+        session(['ideasComiteCreate' => []]);
+        alert()->success('El CSIBT ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
+        return redirect('csibt');
+      }
+    }
+  }
+
+  // Muestra las evidencias/entregables de un comité
+  public function evidencias($id)
+  {
+    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+      $comite = $this->comiteRepository->consultarComitePorId($id)->last();
+      // dd($comite->codigo);
+      return view('comite.infocenter.evidencias', compact('comite'));
+    }
   }
 
   /**

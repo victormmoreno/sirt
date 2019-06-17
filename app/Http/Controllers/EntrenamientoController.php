@@ -138,7 +138,7 @@ class EntrenamientoController extends Controller
   */
   public function store(EntrenamientoFormRequest $request)
   {
-    if(session('ideasEntrenamiento') == false){
+    if(session('ideasEntrenamiento') == false) {
       alert()->warning('Advertencia!','Para registrar el entrenamiento debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
       return back()->withInput();
     } else {
