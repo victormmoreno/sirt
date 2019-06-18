@@ -27,6 +27,7 @@
                 <center>
                 </center>
                 <div class="divider"></div>
+                <a target="_blank" href="{{route('print')}}">Generar PDF</a>
                 <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="comitesDelNodo_table">
                   <thead>
                     <tr>

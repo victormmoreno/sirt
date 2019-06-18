@@ -11,8 +11,10 @@ use App\Models\Idea;
 use App\Models\Comite;
 use App\Models\ComiteIdea;
 use App\Http\Controllers\ArchivoComiteController;
+use App\Http\Controllers\PDF\PdfComiteController;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Events\Comite\ComiteWasRegistered;
 
 class ComiteController extends Controller
 {
@@ -176,9 +178,14 @@ class ComiteController extends Controller
           $comite = $this->comiteRepository->store($request, $codigoComite);
           foreach (session('ideasComiteCreate') as $key => $value) {
             $this->comiteRepository->storeComiteIdea($value, $comite->id);
+            $value['FechaComite'] = $comite->fechacomite;
             if ($value['Admitido'] == 1) {
+              $pdf = PdfComiteController::printPDF($value);
+              event(new ComiteWasRegistered($value, $pdf));
               $this->ideaRepository->updateEstadoIdea($value['id'], 'Admitido');
             } else {
+              $pdf = PdfComiteController::printPDFNoAceptado($value);
+              event(new ComiteWasRegistered($value, $pdf));
               $this->ideaRepository->updateEstadoIdea($value['id'], 'No Admitido');
             }
           }

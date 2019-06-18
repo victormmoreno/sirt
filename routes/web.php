@@ -208,6 +208,18 @@ Route::group([
     }
 );
 
+//-------------------Route group para todos los pdfs de la aplicacion
+Route::group([
+    	'prefix' => 'pdf',
+      'namespace' => 'PDF',
+	],
+    function () {
+        Route::get('/', 'PdfComiteController@printPDF')->name('print');
+    }
+);
+
+
+
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
 ===================================================================*/
