@@ -2,20 +2,31 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Repositories\Repository\UserRepository\UserRepository;
+use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
+
+    public $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->middleware('auth');
+        $this->userRepository = $userRepository;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        
-        return view('users.profile.profile');
+
+        return view('users.profile.profile',[
+            'user' => $this->userRepository->findById($id),
+        ]);
 
     }
 

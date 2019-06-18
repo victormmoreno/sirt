@@ -13,6 +13,8 @@
 
 Route::get('/', function () {
 
+
+
     // dd(config('laravelpermission.permissions.linea.index'));
     // 
     // $user = App\User::()->last();
@@ -147,8 +149,8 @@ Route::group([
     }
 );
 
-
-Route::resource('perfil', 'User\ProfileController',['except'=>'show']);
+Route::get('perfil/{id}', 'User\ProfileController@index')->name('perfil.index');
+Route::resource('perfil', 'User\ProfileController',['except'=>'show','index']);
 
 //-------------------Route group para el módulo de ideas
 Route::group([

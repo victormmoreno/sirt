@@ -17,6 +17,7 @@ class Infocenter extends Model
     protected $fillable = [
         'nodo_id',
         'user_id',
+        'extension',
     ];
 
     public function user()

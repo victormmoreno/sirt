@@ -10,11 +10,11 @@ use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanquineo;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
+use App\Models\Ocupacion;
 use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\Notifications\ResetPasswordNotification;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -158,6 +158,15 @@ class User extends Authenticatable implements JWTSubject
     =            relaciones eloquent            =
     ===========================================*/
 
+    //relaciones muchos a muchos
+
+    public function ocupaciones()
+    {
+        return $this->belongsToMany(Ocupacion::class, 'ocupaciones_users')
+            ->withTimestamps();
+
+    }
+
     public function rol()
     {
         return $this->belongsTo(Rols::class, 'rol_id', 'id');
@@ -265,7 +274,7 @@ class User extends Authenticatable implements JWTSubject
     ================================================================*/
     public static function generatePasswordRamdom()
     {
-        return str_random(9);       
+        return str_random(9);
     }
 
     /*=====  End of metodo para generar contraseña aleatoria  ======*/

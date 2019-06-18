@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
                 'servicios',
                 'ocupaciones',
                 'tiposdocumentos',
+                'ocupaciones',
                 'estadosidea',
                 'sectores',
                 'tiposarticulaciones',
@@ -82,6 +83,7 @@ class DatabaseSeeder extends Seeder
                 'users',
                 'gruposinvestigacion',
                 'empresas',
+                'ocupaciones_users',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

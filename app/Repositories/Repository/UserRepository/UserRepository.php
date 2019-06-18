@@ -8,7 +8,9 @@ use App\Models\Departamento;
 use App\Models\Eps;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
+use App\Models\Ocupacion;
 use App\Models\TipoDocumento;
+use App\User;
 use Carbon\Carbon;
 
 class UserRepository
@@ -105,5 +107,29 @@ class UserRepository
     }
 
     /*=====  End of metodod para registrar   ======*/
+
+
+    /*====================================================================
+    =            metodo para  consultar todas las ocupaciones            =
+    ====================================================================*/
+    
+    public function getAllOcupaciones()
+    {
+        return Ocupacion::allOcupaciones()->orderBy('nombre')->get();
+    }
+    
+    /*=====  End of metodo para  consultar todas las ocupaciones  ======*/
+
+     /*===============================================================
+    =            metodo para consultar el usuario por id            =
+    ===============================================================*/
+
+    public function findById($id)
+    {
+        return User::findOrFail($id);
+    }
+
+    /*=====  End of metodo para consultar el usuario por id  ======*/
+    
 
 }

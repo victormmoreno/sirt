@@ -85,13 +85,14 @@ class AdminController extends Controller
      */
     public function administradorCreate()
     {
-
+        // dd($this->userRepository->getAllOcupaciones());
         return view('users.administrador.administrador.create', [
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
         ]);
     }
 
