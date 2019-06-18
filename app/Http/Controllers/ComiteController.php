@@ -10,7 +10,7 @@ use App\Models\Nodo;
 use App\Models\Idea;
 use App\Models\Comite;
 use App\Models\ComiteIdea;
-use App\Http\Controllers\ArchivoController;
+use App\Http\Controllers\ArchivoComiteController;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -98,33 +98,27 @@ class ComiteController extends Controller
     if (request()->ajax()) {
       $archivosComite = $this->comiteRepository->consultarRutasArchivosDeUnComite( $id );
       return datatables()->of($archivosComite)
-      ->addColumn('see', function ($data) {
-        $button = '
-        <a class="btn light-red m-b-xs modal-trigger">
-        <i class="material-icons">remove_red_eye</i>
-        </a>
-        ';
-        return $button;
-      })->addColumn('download', function ($data) {
+      ->addColumn('download', function ($data) {
         $download = '
-        <a class="btn info m-b-xs">
+        <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
         <i class="material-icons">file_download</i>
         </a>
         ';
         return $download;
       })->addColumn('delete', function ($data) {
-        $delete = '
-        <a class="btn light-red m-b-xs">
-        <i class="material-icons">delete</i>
-        </a>
-        ';
+        $delete = '<form method="POST" action="' . route('csibt.files.destroy', $data) . '">
+        ' . method_field('DELETE') . '' .  csrf_field() . '
+        <button class="btn red darken-4 m-b-xs">
+        <i class="material-icons">delete_forever</i>
+        </button>
+        </form>';
         return $delete;
       })->addColumn('file', function ($data) {
         $file = '
-        <img class="materialboxed" data-caption="A picture of a way with a group of trees in a park" width="250" src="' . url($data->ruta) . '">
+        <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
         ';
         return $file;
-      })->rawColumns(['see', 'download', 'delete', 'file'])->make(true);
+      })->rawColumns(['download', 'delete', 'file'])->make(true);
     }
   }
 

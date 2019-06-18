@@ -16,7 +16,7 @@ class ComiteRepository
   // Consulta los archivos que tiene ese comité
   public function consultarRutasArchivosDeUnComite($id)
   {
-    return ArchivoComite::select('ruta')
+    return ArchivoComite::select('ruta', 'archivoscomites.id')
     ->join('comites', 'comites.id', '=', 'archivoscomites.comite_id')
     ->where('comites.id', $id)
     ->get();
