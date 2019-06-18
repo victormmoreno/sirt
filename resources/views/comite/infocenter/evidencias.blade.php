@@ -53,7 +53,7 @@
                     <thead>
                       <tr>
                         <th>Archivo</th>
-                        <th>Ver</th>
+                        {{-- <th>Ver</th> --}}
                         <th>Descargar</th>
                         <th>Eliminar</th>
                         {{-- <th>Observaciones</th>
@@ -99,18 +99,17 @@
         {
           data: 'file',
           name: 'file',
-        },
-        {
-          data: 'see',
-          name: 'see',
+          orderable: false,
         },
         {
           data: 'download',
           name: 'download',
+          orderable: false,
         },
         {
           data: 'delete',
           name: 'delete',
+          orderable: false,
         },
       ],
       initComplete: function () {

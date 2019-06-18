@@ -200,11 +200,25 @@ Route::group([
         Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
         Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
+        Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
         Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store');
         Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
+        Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');
     }
 );
+
+//-------------------Route group para todos los pdfs de la aplicacion
+Route::group([
+    	'prefix' => 'pdf',
+      'namespace' => 'PDF',
+	],
+    function () {
+        Route::get('/', 'PdfComiteController@printPDF')->name('print');
+    }
+);
+
+
 
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
