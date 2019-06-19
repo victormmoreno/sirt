@@ -128,7 +128,7 @@
     </div>
     <div class="sidebar-account-settings">
       <ul>
-        <li class="no-padding ">
+        <li class="no-padding">
           <a class="waves-effect waves-grey ">
             <i class="material-icons">
               perm_contact_calendar
@@ -207,17 +207,17 @@
           Inicio
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a href="" class="waves-effect waves-grey">
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">toll</i>Articulaciones
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">record_voice_over</i>EDT's
         </a>
@@ -366,12 +366,12 @@
           </ul>
         </div>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li class="no-padding">
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">toll</i>Articulaciones
         </a>

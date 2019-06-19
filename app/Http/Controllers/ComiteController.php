@@ -88,39 +88,65 @@ class ComiteController extends Controller
           </a>
           ';
           return $button;
-        })->rawColumns(['details'])->make(true);
+        })->addColumn('evidencias', function ($data) {
+          $button = '
+          <a class="btn blue-grey m-b-xs" href="' . route('csibt.evidencias', $data->id) . '">
+          <i class="material-icons">library_books</i>
+          </a>
+          ';
+          return $button;
+        })->rawColumns(['details', 'evidencias'])->make(true);
       }
       return view('comite.dinamizador.index');
     }
   }
 
-  // Datatable para mostrar los archivos de un comité
+  // Datatable para mostrar los archivos de un comité (Infocenter)
   public function datatableArchivosDeUnComite($id)
   {
     if (request()->ajax()) {
-      $archivosComite = $this->comiteRepository->consultarRutasArchivosDeUnComite( $id );
-      return datatables()->of($archivosComite)
-      ->addColumn('download', function ($data) {
-        $download = '
-        <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-        <i class="material-icons">file_download</i>
-        </a>
-        ';
-        return $download;
-      })->addColumn('delete', function ($data) {
-        $delete = '<form method="POST" action="' . route('csibt.files.destroy', $data) . '">
-        ' . method_field('DELETE') . '' .  csrf_field() . '
-        <button class="btn red darken-4 m-b-xs">
-        <i class="material-icons">delete_forever</i>
-        </button>
-        </form>';
-        return $delete;
-      })->addColumn('file', function ($data) {
-        $file = '
-        <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
-        ';
-        return $file;
-      })->rawColumns(['download', 'delete', 'file'])->make(true);
+      if (auth()->user()->rol()->first()->nombre == 'Infocenter') {
+        $archivosComite = $this->comiteRepository->consultarRutasArchivosDeUnComite( $id );
+        return datatables()->of($archivosComite)
+        ->addColumn('download', function ($data) {
+          $download = '
+          <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+          <i class="material-icons">file_download</i>
+          </a>
+          ';
+          return $download;
+        })->addColumn('delete', function ($data) {
+          $delete = '<form method="POST" action="' . route('csibt.files.destroy', $data) . '">
+          ' . method_field('DELETE') . '' .  csrf_field() . '
+          <button class="btn red darken-4 m-b-xs">
+          <i class="material-icons">delete_forever</i>
+          </button>
+          </form>';
+          return $delete;
+        })->addColumn('file', function ($data) {
+          $file = '
+          <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
+          ';
+          return $file;
+        })->rawColumns(['download', 'delete', 'file'])->make(true);
+      } else {
+        $archivosComite = $this->comiteRepository->consultarRutasArchivosDeUnComite( $id );
+        return datatables()->of($archivosComite)
+        ->addColumn('download', function ($data) {
+          $download = '
+          <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+          <i class="material-icons">file_download</i>
+          </a>
+          ';
+          return $download;
+        })->addColumn('file', function ($data) {
+          $file = '
+          <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
+          ';
+          return $file;
+        })->rawColumns(['download', 'file'])->make(true);
+
+      }
     }
   }
 
@@ -135,8 +161,26 @@ class ComiteController extends Controller
         </a>
         ';
         return $button;
-      })->rawColumns(['details'])->make(true);
+      })->addColumn('evidencias', function ($data) {
+        $button = '
+        <a class="btn blue-grey m-b-xs" href="' . route('csibt.evidencias', $data->id) . '">
+        <i class="material-icons">library_books</i>
+        </a>
+        ';
+        return $button;
+      })->rawColumns(['details', 'evidencias'])->make(true);
     }
+  }
+
+  // Método para modificar las evidencias de un comité
+  public function updateEvidencias(Request $request, $id)
+  {
+    !isset($request['ev_correos']) ? $request['ev_correos'] = 0 : $request['ev_correos'] = 1;
+    !isset($request['ev_listado']) ? $request['ev_listado'] = 0 : $request['ev_listado'] = 1;
+    !isset($request['ev_otros']) ? $request['ev_otros'] = 0 : $request['ev_otros'] = 1;
+    $evidenciasComite = $this->comiteRepository->updateEvidenciasComite($request, $id);
+    alert()->success('Modificación Exitosa!','Las evidencias del CSIBT se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
+    return redirect('csibt');
   }
 
   /**
@@ -202,8 +246,11 @@ class ComiteController extends Controller
   {
     if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
       $comite = $this->comiteRepository->consultarComitePorId($id)->last();
-      // dd($comite->codigo);
+      // dd($comite);
       return view('comite.infocenter.evidencias', compact('comite'));
+    } else if (auth()->user()->rol()->first()->nombre != 'Ingreso' && auth()->user()->rol()->first()->nombre != 'Talento')  {
+      $comite = $this->comiteRepository->consultarComitePorId($id)->last();
+      return view('comite.evidencias', compact('comite'));
     }
   }
 
