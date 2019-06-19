@@ -192,10 +192,10 @@
                                                             <div class="right">
                                                             
         
-                                                            <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Más Información</a>
+                                                            <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Cambiar Información</a>
                                                             <!-- Dropdown Structure -->
                                                             <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="{{route('perfil.edit',$user->id)}}">Cambiar Información</a></li>
+                                                                <li><a href="#!">one</a></li>
                                                                 <li><a href="#!">two</a></li>
                                                                 <li class="divider"></li>
                                                                 <li><a href="#!">three</a></li>

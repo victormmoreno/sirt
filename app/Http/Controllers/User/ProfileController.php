@@ -30,6 +30,21 @@ class ProfileController extends Controller
 
     }
 
+    public function roles($id)
+    {
+        return view('users.profile.roles',[
+            'user' => $this->userRepository->findById($id),
+        ]);
+    }
+
+
+    public function permisos($id)
+    {
+        return view('users.profile.permisos',[
+            'user' => $this->userRepository->findById($id),
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

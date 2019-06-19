@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Ciudad extends Model
@@ -22,6 +23,11 @@ class Ciudad extends Model
     public function departamento()
     {
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'ciudad_id', 'id');
     }
 
     public function centros()

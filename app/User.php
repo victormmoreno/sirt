@@ -3,10 +3,12 @@
 namespace App;
 
 use App\Models\ActivationToken;
+use App\Models\Ciudad;
 use App\Models\Dinamizador;
 use App\Models\Eps;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanguineo;
 use App\Models\GrupoSanquineo;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
@@ -167,6 +169,11 @@ class User extends Authenticatable implements JWTSubject
 
     }
 
+    public function ciudad()
+    {
+        return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
+    }
+
     public function rol()
     {
         return $this->belongsTo(Rols::class, 'rol_id', 'id');
@@ -184,7 +191,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function grupoSanguineo()
     {
-        return $this->belongsTo(GrupoSanquineo::class, 'gruposanquineo_id', 'id');
+        return $this->belongsTo(GrupoSanguineo::class, 'gruposanguineo_id', 'id');
     }
 
     public function eps()
@@ -216,6 +223,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
+
+
 
     /*=====  End of relaciones eloquent  ======*/
 

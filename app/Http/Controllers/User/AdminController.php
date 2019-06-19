@@ -170,6 +170,7 @@ class AdminController extends Controller
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ciudades' => $this->userRepository->getAllCiudadDepartamento($user->iddepartamento),
+            'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
         ]);
     }
 

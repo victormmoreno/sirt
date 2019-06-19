@@ -13,7 +13,8 @@
 
 Route::get('/', function () {
 
-
+// $user = App\User::first();
+// dd($user->grupoSanguineo);
 
     // dd(config('laravelpermission.permissions.linea.index'));
     // 
@@ -150,6 +151,8 @@ Route::group([
 );
 
 Route::get('perfil/{id}', 'User\ProfileController@index')->name('perfil.index');
+Route::get('perfil/roles/{id}', 'User\ProfileController@roles')->name('perfil.roles');
+Route::get('perfil/permisos/{id}', 'User\ProfileController@permisos')->name('perfil.permisos');
 Route::resource('perfil', 'User\ProfileController',['except'=>'show','index']);
 
 //-------------------Route group para el módulo de ideas
