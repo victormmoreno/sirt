@@ -25,7 +25,7 @@ class ComiteRepository
   // Consulta un comité por su id
   public function consultarComitePorId($id)
   {
-    return Comite::select('codigo', 'fechacomite', 'id')
+    return Comite::select('codigo', 'fechacomite', 'id', 'correos', 'listado_asistencia', 'otros')
     ->where('comites.id', $id)
     ->get();
   }
@@ -87,6 +87,17 @@ class ComiteRepository
       "admitido" => $value['Admitido'],
       "asistencia" => $value['Asistencia'],
       "observaciones" => $value['Observaciones'],
+    ]);
+  }
+
+  // Hace el registro en la tabla Comite_Idea
+  public function updateEvidenciasComite($request, $idComite)
+  {
+    return Comite::where('id', $idComite)
+    ->update([
+      "correos"            => $request['ev_correos'],
+      "listado_asistencia"   => $request['ev_listado'],
+      "otros" => $request['ev_otros'],
     ]);
   }
 

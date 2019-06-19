@@ -31,6 +31,7 @@
                       <th>Fecha</th>
                       <th>Observaciones</th>
                       <th>Ideas de Proyecto</th>
+                      <th>Evidencias</th>
                     </tr>
                   </thead>
                   <tbody>

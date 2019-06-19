@@ -13,7 +13,9 @@
           <div class="card-content">
             <div class="row">
               <div class="col s12 m12 l12">
-                <form id="formValidate">
+                <form id="formValidate" onsubmit="return checkSubmit()" method="post" action="{{ route('csibt.update.evidencias', $comite->id) }}">
+                  {!! method_field('PUT')!!}
+                  {!! csrf_field() !!}
                   <div class="row">
                     <div class="col s12 m6 l6">
                       <small>Código del Comité <span class="red-text">*</span></small>
@@ -29,19 +31,19 @@
                     <h5>Evidencias del CSIBT</h5>
                     <div class="col s12 m4 l4">
                       <p class="p-v-xs">
-                        <input type="checkbox" name="ev_correos" id="ev_correos" value="1">
+                        <input type="checkbox" name="ev_correos" {{ $comite->correos == 0 ? '' : 'checked' }} id="ev_correos" value="1">
                         <label for="ev_correos">Correos<span class="red-text">*</span></label>
                       </p>
                     </div>
                     <div class="col s6 m4 l4">
                       <p class="p-v-xs">
-                        <input type="checkbox" name="ev_listado" id="ev_listado" value="1">
+                        <input type="checkbox" name="ev_listado" {{ $comite->listado_asistencia == 0 ? '' : 'checked' }} id="ev_listado" value="1">
                         <label for="ev_listado">Listado de Asistencia <span class="red-text">*</span></label>
                       </p>
                     </div>
                     <div class="col s6 m4 l4">
                       <p class="p-v-xs">
-                        <input type="checkbox" name="ev_otros" id="ev_otros" value="1">
+                        <input type="checkbox" name="ev_otros" {{ $comite->otros == 0 ? '' : 'checked' }} id="ev_otros" value="1">
                         <label for="ev_otros">Otros</label>
                       </p>
                     </div>
@@ -49,29 +51,24 @@
                   <div class="divider"></div>
                   <div class="dropzone"></div>
                   <div class="divider"></div>
-                  <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="archivosDelComite">
-                    <thead>
-                      <tr>
-                        <th>Archivo</th>
-                        {{-- <th>Ver</th> --}}
-                        <th>Descargar</th>
-                        <th>Eliminar</th>
-                        {{-- <th>Observaciones</th>
-                        <th>Ideas de Proyecto</th>
-                        <th>Editar</th>
-                        <th>Evidencias</th> --}}
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                  </table>
                   <div class="divider"></div>
                   <center>
                     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                     <a href="{{route('csibt')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                   </center>
                 </form>
+                <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="archivosDelComite">
+                  <thead>
+                    <tr>
+                      <th>Archivo</th>
+                      <th style="width: 10%">Descargar</th>
+                      <th style="width: 10%">Eliminar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -124,7 +121,6 @@
       }
     });
   }
-
 
   var DropzoneComite = new Dropzone('.dropzone', {
     url: '/csibt/store/{{ $comite->id }}/filesComite',

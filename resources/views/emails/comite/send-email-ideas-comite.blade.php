@@ -7,18 +7,10 @@ Hola,
 
 Cordial Saludo.
 
-Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar al sistema {{config('app.name')}}
-
-<h3><b>Nombres contacto: </b> {{$datosIdea->nombres_contacto}}</h3>
-<h3><b>Aepllidos contacto: </b> {{$datosIdea->apellidos_contacto}}</h3>
-<h3><b>Correo contacto: </b> {{$datosIdea->correo_contacto}}</h3>
+Hemos enviado este correo para informarte de la desición que se dió en el Comité de Selección de Ideas de Bases Tecnológicas.
 <br>
-Con las anteriores credenciales podrás iniciar sesión mediante el siguiente boton.
+Para conocer el resultado, debe abrir el archivo adjunto a este email.
 <br>
-@component('mail::button', ['url' => route('login')])
-Iniciar Sesión
-@endcomponent
-
 Gracias,<br>
 {{config('mail.from.name')}} <br>
 Gestión {{ config('app.name') }}

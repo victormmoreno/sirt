@@ -27,16 +27,15 @@
                 <center>
                 </center>
                 <div class="divider"></div>
-                <a target="_blank" href="{{route('print')}}">Generar PDF</a>
                 <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="comitesDelNodo_table">
                   <thead>
                     <tr>
                       <th>Código del Comité</th>
                       <th>Fecha</th>
                       <th>Observaciones</th>
-                      <th>Ideas de Proyecto</th>
-                      <th>Editar</th>
-                      <th>Evidencias</th>
+                      <th style="width: 8%">Ideas de Proyecto</th>
+                      <th style="width: 8%">Editar</th>
+                      <th style="width: 8%">Evidencias</th>
                     </tr>
                   </thead>
                   <tbody>
