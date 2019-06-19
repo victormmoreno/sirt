@@ -60,6 +60,7 @@ mix.scripts([
 		'resources/app/comite/infocenter/create.js',
 		'resources/app/comite/gestor/index.js',
 		'resources/app/comite/administrador/index.js',
+		'resources/app/empresa/index.js',
 		'resources/app/user/administrador/index-administrador.js',
 		'resources/app/user/administrador/index-dinamizador.js',
 	],'public/js/app2.js');
