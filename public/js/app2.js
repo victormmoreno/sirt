@@ -961,6 +961,11 @@ $('.dataTables_length select').addClass('browser-default');
         name: 'edit',
         orderable: false
       },
+      {
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
 
     ],
     initComplete: function () {
@@ -1078,6 +1083,7 @@ csibt = {
 }
 
 $(document).ready(function() {
+  csibt_create.getIdeasEnLaSesionDelComite();
   $('#txtfechacomite_create').bootstrapMaterialDatePicker({
     time:false,
     date:true,

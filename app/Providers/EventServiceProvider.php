@@ -31,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\User\UserWelcome',
             'App\Listeners\User\SendNotificationPasswordEmail',
         ],
+        'App\Events\Comite\ComiteWasRegistered' => [
+            'App\Listeners\Comite\IdeaWasRegisteredInComite',
+        ],
     ];
 
     /**

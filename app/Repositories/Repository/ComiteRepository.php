@@ -7,10 +7,29 @@ use App\Models\EstadoIdea;
 use App\Models\Comite;
 use App\Models\Idea;
 use App\Models\ComiteIdea;
+use App\Models\ArchivoComite;
 use Illuminate\Support\Facades\DB;
 
 class ComiteRepository
 {
+
+  // Consulta los archivos que tiene ese comité
+  public function consultarRutasArchivosDeUnComite($id)
+  {
+    return ArchivoComite::select('ruta', 'archivoscomites.id')
+    ->join('comites', 'comites.id', '=', 'archivoscomites.comite_id')
+    ->where('comites.id', $id)
+    ->get();
+  }
+
+  // Consulta un comité por su id
+  public function consultarComitePorId($id)
+  {
+    return Comite::select('codigo', 'fechacomite', 'id')
+    ->where('comites.id', $id)
+    ->get();
+  }
+
   //-- Consulta los entrenamientos de un nodo
   public function consultarComitesPorNodo($id)
   {
@@ -36,5 +55,39 @@ class ComiteRepository
     ->get();
   }
 
+  //-- Consulta un comité en una fecha
+  public function consultarComitePorNodoYFecha($id, $fecha)
+  {
+    return Comite::select('comites.id', 'fechacomite', 'codigo')
+    ->join('comite_idea', 'comite_idea.comite_id', '=', 'comites.id')
+    ->join('ideas', 'ideas.id', '=', 'comite_idea.idea_id')
+    ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+    ->where('fechacomite', $fecha)
+    ->where('nodos.id', $id)
+    ->get();
+  }
+
+  // Hace el registro de un comité
+  public function store($request, $codigo)
+  {
+    return Comite::create([
+      'codigo' => $codigo,
+      'fechacomite' => $request->input('txtfechacomite_create'),
+      'observaciones' => $request->input('txtobservacionescomite'),
+    ]);
+  }
+
+  // Hace el registro en la tabla Comite_Idea
+  public function storeComiteIdea($value, $idComite)
+  {
+    return ComiteIdea::create([
+      "idea_id"            => $value['id'],
+      "comite_id"   => $idComite,
+      "hora" => $value['Hora'],
+      "admitido" => $value['Admitido'],
+      "asistencia" => $value['Asistencia'],
+      "observaciones" => $value['Observaciones'],
+    ]);
+  }
 
 }

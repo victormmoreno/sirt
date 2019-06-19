@@ -27,6 +27,7 @@
                 <center>
                 </center>
                 <div class="divider"></div>
+                <a target="_blank" href="{{route('print')}}">Generar PDF</a>
                 <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="comitesDelNodo_table">
                   <thead>
                     <tr>
@@ -35,6 +36,7 @@
                       <th>Observaciones</th>
                       <th>Ideas de Proyecto</th>
                       <th>Editar</th>
+                      <th>Evidencias</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -69,13 +71,13 @@
     <center><h4 id="fechaComiteModal" class="center-aling"></h4></center>
     <div class="divider"></div>
     <div>
-      <table class="striped">
+      <table class="striped" style="width: 100%">
         <thead>
           <tr>
             <th>Idea de Proyecto</th>
             <th>Hora</th>
             <th>Asistencia</th>
-            <th>Observaciones</th>
+            <th style="width: 40%">Observaciones</th>
             <th>Admitido</th>
             <th>Editar Idea</th>
             <th>Detalles de la Idea</th>

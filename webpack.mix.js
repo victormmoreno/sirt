@@ -14,7 +14,7 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js');
 
 mix.styles([
-		'resources/assets/plugins/materialize/css/materialize.min.css',
+		'resources/assets/plugins/materialize/css/materialize.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
 		'public/sweetalert2/sweetalert2.css',

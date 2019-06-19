@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ArchivoComite;
 
 class Comite extends Model
 {
@@ -22,4 +23,9 @@ class Comite extends Model
     'fechacomite',
     'observaciones',
   ];
+
+  public function archivos()
+  {
+    return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
+  }
 }

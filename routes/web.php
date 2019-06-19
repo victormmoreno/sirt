@@ -18,9 +18,10 @@ Route::get('/', function () {
 
     // dd(config('laravelpermission.permissions.linea.index'));
     //
-    // $user = App\User::()->last();
+    // $user = App\User::all()->last();
 
     // dd($user->getRoleNames()[0]);
+
 
     // $user = App\Models\Departamento::allDepartamentos()->pluck('id','nombre');
     // dd($user);
@@ -225,14 +226,30 @@ Route::group([
         Route::get('/create', 'ComiteController@create')->name('csibt.create');
         Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
+        Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
         Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
+        Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
+        Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
         Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store');
-        Route::post('/store/filesComite', 'ArchivoController@store')->name('csibt.files.store');
+        Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
+        Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');
     }
 );
+
+//-------------------Route group para todos los pdfs de la aplicacion
+Route::group([
+    	'prefix' => 'pdf',
+      'namespace' => 'PDF',
+	],
+    function () {
+        Route::get('/', 'PdfComiteController@printPDF')->name('print');
+    }
+);
+
+
 
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
