@@ -28,7 +28,7 @@ class CreateComiteIdeaTable extends Migration
             $table->time('hora');
             $table->tinyInteger('admitido')->default('0');
             $table->tinyInteger('asistencia')->default('0');
-            $table->string('observaciones',1000)->nullable();
+            $table->string('observaciones',2000)->nullable();
             $table->timestamps();
 
             $table->index(["idea_id"], 'fk_entrenamiento_comite_idea1_idx');

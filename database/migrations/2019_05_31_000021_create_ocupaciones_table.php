@@ -17,7 +17,7 @@ class CreateOcupacionesTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre',100);
+            $table->string('nombre', 200)->unique();
             $table->timestamps();
         });
     }

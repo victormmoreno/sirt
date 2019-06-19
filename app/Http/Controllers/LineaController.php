@@ -12,11 +12,16 @@ class LineaController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('auth');
+       
         $this->middleware([
             'auth',
-            'role:'.Rols::IsAdministrador(),
-            'permission:'.config('laravelpermission.permissions.linea.index').'|'.config('laravelpermission.permissions.linea.register').'|'.config('laravelpermission.permissions.linea.edit').'|'.config('laravelpermission.permissions.linea.delete')
+            'role_or_permission:'                
+                .config('laravelpermission.roles.roleAdministrador').'|'
+                .config('laravelpermission.permissions.linea.index').'|'
+                .config('laravelpermission.permissions.linea.register').'|'
+                .config('laravelpermission.permissions.linea.edit').'|'
+                .config('laravelpermission.permissions.linea.delete'),
+            
         ]);
     }
 
@@ -27,7 +32,7 @@ class LineaController extends Controller
      */
     public function index()
     {
-
+                
         if (request()->ajax()) {
             return datatables()->of(LineaTecnologica::all())
                 ->addColumn('action', function ($data) {

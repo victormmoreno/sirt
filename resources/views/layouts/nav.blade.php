@@ -112,9 +112,11 @@
             @guest
             @else
               @if(auth()->user()->rol->nombre != 'Administrador' && auth()->user()->rol->nombre != 'Talento')
+
                 {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }}
               @else
                 {{ auth()->user()->rol->nombre }} Tecnoparques
+                {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
               @endif
             <i class="material-icons right">
               arrow_drop_down

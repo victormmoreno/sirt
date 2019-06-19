@@ -25,7 +25,7 @@
                                     </div>
                                 </span>
                                 <div class="row">
-                                  <form   method="POST" action="{{ route('password.update') }}">
+                                  <form   method="POST" action="{{ route('password.update') }}" onsubmit="return checkSubmit()">
                                     @csrf
                                     <input type="hidden" name="token" value="{{ $token }}">
                                     <div class="input-field col s12">

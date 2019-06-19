@@ -9,6 +9,7 @@ use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
+use App\Models\Ocupacion;
 use App\Models\Perfil;
 use App\Models\Rols;
 use App\Models\TipoDocumento;
@@ -76,6 +77,11 @@ class UsersTableSeeder extends Seeder
         $userAdmin->assignRole($roleAdministrador);
         $userAdmin->givePermissionTo($registrarIdeaPermission);
 
+        $ocupacion = Ocupacion::all()->random()->id;
+
+        $userAdmin->ocupaciones()->attach($ocupacion);
+
+
         $userDinamizador = User::create([
             'rol_id'              => Rols::where('nombre', '=', 'Dinamizador')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
@@ -98,6 +104,9 @@ class UsersTableSeeder extends Seeder
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
+
+        
+
 
         $userDinamizador->dinamizador()->create([
             'user_id' => $userDinamizador->id,
@@ -190,6 +199,7 @@ class UsersTableSeeder extends Seeder
         $userInfocenter->infocenter()->create([
             'nodo_id' => Nodo::where('nombre', '=', 'Medellin')->first()->id,
             'user_id' => $userInfocenter->id,
+            'extension' => 413342,
         ]);
 
         $userIngreso = User::create([

@@ -44,7 +44,7 @@ $factory->define(User::class, function (Faker $faker) {
         'fechanacimiento'     => $faker->date($format = 'Y-m-d', $max = 'now'),
         'genero'              => $faker->randomElement([User::IS_MASCULINO, User::IS_FEMENINO]),
         'estado'              => $faker->boolean,
-        'password'            => Hash::make('12345678'),
+        'password'            => Hash::make('123456789'),
         'remember_token'      => Str::random(10),
         'estrato'             => rand(1, 6),
 

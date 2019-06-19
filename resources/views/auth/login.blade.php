@@ -1,5 +1,7 @@
 @extends('auth.layouts.app')
 
+@section('meta-tittle', 'Inicio Sesión')
+
 @section('content-auth')
   
 <div class="mn-content valign-wrapper" id="app">
@@ -12,7 +14,7 @@
                           <span class="card-title center-align">
                               <div class="row">
                                   <div class="col s12 m12 l12">
-                                      <a href="">
+                                      <a href="{{route('/')}}">
                                           <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title responsive-img"></img>
                                       </a>
                                   </div>
@@ -20,14 +22,14 @@
                                   <br>
                                   <div class="col s12 m12 l12">
                                       <div class="divider" style="background:#008981;"></div>
-                                        <a class="footer-text left-align" href="">
+                                        <a class="footer-text left-align" href="{{route('/')}}">
                                             <i class="material-icons arrow-l">arrow_back</i>
                                         </a>INICIAR SESIÓN
                                   </div>
                               </div>
                             </span>
                 <div class="row">
-                  <form   method="POST" action="{{ route('login') }}">
+                  <form   method="POST" action="{{ route('login') }}" onsubmit="return checkSubmit()">
                     @csrf
                     <div class="input-field col s12">
                       <i class="material-icons prefix">mail</i>

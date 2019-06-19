@@ -16,24 +16,17 @@ class Entidad extends Model
     protected $fillable = [
         'ciudad_id',
         'nombre',
-        'direccion',
         'contacto',
     ];
 
-
-
     public function centros()
     {
-      return $this->hasMany(Centro::class, 'entidad_id', 'id');
+        return $this->hasMany(Centro::class, 'entidad_id', 'id');
     }
-
-    
 
     public function tecnoacademias()
     {
-      return $this->hasMany(Tecnoacademia::class, 'entidad_id', 'id');
+        return $this->hasMany(Tecnoacademia::class, 'entidad_id', 'id');
     }
-
-    
 
 }
