@@ -315,7 +315,7 @@
         <i class="material-icons prefix">
              details
         </i>
-        <select class="" id="txtocupaciones" name="txtocupaciones" style="width: 100%" tabindex="-1">
+        <select class="" id="txtocupaciones" name="txtocupaciones" style="width: 100%" tabindex="-1" onchange="CreateUserAdmin.addOcupacion(this)">
             <option value="">Seleccione ocupación</option>
             
             @foreach($ocupaciones as $value)
@@ -334,6 +334,35 @@
         @enderror
     </div>
 </div>
+<div class="row">
+                    <div class="col s10 m9 l9">
+                      <div class="card blue-grey lighten-5">
+                        <div class="card-content">
+                          <table class="highlight centered responsive-table">
+                            <thead>
+                              <tr>
+                                <th style="width: 20%">Nombre Ocupación</th>
+                                <th style="width: 10%">Eliminar</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tblOcupacionAdministradorCreate">
+
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col s2 m3 l3">
+                      <blockquote>
+                        <ul class="collection">
+                          <li class="collection-item">Para agregar una idea de proyecto al entrenamiento solo debe buscarla y seleccionarla.</li>
+                        </ul>
+                      </blockquote>
+                    </div>
+                  </div>
+
+
+
 <div class="divider mailbox-divider"></div>
 <br>
 <center>

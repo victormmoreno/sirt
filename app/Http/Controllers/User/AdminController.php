@@ -5,10 +5,14 @@ namespace App\Http\Controllers\User;
 use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\AdminFormRequest;
+use App\Models\Cart;
+use App\Models\Ocupacion;
+use App\Models\OcupacionModel;
 use App\Repositories\Repository\UserRepository\AdminRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
+use Session;
 
 class AdminController extends Controller
 {
@@ -94,6 +98,42 @@ class AdminController extends Controller
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
         ]);
+    }
+
+
+    public function anadirOcupacion(Request $request, $id)
+    {
+        $ocupacion = Ocupacion::findOrFail($id);
+        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
+        $OcupacionModel = new OcupacionModel($oldCart);
+        $OcupacionModel->add($ocupacion, $ocupacion->id);
+        $request->session()->put('ocupacion', $OcupacionModel);
+        
+        $notificacion = [
+            'message' => $ocupacion->nombre.' añadido exitosamente', 
+            'alert-type' => 'success'
+        ];
+        return response()->json([
+            'notificacion' => $notificacion,
+            'ocupacion' => $OcupacionModel,
+        ]);
+           
+    }
+
+    public function getOcupacionSesion()
+    {
+        
+        return response()->json([
+            'getOcupacion' => Session::get('ocupacion'),
+        ]);
+    }
+
+    public function removerItemOcupacion($id)
+    {
+        $ocupacion = Ocupacion::findOrFail($id);
+        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
+        $OcupacionModel = new OcupacionModel($oldCart);
+        $OcupacionModel->removeallitem($id);
     }
 
     /**

@@ -27,6 +27,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+
     use Notifiable, HasRoles;
 
     const IS_MASCULINO = 1;
@@ -42,6 +43,8 @@ class User extends Authenticatable implements JWTSubject
         'ultimo_login',
         'fechanacimiento',
     ];
+
+    public $items = null;
 
     /**
      * The attributes that are mass assignable.
