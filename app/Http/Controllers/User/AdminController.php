@@ -120,6 +120,45 @@ class AdminController extends Controller
            
     }
 
+    /*==============================================================
+    =            metodo para añadir ocupaciones session            =
+    ==============================================================*/
+    
+    public function anadirOcupacionEdit(Request $request, $idOcupacion, $idUser)
+    {
+        
+        
+
+    
+        $ocupacion = Ocupacion::findOrFail($idOcupacion);
+        $ocupacion->users;
+
+
+
+        $user = User::findOrFail($idUser);
+        $sessionUser = Session::put('ocupacionEdit',$user);
+        $request->session()->put('ocupacionEdit', $user->ocupaciones);
+    
+        // dd($sessionUser);
+      
+        // foreach ($user->ocupaciones as  $value) {
+        //    $datos =$request->session()->put(   $value);
+        // }
+       
+        $oldOcupacion = Session::has('ocupacionEdit') ? Session::get('ocupacionEdit', $user->ocupaciones) : null;
+        // $OcupacionModel = new OcupacionModel($oldOcupacion);
+        // $OcupacionModel->add($ocupacion->users, $ocupacion->id);
+
+        return response()->json([
+            'getOcupacion' => $oldOcupacion,
+        ]);
+    }
+    
+    /*=====  End of metodo para añadir ocupaciones session  ======*/
+    
+
+    
+
     public function getOcupacionSesion()
     {
         
@@ -133,7 +172,29 @@ class AdminController extends Controller
         $ocupacion = Ocupacion::findOrFail($id);
         $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
         $OcupacionModel = new OcupacionModel($oldCart);
-        $OcupacionModel->removeallitem($id);
+        $OcupacionModel->removeitem($id);
+
+        if(count($OcupacionModel->items) > 0)
+        {
+            Session::put('ocupacion', $OcupacionModel);
+        }
+        else
+        {
+            Session::forget('ocupacion');
+        }
+
+        Session::put('ocupacion', $OcupacionModel);
+
+        $notificacion = array(
+            'message' => $ocupacion->nombre.' ha sido eliminado', 
+            'alert-type' => 'success'
+        );
+
+         return response()->json([
+            'notificacion' => $notificacion,
+            'ocupacion' => $OcupacionModel,
+        ]);
+
     }
 
     /**
@@ -200,6 +261,10 @@ class AdminController extends Controller
     {
 
         $user = $this->adminRepository->findInfoUserById($id);
+        $user->ocupaciones;
+       
+         // $sessionEdit= Session::get('ocupacionEdit', $user->ocupaciones);
+
         // dd($user->genero);
         
         return view('users.administrador.administrador.edit', [
@@ -211,6 +276,7 @@ class AdminController extends Controller
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ciudades' => $this->userRepository->getAllCiudadDepartamento($user->iddepartamento),
             'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
+            'sessionEdit'     =>  $user->ocupaciones,
         ]);
     }
 

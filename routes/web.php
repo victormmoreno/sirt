@@ -13,6 +13,12 @@
 
 Route::get('/', function () {
 
+
+$ocupacion = App\Models\Ocupacion::first();
+dd($ocupacion->users);
+
+
+// dd($ocupaciones->items);
 // $user = App\User::first();
     // dd($user->grupoSanguineo);
 
@@ -139,6 +145,11 @@ Route::group([
         Route::get('/administrador/anadir-ocupacion/{id}', [
         'uses' => 'AdminController@anadirOcupacion',
         'as' => 'administrador.anadirocupacion'
+        ]);
+
+        Route::get('/administrador/anadir-ocupacion-edit/{idOcupacion}/{idUser}', [
+        'uses' => 'AdminController@anadirOcupacionEdit',
+        'as' => 'administrador.anadirocupacion.edit'
         ]);
 
         Route::post('/anadir-ocupacion', [

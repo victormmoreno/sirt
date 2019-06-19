@@ -63,11 +63,11 @@
 @push('script')
 <script>
 $(document).ready(function() {
-CreateUserAdmin.getOcupaciones();
+UserAdmininstradorOcupacion.getOcupaciones();
 
 });
     
- var CreateUserAdmin = {
+ var UserAdmininstradorOcupacion = {
     addOcupacion:function(e){
         let id = $(e).val();
 
@@ -79,7 +79,7 @@ CreateUserAdmin.getOcupaciones();
             url:'/usuario/administrador/anadir-ocupacion/'+ id,
         }).done(function(response){
             // console.log(response.ocupacion);
-            CreateUserAdmin.getOcupaciones();
+            UserAdmininstradorOcupacion.getOcupaciones();
             // $('#tblOcupacionAdministradorCreate').empty();
             // $.each(response.ocupacion, function (i,elemento){
                 
@@ -125,7 +125,7 @@ CreateUserAdmin.getOcupaciones();
           url:'/usuario/administrador/remove-ocupacion/'+idOcupacion,
         }).done(function(respuesta){
                 console.log(respuesta);
-          // CreateUserAdmin.getOcupaciones();
+                UserAdmininstradorOcupacion.getOcupaciones();
         });
       },
 }

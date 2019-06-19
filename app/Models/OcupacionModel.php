@@ -16,24 +16,24 @@ class OcupacionModel
     public function add($item, $id)
     {
         $itemAlmacenado = [
-            
-            'item' => $item
+
+            'item' => $item,
         ];
 
-        if($this->items)
-        {
-            if(array_key_exists($id, $this->items))
+        if ($this->items) {
+            if (array_key_exists($id, $this->items)) {
                 $itemAlmacenado = $this->items[$id];
+            }
+
         }
 
         $this->items[$id] = $itemAlmacenado;
 
     }
 
-
-    public function removeaitem($id)
+    public function removeitem($id)
     {
-            unset($this->items[$id]);
+        unset($this->items[$id]);
     }
 
 }
