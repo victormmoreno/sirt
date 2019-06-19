@@ -232,9 +232,9 @@
           <i class="material-icons">domain</i>Uso de Infraestructura
         </a>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">business</i>Empresas
+      <li class="no-padding {{setActiveRoute('empresa')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
         </a>
       </li>
       <li class="no-padding">
