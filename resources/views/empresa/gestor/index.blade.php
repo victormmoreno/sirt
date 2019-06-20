@@ -27,11 +27,11 @@
                 <center>
                 </center>
                 <div class="divider"></div>
-                <table id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
+                <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
                   <thead>
                     <tr>
                       <th>Nit</th>
-                      <th>nombre de la Empresa</th>
+                      <th>Nombre de la Empresa</th>
                       <th>Ciudad - Departamento</th>
                       <th>Dirección</th>
                       <th>Detalles</th>

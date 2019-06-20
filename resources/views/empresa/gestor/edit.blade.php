@@ -16,10 +16,11 @@
                 <div class="col s12 m12 l12">
                   <br>
                   <center>
-                    <span class="card-title center-align">Nueva Empresa - Red Tecnoparque</span>
+                    <span class="card-title center-align">Modifcar Empresa - Red Tecnoparque</span>
                   </center>
                   <div class="divider"></div>
-                  <form action="{{route('empresa.store')}}" method="POST" onsubmit="return checkSubmit()">
+                  <form action="{{ route('empresa.update', $empresa->id)}}" method="POST" onsubmit="return checkSubmit()">
+                    {!! method_field('PUT')!!}
                     {!! csrf_field() !!}
                     @if($errors->any())
                       <div class="card red lighten-3">
@@ -34,14 +35,14 @@
                     @endif
                     <div class="row">
                       <div class="input-field col s12 m4 l4">
-                        <input type="text" name="nombre" id="nombre" value="{{ old('nombre') }}">
+                        <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $empresa->entidad->nombre) }}">
                         <label for="nombre">Nombre de la Empresa <span class="red-text">*</span></label>
                         @error('nombre')
                           <label id="nombre-error" class="error" for="nombre">{{ $message }}</label>
                         @enderror
                       </div>
                       <div class="input-field col s12 m4 l4">
-                        <input type="text" name="nit" id="nit" value="{{ old('nit') }}">
+                        <input type="text" name="nit" id="nit" value="{{ old('nit', $empresa->nit) }}">
                         <label for="nit">Nit de la Empresa (Sin puntos ni dígito de verificación) <span class="red-text">*</span></label>
                         @error('nit')
                           <label id="nit-error" class="error" for="nit">{{ $message }}</label>
@@ -51,7 +52,7 @@
                         <select class="" id="txtsector" name="txtsector" style="width: 100%" tabindex="-1">
                           <option value="">Seleccione el sector</option>
                           @foreach($sectores as $value)
-                            <option value="{{$value->id}}" {{ old('txtsector') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
+                            <option value="{{$value->id}}"{{ $empresa->sector->id == $value->id ? 'selected' : '' }} {{ old('txtsector') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
                           @endforeach
                         </select>
                         <label for="txtsector">Sector de la Empresa <span class="red-text">*</span></label>
@@ -62,14 +63,14 @@
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="email_entidad" id="email_entidad" value="{{ old('email_entidad') }}">
+                        <input type="text" name="email_entidad" id="email_entidad" value="{{ old('email_entidad', $empresa->entidad->email_entidad) }}">
                         <label for="email_entidad">Email de la Empresa</label>
                         @error('email_entidad')
                              <label id="email_entidad-error" class="error" for="email_entidad">{{ $message }}</label>
                         @enderror
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="direccion" id="direccion" value="{{ old('direccion') }}">
+                        <input type="text" name="direccion" id="direccion" value="{{ old('direccion', $empresa->direccion) }}">
                         <label for="direccion">Dirección de la Empresa <span class="red-text">*</span></label>
                         @error('direccion')
                              <label id="direccion-error" class="error" for="direccion">{{ $message }}</label>
@@ -81,7 +82,9 @@
                         <select class="" id="txtdepartamento" name="txtdepartamento" onchange="EmpresaCreate.getCiudad()" style="width: 100%" tabindex="-1">
                           <option value="">Seleccione el departamento</option>
                           @foreach($departamentos as $value)
-                            <option value="{{$value->id}}" {{ old('txtdepartamento') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
+                            <option value="{{$value->id}}"
+                               {{ $empresa->entidad->ciudad->departamento->id == $value->id ? 'selected' : '' }} {{ old('txtdepartamento') == $value->id ? 'selected' : '' }}>{{$value->nombre}}
+                             </option>
                           @endforeach
                         </select>
                         <label for="txtdepartamento">Departamento de la Empresa <span class="red-text">*</span></label>
@@ -131,7 +134,7 @@
                     </div>
                     <div class="divider"></div>
                     <center>
-                      <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
+                      <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                       <a href="{{route('empresa')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                     </center>
                   </form>
@@ -147,9 +150,7 @@
 @push('script')
   <script>
   $(document).ready(function() {
-    @if($errors->any())
     EmpresaCreate.getCiudad();
-    @endif
   });
 
   var EmpresaCreate = {
@@ -169,6 +170,8 @@
         })
         @if($errors->any())
         $('#txtciudad_id').val({{old('txtciudad_id')}});
+        @else
+        $('#txtciudad_id').val({{$empresa->entidad->ciudad->id}});
         @endif
         $('#txtciudad_id').material_select();
       });

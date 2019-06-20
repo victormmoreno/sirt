@@ -1396,8 +1396,7 @@ var empresaIndex = {
         swal('Ups!!', 'Ha ocurrido un error', 'warning');
       } else {
         $("#modalDetalleDeUnaEmpresaTecnoparque_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Empresa </span><br>");
-        // $("#modalDetalleDeUnaEmpresaTecnoparque_titulo").append("<span class='cyan-text text-darken-3'>Nombre de la Empresa: </span>"+respuesta.detalles.nombre_empresa+"");
-        $("#modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa").append('<div class="row">'
+        $("#modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa").append("<div class='row'>"
         +'<div class="col s12 m6 l6">'
         +'<span class="cyan-text text-darken-3">Nit de la Empresa: </span>'
         +'</div>'
@@ -1448,6 +1447,15 @@ var empresaIndex = {
         +'</div>'
         +'<div class="col s12 m6 l6">'
         +'<span class="black-text">'+respuesta.detalles.nombre_contacto+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Teléfono del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">' + respuesta.detalles.telefono_contacto + '</span>'
         +'</div>'
         +'</div>'
         +'<div class="divider"></div>'
