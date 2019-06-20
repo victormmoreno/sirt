@@ -209,6 +209,7 @@ class AdminController extends Controller
         $password = User::generatePasswordRamdom();
         //guardar registro
         $administrador   = $this->adminRepository->Store($request, $password);
+
         $activationToken = $this->userRepository->activationToken($administrador->id);
         //envio de email con contraseña
         if ($administrador != null) {

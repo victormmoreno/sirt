@@ -64,7 +64,11 @@
 <script>
 $(document).ready(function() {
 UserAdmininstradorOcupacion.getOcupaciones();
-
+    $('.EPSselect2').select2({ 
+    tags : true , 
+    tokenSeparators : [ ',' , '' ],
+    
+    }); 
 });
     
  var UserAdmininstradorOcupacion = {
@@ -109,7 +113,7 @@ UserAdmininstradorOcupacion.getOcupaciones();
                    
                     $('#tblOcupacionAdministradorCreate').append('<tr>'
                     +'<td>'+elemento.item.nombre+'</td>'
-                     +'<td><a class="waves-effect red lighten-3 btn" onclick="CreateUserAdmin.getEliminar('+elemento.item.id+');"><i class="material-icons">delete_sweep</i></a></td>'
+                     +'<td><a class="waves-effect red lighten-3 btn" onclick="UserAdmininstradorOcupacion.getEliminar('+elemento.item.id+');"><i class="material-icons">delete_sweep</i></a></td>'
                     +'</tr>');
 
                 
@@ -127,8 +131,24 @@ UserAdmininstradorOcupacion.getOcupaciones();
                 console.log(respuesta);
                 UserAdmininstradorOcupacion.getOcupaciones();
         });
-      },
+    },
 }
+
+// var eps = {
+//     getOtraEsp:function (ideps) {
+//         let id = $(ideps).val();
+//         let nombre = $("#txteps option:selected").text();
+//         if (nombre != 'OTRA') {
+//             $('#otraeps').hide();
+             
+//         }else{
+//             console.log(nombre);
+//             $('#otraeps').show();
+//         }
+//         console.log(id);
+        
+//     }
+// }
 
 </script>
 @endpush

@@ -560,6 +560,11 @@
         </a>
       </li>
       <li class="no-padding">
+        <a class="waves-effect waves-grey" href="{{route('sublineas.index')}}">
+          <i class="material-icons">linear_scale</i>Sublineas
+        </a>
+      </li>
+      <li class="no-padding">
         <a href="">
           <i class="material-icons">settings_input_svideo</i>Costos Administrativos
         </a>

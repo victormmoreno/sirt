@@ -33,14 +33,15 @@ class AdminFormRequest extends FormRequest
             'txtdepartamento'    => 'required',
             'txtdocumento'         => 'required|digits_between:6,11|numeric|unique:users,documento,'.$this->route('id'),
             'txtnombres'           => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            // 'txtnombres'           => 'required|min:1|max:45|regex:/([a-zA-ZñÑáéíóúÁÉÍÓÚ]){1,3}([0-9]{1,10})+(\s*)-+(\s*)([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)+$/',
             'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'           => 'required',
             'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,'.$this->route('id'),
             'txtbarrio'         => 'required|min:1|max:100',
             'txtdireccion'         => 'required|min:1|max:200',
-            'txttelefono'          => 'digits_between:6,11|numeric',
-            'txtcelular'           => 'digits_between:10,11|numeric',
+            'txttelefono'          => 'nullable|digits_between:6,11|numeric',
+            'txtcelular'           => 'nullable|digits_between:10,11|numeric',
 
         ];
     }

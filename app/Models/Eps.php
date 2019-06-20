@@ -56,7 +56,7 @@ class Eps extends Model
     public function scopeAllEps($query, $estado, $OrderBy)
     {
 
-        return $query->select('eps.id', 'eps.nombre')->where('estado', $estado)->orderby($OrderBy);
+        return $query->selectRaw( 'eps.id, concat(eps.codigo," - ", eps.nombre) as nombre')->where('estado', $estado)->orderby($OrderBy);
 
     }
 

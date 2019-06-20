@@ -109,10 +109,8 @@
 
 <div class="row">
     <div class="input-field col s12 m6 l6">
-        <i class="material-icons prefix">
-            details
-        </i>
-        <select class="" id="txteps" name="txteps" style="width: 100%" tabindex="-1">
+        
+        <select class="js-states browser-default EPSselect2" id="txteps" name="txteps" style="width: 100%" tabindex="-1">
             <option value="">Seleccione eps</option>
             @foreach($eps as $value)
                 @if(isset($user->eps_id))
@@ -122,7 +120,7 @@
                 @endif
             @endforeach
         </select>
-        <label for="txteps">Esp *</label>
+        <label for="txteps" class="active">Esp *</label>
         @error('txteps')
             <label id="txteps-error" class="error" for="txteps">{{ $message }}</label>
         @enderror 

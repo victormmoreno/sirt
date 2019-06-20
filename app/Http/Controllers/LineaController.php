@@ -19,8 +19,7 @@ class LineaController extends Controller
                 .config('laravelpermission.roles.roleAdministrador').'|'
                 .config('laravelpermission.permissions.linea.index').'|'
                 .config('laravelpermission.permissions.linea.register').'|'
-                .config('laravelpermission.permissions.linea.edit').'|'
-                .config('laravelpermission.permissions.linea.delete'),
+                .config('laravelpermission.permissions.linea.edit'),
             
         ]);
     }
@@ -84,17 +83,7 @@ class LineaController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -129,20 +118,8 @@ class LineaController extends Controller
         }else{
             Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");
         }
-
-
-
         return redirect('lineas');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }

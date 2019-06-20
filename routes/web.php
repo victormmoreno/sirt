@@ -12,10 +12,13 @@
  */
 
 Route::get('/', function () {
-
-
-$ocupacion = App\Models\Ocupacion::first();
-dd($ocupacion->users);
+// $empresa = "1234 - sol de juan";
+// $porciones = explode("-", $empresa);
+// dd($porciones);
+// $ocupacion = App\Models\Ocupacion::first();
+// dd($ocupacion->users);
+// 
+// 
 
 
 // dd($ocupaciones->items);
@@ -99,6 +102,7 @@ DB::listen(function ($query) {
 Auth::routes(['register' => false]);
 
 /*=====  End of rutas modulos de login registro, recuperacion de contraseña  ======*/
+
 
 /*===========================================================
 =            ruta principal apenas se hace login            =
@@ -277,11 +281,20 @@ Route::get('/notificaciones', 'NotificationsController@index')->name('notificati
 Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
 Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
 
+
+
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
-Route::resource('lineas', 'LineaController');
-// Route::resource('ideas', 'IdeaController');
+Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
+
+/*====================================================================
+=            rutas para las funcionalidades de las sublineas            =
+====================================================================*/
+
+Route::resource('sublineas', 'SublineaController');
+
+/*=====  End of rutas para las funcionalidades de las sublineas  ======*/
