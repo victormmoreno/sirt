@@ -250,6 +250,8 @@ Route::group([
         Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
         Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit');
         Route::get('/ajaxDetallesDeUnaEmpresa/{id}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
+        Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
+        Route::post('/', 'EmpresaController@store')->name('empresa.store');
         // Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         // Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
         // Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
@@ -257,9 +259,7 @@ Route::group([
         // Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
         // Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
         // Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
-        // Route::put('/updateEvidencias/{id}', 'ComiteController@updateEvidencias')->name('csibt.update.evidencias');
         // Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
-        // Route::post('/', 'ComiteController@store')->name('csibt.store');
         // Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
         // Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');
     }
