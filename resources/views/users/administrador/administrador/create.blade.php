@@ -63,92 +63,88 @@
 @push('script')
 <script>
 $(document).ready(function() {
-UserAdmininstradorOcupacion.getOcupaciones();
-    $('.EPSselect2').select2({ 
-    tags : true , 
-    tokenSeparators : [ ',' , '' ],
-    
-    }); 
+// UserAdmininstradorOcupacion.getOcupaciones();
+    eps.getOtraEsp();
 });
     
- var UserAdmininstradorOcupacion = {
-    addOcupacion:function(e){
-        let id = $(e).val();
+//  var UserAdmininstradorOcupacion = {
+//     addOcupacion:function(e){
+//         let id = $(e).val();
 
-        console.log(id);
-       
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url:'/usuario/administrador/anadir-ocupacion/'+ id,
-        }).done(function(response){
-            // console.log(response.ocupacion);
-            UserAdmininstradorOcupacion.getOcupaciones();
-            // $('#tblOcupacionAdministradorCreate').empty();
-            // $.each(response.ocupacion, function (i,elemento){
-                
-            //      $.each(elemento, function (e,el){
-            //         console.log(el.item.nombre);
-            //         $('#tblOcupacionAdministradorCreate').append('<tr>'
-            //         +'<td>'+el.item.nombre+'</td>'
-            //         +'<td>'+el.item.nombre+'</td>');
-
-            //      });
-                
-            
-            // });
-        });
-    },
-    getOcupaciones: function(){
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url:'/usuario/administrador/getOcupaciones',
-        }).done(function(response){
-            // console.log(response.getOcupacion.items);
-            
-            $('#tblOcupacionAdministradorCreate').empty();
-                      
-            $.each(response.getOcupacion.items, function (i,elemento){
-                   
-                    $('#tblOcupacionAdministradorCreate').append('<tr>'
-                    +'<td>'+elemento.item.nombre+'</td>'
-                     +'<td><a class="waves-effect red lighten-3 btn" onclick="UserAdmininstradorOcupacion.getEliminar('+elemento.item.id+');"><i class="material-icons">delete_sweep</i></a></td>'
-                    +'</tr>');
-
-                
-            
-            });
-        });
-    },
-    getEliminar:function (idOcupacion) {
-        console.log(idOcupacion);
-        $.ajax({
-          type:'get',
-          dataType:'json',
-          url:'/usuario/administrador/remove-ocupacion/'+idOcupacion,
-        }).done(function(respuesta){
-                console.log(respuesta);
-                UserAdmininstradorOcupacion.getOcupaciones();
-        });
-    },
-}
-
-// var eps = {
-//     getOtraEsp:function (ideps) {
-//         let id = $(ideps).val();
-//         let nombre = $("#txteps option:selected").text();
-//         if (nombre != 'OTRA') {
-//             $('#otraeps').hide();
-             
-//         }else{
-//             console.log(nombre);
-//             $('#otraeps').show();
-//         }
 //         console.log(id);
-        
-//     }
+       
+//         $.ajax({
+//             dataType:'json',
+//             type:'get',
+//             url:'/usuario/administrador/anadir-ocupacion/'+ id,
+//         }).done(function(response){
+//             // console.log(response.ocupacion);
+//             UserAdmininstradorOcupacion.getOcupaciones();
+//             // $('#tblOcupacionAdministradorCreate').empty();
+//             // $.each(response.ocupacion, function (i,elemento){
+                
+//             //      $.each(elemento, function (e,el){
+//             //         console.log(el.item.nombre);
+//             //         $('#tblOcupacionAdministradorCreate').append('<tr>'
+//             //         +'<td>'+el.item.nombre+'</td>'
+//             //         +'<td>'+el.item.nombre+'</td>');
+
+//             //      });
+                
+            
+//             // });
+//         });
+//     },
+//     getOcupaciones: function(){
+//         $.ajax({
+//             dataType:'json',
+//             type:'get',
+//             url:'/usuario/administrador/getOcupaciones',
+//         }).done(function(response){
+//             // console.log(response.getOcupacion.items);
+            
+//             $('#tblOcupacionAdministradorCreate').empty();
+                      
+//             $.each(response.getOcupacion.items, function (i,elemento){
+                   
+//                     $('#tblOcupacionAdministradorCreate').append('<tr>'
+//                     +'<td>'+elemento.item.nombre+'</td>'
+//                      +'<td><a class="waves-effect red lighten-3 btn" onclick="UserAdmininstradorOcupacion.getEliminar('+elemento.item.id+');"><i class="material-icons">delete_sweep</i></a></td>'
+//                     +'</tr>');
+
+                
+            
+//             });
+//         });
+//     },
+//     getEliminar:function (idOcupacion) {
+//         console.log(idOcupacion);
+//         $.ajax({
+//           type:'get',
+//           dataType:'json',
+//           url:'/usuario/administrador/remove-ocupacion/'+idOcupacion,
+//         }).done(function(respuesta){
+//                 console.log(respuesta);
+//                 UserAdmininstradorOcupacion.getOcupaciones();
+//         });
+//     },
 // }
+
+var eps = {
+    getOtraEsp:function (ideps) {
+        let id = $(ideps).val();
+        let nombre = $("#txteps option:selected").text();
+        if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
+            $('#otraeps').hide();
+             
+        }else{
+            console.log(nombre);
+            $('#otraeps').show();
+        }
+        console.log(id);
+        
+    }
+}
 
 </script>
 @endpush

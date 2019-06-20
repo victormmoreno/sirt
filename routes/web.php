@@ -12,6 +12,8 @@
  */
 
 Route::get('/', function () {
+    // $entidad = App\Models\Entidad::where('entidades.id',171)->first();
+    dd(App\Models\Eps::OTRA_EPS);
 // $empresa = "1234 - sol de juan";
 // $porciones = explode("-", $empresa);
 // dd($porciones);

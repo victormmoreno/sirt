@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Model;
 
 class Entidad extends Model
@@ -27,6 +28,11 @@ class Entidad extends Model
     public function tecnoacademias()
     {
         return $this->hasMany(Tecnoacademia::class, 'entidad_id', 'id');
+    }
+
+    public function empresa()
+    {
+        return $this->hasOne(Empresa::class, 'entidad_id', 'id');
     }
 
 }

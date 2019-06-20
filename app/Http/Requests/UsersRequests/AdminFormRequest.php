@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\UsersRequests;
 
+use App\Models\Eps;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AdminFormRequest extends FormRequest
 {
@@ -23,6 +25,7 @@ class AdminFormRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this->txteps);
      
         return [
             'txttipo_documento'    => 'required',
@@ -36,6 +39,7 @@ class AdminFormRequest extends FormRequest
             // 'txtnombres'           => 'required|min:1|max:45|regex:/([a-zA-ZñÑáéíóúÁÉÍÓÚ]){1,3}([0-9]{1,10})+(\s*)-+(\s*)([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)+$/',
             'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'txtotraeps' => Rule::requiredIf($this->txteps == 42),
             'txtestrato'           => 'required',
             'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,'.$this->route('id'),
             'txtbarrio'         => 'required|min:1|max:100',

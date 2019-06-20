@@ -83,21 +83,12 @@ class AdminRepository
     public function Store($request, $password)
     {
         
-
-        if (ctype_digit($request->get('txteps'))) {
-            $id = $request->get('txteps');
-        }else{
-            $texto = $request->get('txteps');
-             $explode =  explode("-", $texto);
-        
-        }
         $user = User::create([
             "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
             "tipodocumento_id"    => $request->input('txttipo_documento'),
             "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
             "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
-            // "eps_id"              => $request->input('txteps'),
-            "eps_id"              => Eps::find($id = $request->get('txteps')) ? $id : Eps::Create(['codigo' => $explode['0'],'nombre' => $explode['1']])->id,
+            "eps_id"              => $request->input('txteps'),
             "ciudad_id"           => $request->input('txtciudad'),
             "nombres"             => $request->input('txtnombres'),
             "apellidos"           => $request->input('txtapellidos'),

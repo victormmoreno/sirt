@@ -22,4 +22,9 @@ class Empresa extends Model
         'correo_contacto',
         'telefono_contacto',
     ];
+
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class,'entidad_id', 'id');
+    }
 }

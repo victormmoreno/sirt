@@ -89,7 +89,7 @@
         <i class="material-icons prefix">
             details
         </i>
-        <select class="" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1">
+        <select class="" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1" >
             <option value="">Seleccione grupo sanguíneo </option>
             @foreach($gruposanguineos as $value)
                 @if(isset($user->gruposanguineo_id))
@@ -108,9 +108,11 @@
 </div>
 
 <div class="row">
-    <div class="input-field col s12 m6 l6">
-        
-        <select class="js-states browser-default EPSselect2" id="txteps" name="txteps" style="width: 100%" tabindex="-1">
+    <div class="input-field col s12 m6 l6" >
+        <i class="material-icons prefix">
+            details
+        </i>
+        <select class="" id="txteps" name="txteps" style="width: 100%" tabindex="-1" onchange="eps.getOtraEsp(this)">
             <option value="">Seleccione eps</option>
             @foreach($eps as $value)
                 @if(isset($user->eps_id))
@@ -120,12 +122,21 @@
                 @endif
             @endforeach
         </select>
-        <label for="txteps" class="active">Esp *</label>
+        <label for="txteps" >Esp *</label>
         @error('txteps')
             <label id="txteps-error" class="error" for="txteps">{{ $message }}</label>
         @enderror 
     </div>
-    
+    <div class="input-field col s12 m6 l6" id="otraeps">
+        <i class="material-icons prefix">
+            details
+        </i>
+        <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{old('txtotraeps')}}">
+        <label for="txtotraeps" class="active">Esp *</label>
+        @error('txtotraeps')
+            <label id="txtotraeps-error" class="error" for="txtotraeps">{{ $message }}</label>
+        @enderror 
+    </div>
    
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
@@ -314,7 +325,7 @@
         </i>
 
         @if(isset($user->gradoescolaridad_id))
-            <select class="" id="txtocupaciones" style="width: 100%" tabindex="-1" onchange="OcupacionAdministradorEdit.addOcupacionEdit(this)">
+            <select class="" id="txtocupaciones" style="width: 100%" tabindex="-1" >
                 <option value="">Seleccione ocupación</option>
                 
                 @foreach($ocupaciones as $value)
@@ -322,7 +333,7 @@
                 @endforeach
             </select>
         @else
-            <select class="" id="txtocupaciones" style="width: 100%" tabindex="-1" onchange="UserAdmininstradorOcupacion.addOcupacion(this)">
+            <select class="" id="txtocupaciones" style="width: 100%" tabindex="-1">
                 <option value="">Seleccione ocupación</option>
                 @foreach($ocupaciones as $value)
                     <option value="{{$value->id}}" {{old('txtocupaciones') }}>{{$value->nombre}}</option>
