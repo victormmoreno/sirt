@@ -29,6 +29,12 @@ class Entidad extends Model
         return $this->hasOne(Empresa::class, 'entidad_id', 'id');
     }
 
+    // Relación con la tabla de gruposinvestigacion
+    public function grupoinvestigacion()
+    {
+        return $this->hasOne(GrupoInvestigacion::class, 'entidad_id', 'id');
+    }
+
     public function tecnoacademia()
     {
         return $this->hasOne(Tecnoacademia::class, 'entidad_id', 'id');

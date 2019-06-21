@@ -12,4 +12,10 @@ class ClasificacionColciencias extends Model
         'nombre',
         'estado',
     ];
+
+    public function gruposinvestigacion()
+    {
+      return $this->hasMany(GrupoInvestigacion::class, 'clasificacioncolciencias_id', 'id');
+    }
+
 }

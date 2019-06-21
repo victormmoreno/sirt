@@ -18,7 +18,7 @@
                   </div>
                   <div class="col s12 m2 l2">
                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="{{route('empresa.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nueva Empresa">
+                      <a href="{{route('grupo.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nuevo Grupo de Investigación">
                         <i class="material-icons">exposure_plus_1</i>
                       </a>
                     </div>
@@ -27,14 +27,15 @@
                 <center>
                 </center>
                 <div class="divider"></div>
-                <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
+                <table style="width: 100%" id="grupoDeInvestigacionTecnoparque_table" class="display responsive-table datatable-example dataTable">
                   <thead>
                     <tr>
-                      <th>Nit</th>
-                      <th>Nombre de la Empresa</th>
-                      <th>Sector de la Empresa</th>
-                      <th>Ciudad - Departamento</th>
-                      <th>Dirección</th>
+                      <th>Código del Grupo de Investigación</th>
+                      <th>Nombre del Grupo de Investigación</th>
+                      <th>Ciudad</th>
+                      <th>Tipo de Grupo de Investigación</th>
+                      <th>Institución</th>
+                      <th>Clasificación de Colciencias</th>
                       <th>Detalles</th>
                       <th>Editar</th>
                     </tr>
@@ -49,18 +50,18 @@
         </div>
       </div>
       <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href="{{route('empresa.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nueva Empresa">
+        <a href="{{route('grupo.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Grupo de Investigación">
           <i class="material-icons">exposure_plus_1</i>
         </a>
       </div>
     </div>
   </div>
 </main>
-<div id="detalleDeUnaEmpresaTecnoparque" class="modal">
+<div id="detalleDeUnGrupoDeInvestigacion" class="modal">
   <div class="modal-content">
-    <center><h4 id="modalDetalleDeUnaEmpresaTecnoparque_titulo" class="center-aling"></h4></center>
+    <center><h4 id="modalDetalleDeUnGrupoDeInvestigacion_titulo" class="center-aling"></h4></center>
     <div class="divider"></div>
-    <div id="modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa"></div>
+    <div id="modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa"></div>
   </div>
   <div class="modal-footer white-text">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat">Cerrar</a>

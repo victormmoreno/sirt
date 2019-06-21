@@ -238,8 +238,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">group_work</i>Grupos de Investigación
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
       </li>
       <li class="no-padding">
@@ -417,8 +417,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">business</i>Empresas
+        <a class="{{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
         </a>
       </li>
       <li class="no-padding">
@@ -610,8 +610,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">business</i>Empresas
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
         </a>
       </li>
       <li class="no-padding">

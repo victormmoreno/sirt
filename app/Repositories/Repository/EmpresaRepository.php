@@ -15,6 +15,7 @@ class EmpresaRepository
     $empresa->entidad->ciudad_id = $request->input('txtciudad_id');
     $empresa->entidad->nombre = $request->input('nombre');
     $empresa->entidad->email_entidad = $request->input('email_entidad');
+    $empresa->entidad->update();
     $empresa->sector_id = $request->input('txtsector');
     $empresa->nit = $request->input('nit');
     $empresa->direccion = $request->input('direccion');
@@ -48,7 +49,7 @@ class EmpresaRepository
   // Consulta las empresas de la red de tecnoparque
   public function consultarEmpresasDeRedTecnoparque()
   {
-    return Empresa::select('nit', 'direccion', 'entidades.nombre AS nombre_empresa', 'empresas.id')
+    return Empresa::select('nit', 'direccion', 'entidades.nombre AS nombre_empresa', 'empresas.id', 'sectores.nombre AS sector_empresa')
     ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
     ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
     ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
