@@ -25,6 +25,11 @@ class Empresa extends Model
 
     public function entidad()
     {
-        return $this->belongsTo(Entidad::class,'entidad_id', 'id');
+      return $this->belongsTo(Entidad::class,'entidad_id', 'id');
+    }
+
+    public function sector()
+    {
+      return $this->belongsTo(Sector::class, 'sector_id', 'id');
     }
 }

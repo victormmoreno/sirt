@@ -250,6 +250,38 @@ Route::group([
     }
 );
 
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'empresa',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'EmpresaController@index')->name('empresa');
+        Route::get('/create', 'EmpresaController@create')->name('empresa.create');
+        Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
+        Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit');
+        Route::get('/ajaxDetallesDeUnaEmpresa/{id}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
+        Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
+        Route::post('/', 'EmpresaController@store')->name('empresa.store');
+    }
+);
+
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'grupo',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'GrupoInvestigacionController@index')->name('grupo');
+        Route::get('/create', 'GrupoInvestigacionController@create')->name('grupo.create');
+        Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');
+        Route::get('/{id}/edit', 'GrupoInvestigacionController@edit')->name('grupo.edit');
+        Route::get('/ajaxDetallesDeUnGrupoInvestigacion/{id}', 'GrupoInvestigacionController@detallesDeUnGrupoInvestigacion')->name('grupo.detalle');
+        Route::put('/{id}', 'GrupoInvestigacionController@update')->name('grupo.update');
+        Route::post('/', 'GrupoInvestigacionController@store')->name('grupo.store');
+    }
+);
+
 //-------------------Route group para todos los pdfs de la aplicacion
 Route::group([
     	'prefix' => 'pdf',

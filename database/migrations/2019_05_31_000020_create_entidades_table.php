@@ -25,7 +25,7 @@ class CreateEntidadesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('ciudad_id');
             $table->string('nombre', 300);
-            $table->string('contacto', 200)->nullable();
+            $table->string('email_entidad', 200)->nullable();
             $table->timestamps();
 
             $table->index(["ciudad_id"], 'fk_entidades_ciudad1_idx');
