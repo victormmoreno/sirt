@@ -36,70 +36,20 @@ class AdminController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function administradorIndex()
+    
+    /*================================================================================
+    =            metodo para consultar las ciudedes segun el departamento            =
+    ================================================================================*/
+    
+    public function getCiudad($departamento)
     {
-
-        if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
-
-            $admin = $this->adminRepository->getAllAdministradores();
-
-
-            if (request()->ajax()) {
-                return datatables()->of($this->adminRepository->getAllAdministradores())
-                    ->addColumn('detail', function ($data) {
-                        
-                        $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                        return $button;
-                    })
-                    ->addColumn('edit', function ($data) {
-                        if ($data->id != auth()->user()->id) {
-                            $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                        }else{
-                            $button = '';
-                        }
-                        return $button;
-                    })
-                    ->editColumn('estado', function ($data) {
-                        if ($data->estado == User::IsActive()) {
-                            return $data->estado = 'Habilitado';
-                        } else {
-                            return $data->estado = 'Inhabilitado ';
-                        }
-                    })
-                    ->rawColumns(['detail', 'edit'])
-                    ->make(true);
-            }
-
-            return view('users.administrador.administrador.index');
-        } else {
-            abort(403);
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function administradorCreate()
-    {
-        // dd($this->userRepository->getAllOcupaciones());
-        return view('users.administrador.administrador.create', [
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
+       
+        return response()->json([
+            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
         ]);
     }
-
+    
+    /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
 
     public function anadirOcupacion(Request $request, $id)
     {
@@ -198,12 +148,76 @@ class AdminController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+        if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
+
+            $admin = $this->adminRepository->getAllAdministradores();
+
+
+            if (request()->ajax()) {
+                return datatables()->of($this->adminRepository->getAllAdministradores())
+                    ->addColumn('detail', function ($data) {
+                        
+                        $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                        return $button;
+                    })
+                    ->addColumn('edit', function ($data) {
+                        if ($data->id != auth()->user()->id) {
+                            $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        }else{
+                            $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                        }
+                        return $button;
+                    })
+                    ->editColumn('estado', function ($data) {
+                        if ($data->estado == User::IsActive()) {
+                            return $data->estado = 'Habilitado';
+                        } else {
+                            return $data->estado = 'Inhabilitado ';
+                        }
+                    })
+                    ->rawColumns(['detail', 'edit'])
+                    ->make(true);
+            }
+
+            return view('users.administrador.administrador.index');
+        } else {
+            abort(403);
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        // dd($this->userRepository->getAllOcupaciones());
+        return view('users.administrador.administrador.create', [
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function administradorStore(AdminFormRequest $request)
+    public function store(AdminFormRequest $request)
     {
         //generar contraseña
         $password = User::generatePasswordRamdom();
@@ -224,19 +238,7 @@ class AdminController extends Controller
 
     }
 
-    /*================================================================================
-    =            metodo para consultar las ciudedes segun el departamento            =
-    ================================================================================*/
     
-    public function getCiudad($departamento)
-    {
-       
-        return response()->json([
-            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
-        ]);
-    }
-    
-    /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
     
 
     /**
@@ -258,10 +260,10 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorEdit($id)
+    public function edit($id)
     {
 
-        $user = $this->adminRepository->findInfoUserById($id);
+        $user = $this->adminRepository->findById($id);
         $user->ocupaciones;
        
          // $sessionEdit= Session::get('ocupacionEdit', $user->ocupaciones);
@@ -288,7 +290,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorUpdate(AdminFormRequest $request, $id)
+    public function update(AdminFormRequest $request, $id)
     {
         $user = $this->adminRepository->findById($id);
         if ($user != null) {
@@ -307,7 +309,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorDelete($id)
+    public function delete($id)
     {
         //
     }

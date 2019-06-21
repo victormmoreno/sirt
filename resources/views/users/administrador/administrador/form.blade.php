@@ -35,7 +35,7 @@
                 @endif
             @endforeach
         </select>
-        <label for="txtcelular">Tipo Documento *</label>
+        <label for="txtcelular">Tipo Documento <span class="red-text">*</span></label>
         @error('txttipo_documento')
             <label id="txttipo_documento-error" class="error" for="txttipo_documento">{{ $message }}</label>
         @enderror
@@ -45,7 +45,7 @@
             assignment_ind
         </i>
         <input id="txtdocumento" name="txtdocumento" type="text" value="{{ isset($user->documento) ? $user->documento : old('txtdocumento')}}">
-        <label for="txtdocumento">Documento *</label> 
+        <label for="txtdocumento">Documento <span class="red-text">*</span></label> 
         @error('txtdocumento')
             <label id="txtdocumento-error" class="error" for="txtdocumento">{{ $message }}</label>
         @enderror
@@ -57,7 +57,7 @@
             account_circle
         </i>
         <input class="validate" id="txtnombres" name="txtnombres" type="text"  value="{{ isset($user->nombres) ? $user->nombres : old('txtnombres')}}">
-        <label for="txtnombres">Nombres *</label>
+        <label for="txtnombres">Nombres <span class="red-text">*</span></label>
         @error('txtnombres')
             <label id="txtnombres-error" class="error" for="txtnombres">{{ $message }}</label>
         @enderror
@@ -67,7 +67,7 @@
             account_circle
         </i>
         <input class="validate" id="txtapellidos" name="txtapellidos" type="text" value="{{ isset($user->apellidos) ? $user->apellidos : old('txtapellidos')}}">
-        <label for="txtapellidos">Apellidos *</label>
+        <label for="txtapellidos">Apellidos <span class="red-text">*</span></label>
         @error('txtapellidos')
             <label id="txtapellidos-error" class="error" for="txtapellidos">{{ $message }}</label>
         @enderror
@@ -80,7 +80,7 @@
             date_range
         </i>
         <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfecha_nacimiento')}}">
-        <label for="txtfecha_nacimiento">Fecha de Nacimiento *</label>
+        <label for="txtfecha_nacimiento">Fecha de Nacimiento <span class="red-text">*</span></label>
         @error('txtfecha_nacimiento')
             <label id="txtfecha_nacimiento-error" class="error" for="txtfecha_nacimiento">{{ $message }}</label>
         @enderror
@@ -99,7 +99,7 @@
                 @endif
             @endforeach
         </select>
-        <label for="txtgruposanguineo">Grupo Sanguíneo *</label>
+        <label for="txtgruposanguineo">Grupo Sanguíneo <span class="red-text">*</span></label>
         @error('txtgruposanguineo')
             <label id="txtgruposanguineo-error" class="error" for="txtgruposanguineo">{{ $message }}</label>
         @enderror 
@@ -122,7 +122,7 @@
                 @endif
             @endforeach
         </select>
-        <label for="txteps" >Esp *</label>
+        <label for="txteps" >Esp <span class="red-text">*</span></label>
         @error('txteps')
             <label id="txteps-error" class="error" for="txteps">{{ $message }}</label>
         @enderror 
@@ -131,8 +131,8 @@
         <i class="material-icons prefix">
             details
         </i>
-        <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{old('txtotraeps')}}">
-        <label for="txtotraeps" class="active">Esp *</label>
+        <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{ isset($user->otra_eps) ? $user->otra_eps : old('txtotraeps')}}">
+        <label for="txtotraeps" class="active">Otra Eps <span class="red-text">*</span></label>
         @error('txtotraeps')
             <label id="txtotraeps-error" class="error" for="txtotraeps">{{ $message }}</label>
         @enderror 
@@ -152,7 +152,7 @@
                 @endif 
             @endfor
         </select>
-        <label for="txtestrato">Estrato *</label>
+        <label for="txtestrato">Estrato <span class="red-text">*</span></label>
         @error('txtestrato')
             <label id="txtestrato-error" class="error" for="txtestrato">{{ $message }}</label>
         @enderror 
@@ -164,41 +164,51 @@
         <i class="material-icons prefix">
             details
         </i>
-        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministrador.getCiudad(this)" style="width: 100%" tabindex="-1">
+        @if(isset($user->ciudad->departamento->id))
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministradorEdit.getCiudad()" style="width: 100%" tabindex="-1">
             <option value="">Seleccione departamento</option>
             @foreach($departamentos as $value)
-                @if(isset($user->iddepartamento))
-                    <option value="{{$value->id}}" {{old('txtdepartamento',$user->iddepartamento) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                @if(isset($user->ciudad->departamento->id))
+                    <option value="{{$value->id}}" {{old('txtdepartamento',$user->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
                 @else
                     <option value="{{$value->id}}" {{old('txtdepartamento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
                 @endif
             @endforeach
         </select>
-        <label for="txtdepartamento">Departamento de Residencia *</label>
+        @else
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministradorCreate.getCiudad()" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione departamento</option>
+            @foreach($departamentos as $value)
+                @if(isset($user->ciudad->departamento->id))
+                    <option value="{{$value->id}}" {{old('txtdepartamento',$user->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                @else
+                    <option value="{{$value->id}}" {{old('txtdepartamento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                @endif
+            @endforeach
+        </select>
+        @endif
+        <label for="txtdepartamento">Departamento de Residencia <span class="red-text">*</span></label>
         @error('txtdepartamento')
             <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
         @enderror 
     </div>
-    
+ 
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
             details
         </i>
         @if(isset($user->ciudad_id))
         <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
-            <option value="">Seleccione Ciudad</option>
-            @foreach($ciudades as $value)
-                <option value="{{$value->id}}" {{old('txtciudad',$user->ciudad_id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
-            @endforeach
+            <option value="">Seleccione Primero el Departamento</option>
+            
         </select>
         @else
         <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
-            <option value="">Seleccione Ciudad</option>
-            
+            <option value="">Seleccione Primero el Departamento</option> 
         </select>
         @endif
         
-        <label for="txtciudad">Ciudad de Residencia *</label>
+        <label for="txtciudad">Ciudad de Residencia <span class="red-text">*</span></label>
         @error('txtciudad')
             <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
         @enderror 
@@ -210,7 +220,7 @@
             room
         </i>
         <input class="validate" id="txtbarrio" name="txtbarrio" type="text"  value="{{ isset($user->barrio) ? $user->barrio : old('txtbarrio')}}">
-        <label for="txtbarrio">Barrio *</label>
+        <label for="txtbarrio">Barrio <span class="red-text">*</span></label>
         @error('txtbarrio')
             <label id="txtbarrio-error" class="error" for="txtbarrio">{{ $message }}</label>
         @enderror
@@ -221,7 +231,7 @@
             room
         </i>
         <input class="validate" id="txtdireccion" name="txtdireccion" type="text"  value="{{ isset($user->direccion) ? $user->direccion : old('txtdireccion')}}">
-        <label for="txtdireccion">Dirección *</label>
+        <label for="txtdireccion">Dirección <span class="red-text">*</span></label>
         @error('txtdireccion')
             <label id="txtdireccion-error" class="error" for="txtdireccion">{{ $message }}</label>
         @enderror
@@ -237,7 +247,7 @@
             mail_outline
         </i>
         <input class="validate" id="txtemail" name="txtemail" type="email" value="{{ isset($user->email) ? $user->email : old('txtemail')}}">
-        <label for="txtemail">Correo *</label>
+        <label for="txtemail">Correo <span class="red-text">*</span></label>
         @error('txtemail')
             <label id="txtemail-error" class="error" for="txtemail">{{ $message }}</label>
         @enderror
@@ -274,7 +284,7 @@
                 @if(isset($user->genero))
                 <input type="checkbox" id="txtgenero" name="txtgenero" {{$user->genero != 1 ? 'checked' : old('txtgenero')}}>
                 @else
-                <input type="checkbox" id="txtgenero" name="txtgenero" {{old('txtgenero') == 1 ? 'checked' : ''}}>
+                <input type="checkbox" id="txtgenero" name="txtgenero" {{old('txtgenero') == 'on' ? 'checked' : ''}}>
                 @endif
                 <span class="lever"></span>
                 Femenino
@@ -312,7 +322,7 @@
 
             @endforeach
         </select>
-        <label for="txtgrado_escolaridad">Grado Escolaridad*</label>
+        <label for="txtgrado_escolaridad">Grado Escolaridad <span class="red-text">*</span></label>
         @error('txtgrado_escolaridad')
             <label id="txtgrado_escolaridad-error" class="error" for="txtgrado_escolaridad">{{ $message }}</label>
         @enderror

@@ -65,6 +65,10 @@
 $(document).ready(function() {
 // UserAdmininstradorOcupacion.getOcupaciones();
     eps.getOtraEsp();
+     @if($errors->any())
+    UserAdministradorCreate.getCiudad();
+    @endif
+
 });
     
 //  var UserAdmininstradorOcupacion = {
@@ -145,6 +149,30 @@ var eps = {
         
     }
 }
+
+var UserAdministradorCreate = {
+    getCiudad:function(){
+      let id;
+      id = $('#txtdepartamento').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        $('#txtciudad').empty();
+        $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+          // console.log(e.id);
+          $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudad').val({{old('txtciudad')}});
+        @endif
+        $('#txtciudad').material_select();
+      });
+    },
+  }
+
 
 </script>
 @endpush

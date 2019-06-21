@@ -26,7 +26,7 @@ class SublineaController extends Controller
     public function index()
     {
         $sublineas = $this->sublineaRepository->getAllLineas();
-        dd($sublineas);
+        return view('sublineas.administrador.index');
     }
 
     /**

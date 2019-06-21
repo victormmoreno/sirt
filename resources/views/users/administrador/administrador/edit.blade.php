@@ -62,10 +62,11 @@
 
 @push('script')
 <script>
-// $(document).ready(function() {
+$(document).ready(function() {
 // UserAdmininstradorOcupacion.getOcupaciones();
-
-// });
+    eps.getOtraEsp();
+    UserAdministradorEdit.getCiudad();
+});
     
  var OcupacionAdministradorEdit = {
     addOcupacionEdit:function(e){
@@ -116,6 +117,49 @@
     //     });
     //   },
 }
+
+var eps = {
+    getOtraEsp:function (ideps) {
+        let id = $(ideps).val();
+        let nombre = $("#txteps option:selected").text();
+        if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
+            $('#otraeps').hide();
+             
+        }else{
+            console.log(nombre);
+            $('#otraeps').show();
+        }
+        console.log(id);
+        
+    }
+}
+
+var UserAdministradorEdit = {
+    getCiudad:function(){
+      let id;
+      id = $('#txtdepartamento').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        console.log(response);
+        $('#txtciudad').empty();
+        $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+          // console.log(e.id);
+          $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudad').val({{old('txtciudad')}});
+        @else
+        $('#txtciudad').val({{$user->ciudad->id}});
+        @endif
+        $('#txtciudad').material_select();
+      });
+    },
+  }
+
 
 </script>
 @endpush

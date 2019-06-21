@@ -71,6 +71,7 @@ class User extends Authenticatable implements JWTSubject
         'estado',
         'password',
         'estrato',
+        'otra_eps',
     ];
 
     /**
@@ -94,7 +95,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getRouteKeyName()
     {
-        return 'nombres'; // db column name
+        return 'documento'; // db column name
     }
 
     public static function IsMasculino()
@@ -226,8 +227,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
-
-
 
     /*=====  End of relaciones eloquent  ======*/
 

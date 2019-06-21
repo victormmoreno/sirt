@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     // $entidad = App\Models\Entidad::where('entidades.id',171)->first();
-    dd(App\Models\Eps::OTRA_EPS);
+
 // $empresa = "1234 - sol de juan";
 // $porciones = explode("-", $empresa);
 // dd($porciones);
@@ -162,19 +162,12 @@ Route::group([
             'uses' => 'AdminController@postanadirOcupacion',
             'as'   => 'administrador.postanadirocupacion',
         ]);
-        Route::get('/administrador', 'AdminController@administradorIndex')->name('usuario.administrador.index');
-        Route::get('/administrador/create', 'AdminController@administradorCreate')->name('usuario.administrador.create');
-        Route::post('administrador', 'AdminController@administradorStore')->name('usuario.administrador.store');
-        Route::get('administrador/{id}', 'AdminController@show')->name('usuario.administrador.show');
-        Route::get('administrador/{id}/edit', 'AdminController@administradorEdit')->name('usuario.administrador.edit');
-
-        Route::put('administrador/{id}', 'AdminController@administradorUpdate')->name('usuario.administrador.update');
-        Route::delete('administrador/{id}', 'AdminController@administradorDelete')->name('usuario.administrador.delete');
         Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
+   
+        Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
-        // Route::get('dinamizador/show/{nombre}.{apellido}', 'DinamizadorController@show')->name('usuario.dinamizador.show');
         Route::resource('dinamizador', 'DinamizadorController', ['except' => 'show', 'as' => 'usuario']);
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
@@ -182,10 +175,10 @@ Route::group([
     }
 );
 
-Route::get('perfil/{id}', 'User\ProfileController@index')->name('perfil.index');
-Route::get('perfil/roles/{id}', 'User\ProfileController@roles')->name('perfil.roles');
-Route::get('perfil/permisos/{id}', 'User\ProfileController@permisos')->name('perfil.permisos');
-Route::resource('perfil', 'User\ProfileController', ['except' => 'show', 'index']);
+Route::get('perfil/{documento}', 'User\ProfileController@index')->name('perfil.index');
+Route::get('perfil/roles/{documento}', 'User\ProfileController@roles')->name('perfil.roles');
+Route::get('perfil/permisos/{documento}', 'User\ProfileController@permisos')->name('perfil.permisos');
+Route::resource('perfil', 'User\ProfileController', ['except' => 'index', 'show']);
 
 //-------------------Route group para el módulo de ideas
 Route::group([

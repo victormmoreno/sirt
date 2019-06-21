@@ -20,6 +20,12 @@ class Ciudad extends Model
 
     public $timestamps = false;
 
+    
+
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
+    
     public function departamento()
     {
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
@@ -39,6 +45,9 @@ class Ciudad extends Model
     {
         return $this->hasMany(Regional::class, 'ciudad_id', 'id');
     }
+    
+    /*=====  End of relaciones eloquent  ======*/
+    
 
 
     /*================================================================================

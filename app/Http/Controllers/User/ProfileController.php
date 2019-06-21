@@ -21,27 +21,28 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($documento)
     {
+
 
         return view('users.profile.profile',[
-            'user' => $this->userRepository->findById($id),
+            'user' => $this->userRepository->account($documento),
         ]);
 
     }
 
-    public function roles($id)
+    public function roles($documento)
     {
         return view('users.profile.roles',[
-            'user' => $this->userRepository->findById($id),
+            'user' => $this->userRepository->account($documento),
         ]);
     }
 
 
-    public function permisos($id)
+    public function permisos($documento)
     {
         return view('users.profile.permisos',[
-            'user' => $this->userRepository->findById($id),
+            'user' => $this->userRepository->account($documento),
         ]);
     }
 
@@ -83,9 +84,15 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($documento)
     {
-        //
+        return view('users.profile.edit',[
+            'user' => $this->userRepository->account($documento),
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
+        ]);
     }
 
     /**

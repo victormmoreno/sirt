@@ -1,3 +1,13 @@
+$(document).ready(function() {
+    $('#dinamizador_table').DataTable({
+        language: {
+             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+         },
+    });
+    // $('.dataTables_length select').addClass('browser-default');
+});
+
+
  var UserAdministradorDinamizador = {
      selectDinamizadoresPorNodo: function() {
          let nodo = $('#selectnodo').val();
