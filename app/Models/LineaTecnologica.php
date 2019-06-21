@@ -55,6 +55,20 @@ class LineaTecnologica extends Model
     }
     
     /*=====  End of mutador para tranformar la descripcion a minusculas y la primera letra a myuscaulas  ======*/
+
+    /*===============================================================
+    =            scope para seleccionar todas las lineas            =
+    ===============================================================*/
+    
+    public function scopeAllLineas($query)
+    {
+        return $query;
+        // return $query->select(['lineastecnologicas.id','lineastecnologicas.abreviatura','lineastecnologicas.nombre','lineastecnologicas.descripcion','lineastecnologicas.created_at','lineastecnologicas.updated_at'])
+        //     ->orderby('lineastecnologicas.nombre');
+    }
+    
+    /*=====  End of scope para seleccionar todas las lineas  ======*/
+    
     
 
     

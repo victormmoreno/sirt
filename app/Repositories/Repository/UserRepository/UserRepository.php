@@ -130,6 +130,18 @@ class UserRepository
     }
 
     /*=====  End of metodo para consultar el usuario por id  ======*/
+
+    /*========================================================================
+    =            metodo para consultar la informacion del usuario            =
+    ========================================================================*/
+    
+    public function account($documento)
+    {
+        return User::where('documento',$documento)->firstOrFail();
+    }
+    
+    /*=====  End of metodo para consultar la informacion del usuario  ======*/
+    
     
 
 }

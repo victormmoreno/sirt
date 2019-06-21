@@ -1,49 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\SublineaRepository;
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller
+class SublineaController extends Controller
 {
 
-    public $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public $sublineaRepository;
+    public function __construct(SublineaRepository $sublineaRepository)
     {
-        $this->middleware('auth');
-        $this->userRepository = $userRepository;
+        $this->sublineaRepository = $sublineaRepository;
+       
+        $this->middleware([
+            'auth',
+        ]);
+
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($documento)
+    public function index()
     {
-
-
-        return view('users.profile.profile',[
-            'user' => $this->userRepository->account($documento),
-        ]);
-
-    }
-
-    public function roles($documento)
-    {
-        return view('users.profile.roles',[
-            'user' => $this->userRepository->account($documento),
-        ]);
-    }
-
-
-    public function permisos($documento)
-    {
-        return view('users.profile.permisos',[
-            'user' => $this->userRepository->account($documento),
-        ]);
+        $sublineas = $this->sublineaRepository->getAllLineas();
+        return view('sublineas.administrador.index');
     }
 
     /**
@@ -84,15 +67,9 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($documento)
+    public function edit($id)
     {
-        return view('users.profile.edit',[
-            'user' => $this->userRepository->account($documento),
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-        ]);
+        //
     }
 
     /**
