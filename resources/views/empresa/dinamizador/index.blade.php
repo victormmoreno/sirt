@@ -16,18 +16,11 @@
                       <span class="card-title center-align">Empresas de Tecnoparque</span>
                     </div>
                   </div>
-                  <div class="col s12 m2 l2">
-                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="{{route('empresa.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nueva Empresa">
-                        <i class="material-icons">exposure_plus_1</i>
-                      </a>
-                    </div>
-                  </div>
                 </div>
                 <center>
                 </center>
                 <div class="divider"></div>
-                <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
+                <table style="width: 100%" id="empresasDeTecnoparque_tableNoGestor" class="display responsive-table datatable-example dataTable">
                   <thead>
                     <tr>
                       <th>Nit</th>
@@ -36,7 +29,7 @@
                       <th>Ciudad - Departamento</th>
                       <th>Dirección</th>
                       <th>Detalles</th>
-                      <th>Editar</th>
+                      {{-- <th>Inhabilitar</th> --}}
                     </tr>
                   </thead>
                   <tbody>
@@ -47,11 +40,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href="{{route('empresa.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nueva Empresa">
-          <i class="material-icons">exposure_plus_1</i>
-        </a>
       </div>
     </div>
   </div>

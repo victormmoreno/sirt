@@ -28,8 +28,19 @@ class EmpresaController extends Controller
   */
   public function index()
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
-      return view('empresa.gestor.index');
+    switch (auth()->user()->rol()->first()->nombre) {
+      case 'Gestor':
+        return view('empresa.gestor.index');
+        break;
+      case 'Dinamizador':
+        return view('empresa.dinamizador.index');
+        break;
+      case 'Administrador':
+        return view('empresa.administrador.index');
+        break;
+      default:
+
+        break;
     }
   }
 
@@ -43,7 +54,7 @@ class EmpresaController extends Controller
         ->addColumn('details', function ($data) {
           $button = '
           <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="empresaIndex.consultarDetallesDeUnaEmpresa('. $data->id .')">
-          <i class="material-icons">info</i>
+            <i class="material-icons">info</i>
           </a>
           ';
           return $button;
@@ -51,6 +62,20 @@ class EmpresaController extends Controller
           $edit = '<a href="'. route("empresa.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
         })->rawColumns(['details', 'edit'])->make(true);
+      } else {
+        $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
+        return datatables()->of($empresas)
+        ->addColumn('details', function ($data) {
+          $button = '
+          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="empresaIndex.consultarDetallesDeUnaEmpresa('. $data->id .')">
+          <i class="material-icons">info</i>
+          </a>
+          ';
+          return $button;
+        })->addColumn('soft_delete', function ($data) {
+          $edit = '<a class="btn m-b-xs"><i class="material-icons">sweep_delete</i></a>';
+          return $edit;
+        })->rawColumns(['details', 'soft_delete'])->make(true);
       }
     }
   }
@@ -137,27 +162,11 @@ class EmpresaController extends Controller
   public function update(EmpresaFormRequest $request, $id)
   {
     $empresa = Empresa::find($id);
-    if ($empresa != null) {
-      // DB::transaction(function () {
-        $empresaUpdate = $this->empresaRepository->update($request, $empresa);
-      // });
-      alert()->success("La empresa ha sido modificada.",'Modificación Exitosa',"success");
-    }else{
-      alert()->error("La empresa no se ha modificado.", 'Modificación Errónea', "error");
-    }
+    $empresaUpdate = $this->empresaRepository->update($request, $empresa);
+    alert()->success("La empresa ha sido modificada.",'Modificación Exitosa',"success")->showConfirmButton('Ok', '#3085d6');;
+
 
     return redirect()->route('empresa');
 
-  }
-
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
   }
 }

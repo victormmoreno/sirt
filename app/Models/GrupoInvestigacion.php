@@ -31,6 +31,8 @@ class GrupoInvestigacion extends Model
         'telefono_contacto',
     ];
 
+
+    // Retorno de las constantes del mdoelo de grupos de investigacion
     public static function IsInterno()
     {
         return self::IS_INTERNO;
@@ -48,4 +50,30 @@ class GrupoInvestigacion extends Model
     {
         return self::IS_INACTIVE;
     }
+
+    // Consultas scope para la tabla de grupos de investigación
+    public function scopeConsultarGruposDeInvestigaciónTecnoparque($query)
+    {
+      return $query->select('codigo_grupo', 'entidades.nombre', 'institucion', 'clasificacionescolciencias.nombre AS clasificacioncolciencias', 'gruposinvestigacion.id')
+      ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+      ->selectRaw('IF(tipogrupo = ' . $this->IsInterno() . ', "Interno", "Externo") AS tipo_grupo')
+      ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+      ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+      ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+      ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+      ->where('gruposinvestigacion.estado', $this->IsActive());
+    }
+
+    // Relación con la tabla de entidades
+    public function entidad()
+    {
+      return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
+    }
+
+    //Relación con la tabla de clasificacionescolciencias
+    public function clasificacioncolciencias()
+    {
+      return $this->belongsTo(ClasificacionColciencias::class, 'clasificacioncolciencias_id', 'id');
+    }
+
 }

@@ -243,6 +243,7 @@ Route::group([
 //-------------------Route group para el módulo de Comité
 Route::group([
     'prefix' => 'empresa',
+    'middleware' => 'auth',
 ],
     function () {
         Route::get('/', 'EmpresaController@index')->name('empresa');
@@ -252,16 +253,22 @@ Route::group([
         Route::get('/ajaxDetallesDeUnaEmpresa/{id}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
         Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
         Route::post('/', 'EmpresaController@store')->name('empresa.store');
-        // Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
-        // Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
-        // Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
-        // Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
-        // Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
-        // Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
-        // Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
-        // Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
-        // Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
-        // Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');
+    }
+);
+
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'grupo',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'GrupoInvestigacionController@index')->name('grupo');
+        Route::get('/create', 'GrupoInvestigacionController@create')->name('grupo.create');
+        Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');
+        Route::get('/{id}/edit', 'GrupoInvestigacionController@edit')->name('grupo.edit');
+        Route::get('/ajaxDetallesDeUnGrupoInvestigacion/{id}', 'GrupoInvestigacionController@detallesDeUnGrupoInvestigacion')->name('grupo.detalle');
+        Route::put('/{id}', 'GrupoInvestigacionController@update')->name('grupo.update');
+        Route::post('/', 'GrupoInvestigacionController@store')->name('grupo.store');
     }
 );
 
