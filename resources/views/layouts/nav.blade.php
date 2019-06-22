@@ -55,7 +55,7 @@
           </center>
         </li>
         <li>
-          <a href="">
+          <a href="{{ route('perfil.index')}}">
             <div class="notification">
               <div class="notification-icon circle teal lighten-4">
                 <i class="material-icons">

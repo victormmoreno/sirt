@@ -26,7 +26,7 @@
                                         <div class="mailbox-list">
                                             <ul>
                                                 <li>
-                                                    <a href="{{{route('perfil.index',auth()->user()->documento)}}}">
+                                                    <a href="{{{route('perfil.index')}}}">
                                                         <h4 class="mail-title">
                                                             Información Personal
                                                         </h4>
@@ -37,7 +37,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{{route('perfil.roles',auth()->user()->documento)}}}">
+                                                    <a href="{{{route('perfil.roles')}}}">
                                                         <h4 class="mail-title">
                                                             Roles
                                                         </h4>
@@ -47,7 +47,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a  href="{{{route('perfil.permisos', auth()->user()->documento)}}}">
+                                                    <a  href="{{{route('perfil.permisos')}}}">
                                                         <h4 class="mail-title">
                                                             Permisos Adicionales
                                                         </h4>
@@ -57,7 +57,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a  href="">
+                                                    <a  href="{{{route('perfil.cuenta')}}}">
                                                         <h4 class="mail-title">
                                                             Cambiar Contraseña
                                                         </h4>
@@ -73,24 +73,24 @@
                                     </div>
                                     <div class="col s12 m7 l9">
                                         <div class="mailbox-options">
-                                            <ul>
+                                           <ul>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.index')}}}">
                                                         Información Personal
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.roles')}}}">
                                                         Roles
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.permisos')}}}">
                                                         Permisos Adicionales
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.cuenta')}}}">
                                                         Cambiar Contraseña
                                                     </a>
                                                 </li>
