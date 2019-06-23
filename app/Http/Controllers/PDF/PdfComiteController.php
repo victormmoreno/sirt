@@ -4,21 +4,24 @@ namespace App\Http\Controllers\PDF;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Nodo;
 use PDF;
 
 class PdfComiteController extends Controller
 {
-  // public static function printPDF($informacion)
-  // {
-  //   $pdf = PDF::loadView('pdf.csibt.pdf_idea_aceptada', $informacion);
-  //   return $pdf->stream();
-  // }
-
-  public function printPDF()
+  public static function printPDF($informacion)
   {
-    $pdf = PDF::loadView('pdf.csibt.plantilla');
-    return $pdf->download('plantilla');
+    $nodo =\NodoHelper::returnNodoUsuario();
+    $informacion['nodoNombre'] = $nodo;
+    $pdf = PDF::loadView('pdf.csibt.pdf_idea_aceptada', $informacion);
+    return $pdf->stream();
   }
+
+  // public function printPDF()
+  // {
+  //   $pdf = PDF::loadView('pdf.csibt.plantilla');
+  //   return $pdf->download('plantilla');
+  // }
 
   public static function printPDFNoAceptado($informacion)
   {

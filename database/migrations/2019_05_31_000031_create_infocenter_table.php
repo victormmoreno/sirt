@@ -25,6 +25,7 @@ class CreateInfocenterTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('user_id');
+            $table->string('extension',7);
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_infocenter_nodos1_idx');

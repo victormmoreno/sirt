@@ -13,6 +13,9 @@
 
 Route::get('/', function () {
 
+// $user = App\User::first();
+    // dd($user->grupoSanguineo);
+
     // dd(config('laravelpermission.permissions.linea.index'));
     //
     // $user = App\User::all()->last();
@@ -39,10 +42,12 @@ Route::get('/', function () {
     // dd($user);
     // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
 
+    // $entidad = App\Models\Entidad::whereBetween('id', [119, 128])->get()->random()->id;
+    // dd($entidad);
+
     return view('spa');
 
 })->name('/');
-
 
 DB::listen(function ($query) {
     // echo "<pre>{$query->sql}</pre>";
@@ -118,31 +123,57 @@ Route::resource('nodo', 'NodoController');
 // Route::resource('usuarios', 'UserController',[ 'names' => [ 'index' => 'usuarios', 'create' => 'usuarios.crear']]);
 Route::group([
     'prefix'     => 'usuario',
-    // 'middleware' => 'auth'
-    ],
+    'namespace'  => 'User',
+    'middleware' => 'auth',
+],
     function () {
 
-        Route::get('/administrador', 'User\AdminController@administradorIndex')->name('usuario.administrador.index');
-        Route::get('/administrador/create', 'User\AdminController@administradorCreate')->name('usuario.administrador.create');
-        Route::post('administrador', 'User\AdminController@administradorStore')->name('usuario.administrador.store');
-        Route::get('administrador/{id}', 'User\AdminController@show')->name('usuario.administrador.show');
-        Route::get('administrador/{id}/edit', 'User\AdminController@administradorEdit')->name('usuario.administrador.edit');
-        Route::put('administrador/{id}', 'User\AdminController@administradorUpdate')->name('usuario.administrador.update');
-        Route::delete('administrador/{id}', 'User\AdminController@administradorDelete')->name('usuario.administrador.delete');
-        Route::get('getciudad/{departamento}', 'User\AdminController@getCiudad');
+        Route::get('/administrador/getOcupaciones', [
+        'uses' => 'AdminController@getOcupacionSesion',
+        ]);
 
-        Route::get('dinamizador', 'User\DinamizadorController@index')->name('usuario.dinamizador.index');
-        Route::get('/dinamizador/create', 'User\DinamizadorController@create')->name('usuario.dinamizador.create');
-        Route::post('/dinamizador', 'User\DinamizadorController@store')->name('usuario.dinamizador.store');
-        Route::get('dinamizador/getDinamizador/{id}', 'User\DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
+        Route::get('/administrador/remove-ocupacion/{id}', [
+        'uses' => 'AdminController@removerItemOcupacion',
+        ]);
+
+        Route::get('/administrador/anadir-ocupacion/{id}', [
+        'uses' => 'AdminController@anadirOcupacion',
+        'as' => 'administrador.anadirocupacion'
+        ]);
+
+        Route::post('/anadir-ocupacion', [
+            'uses' => 'AdminController@postanadirOcupacion',
+            'as'   => 'administrador.postanadirocupacion',
+        ]);
+        Route::get('/administrador', 'AdminController@administradorIndex')->name('usuario.administrador.index');
+        Route::get('/administrador/create', 'AdminController@administradorCreate')->name('usuario.administrador.create');
+        Route::post('administrador', 'AdminController@administradorStore')->name('usuario.administrador.store');
+        Route::get('administrador/{id}', 'AdminController@show')->name('usuario.administrador.show');
+        Route::get('administrador/{id}/edit', 'AdminController@administradorEdit')->name('usuario.administrador.edit');
+
+        Route::put('administrador/{id}', 'AdminController@administradorUpdate')->name('usuario.administrador.update');
+        Route::delete('administrador/{id}', 'AdminController@administradorDelete')->name('usuario.administrador.delete');
+        Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
+
+        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
+
+        // Route::get('dinamizador/show/{nombre}.{apellido}', 'DinamizadorController@show')->name('usuario.dinamizador.show');
+        Route::resource('dinamizador', 'DinamizadorController', ['except' => 'show', 'as' => 'usuario']);
+
+        Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
 
     }
 );
 
+Route::get('perfil/{id}', 'User\ProfileController@index')->name('perfil.index');
+Route::get('perfil/roles/{id}', 'User\ProfileController@roles')->name('perfil.roles');
+Route::get('perfil/permisos/{id}', 'User\ProfileController@permisos')->name('perfil.permisos');
+Route::resource('perfil', 'User\ProfileController', ['except' => 'show', 'index']);
+
 //-------------------Route group para el módulo de ideas
 Route::group([
-    	'prefix' => 'idea'
-	],
+    'prefix' => 'idea',
+],
     function () {
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
         Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
@@ -161,8 +192,8 @@ Route::group([
 
 //-------------------Route group para el módulo de Entrenamientos
 Route::group([
-    	'prefix' => 'entrenamientos'
-	],
+    'prefix' => 'entrenamientos',
+],
     function () {
         Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
         Route::get('/consultarEntrenamientosPorNodo/{id}', 'EntrenamientoController@datatableEntrenamientosPorNodo');
@@ -188,8 +219,8 @@ Route::group([
 
 //-------------------Route group para el módulo de Comité
 Route::group([
-    	'prefix' => 'csibt'
-	],
+    'prefix' => 'csibt',
+],
     function () {
         Route::get('/', 'ComiteController@index')->name('csibt');
         Route::get('/create', 'ComiteController@create')->name('csibt.create');
@@ -201,10 +232,43 @@ Route::group([
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
         Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
         Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
+        Route::put('/updateEvidencias/{id}', 'ComiteController@updateEvidencias')->name('csibt.update.evidencias');
         Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store');
         Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
         Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');
+    }
+);
+
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'empresa',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'EmpresaController@index')->name('empresa');
+        Route::get('/create', 'EmpresaController@create')->name('empresa.create');
+        Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
+        Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit');
+        Route::get('/ajaxDetallesDeUnaEmpresa/{id}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
+        Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
+        Route::post('/', 'EmpresaController@store')->name('empresa.store');
+    }
+);
+
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'grupo',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'GrupoInvestigacionController@index')->name('grupo');
+        Route::get('/create', 'GrupoInvestigacionController@create')->name('grupo.create');
+        Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');
+        Route::get('/{id}/edit', 'GrupoInvestigacionController@edit')->name('grupo.edit');
+        Route::get('/ajaxDetallesDeUnGrupoInvestigacion/{id}', 'GrupoInvestigacionController@detallesDeUnGrupoInvestigacion')->name('grupo.detalle');
+        Route::put('/{id}', 'GrupoInvestigacionController@update')->name('grupo.update');
+        Route::post('/', 'GrupoInvestigacionController@store')->name('grupo.store');
     }
 );
 

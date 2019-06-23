@@ -112,9 +112,11 @@
             @guest
             @else
               @if(auth()->user()->rol->nombre != 'Administrador' && auth()->user()->rol->nombre != 'Talento')
+
                 {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }}
               @else
                 {{ auth()->user()->rol->nombre }} Tecnoparques
+                {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
               @endif
             <i class="material-icons right">
               arrow_drop_down
@@ -126,7 +128,7 @@
     </div>
     <div class="sidebar-account-settings">
       <ul>
-        <li class="no-padding ">
+        <li class="no-padding">
           <a class="waves-effect waves-grey ">
             <i class="material-icons">
               perm_contact_calendar
@@ -205,17 +207,17 @@
           Inicio
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a href="" class="waves-effect waves-grey">
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">toll</i>Articulaciones
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">record_voice_over</i>EDT's
         </a>
@@ -230,14 +232,14 @@
           <i class="material-icons">domain</i>Uso de Infraestructura
         </a>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">business</i>Empresas
+      <li class="no-padding {{setActiveRoute('empresa')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">group_work</i>Grupos de Investigación
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
       </li>
       <li class="no-padding">
@@ -364,12 +366,12 @@
           </ul>
         </div>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li>
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="teal lighten-2 no-padding">
+      <li class="no-padding">
         <a class="waves-effect waves-grey" href="">
           <i class="material-icons">toll</i>Articulaciones
         </a>
@@ -415,8 +417,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">business</i>Empresas
+        <a class="{{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
         </a>
       </li>
       <li class="no-padding">
@@ -608,8 +610,8 @@
         </a>
       </li>
       <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">business</i>Empresas
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
         </a>
       </li>
       <li class="no-padding">

@@ -3,18 +3,20 @@
 namespace App;
 
 use App\Models\ActivationToken;
+use App\Models\Ciudad;
 use App\Models\Dinamizador;
 use App\Models\Eps;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanguineo;
 use App\Models\GrupoSanquineo;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
+use App\Models\Ocupacion;
 use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\Notifications\ResetPasswordNotification;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +27,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+
     use Notifiable, HasRoles;
 
     const IS_MASCULINO = 1;
@@ -40,6 +43,8 @@ class User extends Authenticatable implements JWTSubject
         'ultimo_login',
         'fechanacimiento',
     ];
+
+    public $items = null;
 
     /**
      * The attributes that are mass assignable.
@@ -86,6 +91,11 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'fechanacimiento'   => 'date:Y-m-d',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'nombres'; // db column name
+    }
 
     public static function IsMasculino()
     {
@@ -153,6 +163,20 @@ class User extends Authenticatable implements JWTSubject
     =            relaciones eloquent            =
     ===========================================*/
 
+    //relaciones muchos a muchos
+
+    public function ocupaciones()
+    {
+        return $this->belongsToMany(Ocupacion::class, 'ocupaciones_users')
+            ->withTimestamps();
+
+    }
+
+    public function ciudad()
+    {
+        return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
+    }
+
     public function rol()
     {
         return $this->belongsTo(Rols::class, 'rol_id', 'id');
@@ -170,7 +194,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function grupoSanguineo()
     {
-        return $this->belongsTo(GrupoSanquineo::class, 'gruposanquineo_id', 'id');
+        return $this->belongsTo(GrupoSanguineo::class, 'gruposanguineo_id', 'id');
     }
 
     public function eps()
@@ -202,6 +226,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
+
+
 
     /*=====  End of relaciones eloquent  ======*/
 
@@ -260,7 +286,7 @@ class User extends Authenticatable implements JWTSubject
     ================================================================*/
     public static function generatePasswordRamdom()
     {
-        return str_random(9);       
+        return str_random(9);
     }
 
     /*=====  End of metodo para generar contraseña aleatoria  ======*/

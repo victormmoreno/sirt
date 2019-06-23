@@ -1277,6 +1277,11 @@ $(document).ready(function() {
         name: 'details',
         orderable: false
       },
+      {
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
 
     ],
     initComplete: function () {
@@ -1326,9 +1331,399 @@ function consultarCsibtPorNodo() {
         name: 'details',
         orderable: false
       },
+      {
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
 
     ],
   });
+}
+
+$(document).ready(function() {
+  $('#empresasDeTecnoparque_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/empresa/datatableEmpresasDeTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'nit',
+        name: 'nit',
+      },
+      {
+        data: 'nombre_empresa',
+        name: 'nombre_empresa',
+      },
+      {
+        data: 'sector_empresa',
+        name: 'sector_empresa',
+      },
+      {
+        data: 'ciudad',
+        name: 'ciudad',
+      },
+      {
+        data: 'direccion',
+        name: 'direccion',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+    ],
+  });
+
+  $('#empresasDeTecnoparque_tableNoGestor').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/empresa/datatableEmpresasDeTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'nit',
+        name: 'nit',
+      },
+      {
+        data: 'nombre_empresa',
+        name: 'nombre_empresa',
+      },
+      {
+        data: 'sector_empresa',
+        name: 'sector_empresa',
+      },
+      {
+        data: 'ciudad',
+        name: 'ciudad',
+      },
+      {
+        data: 'direccion',
+        name: 'direccion',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      // {
+      //   data: 'soft_delete',
+      //   name: 'soft_delete',
+      //   orderable: false
+      // },
+    ],
+  });
+});
+
+var empresaIndex = {
+  consultarDetallesDeUnaEmpresa:function(id){
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:"/empresa/ajaxDetallesDeUnaEmpresa/"+id
+    }).done(function(respuesta){
+      $("#modalDetalleDeUnaEmpresaTecnoparque_titulo").empty();
+      $("#modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa").empty();
+      if (respuesta == null) {
+        swal('Ups!!', 'Ha ocurrido un error', 'warning');
+      } else {
+        $("#modalDetalleDeUnaEmpresaTecnoparque_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Empresa </span><br>");
+        $("#modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa").append("<div class='row'>"
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nit de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.nit+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.nombre_empresa+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Dirección de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.direccion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Ciudad de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.ciudad+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Email de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.email_entidad+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.nombre_contacto+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Teléfono del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">' + respuesta.detalles.telefono_contacto + '</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Correo del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.correo_contacto+'</span>'
+        +'</div>'
+        +'</div>'
+      );
+      $('#detalleDeUnaEmpresaTecnoparque').openModal();
+    }
+  });
+  },
+}
+
+$(document).ready(function() {
+  $('#grupoDeInvestigacionTecnoparque_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_grupo',
+        name: 'codigo_grupo',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'ciudad',
+        name: 'ciudad',
+      },
+      {
+        data: 'tipo_grupo',
+        name: 'tipo_grupo',
+      },
+      {
+        data: 'institucion',
+        name: 'institucion',
+      },
+      {
+        data: 'clasificacioncolciencias',
+        name: 'clasificacioncolciencias',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+    ],
+  });
+});
+
+  // $('#empresasDeTecnoparque_tableNoGestor').DataTable({
+  //   language: {
+  //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+  //   },
+  //   processing: true,
+  //   serverSide: true,
+  //   ajax:{
+  //     url: "/empresa/datatableEmpresasDeTecnoparque",
+  //     type: "get",
+  //   },
+  //   columns: [
+  //     {
+  //       data: 'nit',
+  //       name: 'nit',
+  //     },
+  //     {
+  //       data: 'nombre_empresa',
+  //       name: 'nombre_empresa',
+  //     },
+  //     {
+  //       data: 'sector_empresa',
+  //       name: 'sector_empresa',
+  //     },
+  //     {
+  //       data: 'ciudad',
+  //       name: 'ciudad',
+  //     },
+  //     {
+  //       data: 'direccion',
+  //       name: 'direccion',
+  //     },
+  //     {
+  //       data: 'details',
+  //       name: 'details',
+  //       orderable: false
+  //     },
+  //     // {
+  //     //   data: 'soft_delete',
+  //     //   name: 'soft_delete',
+  //     //   orderable: false
+  //     // },
+  //   ],
+  // });
+
+var grupoInvestigacionIndex = {
+  consultarDetallesDeUnGrupoInvestigacion:function(id){
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+    }).done(function(respuesta){
+      $("#modalDetalleDeUnGrupoDeInvestigacion_titulo").empty();
+      $("#modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa").empty();
+      if (respuesta == null) {
+        swal('Ups!!', 'Ha ocurrido un error', 'warning');
+      } else {
+        $("#modalDetalleDeUnGrupoDeInvestigacion_titulo").append("<span class='cyan-text text-darken-3'>Datos del Grupo de Investigación </span><br>");
+        $("#modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa").append("<div class='row'>"
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Código del Grupo de Investigacion: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.codigo_grupo+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre del Grupo de Investigación: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.entidad.nombre+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Correo del Grupo de Investigacion: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.entidad.email_entidad+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Ciudad del Grupo de Investigación: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.entidad.ciudad.nombre+' - '+respuesta.detalles.entidad.ciudad.departamento.nombre+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Tipo de Grupo de Investigación: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.tipogrupo+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Institución que avala el grupo de investigación: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.institucion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Clasificación Colciencias del Grupo de Investigación: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.clasificacioncolciencias.nombre+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.nombres_contacto+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Teléfono del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">' + respuesta.detalles.telefono_contacto + '</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Correo del Contacto: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.correo_contacto+'</span>'
+        +'</div>'
+        +'</div>'
+      );
+      $('#detalleDeUnGrupoDeInvestigacion').openModal();
+    }
+  });
+  },
 }
 
 $(document).ready(function() {

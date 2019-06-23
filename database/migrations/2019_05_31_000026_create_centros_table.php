@@ -25,7 +25,6 @@ class CreateCentrosTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('regional_id');
             $table->unsignedInteger('entidad_id');
-            $table->unsignedInteger('ciudad_id');
             $table->string('codigo_centro', 45);
             $table->string('descripcion', 200)->nullable();
             $table->timestamps();
@@ -33,8 +32,6 @@ class CreateCentrosTable extends Migration
             $table->index(["entidad_id"], 'fk_centro_entidad1_idx');
 
             $table->index(["regional_id"], 'fk_centro_regional1_idx');
-            $table->index(["ciudad_id"], 'fk_centro_ciudad1_idx');
-
 
             $table->foreign('regional_id', 'fk_centro_regional1_idx')
                 ->references('id')->on('regionales')
@@ -43,11 +40,6 @@ class CreateCentrosTable extends Migration
 
             $table->foreign('entidad_id', 'fk_centro_entidad1_idx')
                 ->references('id')->on('entidades')
-                ->onDelete('no action')
-                ->onUpdate('no action');
-
-            $table->foreign('ciudad_id', 'fk_centro_ciudad1_idx')
-                ->references('id')->on('ciudades')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 

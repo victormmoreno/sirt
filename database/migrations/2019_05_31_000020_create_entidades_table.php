@@ -23,9 +23,17 @@ class CreateEntidadesTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->unsignedInteger('ciudad_id');
             $table->string('nombre', 300);
-            $table->string('contacto', 45)->nullable();
+            $table->string('email_entidad', 200)->nullable();
             $table->timestamps();
+
+            $table->index(["ciudad_id"], 'fk_entidades_ciudad1_idx');
+
+            $table->foreign('ciudad_id', 'fk_entidades_ciudad1_idx')
+                ->references('id')->on('ciudades')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 

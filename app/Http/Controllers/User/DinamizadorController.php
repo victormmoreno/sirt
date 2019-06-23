@@ -26,6 +26,13 @@ class DinamizadorController extends Controller
     {
         $nodos = $this->dinamizadorRepository->getAllNodos();
 
+        // dd(auth()->user()->getRoleNames()->implode(', '));
+        // dd(auth()->user()->getDirectPermissions());
+
+        // if ($request->route()->named('profile')) {
+        
+        // }
+
         return view('users.administrador.dinamizador.index', [
             'nodos' => $this->dinamizadorRepository->getAllNodos(),
         ]);
@@ -90,9 +97,10 @@ class DinamizadorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $nombre)
     {
-        //
+        // $user = User::where('nombres',$nombre)->where('apellidos',$apellido)->first();
+        // dd($nombre);
     }
 
     /**

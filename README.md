@@ -73,30 +73,24 @@ _Agrega notas adicionales sobre como hacer deploy_
 
 _Menciona las herramientas que utilizaste para crear tu proyecto_
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - El framework web usado
-* [Maven](https://maven.apache.org/) - Manejador de dependencias
-* [ROME](https://rometools.github.io/rome/) - Usado para generar RSS
-
-## Contribuyendo 🖇️
-
-Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
+* [Laravel](https://laravel.com/docs/5.8) - El framework web usado
+* [JQuery](https://jquery.com/) - Use para simplificar la forma de manejar el JavaScript
+* [Dropzone](https://www.dropzonejs.com/) - Usado para subir archivos al servidor
+* [Datatables](http://yajrabox.com/docs/laravel-datatables) - Usado para el manejo de las tablas
+* [Dompdf](https://github.com/barryvdh/laravel-dompdf) - Usado para generar archivos PDF
 
 ## Wiki 📖
 
 Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki)
 
-## Versionado 📌
-
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).
-
 ## Autores ✒️
 
 _Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
 
-* **Andrés Villanueva** - *Trabajo Inicial* - [villanuevand](https://github.com/villanuevand)
-* **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal)
+* **Julian Dario Londoño Raigosa** - [jlondono433](https://gitlab.com/jlondono433)
+* **Fulanito Detal**  - [Dumuzid](https://gitlab.com/Dumuzid)
 
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
+También puedes mirar la lista de todos los [contribuyentes](https://gitlab.com/tecnoparque/gestion2019/-/graphs/master) quíenes han participado en este proyecto.
 
 ## Licencia 📄
 
@@ -105,11 +99,11 @@ Este proyecto está bajo la Licencia (MIT) - mira el archivo [LICENSE.md](LICENS
 ## Expresiones de Gratitud 🎁
 
 * Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 a alguien del equipo. 
+* Invita una cerveza 🍺 a alguien del equipo.
 * Da las gracias públicamente 🤓.
 * etc.
 
 
 
 ---
-⌨️ con ❤️ por [Julilin10](https://github.com/Villanuevand) ❤️ [Vicmo](https://github.com/Villanuevand)  😊 ⌨️
+⌨️ con ❤️ por [jlondono433](https://gitlab.com/jlondono433) ❤️ [Dumuzid](https://gitlab.com/Dumuzid)  😊 ⌨️

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Ciudad extends Model
@@ -24,9 +25,9 @@ class Ciudad extends Model
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
     }
 
-    public function centros()
+    public function users()
     {
-        return $this->hasMany(Centro::class, 'entidad_id', 'id');
+        return $this->hasMany(User::class, 'ciudad_id', 'id');
     }
 
     public function regionales()
@@ -34,19 +35,24 @@ class Ciudad extends Model
         return $this->hasMany(Regional::class, 'ciudad_id', 'id');
     }
 
+    public function entidades()
+    {
+        return $this->hasMany(Entidad::class, 'ciudad_id', 'id');
+    }
+
 
     /*================================================================================
     =            metodo para consultar las ciudades según el departamento            =
     ================================================================================*/
-    
+
     public function scopeAllCiudadDepartamento($query,$departamento)
     {
 
         return $query->select('ciudades.id','ciudades.nombre')->where('ciudades.departamento_id',$departamento);
 
     }
-    
+
     /*=====  End of metodo para consultar las ciudades según el departamento  ======*/
-    
+
 
 }

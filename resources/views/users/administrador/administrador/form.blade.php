@@ -309,6 +309,60 @@
         @enderror
     </div>
 </div>
+
+<div class="row">
+    <div class="input-field col s12 m12 l12 ">
+        <i class="material-icons prefix">
+             details
+        </i>
+        <select class="" id="txtocupaciones" name="txtocupaciones" style="width: 100%" tabindex="-1" onchange="CreateUserAdmin.addOcupacion(this)">
+            <option value="">Seleccione ocupación</option>
+            
+            @foreach($ocupaciones as $value)
+                
+                @if(isset($user->gradoescolaridad_id))
+                <option value="{{$value->id}}" {{old('txtocupaciones',$user->gradoescolaridad_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                @else
+                    <option value="{{$value->id}}" {{old('txtocupaciones') ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                @endif
+
+            @endforeach
+        </select>
+        <label for="txtocupaciones">Ocupación*</label>
+        @error('txtocupaciones')
+            <label id="txtocupaciones-error" class="error" for="txtocupaciones">{{ $message }}</label>
+        @enderror
+    </div>
+</div>
+<div class="row">
+                    <div class="col s10 m9 l9">
+                      <div class="card blue-grey lighten-5">
+                        <div class="card-content">
+                          <table class="highlight centered responsive-table">
+                            <thead>
+                              <tr>
+                                <th style="width: 20%">Nombre Ocupación</th>
+                                <th style="width: 10%">Eliminar</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tblOcupacionAdministradorCreate">
+
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col s2 m3 l3">
+                      <blockquote>
+                        <ul class="collection">
+                          <li class="collection-item">Para agregar una idea de proyecto al entrenamiento solo debe buscarla y seleccionarla.</li>
+                        </ul>
+                      </blockquote>
+                    </div>
+                  </div>
+
+
+
 <div class="divider mailbox-divider"></div>
 <br>
 <center>

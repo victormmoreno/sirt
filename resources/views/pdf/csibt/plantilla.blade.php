@@ -16,18 +16,14 @@
     Cordial Saludo
   </p>
   <p style="text-align: justify">
-    Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica realizado en el mes de Aquí va el mes y año en el que se realizó en comité,
-    el comité evaluador considera
-    necesario aclarar algunos puntos para poder realizar la correcta asignación de su proyecto:
-    <b>“Aquí irá el nombre de la idea de proyecto”</b>. <br>Para esto le solicitamos seguir las siguientes recomendaciones:
-  </p>
-  <p style="text-align: right">
+    Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica
+    realizado en el mes de Aquí va el mes y año en el que se realizó en comité,
+    La Red Tecnoparque Colombia
+    del SENA le da la Bienvenida a su nodo <b>Aquí irá el nombre del nodo</b>. Desde ahora usted hace parte del
+    grupo de emprendedores innovadores de nuestra Red y recibirán de parte nuestra la
+    Asesoría Técnica especializada y los servicios tecnológicos para el desarrollo de su
+    idea: <b>“Nombre de la idea de proyecto”</b>
 
-  </p>
-  <p style="text-align: justify">
-    Luego de seguir las recomendaciones usted podrá volver a inscribir su proyecto en Tecnoparque y el comité decidirá si se le asigna un gestor de Tecnoparque,
-    quien lo contactará para iniciar con la metodología en caso de que el proyecto se admitido.
-    Cualquier información adicional la puede solicitar a los teléfonos 5760000 <b>ext.</b> aaquí va la extension del infocenter.
   </p>
   <p>
     Recuerde que además de la Asesoría Técnica para el Desarrollo de Proyectos de Base Tecnológica, la Red Tecnoparque Colombia pone a su disposición los siguientes servicios:
