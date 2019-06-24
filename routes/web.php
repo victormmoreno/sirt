@@ -12,7 +12,18 @@
  */
 
 Route::get('/', function () {
+    // $entidad = App\Models\Entidad::where('entidades.id',171)->first();
 
+// $empresa = "1234 - sol de juan";
+// $porciones = explode("-", $empresa);
+// dd($porciones);
+// $ocupacion = App\Models\Ocupacion::first();
+// dd($ocupacion->users);
+//
+//
+
+
+// dd($ocupaciones->items);
 // $user = App\User::first();
     // dd($user->grupoSanguineo);
 
@@ -94,6 +105,7 @@ Auth::routes(['register' => false]);
 
 /*=====  End of rutas modulos de login registro, recuperacion de contraseña  ======*/
 
+
 /*===========================================================
 =            ruta principal apenas se hace login            =
 ===========================================================*/
@@ -141,23 +153,21 @@ Route::group([
         'as' => 'administrador.anadirocupacion'
         ]);
 
+        Route::get('/administrador/anadir-ocupacion-edit/{idOcupacion}/{idUser}', [
+        'uses' => 'AdminController@anadirOcupacionEdit',
+        'as' => 'administrador.anadirocupacion.edit'
+        ]);
+
         Route::post('/anadir-ocupacion', [
             'uses' => 'AdminController@postanadirOcupacion',
             'as'   => 'administrador.postanadirocupacion',
         ]);
-        Route::get('/administrador', 'AdminController@administradorIndex')->name('usuario.administrador.index');
-        Route::get('/administrador/create', 'AdminController@administradorCreate')->name('usuario.administrador.create');
-        Route::post('administrador', 'AdminController@administradorStore')->name('usuario.administrador.store');
-        Route::get('administrador/{id}', 'AdminController@show')->name('usuario.administrador.show');
-        Route::get('administrador/{id}/edit', 'AdminController@administradorEdit')->name('usuario.administrador.edit');
-
-        Route::put('administrador/{id}', 'AdminController@administradorUpdate')->name('usuario.administrador.update');
-        Route::delete('administrador/{id}', 'AdminController@administradorDelete')->name('usuario.administrador.delete');
         Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
+
+        Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
-        // Route::get('dinamizador/show/{nombre}.{apellido}', 'DinamizadorController@show')->name('usuario.dinamizador.show');
         Route::resource('dinamizador', 'DinamizadorController', ['except' => 'show', 'as' => 'usuario']);
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
@@ -165,10 +175,10 @@ Route::group([
     }
 );
 
-Route::get('perfil/{id}', 'User\ProfileController@index')->name('perfil.index');
-Route::get('perfil/roles/{id}', 'User\ProfileController@roles')->name('perfil.roles');
-Route::get('perfil/permisos/{id}', 'User\ProfileController@permisos')->name('perfil.permisos');
-Route::resource('perfil', 'User\ProfileController', ['except' => 'show', 'index']);
+Route::get('perfil/{documento}', 'User\ProfileController@index')->name('perfil.index');
+Route::get('perfil/roles/{documento}', 'User\ProfileController@roles')->name('perfil.roles');
+Route::get('perfil/permisos/{documento}', 'User\ProfileController@permisos')->name('perfil.permisos');
+Route::resource('perfil', 'User\ProfileController', ['except' => 'index', 'show']);
 
 //-------------------Route group para el módulo de ideas
 Route::group([
@@ -272,6 +282,22 @@ Route::group([
     }
 );
 
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'articulacion',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'ArticulacionController@index')->name('articulacion');
+        Route::get('/create', 'ArticulacionController@create')->name('articulacion.create');
+        // Route::get('/datatableGruposInvestigacionDeTecnoparque', 'ArticulacionController@datatableGruposInvestigacionDeTecnoparque')->name('articulacion.datatable');
+        Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit');
+        Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
+        Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update');
+        Route::post('/', 'ArticulacionController@store')->name('articulacion.store');
+    }
+);
+
 //-------------------Route group para todos los pdfs de la aplicacion
 Route::group([
     	'prefix' => 'pdf',
@@ -298,11 +324,20 @@ Route::get('/notificaciones', 'NotificationsController@index')->name('notificati
 Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
 Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
 
+
+
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
-Route::resource('lineas', 'LineaController');
-// Route::resource('ideas', 'IdeaController');
+Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
+
+/*====================================================================
+=            rutas para las funcionalidades de las sublineas            =
+====================================================================*/
+
+Route::resource('sublineas', 'SublineaController');
+
+/*=====  End of rutas para las funcionalidades de las sublineas  ======*/

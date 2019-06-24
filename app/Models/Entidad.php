@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Model;
 
 class Entidad extends Model
@@ -43,6 +44,12 @@ class Entidad extends Model
     public function ciudad()
     {
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
+    }
+
+    // Relación a la tabla de articulaciones
+    public function articulaciones()
+    {
+      return $this->hasMany(Articulacion::class, 'entidad_id', 'id');
     }
 
 }

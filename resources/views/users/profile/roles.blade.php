@@ -26,119 +26,48 @@
                                         <div class="mailbox-list">
                                             <ul>
                                                 <li>
-                                                    <a href="">
-                                                        
-                                                        
+                                                    <a href="{{{route('perfil.index',auth()->user()->documento)}}}">
                                                         <h4 class="mail-title">
                                                             Información Personal
                                                         </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
                                                            En este apartado podrás ver y actualizar tu información personal.
                                                         </p>
                                                         
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
-                                                        
-                                                
+                                                    <a href="{{{route('perfil.roles',auth()->user()->documento)}}}">
                                                         <h4 class="mail-title">
                                                             Roles
                                                         </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
                                                             En este apartado podrás ver los roles asignados.
                                                         </p>
-                                                        
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a  href="{{{route('perfil.permisos', auth()->user()->documento)}}}">
+                                                        <h4 class="mail-title">
+                                                            Permisos Adicionales
+                                                        </h4>
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
+                                                            En este apartado podrás ver los permisos adicionales que se te han asignado.
+                                                        </p>
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a  href="">
-                                                        
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
                                                         <h4 class="mail-title">
-                                                            I am on my way
+                                                            Cambiar Contraseña
                                                         </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
+                                                            En este apartado podrás ver los permisos cambiar tu contraseña de ingreso a la plataforma {{config('app.name')}}
                                                         </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
                                                     </a>
                                                 </li>
-                                                <li>
-                                                    <a href="">
-                                                        <div class="mail-checkbox">
-                                                            <input class="filled-in" id="mail-checkbox4" type="checkbox">
-                                                                <label for="mail-checkbox4">
-                                                                </label>
-                                                            </input>
-                                                        </div>
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
-                                                        <h4 class="mail-title">
-                                                            I am on my way
-                                                        </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
-                                                        </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="">
-                                                        <div class="mail-checkbox">
-                                                            <input class="filled-in" id="mail-checkbox5" type="checkbox">
-                                                                <label for="mail-checkbox5">
-                                                                </label>
-                                                            </input>
-                                                        </div>
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
-                                                        <h4 class="mail-title">
-                                                            I am on my way
-                                                        </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
-                                                        </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
-                                                        <div class="position-bottom-right p mail-attachment">
-                                                            <i class="material-icons">
-                                                                attachment
-                                                            </i>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="">
-                                                        <div class="mail-checkbox">
-                                                            <input class="filled-in" id="mail-checkbox6" type="checkbox">
-                                                                <label for="mail-checkbox6">
-                                                                </label>
-                                                            </input>
-                                                        </div>
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
-                                                        <h4 class="mail-title">
-                                                            I am on my way
-                                                        </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
-                                                        </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
-                                                    </a>
-                                                </li>
+                                                
+                                                
                                             </ul>
                                         </div>
                                     </div>

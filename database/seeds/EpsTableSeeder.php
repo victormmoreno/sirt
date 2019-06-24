@@ -218,5 +218,10 @@ class EpsTableSeeder extends Seeder
             'nombre' => 'PIJAOS SALUD EPSI',
         ]);
 
+        Eps::create([
+            'codigo' => 'EPS000',
+            'nombre' => 'OTRA',
+        ]);
+
     }
 }

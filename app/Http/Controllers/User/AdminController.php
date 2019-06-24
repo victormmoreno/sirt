@@ -36,12 +36,123 @@ class AdminController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    
+    /*================================================================================
+    =            metodo para consultar las ciudedes segun el departamento            =
+    ================================================================================*/
+    
+    public function getCiudad($departamento)
+    {
+       
+        return response()->json([
+            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
+        ]);
+    }
+    
+    /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
+
+    public function anadirOcupacion(Request $request, $id)
+    {
+        $ocupacion = Ocupacion::findOrFail($id);
+        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
+        $OcupacionModel = new OcupacionModel($oldCart);
+        $OcupacionModel->add($ocupacion, $ocupacion->id);
+        $request->session()->put('ocupacion', $OcupacionModel);
+        
+        $notificacion = [
+            'message' => $ocupacion->nombre.' añadido exitosamente', 
+            'alert-type' => 'success'
+        ];
+        return response()->json([
+            'notificacion' => $notificacion,
+            'ocupacion' => $OcupacionModel,
+        ]);
+           
+    }
+
+    /*==============================================================
+    =            metodo para añadir ocupaciones session            =
+    ==============================================================*/
+    
+    public function anadirOcupacionEdit(Request $request, $idOcupacion, $idUser)
+    {
+        
+        
+
+    
+        $ocupacion = Ocupacion::findOrFail($idOcupacion);
+        $ocupacion->users;
+
+
+
+        $user = User::findOrFail($idUser);
+        $sessionUser = Session::put('ocupacionEdit',$user);
+        $request->session()->put('ocupacionEdit', $user->ocupaciones);
+    
+        // dd($sessionUser);
+      
+        // foreach ($user->ocupaciones as  $value) {
+        //    $datos =$request->session()->put(   $value);
+        // }
+       
+        $oldOcupacion = Session::has('ocupacionEdit') ? Session::get('ocupacionEdit', $user->ocupaciones) : null;
+        // $OcupacionModel = new OcupacionModel($oldOcupacion);
+        // $OcupacionModel->add($ocupacion->users, $ocupacion->id);
+
+        return response()->json([
+            'getOcupacion' => $oldOcupacion,
+        ]);
+    }
+    
+    /*=====  End of metodo para añadir ocupaciones session  ======*/
+    
+
+    
+
+    public function getOcupacionSesion()
+    {
+        
+        return response()->json([
+            'getOcupacion' => Session::get('ocupacion'),
+        ]);
+    }
+
+    public function removerItemOcupacion($id)
+    {
+        $ocupacion = Ocupacion::findOrFail($id);
+        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
+        $OcupacionModel = new OcupacionModel($oldCart);
+        $OcupacionModel->removeitem($id);
+
+        if(count($OcupacionModel->items) > 0)
+        {
+            Session::put('ocupacion', $OcupacionModel);
+        }
+        else
+        {
+            Session::forget('ocupacion');
+        }
+
+        Session::put('ocupacion', $OcupacionModel);
+
+        $notificacion = array(
+            'message' => $ocupacion->nombre.' ha sido eliminado', 
+            'alert-type' => 'success'
+        );
+
+         return response()->json([
+            'notificacion' => $notificacion,
+            'ocupacion' => $OcupacionModel,
+        ]);
+
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function administradorIndex()
+    public function index()
     {
 
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
@@ -61,7 +172,7 @@ class AdminController extends Controller
                         if ($data->id != auth()->user()->id) {
                             $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                         }else{
-                            $button = '';
+                            $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
                         }
                         return $button;
                     })
@@ -87,7 +198,7 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function administradorCreate()
+    public function create()
     {
         // dd($this->userRepository->getAllOcupaciones());
         return view('users.administrador.administrador.create', [
@@ -100,54 +211,19 @@ class AdminController extends Controller
         ]);
     }
 
-
-    public function anadirOcupacion(Request $request, $id)
-    {
-        $ocupacion = Ocupacion::findOrFail($id);
-        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
-        $OcupacionModel = new OcupacionModel($oldCart);
-        $OcupacionModel->add($ocupacion, $ocupacion->id);
-        $request->session()->put('ocupacion', $OcupacionModel);
-        
-        $notificacion = [
-            'message' => $ocupacion->nombre.' añadido exitosamente', 
-            'alert-type' => 'success'
-        ];
-        return response()->json([
-            'notificacion' => $notificacion,
-            'ocupacion' => $OcupacionModel,
-        ]);
-           
-    }
-
-    public function getOcupacionSesion()
-    {
-        
-        return response()->json([
-            'getOcupacion' => Session::get('ocupacion'),
-        ]);
-    }
-
-    public function removerItemOcupacion($id)
-    {
-        $ocupacion = Ocupacion::findOrFail($id);
-        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
-        $OcupacionModel = new OcupacionModel($oldCart);
-        $OcupacionModel->removeallitem($id);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function administradorStore(AdminFormRequest $request)
+    public function store(AdminFormRequest $request)
     {
         //generar contraseña
         $password = User::generatePasswordRamdom();
         //guardar registro
         $administrador   = $this->adminRepository->Store($request, $password);
+
         $activationToken = $this->userRepository->activationToken($administrador->id);
         //envio de email con contraseña
         if ($administrador != null) {
@@ -162,19 +238,7 @@ class AdminController extends Controller
 
     }
 
-    /*================================================================================
-    =            metodo para consultar las ciudedes segun el departamento            =
-    ================================================================================*/
     
-    public function getCiudad($departamento)
-    {
-       
-        return response()->json([
-            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
-        ]);
-    }
-    
-    /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
     
 
     /**
@@ -196,10 +260,14 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorEdit($id)
+    public function edit($id)
     {
 
-        $user = $this->adminRepository->findInfoUserById($id);
+        $user = $this->adminRepository->findById($id);
+        $user->ocupaciones;
+       
+         // $sessionEdit= Session::get('ocupacionEdit', $user->ocupaciones);
+
         // dd($user->genero);
         
         return view('users.administrador.administrador.edit', [
@@ -211,6 +279,7 @@ class AdminController extends Controller
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ciudades' => $this->userRepository->getAllCiudadDepartamento($user->iddepartamento),
             'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
+            'sessionEdit'     =>  $user->ocupaciones,
         ]);
     }
 
@@ -221,7 +290,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorUpdate(AdminFormRequest $request, $id)
+    public function update(AdminFormRequest $request, $id)
     {
         $user = $this->adminRepository->findById($id);
         if ($user != null) {
@@ -240,7 +309,7 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function administradorDelete($id)
+    public function delete($id)
     {
         //
     }

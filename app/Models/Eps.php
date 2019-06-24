@@ -10,6 +10,7 @@ class Eps extends Model
 
     const IS_ACTIVE   = 1;
     const IS_INACTIVE = 0;
+    const OTRA_EPS = 'OTRA';
 
     protected $table = 'eps';
 
@@ -56,7 +57,7 @@ class Eps extends Model
     public function scopeAllEps($query, $estado, $OrderBy)
     {
 
-        return $query->select('eps.id', 'eps.nombre')->where('estado', $estado)->orderby($OrderBy);
+        return $query->selectRaw( 'eps.id,  eps.nombre')->where('estado', $estado)->orderby($OrderBy);
 
     }
 

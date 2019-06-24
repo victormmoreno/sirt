@@ -40,6 +40,7 @@ class CreateUsersTable extends Migration
             $table->string('telefono', 11)->nullable();
             $table->date('fechanacimiento');
             $table->tinyInteger('genero');
+            $table->string('otra_eps',60)->nullable();
             $table->tinyInteger('estado')->default('1');
             $table->rememberToken();
             $table->string('password', 255)->nullable();

@@ -26,119 +26,48 @@
                                         <div class="mailbox-list">
                                             <ul>
                                                 <li>
-                                                    <a href="">
-                                                        
-                                                        
+                                                    <a href="{{{route('perfil.index',auth()->user()->documento)}}}">
                                                         <h4 class="mail-title">
                                                             Información Personal
                                                         </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
                                                            En este apartado podrás ver y actualizar tu información personal.
                                                         </p>
                                                         
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
-                                                        
-                                                
+                                                    <a href="{{{route('perfil.roles',auth()->user()->documento)}}}">
                                                         <h4 class="mail-title">
                                                             Roles
                                                         </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
                                                             En este apartado podrás ver los roles asignados.
                                                         </p>
-                                                        
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a  href="{{{route('perfil.permisos', auth()->user()->documento)}}}">
+                                                        <h4 class="mail-title">
+                                                            Permisos Adicionales
+                                                        </h4>
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
+                                                            En este apartado podrás ver los permisos adicionales que se te han asignado.
+                                                        </p>
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a  href="">
-                                                        
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
                                                         <h4 class="mail-title">
-                                                            I am on my way
+                                                            Cambiar Contraseña
                                                         </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
+                                                        <p align="justify" class="hide-on-small-and-down mail-text">
+                                                            En este apartado podrás ver los permisos cambiar tu contraseña de ingreso a la plataforma {{config('app.name')}}
                                                         </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
                                                     </a>
                                                 </li>
-                                                <li>
-                                                    <a href="">
-                                                        <div class="mail-checkbox">
-                                                            <input class="filled-in" id="mail-checkbox4" type="checkbox">
-                                                                <label for="mail-checkbox4">
-                                                                </label>
-                                                            </input>
-                                                        </div>
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
-                                                        <h4 class="mail-title">
-                                                            I am on my way
-                                                        </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
-                                                        </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="">
-                                                        <div class="mail-checkbox">
-                                                            <input class="filled-in" id="mail-checkbox5" type="checkbox">
-                                                                <label for="mail-checkbox5">
-                                                                </label>
-                                                            </input>
-                                                        </div>
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
-                                                        <h4 class="mail-title">
-                                                            I am on my way
-                                                        </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
-                                                        </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
-                                                        <div class="position-bottom-right p mail-attachment">
-                                                            <i class="material-icons">
-                                                                attachment
-                                                            </i>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="">
-                                                        <div class="mail-checkbox">
-                                                            <input class="filled-in" id="mail-checkbox6" type="checkbox">
-                                                                <label for="mail-checkbox6">
-                                                                </label>
-                                                            </input>
-                                                        </div>
-                                                        <h5 class="mail-author">
-                                                            Jonathan Smith
-                                                        </h5>
-                                                        <h4 class="mail-title">
-                                                            I am on my way
-                                                        </h4>
-                                                        <p class="hide-on-small-and-down mail-text">
-                                                            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit...
-                                                        </p>
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                            12:46 am
-                                                        </div>
-                                                    </a>
-                                                </li>
+                                                
+                                                
                                             </ul>
                                         </div>
                                     </div>
@@ -182,6 +111,7 @@
                                                         <span class="mailbox-author">
                                                             
                                                             {{$user->getRoleNames()->implode(', ')}}<br>
+                                                            Miembro desde {{$user->created_at->isoFormat('LL')}} <br>
                                                             {{$user->fechanacimiento->age}} años
                                                         </span>
                                                     </div>
@@ -190,32 +120,27 @@
                                                     <span class="mailbox-title">
                                                        <p class="center">Información Personal
                                                             <div class="right">
-                                                            
-        
                                                             <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Más Información</a>
                                                             <!-- Dropdown Structure -->
                                                             <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="{{route('perfil.edit',$user->id)}}">Cambiar Información</a></li>
+                                                                <li><a href="{{route('perfil.edit',$user->documento)}}">Cambiar Información</a></li>
                                                                 <li><a href="#!">two</a></li>
                                                                 <li class="divider"></li>
                                                                 <li><a href="#!">three</a></li>
                                                             </ul> 
                                                         </div>
                                                        </p>
-
                                                     </span>
-
-                                                    
                                                 </div>
 
                                                 <div class="right mailbox-buttons">
-                                                    
-                                                    
                                                     {{-- <a class="waves-effect waves-red btn-flat m-t-xs">
                                                         Delete
-                                                    </a> --}}
-                                                    
+                                                    </a> --}} 
                                                 </div>
+                                            </div>
+                                            <div class="right">
+                                                <small>{{{$user->genero == 1 ? 'Masculino' : 'Femenino'}}}  </small>
                                             </div>
                                             <div class="divider mailbox-divider">
                                             </div>
@@ -234,11 +159,7 @@
                                                                     {{$user->tipodocumento->nombre ? $user->tipodocumento->nombre : 'No se encontraron resultados' }}
                                                                     
                                                                 </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
+                                                                
                                                                 
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -249,47 +170,64 @@
                                                                     Fecha de Nacimiento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->fechanacimiento->isoFormat('D [de] MMMM [de] YYYY')}} 
+                                                                    {{$user->fechanacimiento->isoFormat('LL')}} 
                                                                 </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
+                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
                                                                     insert_chart
                                                                 </i>
-                                                                <span class="title">
-                                                                    Eps
-                                                                </span>
-                                                                <p>
-                                                                   {{$user->eps->nombre}}
-                                                                    
-                                                                </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
+                                                                <div class="left">
+                                                                   <span class="title">
+                                                                        Eps
+                                                                    </span>
+                                                                    <p>
+                                                                       {{$user->eps->nombre}}   
+                                                                    </p> 
+                                                                </div>
+                                                                @if($user->eps->nombre == App\Models\Eps::OTRA_EPS)
+                                                                <div class="right">
+                                                                   <span class="title">
+                                                                        Otra Eps
+                                                                    </span>
+                                                                    <p>
+                                                                       {{$user->otra_eps}}   
+                                                                    </p> 
+                                                                </div>
+                                                                @endif
+                                                            </li>
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    play_arrow
+                                                                </i>
+                                                                <div class="left">
+                                                                    <span class="title">
+                                                                       Dirección
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->direccion}} 
+                                                                    </p>
+                                                                </div>
+                                                                <div class="right">
+                                                                    <span class="title">
+                                                                       Barrio
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->barrio}} 
+                                                                    </p>
+                                                                </div>
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
                                                                     play_arrow
                                                                 </i>
                                                                 <span class="title">
-                                                                   Barrio de Residencia
+                                                                   Correo Electrónico
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->barrio}} 
-                                                                    
+                                                                    {{$user->email}} 
                                                                 </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -305,11 +243,7 @@
                                                                 <p>
                                                                     {{$user->documento}} 
                                                                 </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
+                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
@@ -322,14 +256,10 @@
                                                                    {{$user->grupoSanguineo->nombre}}
                                                                    
                                                                 </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
+                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
-                                                                <i class="material-icons circle green">
+                                                                <i class="material-icons circle teal darken-2">
                                                                     insert_chart
                                                                 </i>
                                                                 <span class="title">
@@ -339,82 +269,81 @@
                                                                     {{$user->estrato}}
                                                                     
                                                                 </p>
-                                                                <span class="secondary-content">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </span>
+                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
-                                                                <i class="material-icons circle red">
+                                                                <i class="material-icons circle teal darken-2">
                                                                     play_arrow
                                                                 </i>
                                                                 <span class="title">
                                                                     Lugar de Residencia
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->ciudad->nombre}} 
-                                                                    
-                                                                      
+                                                                    {{$user->ciudad->nombre}} - {{$user->ciudad->departamento->nombre}}   
                                                                 </p>
-                                                                <a class="secondary-content" href="#!">
-                                                                    <i class="material-icons">
-                                                                        grade
-                                                                    </i>
-                                                                </a>
+                                                            </li>
+                                                            <li class="collection-item avatar">
+                                                                
+                                                                <div class="center">
+                                                                    <span class="title">
+                                                                       Datos contacto
+                                                                    </span>
+                                                                </div>
+                                                                <div class="left">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                    play_arrow
+                                                                </i>
+                                                                    <p>
+                                                                        Telefono <br>
+                                                                        {{$user->telefono}} 
+                                                                    </p>
+                                                                </div>
+                                                                <div class="right">
+                                                                    <span class="title">
+                                                                       Celular
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->celular}} 
+                                                                    </p>
+                                                                </div>
                                                             </li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                                 <div class="divider mailbox-divider">
                                                 </div>
-                                                <span class="attachment-info">
-                                                    <i class="material-icons">
-                                                        attachment
-                                                    </i>
-                                                    2 Attachments -
-                                                    <a href="">
-                                                        View all
+                                                
+                                                <div class="right">
+                                                    <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
+                                                        Cambiar Información Personal
                                                     </a>
-                                                    |
-                                                    <a href="">
-                                                        Download all
+                                                    <a class="waves-effect waves-red btn-flat m-t-xs">
+                                                        Delete
                                                     </a>
-                                                </span>
-                                                <ul class="attachment-list">
-                                                    <li>
-                                                        <a class="attachment z-depth-1" href="#">
-                                                            <div class="attachment-content">
-                                                                <img alt="" src="assets/images/card-image3.jpg">
-                                                                </img>
-                                                            </div>
-                                                            <div class="attachment-info">
-                                                                <p>
-                                                                    Attachment1.jpg
-                                                                </p>
-                                                                <span>
-                                                                    444 KB
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="attachment z-depth-1" href="#">
-                                                            <div class="attachment-content">
-                                                                <img alt="" src="assets/images/card-image2.jpg">
-                                                                </img>
-                                                            </div>
-                                                            <div class="attachment-info">
-                                                                <p>
-                                                                    Attachment2.jpg
-                                                                </p>
-                                                                <span>
-                                                                    548 KB
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                                    {{-- <ul class="attachment-list">
+                                                        <li>
+                                                            <a class="waves-effect waves-red btn-flat m-t-xs">
+                                                                Delete
+                                                            </a>
+                                                        </li> --}}
+                                                        {{-- <li>
+                                                            <a class="attachment z-depth-1" href="#">
+                                                                <div class="attachment-content">
+                                                                    <img alt="" src="assets/images/card-image2.jpg">
+                                                                    </img>
+                                                                </div>
+                                                                <div class="attachment-info">
+                                                                    <p>
+                                                                        Attachment2.jpg
+                                                                    </p>
+                                                                    <span>
+                                                                        548 KB
+                                                                    </span>
+                                                                </div>
+                                                            </a>
+                                                        </li> --}}
+                                                    {{-- </ul> --}}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

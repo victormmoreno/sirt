@@ -2,12 +2,12 @@
 
 namespace App\Repositories\Repository\UserRepository;
 
+use App\Models\Eps;
 use App\Models\Rols;
 use App\User;
 
 class AdminRepository
 {
-
 
     /*=======================================================================
     =            metodo para consultar todos los administradores            =
@@ -80,6 +80,7 @@ class AdminRepository
     ==================================================================*/
     public function Store($request, $password)
     {
+
         $user = User::create([
             "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
             "tipodocumento_id"    => $request->input('txttipo_documento'),
@@ -97,10 +98,18 @@ class AdminRepository
             "telefono"            => $request->input('txttelefono'),
             "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
             "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "estado"              => User::IsInactive(),
             "password"            => $password,
             "estrato"             => $request->input('txtestrato'),
         ]);
+
+        // $ocupaciones = \Session::has('ocupacion') ? \Session::get('ocupacion') : null;
+        // foreach ($ocupaciones->items as  $value) {
+        //     $user->ocupaciones()->attach($value['item']->id);
+        // }
+        // \Session::forget('ocupacion');
+        // $userAdmin->ocupaciones()->attach($ocupaciones);
 
         $user->assignRole(config('laravelpermission.roles.roleAdministrador'));
 
@@ -131,6 +140,7 @@ class AdminRepository
         $user->telefono            = $request->input('txttelefono');
         $user->fechanacimiento     = $request->input('txtfecha_nacimiento');
         $user->genero              = $request->input('txtgenero') == 'on' ? $request['txtgenero']              = 0 : $request['txtgenero']              = 1;
+        $user->otra_eps            = $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null;
         $user->estrato             = $request->input('txtestrato');
         $user->update();
 

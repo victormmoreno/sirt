@@ -1573,49 +1573,48 @@ $(document).ready(function() {
   });
 });
 
-  // $('#empresasDeTecnoparque_tableNoGestor').DataTable({
-  //   language: {
-  //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-  //   },
-  //   processing: true,
-  //   serverSide: true,
-  //   ajax:{
-  //     url: "/empresa/datatableEmpresasDeTecnoparque",
-  //     type: "get",
-  //   },
-  //   columns: [
-  //     {
-  //       data: 'nit',
-  //       name: 'nit',
-  //     },
-  //     {
-  //       data: 'nombre_empresa',
-  //       name: 'nombre_empresa',
-  //     },
-  //     {
-  //       data: 'sector_empresa',
-  //       name: 'sector_empresa',
-  //     },
-  //     {
-  //       data: 'ciudad',
-  //       name: 'ciudad',
-  //     },
-  //     {
-  //       data: 'direccion',
-  //       name: 'direccion',
-  //     },
-  //     {
-  //       data: 'details',
-  //       name: 'details',
-  //       orderable: false
-  //     },
-  //     // {
-  //     //   data: 'soft_delete',
-  //     //   name: 'soft_delete',
-  //     //   orderable: false
-  //     // },
-  //   ],
-  // });
+  $('#grupoDeInvestigacionTecnoparque_tableNoGestor').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_grupo',
+        name: 'codigo_grupo',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'ciudad',
+        name: 'ciudad',
+      },
+      {
+        data: 'tipo_grupo',
+        name: 'tipo_grupo',
+      },
+      {
+        data: 'institucion',
+        name: 'institucion',
+      },
+      {
+        data: 'clasificacioncolciencias',
+        name: 'clasificacioncolciencias',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+    ],
+  });
 
 var grupoInvestigacionIndex = {
   consultarDetallesDeUnGrupoInvestigacion:function(id){
@@ -1835,25 +1834,16 @@ function detalleAdministrador(id){
 }
 
 
- var UserAdministrador = {
-        getCiudad:function(e){
-            let id = $(e).val();
-           
-            $.ajax({
-                dataType:'json',
-                type:'get',
-                url:'/usuario/getciudad/'+id
-            }).done(function(response){
-                $('#txtciudad').empty();
-                $('#txtciudad').append('<option value="">Seleccione Ciudad</option>')
-                $.each(response.ciudades, function(i, e) {
-                    console.log(e.id);
-                    $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-                })
-                $('#txtciudad').material_select();
-            });
-        },
- }
+$(document).ready(function() {
+    $('#dinamizador_table').DataTable({
+        language: {
+             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+         },
+    });
+    // $('.dataTables_length select').addClass('browser-default');
+});
+
+
  var UserAdministradorDinamizador = {
      selectDinamizadoresPorNodo: function() {
          let nodo = $('#selectnodo').val();

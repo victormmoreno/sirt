@@ -17,6 +17,10 @@ class GrupoInvestigacionController extends Controller
   public function __construct(GrupoInvestigacionRepository $grupoInvestigacionRepository)
   {
     $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
+    $this->middleware([
+        'auth',
+    ]);
+
   }
 
   /**
@@ -79,19 +83,15 @@ class GrupoInvestigacionController extends Controller
           return $edit;
         })->rawColumns(['details', 'edit'])->make(true);
       } else {
-        // $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
-        // return datatables()->of($empresas)
-        // ->addColumn('details', function ($data) {
-        //   $button = '
-        //   <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="empresaIndex.consultarDetallesDeUnaEmpresa('. $data->id .')">
-        //   <i class="material-icons">info</i>
-        //   </a>
-        //   ';
-        //   return $button;
-        // })->addColumn('soft_delete', function ($data) {
-        //   $edit = '<a class="btn m-b-xs"><i class="material-icons">sweep_delete</i></a>';
-        //   return $edit;
-        // })->rawColumns(['details', 'soft_delete'])->make(true);
+        return datatables()->of($gruposInvestigacion)
+        ->addColumn('details', function ($data) {
+          $button = '
+          <a class="btn light-blue m-b-xs modal-trigger" onclick="grupoInvestigacionIndex.consultarDetallesDeUnGrupoInvestigacion(' . $data->id . ')" href="#modal1">
+            <i class="material-icons">info</i>
+          </a>
+          ';
+          return $button;
+        })->rawColumns(['details'])->make(true);
       }
     }
   }
