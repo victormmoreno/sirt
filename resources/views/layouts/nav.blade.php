@@ -212,9 +212,9 @@
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li>
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">toll</i>Articulaciones
+      <li class="{{setActiveRoute('articulacion')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
         </a>
       </li>
       <li>
@@ -411,9 +411,9 @@
           </ul>
         </div>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">group_work</i>Grupos de Investigación
+      <li class="no-padding {{setActiveRoute('grupo')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
       </li>
       <li class="no-padding">
@@ -609,9 +609,9 @@
           <i class="material-icons">local_drink</i>Laboratorios
         </a>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">group_work</i>Grupos de Investigación
+      <li class="no-padding {{setActiveRoute('grupo')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
       </li>
       <li class="no-padding">

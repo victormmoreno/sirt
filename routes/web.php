@@ -19,8 +19,8 @@ Route::get('/', function () {
 // dd($porciones);
 // $ocupacion = App\Models\Ocupacion::first();
 // dd($ocupacion->users);
-// 
-// 
+//
+//
 
 
 // dd($ocupaciones->items);
@@ -163,7 +163,7 @@ Route::group([
             'as'   => 'administrador.postanadirocupacion',
         ]);
         Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
-   
+
         Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
@@ -279,6 +279,22 @@ Route::group([
         Route::get('/ajaxDetallesDeUnGrupoInvestigacion/{id}', 'GrupoInvestigacionController@detallesDeUnGrupoInvestigacion')->name('grupo.detalle');
         Route::put('/{id}', 'GrupoInvestigacionController@update')->name('grupo.update');
         Route::post('/', 'GrupoInvestigacionController@store')->name('grupo.store');
+    }
+);
+
+//-------------------Route group para el módulo de Comité
+Route::group([
+    'prefix' => 'articulacion',
+    'middleware' => 'auth',
+],
+    function () {
+        Route::get('/', 'ArticulacionController@index')->name('articulacion');
+        Route::get('/create', 'ArticulacionController@create')->name('articulacion.create');
+        // Route::get('/datatableGruposInvestigacionDeTecnoparque', 'ArticulacionController@datatableGruposInvestigacionDeTecnoparque')->name('articulacion.datatable');
+        Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit');
+        Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
+        Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update');
+        Route::post('/', 'ArticulacionController@store')->name('articulacion.store');
     }
 );
 
