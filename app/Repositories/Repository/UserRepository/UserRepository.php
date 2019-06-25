@@ -116,18 +116,21 @@ class UserRepository
     
     public function getAllOcupaciones()
     {
-        return Ocupacion::allOcupaciones()->orderBy('nombre')->get();
+        
+        return Ocupacion::allOcupaciones()->pluck('nombre','id');
     }
     
     /*=====  End of metodo para  consultar todas las ocupaciones  ======*/
 
-     /*===============================================================
+    /*=====  End of metodo para consultar todo el detalle del usuario por su id  ======*/
+
+    /*===============================================================
     =            metodo para consultar el usuario por id            =
     ===============================================================*/
 
     public function findById($id)
     {
-        return User::findOrFail($id);
+        return User::with('ocupaciones')->findOrFail($id);
     }
 
     /*=====  End of metodo para consultar el usuario por id  ======*/

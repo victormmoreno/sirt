@@ -3,6 +3,7 @@
 namespace App\Repositories\Repository\UserRepository;
 
 use App\Models\Eps;
+use App\Models\Ocupacion;
 use App\Models\Rols;
 use App\User;
 
@@ -48,18 +49,7 @@ class AdminRepository
 
     }
 
-    /*=====  End of metodo para consultar todo el detalle del usuario por su id  ======*/
-
-    /*===============================================================
-    =            metodo para consultar el usuario por id            =
-    ===============================================================*/
-
-    public function findById($id)
-    {
-        return User::findOrFail($id);
-    }
-
-    /*=====  End of metodo para consultar el usuario por id  ======*/
+    
 
     /*=======================================================================================
     =            metodo para consultar toda la infomcacion del usuario por el id            =
@@ -104,6 +94,8 @@ class AdminRepository
             "estrato"             => $request->input('txtestrato'),
         ]);
 
+        $user->ocupaciones()->sync($request->get('txtocupaciones'));
+
         // $ocupaciones = \Session::has('ocupacion') ? \Session::get('ocupacion') : null;
         // foreach ($ocupaciones->items as  $value) {
         //     $user->ocupaciones()->attach($value['item']->id);
@@ -143,6 +135,8 @@ class AdminRepository
         $user->otra_eps            = $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null;
         $user->estrato             = $request->input('txtestrato');
         $user->update();
+
+        $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
         return $user;
     }

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Repository\NodoRepository;
+use App\Http\Requests\NodoFormRequest;
 use Illuminate\Http\Request;
+use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller
 {
@@ -22,7 +23,6 @@ class NodoController extends Controller
      */
     public function index()
     {
-        
         if (request()->ajax()) {
             return datatables()->of($this->nodoRepository->getAlltNodo())
                 ->addColumn('detail', function ($data) {
@@ -48,8 +48,11 @@ class NodoController extends Controller
      */
     public function create()
     {
-        $departamentos = $this->nodoRepository->getAllDepartamentos();
-        return view('nodos.administrador.create');
+        
+        return view('nodos.administrador.create',[
+            'centros' => $this->nodoRepository->getAllCentros(),
+            'lineas' => $this->nodoRepository->getAllLineas(),
+        ]);
     }
 
     /**
@@ -58,9 +61,9 @@ class NodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NodoFormRequest $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -82,8 +85,12 @@ class NodoController extends Controller
      */
     public function edit($id)
     {
-        $nodo = $this->nodoRepository->findByid($id);
-        return view('nodos.administrador.edit', compact('nodo'));
+        // $nodo = $this->nodoRepository->findByid($id);
+        return view('nodos.administrador.edit',[
+            'nodo' => $this->nodoRepository->findByid($id),
+            'centros' => $this->nodoRepository->getAllCentros(),
+            'lineas' => $this->nodoRepository->getAllLineas(),
+        ]);
     }
 
     /**
@@ -93,7 +100,7 @@ class NodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(NodoFormRequest $request, $id)
     {
         //
     }

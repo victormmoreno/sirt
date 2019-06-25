@@ -21,7 +21,7 @@
                                 <center><span class="card-title center-align">Editar Nodo <b>{{$nodo->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
                                 <form action="{{ route('nodo.update', $nodo->id)}}" method="POST">
                                 	{!! method_field('PUT')!!}
-	                                @include('lineas.administrador.form', [
+	                                @include('nodos.administrador.form', [
 								    	'btnText' => 'Actualizar',
 								   	])
 							   	</form>  

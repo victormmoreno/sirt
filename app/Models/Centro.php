@@ -21,7 +21,6 @@ class Centro extends Model
         'descripcion',
     ];
 
-
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'regional_id', 'id');
@@ -38,16 +37,22 @@ class Centro extends Model
 
     public function tecnoacademias()
     {
-      return $this->hasMany(Tecnoacademia::class, 'centro_id', 'id');
+        return $this->hasMany(Tecnoacademia::class, 'centro_id', 'id');
     }
 
     public function nodos()
     {
-      return $this->hasMany(Nodo::class, 'centro_id', 'id');
+        return $this->hasMany(Nodo::class, 'centro_id', 'id');
     }
 
-    //  public function nodo()
-    // {
-    //     return $this->belongsTo(Nodo::class, 'centro_id', 'id');
-    // }
+    /*==================================================================
+    =            scope para consultar todos los centros            =
+    ==================================================================*/
+
+    public function scopeAllCentros($query)
+    {
+        return $query->select(['centros.id','entidades.nombre'])->join('entidades','entidades.id','centros.entidad_id');
+    }
+
+    /*=====  End of scope para consultar todos los centros  ======*/
 }

@@ -31,10 +31,10 @@ class Ocupacion extends Model
     public function scopeAllOcupaciones($query)
     {
 
-        return $query->select(['ocupaciones.id', 'ocupaciones.nombre']);
+        return $query->with('users')->orderby('nombre');
             
     }
-    
+
     /*=====  End of scope para consultar todas las ocupaciones  ======*/
     
 }

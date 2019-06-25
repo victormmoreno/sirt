@@ -16,7 +16,39 @@
 </div>
 @endif
 {!! csrf_field() !!}
-
+<div class="row">
+    <div class="col s12 m3 l3">
+        <blockquote>
+            <ul class="collection">
+                <li class="collection-item">
+                    <span class="title"><b>Configuración principal</b></span>
+                    <p>Esta información aparecerá en el perfil del usuario</p>
+                </li>
+                <li class="collection-item">
+                    <span class="title"><b>Roles</b></span>
+                    <p>Puedes Asignar más roles al usuario</p>
+                </li>
+            </ul>
+        </blockquote>
+        {{-- <div class="col s12 m12 l12">
+            <ul class="collection with-header">
+                <li class="collection-header center"><h6><b>Roles</b></h6></li>
+                @forelse($roles as $role)
+                   
+                    
+                    <li class="collection-item">
+                        <p class="p-v-xs">
+                            <input type="checkbox" id="test5">
+                            <label for="test5">{{$role}}</label>
+                        </p>
+                    </li>
+                @empty
+                <p>No tienes roles asignados</p>
+                @endforelse
+            </ul>
+        </div> --}}
+    </div>
+    <div class="col s12 m9 l9">
         <div class="divider mailbox-divider"></div>
         <div class="mailbox-text">
            
@@ -326,6 +358,34 @@
         @enderror
     </div>
 </div>
+{{-- {{var_dump(old('txtocupaciones'))}} --}}
+
+<div class="divider mailbox-divider"></div>
+<div class="row">
+    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+        {{-- <i class="material-icons prefix">
+             details
+        </i> --}}
+        <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple>
+            <option value="">Seleccione ocupación</option>
+
+            @foreach($ocupaciones as $id => $nombre)
+
+                @if(isset($user))
+                <option value="{{$id}}" {{collect(old('txtocupaciones',$user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : ''  }} >{{$nombre}}</option>
+                @else
+                    <option {{collect(old('txtocupaciones'))->contains($id) ? 'selected' : ''  }}  value="{{$id}}" >{{$nombre}}</option>
+                @endif
+
+            
+            @endforeach
+        </select>
+        <label for="txtocupaciones" class="active">Ocupación <span class="red-text">*</span></label>
+        @error('txtocupaciones')
+            <label id="txtocupaciones-error" class="error" for="txtocupaciones">{{ $message }}</label>
+        @enderror
+    </div>
+</div>
 <div class="divider mailbox-divider"></div>
 <br>
 <center>
@@ -341,5 +401,9 @@
     </div>
 </div>                             
 
+    </div>
+</div>
+
+        
 
                                     

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\AdminFormRequest;
-use App\Models\Cart;
 use App\Models\Ocupacion;
 use App\Models\OcupacionModel;
 use App\Repositories\Repository\UserRepository\AdminRepository;
@@ -17,8 +16,6 @@ use Session;
 class AdminController extends Controller
 {
 
-
-
     public $adminRepository;
     public $userRepository;
 
@@ -26,68 +23,62 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
         $this->adminRepository = $adminRepository;
-        $this->userRepository = $userRepository;
+        $this->userRepository  = $userRepository;
     }
 
-    
     /*================================================================================
     =            metodo para consultar las ciudedes segun el departamento            =
     ================================================================================*/
-    
+
     public function getCiudad($departamento)
     {
-       
+
         return response()->json([
             'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
         ]);
     }
-    
+
     /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
 
     public function anadirOcupacion(Request $request, $id)
     {
-        $ocupacion = Ocupacion::findOrFail($id);
-        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
+        $ocupacion      = Ocupacion::findOrFail($id);
+        $oldCart        = Session::has('ocupacion') ? Session::get('ocupacion') : null;
         $OcupacionModel = new OcupacionModel($oldCart);
         $OcupacionModel->add($ocupacion, $ocupacion->id);
         $request->session()->put('ocupacion', $OcupacionModel);
-        
+
         $notificacion = [
-            'message' => $ocupacion->nombre.' añadido exitosamente', 
-            'alert-type' => 'success'
+            'message'    => $ocupacion->nombre . ' añadido exitosamente',
+            'alert-type' => 'success',
         ];
         return response()->json([
             'notificacion' => $notificacion,
-            'ocupacion' => $OcupacionModel,
+            'ocupacion'    => $OcupacionModel,
         ]);
-           
+
     }
 
     /*==============================================================
     =            metodo para añadir ocupaciones session            =
     ==============================================================*/
-    
+
     public function anadirOcupacionEdit(Request $request, $idOcupacion, $idUser)
     {
-        
-        
 
-    
         $ocupacion = Ocupacion::findOrFail($idOcupacion);
         $ocupacion->users;
 
-
-
-        $user = User::findOrFail($idUser);
-        $sessionUser = Session::put('ocupacionEdit',$user);
+        $user        = User::findOrFail($idUser);
+        $sessionUser = Session::put('ocupacionEdit', $user);
         $request->session()->put('ocupacionEdit', $user->ocupaciones);
-    
+
         // dd($sessionUser);
-      
+
         // foreach ($user->ocupaciones as  $value) {
         //    $datos =$request->session()->put(   $value);
         // }
-       
+
         $oldOcupacion = Session::has('ocupacionEdit') ? Session::get('ocupacionEdit', $user->ocupaciones) : null;
         // $OcupacionModel = new OcupacionModel($oldOcupacion);
         // $OcupacionModel->add($ocupacion->users, $ocupacion->id);
@@ -96,15 +87,12 @@ class AdminController extends Controller
             'getOcupacion' => $oldOcupacion,
         ]);
     }
-    
-    /*=====  End of metodo para añadir ocupaciones session  ======*/
-    
 
-    
+    /*=====  End of metodo para añadir ocupaciones session  ======*/
 
     public function getOcupacionSesion()
     {
-        
+
         return response()->json([
             'getOcupacion' => Session::get('ocupacion'),
         ]);
@@ -112,30 +100,27 @@ class AdminController extends Controller
 
     public function removerItemOcupacion($id)
     {
-        $ocupacion = Ocupacion::findOrFail($id);
-        $oldCart = Session::has('ocupacion') ? Session::get('ocupacion') : null;
+        $ocupacion      = Ocupacion::findOrFail($id);
+        $oldCart        = Session::has('ocupacion') ? Session::get('ocupacion') : null;
         $OcupacionModel = new OcupacionModel($oldCart);
         $OcupacionModel->removeitem($id);
 
-        if(count($OcupacionModel->items) > 0)
-        {
+        if (count($OcupacionModel->items) > 0) {
             Session::put('ocupacion', $OcupacionModel);
-        }
-        else
-        {
+        } else {
             Session::forget('ocupacion');
         }
 
         Session::put('ocupacion', $OcupacionModel);
 
         $notificacion = array(
-            'message' => $ocupacion->nombre.' ha sido eliminado', 
-            'alert-type' => 'success'
+            'message'    => $ocupacion->nombre . ' ha sido eliminado',
+            'alert-type' => 'success',
         );
 
-         return response()->json([
+        return response()->json([
             'notificacion' => $notificacion,
-            'ocupacion' => $OcupacionModel,
+            'ocupacion'    => $OcupacionModel,
         ]);
 
     }
@@ -148,40 +133,35 @@ class AdminController extends Controller
     public function index()
     {
 
-        if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
+        if (request()->ajax()) {
+            return datatables()->of($this->adminRepository->getAllAdministradores())
+                ->addColumn('detail', function ($data) {
 
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
-            if (request()->ajax()) {
-                return datatables()->of($this->adminRepository->getAllAdministradores())
-                    ->addColumn('detail', function ($data) {
-                        
-                        $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                        return $button;
-                    })
-                    ->addColumn('edit', function ($data) {
-                        if ($data->id != auth()->user()->id) {
-                            $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                        }else{
-                            $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                        }
-                        return $button;
-                    })
-                    ->editColumn('estado', function ($data) {
-                        if ($data->estado == User::IsActive()) {
-                            return $data->estado = 'Habilitado';
-                        } else {
-                            return $data->estado = 'Inhabilitado ';
-                        }
-                    })
-                    ->rawColumns(['detail', 'edit'])
-                    ->make(true);
-            }
-
-            return view('users.administrador.administrador.index');
-        } else {
-            abort(403);
+                    return $button;
+                })
+                ->addColumn('edit', function ($data) {
+                    if ($data->id != auth()->user()->id) {
+                        $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    } else {
+                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                    }
+                    return $button;
+                })
+                ->editColumn('estado', function ($data) {
+                    if ($data->estado == User::IsActive()) {
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })
+                ->rawColumns(['detail', 'edit'])
+                ->make(true);
         }
+
+        return view('users.administrador.administrador.index');
+
     }
 
     /**
@@ -191,14 +171,16 @@ class AdminController extends Controller
      */
     public function create()
     {
-        // dd($this->userRepository->getAllOcupaciones());
+        // $ocupacion$this->userRepository->getAllOcupaciones();
+
         return view('users.administrador.administrador.create', [
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
+            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+            'roles'             => $this->userRepository->getAllRoles(),
         ]);
     }
 
@@ -213,13 +195,13 @@ class AdminController extends Controller
         //generar contraseña
         $password = User::generatePasswordRamdom();
         //guardar registro
-        $administrador   = $this->adminRepository->Store($request, $password);
+        $administrador = $this->adminRepository->Store($request, $password);
 
         $activationToken = $this->userRepository->activationToken($administrador->id);
         //envio de email con contraseña
         if ($administrador != null) {
             event(new UserWasRegistered($administrador, $password));
-            alert()->success('Registro Exitoso.','El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
         } else {
             alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
         }
@@ -228,9 +210,6 @@ class AdminController extends Controller
         return redirect()->route('usuario.administrador.index');
 
     }
-
-    
-    
 
     /**
      * Display the specified resource.
@@ -253,24 +232,16 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
-
-        $user = $this->adminRepository->findById($id);
-        $user->ocupaciones;
-       
-         // $sessionEdit= Session::get('ocupacionEdit', $user->ocupaciones);
-
-        // dd($user->genero);
-        
         return view('users.administrador.administrador.edit', [
-            'user'              => $user,
+            'user'              => $this->userRepository->findById($id),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ciudades' => $this->userRepository->getAllCiudadDepartamento($user->iddepartamento),
-            'ocupaciones'     => $this->userRepository->getAllOcupaciones(),
-            'sessionEdit'     =>  $user->ocupaciones,
+            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+            'roles'             => $this->userRepository->getAllRoles(),
+    
         ]);
     }
 
@@ -283,15 +254,15 @@ class AdminController extends Controller
      */
     public function update(AdminFormRequest $request, $id)
     {
-        $user = $this->adminRepository->findById($id);
+        $user = $this->userRepository->findById($id);
         if ($user != null) {
             $userUpdate = $this->adminRepository->Update($request, $user);
-            alert()->success("El Usuario {$userUpdate->nombre_completo } ha sido  modificado.",'Modificación Exitosa',"success");
-        }else{
+            alert()->success("El Usuario {$userUpdate->nombre_completo} ha sido  modificado.", 'Modificación Exitosa', "success");
+        } else {
             alert()->error("El Usuario no se ha modificado.", 'Modificación Errónea', "error");
         }
 
-        return redirect()->route('usuario.administrador.index');        
+        return redirect()->route('usuario.administrador.index');
     }
 
     /**
