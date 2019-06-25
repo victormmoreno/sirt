@@ -24,6 +24,7 @@ class CreateTiposarticulacionesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 100);
+            $table->tinyInteger('articulado_con');
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->timestamps();
         });

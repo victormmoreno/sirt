@@ -20,6 +20,10 @@ class EmpresaController extends Controller
   {
     $this->empresaRepository = $empresaRepository;
     $this->userRepository = $userRepository;
+    $this->middleware([
+        'auth',
+    ]);
+
   }
   /**
   * Display a listing of the resource.

@@ -1573,49 +1573,48 @@ $(document).ready(function() {
   });
 });
 
-  // $('#empresasDeTecnoparque_tableNoGestor').DataTable({
-  //   language: {
-  //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-  //   },
-  //   processing: true,
-  //   serverSide: true,
-  //   ajax:{
-  //     url: "/empresa/datatableEmpresasDeTecnoparque",
-  //     type: "get",
-  //   },
-  //   columns: [
-  //     {
-  //       data: 'nit',
-  //       name: 'nit',
-  //     },
-  //     {
-  //       data: 'nombre_empresa',
-  //       name: 'nombre_empresa',
-  //     },
-  //     {
-  //       data: 'sector_empresa',
-  //       name: 'sector_empresa',
-  //     },
-  //     {
-  //       data: 'ciudad',
-  //       name: 'ciudad',
-  //     },
-  //     {
-  //       data: 'direccion',
-  //       name: 'direccion',
-  //     },
-  //     {
-  //       data: 'details',
-  //       name: 'details',
-  //       orderable: false
-  //     },
-  //     // {
-  //     //   data: 'soft_delete',
-  //     //   name: 'soft_delete',
-  //     //   orderable: false
-  //     // },
-  //   ],
-  // });
+  $('#grupoDeInvestigacionTecnoparque_tableNoGestor').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_grupo',
+        name: 'codigo_grupo',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'ciudad',
+        name: 'ciudad',
+      },
+      {
+        data: 'tipo_grupo',
+        name: 'tipo_grupo',
+      },
+      {
+        data: 'institucion',
+        name: 'institucion',
+      },
+      {
+        data: 'clasificacioncolciencias',
+        name: 'clasificacioncolciencias',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+    ],
+  });
 
 var grupoInvestigacionIndex = {
   consultarDetallesDeUnGrupoInvestigacion:function(id){
