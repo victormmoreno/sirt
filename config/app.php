@@ -182,6 +182,7 @@ return [
 
         //Providers Personalizados
         App\Providers\NodoServiceProvider::class,
+        App\Providers\ValidatorServiceProvider::class,
 
     ],
 

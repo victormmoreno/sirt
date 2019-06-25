@@ -18,9 +18,6 @@ class EventServiceProvider extends ServiceProvider
         Registered::class                   => [
             SendEmailVerificationNotification::class,
         ],
-        'Illuminate\Auth\Events\Registered' => [
-            'App\Listeners\SendActivationLink',
-        ],
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\LogSuccessfulLogin',
         ],
@@ -28,7 +25,7 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\IdeaHasBeenReceived'
         ],
         'App\Events\User\UserWasRegistered' => [
-            'App\Listeners\User\UserWelcome',
+            'App\Listeners\User\SendActivationLink',
             'App\Listeners\User\SendNotificationPasswordEmail',
         ],
         'App\Events\Comite\ComiteWasRegistered' => [

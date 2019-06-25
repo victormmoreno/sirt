@@ -84,7 +84,7 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('perfil.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('perfil.contraseña')}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
                                                     <div class="row">
@@ -122,7 +122,7 @@
                                                                     <i class="material-icons prefix">
                                                                         account_circle
                                                                     </i>
-                                                                    <input class="validate" id="txtnewpassword" name="txtnewpassword" type="password" value="{{ old('txtnewpassword' )}}">
+                                                                    <input class="validate" id="txtnewpassword" name="txtnewpassword" type="text"  required>
                                                                     <label for="txtnewpassword">Nueva contraseña <span class="red-text">*</span></label>
                                                                     @error('txtnewpassword')
                                                                         <label id="txtnewpassword-error" class="error" for="txtnewpassword">{{ $message }}</label>
@@ -134,11 +134,9 @@
                                                                     <i class="material-icons prefix">
                                                                         account_circle
                                                                     </i>
-                                                                    <input class="validate" id="txtapellidos" name="txtapellidos" type="password" value="{{ old('txtapellidos')}}">
-                                                                    <label for="txtapellidos">Confirmar contraseña <span class="red-text">*</span></label>
-                                                                    @error('txtapellidos')
-                                                                        <label id="txtapellidos-error" class="error" for="txtapellidos">{{ $message }}</label>
-                                                                    @enderror
+                                                                    <input class="validate" id="txtnewpassword-confirm" name="txtnewpassword_confirmation" type="text" >
+                                                                    <label for="txtnewpassword-confirm">Confirmar contraseña <span class="red-text">*</span></label>
+                                                                    
                                                                 </div>
                                                             </div>
                                                             <div class="divider mailbox-divider">

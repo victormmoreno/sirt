@@ -17,4 +17,40 @@ class Sublinea extends Model
         'lineatecnologica_id',
         'nombre',
     ];
+
+
+     /*================================================
+    =            mutador para el nombre            =
+    ================================================*/
+
+    public function setNombreAttribute($nombre)
+    {
+        $this->attributes['nombre'] = strtolower($nombre);
+        $this->attributes['nombre'] = ucfirst($nombre);
+    }
+
+    
+    /*=====  End of mutador para el nombre  ======*/
+
+
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
+    public function linea()
+    {
+        return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
+    }
+
+
+    /*=====  End of relaciones eloquent  ======*/
+
+    /*===========================================
+    =            scope para consultar todas las lineass            =
+    ===========================================*/
+    public function scopeAllSublineas($query)
+    {
+        return $query;
+    }
+
+    /*=====  End of scope para consultar todas las lineass  ======*/
 }

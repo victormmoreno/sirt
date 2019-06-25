@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nueva Sublinea" href="{{route('usuario.administrador.create')}}">
+                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nueva Sublinea" href="{{route('sublineas.create')}}">
                                             <i class="material-icons">
                                                 how_to_reg
                                             </i>
@@ -41,18 +41,13 @@
                             <div class="divider">
                             </div>
                             <br>
-                                <table class="display responsive-table" id="administrador_table">
+                                <table class="display responsive-table" id="sublineas_table" width="100%">
                                     <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
-                                        <th>Administrador</th>
-                                        <th>Correo</th>
-                                        <th>Telefono</th>
-                                        <th>Estado Sistema</th>
-                                        <th>Detalles</th>
-                                        <th>Editar</th>
+                                        <th>Nombre Sublinea</th>
+                                        <th>Lineas</th>
+                                        <th>editar</th>
+                                        
                                     </thead>
-                    
                                 </table>
                         </div>
                     </div>

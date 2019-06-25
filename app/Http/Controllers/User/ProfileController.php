@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileRequest\ChangePasswordRequest;
 use App\Http\Requests\ProfileRequest\ProfileFormRequest;
 use App\Repositories\Repository\ProfileRepository\ProfileRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
@@ -29,7 +30,7 @@ class ProfileController extends Controller
     public function index()
     {
 
-
+        // dd($this->userRepository->getRoleWhereInRole(array('Administrador' => 'Administrador','Dinamizador' => 'Dinamizador', 'Gestor' =>'Gestor' )));
         return view('users.profile.profile',[
             'user' => $this->userRepository->account(auth()->user()->documento),
         ]);
@@ -40,6 +41,7 @@ class ProfileController extends Controller
     {
         return view('users.profile.roles',[
             'user' => $this->userRepository->account(auth()->user()->documento),
+            'roles' => $this->userRepository->getAllRoles(),
         ]);
     }
 
@@ -58,7 +60,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    
 
     /**
      * Show the form for editing the specified resource.
@@ -97,8 +98,20 @@ class ProfileController extends Controller
         //rediccion
         // Auth::logout();
         //  return redirect()->route('login'); 
-        return redirect()->route('perfil.index',$userUpdated->documento);
+        return redirect()->route('perfil.index');
 
+    }
+
+    public function updatePassword(ChangePasswordRequest $request)
+    {
+        $user = $this->userRepository->findById(auth()->user()->id);
+
+        $userPasswordUpdated = $this->profileRepostory->updatePassword($request, $user);
+
+        alert()->success('Modificación Exitosa',"su contraseña se ha actualizado","success")
+                ->showConfirmButton('Ok', '#009891')->toHtml();
+
+        return redirect()->route('perfil.index');
     }
 
     /**

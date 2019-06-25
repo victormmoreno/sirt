@@ -19,6 +19,17 @@ class LineaTecnologica extends Model
         'descripcion',
     ];
 
+    /*===========================================================================
+    =            relaciones elquent            =
+    ===========================================================================*/
+
+    public function sublineas()
+    {
+        return $this->hasMany(Sublinea::class, 'lineatecnologica_id', 'id');
+    }
+
+    /*=====  End of relaciones elquent  ======*/
+
 
     /*===========================================================================
     =            mutador para tranformar la abreviatura a mayusculas            =

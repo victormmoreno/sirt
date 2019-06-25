@@ -118,18 +118,7 @@
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                        <p class="center">Roles
-                                                            <div class="right">
                                                             
-        
-                                                            <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Cambiar Información</a>
-                                                            <!-- Dropdown Structure -->
-                                                            <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="#!">one</a></li>
-                                                                <li><a href="#!">two</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#!">three</a></li>
-                                                            </ul> 
-                                                        </div>
                                                        </p>
 
                                                     </span>
@@ -166,12 +155,6 @@
                                                                       @endif
                                                                         
                                                                     </p>
-                                                                    <span class="secondary-content">
-                                                                        <i class="material-icons">
-                                                                            grade
-                                                                        </i>
-                                                                    </span>
-                                                                    
                                                                 </li>
                                                             @empty
                                                             <p>No tienes roles asignados</p>

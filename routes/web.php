@@ -12,7 +12,8 @@
  */
 
 Route::get('/', function () {
-    // $entidad = App\Models\Entidad::where('entidades.id',171)->first();
+    // $linea = App\Models\Sublinea::getAllSublineas();
+    // dd($linea);
 
 // $empresa = "1234 - sol de juan";
 // $porciones = explode("-", $empresa);
@@ -183,6 +184,7 @@ Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuen
 Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
 Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles');
 Route::get('perfil/permisos', 'User\ProfileController@permisos')->name('perfil.permisos');
+Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña');
 Route::resource('perfil', 'User\ProfileController', ['only' => ['edit','update','destroy']]);
 
 /*=====  End of seccion para las rutas del perfil  ======*/
@@ -330,6 +332,6 @@ Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
 =            rutas para las funcionalidades de las sublineas            =
 ====================================================================*/
 
-Route::resource('sublineas', 'SublineaController');
+Route::resource('sublineas', 'SublineaController', ['except' => ['show']]);
 
 /*=====  End of rutas para las funcionalidades de las sublineas  ======*/

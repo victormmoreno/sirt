@@ -118,41 +118,17 @@
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                        <p class="center">Permisos Adicionales
-                                                            <div class="right">
-                                                            
-        
-                                                            <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Cambiar Información</a>
-                                                            <!-- Dropdown Structure -->
-                                                            <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="#!">one</a></li>
-                                                                <li><a href="#!">two</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#!">three</a></li>
-                                                            </ul> 
-                                                        </div>
                                                        </p>
-
                                                     </span>
-
-                                                    
-                                                </div>
-
-                                                <div class="right mailbox-buttons">
-                                                    
-                                                    
-                                                    {{-- <a class="waves-effect waves-red btn-flat m-t-xs">
-                                                        Delete
-                                                    </a> --}}
-                                                    
                                                 </div>
                                             </div>
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
                                                 <div class="row">
-                                                    <div class="col s12 m6 l6  ">
-                                                        <ul class="collection">
-                                                            @forelse($user->permissions as $permission)
+                                                    @forelse($user->permissions as $permission)
+                                                        <div class="col s12 m4 l4  ">
+                                                            <ul class="collection">
                                                                 <li class="collection-item avatar">
                                                                     <i class="material-icons circle teal darken-2">
                                                                         credit_card
@@ -160,26 +136,15 @@
                                                                     <span class="title">
                                                                         {{$permission->name}}
                                                                     </span>
-                                                                    
-                                                                    <span class="secondary-content">
-                                                                        <i class="material-icons">
-                                                                            grade
-                                                                        </i>
-                                                                    </span>
-                                                                    
                                                                 </li>
-                                                            @empty
-                                                            <p>No tienes roles asignados</p>
-                                                            @endforelse
-                                                            
-    
-                                                        </ul>
-                                                    </div>
-                                                    
+                                                            </ul>
+                                                        </div>
+                                                    @empty
+                                                        <p>No tienes roles asignados</p>
+                                                    @endforelse
                                                 </div>
                                                 <div class="divider mailbox-divider">
                                                 </div>
-                                                
                                             </div>
                                         </div>
                                     </div>

@@ -249,12 +249,12 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify((new ResetPasswordNotification($token))->onQueue('authentication'));
-        // $this->notify((new ResetPasswordNotification($token))->onQueue('authentication')->delay(now()->addMinutes(10)));
-        // \Notification::send($this, new ResetPasswordNotification($token));
-    }
+    // public function sendPasswordResetNotification($token)
+    // {
+    //     $this->notify((new ResetPasswordNotification($token))->send('authentication'));
+    //     // $this->notify((new ResetPasswordNotification($token))->onQueue('authentication')->delay(now()->addMinutes(10)));
+    //     // \Notification::send($this, new ResetPasswordNotification($token));
+    // }
 
     public function activate()
     {

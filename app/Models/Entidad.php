@@ -46,9 +46,6 @@ class Entidad extends Model
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
     }
 
-    public function empresa()
-    {
-        return $this->hasOne(Empresa::class, 'entidad_id', 'id');
-    }
+    
 
 }
