@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\User;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PleaseActivateYourAccount extends Mailable
+class PleaseActivateYourAccount extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -30,6 +31,6 @@ class PleaseActivateYourAccount extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.activation-email');
+        return $this->markdown('emails.users.activation-email');
     }
 }

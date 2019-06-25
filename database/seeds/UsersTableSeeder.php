@@ -69,7 +69,7 @@ class UsersTableSeeder extends Seeder
             'fechanacimiento'     => '1996-09-12',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
-            'remember_token'      => Str::random(10),
+            'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
@@ -100,7 +100,7 @@ class UsersTableSeeder extends Seeder
             'fechanacimiento'     => '1996-09-12',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
-            'remember_token'      => Str::random(10),
+            'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
@@ -133,7 +133,7 @@ class UsersTableSeeder extends Seeder
             'fechanacimiento'     => '1999-01-19',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
-            'remember_token'      => Str::random(10),
+            'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
@@ -191,7 +191,7 @@ class UsersTableSeeder extends Seeder
             'fechanacimiento'     => '1980-09-12',
             'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
-            'remember_token'      => Str::random(10),
+            'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
@@ -220,7 +220,7 @@ class UsersTableSeeder extends Seeder
             'fechanacimiento'     => '1980-09-12',
             'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
-            'remember_token'      => Str::random(10),
+            'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
@@ -248,7 +248,7 @@ class UsersTableSeeder extends Seeder
             'fechanacimiento'     => '1980-09-12',
             'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
-            'remember_token'      => Str::random(10),
+            'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);

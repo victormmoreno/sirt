@@ -238,9 +238,7 @@
         
     </div>
 </div>
-<div class="row">
-    
-</div>
+
 <div class="row">
     <div class="input-field col s12 m4 l4">
         <i class="material-icons prefix">
@@ -328,77 +326,6 @@
         @enderror
     </div>
 </div>
-<div class="row">
-    <div class="input-field col s12 m12 l12 ">
-        <i class="material-icons prefix">
-             details
-        </i>
-
-        @if(isset($user->gradoescolaridad_id))
-            <select class="" id="txtocupaciones" style="width: 100%" tabindex="-1" >
-                <option value="">Seleccione ocupación</option>
-                
-                @foreach($ocupaciones as $value)
-                    <option value="{{$value->id}}" {{old('txtocupaciones') }}>{{$value->nombre}}</option>
-                @endforeach
-            </select>
-        @else
-            <select class="" id="txtocupaciones" style="width: 100%" tabindex="-1">
-                <option value="">Seleccione ocupación</option>
-                @foreach($ocupaciones as $value)
-                    <option value="{{$value->id}}" {{old('txtocupaciones') }}>{{$value->nombre}}</option>
-                @endforeach
-            </select>   
-        @endif
-        <label for="txtocupaciones">Ocupación*</label>
-        @error('txtocupaciones')
-            <label id="txtocupaciones-error" class="error" for="txtocupaciones">{{ $message }}</label>
-        @enderror
-    </div>
-</div>
-<div class="row">
-                    <div class="col s10 m9 l9">
-                      <div class="card blue-grey lighten-5">
-                        <div class="card-content">
-                          <table class="highlight centered responsive-table">
-                            <thead>
-                              <tr>
-                                <th style="width: 20%">Nombre Ocupación</th>
-                                <th style="width: 10%">Eliminar</th>
-                              </tr>
-                            </thead>
-                            @if(isset($user->gradoescolaridad_id))
-                                <tbody id="tblOcupacionAdministradorEdit">
-                                    
-                                    @forelse($sessionEdit as $value)
-                                        <tr>
-                                            <th >{{$value->nombre}}</th>
-                                            <td><a class="waves-effect red lighten-3 btn" ><i class="material-icons">delete_sweep</i></a></td>
-                                        </tr>
-                                    @empty
-                                
-                              
-                                    @endforelse
-                                </tbody>
-                            @else
-                            <tbody id="tblOcupacionAdministradorCreate"></tbody>
-                            @endif
-                            
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col s2 m3 l3">
-                      <blockquote>
-                        <ul class="collection">
-                          <li class="collection-item">Para agregar una idea de proyecto al entrenamiento solo debe buscarla y seleccionarla.</li>
-                        </ul>
-                      </blockquote>
-                    </div>
-                  </div>
-
-
-
 <div class="divider mailbox-divider"></div>
 <br>
 <center>

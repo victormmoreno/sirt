@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\User;
 
-use App\Mail\PleaseActivateYourAccount;
-use Illuminate\Auth\Events\Registered;
+use App\Events\User\UserWasRegistered;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\User\PleaseActivateYourAccount;
 
 class SendActivationLink
 {
@@ -21,10 +23,10 @@ class SendActivationLink
     /**
      * Handle the event.
      *
-     * @param  Registered  $event
+     * @param  UserWasRegistered  $event
      * @return void
      */
-    public function handle(Registered $event)
+    public function handle(UserWasRegistered $event)
     {
         Mail::to($event->user->email)->send(new PleaseActivateYourAccount($event->user));
     }

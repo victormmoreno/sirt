@@ -17,14 +17,7 @@ use Session;
 class AdminController extends Controller
 {
 
-    // use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    // protected $redirectTo = '/home';
 
     public $adminRepository;
     public $userRepository;
@@ -157,8 +150,6 @@ class AdminController extends Controller
 
         if (auth()->user()->hasRole('Administrador') || auth()->user()->hasPermissionTo('consultar linea')) {
 
-            $admin = $this->adminRepository->getAllAdministradores();
-
 
             if (request()->ajax()) {
                 return datatables()->of($this->adminRepository->getAllAdministradores())
@@ -228,7 +219,7 @@ class AdminController extends Controller
         //envio de email con contraseña
         if ($administrador != null) {
             event(new UserWasRegistered($administrador, $password));
-            alert()->success('El Usuario ha sido creado satisfactoriamente', 'Registro Exitoso.')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+            alert()->success('Registro Exitoso.','El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
         } else {
             alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
         }

@@ -26,7 +26,7 @@
                                         <div class="mailbox-list">
                                             <ul>
                                                 <li>
-                                                    <a href="{{{route('perfil.index',auth()->user()->documento)}}}">
+                                                    <a href="{{{route('perfil.index')}}}">
                                                         <h4 class="mail-title">
                                                             Información Personal
                                                         </h4>
@@ -37,7 +37,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{{route('perfil.roles',auth()->user()->documento)}}}">
+                                                    <a href="{{{route('perfil.roles')}}}">
                                                         <h4 class="mail-title">
                                                             Roles
                                                         </h4>
@@ -47,7 +47,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a  href="{{{route('perfil.permisos', auth()->user()->documento)}}}">
+                                                    <a  href="{{{route('perfil.permisos')}}}">
                                                         <h4 class="mail-title">
                                                             Permisos Adicionales
                                                         </h4>
@@ -57,7 +57,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a  href="">
+                                                    <a  href="{{{route('perfil.cuenta')}}}">
                                                         <h4 class="mail-title">
                                                             Cambiar Contraseña
                                                         </h4>
@@ -75,22 +75,22 @@
                                         <div class="mailbox-options">
                                             <ul>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.index')}}}">
                                                         Información Personal
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.roles')}}}">
                                                         Roles
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.permisos')}}}">
                                                         Permisos Adicionales
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.cuenta')}}}">
                                                         Cambiar Contraseña
                                                     </a>
                                                 </li>
@@ -118,18 +118,7 @@
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                        <p class="center">Roles
-                                                            <div class="right">
                                                             
-        
-                                                            <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Cambiar Información</a>
-                                                            <!-- Dropdown Structure -->
-                                                            <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="#!">one</a></li>
-                                                                <li><a href="#!">two</a></li>
-                                                                <li class="divider"></li>
-                                                                <li><a href="#!">three</a></li>
-                                                            </ul> 
-                                                        </div>
                                                        </p>
 
                                                     </span>
@@ -166,12 +155,6 @@
                                                                       @endif
                                                                         
                                                                     </p>
-                                                                    <span class="secondary-content">
-                                                                        <i class="material-icons">
-                                                                            grade
-                                                                        </i>
-                                                                    </span>
-                                                                    
                                                                 </li>
                                                             @empty
                                                             <p>No tienes roles asignados</p>

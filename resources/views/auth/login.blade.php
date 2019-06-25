@@ -20,6 +20,24 @@
                                   </div>
                                   <br>
                                   <br>
+                                  <div class="center">
+                                    @if (session()->has('success'))
+                                      <div class="card green darken-1">
+                                          <div class="row">
+                                              <div class="col s12 m10">
+                                                  <div class="card-content white-text">
+                                                      <p>
+                                                          <i class="material-icons left">
+                                                              info_outline
+                                                          </i>
+                                                          {{ session('success') }}
+                                                      </p>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      @endif
+                                  </div>
                                   <div class="col s12 m12 l12">
                                       <div class="divider" style="background:#008981;"></div>
                                         <a class="footer-text left-align" href="{{route('/')}}">

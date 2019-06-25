@@ -41,7 +41,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="">
+                                                    <a href="{{{route('perfil.cuenta')}}}">
                                                         Cambiar Contraseña
                                                     </a>
                                                 </li>
@@ -83,15 +83,20 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('perfil.edit',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('perfil.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                    {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
-                                                        {!! csrf_field() !!}
                                                     <div class="row">
                                                         <div class="col s12 m3 l3">
                                                             <blockquote>
                                                                 <ul class="collection">
                                                                     <li class="collection-item">
-                                                                        Para agregar una idea de proyecto al entrenamiento solo debe buscarla y seleccionarla.
+                                                                        <span class="title"><b>Configuración principal</b></span>
+                                                                        <p>Esta información aparecerá en tu perfil</p>
+                                                                    </li>
+                                                                    <li class="collection-item">
+                                                                        <span class="title"><b>Perfil</b></span>
+                                                                        <p>Después de una actualización correcta del perfil, se le redirigirá a la página de inicio de sesión donde podrá iniciar sesión nuevamente.</p>
                                                                     </li>
                                                                 </ul>
                                                             </blockquote>
@@ -155,7 +160,7 @@
                                                                     <i class="material-icons prefix">
                                                                         date_range
                                                                     </i>
-                                                                    <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfecha_nacimiento')}}">
+                                                                    <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfecha_nacimiento',  $user->fechanacimiento->toDateString())}}">
                                                                     <label for="txtfecha_nacimiento">Fecha de Nacimiento <span class="red-text">*</span></label>
                                                                     @error('txtfecha_nacimiento')
                                                                         <label id="txtfecha_nacimiento-error" class="error" for="txtfecha_nacimiento">{{ $message }}</label>
@@ -201,7 +206,7 @@
                                                                     <i class="material-icons prefix">
                                                                         details
                                                                     </i>
-                                                                    <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{ isset($user->otra_eps) ? $user->otra_eps : old('txtotraeps')}}">
+                                                                    <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{ isset($user->otra_eps) ? $user->otra_eps : old('txtotraeps', $user->otra_eps)}}">
                                                                     <label for="txtotraeps" class="active">Otra Eps <span class="red-text">*</span></label>
                                                                     @error('txtotraeps')
                                                                         <label id="txtotraeps-error" class="error" for="txtotraeps">{{ $message }}</label>
@@ -224,16 +229,178 @@
                                                                     @enderror 
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="input-field col s12 m6 l6">
+
+                                                                    <i class="material-icons prefix">
+                                                                        details
+                                                                    </i>
+                                                                   
+                                                                    <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministradorEdit.getCiudad()" style="width: 100%" tabindex="-1">
+                                                                        <option value="">Seleccione departamento</option>
+                                                                        @foreach($departamentos as $value)
+                                                                            @if(isset($user->ciudad->departamento->id))
+                                                                                <option value="{{$value->id}}" {{old('txtdepartamento',$user->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                                                                            @else
+                                                                                <option value="{{$value->id}}" {{old('txtdepartamento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                   
+                                                                    <label for="txtdepartamento">Departamento de Residencia <span class="red-text">*</span></label>
+                                                                    @error('txtdepartamento')
+                                                                        <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
+                                                                    @enderror 
+                                                                </div>
+                                                             
+                                                                <div class="input-field col s12 m6 l6">
+                                                                    <i class="material-icons prefix">
+                                                                        details
+                                                                    </i>
+                                                                
+                                                                    <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+                                                                        <option value="">Seleccione Primero el Departamento</option>
+                                                                        
+                                                                    </select>
+
+                                                                    <label for="txtciudad">Ciudad de Residencia <span class="red-text">*</span></label>
+                                                                    @error('txtciudad')
+                                                                        <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
+                                                                    @enderror 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="input-field col s12 m6 l6">
+                                                                    <i class="material-icons prefix">
+                                                                        room
+                                                                    </i>
+                                                                    <input class="validate" id="txtbarrio" name="txtbarrio" type="text"  value="{{ isset($user->barrio) ? $user->barrio : old('txtbarrio', $user->barrio)}}">
+                                                                    <label for="txtbarrio">Barrio <span class="red-text">*</span></label>
+                                                                    @error('txtbarrio')
+                                                                        <label id="txtbarrio-error" class="error" for="txtbarrio">{{ $message }}</label>
+                                                                    @enderror
+                                                                    
+                                                                </div>
+                                                                <div class="input-field col s12 m6 l6">
+                                                                    <i class="material-icons prefix">
+                                                                        room
+                                                                    </i>
+                                                                    <input class="validate" id="txtdireccion" name="txtdireccion" type="text"  value="{{ isset($user->direccion) ? $user->direccion : old('txtdireccion', $user->barrio)}}">
+                                                                    <label for="txtdireccion">Dirección <span class="red-text">*</span></label>
+                                                                    @error('txtdireccion')
+                                                                        <label id="txtdireccion-error" class="error" for="txtdireccion">{{ $message }}</label>
+                                                                    @enderror
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="input-field col s12 m4 l4">
+                                                                    <i class="material-icons prefix">
+                                                                        mail_outline
+                                                                    </i>
+                                                                    <input class="validate" id="txtemail" name="txtemail" type="email" value="{{ isset($user->email) ? $user->email : old('txtemail', $user->email )}}">
+                                                                    <label for="txtemail">Correo <span class="red-text">*</span></label>
+                                                                    @error('txtemail')
+                                                                        <label id="txtemail-error" class="error" for="txtemail">{{ $message }}</label>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="input-field col s12 m4 l4">
+                                                                    <i class="material-icons prefix">
+                                                                        contact_phone
+                                                                    </i>
+                                                                    <input class="validate" id="txttelefono" name="txttelefono" type="tel" value="{{ isset($user->telefono) ? $user->telefono : old('txttelefono', $user->telefono )}}">
+                                                                    <label for="txttelefono">Telefono</label>
+                                                                    @error('txttelefono')
+                                                                        <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="input-field col s12 m4 l4">
+                                                                    <i class="material-icons prefix">
+                                                                        settings_cell
+                                                                    </i>
+                                                                    <input class="validate" id="txtcelular" name="txtcelular" type="tel"  value="{{ isset($user->celular) ? $user->celular : old('txtcelular', $user->celular )}}">
+                                                                    <label for="txtcelular">Celular</label>
+                                                                    @error('txtcelular')
+                                                                        <label id="txtcelular-error" class="error" for="txtcelular">{{ $message }}</label>
+                                                                    @enderror 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+                                                                        <i class="material-icons prefix">
+                                                                             details
+                                                                        </i>
+                                                                        <select class="" id="txtgrado_escolaridad" name="txtgrado_escolaridad" style="width: 100%" tabindex="-1">
+                                                                            <option value="">Seleccione grado de escolaridad</option>
+                                                                            @foreach($gradosescolaridad as $value)
+                                                                                @if(isset($user->gradoescolaridad_id))
+                                                                                <option value="{{$value->id}}" {{old('txtgrado_escolaridad',$user->gradoescolaridad_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                                                                                @else
+                                                                                    <option value="{{$value->id}}" {{old('txtgrado_escolaridad') ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                                                                                @endif
+
+                                                                            @endforeach
+                                                                        </select>
+                                                                        <label for="txtgrado_escolaridad">Grado Escolaridad <span class="red-text">*</span></label>
+                                                                        @error('txtgrado_escolaridad')
+                                                                            <label id="txtgrado_escolaridad-error" class="error" for="txtgrado_escolaridad">{{ $message }}</label>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
                                                         </div>
                                                     </div>
                                                     <div class="divider mailbox-divider">
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col s12 m3 l3">
+                                                            <blockquote>
+                                                                <ul class="collection">
+                                                                    <li class="collection-item">
+                                                                        <span class="title"><b>Genero</b></span>
+                                                                        <p>No puedes modificar el genero para hacerlo solicitelo mediante el link o acuda a las instalaciones del nodo más cercano.</p>
+                                                                        
+                                                                    </li>
+                                                                </ul>
+                                                            </blockquote>
+                                                        </div>
+                                                        <div class="col s12 m9 l9"><br>
+                                                            <div class="row">
+                                                                <div class="input-field col s12 m12 l12 offset-l5 m5 s5">
+                                                                    <div class="switch m-b-md">
+                                                                      <i class="material-icons prefix">wc</i>
+                                                                      <label class="active">Genero*</label>
+                                                                        <label>
+                                                                            Masculino
+                                                                            @if(isset($user->genero))
+                                                                            <input type="checkbox" id="txtgenero" name="txtgenero" {{$user->genero != 1 ? 'checked' : old('txtgenero')}} disabled>
+                                                                            @else
+                                                                            <input type="checkbox" id="txtgenero" name="txtgenero" {{old('txtgenero') == 'on' ? 'checked' : ''}}>
+                                                                            @endif
+                                                                            <span class="lever"></span>
+                                                                            Femenino
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="right">
+                                                                <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
+                                                                    Solicitar actualización del genero
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                         
+                                                    </div>
+                                                    <div class="divider mailbox-divider">
+                                                    </div>
                                                     <div class="right">
-                                                        <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
+                                                        <button type="submit" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
                                                             Cambiar Información Personal
+                                                        </button>
+                                                        <a class="waves-effect waves-red btn-flat m-t-xs">
+                                                            Eliminar Cuenta
                                                         </a>
                                                         <a class="waves-effect waves-red btn-flat m-t-xs">
-                                                            Delete
+                                                            Salir
                                                         </a>
                                                     </div>
                                                 </form>
@@ -250,3 +417,59 @@
     </div>
 </main>
 @endsection
+
+@push('script')
+<script>
+$(document).ready(function() {
+// UserAdmininstradorOcupacion.getOcupaciones();
+    eps.getOtraEsp();
+    UserAdministradorEdit.getCiudad();
+});
+    
+
+
+var eps = {
+    getOtraEsp:function (ideps) {
+        let id = $(ideps).val();
+        let nombre = $("#txteps option:selected").text();
+        if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
+            $('#otraeps').hide();
+             
+        }else{
+            console.log(nombre);
+            $('#otraeps').show();
+        }
+        console.log(id);
+        
+    }
+}
+
+var UserAdministradorEdit = {
+    getCiudad:function(){
+      let id;
+      id = $('#txtdepartamento').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        console.log(response);
+        $('#txtciudad').empty();
+        $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+          // console.log(e.id);
+          $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudad').val({{old('txtciudad')}});
+        @else
+        $('#txtciudad').val({{$user->ciudad->id}});
+        @endif
+        $('#txtciudad').material_select();
+      });
+    },
+  }
+
+
+</script>
+@endpush

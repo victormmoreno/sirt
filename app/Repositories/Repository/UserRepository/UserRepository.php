@@ -12,6 +12,7 @@ use App\Models\Ocupacion;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 class UserRepository
 {
@@ -141,7 +142,42 @@ class UserRepository
     }
     
     /*=====  End of metodo para consultar la informacion del usuario  ======*/
+
+    /*========================================================================
+    =            metodo para obtener todos los roles laravel permision            =
+    ========================================================================*/
+
+    public function getAllRoles()
+    {
+        return Role::all()->pluck('name', 'id');
+    }
+
+    /*=====  End of metodo para obtener todos los roles laravel permision  ======*/
     
-    
+    /*========================================================================
+    =            metodo para obtener todos los roles menos el inidicado laravel permision            =
+    ========================================================================*/
+
+    public function getRoleWhereNotInRole(array $role)
+    {
+
+       // return $role;
+        return Role::whereNotIn('name', $role)->pluck('name', 'id');
+    }
+
+    /*=====  End of metodo para obtener todos los roles menos el inidicado laravel permision  ======*/
+
+    /*========================================================================
+    =            metodo para obtener todos los roles inidicados laravel permision            =
+    ========================================================================*/
+
+    public function getRoleWhereInRole(array $role)
+    {
+
+       // return $role;
+        return Role::whereIn('name', $role)->pluck('name', 'id');
+    }
+
+    /*=====  End of metodo para obtener todos los roles inidicados laravel permision  ======*/
 
 }
