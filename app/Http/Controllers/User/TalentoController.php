@@ -4,10 +4,23 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Models\Talento;
 use Illuminate\Http\Request;
 
 class TalentoController extends Controller
 {
+
+    public function datatableTalentosDeTecnoparque()
+    {
+      if (request()->ajax()) {
+        $talentos = Talento::ConsultarTalentosDeTecnoparque()->get();
+        return datatables()->of($talentos)
+        ->addColumn('add_articulacion', function ($data) {
+          $add = '<a onclick="addEmpresaArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+          return $add;
+        })->rawColumns(['add_articulacion'])->make(true);
+      }
+    }
     /**
      * Display a listing of the resource.
      *

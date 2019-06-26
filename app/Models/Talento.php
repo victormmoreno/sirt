@@ -25,4 +25,12 @@ class Talento extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    // Métodos scope
+    public function scopeConsultarTalentosDeTecnoparque($query)
+    {
+      return Talento::select('users.documento')
+      ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
+      ->join('users', 'users.id', '=', 'talentos.user_id');
+    }
 }
