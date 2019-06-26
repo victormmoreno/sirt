@@ -13,9 +13,7 @@
         </a>
       </div>
       <ul class="right col s6 m6 nav-right-menu">
-
         <notifications></notifications>
-
         <li >
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
@@ -24,8 +22,6 @@
             @endguest
           </a>
         </li>
-
-
         <li class="hide-on-med-and-down show-on-large">
           <clock>
           </clock>
@@ -212,7 +208,7 @@
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="{{setActiveRoute('articulacion')}}">
+      <li class="no-padding {{setActiveRoute('articulacion')}}">
         <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
           <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
         </a>
@@ -237,7 +233,7 @@
           <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
         </a>
       </li>
-      <li class="no-padding">
+      <li class="no-padding {{setActiveRoute('grupo')}}">
         <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
           <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
@@ -416,7 +412,7 @@
           <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
       </li>
-      <li class="no-padding">
+      <li class="no-padding {{setActiveRoute('empresa')}}">
         <a class="{{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
           <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
         </a>
@@ -538,7 +534,7 @@
           </ul>
         </div>
       </li>
-      <li class="no-padding">
+      <li class="no-padding {{setActiveRouteActivePage('csibt')}} ">
         <a class="collapsible-header waves-effect waves-grey">
           <i class="material-icons">location_city</i>Nodos
           <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
@@ -554,14 +550,14 @@
           </ul>
         </div>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="{{route('lineas.index')}}">
-          <i class="material-icons">linear_scale</i>Lineas
+      <li class="no-padding {{setActiveRoute('lineas')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas
         </a>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="{{route('sublineas.index')}}">
-          <i class="material-icons">linear_scale</i>Sublineas
+      <li class="no-padding {{setActiveRoute('sublineas')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('sublineas')}}" href="{{route('sublineas.index')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('sublineas') }}">linear_scale</i>Sublineas
         </a>
       </li>
       <li class="no-padding">
@@ -614,7 +610,7 @@
           <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
         </a>
       </li>
-      <li class="no-padding">
+      <li class="no-padding {{setActiveRoute('empresa')}}">
         <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
           <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
         </a>
