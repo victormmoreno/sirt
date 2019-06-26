@@ -28,7 +28,8 @@
             </div>
 
         </div>
-        <script  src="{{ mix('js/app.js') }}"></script>
-        <script  src="{{ mix('js/libs.js') }}"></script>
-        {{-- @include('sweet::alert') --}}    </body>
+        <script  src="{{ asset('js/app.js') }}"></script>
+        <script  src="{{ asset('js/libs.js') }}"></script>
+        {{-- @include('sweet::alert') --}}    
+    </body>
 </html>

@@ -64,6 +64,9 @@
 <script>
 $(document).ready(function() {
 // UserAdmininstradorOcupacion.getOcupaciones();
+    $('.selectMultipe').select2({
+      language: "es",
+    });
     eps.getOtraEsp();
     UserAdministradorEdit.getCiudad();
 });

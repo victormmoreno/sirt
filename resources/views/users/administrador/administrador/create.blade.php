@@ -64,9 +64,12 @@
 <script>
 $(document).ready(function() {
 // UserAdmininstradorOcupacion.getOcupaciones();
+    $('.selectMultipe').select2({
+      language: "es",
+    });
     eps.getOtraEsp();
-     @if($errors->any())
-    UserAdministradorCreate.getCiudad();
+    @if($errors->any())
+        UserAdministradorCreate.getCiudad();
     @endif
 
 });
@@ -142,11 +145,8 @@ var eps = {
             $('#otraeps').hide();
              
         }else{
-            console.log(nombre);
             $('#otraeps').show();
         }
-        console.log(id);
-        
     }
 }
 

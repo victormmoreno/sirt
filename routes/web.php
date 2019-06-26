@@ -189,6 +189,15 @@ Route::resource('perfil', 'User\ProfileController', ['only' => ['edit','update',
 
 /*=====  End of seccion para las rutas del perfil  ======*/
 
+/*========================================================
+=            sesccion para las rutas de ayuda            =
+========================================================*/
+
+Route::get('help/getciudades/{departamento}', 'Help\CiudadController@getCiudad')->name('help.getciudades');
+
+/*=====  End of sesccion para las rutas de ayuda  ======*/
+
+
 
 //-------------------Route group para el módulo de ideas
 Route::group([
