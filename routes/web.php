@@ -141,6 +141,11 @@ Route::group([
 ],
     function () {
 
+        Route::get('/talento/getTalentosDeTecnoparque', [
+          'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
+          'as' => 'talento.tecnoparque',
+        ]);
+
         Route::get('/administrador/getOcupaciones', [
         'uses' => 'AdminController@getOcupacionSesion',
         ]);

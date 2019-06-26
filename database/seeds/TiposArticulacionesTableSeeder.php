@@ -2,6 +2,7 @@
 
 use App\Models\TipoArticulacion;
 use Illuminate\Database\Seeder;
+// use App\Models\TipoArticulacion;
 
 class TiposArticulacionesTableSeeder extends Seeder
 {
@@ -14,62 +15,68 @@ class TiposArticulacionesTableSeeder extends Seeder
     {
         TipoArticulacion::create([
             'id'     => 1,
-            'nombre' => 'Proyecto I+D+I formulados',
-            'articulado_con' => 1,
+            'nombre' => 'Vigilancia Tecnológica.',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 2,
-            'nombre' => 'Publicaciones',
-            'articulado_con' => 1,
+            'nombre' => 'Análisis de Prospectiva.',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 3,
-            'nombre' => 'Articulos A',
-            'articulado_con' => 1,
+            'nombre' => 'Reestructuración y diseño de planta.',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 4,
-            'nombre' => 'Articulos B',
-            'articulado_con' => 1,
+            'nombre' => 'Estrategias de creación y posicionamiento de marca.',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 5,
-            'nombre' => 'Articulos C',
-            'articulado_con' => 1,
+            'nombre' => 'Acompañamiento y gestión en el desarrollo de productos de propiedad intelectual',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 6,
-            'nombre' => 'Articulos Divulgación',
-            'articulado_con' => 1,
+            'nombre' => 'Formular proyectos I+D+i.',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 7,
-            'nombre' => 'Solicitudes de patentes',
-            'articulado_con' => 1,
+            'nombre' => 'Asesoría a empresa o emprendedor.',
+            'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 8,
-            'nombre' => 'Vigilancias Tecnológicas',
-            'articulado_con' => 1,
+            'nombre' => 'Productos resultados de actividades de generación de nuevo conocimiento.',
+            'articulado_con' => TipoArticulacion::IsGrupo(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 9,
-            'nombre' => 'Prototipos',
-            'articulado_con' => 1,
+            'nombre' => 'Productos resultados de actividades de desarrollo tecnológico e innovación. ',
+            'articulado_con' => TipoArticulacion::IsGrupo(),
         ]);
 
         TipoArticulacion::create([
             'id'     => 10,
-            'nombre' => 'Eventos científicos y afines',
-            'articulado_con' => 1,
+            'nombre' => 'Productos resultados de actividades de apropiación social del conocimiento.',
+            'articulado_con' => TipoArticulacion::IsGrupo(),
+        ]);
+
+        TipoArticulacion::create([
+            'id'     => 11,
+            'nombre' => 'Productos de actividades relacionadas con la Formación de Recurso Humano en CTeI.',
+            'articulado_con' => TipoArticulacion::IsGrupo(),
         ]);
 
     }

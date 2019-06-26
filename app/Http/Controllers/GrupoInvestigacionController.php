@@ -81,7 +81,10 @@ class GrupoInvestigacionController extends Controller
         })->addColumn('edit', function ($data) {
           $edit = '<a href="'. route("grupo.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
-        })->rawColumns(['details', 'edit'])->make(true);
+        })->addColumn('add_articulacion', function ($data) {
+          $add = '<a onclick="addGrupoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+          return $add;
+        })->rawColumns(['details', 'edit', 'add_articulacion'])->make(true);
       } else {
         return datatables()->of($gruposInvestigacion)
         ->addColumn('details', function ($data) {
