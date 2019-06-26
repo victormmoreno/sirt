@@ -55,4 +55,20 @@ class Centro extends Model
     }
 
     /*=====  End of scope para consultar todos los centros  ======*/
+
+     /*================================================================================
+    =            metodo para consultar los centros por regional            =
+    ================================================================================*/
+
+    public function scopeAllCentrosRegional($query,$regional)
+    {
+
+        return $query->select(['centros.id','entidades.nombre'])
+                ->join('entidades','entidades.id','centros.entidad_id')
+                ->join('regionales','regionales.id','centros.regional_id')
+                ->where('centros.regional_id',$regional);
+
+    }
+
+    /*=====  End of metodo para consultar los centros por regional  ======*/
 }

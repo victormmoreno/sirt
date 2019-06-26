@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Ciudad;
 use App\Models\Entidad;
 use Illuminate\Database\Seeder;
 
@@ -13,194 +14,233 @@ class EntidadesTableSeeder extends Seeder
     public function run()
     {
 
+
         //centros de formacion
         Entidad::create([
-            'ciudad_id' => 431,
+            // 'ciudad_id' => 431,
+            'ciudad_id' => Ciudad::where('nombre','Aguachica')->first()->id,
             'nombre'    => 'CENTRO AGROEMPRESARIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 13,
+            // 'ciudad_id' => 13,
+            'ciudad_id' => Ciudad::where('nombre','Apartado')->first()->id,
             'nombre'    => 'COMPLEJO TECNOLÓGICO AGROINDUSTRIAL, PECUARIO Y TURÍSTICO ',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 128,
+            // 'ciudad_id' => 128,
+            'ciudad_id' => Ciudad::where('nombre','Arauca')->first()->id,
             'nombre'    => 'CENTRO DE GESTIÓN Y DESARROLLO AGROINDUSTRIAL DE ARAUCA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 867,
+            // 'ciudad_id' => 867,
+            'ciudad_id' => Ciudad::where('id',867)->first()->id, //Armenia
             'nombre'    => 'CENTRO DE COMERCIO, INDUSTRIA Y TURISMO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 899,
+            // 'ciudad_id' => 899,
+            'ciudad_id' => Ciudad::where('nombre','Barrancabermeja')->first()->id,
             'nombre'    => 'CENTRO INDUSTRIAL Y DEL DESARROLLO TECNOLÓGICO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 136,
+            // 'ciudad_id' => 136,
+            'ciudad_id' => Ciudad::where('nombre','Barranquilla')->first()->id,
             'nombre'    => 'CENTRO PARA EL DESARROLLO AGROECOLÓGICO Y AGROINDUSTRIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 136,
+            // 'ciudad_id' => 136,
+            'ciudad_id' => Ciudad::where('nombre','Barranquilla')->first()->id,
             'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 136,
+            // 'ciudad_id' => 136,
+            'ciudad_id' => Ciudad::where('nombre','Barranquilla')->first()->id,
             'nombre'    => 'CENTRO NACIONAL COLOMBO ALEMAN',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 136,
+            // 'ciudad_id' => 136,
+            'ciudad_id' => Ciudad::where('nombre','Barranquilla')->first()->id,
             'nombre'    => 'CENTRO INDUSTRIAL Y DE AVIACIÓN',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE SERVICIOS FINANCIEROS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE TECNOLOGIAS PARA LA CONSTRUCCIÓN Y LA MADERA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE ELECTRICIDAD, ELECTRÓNICA Y TELECOMUNICACIONES',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE MANUFACTURA EN TEXTILES Y CUERO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO METALMECÁNICO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE MATERIALES Y ENSAYOS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE GESTIÓN INDUSTRIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE DISEÑO Y METROLOGIA ',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO PARA LA INDUSTRIA DE LA COMUNICACIÓN GRÁFICA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO NACIONAL DE HOTELERIA, TURISMO Y ALIMENTOS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE DISEÑO TECNOLÓGICO INDUSTRIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE GESTIÓN ADMINISTRATIVA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE GESTIÓN Y FORTALECIMIENTO SOCIO EMPRESARIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 525,
+            // 'ciudad_id' => 525,
+            'ciudad_id' => Ciudad::where('nombre','Bogotá D.C.')->first()->id,
             'nombre'    => 'CENTRO DE GESTIÓN DE MERCADOS, LOGÍSITICA Y TECNOLOGIAS DE LA INFORMACIÓN',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 902,
+            // 'ciudad_id' => 902,
+            'ciudad_id' => Ciudad::where('nombre','Bucaramanga')->first()->id,
             'nombre'    => 'CENTRO DE SERVICIOS EMPRESARIALES Y TURÍSTICOS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1059,
+            // 'ciudad_id' => 1059,
+            'ciudad_id' => Ciudad::where('nombre','Buenaventura')->first()->id,
             'nombre'    => 'CENTRO NÁUTICO PESQUERO DE BUENAVENTURA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1060,
+            // 'ciudad_id' => 1060,
+            'ciudad_id' => Ciudad::where('nombre','Buga')->first()->id,
             'nombre'    => 'CENTRO AGROPECUARIO DE BUGA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 26,
+            // 'ciudad_id' => 26,
+            'ciudad_id' => Ciudad::where('nombre','Caldas')->first()->id,
             'nombre'    => 'CENTRO DE LOS RECURSOS NATURALES RENOVABLES - LA SALADA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1064,
+            // 'ciudad_id' => 1064,
+            'ciudad_id' => Ciudad::where('nombre','Calí')->first()->id,
             'nombre'    => 'CENTRO DE ELECTRICIDAD Y AUTOMATIZACIÓN INDUSTRIAL - CEAI',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1064,
+            // 'ciudad_id' => 1064,
+            'ciudad_id' => Ciudad::where('nombre','Calí')->first()->id,
             'nombre'    => 'CENTRO DE DISEÑO TECNOLÓGICO INDUSTRIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1064,
+            // 'ciudad_id' => 1064,
+            'ciudad_id' => Ciudad::where('nombre','Calí')->first()->id,
             'nombre'    => 'CENTRO NACIONAL DE ASISTENCIA TÉCNICA A LA INDUSTRIA - ASTIN',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1064,
+            // 'ciudad_id' => 1064,
+            'ciudad_id' => Ciudad::where('nombre','Calí')->first()->id,
             'nombre'    => 'CENTRO DE GESTIÓN TECNOLÓGICA DE SERVICIOS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1064,
+            // 'ciudad_id' => 1064,
+            'ciudad_id' => Ciudad::where('nombre','Calí')->first()->id,
             'nombre'    => 'CENTRO DE LA CONSTRUCCIÓN',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 645,
+            // 'ciudad_id' => 645,
+            'ciudad_id' => Ciudad::where('nombre','Campoalegre')->first()->id,
             'nombre'    => 'CENTRO DE FORMACIÓN AGROINDUSTRIAL',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 200,
+            // 'ciudad_id' => 200,
+            'ciudad_id' => Ciudad::where('nombre','Turbaco')->first()->id,
             'nombre'    => 'CENTRO AGROEMPRESARIAL Y MINERO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 200,
+            // 'ciudad_id' => 200,
+            'ciudad_id' => Ciudad::where('nombre','Turbaco')->first()->id,
             'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 166,
+            // 'ciudad_id' => 166,
+            'ciudad_id' => Ciudad::where('nombre','Cartagena')->first()->id,
             'nombre'    => 'CENTRO  NAUTICO INTERNACIONAL, FLUVIAL Y PORTUARIO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 166,
+            // 'ciudad_id' => 166,
+            'ciudad_id' => Ciudad::where('nombre','Cartagena')->first()->id,
             'nombre'    => 'CENTRO PARA LA INDUSTRIA PETROQUÍMICA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 1066,
+            // 'ciudad_id' => 1066,
+            'ciudad_id' => Ciudad::where('nombre','Cartago')->first()->id,
             'nombre'    => 'CENTRO DE TECNOLOGÍAS AGROINDUSTRIALES',
         ]);
 
@@ -355,32 +395,42 @@ class EntidadesTableSeeder extends Seeder
         ]);
 
         Entidad::create([
-            'ciudad_id' => 70,
+            // 'ciudad_id' => 70,
+            'ciudad_id' => Ciudad::where('nombre', 'Medellin')->first()->id,
             'nombre'    => 'CENTRO DE COMERCIO',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 70,
+            // 'ciudad_id' => 70,
+            'ciudad_id' => Ciudad::where('nombre', 'Medellin')->first()->id,
             'nombre'    => 'CENTRO DE SERVICIOS DE SALUD',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 70,
+            'ciudad_id' => Ciudad::where('id', 86)->first()->id, //rionegro
+            'nombre'    => 'CENTRO DE LA INNOVACIÓN, LA AGROINDUSTRIA Y LA AVIACIÓN​',
+        ]);
+
+        Entidad::create([
+            'ciudad_id' => Ciudad::where('nombre', 'Medellin')->first()->id,
             'nombre'    => 'CENTRO DE SERVICIOS Y GESTIÓN EMPRESARIAL ',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 70,
+            // 'ciudad_id' => 70,
+            'ciudad_id' => Ciudad::where('nombre', 'Medellin')->first()->id,
             'nombre'    => 'CENTRO PARA EL DESARROLLO DEL HABITAT Y LA CONSTRUCCIÓN',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 70,
+            // 'ciudad_id' => 70,
+            'ciudad_id' => Ciudad::where('nombre', 'Medellin')->first()->id,
             'nombre'    => 'CENTRO DE TECNOLOGÍA DE LA MANUFACTURA AVANZADA',
         ]);
 
         Entidad::create([
-            'ciudad_id' => 70,
+            // 'ciudad_id' => 70,
+            'ciudad_id' => Ciudad::where('nombre', 'Medellin')->first()->id,
             'nombre'    => 'TECNOLÓGICO DE GESTIÓN INDUSTRIAL',
         ]);
 
@@ -604,7 +654,7 @@ class EntidadesTableSeeder extends Seeder
             'nombre'    => 'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE',
         ]);
 
-        //tecnoacademias
+        //tecnoacademas
 
         Entidad::create([
             'ciudad_id' => 902,
@@ -655,9 +705,7 @@ class EntidadesTableSeeder extends Seeder
             'ciudad_id' => 823,
             'nombre'    => 'TECNOACADEMIA CUCÚTA',
         ]);
-
         //empresas
-        //
 
         Entidad::create([
             'ciudad_id' => 70,
@@ -1103,7 +1151,6 @@ class EntidadesTableSeeder extends Seeder
             'ciudad_id' => 70,
             'nombre'    => 'Group Ingenieria SAS',
         ]);
-
     }
 
 }

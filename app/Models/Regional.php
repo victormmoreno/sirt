@@ -36,5 +36,17 @@ class Regional extends Model
       return $this->hasMany(Centro::class, 'regional_id', 'id');
     }
 
+    /*==========================================================================
+    =            scope para consultar todos las regionales del pais            =
+    ==========================================================================*/
+    
+    public function scopeAllRegionales($query)
+    {
+      return $query;
+    }
+    
+    /*=====  End of scope para consultar todos las regionales del pais  ======*/
+    
+
     
 }

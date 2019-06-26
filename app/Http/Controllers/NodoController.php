@@ -23,6 +23,8 @@ class NodoController extends Controller
      */
     public function index()
     {
+
+        // dd($this->nodoRepository->getAlltNodo());
         if (request()->ajax()) {
             return datatables()->of($this->nodoRepository->getAlltNodo())
                 ->addColumn('detail', function ($data) {
@@ -50,8 +52,8 @@ class NodoController extends Controller
     {
         
         return view('nodos.administrador.create',[
-            'centros' => $this->nodoRepository->getAllCentros(),
             'lineas' => $this->nodoRepository->getAllLineas(),
+            'regionales' => $this->nodoRepository->getAllRegionales(),
         ]);
     }
 
@@ -88,8 +90,8 @@ class NodoController extends Controller
         // $nodo = $this->nodoRepository->findByid($id);
         return view('nodos.administrador.edit',[
             'nodo' => $this->nodoRepository->findByid($id),
-            'centros' => $this->nodoRepository->getAllCentros(),
             'lineas' => $this->nodoRepository->getAllLineas(),
+            'regionales' => $this->nodoRepository->getAllRegionales(),
         ]);
     }
 

@@ -5,6 +5,7 @@ namespace Repositories\Repository;
 use App\Models\Centro;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
+use App\Models\Regional;
 use Illuminate\Support\Facades\DB;
 
 class NodoRepository
@@ -45,6 +46,19 @@ class NodoRepository
     }
     
     /*=====  End of metaodo para consultar todas las lineas   ======*/
+
+    /*===========================================================================
+    =            metodo para consultar todos las regionales del pais            =
+    ===========================================================================*/
+    
+    public function getAllRegionales()
+    {
+        return Regional::allRegionales()->pluck('nombre','id');
+    }
+    
+    
+    /*=====  End of metodo para consultar todos las regionales del pais  ======*/
+    
     
 
 }
