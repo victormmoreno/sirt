@@ -368,9 +368,7 @@
         </i> --}}
         <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple>
             <option value="">Seleccione ocupación</option>
-
             @foreach($ocupaciones as $id => $nombre)
-
                 @if(isset($user))
                 <option value="{{$id}}" {{collect(old('txtocupaciones',$user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : ''  }} >{{$nombre}}</option>
                 @else

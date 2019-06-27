@@ -64,8 +64,17 @@ class NodoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(NodoFormRequest $request)
-    {
-        dd($request->all());
+    {   
+        //metodo para guardad
+        $nodoCreate = $this->nodoRepository->create($request);
+ 
+        if ($nodoCreate != null) {
+          
+            alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
+        }else{
+            alert()->error('Registro Erróneo.','El nodo no se ha creado.');
+        }
+        return redirect()->route('nodo.index');
     }
 
     /**
@@ -104,7 +113,7 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**

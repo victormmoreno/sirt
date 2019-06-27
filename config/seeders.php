@@ -30,11 +30,11 @@ return [
         ['name' => RegionalesTableSeeder::class, 'callable' => true],
         ['name' => EntidadesTableSeeder::class, 'callable' => true],
         ['name' => CentrosTableSeeder::class, 'callable' => true],
-        // ['name' => NodosTableSeeder::class, 'callable' => true],
-        // ['name' => TecnoacademiasTableSeeder::class, 'callable' => false],
-        // ['name' => UsersTableSeeder::class, 'callable' => true],
-        // ['name' => GruposInvestigacionTableSeeder::class, 'callable' => false],
-        // ['name' => EmpresasTableSeeder::class, 'callable' => false],
+        ['name' => NodosTableSeeder::class, 'callable' => true],
+        ['name' => TecnoacademiasTableSeeder::class, 'callable' => true],
+        ['name' => UsersTableSeeder::class, 'callable' => true],
+        ['name' => GruposInvestigacionTableSeeder::class, 'callable' => false],
+        ['name' => EmpresasTableSeeder::class, 'callable' => false],
     
     ],
 ];

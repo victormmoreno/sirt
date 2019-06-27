@@ -28,6 +28,15 @@ class LineaTecnologica extends Model
         return $this->hasMany(Sublinea::class, 'lineatecnologica_id', 'id');
     }
 
+    //relacion muchos a muchos con nodos
+    //
+    
+    public function nodos()
+    {
+        return $this->belongsToMany(Nodo::class, 'lineastecnologicas_nodos', 'lineatecnologica_id', 'nodo_id')
+           ->withTimestamps();
+    }
+
     /*=====  End of relaciones elquent  ======*/
 
 
@@ -73,7 +82,7 @@ class LineaTecnologica extends Model
     
     public function scopeAllLineas($query)
     {
-        return $query;
+        return $query->simplePaginate(7);
         // return $query->select(['lineastecnologicas.id','lineastecnologicas.abreviatura','lineastecnologicas.nombre','lineastecnologicas.descripcion','lineastecnologicas.created_at','lineastecnologicas.updated_at'])
         //     ->orderby('lineastecnologicas.nombre');
     }

@@ -10,7 +10,7 @@ use Faker\Generator as Faker;
 $factory->define(LineaTecnologica::class, function (Faker $faker) {
     return [
         'abreviatura' => strtoupper($faker->lexify('???')),
-        'nombre'      => $faker->word,
+        'nombre'      => $faker->unique()->word,
         'descripcion' => $faker->text,
     ];
 });

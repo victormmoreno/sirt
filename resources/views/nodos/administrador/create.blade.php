@@ -26,7 +26,7 @@
                                     </i>
                                 </center>
                                 <div class="divider mailbox-divider"></div>
-                                <form action="{{ route('nodo.store')}}" method="POST">
+                                <form action="{{ route('nodo.store')}}" method="POST" onsubmit="return checkSubmit()">
                                     @include('nodos.administrador.form', [
                                         'btnText' => 'Guardar',
                                     ])

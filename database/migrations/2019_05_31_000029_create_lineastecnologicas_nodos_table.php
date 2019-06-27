@@ -22,7 +22,8 @@ class CreateLineastecnologicasNodosTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('lineatecnologica_id');
+            $table->increments('id');
+            $table->unsignedInteger('lineatecnologica_id');
             $table->unsignedInteger('nodo_id');
             $table->timestamps();
 
