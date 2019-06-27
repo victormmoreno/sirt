@@ -32,7 +32,7 @@
                       </div>
                     </div>
                   </div>
-                  <form method="POST" action="{{route('articulacion.store')}}" onsubmit="return checkSubmit()">
+                  <form id="frmArticulacionesCreate" method="POST" action="{{route('articulacion.store')}}">
                     {!! csrf_field() !!}
                     <input type="hidden" name="txttipo_articulacion" id="txttipo_articulacion" value="">
                     <div class="row">
@@ -57,6 +57,7 @@
                         </p>
                       </div>
                     </div>
+                    <div class="divider"></div>
                     <div id="divGrupo" class="row">
                       <div class="col s12 m6 l6">
                         <table style="width: 100%;" id="grupoDeInvestigacionTecnoparque_ArticulacionCreate_table" class="display responsive-table datatable-example dataTable">
@@ -119,24 +120,36 @@
                     </div>
                     <div id="divEmprendedor">
                       <div class="row">
-                        <table style="width: 100%;" id="talentosDeTecnoparque_ArticulacionCreate_table" class="display responsive-table datatable-example dataTable">
-                          <thead>
-                            <tr>
-                              <th>Documento de Identidad</th>
-                              <th>Talento</th>
-                              <th>Agregar</th>
-                            </tr>
-                          </thead>
-                          <tbody>
+                        <div class="col s12 m8 l8">
+                          <table style="width: 100%;" id="talentosDeTecnoparque_ArticulacionCreate_table" class="display responsive-table datatable-example dataTable">
+                            <thead>
+                              <tr>
+                                <th>Documento de Identidad</th>
+                                <th>Talento</th>
+                                <th>Agregar</th>
+                              </tr>
+                            </thead>
+                            <tbody>
 
-                          </tbody>
-                        </table>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col s12 m4 l4">
+                          <blockquote>
+                            <ul class="collection">
+                              <li class="collection-item">Para agregar un talento a la articulación solo debe buscarlo y seleccionar el ícono <i class="material-icons">done</i>.</li>
+                              <li class="collection-item">Para buscar un talento, lo puedes hacer por su documento de identidad ó nombre en el campo <b><u>Buscar</u></b>.</li>
+                              <li class="collection-item">Los talentos agregados a la articulación se mostrarán en la siguiente tabla.</li>
+                            </ul>
+                          </blockquote>
+                        </div>
                       </div>
+
                       <div class="row">
                         <div class="col s10 m8 l8">
                           <div class="card blue-grey lighten-5">
                             <div class="card-content">
-                              <table id="detalleTalentosDeUnaArticulacion" style="width: 100%" class="highlight centered responsive-table">
+                              <table id="detalleTalentosDeUnaArticulacion" style="width: 100%">
                                 <thead>
                                   <tr>
                                     <th style="width: 20%">Talento Líder</th>
@@ -154,8 +167,8 @@
                         <div class="col s2 m4 l4">
                           <blockquote>
                             <ul class="collection">
-                              <li class="collection-item">Para agregar un talento a la articulación solo debe buscarlo y seleccionarlo.</li>
                               <li class="collection-item">Para seleccionar un talento como talento líder, presione la casilla "Talento Líder" del talento que será el talento líder.</li>
+                              <li class="collection-item">Para quitar a un talento de la articulación, debes presionar el botón con el ícono <i class="material-icons">delete</i>.</li>
                             </ul>
                           </blockquote>
                         </div>
@@ -165,19 +178,20 @@
                     <div class="row">
                       <div class="input-field col s12 m12 l12">
                         <input type="text" id="txtnombre" name="txtnombre"/>
-                        <label for="txtnombre">Nombre <span class="red-text">*</span></label>
+                        <label for="txtnombre">Nombre de la Articulación <span class="red-text">*</span></label>
                       </div>
+                      <label id="txtnombre-error" class="error red-text" for="txtnombre"></label>
                     </div>
                     <div class="row">
-                      {{-- <div class="input-field col s12 m6 l6">
-                        <select id="txttipoarticulacion_id" name="txttipoarticulacion_id" class="js-states" required>
-                          <option value="">Seleccione el tipo de articulación</option>
+                      <div class="input-field col s12 m6 l6">
+                        <select id="txttipoarticulacion_id" name="txttipoarticulacion_id" class="js-states">
+                          <option value="null">Primero debes seleccionar con quién se hará la articulación</option>
                         </select>
                         <label for="txttipoarticulacion_id">Seleccione el Tipo de Articulación <span class="red-text">*</span></label>
-                      </div> --}}
+                      </div>
                       <div class="input-field col s12 m6 l6">
                         <select class="js-states" id="txtestado" name="txtestado">
-                          <option value="null">Seleccione el Estado de la Articulación</option>
+                          <option value="">Seleccione el Estado de la Articulación</option>
                           <option value="0">Inicio</option>
                           <option value="1">Ejecución</option>
                         </select>
@@ -310,6 +324,38 @@
 
     });
 
+    $(document).on('submit', 'form#frmArticulacionesCreate', function (event) {
+      event.preventDefault();
+      var form = $(this);
+      var data = new FormData($(this)[0]);
+      var url = form.attr("action");
+      $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          $('.error').removeClass('error');
+          if (data.fail) {
+            for (control in data.errors) {
+              // console.log(data.errors[control]);
+
+              // $('label[id=' + control + '-error]').addClass('error');
+              $('#' + control + '-error').html(data.errors[control]);
+            }
+          } else {
+            // $('#modalForm').modal('hide');
+            // ajaxLoad(data.redirect_url);
+          }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      });
+    });
+
     function addEmpresaArticulacion(id) {
       $.ajax({
         dataType:'json',
@@ -350,6 +396,24 @@
       })
     }
 
+    // Consulta los tipos de articulaciones que se pueden realizar según el caso (Grupos de Investigación, Empresas, Emprendedores)
+    function consultarTipoArticulacion(value) {
+      $('#txttipoarticulacion_id').empty();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/articulacion/consultarTiposArticulacion/'+value,
+      }).done(function(ajax){
+        $('#txttipoarticulacion_id').append('<option value="null">Seleccione el tipo de articulación</option>');
+        $.each(ajax.tiposarticulacion, function(i, e) {
+          // console.log(e.nombre);
+          $('#txttipoarticulacion_id').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        $('#txttipoarticulacion_id').material_select();
+      })
+    }
+
+
     function getTipoArt() {
       return tipo;
     }
@@ -358,25 +422,65 @@
       tipo = value;
     }
 
-    $( "input[name='group1']" ).change(function (){
-      if ( $("#IsGrupo").is(":checked") ) {
-        $divGrupo.show();
-        $divEmpresa.hide();
-        $divEmprendedor.hide();
-        setTipoArt(0);
-      } else if ( $("#IsEmpresa").is(":checked") ) {
-        $divEmpresa.show();
-        $divGrupo.hide();
-        $divEmprendedor.hide();
-        setTipoArt(1);
-      } else {
-        $divEmprendedor.show();
-        $divEmpresa.hide();
-        $divGrupo.hide();
-        setTipoArt(2);
-      }
-      $('#txttipoart').val(getTipoArt());
-    });
 
-  </script>
-@endpush
+    function noRepeat(id) {
+      let idTalento = id;
+      let retorno = true;
+      let a = document.getElementsByName("talentos[]");
+      for (x=0;x<a.length;x++){
+        if (a[x].value == idTalento) {
+          retorno = false;
+          break;
+        }
+      }
+      return retorno;
+    }
+
+    // Método para agregar talentos a una articulación
+    function addTalentoArticulacion(id) {
+      if (noRepeat(id) == false) {
+        swal("Error!", "El talento ya esta listado en la articulación!", "warning");
+      } else {
+        // let talentos = document.getElementsByName("talentos[]");
+        $.ajax({
+          dataType:'json',
+          type:'get',
+          url:'/usuario/talento/consultarTalentoPorId/'+id,
+        }).done(function(ajax){
+          // El ajax.talento.id es el id del TALENTO, no del usuario
+          let idTalento = ajax.talento.id;
+          let fila = '<tr class="selected" id='+idTalento+'>'
+          +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'"/><label for ="radioButton'+idTalento+'"></label></td>'
+          +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.talento+'</td>'
+          +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
+          +'</tr>';
+          $('#detalleTalentosDeUnaArticulacion').append(fila);
+        });
+        }
+      }
+
+      $( "input[name='group1']" ).change(function (){
+        if ( $("#IsGrupo").is(":checked") ) {
+          $divGrupo.show();
+          $divEmpresa.hide();
+          $divEmprendedor.hide();
+          consultarTipoArticulacion(0);
+          setTipoArt(0);
+        } else if ( $("#IsEmpresa").is(":checked") ) {
+          $divEmpresa.show();
+          $divGrupo.hide();
+          $divEmprendedor.hide();
+          consultarTipoArticulacion(1);
+          setTipoArt(1);
+        } else {
+          $divEmprendedor.show();
+          $divEmpresa.hide();
+          $divGrupo.hide();
+          consultarTipoArticulacion(1);
+          setTipoArt(2);
+        }
+        $('#txttipoart').val(getTipoArt());
+      });
+
+    </script>
+  @endpush

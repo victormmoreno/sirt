@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sector;
 use App\Models\Departamento;
+use App\Models\TipoArticulacion;
 use App\Models\Talento;
+use App\Http\Requests\ArticulacionFormRequest;
 
 class ArticulacionController extends Controller
 {
@@ -48,6 +50,30 @@ class ArticulacionController extends Controller
     }
   }
 
+
+  // Consulta los tipos de articulaciones que se pueden realizar con grupos de investigación, empresas ó emprendedores
+  public function consultarTipoArticulacion($tipo)
+  {
+    $tiposarticulacion = "";
+    if ($tipo == 0) {
+      $tiposarticulacion = TipoArticulacion::ConsultarTipoArticulacionConGruposDeInvestigacion()->get();
+    } else {
+      $tiposarticulacion = TipoArticulacion::ConsultarTipoArticulacionConEmpresasEmprendedores()->get();
+    }
+    return response()->json([
+      'tiposarticulacion' => $tiposarticulacion,
+    ]);
+  }
+
+  public function addTalentoCollectionCreate($id)
+  {
+    if (isset($collect)) {
+      $collect = $collect->concat($id);
+    } else {
+      $collect = collect($id);
+    }
+  }
+
   /**
   * Show the form for creating a new resource.
   *
@@ -68,9 +94,20 @@ class ArticulacionController extends Controller
   */
   public function store(Request $request)
   {
+    // dd($request->all());
+    $req = new ArticulacionFormRequest;
+    // dd($req->rules());
+    $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'fail' => true,
+        'errors' => $validator->errors(),
+      ]);
+    }
+    // return response()->json([$request]);
     // $ip = \Request::getClientIp(true);
     // dd($ip);
-    dd(request());
+    // dd(request());
   }
 
   /**

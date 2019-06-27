@@ -36,4 +36,17 @@ class TipoArticulacion extends Model
     'nombre',
     'articulado_con',
   ];
+
+  // Consulta las articulaciones que se puede realizar con un grupo de investigación
+  public function scopeConsultarTipoArticulacionConGruposDeInvestigacion($query)
+  {
+    return $query->where('articulado_con', $this->IsGrupo())->orderBy('nombre', 'asc');
+  }
+
+  // Consulta las articulaciones que se puede realizar con una empresa ó con emprendedor (es)
+  public function scopeConsultarTipoArticulacionConEmpresasEmprendedores($query)
+  {
+    return $query->where('articulado_con', $this->IsEmpresaEmprendedor())->orderBy('nombre', 'asc');
+  }
+
 }

@@ -146,6 +146,11 @@ Route::group([
           'as' => 'talento.tecnoparque',
         ]);
 
+        Route::get('/talento/consultarTalentoPorId/{id}', [
+          'uses' => 'TalentoController@consultarUnTalentoPorId',
+          'as' => 'talento.tecnoparque.byid',
+        ]);
+
         Route::get('/administrador/getOcupaciones', [
         'uses' => 'AdminController@getOcupacionSesion',
         ]);
@@ -317,6 +322,8 @@ Route::group([
         // Route::get('/datatableGruposInvestigacionDeTecnoparque', 'ArticulacionController@datatableGruposInvestigacionDeTecnoparque')->name('articulacion.datatable');
         Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit');
         Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
+        Route::get('/consultarTiposArticulacion/{id}', 'ArticulacionController@consultarTipoArticulacion')->name('articulacion.tiposarticulacion');
+        Route::get('/talentoCollectionCreate/{id}/{talentos}', 'ArticulacionController@addTalentoCollectionCreate')->name('articulacion.talento.collection');
         Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update');
         Route::post('/', 'ArticulacionController@store')->name('articulacion.store');
     }
