@@ -13,6 +13,12 @@ class EntidadesTableSeeder extends Seeder
     public function run()
     {
 
+        Entidad::create([
+          'id' => 1,
+          'ciudad_id' => 431,
+          'nombre'    => 'No Aplica',
+        ]);
+
         //centros de formacion
         Entidad::create([
             'ciudad_id' => 431,

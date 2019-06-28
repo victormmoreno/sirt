@@ -8,17 +8,19 @@ use App\Models\Departamento;
 use App\Models\TipoArticulacion;
 use App\Models\Talento;
 use App\Http\Requests\ArticulacionFormRequest;
+use Carbon\Carbon;
+use App\Repositories\Repository\ArticulacionRepository;
 
 class ArticulacionController extends Controller
 {
 
-  // private $grupoInvestigacionRepository;
+  private $articulacionRepository;
   // private $empresaRepository;
 
-  public function __construct()
+  public function __construct(ArticulacionRepository $articulacionRepository)
   {
-    // $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
     // $this->empresaRepository = $empresaRepository;
+    $this->articulacionRepository = $articulacionRepository;
     $this->middleware([
       'auth',
     ]);
@@ -94,6 +96,7 @@ class ArticulacionController extends Controller
   */
   public function store(Request $request)
   {
+
     // sleep(5);
     // dd($request->all());
     $req = new ArticulacionFormRequest;
@@ -105,6 +108,7 @@ class ArticulacionController extends Controller
         'errors' => $validator->errors(),
       ]);
     }
+    $this->articulacionRepository->create($request);
     // dd('mostrar');
     // return response()->json([$request]);
     // $ip = \Request::getClientIp(true);
