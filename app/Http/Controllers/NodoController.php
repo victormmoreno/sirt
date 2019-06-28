@@ -67,8 +67,9 @@ class NodoController extends Controller
     {   
         //metodo para guardad
         $nodoCreate = $this->nodoRepository->create($request);
+
  
-        if ($nodoCreate != null) {
+        if ($nodoCreate == true) {
           
             alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
         }else{
@@ -96,7 +97,8 @@ class NodoController extends Controller
      */
     public function edit($id)
     {
-        // $nodo = $this->nodoRepository->findByid($id);
+        $nodo = $this->nodoRepository->findByid($id);
+        dd($nodo->lineas);
         return view('nodos.administrador.edit',[
             'nodo' => $this->nodoRepository->findByid($id),
             'lineas' => $this->nodoRepository->getAllLineas(),

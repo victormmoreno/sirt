@@ -54,7 +54,7 @@ class Nodo extends Model
 
     public function lineas()
     {
-        return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos', 'lineatecnologica_id', 'nodo_id')
+        return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
             ->withTimestamps();
     }
 

@@ -66,7 +66,10 @@ class NodoRepository
     
     public function create($request)
     {
-        DB::transaction(function () use ($request) {
+        
+    DB::beginTransaction();
+
+        try {
             $nodo = Nodo::create([
                 'centro_id' => $request->input('txtcentro'),
                 'nombre' => $request->input('txtnombre'),
@@ -74,10 +77,14 @@ class NodoRepository
                 'anho_inicio' => Carbon::now()->format('Y'),
             ]);
             $nodo->lineas()->sync($request->get('txtlineas'), false);
-            return $nodo;
-        });
 
-        
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;        
+        }
+       
     }
     
     /*=====  End of metodo para guardar un nodo  ======*/
