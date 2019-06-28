@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Session;
+use Cache;
 
 class LoginController extends Controller
 {
@@ -57,5 +59,25 @@ class LoginController extends Controller
         // //
 
         // return ['email' => $request->{$this->username()}, 'password' => $request->password, 'estado' => true];
+    }
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        // Session::flush();
+
+        // return redirect()->route('/');
+        
+        return $this->loggedOut($request) ?: redirect('/');
+    }
+
+    protected function loggedOut(Request $request)
+    {
+        // $request->session()->flush();
+        Session::flush();
+        Cache::flush();
     }
 }

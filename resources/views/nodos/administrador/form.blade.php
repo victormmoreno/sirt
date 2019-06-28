@@ -85,11 +85,17 @@
                 @empty
                 <p>No hay Lineas</p>
                 @endforelse
-                @if(isset($lineas))
-                        {{ $lineas->links() }}
-                @endif
+                
                 
             </ul>
+            
+             @if(isset($lineas))
+                <div class="center">
+                    {{ $lineas->links() }}
+                </div>
+            @endif
+            
+           
         </div>
 <div class="divider mailbox-divider"></div>
 <br>

@@ -56,6 +56,7 @@ class Nodo extends Model
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
             ->withTimestamps();
+            
     }
 
     /*=====  End of relaciones eloquent  ======*/
