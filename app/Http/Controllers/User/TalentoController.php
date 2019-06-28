@@ -16,10 +16,17 @@ class TalentoController extends Controller
         $talentos = Talento::ConsultarTalentosDeTecnoparque()->get();
         return datatables()->of($talentos)
         ->addColumn('add_articulacion', function ($data) {
-          $add = '<a onclick="addEmpresaArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+          $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add;
         })->rawColumns(['add_articulacion'])->make(true);
       }
+    }
+
+    public function consultarUnTalentoPorId($id)
+    {
+      return response()->json([
+        'talento' => Talento::ConsultarTalentoPorId($id)->get()->last(),
+      ]);
     }
     /**
      * Display a listing of the resource.
