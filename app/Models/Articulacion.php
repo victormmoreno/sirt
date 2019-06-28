@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Articulacion extends Model
 {
 
+  // Constante para la entidad de no aplica
+  const IS_NOAPLICA = 1;
+
   //Constantes del campo tipo_articulacion
   const IS_GRUPO = 0; //ES UNA ARTICULACION CON GRUPO DE INVESTIGACIÓN
   const IS_EMPRESA = 1; //ES UNA ARTICULACIÓN CON EMPRESA
@@ -21,6 +24,12 @@ class Articulacion extends Model
   const IS_POREVALUAR = 0;
   const IS_APROBADO = 1;
   const IS_NOAPROBADO = 2;
+
+  // Retorno para la constante de no aplica
+  public function IsNoAplica()
+  {
+    return self::IS_NOAPLICA;
+  }
 
   // Retorno para las constantes del campo revisado_final
   public static function IsPorEvaluar() {
@@ -96,6 +105,14 @@ class Articulacion extends Model
   'pantallazo',
   'otros',
   ];
+
+  // Relacion muchos a muchos con talentos
+  public function talentos()
+  {
+      return $this->belongsToMany(Talento::class, 'articulacion_talento')
+          ->withTimestamps()
+          ->withPivot('talento_lider');
+  }
 
   // Relación a la tabla de tipos de articulación
   public function tipoarticulacion()

@@ -26,7 +26,7 @@ class CreateArticulacionTalentoTable extends Migration
         $table->tinyInteger('talento_lider');
         $table->timestamps();
 
-        $table->index(["talento_id"], 'fk_proyecto_talento_talentos1_idx');
+        $table->index(["talento_id"], 'fk_articulacion_talento_talentos1_idx');
 
         $table->index(["articulacion_id"], 'fk_articulacion_talento_articulaciones1_idx');
 
@@ -36,7 +36,7 @@ class CreateArticulacionTalentoTable extends Migration
             ->onDelete('no action')
             ->onUpdate('no action');
 
-        $table->foreign('talento_id', 'fk_proyecto_talento_talentos1_idx')
+        $table->foreign('talento_id', 'fk_articulacion_talento_talentos1_idx')
             ->references('id')->on('talentos')
             ->onDelete('no action')
             ->onUpdate('no action');
