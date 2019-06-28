@@ -22,16 +22,17 @@ class CreateLineastecnologicasNodosTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('lineatecnologica_id');
+            $table->increments('id');
+            $table->unsignedInteger('linea_tecnologica_id');
             $table->unsignedInteger('nodo_id');
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_lineastecnologicas_has_nodos_nodos1_idx');
 
-            $table->index(["lineatecnologica_id"], 'fk_lineastecnologicas_has_nodos_lineastecnologicas1_idx');
+            $table->index(["linea_tecnologica_id"], 'fk_lineastecnologicas_has_nodos_lineastecnologicas1_idx');
 
 
-            $table->foreign('lineatecnologica_id', 'fk_lineastecnologicas_has_nodos_lineastecnologicas1_idx')
+            $table->foreign('linea_tecnologica_id', 'fk_lineastecnologicas_has_nodos_lineastecnologicas1_idx')
                 ->references('id')->on('lineastecnologicas')
                 ->onDelete('no action')
                 ->onUpdate('no action');

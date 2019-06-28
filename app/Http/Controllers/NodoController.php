@@ -23,6 +23,8 @@ class NodoController extends Controller
      */
     public function index()
     {
+
+        // dd($this->nodoRepository->getAlltNodo());
         if (request()->ajax()) {
             return datatables()->of($this->nodoRepository->getAlltNodo())
                 ->addColumn('detail', function ($data) {
@@ -50,8 +52,8 @@ class NodoController extends Controller
     {
         
         return view('nodos.administrador.create',[
-            'centros' => $this->nodoRepository->getAllCentros(),
             'lineas' => $this->nodoRepository->getAllLineas(),
+            'regionales' => $this->nodoRepository->getAllRegionales(),
         ]);
     }
 
@@ -62,8 +64,18 @@ class NodoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(NodoFormRequest $request)
-    {
-        dd($request->all());
+    {   
+        //metodo para guardad
+        $nodoCreate = $this->nodoRepository->create($request);
+
+ 
+        if ($nodoCreate == true) {
+          
+            alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
+        }else{
+            alert()->error('Registro Erróneo.','El nodo no se ha creado.');
+        }
+        return redirect()->route('nodo.index');
     }
 
     /**
@@ -85,11 +97,12 @@ class NodoController extends Controller
      */
     public function edit($id)
     {
-        // $nodo = $this->nodoRepository->findByid($id);
+        $nodo = $this->nodoRepository->findByid($id);
+        dd($nodo->lineas);
         return view('nodos.administrador.edit',[
             'nodo' => $this->nodoRepository->findByid($id),
-            'centros' => $this->nodoRepository->getAllCentros(),
             'lineas' => $this->nodoRepository->getAllLineas(),
+            'regionales' => $this->nodoRepository->getAllRegionales(),
         ]);
     }
 
@@ -102,7 +115,7 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**

@@ -25,6 +25,8 @@ class NodoFormRequest extends FormRequest
     {
         return [
             'txtcentro'    => 'required',
+            'txtregional'  => 'required',
+            'txtlineas'  => 'required',
             'txtnombre'    => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:1|max:100|unique:nodos,nombre,' . $this->route('nodo'),
             'txtdireccion' => 'required|min:1|max:2000',
         ];
@@ -34,7 +36,8 @@ class NodoFormRequest extends FormRequest
     {
         return $messages = [
             'txtcentro.required'    => 'El :attribute es obligatorio.',
-            'txtlineas[].required'    => 'El :attribute es obligatorio.',
+            'txtregional.required'    => 'El :attribute es obligatorio.',
+            'txtlineas.required'  => 'Por favor selecciona al menos una linea',
 
             'txtnombre.required'    => 'El :attribute es obligatorio.',
             'txtnombre.min'         => 'El :attribute debe ser minimo 1 caracter',
@@ -56,6 +59,7 @@ class NodoFormRequest extends FormRequest
             'txtnombre'    => 'nombre',
             'txtnombre'    => 'nombre',
             'txtdireccion' => 'dirección',
+            'txtlineas' => 'linea',
 
         ];
     }

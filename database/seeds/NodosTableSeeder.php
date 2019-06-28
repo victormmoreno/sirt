@@ -22,7 +22,7 @@ class NodosTableSeeder extends Seeder
 
         Nodo::create([
             'id'          => 2,
-            'centro_id'   => 96,
+            'centro_id'   => 119,
             'nombre'      => 'Rionegro',
             'direccion'   => 'Calle 41 Nº 50A – 324',
             'anho_inicio' => '2007',

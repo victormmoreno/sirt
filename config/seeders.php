@@ -33,8 +33,8 @@ return [
         ['name' => NodosTableSeeder::class, 'callable' => true],
         ['name' => TecnoacademiasTableSeeder::class, 'callable' => true],
         ['name' => UsersTableSeeder::class, 'callable' => true],
-        ['name' => GruposInvestigacionTableSeeder::class, 'callable' => true],
-        ['name' => EmpresasTableSeeder::class, 'callable' => true],
+        ['name' => GruposInvestigacionTableSeeder::class, 'callable' => false],
+        ['name' => EmpresasTableSeeder::class, 'callable' => false],
     
     ],
 ];

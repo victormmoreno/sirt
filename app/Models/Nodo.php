@@ -50,7 +50,13 @@ class Nodo extends Model
         return $this->hasMany(Ingreso::class, 'nodo_id', 'id');
     }
 
+    //relacion muchos a muchos con lineas
 
+    public function lineas()
+    {
+        return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
+            ->withTimestamps();
+    }
 
     /*=====  End of relaciones eloquent  ======*/
 

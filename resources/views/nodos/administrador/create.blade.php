@@ -26,7 +26,7 @@
                                     </i>
                                 </center>
                                 <div class="divider mailbox-divider"></div>
-                                <form action="{{ route('nodo.store')}}" method="POST">
+                                <form action="{{ route('nodo.store')}}" method="POST" onsubmit="return checkSubmit()">
                                     @include('nodos.administrador.form', [
                                         'btnText' => 'Guardar',
                                     ])
@@ -41,33 +41,35 @@
 </main>
 @endsection
 
-{{-- @push('script')
+@push('script')
 <script>
     $(document).ready(function() {
-        NodoCreate.getCiudad();
+        Regional.getCentrosFormacion();
 });
 
-var NodoCreate = {
-    getCiudad:function(){
+var Regional = {
+    getCentrosFormacion:function(){
       let id;
-      id = $('#txtdepartamento').val();
+      id = $('#txtregional').val();
       $.ajax({
         dataType:'json',
         type:'get',
-        url:'/help/getciudades/'+id
+        url:'/help/getcentrosformacion/'+id
       }).done(function(response){
-        $('#txtciudad').empty();
-        $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-        $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
-          $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+      
+
+        $('#txtcentro').empty();
+        $('#txtcentro').append('<option value="">Seleccione el centro de formación</option>')
+        $.each(response.centros, function(i, e) {
+  
+          $('#txtcentro').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
-        @if($errors->any())
-        $('#txtciudad').val({{old('txtciudad')}});
+         @if($errors->any())
+        $('#txtcentro').val({{old('txtcentro')}});
         @endif
-        $('#txtciudad').material_select();
+        $('#txtcentro').material_select();
       });
     },
 }
-</script> --}}
-{{-- @endpush --}}
+</script>
+@endpush

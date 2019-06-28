@@ -5,6 +5,8 @@ namespace Repositories\Repository;
 use App\Models\Centro;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
+use App\Models\Regional;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class NodoRepository
@@ -41,10 +43,53 @@ class NodoRepository
     
     public function getAllLineas()
     {
-        return LineaTecnologica::AllLineas()->pluck('nombre','id');
+        return LineaTecnologica::AllLineas();
     }
     
     /*=====  End of metaodo para consultar todas las lineas   ======*/
+
+    /*===========================================================================
+    =            metodo para consultar todos las regionales del pais            =
+    ===========================================================================*/
+    
+    public function getAllRegionales()
+    {
+        return Regional::allRegionales()->pluck('nombre','id');
+    }
+    
+    
+    /*=====  End of metodo para consultar todos las regionales del pais  ======*/
+
+    /*===================================================
+    =            metodo para guardar un nodo            =
+    ===================================================*/
+    
+    public function create($request)
+    {
+        
+    DB::beginTransaction();
+
+        try {
+            $nodo = Nodo::create([
+                'centro_id' => $request->input('txtcentro'),
+                'nombre' => $request->input('txtnombre'),
+                'direccion' => $request->input('txtdireccion'),
+                'anho_inicio' => Carbon::now()->format('Y'),
+            ]);
+            $nodo->lineas()->sync($request->get('txtlineas'), false);
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;        
+        }
+       
+    }
+    
+    /*=====  End of metodo para guardar un nodo  ======*/
+    
+    
     
 
 }

@@ -604,8 +604,12 @@ class EntidadesTableSeeder extends Seeder
             'nombre'    => 'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE',
         ]);
 
-        //tecnoacademias
+        Entidad::create([
+            'ciudad_id' => 86,
+            'nombre'    => 'CENTRO DE LA INNOVACIÓN, LA AGROINDUSTRIA Y LA AVIACIÓN​',
+        ]);
 
+        //tecnoacademias
         Entidad::create([
             'ciudad_id' => 902,
             'nombre'    => 'TECNOACADEMIA BUCARAMANGA',
@@ -657,8 +661,6 @@ class EntidadesTableSeeder extends Seeder
         ]);
 
         //empresas
-        //
-
         Entidad::create([
             'ciudad_id' => 70,
             'nombre'    => 'CIDET - Centro de Desarrollo Tecnológico del',

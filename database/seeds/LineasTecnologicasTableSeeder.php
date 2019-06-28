@@ -40,6 +40,6 @@ class LineasTecnologicasTableSeeder extends Seeder
             'descripcion' => '',
         ]);
 
-        // factory(LineaTecnologica::class, 5)->create();
+        // factory(LineaTecnologica::class, 20)->create();
     }
 }
