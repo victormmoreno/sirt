@@ -25,12 +25,13 @@ class ArticulacionFormRequest extends FormRequest
   */
   public function rules()
   {
+    // dd(request()->group1);
     return [
       'group1' => 'required',
-      'txtgrupo_id' => Rule::requiredIf($this->group1 == Articulacion::IsGrupo()),
-      'txtempresa_id' => Rule::requiredIf($this->group1 == Articulacion::IsEmpresa()),
-      'talentos' => Rule::requiredIf($this->group1 == Articulacion::isEmprendedor()),
-      'radioTalentoLider' => Rule::requiredIf($this->group1 == Articulacion::isEmprendedor()),
+      'txtgrupo_id' => Rule::requiredIf(request()->group1 == Articulacion::IsGrupo()),
+      'txtempresa_id' => Rule::requiredIf(request()->group1 == Articulacion::IsEmpresa()),
+      'talentos' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
+      'radioTalentoLider' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
       'txtnombre' => 'required|min:10|max:200',
       'txttipoarticulacion_id' => 'required',
       'txtestado' => 'required',
@@ -60,14 +61,14 @@ class ArticulacionFormRequest extends FormRequest
 
       'txtestado.required' => 'El Estado de la Articulación debe ser obligatorio.',
 
-      'txtfecha_inicio.date_format' => 'La Fecha de Inicio de la Articulación no tiene un formato válido.',
       'txtfecha_inicio.required' => 'La Fecha de Inicio de la Articulación no tiene un formato válido.',
+      'txtfecha_inicio.date_format' => 'La Fecha de Inicio de la Articulación no tiene un formato válido.',
 
       'txtobservaciones.max' => 'Las Observaciones de la Articulación debe ser máximo 1000 caracteres',
       ];
     }
 
-    // No está funcionando
+    // Este método no está funcionando
     public function attributes()
     {
       return [

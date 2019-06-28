@@ -55,6 +55,9 @@
                           <input class="with-gap" name="group1" type="radio" id="IsEmprendededor" value="2"/>
                           <label for="IsEmprendededor">Emprendedor</label>
                         </p>
+                        <center>
+                          <small id="group1-error" class="center-align error red-text"></small>
+                        </center>
                       </div>
                     </div>
                     <div class="divider"></div>
@@ -82,6 +85,7 @@
                                 <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="">
                                 <input readonly type="text" name="grupoInvestigacion" id="grupoInvestigacion" value="">
                                 <label for="grupoInvestigacion">Grupo de Investigación</label>
+                                <small id="txtgrupo_id-error" class="error red-text"></small>
                               </div>
                             </div>
                           </div>
@@ -112,6 +116,7 @@
                                 <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="">
                                 <input readonly type="text" name="empresa" id="empresa" value="">
                                 <label for="empresa">Empresa</label>
+                                <small id="txtempresa_id-error" class="error red-text"></small>
                               </div>
                             </div>
                           </div>
@@ -135,13 +140,18 @@
                           </table>
                         </div>
                         <div class="col s12 m4 l4">
-                          <blockquote>
-                            <ul class="collection">
-                              <li class="collection-item">Para agregar un talento a la articulación solo debe buscarlo y seleccionar el ícono <i class="material-icons">done</i>.</li>
-                              <li class="collection-item">Para buscar un talento, lo puedes hacer por su documento de identidad ó nombre en el campo <b><u>Buscar</u></b>.</li>
-                              <li class="collection-item">Los talentos agregados a la articulación se mostrarán en la siguiente tabla.</li>
-                            </ul>
-                          </blockquote>
+                          <div class="row">
+                            <blockquote>
+                              <ul class="collection">
+                                <li class="collection-item">Para agregar un talento a la articulación solo debe buscarlo y seleccionar el ícono <i class="material-icons">done</i>.</li>
+                                <li class="collection-item">Para buscar un talento, lo puedes hacer por su documento de identidad ó nombre en el campo <b><u>Buscar</u></b>.</li>
+                                <li class="collection-item">Los talentos agregados a la articulación se mostrarán en la siguiente tabla.</li>
+                              </ul>
+                            </blockquote>
+                          </div>
+                          <div class="row">
+                            <div id="talentos-error" class="error red-text"></div>
+                          </div>
                         </div>
                       </div>
 
@@ -165,29 +175,35 @@
                           </div>
                         </div>
                         <div class="col s2 m4 l4">
-                          <blockquote>
-                            <ul class="collection">
-                              <li class="collection-item">Para seleccionar un talento como talento líder, presione la casilla "Talento Líder" del talento que será el talento líder.</li>
-                              <li class="collection-item">Para quitar a un talento de la articulación, debes presionar el botón con el ícono <i class="material-icons">delete</i>.</li>
-                            </ul>
-                          </blockquote>
+                          <div class="row">
+                            <blockquote>
+                              <ul class="collection">
+                                <li class="collection-item">Para seleccionar un talento como talento líder, presione la casilla "Talento Líder" del talento que será el talento líder.</li>
+                                <li class="collection-item">Para quitar a un talento de la articulación, debes presionar el botón con el ícono <i class="material-icons">delete</i>.</li>
+                              </ul>
+                            </blockquote>
+                          </div>
+                          <div class="row">
+                            <div id="radioTalentoLider-error" class="error red-text"></div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div class="divider"></div>
                     <div class="row">
                       <div class="input-field col s12 m12 l12">
-                        <input type="text" id="txtnombre" name="txtnombre"/>
                         <label for="txtnombre">Nombre de la Articulación <span class="red-text">*</span></label>
+                        <input type="text" id="txtnombre" name="txtnombre"/>
+                        <small id="txtnombre-error" class="error red-text"></small>
                       </div>
-                      <label id="txtnombre-error" class="error red-text" for="txtnombre"></label>
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <select id="txttipoarticulacion_id" name="txttipoarticulacion_id" class="js-states">
-                          <option value="null">Primero debes seleccionar con quién se hará la articulación</option>
+                          <option value="">Primero debes seleccionar con quién se hará la articulación</option>
                         </select>
                         <label for="txttipoarticulacion_id">Seleccione el Tipo de Articulación <span class="red-text">*</span></label>
+                        <small id="txttipoarticulacion_id-error" class="error red-text"></small>
                       </div>
                       <div class="input-field col s12 m6 l6">
                         <select class="js-states" id="txtestado" name="txtestado">
@@ -196,23 +212,26 @@
                           <option value="1">Ejecución</option>
                         </select>
                         <label for="txtestado">Estado de la Articulación <span class="red-text">*</span></label>
+                        <small id="txtestado-error" class="error red-text"></small>
                       </div>
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
                         <input type="text" id="txtfecha_inicio" name="txtfecha_inicio" class="datepicker __pickerinput"/>
                         <label for="txtfecha_inicio">Fecha de Inicio de la Articulación<span class="red-text">*</span></label>
+                        <small id="txtfecha_inicio-error" class="error red-text"></small>
                       </div>
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m12 l8 offset-l2">
-                        <textarea id="txtobservaciones" name="txtobservaciones" class="materialize-textarea" length="400" maxlength="400"></textarea>
+                        <textarea id="txtobservaciones" name="txtobservaciones" class="materialize-textarea"></textarea>
                         <label for="txtobservaciones">Observaciones</label>
+                        <small id="txtobservaciones-error" class="error red-text"></small>
                       </div>
                     </div>
                     <div class="divider"></div>
                     <center>
-                      <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
+                      <button type="submit" class="cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
                       <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                     </center>
                   </form>
@@ -227,7 +246,6 @@
 @endsection
 @push('script')
   <script>
-
     $(document).ready(function() {
       $divGrupo = $("#divGrupo");
       $divGrupo.hide();
@@ -325,6 +343,8 @@
     });
 
     $(document).on('submit', 'form#frmArticulacionesCreate', function (event) {
+      // $('button[type="submit"]').prop("disabled", true);
+      $('button[type="submit"]').attr('disabled', 'disabled');
       event.preventDefault();
       var form = $(this);
       var data = new FormData($(this)[0]);
@@ -337,13 +357,13 @@
         contentType: false,
         processData: false,
         success: function (data) {
-          $('.error').removeClass('error');
+          $('button[type="submit"]').removeAttr('disabled');
+          // $('button[type="submit"]').prop("disabled", false);
+          $('.error').hide();
           if (data.fail) {
             for (control in data.errors) {
-              // console.log(data.errors[control]);
-
-              // $('label[id=' + control + '-error]').addClass('error');
               $('#' + control + '-error').html(data.errors[control]);
+              $('#' + control + '-error').show();
             }
           } else {
             // $('#modalForm').modal('hide');
@@ -404,7 +424,7 @@
         type:'get',
         url:'/articulacion/consultarTiposArticulacion/'+value,
       }).done(function(ajax){
-        $('#txttipoarticulacion_id').append('<option value="null">Seleccione el tipo de articulación</option>');
+        $('#txttipoarticulacion_id').append('<option value="">Seleccione el tipo de articulación</option>');
         $.each(ajax.tiposarticulacion, function(i, e) {
           // console.log(e.nombre);
           $('#txttipoarticulacion_id').append('<option value="'+e.id+'">'+e.nombre+'</option>');

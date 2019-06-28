@@ -94,6 +94,7 @@ class ArticulacionController extends Controller
   */
   public function store(Request $request)
   {
+    // sleep(5);
     // dd($request->all());
     $req = new ArticulacionFormRequest;
     // dd($req->rules());
@@ -104,6 +105,7 @@ class ArticulacionController extends Controller
         'errors' => $validator->errors(),
       ]);
     }
+    // dd('mostrar');
     // return response()->json([$request]);
     // $ip = \Request::getClientIp(true);
     // dd($ip);
