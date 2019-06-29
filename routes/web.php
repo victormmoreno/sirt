@@ -320,7 +320,7 @@ Route::group([
     function () {
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create');
-        // Route::get('/datatableGruposInvestigacionDeTecnoparque', 'ArticulacionController@datatableGruposInvestigacionDeTecnoparque')->name('articulacion.datatable');
+        Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulaciones')->name('articulacion.datatable');
         Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit');
         Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
         Route::get('/consultarTiposArticulacion/{id}', 'ArticulacionController@consultarTipoArticulacion')->name('articulacion.tiposarticulacion');

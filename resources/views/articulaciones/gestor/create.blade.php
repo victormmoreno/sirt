@@ -365,9 +365,27 @@
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
+          } else if (data.fail == false && data.redirect_url == false) {
+            Swal.fire({
+              title: 'La articulación no se ha registrado, por favor inténtalo de nuevo',
+              // text: "You won't be able to revert this!",
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            })
           } else {
-            // $('#modalForm').modal('hide');
-            // ajaxLoad(data.redirect_url);
+            Swal.fire({
+              title: 'Registro Exitoso',
+              text: "La articulación ha sido creado satisfactoriamente",
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
+            setTimeout(function(){
+              window.location.replace("{{route('articulacion')}}");
+            }, 1000);
           }
         },
         error: function (xhr, textStatus, errorThrown) {

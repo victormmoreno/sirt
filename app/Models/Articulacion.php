@@ -87,7 +87,7 @@ class Articulacion extends Model
   'entidad_id',
   'tipoarticulacion_id',
   'gestor_id',
-  'tipogrupo',
+  // 'tipogrupo',
   'codigo_articulacion',
   'nombre',
   'revisado_final',
