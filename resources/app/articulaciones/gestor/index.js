@@ -5,8 +5,9 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
+    order: [ 0, 'desc' ],
     ajax:{
-      url: "/articulacion/datatableArticulacionesDelGestor",
+      url: "/articulacion/datatableArticulacionesDelGestor/"+0,
       type: "get",
     },
     columns: [
@@ -19,8 +20,8 @@ $(document).ready(function() {
         name: 'nombre',
       },
       {
-        data: 'tipoarticulacion_nombre',
-        name: 'tipoarticulacion_nombre',
+        data: 'tipo_articulacion',
+        name: 'tipo_articulacion',
       },
       {
         data: 'estado',
@@ -90,5 +91,4 @@ $(document).ready(function() {
   //     //   orderable: false
   //     // },
   //   ],
-  });
 });

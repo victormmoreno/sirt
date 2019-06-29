@@ -26,8 +26,35 @@ class ArticulacionController extends Controller
     ]);
   }
 
-  // Código de la articulación
-  //ART190624-1632111
+  public function datatableArticulaciones($id)
+  {
+    if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+      if (request()->ajax()) {
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( auth()->user()->gestor->id );
+        // dd($articulaciones);
+        return datatables()->of($articulaciones)
+        ->addColumn('details', function ($data) {
+          $button = '
+          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1">
+          <i class="material-icons">info</i>
+          </a>
+          ';
+          return $button;
+        })->addColumn('edit', function ($data) {
+          $edit = '<a class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+          return $edit;
+        })->addColumn('entregables', function ($data) {
+          $button = '
+          <a class="btn blue-grey m-b-xs" >
+          <i class="material-icons">library_books</i>
+          </a>
+          ';
+          return $button;
+        })->rawColumns(['details', 'edit', 'entregables'])->make(true);
+      }
+    }
+  }
+
   /**
   * Display a listing of the resource.
   *
@@ -35,6 +62,8 @@ class ArticulacionController extends Controller
   */
   public function index()
   {
+    // dd($this->articulacionRepository->consultarArticulacionesDeUnGestor( auth()->user()->gestor->id ));
+
     switch (auth()->user()->rol()->first()->nombre) {
       case 'Administrador':
 
@@ -96,11 +125,7 @@ class ArticulacionController extends Controller
   */
   public function store(Request $request)
   {
-
-    // sleep(5);
-    // dd($request->all());
     $req = new ArticulacionFormRequest;
-    // dd($req->rules());
     $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
       return response()->json([
@@ -108,12 +133,18 @@ class ArticulacionController extends Controller
         'errors' => $validator->errors(),
       ]);
     }
-    $this->articulacionRepository->create($request);
-    // dd('mostrar');
-    // return response()->json([$request]);
-    // $ip = \Request::getClientIp(true);
-    // dd($ip);
-    // dd(request());
+    $result = $this->articulacionRepository->create($request);
+    if ($result == false) {
+      return response()->json([
+          'fail' => false,
+          'redirect_url' => false
+      ]);
+    } else {
+      return response()->json([
+          'fail' => false,
+          'redirect_url' => url(route('articulacion'))
+      ]);
+    }
   }
 
   /**
