@@ -11,6 +11,8 @@ class Fase extends Model
   protected $fillable = [
     'nombre',
   ];
+  
+  public $timestamps = false;
 
   // Relación a la tabla de archivosarticulaciones
   public function archivosarticulaciones()

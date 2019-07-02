@@ -9,6 +9,7 @@ return [
     ],
 
     'local'      => [
+        ['name' => FasesTableSeeder::class, 'callable' => true],
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
         ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],
         ['name' => EpsTableSeeder::class, 'callable' => true],
@@ -35,6 +36,6 @@ return [
         ['name' => UsersTableSeeder::class, 'callable' => true],
         ['name' => GruposInvestigacionTableSeeder::class, 'callable' => false],
         ['name' => EmpresasTableSeeder::class, 'callable' => false],
-    
+
     ],
 ];

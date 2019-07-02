@@ -3,14 +3,74 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
+use App\Models\{ArchivoArticulacion, Articulacion, Entidad};
 // use App\Models\ArchivoComite;
-use App\Models\Articulacion;
-use App\Models\Entidad;
+// use App\Models\Articulacion;
+// use App\Models\Entidad;
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
 
+  // Consulta los datos de la tabla intermedia entre talentos y articulacion (articulacion_talento)
+  public function consultarArticulacionTalento($id)
+  {
+    return Articulacion::select('articulacion_talento.talento_lider', 'articulacion_talento.talento_id')
+    ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS talento')
+    ->join('articulacion_talento', 'articulacion_talento.articulacion_id', '=', 'articulaciones.id')
+    ->join('talentos', 'articulacion_talento.talento_id', '=', 'talentos.id')
+    ->join('users', 'users.id', '=', 'talentos.user_id')
+    ->where('articulaciones.id', $id)
+    ->get();
+  }
+
+  // Modifica los entregables de una articulación (Solo se actualizan los checkbox, los archivos se suben en tiempo real con ajax)
+  public function updateEntregablesArticulacion($request, $id)
+  {
+    return Articulacion::where('id', $id)
+    ->update([
+      "acta_inicio" => $request['entregable_acta_inicio'],
+      "acc" => $request['entregable_acuerdo_confidencialidad_compromiso'],
+      "actas_seguimiento" => $request['entregable_acta_seguimiento'],
+      "acta_cierre" => $request['entregable_acta_cierre'],
+      "informe_final" => $request['entregable_informe_final'],
+      "pantallazo" => $request['entregable_encuesta_satisfaccion'],
+      "otros" => $request['entregable_otros'],
+    ]);
+  }
+
+  // Consulta una articulación por id
+  public function consultarArticulacionPorId($id)
+  {
+    return Articulacion::select(
+      'codigo_articulacion',
+      'articulaciones.nombre',
+      'revisado_final',
+      'observaciones',
+      'articulaciones.id',
+      'fecha_inicio',
+      'fecha_cierre',
+      'acta_inicio',
+      'acc',
+      'actas_seguimiento',
+      'acta_cierre',
+      'informe_final',
+      'pantallazo',
+      'otros',
+      'tiposarticulaciones.nombre AS tipoArticulacion'
+      )
+    ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa",
+    "Emprendedor") ) AS tipo_articulacion')
+    ->selectRaw('IF(estado = '.Articulacion::IsInicio().', "Inicio", IF(estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
+    ->selectRaw('IF(revisado_final = '.Articulacion::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Articulacion::IsAprobado().', "Aprobado",
+    "No Aprobado") ) AS revisado_final')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->where('articulaciones.id', $id)
+    ->get();
+  }
+
+
+  // Consulta las articulaciones de un gestor
   public function consultarArticulacionesDeUnGestor($id)
   {
     return Articulacion::select('codigo_articulacion', 'articulaciones.nombre', 'articulaciones.id')
@@ -40,11 +100,17 @@ class ArticulacionRepository
 
       // dd($anho);
       $codigo = 'A'. $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
-      if (request()->group1 == Articulacion::IsGrupo())
-      request()->entidad_id = request()->txtgrupo_id;
+      if (request()->group1 == Articulacion::IsGrupo()) {
+        request()->entidad_id = Entidad::select('entidades.id')
+        ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
+        ->where('gruposinvestigacion.id', request()->txtgrupo_id)->get()->last()->id;
+      }
 
-      if (request()->group1 == Articulacion::IsEmpresa())
-      request()->entidad_id = request()->txtempresa_id;
+      if (request()->group1 == Articulacion::IsEmpresa()) {
+        request()->entidad_id = Entidad::select('entidades.id')
+        ->join('empresas', 'empresas.entidad_id', '=', 'entidades.id')
+        ->where('empresas.id', request()->txtempresa_id)->get()->last()->id;
+      }
 
       if (request()->group1 == Articulacion::IsEmprendedor())
       request()->entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;

@@ -16,7 +16,7 @@
                 <div class="col s12 m12 l12">
                   <br>
                   <center>
-                    <span class="card-title center-align">Nueva Articulación - {{ auth()->user()->nombres}} {{auth()->user()->apellidos}}</span>
+                    <span class="card-title center-align">Modificar Articulación - <b>{{ $articulacion->codigo_articulacion }}</b></span>
                   </center>
                   <div class="divider"></div>
                   <div class="row">
@@ -32,8 +32,9 @@
                       </div>
                     </div>
                   </div>
-                  <form id="frmArticulacionesCreate" method="POST" action="{{route('articulacion.store')}}">
+                  <form id="frmArticulacionesEdit" method="POST" action="{{route('articulacion.update', $articulacion->id)}}">
                     {!! csrf_field() !!}
+                    {!! method_field('PUT')!!}
                     <input type="hidden" name="txttipo_articulacion" id="txttipo_articulacion" value="">
                     <div class="row">
                       <div class="col s12 m12 l12">
@@ -48,11 +49,11 @@
                       <p class="center card-title">Seleccione con quién será la articulación</p><br>
                       <div class="input-field col s12 m12 l12">
                         <p class="center p-v-xs">
-                          <input class="with-gap" name="group1" type="radio" id="IsGrupo" value="0"/>
+                          <input class="with-gap" onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 0 ? 'checked' : '' }} id="IsGrupo" value="0"/>
                           <label for="IsGrupo">Grupo de Investigación</label>
-                          <input class="with-gap" name="group1" type="radio" id="IsEmpresa" value="1"/>
+                          <input class="with-gap" onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 1 ? 'checked' : '' }} id="IsEmpresa" value="1"/>
                           <label for="IsEmpresa">Empresa</label>
-                          <input class="with-gap" name="group1" type="radio" id="IsEmprendededor" value="2"/>
+                          <input class="with-gap" onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 2 ? 'checked' : '' }} id="IsEmprendededor" value="2"/>
                           <label for="IsEmprendededor">Emprendedor</label>
                         </p>
                         <center>
@@ -82,8 +83,9 @@
                           <div class="card-stacked">
                             <div class="card-content">
                               <div class="input-field col s12 m12 l12">
-                                <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="">
-                                <input readonly type="text" name="grupoInvestigacion" id="grupoInvestigacion" value="">
+                                <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="{{ $articulacion->tipo_articulacion == 0 ? $articulacion->entidad->grupoinvestigacion->id : '' }}">
+                                <input readonly type="text" name="grupoInvestigacion" id="grupoInvestigacion"
+                                value="{{ $articulacion->tipo_articulacion == 0 ? $articulacion->entidad->grupoinvestigacion->codigo_grupo . ' - ' . $articulacion->entidad->nombre : '' }}">
                                 <label for="grupoInvestigacion">Grupo de Investigación</label>
                                 <small id="txtgrupo_id-error" class="error red-text"></small>
                               </div>
@@ -113,8 +115,9 @@
                           <div class="card-stacked">
                             <div class="card-content">
                               <div class="input-field col s12 m12 l12">
-                                <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="">
-                                <input readonly type="text" name="empresa" id="empresa" value="">
+                                <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="{{ $articulacion->tipo_articulacion == 1 ? $articulacion->entidad->empresa->id : '' }}">
+                                <input readonly type="text" name="empresa" id="empresa"
+                                value="{{ $articulacion->tipo_articulacion == 1 ? $articulacion->entidad->empresa->nit . ' - ' . $articulacion->entidad->nombre : '' }}">
                                 <label for="empresa">Empresa</label>
                                 <small id="txtempresa_id-error" class="error red-text"></small>
                               </div>
@@ -168,7 +171,14 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-
+                                  @foreach ($pivot as $key => $value)
+                                    {{-- {{$value}} --}}
+                                    <tr id="{{$value->talento_id}}">
+                                      <td></td>
+                                      <td>{{$value->talento}}</td>
+                                      <td></td>
+                                    </tr>
+                                  @endforeach
                                 </tbody>
                               </table>
                             </div>
@@ -193,7 +203,7 @@
                     <div class="row">
                       <div class="input-field col s12 m12 l12">
                         <label for="txtnombre">Nombre de la Articulación <span class="red-text">*</span></label>
-                        <input type="text" id="txtnombre" name="txtnombre"/>
+                        <input type="text" id="txtnombre" name="txtnombre" value="{{ $articulacion->nombre }}"/>
                         <small id="txtnombre-error" class="error red-text"></small>
                       </div>
                     </div>
@@ -206,10 +216,13 @@
                         <small id="txttipoarticulacion_id-error" class="error red-text"></small>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <select class="js-states" id="txtestado" name="txtestado">
+                        <select class="js-states" id="txtestado" name="txtestado" onchange="estadoArticulacion(this.value);">
                           <option value="">Seleccione el Estado de la Articulación</option>
                           <option value="0">Inicio</option>
                           <option value="1">Ejecución</option>
+                          @if ($articulacion->revisado_final == 1)
+                            <option value="2">Cierre</option>
+                          @endif
                         </select>
                         <label for="txtestado">Estado de la Articulación <span class="red-text">*</span></label>
                         <small id="txtestado-error" class="error red-text"></small>
@@ -217,9 +230,16 @@
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_inicio" name="txtfecha_inicio" class="datepicker __pickerinput"/>
+                        <input type="text" id="txtfecha_inicio" name="txtfecha_inicio" class="datepicker __pickerinput" value="{{$articulacion->fecha_inicio->toDateString()}}"/>
                         <label for="txtfecha_inicio">Fecha de Inicio de la Articulación<span class="red-text">*</span></label>
                         <small id="txtfecha_inicio-error" class="error red-text"></small>
+                      </div>
+                      <div id="divFechaCierre">
+                        <div class="input-field col s12 m6 l6">
+                          <input type="text" id="txtfecha_cierre" name="txtfecha_cierre" class="datepicker __pickerinput" value=""/>
+                          <label for="txtfecha_cierre">Fecha de Cierre de la Articulación<span class="red-text">*</span></label>
+                          <small id="txtfecha_cierre-error" class="error red-text"></small>
+                        </div>
                       </div>
                     </div>
                     <div class="row">
@@ -253,6 +273,8 @@
       $divEmpresa.hide();
       $divEmprendedor = $('#divEmprendedor');
       $divEmprendedor.hide();
+      $divFechaCierre = $('#divFechaCierre');
+      $divFechaCierre.hide();
 
       $('#empresasDeTecnoparque_ArticulacionCreate_table').DataTable({
         "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
@@ -339,7 +361,9 @@
         },
         ],
       });
-
+      contenedores();
+      $('#txtestado').val({{$articulacion->estado}});
+      $('#txtestado').material_select();
     });
 
     $(document).on('submit', 'form#frmArticulacionesCreate', function (event) {
@@ -447,6 +471,7 @@
           // console.log(e.nombre);
           $('#txttipoarticulacion_id').append('<option value="'+e.id+'">'+e.nombre+'</option>');
         })
+        $('#txttipoarticulacion_id').val({{$articulacion->tipoarticulacion->id}});
         $('#txttipoarticulacion_id').material_select();
       })
     }
@@ -501,7 +526,7 @@
         $('#'+index).remove();
       }
 
-      $( "input[name='group1']" ).change(function (){
+      function contenedores() {
         if ( $("#IsGrupo").is(":checked") ) {
           $divGrupo.show();
           $divEmpresa.hide();
@@ -522,7 +547,15 @@
           setTipoArt(2);
         }
         $('#txttipoart').val(getTipoArt());
-      });
+      }
+
+      function estadoArticulacion(value) {
+        if ( value == 2 ) {
+          $divFechaCierre.show();
+        }  else {
+          $divFechaCierre.hide();
+        }
+      }
 
     </script>
   @endpush

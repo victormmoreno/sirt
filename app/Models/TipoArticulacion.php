@@ -37,6 +37,12 @@ class TipoArticulacion extends Model
     'articulado_con',
   ];
 
+  // Relación a la table de articulaciones
+  public function articulaciones()
+  {
+      return $this->hasMany(Articulacion::class, 'tipoarticulacion_id', 'id');
+  }
+
   // Consulta las articulaciones que se puede realizar con un grupo de investigación
   public function scopeConsultarTipoArticulacionConGruposDeInvestigacion($query)
   {
