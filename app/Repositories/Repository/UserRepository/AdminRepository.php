@@ -41,11 +41,12 @@ class AdminRepository
     public function getFindDetailByid($id)
     {
 
-        return User::select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'rols.nombre as rol', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
-            ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
-            ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.rol_id')
-            ->Join('rols', 'rols.id', '=', 'users.tipodocumento_id')
-            ->findOrFail($id);
+        // return User::select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
+        //     ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
+        //     ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.rol_id')
+        //     ->findOrFail($id);
+        //     
+        return User::findOrFail($id);
 
     }
 
@@ -112,7 +113,7 @@ class AdminRepository
     /*=====  End of metodo para guardar un nuevo administrador  ======*/
 
     /*=============================================================
-    =            meotod para actualizar un dinamizador            =
+    =            meotod para actualizar un administrador            =
     =============================================================*/
 
     public function Update($request, $user)
@@ -141,6 +142,6 @@ class AdminRepository
         return $user;
     }
 
-    /*=====  End of meotod para actualizar un dinamizador  ======*/
+    /*=====  End of meotod para actualizar un administrador  ======*/
 
 }

@@ -219,8 +219,23 @@ class AdminController extends Controller
      */
     public function show($id)
     {
+        $user = $this->adminRepository->getFindDetailByid($id);
+
+        $data = [
+                    'user' =>$user,
+                    'role' =>$user->getRoleNames()->implode(', '),
+                    'tipodocumento' =>$user->tipoDocumento->nombre,
+                    'eps' =>$user->eps->nombre,
+                    'departamento' =>$user->ciudad->departamento->nombre,
+                    'ciudad' =>$user->ciudad->nombre,
+                    'gruposanguineo' =>$user->grupoSanguineo->nombre,
+                    'gradosescolaridad' =>$user->gradoEscolaridad->nombre,
+
+                ];
+                
+
         return response()->json([
-            'user' => $this->adminRepository->getFindDetailByid($id),
+            'data' =>  $data,
         ]);
     }
 
