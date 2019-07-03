@@ -22,7 +22,7 @@
 
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Dinamizador
+                                        Editar Dinamizador
                                     </span>
                                     <i class="Small material-icons prefix">
                                         supervised_user_circle
@@ -44,9 +44,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.dinamizador.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                <form action="{{ route('usuario.dinamizador.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                     {!! method_field('PUT')!!}
                                     @include('users.administrador.dinamizador.form', [
-                                        'btnText' => 'Guardar',
+                                        'btnText' => 'Modificar',
                                     ])
                                 </form>
                             
@@ -63,17 +64,15 @@
 @push('script')
 <script>
 $(document).ready(function() {
-// UserAdmininstradorOcupacion.getOcupaciones();
+
     $('.selectMultipe').select2({
       language: "es",
     });
     eps.getOtraEsp();
-    @if($errors->any())
-        UserDinamizadorCreate.getCiudad();
-    @endif
-
+    UserDinamizadorEdit.getCiudad();
 });
     
+
 var eps = {
     getOtraEsp:function (ideps) {
         let id = $(ideps).val();
@@ -82,12 +81,14 @@ var eps = {
             $('#otraeps').hide();
              
         }else{
+            console.log(nombre);
             $('#otraeps').show();
         }
+       
     }
 }
 
-var UserDinamizadorCreate = {
+var UserDinamizadorEdit = {
     getCiudad:function(){
       let id;
       id = $('#txtdepartamento').val();
@@ -96,14 +97,17 @@ var UserDinamizadorCreate = {
         type:'get',
         url:'/usuario/getciudad/'+id
       }).done(function(response){
+        console.log(response);
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
+
           $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())
         $('#txtciudad').val({{old('txtciudad')}});
+        @else
+        $('#txtciudad').val({{$user->ciudad->id}});
         @endif
         $('#txtciudad').material_select();
       });
@@ -113,4 +117,3 @@ var UserDinamizadorCreate = {
 
 </script>
 @endpush
-

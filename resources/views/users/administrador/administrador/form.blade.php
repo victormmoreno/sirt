@@ -34,12 +34,10 @@
             <ul class="collection with-header">
                 <li class="collection-header center"><h6><b>Roles</b></h6></li>
                 @forelse($roles as $role)
-                   
-                    
                     <li class="collection-item">
                         <p class="p-v-xs">
-                            <input type="checkbox" id="test5">
-                            <label for="test5">{{$role}}</label>
+                            <input type="checkbox" name="role" value="{{$role}}" id="test-{{$role}}">
+                            <label for="test-{{$role}}">{{$role}}</label>
                         </p>
                     </li>
                 @empty

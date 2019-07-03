@@ -67,7 +67,7 @@ class NodoRepository
     public function create($request)
     {
         
-    DB::beginTransaction();
+        DB::beginTransaction();
 
         try {
             $nodo = Nodo::create([
@@ -88,6 +88,34 @@ class NodoRepository
     }
     
     /*=====  End of metodo para guardar un nodo  ======*/
+
+    /*======================================================
+    =            metodo para actualizar un nodo            =
+    ======================================================*/
+    public function Update($request, $nodo)
+    {
+        DB::beginTransaction();
+
+        try {
+            $nodo->update([
+                'centro_id' => $request->input('txtcentro'),
+                'nombre' => $request->input('txtnombre'),
+                'direccion' => $request->input('txtdireccion'),
+                'anho_inicio' => Carbon::now()->format('Y'),
+            ]);
+            $nodo->lineas()->sync($request->get('txtlineas'));
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;        
+        }
+    }
+    
+    
+    /*=====  End of metodo para actualizar un nodo  ======*/
+    
     
     
     

@@ -82,7 +82,7 @@ class LineaTecnologica extends Model
     
     public function scopeAllLineas($query)
     {
-        return $query->simplePaginate(7);
+        return $query->paginate(7);
         // return $query->select(['lineastecnologicas.id','lineastecnologicas.abreviatura','lineastecnologicas.nombre','lineastecnologicas.descripcion','lineastecnologicas.created_at','lineastecnologicas.updated_at'])
         //     ->orderby('lineastecnologicas.nombre');
     }

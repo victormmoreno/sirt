@@ -68,7 +68,6 @@ class NodoController extends Controller
         //metodo para guardad
         $nodoCreate = $this->nodoRepository->create($request);
 
- 
         if ($nodoCreate == true) {
           
             alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
@@ -97,8 +96,7 @@ class NodoController extends Controller
      */
     public function edit($id)
     {
-        $nodo = $this->nodoRepository->findByid($id);
-        dd($nodo->lineas);
+        // $nodo = $this->nodoRepository->findByid($id);
         return view('nodos.administrador.edit',[
             'nodo' => $this->nodoRepository->findByid($id),
             'lineas' => $this->nodoRepository->getAllLineas(),
@@ -115,7 +113,18 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-        dd($request->all());
+
+        $nodo = $this->nodoRepository->findById($id);
+        // dd($nodo);
+        $nodoUdate = $this->nodoRepository->update($request, $nodo);
+
+        if ($nodoUdate == true) {
+          
+            alert()->success('Modificación Exitoso.', 'El nodo ha sido modificado satisfactoriamente');
+        }else{
+            alert()->error('Modificación Erróneo.','El nodo no se ha modificado.');
+        }
+        return redirect()->route('nodo.index');
     }
 
     /**
