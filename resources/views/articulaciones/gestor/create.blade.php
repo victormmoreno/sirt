@@ -477,7 +477,14 @@
     // Método para agregar talentos a una articulación
     function addTalentoArticulacion(id) {
       if (noRepeat(id) == false) {
-        swal("Error!", "El talento ya esta listado en la articulación!", "warning");
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          type: 'warning',
+          title: 'El talento ya está asociado a la articulación!'
+        });
       } else {
         // let talentos = document.getElementsByName("talentos[]");
         $.ajax({
@@ -489,10 +496,18 @@
           let idTalento = ajax.talento.id;
           let fila = '<tr class="selected" id='+idTalento+'>'
           +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'"/><label for ="radioButton'+idTalento+'"></label></td>'
-          +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.talento+'</td>'
+          +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.documento+' - '+ajax.talento.talento+'</td>'
           +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
           +'</tr>';
           $('#detalleTalentosDeUnaArticulacion').append(fila);
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'El talento se ha asociado a la articulación!'
+          });
         });
         }
       }

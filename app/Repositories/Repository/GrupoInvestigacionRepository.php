@@ -2,13 +2,35 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\GrupoInvestigacion;
-use App\Models\ClasificacionColciencias;
-use App\Models\Entidad;
+use App\Models\{GrupoInvestigacion, ClasificacionColciencias, Entidad};
 use Illuminate\Support\Facades\DB;
 
 class GrupoInvestigacionRepository
 {
+  // Consulta los detalles de una empresa
+  public function consultarDetalleDeUnGrupoDeInvestigacion($id)
+  {
+    return GrupoInvestigacion::select(
+      'codigo_grupo',
+      'entidades.nombre AS nombre_grupo',
+      'email_entidad AS correo_grupo',
+      'institucion',
+      'clasificacionescolciencias.nombre AS nombre_clasificacion',
+      'nombres_contacto',
+      'correo_contacto',
+      'telefono_contacto'
+      )
+    ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+    ->selectRaw('IF(tipogrupo = 0, "Externo", "Interno") AS tipogrupo')
+    ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+    ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+    ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+    ->where('gruposinvestigacion.id', $id)
+    ->get()
+    ->last();
+  }
+
   // Modifica los datos de un grupo de investigación
   public function update($request, $grupo)
   {

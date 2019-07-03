@@ -30,4 +30,10 @@ class Gestor extends Model
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
+
+    // Relación a la tabla de articulaciones
+    public function articulaciones()
+    {
+      return $this->hasMany(Articulacion::class, 'gestor_id', 'id');
+    }
 }

@@ -22,9 +22,9 @@ class Talento extends Model
     ];
 
     // Relacion muchos a muchos con articulaciones
-    public function talentos()
+    public function articulaciones()
     {
-        return $this->belongsToMany(Talento::class, 'articulacion_talento')
+        return $this->belongsToMany(Articulacion::class, 'articulacion_talento')
             ->withTimestamps()
             ->withPivot('talento_lider');
     }

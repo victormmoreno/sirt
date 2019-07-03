@@ -4,28 +4,73 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{Sector, Departamento, TipoArticulacion, Talento, Articulacion};
-// use App\Models\Sector;
-// use App\Models\Departamento;
-// use App\Models\TipoArticulacion;
-// use App\Models\Talento;
 use App\Http\Requests\ArticulacionFormRequest;
 use Carbon\Carbon;
-use App\Repositories\Repository\ArticulacionRepository;
+use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository};
+use App\Helpers\ArrayHelper;
 
 class ArticulacionController extends Controller
 {
 
   private $articulacionRepository;
+  private $empresaRepository;
+  private $grupoInvestigacionRepository;
 
-  public function __construct(ArticulacionRepository $articulacionRepository)
+  public function __construct(ArticulacionRepository $articulacionRepository, EmpresaRepository $empresaRepository, GrupoInvestigacionRepository $grupoInvestigacionRepository)
   {
-    // $this->empresaRepository = $empresaRepository;
     $this->articulacionRepository = $articulacionRepository;
+    $this->empresaRepository = $empresaRepository;
+    $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
     $this->middleware([
       'auth',
     ]);
   }
 
+  // Consulta el detalle de la entidad asociada a la articulación
+  public function consultarEntidadDeLaArticulacion($id)
+  {
+    $articulacionObj = Articulacion::findOrFail($id);
+    $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
+    $entidad = null;
+    if ($articulacionObj->tipo_articulacion == Articulacion::IsEmpresa()) {
+      $entidad = $this->empresaRepository->consultarDetallesDeUnaEmpresa($articulacionObj->entidad->empresa->id)->toArray();
+      // $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
+    } else if ($articulacionObj->tipo_articulacion == Articulacion::IsGrupo()) {
+      $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion(21)->toArray();
+      // $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion($articulacionObj->entidad->grupoinvestigacion->id)->toArray();
+    } else {
+
+    }
+    $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
+    return response()->json([
+      'detalles' => $entidad,
+      'articulacion' => $articulacion
+    ]);
+  }
+
+  // Consulta los detalles de los entregables de una articulacion (Solo los checkboxes)
+  public function detallesDeLosEntregablesDeUnaArticulacion($id)
+  {
+    $entregables = $this->articulacionRepository->consultaEntregablesDeUnaArticulacion($id)->last()->toArray();
+    $entregables = ArrayHelper::validarEntregablesNullDeUnArrayString($entregables);
+    $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
+    return response()->json([
+      'entregables' => $entregables,
+      'articulacion' => $articulacion,
+    ]);
+  }
+
+  // Consulta los datos de una articulación por su id
+  public function detallesDeUnArticulacion($id)
+  {
+    $detalles = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
+    $detalles = ArrayHelper::validarDatoNullDeUnArray($detalles);
+    return response()->json([
+      'detalles' => $detalles,
+    ]);
+  }
+
+  // Modificar los entregable para una articulación
   public function updateEntregables(Request $request, $id)
   {
     !isset($request['entregable_acta_inicio']) ? $request['entregable_acta_inicio'] = 0 : $request['entregable_acta_inicio'] = 1;
@@ -61,7 +106,7 @@ class ArticulacionController extends Controller
         return datatables()->of($articulaciones)
         ->addColumn('details', function ($data) {
           $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1">
+          <a class="btn light-blue m-b-xs" onclick="detallesDeUnaArticulacion(' . $data->id . ')">
           <i class="material-icons">info</i>
           </a>
           ';
@@ -87,6 +132,8 @@ class ArticulacionController extends Controller
           return '<span class="red-text">'.$data->revisado_final.'</span>';
         })->rawColumns(['details', 'edit', 'entregables', 'revisado_final'])->make(true);
       }
+    } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+
     }
   }
 
@@ -222,7 +269,27 @@ class ArticulacionController extends Controller
   */
   public function update(Request $request, $id)
   {
-    //
+    $req = new ArticulacionFormRequest;
+    $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'fail' => true,
+        'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->articulacionRepository->update($request, $id);
+    // exit;
+    if ($result == false) {
+      return response()->json([
+          'fail' => false,
+          'redirect_url' => false
+      ]);
+    } else {
+      return response()->json([
+          'fail' => false,
+          'redirect_url' => url(route('articulacion'))
+      ]);
+    }
   }
 
   /**

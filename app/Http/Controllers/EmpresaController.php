@@ -90,13 +90,13 @@ class EmpresaController extends Controller
   // Consulta que muestra los detalles de una empresa
   public function detalleDeUnaEmpresa($id)
   {
-    $detalles  = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+    $detalles = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
     $detalles->telefono_contacto == null ? $detalles->telefono_contacto = 'No hay información disponible' : $detalles->telefono_contacto;
     $detalles->nombre_contacto == null ? $detalles->nombre_contacto = 'No hay información disponible' : $detalles->nombre_contacto;
     $detalles->correo_contacto == null ? $detalles->correo_contacto = 'No hay información disponible' : $detalles->correo_contacto;
     $detalles->email_entidad == null ? $detalles->email_entidad = 'No hay información disponible' : $detalles->email_entidad;
     return json_encode([
-    'detalles' => $detalles
+      'detalles' => $detalles
     ]);
   }
 

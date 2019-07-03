@@ -36,6 +36,7 @@ class ArticulacionFormRequest extends FormRequest
       'txttipoarticulacion_id' => 'required',
       'txtestado' => 'required',
       'txtfecha_inicio' => 'required|date_format:"Y-m-d"',
+      'txtfecha_cierre' => Rule::requiredIf(request()->txtestado == Articulacion::IsCierre()) . '|date_format:"Y-m-d"|nullable',
       'txtobservaciones' => 'max:1000',
     ];
   }
@@ -64,6 +65,9 @@ class ArticulacionFormRequest extends FormRequest
       'txtfecha_inicio.required' => 'La Fecha de Inicio de la Articulación no tiene un formato válido.',
       'txtfecha_inicio.date_format' => 'La Fecha de Inicio de la Articulación no tiene un formato válido.',
 
+      'txtfecha_cierre.required' => 'La Fecha de Cierre de la Articulación no tiene un formato válido.',
+      'txtfecha_cierre.date_format' => 'La Fecha de Cierre de la Articulación no tiene un formato válido.',
+
       'txtobservaciones.max' => 'Las Observaciones de la Articulación debe ser máximo 1000 caracteres',
       ];
     }
@@ -81,6 +85,7 @@ class ArticulacionFormRequest extends FormRequest
       'txttipoarticulacion_id' => 'Actividad',
       'txtestado' => 'Estado de la Articulación',
       'txtfecha_inicio' => 'Fecha de Inicio de la Articulación',
+      'txtfecha_cierre' => 'Fecha de Cierre de la Articulación',
       'txtobservaciones' => 'Observaciones de la Articulación',
       ];
     }

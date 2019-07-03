@@ -2,8 +2,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\Nodo;
-use App\Models\Rols;
+use App\Models\{Nodo, Rols};
 
 class NodoHelper {
 
