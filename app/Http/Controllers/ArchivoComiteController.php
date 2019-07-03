@@ -60,11 +60,6 @@ class ArchivoComiteController extends Controller
       $fileName = $this->archivoComiteRepository->maxIdArchivoComite()->maxId . '_' . $file->getClientOriginalName();
       $fileUrl = $file->storeAs("public/" . auth()->user()->infocenter->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id, $fileName);
       $this->archivoComiteRepository->store($id, Storage::url($fileUrl));
-      // return $fileUrl;
-      // $fileUrl = request()->file('nombreArchivo')->store("public/" . auth()->user()->infocenter->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id);
-      // $fileUrl = request()->file('nombreArchivo')->store("public/" . auth()->user()->infocenter->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id);
-      // $fileUrl
-      // return Storage::url($fileUrl);
     }
   }
 }

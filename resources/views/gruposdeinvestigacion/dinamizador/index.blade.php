@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Empresas')
+@section('meta-title', 'Grupos de Investigación')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
   <div class="content">
@@ -13,7 +13,7 @@
                 <div class="row">
                   <div class="col s12 m12 l12">
                     <div class="center-align">
-                      <span class="card-title center-align">Empresas de Tecnoparque</span>
+                      <span class="card-title center-align">Grupos de Investigación de Tecnoparque</span>
                     </div>
                   </div>
                 </div>

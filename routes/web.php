@@ -325,8 +325,15 @@ Route::group([
         Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
         Route::get('/consultarTiposArticulacion/{id}', 'ArticulacionController@consultarTipoArticulacion')->name('articulacion.tiposarticulacion');
         Route::get('/talentoCollectionCreate/{id}/{talentos}', 'ArticulacionController@addTalentoCollectionCreate')->name('articulacion.talento.collection');
+        Route::get('/{id}/entregables', 'ArticulacionController@entregables')->name('articulacion.entregables');
+        Route::get('/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
         Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update');
+        Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables');
         Route::post('/', 'ArticulacionController@store')->name('articulacion.store');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy');
+
     }
 );
 

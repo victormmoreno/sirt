@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Empresas')
+@section('meta-title', 'Grupos de Investigación')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
   <div class="content">

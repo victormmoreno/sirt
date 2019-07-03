@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Sector;
-use App\Models\Departamento;
-use App\Models\TipoArticulacion;
-use App\Models\Talento;
+use App\Models\{Sector, Departamento, TipoArticulacion, Talento, Articulacion};
+// use App\Models\Sector;
+// use App\Models\Departamento;
+// use App\Models\TipoArticulacion;
+// use App\Models\Talento;
 use App\Http\Requests\ArticulacionFormRequest;
 use Carbon\Carbon;
 use App\Repositories\Repository\ArticulacionRepository;
@@ -15,7 +16,6 @@ class ArticulacionController extends Controller
 {
 
   private $articulacionRepository;
-  // private $empresaRepository;
 
   public function __construct(ArticulacionRepository $articulacionRepository)
   {
@@ -24,6 +24,32 @@ class ArticulacionController extends Controller
     $this->middleware([
       'auth',
     ]);
+  }
+
+  public function updateEntregables(Request $request, $id)
+  {
+    !isset($request['entregable_acta_inicio']) ? $request['entregable_acta_inicio'] = 0 : $request['entregable_acta_inicio'] = 1;
+    !isset($request['entregable_acuerdo_confidencialidad_compromiso']) ? $request['entregable_acuerdo_confidencialidad_compromiso'] = 0 : $request['entregable_acuerdo_confidencialidad_compromiso'] = 1;
+    !isset($request['entregable_acta_seguimiento']) ? $request['entregable_acta_seguimiento'] = 0 : $request['entregable_acta_seguimiento'] = 1;
+    !isset($request['entregable_acta_cierre']) ? $request['entregable_acta_cierre'] = 0 : $request['entregable_acta_cierre'] = 1;
+    !isset($request['entregable_informe_final']) ? $request['entregable_informe_final'] = 0 : $request['entregable_informe_final'] = 1;
+    !isset($request['entregable_encuesta_satisfaccion']) ? $request['entregable_encuesta_satisfaccion'] = 0 : $request['entregable_encuesta_satisfaccion'] = 1;
+    !isset($request['entregable_otros']) ? $request['entregable_otros'] = 0 : $request['entregable_otros'] = 1;
+    $entregablesArticulacion = $this->articulacionRepository->updateEntregablesArticulacion($request, $id);
+    alert()->success('Modificación Exitosa!','Los entregables de la articulación se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
+    return redirect('articulacion');
+  }
+
+  // Vista para subir los entregables de una articulación
+  public function entregables($id)
+  {
+    if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+      $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
+      // dd($articulacion);
+      return view('articulaciones.gestor.entregables',[
+        'articulacion' => $articulacion
+      ]);
+    }
   }
 
   public function datatableArticulaciones($id)
@@ -41,16 +67,25 @@ class ArticulacionController extends Controller
           ';
           return $button;
         })->addColumn('edit', function ($data) {
-          $edit = '<a class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+          $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
           return $edit;
         })->addColumn('entregables', function ($data) {
           $button = '
-          <a class="btn blue-grey m-b-xs" >
+          <a class="btn blue-grey m-b-xs" href='. route('articulacion.entregables', $data->id) .'>
           <i class="material-icons">library_books</i>
           </a>
           ';
           return $button;
-        })->rawColumns(['details', 'edit', 'entregables'])->make(true);
+        })->editColumn('revisado_final', function ($data) {
+          if ($data->revisado_final == 'Por Evaluar') {
+            return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>'.$data->revisado_final.'</span></div>';
+          } else if ($data->revisado_final == 'Aprobado') {
+            return '<div class="card-panel green lighten-4"><span><i class="material-icons left">done_all</i>'.$data->revisado_final.'</span></div>';
+          } else {
+            return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
+          }
+          return '<span class="red-text">'.$data->revisado_final.'</span>';
+        })->rawColumns(['details', 'edit', 'entregables', 'revisado_final'])->make(true);
       }
     }
   }
@@ -166,7 +201,16 @@ class ArticulacionController extends Controller
   */
   public function edit($id)
   {
-    //
+    $pivot = array();
+    if (Articulacion::find($id)->tipo_articulacion == Articulacion::IsEmprendedor()) {
+      $pivot = $this->articulacionRepository->consultarArticulacionTalento($id);
+    }
+    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      return view('articulaciones.gestor.edit', [
+        'articulacion' => Articulacion::find($id),
+        'pivot' => $pivot,
+      ]);
+    }
   }
 
   /**

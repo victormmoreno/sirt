@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
                 'lineas',
                 'ideas',
                 'nivelesacademicos',
+                'fases',
 
             ]);
         }else if(app()->environment() == 'local'){
@@ -84,6 +85,7 @@ class DatabaseSeeder extends Seeder
                 'gruposinvestigacion',
                 'empresas',
                 'ocupaciones_users',
+                'fases',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";
