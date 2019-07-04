@@ -199,7 +199,7 @@ function verDetalleDeLaEntidadAsocidadALaArticulacion(id) {
         +'</div>'
         +'</div>'
       );
-
+      $('#detalleArticulacion_modal').openModal();
     } else if (respuesta.articulacion.tipo_articulacion == 'Grupo de Investigación') {
       $("#detalleDeUnaArticulacion_titulo").append("<span class='cyan-text text-darken-3'>Datos del Grupo de Investigación </span><br>");
       $("#detalleArticulacion_body").append("<div class='row'>"
@@ -292,10 +292,21 @@ function verDetalleDeLaEntidadAsocidadALaArticulacion(id) {
       +'</div>'
       +'</div>'
     );
-    } else {
-      // code..
-    }
     $('#detalleArticulacion_modal').openModal();
+  } else {
+    $("#talentosDeUnaArticulacion_titulo").empty();
+    $("#talentosDeUnaArticulacion_table").empty();
+    $("#talentosDeUnaArticulacion_titulo").append("<span class='cyan-text text-darken-3'>Datos de los Talentos </span><br>");
+    $.each(respuesta.detalles, function( index, value ) {
+      let rol = "Autor";
+      if (value.talento_lider == 1) {
+        rol = "Talento Líder";
+      }
+      $("#talentosDeUnaArticulacion_table").append('<tr><td>'+rol+'</td><td>'+value.talento+'</td></tr>'
+      );
+    });
+    $('#talentosDeUnaArticulacion_modal').openModal();
+  }
   }
 });
 }
