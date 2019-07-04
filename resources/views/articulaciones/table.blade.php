@@ -4,11 +4,14 @@
       <th>Código de la Articulación</th>
       <th>Nombre</th>
       <th>Tipo de Articulación</th>
+      <th>Gestor a cargo</th>
       <th>Estado</th>
       <th>Revisado Final</th>
       <th>Detalles</th>
       <th>Entregables</th>
-      <th>Editar</th>
+      @if (auth()->user()->rol()->first()->nombre == 'Dinamizador')
+        <th>Editar</th>
+      @endif
     </tr>
   </thead>
   <tbody>

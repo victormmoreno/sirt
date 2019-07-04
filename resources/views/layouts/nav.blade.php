@@ -367,9 +367,9 @@
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">toll</i>Articulaciones
+      <li class="no-padding {{setActiveRoute('articulacion')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
         </a>
       </li>
       <li class="no-padding">
@@ -589,6 +589,11 @@
             </li>
           </ul>
         </div>
+      </li>
+      <li class="no-padding {{setActiveRoute('articulacion')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
+        </a>
       </li>
       <li class="no-padding">
         <a href="">

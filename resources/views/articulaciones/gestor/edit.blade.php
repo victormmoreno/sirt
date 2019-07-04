@@ -379,6 +379,27 @@
       var form = $(this);
       var data = new FormData($(this)[0]);
       var url = form.attr("action");
+      if ($('#txtestado').val() == 2) {
+        Swal.fire({
+          title: 'Advertencia!',
+          text: "Al cerrar la articulación con el código {{$articulacion->codigo_articulacion}}, ten en cuenta que no podrás realizar ningún cambio una vez cerrada la articulación!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Sí, cerrar la articulación'
+        }).then((result) => {
+          ajaxEdit(form, url, data);
+        })
+      } else {
+        ajaxEdit(form, url, data);
+      }
+
+    });
+
+
+    function ajaxEdit(form, url, data) {
       $.ajax({
         type: form.attr('method'),
         url: url,
@@ -422,7 +443,8 @@
           alert("Error: " + errorThrown);
         }
       });
-    });
+    }
+
 
     function addEmpresaArticulacion(id) {
       $.ajax({

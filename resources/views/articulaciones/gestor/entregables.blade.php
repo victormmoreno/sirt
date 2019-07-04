@@ -140,6 +140,27 @@
 
                   </div>
                   <div class="divider"></div>
+                  <div class="row">
+                    <h5>Revisado Final</h5>
+                    <div class="col s12 m4 l4">
+                      <p class="p-v-xs">
+                        <input disabled id="txtrevisado" {{ $articulacion->revisado_final == 'Por Evaluar' ? 'checked' : '' }} type="radio">
+                        <label for="txtrevisadoa">Por evaluar</label>
+                      </p>
+                    </div>
+                    <div class="col s12 m4 l4">
+                      <p class="p-v-xs">
+                        <input disabled id="txtrevisado" {{ $articulacion->revisado_final == 'Aprobado' ? 'checked' : '' }} type="radio">
+                        <label for="txtrevisadob">Aprobado</label>
+                      </p>
+                    </div>
+                    <div class="col s12 m4 l4">
+                      <p class="p-v-xs">
+                        <input disabled id="txtrevisado" {{ $articulacion->revisado_final == 'No Aprobado' ? 'checked' : '' }} type="radio">
+                        <label for="txtrevisadoc">No aprobado</label>
+                      </p>
+                    </div>
+                  </div>
                   <center>
                     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                     <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>

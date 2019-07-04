@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Sector, Departamento, TipoArticulacion, Talento, Articulacion};
+use App\Models\{Sector, Departamento, TipoArticulacion, Talento, Articulacion, Nodo, Gestor};
 use App\Http\Requests\ArticulacionFormRequest;
 use Carbon\Carbon;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository};
@@ -73,30 +73,109 @@ class ArticulacionController extends Controller
   // Modificar los entregable para una articulación
   public function updateEntregables(Request $request, $id)
   {
-    !isset($request['entregable_acta_inicio']) ? $request['entregable_acta_inicio'] = 0 : $request['entregable_acta_inicio'] = 1;
-    !isset($request['entregable_acuerdo_confidencialidad_compromiso']) ? $request['entregable_acuerdo_confidencialidad_compromiso'] = 0 : $request['entregable_acuerdo_confidencialidad_compromiso'] = 1;
-    !isset($request['entregable_acta_seguimiento']) ? $request['entregable_acta_seguimiento'] = 0 : $request['entregable_acta_seguimiento'] = 1;
-    !isset($request['entregable_acta_cierre']) ? $request['entregable_acta_cierre'] = 0 : $request['entregable_acta_cierre'] = 1;
-    !isset($request['entregable_informe_final']) ? $request['entregable_informe_final'] = 0 : $request['entregable_informe_final'] = 1;
-    !isset($request['entregable_encuesta_satisfaccion']) ? $request['entregable_encuesta_satisfaccion'] = 0 : $request['entregable_encuesta_satisfaccion'] = 1;
-    !isset($request['entregable_otros']) ? $request['entregable_otros'] = 0 : $request['entregable_otros'] = 1;
-    $entregablesArticulacion = $this->articulacionRepository->updateEntregablesArticulacion($request, $id);
-    alert()->success('Modificación Exitosa!','Los entregables de la articulación se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
-    return redirect('articulacion');
+    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      !isset($request['entregable_acta_inicio']) ? $request['entregable_acta_inicio'] = 0 : $request['entregable_acta_inicio'] = 1;
+      !isset($request['entregable_acuerdo_confidencialidad_compromiso']) ? $request['entregable_acuerdo_confidencialidad_compromiso'] = 0 : $request['entregable_acuerdo_confidencialidad_compromiso'] = 1;
+      !isset($request['entregable_acta_seguimiento']) ? $request['entregable_acta_seguimiento'] = 0 : $request['entregable_acta_seguimiento'] = 1;
+      !isset($request['entregable_acta_cierre']) ? $request['entregable_acta_cierre'] = 0 : $request['entregable_acta_cierre'] = 1;
+      !isset($request['entregable_informe_final']) ? $request['entregable_informe_final'] = 0 : $request['entregable_informe_final'] = 1;
+      !isset($request['entregable_encuesta_satisfaccion']) ? $request['entregable_encuesta_satisfaccion'] = 0 : $request['entregable_encuesta_satisfaccion'] = 1;
+      !isset($request['entregable_otros']) ? $request['entregable_otros'] = 0 : $request['entregable_otros'] = 1;
+      $entregablesArticulacion = $this->articulacionRepository->updateEntregablesArticulacion($request, $id);
+      alert()->success('Modificación Exitosa!','Los entregables de la articulación se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
+      return redirect('articulacion');
+    }
+    if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
+      if ($request['txtrevisado'] == 0) {
+        $articulacionRevisadoFinal = $this->articulacionRepository->updateRevisadoFinalArticulacion($request, $id);
+        alert()->success('Modificación Exitosa!','El revisado final de la articulación se ha modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
+        return redirect('articulacion');
+      } else {
+        if ($articulacion->estado != 'Ejecución') {
+          alert()->warning('Advertencia!','Para cambiar el revisado final de una articulación, esta debe estar en estado de Ejecución.')->showConfirmButton('Ok', '#3085d6');
+          return back();
+        } else {
+          $articulacionRevisadoFinal = $this->articulacionRepository->updateRevisadoFinalArticulacion($request, $id);
+          alert()->success('Modificación Exitosa!','El revisado final de la articulación se ha modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
+          return redirect('articulacion');
+        }
+      }
+    }
   }
 
   // Vista para subir los entregables de una articulación
   public function entregables($id)
   {
+    $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
     if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
-      $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
-      // dd($articulacion);
+      // $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
       return view('articulaciones.gestor.entregables',[
-        'articulacion' => $articulacion
+        'articulacion' => $articulacion,
       ]);
+    } else if ( auth()->user()->rol()->first()->nombre == 'Dinamizador' ) {
+      return view('articulaciones.dinamizador.entregables', [
+        'articulacion' => $articulacion,
+      ]);
+    } else if (auth()->user()->rol()->first()->nombre == 'Administrador') {
+      return view('articulaciones.administrador.entregables', [
+        'articulacion' => $articulacion,
+      ]);
+    } else {
+      return back();
     }
   }
 
+  // Datatable para mostrar las articulaciones POR NODO
+  public function datatableArticulacionesPorNodo($id)
+  {
+    if (request()->ajax()) {
+      // if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+        $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( auth()->user()->dinamizador->nodo_id );
+      } else {
+        $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
+      }
+      return datatables()->of($articulaciones)
+      ->addColumn('details', function ($data) {
+        $button = '
+        <a class="btn light-blue m-b-xs" onclick="detallesDeUnaArticulacion(' . $data->id . ')">
+        <i class="material-icons">info</i>
+        </a>
+        ';
+        return $button;
+      })->addColumn('edit', function ($data) {
+        $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
+        return $edit;
+      })->addColumn('entregables', function ($data) {
+        $button = '
+        <a class="btn blue-grey m-b-xs" href='. route('articulacion.entregables', $data->id) .'>
+        <i class="material-icons">library_books</i>
+        </a>
+        ';
+        return $button;
+      })->editColumn('revisado_final', function ($data) {
+        if ($data->revisado_final == 'Por Evaluar') {
+          return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>'.$data->revisado_final.'</span></div>';
+        } else if ($data->revisado_final == 'Aprobado') {
+          return '<div class="card-panel green lighten-4"><span><i class="material-icons left">done_all</i>'.$data->revisado_final.'</span></div>';
+        } else {
+          return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
+        }
+        return '<span class="red-text">'.$data->revisado_final.'</span>';
+      })->editColumn('estado', function($data){
+        if ($data->estado == 'Inicio') {
+          return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate red" style="width: 33%"></div></div>';
+        } else if ($data->estado == 'Ejecución' || $data->estado == 'Co-Ejecución') {
+          return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate yellow" style="width: 66%"></div></div>';
+        } else {
+          return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate green" style="width: 100%"></div></div>';
+        }
+      })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
+    }
+  }
+
+  // Datatable para mostrar las articulaciones POR GESTOR
   public function datatableArticulaciones($id)
   {
     if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
@@ -121,6 +200,14 @@ class ArticulacionController extends Controller
           </a>
           ';
           return $button;
+        })->editColumn('estado', function($data){
+          if ($data->estado == 'Inicio') {
+            return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate red" style="width: 33%"></div></div>';
+          } else if ($data->estado == 'Ejecución' || $data->estado == 'Co-Ejecución') {
+            return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate yellow" style="width: 66%"></div></div>';
+          } else {
+            return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate green" style="width: 100%"></div></div>';
+          }
         })->editColumn('revisado_final', function ($data) {
           if ($data->revisado_final == 'Por Evaluar') {
             return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>'.$data->revisado_final.'</span></div>';
@@ -130,10 +217,46 @@ class ArticulacionController extends Controller
             return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
           }
           return '<span class="red-text">'.$data->revisado_final.'</span>';
-        })->rawColumns(['details', 'edit', 'entregables', 'revisado_final'])->make(true);
+        })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
       }
     } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
-
+      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( $id );
+      return datatables()->of($articulaciones)
+      ->addColumn('details', function ($data) {
+        $button = '
+        <a class="btn light-blue m-b-xs" onclick="detallesDeUnaArticulacion(' . $data->id . ')">
+        <i class="material-icons">info</i>
+        </a>
+        ';
+        return $button;
+      })->addColumn('edit', function ($data) {
+        $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
+        return $edit;
+      })->addColumn('entregables', function ($data) {
+        $button = '
+        <a class="btn blue-grey m-b-xs" href='. route('articulacion.entregables', $data->id) .'>
+        <i class="material-icons">library_books</i>
+        </a>
+        ';
+        return $button;
+      })->editColumn('estado', function($data){
+        if ($data->estado == 'Inicio') {
+          return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate red" style="width: 33%"></div></div>';
+        } else if ($data->estado == 'Ejecución' || $data->estado == 'Co-Ejecución') {
+          return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate yellow" style="width: 66%"></div></div>';
+        } else {
+          return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate green" style="width: 100%"></div></div>';
+        }
+      })->editColumn('revisado_final', function ($data) {
+        if ($data->revisado_final == 'Por Evaluar') {
+          return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>'.$data->revisado_final.'</span></div>';
+        } else if ($data->revisado_final == 'Aprobado') {
+          return '<div class="card-panel green lighten-4"><span><i class="material-icons left">done_all</i>'.$data->revisado_final.'</span></div>';
+        } else {
+          return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
+        }
+        return '<span class="red-text">'.$data->revisado_final.'</span>';
+      })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
     }
   }
 
@@ -144,21 +267,23 @@ class ArticulacionController extends Controller
   */
   public function index()
   {
-    // dd($this->articulacionRepository->consultarArticulacionesDeUnGestor( auth()->user()->gestor->id ));
-
     switch (auth()->user()->rol()->first()->nombre) {
       case 'Administrador':
-
+      return view('articulaciones.administrador.index', [
+        'nodos' => Nodo::SelectNodo()->get(),
+      ]);
       break;
       case 'Dinamizador':
-
+      return view('articulaciones.dinamizador.index', [
+        'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+      ]);
       break;
       case 'Gestor':
       return view('articulaciones.gestor.index');
       break;
 
       default:
-      // code...
+      return back();
       break;
     }
   }
@@ -248,15 +373,22 @@ class ArticulacionController extends Controller
   */
   public function edit($id)
   {
-    $pivot = array();
-    if (Articulacion::find($id)->tipo_articulacion == Articulacion::IsEmprendedor()) {
-      $pivot = $this->articulacionRepository->consultarArticulacionTalento($id);
-    }
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
-      return view('articulaciones.gestor.edit', [
-        'articulacion' => Articulacion::find($id),
-        'pivot' => $pivot,
-      ]);
+    $articulacion = Articulacion::find($id);
+    if ($articulacion->estado == Articulacion::IsCierre()) {
+      alert()->warning('Advertencia!','No se puede realizar esta acción por el estado de la articulación es Cierre.')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      $pivot = array();
+      if (Articulacion::find($id)->tipo_articulacion == Articulacion::IsEmprendedor()) {
+        $pivot = $this->articulacionRepository->consultarArticulacionTalento($id);
+      }
+      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        return view('articulaciones.gestor.edit', [
+          'articulacion' => $articulacion,
+          'pivot' => $pivot,
+        ]);
+      }
+
     }
   }
 

@@ -9,6 +9,31 @@ use Carbon\Carbon;
 class ArticulacionRepository
 {
 
+  // Cambia el revisado final de una articulación
+  public function updateRevisadoFinalArticulacion($request, $id)
+  {
+    return Articulacion::where('id', $id)
+    ->update([
+      "revisado_final" => $request['txtrevisado']
+    ]);
+  }
+
+
+  // Consulta las articulaciones de un nodo
+  public function consultarArticulacionesDeUnNodo($id)
+  {
+    return Articulacion::select('codigo_articulacion', 'articulaciones.nombre', 'articulaciones.id')
+    ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
+    ->selectRaw('IF(revisado_final = '.Articulacion::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Articulacion::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
+    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->where('nodos.id', $id)
+    ->get();
+  }
+
   // Consulta los entregables de una articulación
   public function consultaEntregablesDeUnaArticulacion($id)
   {
@@ -24,76 +49,6 @@ class ArticulacionRepository
     ->where('id', $id)
     ->get();
   }
-
-  // // Consulta una articulación por id (Conjoin a grupos de investigación)
-  // public function consultarArticulacionConGrupoDeInvestigacionPorId($id)
-  // {
-  //   return Articulacion::select(
-  //     'codigo_articulacion',
-  //     'articulaciones.nombre',
-  //     'revisado_final',
-  //     'observaciones',
-  //     'articulaciones.id',
-  //     'fecha_inicio',
-  //     'fecha_cierre',
-  //     'acta_inicio',
-  //     'acc',
-  //     'actas_seguimiento',
-  //     'acta_cierre',
-  //     'informe_final',
-  //     'pantallazo',
-  //     'otros',
-  //     'tiposarticulaciones.nombre AS tipoArticulacion'
-  //     )
-  //   ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa",
-  //   "Emprendedor") ) AS tipo_articulacion')
-  //   ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
-  //   ->selectRaw('IF(revisado_final = '.Articulacion::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Articulacion::IsAprobado().', "Aprobado",
-  //   "No Aprobado") ) AS revisado_final')
-  //   ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
-  //   ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
-  //   ->join('entidades', 'entidades.id', '=', 'articulaciones.entidad_id')
-  //   ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
-  //   ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
-  //   ->join('users', 'users.id', '=', 'gestores.user_id')
-  //   ->where('articulaciones.id', $id)
-  //   ->get();
-  // }
-
-  // // Consulta una articulación por id (Conjoin a empresas)
-  // public function consultarArticulacionConEmpresaPorId($id)
-  // {
-  //   return Articulacion::select(
-  //     'codigo_articulacion',
-  //     'articulaciones.nombre',
-  //     'revisado_final',
-  //     'observaciones',
-  //     'articulaciones.id',
-  //     'fecha_inicio',
-  //     'fecha_cierre',
-  //     'acta_inicio',
-  //     'acc',
-  //     'actas_seguimiento',
-  //     'acta_cierre',
-  //     'informe_final',
-  //     'pantallazo',
-  //     'otros',
-  //     'tiposarticulaciones.nombre AS tipoArticulacion'
-  //     )
-  //   ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa",
-  //   "Emprendedor") ) AS tipo_articulacion')
-  //   ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
-  //   ->selectRaw('IF(revisado_final = '.Articulacion::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Articulacion::IsAprobado().', "Aprobado",
-  //   "No Aprobado") ) AS revisado_final')
-  //   ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
-  //   ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
-  //   ->join('entidades', 'entidades.id', '=', 'articulaciones.entidad_id')
-  //   ->join('empresas', 'empresas.entidad_id', '=', 'entidades.id')
-  //   ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
-  //   ->join('users', 'users.id', '=', 'gestores.user_id')
-  //   ->where('articulaciones.id', $id)
-  //   ->get();
-  // }
 
   // Modifica un articulación
   public function update($request,  $id)
@@ -238,8 +193,11 @@ class ArticulacionRepository
   {
     return Articulacion::select('codigo_articulacion', 'articulaciones.nombre', 'articulaciones.id')
     ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
-    ->selectRaw('IF(estado = '.Articulacion::IsInicio().', "Inicio", IF(estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
+    ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
     ->selectRaw('IF(revisado_final = '.Articulacion::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Articulacion::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
+    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('articulaciones.gestor_id', $id)
     ->get();
   }

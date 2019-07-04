@@ -86,11 +86,6 @@ function inhabilitarEntrenamientoPorId(id, e) {
   }).then((result) => {
     if (result.value) {
       Swal.fire({
-        // confirmButtonColor: '#3085d6',
-        // cancelButtonText: 'Regresar las ideas de proyecto al estado de Inicio',
-        // confirmButtonAriaLabel: 'Thumbs up, great!',
-        // cancelButtonAriaLabel: 'Thumbs down',
-        // confirmButtonText: 'Inhabilitar las ideas de proyecto',
         title: '¿Qué desea hacer?',
         text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
         type: 'warning',

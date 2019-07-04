@@ -321,6 +321,7 @@ Route::group([
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create');
         Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulaciones')->name('articulacion.datatable');
+        Route::get('/datatableArticulacionesDelNodo/{id}', 'ArticulacionController@datatableArticulacionesPorNodo')->name('articulacion.datatable.nodo');
         Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit');
         Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
         Route::get('/ajaxDetallesDeLosEntregablesDeUnaArticulacion/{id}', 'ArticulacionController@detallesDeLosEntregablesDeUnaArticulacion')->name('articulacion.detalle.entregables');
