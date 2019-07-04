@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Dinamizadores')
+@section('meta-title', 'Gestores')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -11,7 +11,7 @@
                             <i class="material-icons left">
                                 supervised_user_circle
                             </i>
-                            Usuarios | Dinamizadores
+                            Usuarios | Gestores
                         </h5>
                     </div>
                 </div>
@@ -22,13 +22,13 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Dinamizadores {{config('app.name')}}
+                                            Gestores {{config('app.name')}}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Dinamizador" href="{{route('usuario.dinamizador.create')}}">
+                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Gestor" href="{{route('usuario.gestor.create')}}">
                                             <i class="material-icons">
                                                 how_to_reg
                                             </i>
@@ -46,10 +46,10 @@
                                         <div class="file-field input-field">
 
                                             <div class="file-path-wrapper">
-                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorDinamizador.selectDinamizadoresPorNodo()">
+                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorGestor.selectGestoresPorNodo()">
                                                     <option value="">Seleccione nodo</option>
-                                                    @foreach($nodos as $nodo)
-                                                      <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                                    @foreach($nodos as $id => $nodo)
+                                                      <option value="{{$id}}">{{$nodo}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -61,11 +61,11 @@
                                 </div>
                             
                                 <br>
-                                <table class="display responsive-table" id="dinamizador_table">
+                                <table class="display responsive-table" id="gestor_table">
                                     <thead>
                                         <th>Tipo Documento</th>
                                         <th>Docuemento</th>
-                                        <th>Administrador</th>
+                                        <th>Gestor</th>
                                         <th>Correo</th>
                                         <th>Telefono</th>
                                         <th>Estado Sistema</th>
@@ -81,9 +81,9 @@
         </div>
     </div>
 </main>
-<div id="detalledinamizador" class="modal">
+<div id="detallegestor" class="modal">
   <div class="modal-content">
-    <center><h4 id="titulo_dinamizador" class="center-aling"></h4></center>
+    <center><h4 id="titulo_gestor" class="center-aling"></h4></center>
   </div>
   <div class="modal-footer">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>

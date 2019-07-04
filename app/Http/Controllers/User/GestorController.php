@@ -4,24 +4,39 @@ namespace App\Http\Controllers\User;
 
 use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UsersRequests\DinamizadorFormRequest;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use App\Http\Requests\UsersRequests\GestorFormRequest;
+use App\Repositories\Repository\UserRepository\GestorRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
 
-class DinamizadorController extends Controller
+class GestorController extends Controller
 {
 
-    public $dinamizadorRepository;
     public $userRepository;
+    public $gestorRepository;
 
-    public function __construct(DinamizadorRepository $dinamizadorRepository, UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, GestorRepository $gestorRepository)
     {
-        $this->middleware('auth');
-        $this->dinamizadorRepository = $dinamizadorRepository;
-        $this->userRepository        = $userRepository;
+        $this->userRepository   = $userRepository;
+        $this->gestorRepository = $gestorRepository;
     }
+
+    /*=================================================================
+    =            metodo para consultar las lineas por nodo            =
+    =================================================================*/
+
+    public function getLineaPorNodo($nodo)
+    {
+        // $nodo   = $this->userRepository->getAllLineaNodo($nodo);
+        
+        return response()->json([
+            'lineas' => $this->userRepository->getAllLineaNodo($nodo)->lineas->pluck('nombre','id'),
+        ]);
+    }
+
+    /*=====  End of metodo para consultar las lineas por nodo  ======*/
+
     /**
      * Display a listing of the resource.
      *
@@ -29,26 +44,31 @@ class DinamizadorController extends Controller
      */
     public function index()
     {
-       
-        return view('users.administrador.dinamizador.index', [
-            'nodos' => $this->dinamizadorRepository->getAllNodos(),
+        // $nodo   = $this->userRepository->getAllLineaNodo(1)->lineas->pluck('nombre','id');
+        // // $lineas = $nodo->lineas;
+
+        // // dd($nodo->lineas->pluck('nombre','id'));
+        // dd($nodo);
+
+        return view('users.administrador.gestor.index', [
+            'nodos' => $this->userRepository->getAllNodo(),
         ]);
     }
 
-    public function getDinanizador($nodo)
+    public function getGestor($nodo)
     {
 
         if (request()->ajax()) {
-            return datatables()->of($this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo))
+            return datatables()->of($this->gestorRepository->getAllGestoresPorNodo($nodo))
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#modal1" onclick="UserAdministradorDinamizador.detalleDinamizador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#modal1" onclick="UserAdministradorGestor.detalleGestor(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
                 ->addColumn('edit', function ($data) {
                     if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.dinamizador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("usuario.gestor.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     } else {
                         $button = '';
                     }
@@ -74,9 +94,7 @@ class DinamizadorController extends Controller
      */
     public function create()
     {
-        // $nodos = $this->dinamizadorRepository->getAllNodosPluck();
-        // dd($nodos);
-        return view('users.administrador.dinamizador.create', [
+        return view('users.administrador.gestor.create', [
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
@@ -84,7 +102,7 @@ class DinamizadorController extends Controller
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
             'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->dinamizadorRepository->getAllNodosPluck(),
+            'nodos'             => $this->userRepository->getAllNodo(),
         ]);
     }
 
@@ -94,23 +112,24 @@ class DinamizadorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(DinamizadorFormRequest $request)
+    public function store(GestorFormRequest $request)
     {
         //generar contraseña
         $password = User::generatePasswordRamdom();
         //guardar registro
-        $dinamizador = $this->dinamizadorRepository->Store($request, $password);
-        $activationToken = $this->userRepository->activationToken($dinamizador->id);
+        $gestor = $this->gestorRepository->Store($request, $password);
+
+        $activationToken = $this->userRepository->activationToken($gestor->id);
         //envio de email con contraseña
-        if ($dinamizador != null) {
-            event(new UserWasRegistered($dinamizador, $password));
-            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $dinamizador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+        if ($gestor != null) {
+            event(new UserWasRegistered($gestor, $password));
+            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $gestor->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
         } else {
             alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
         }
         //redireccion
 
-        return redirect()->route('usuario.dinamizador.index');
+        return redirect()->route('usuario.gestor.index');
     }
 
     /**
@@ -123,22 +142,20 @@ class DinamizadorController extends Controller
     {
         $user = $this->userRepository->findById($id);
 
-
-
         $data = [
-                    'user' =>$user,
-                    'role' =>$user->getRoleNames()->implode(', '),
-                    'tipodocumento' =>$user->tipoDocumento->nombre,
-                    'eps' =>$user->eps->nombre,
-                    'departamento' =>$user->ciudad->departamento->nombre,
-                    'ciudad' =>$user->ciudad->nombre,
-                    'gruposanguineo' =>$user->grupoSanguineo->nombre,
-                    'gradosescolaridad' =>$user->gradoEscolaridad->nombre,
+            'user'              => $user,
+            'role'              => $user->getRoleNames()->implode(', '),
+            'tipodocumento'     => $user->tipoDocumento->nombre,
+            'eps'               => $user->eps->nombre,
+            'departamento'      => $user->ciudad->departamento->nombre,
+            'ciudad'            => $user->ciudad->nombre,
+            'gruposanguineo'    => $user->grupoSanguineo->nombre,
+            'gradosescolaridad' => $user->gradoEscolaridad->nombre,
 
-                ];
-                
+        ];
+
         return response()->json([
-            'data' =>  $data,
+            'data' => $data,
         ]);
     }
 
@@ -150,7 +167,7 @@ class DinamizadorController extends Controller
      */
     public function edit($id)
     {
-        return view('users.administrador.dinamizador.edit',[
+        return view('users.administrador.gestor.edit', [
             'user'              => $this->userRepository->findById($id),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
@@ -159,7 +176,7 @@ class DinamizadorController extends Controller
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
             'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->dinamizadorRepository->getAllNodosPluck(),
+            'nodos'             => $this->userRepository->getAllNodo(),
         ]);
     }
 
@@ -170,17 +187,9 @@ class DinamizadorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(DinamizadorFormRequest $request, $id)
+    public function update(GestorFormRequest $request, $id)
     {
-        $user = $this->userRepository->findById($id);
-        if ($user != null) {
-            $userUpdate = $this->dinamizadorRepository->Update($request, $user);
-            alert()->success("El Usuario {$userUpdate->nombre_completo} ha sido  modificado.", 'Modificación Exitosa', "success");
-        } else {
-            alert()->error("El Usuario no se ha modificado.", 'Modificación Errónea', "error");
-        }
-
-        return redirect()->route('usuario.dinamizador.index');
+        dd($request->all());
     }
 
     /**

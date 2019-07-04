@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use \App\Models\Eps;
 
-class DinamizadorFormRequest extends FormRequest
+class GestorFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,10 @@ class DinamizadorFormRequest extends FormRequest
      */
     public function rules()
     {
+    
         return [
             'txtnodo'              => 'required',
+            'txtlinea'              => 'required',
             'txtocupaciones'       => 'required',
             'txttipo_documento'    => 'required',
             'txtgrado_escolaridad' => 'required',
@@ -34,16 +36,17 @@ class DinamizadorFormRequest extends FormRequest
             'txteps'               => 'required',
             'txtciudad'            => 'required',
             'txtdepartamento'      => 'required',
-            'txtdocumento'         => 'required|digits_between:6,11|numeric|unique:users,documento,' . $this->route('dinamizador'),
+            'txtdocumento'         => 'required|digits_between:6,11|numeric|unique:users,documento,' . $this->route('gestor'),
             'txtnombres'           => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'           => 'required',
-            'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,' . $this->route('dinamizador'),
+            'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,' . $this->route('gestor'),
             'txtbarrio'            => 'required|min:1|max:100',
             'txtdireccion'         => 'required|min:1|max:200',
             'txttelefono'          => 'nullable|digits_between:6,11|numeric',
             'txtcelular'           => 'nullable|digits_between:10,11|numeric',
+            'txthonorario'           => 'required|regex:/^(\d{1,3}.)*\d{1,3}(\.\d+)?$/|min:1|max:10',
             'txtotraeps'           => Rule::requiredIf($this->txteps == Eps::where('nombre', Eps::OTRA_EPS)->first()->id) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
 
         ];
@@ -53,6 +56,7 @@ class DinamizadorFormRequest extends FormRequest
     {
         return $messages = [
             'txtnodo.required'                    => 'El :attribute es obligatorio.',
+            'txtlinea.required'                    => 'La :attribute es obligatoria.',
             'txtocupaciones.required'             => 'Selecciona al menos una ocupación',
             'txttipo_documento.required'          => 'El :attribute es obligatorio.',
             'txtgrado_escolaridad.required'       => 'El :attribute es obligatorio.',
@@ -114,6 +118,7 @@ class DinamizadorFormRequest extends FormRequest
     {
         return [
             'txtnodo'              => 'nodo',
+            'txtlinea'              => 'linea',
             'txtocupaciones'       => 'ocupación',
             'txttipo_documento'    => 'tipo de documento',
             'txtgrado_escolaridad' => 'grado escolaridad',

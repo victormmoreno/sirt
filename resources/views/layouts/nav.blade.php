@@ -517,7 +517,7 @@
               </a>
             </li>
             <li>
-              <a href="">
+              <a href="{{route('usuario.gestor.index')}}">
                 Gestores
               </a>
             </li>

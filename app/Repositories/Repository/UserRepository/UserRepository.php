@@ -8,6 +8,8 @@ use App\Models\Departamento;
 use App\Models\Eps;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
+use App\Models\LineaTecnologica;
+use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\TipoDocumento;
 use App\User;
@@ -177,10 +179,34 @@ class UserRepository
     public function getRoleWhereInRole(array $role)
     {
 
-       // return $role;
         return Role::whereIn('name', $role)->pluck('name', 'id');
     }
 
     /*=====  End of metodo para obtener todos los roles inidicados laravel permision  ======*/
+
+    /*=============================================================
+    =            metodo para consultar todos los nodos            =
+    =============================================================*/
+    
+    public function getAllNodo()
+    {
+        return Nodo::selectNodo()->pluck('nodos', 'id');
+    }
+    
+    /*=====  End of metodo para consultar todos los nodos  ======*/
+
+    /*=================================================================
+    =            metodo para consultar las lineas por nodo            =
+    =================================================================*/
+    
+    public function getAllLineaNodo($nodo)
+    {
+        return Nodo::allLineasPorNodo($nodo);
+    }
+    
+    
+    /*=====  End of metodo para consultar las lineas por nodo  ======*/
+    
+    
 
 }

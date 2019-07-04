@@ -179,7 +179,13 @@ Route::group([
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
-        Route::resource('dinamizador', 'DinamizadorController', ['except' => 'show', 'as' => 'usuario']);
+        Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario']);
+
+        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
+
+        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
+
+        Route::resource('gestor', 'GestorController', ['as' => 'usuario']);
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
 

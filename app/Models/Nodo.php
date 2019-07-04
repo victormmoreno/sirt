@@ -94,4 +94,15 @@ class Nodo extends Model
 
     /*=====  End of scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso  ======*/
 
+    /*==============================================================================
+    =            scope para consultar todas las lineas por departamento            =
+    ==============================================================================*/
+    
+    public function scopeAllLineasPorNodo($query, $nodo)
+    {
+        return $query->with('lineas')->find($nodo);
+    }
+    
+    /*=====  End of scope para consultar todas las lineas por departamento  ======*/
+
 }

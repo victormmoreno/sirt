@@ -88,6 +88,9 @@ class LineaTecnologica extends Model
     }
     
     /*=====  End of scope para seleccionar todas las lineas  ======*/
+
+    
+    
     
     
 
