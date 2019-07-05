@@ -15,8 +15,8 @@ $factory->define(GrupoInvestigacion::class, function (Faker $faker) {
         'tipogrupo'                   => $faker->randomElement([GrupoInvestigacion::IsInterno(), GrupoInvestigacion::IsExterno()]),
         'estado'                      => $faker->randomElement([GrupoInvestigacion::IsActive(), GrupoInvestigacion::IsInactive()]),
         'institucion'                 => $faker->word,
-        'nombres_contacto'            => $faker->firstName . ' ' . $faker->lastName,
-        'correo_contacto'             => $faker->safeEmail,
-        'telefono_contacto'           => $faker->numerify('######'),
+        // 'nombres_contacto'            => $faker->firstName . ' ' . $faker->lastName,
+        // 'correo_contacto'             => $faker->safeEmail,
+        // 'telefono_contacto'           => $faker->numerify('######'),
     ];
 });

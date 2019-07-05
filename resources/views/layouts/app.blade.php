@@ -28,7 +28,7 @@
             @include('layouts.nav')
 
             @yield('content')
-            
+
             @include('layouts.footer')
         </div>
         <div class="left-sidebar-hover"></div>

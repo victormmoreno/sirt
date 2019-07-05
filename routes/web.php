@@ -291,6 +291,8 @@ Route::group([
         Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
         Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit');
         Route::get('/ajaxDetallesDeUnaEmpresa/{id}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
+        Route::get('/ajaxContactosDeUnaEntidad/{identidad}', 'EmpresaController@contactosDeLaEmpresaPorNodo')->name('empresa.contactos.nodo');
+        Route::put('/updateContactoDeUnaEmpresa/{id}', 'EmpresaController@updateContactosEmpresa')->name('empresa.update.contactos');
         Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
         Route::post('/', 'EmpresaController@store')->name('empresa.store');
     }

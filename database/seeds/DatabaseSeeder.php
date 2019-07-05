@@ -86,6 +86,7 @@ class DatabaseSeeder extends Seeder
                 'empresas',
                 'ocupaciones_users',
                 'fases',
+                'contactosentidades',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

@@ -106,8 +106,6 @@ class ArticulacionRepository
         'estado' => request()->txtestado,
       ]);
 
-
-
       if (request()->group1 == Articulacion::IsEmprendedor()) {
         $syncData = array();
         foreach($request->get('talentos') as $id => $value){

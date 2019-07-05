@@ -13,8 +13,8 @@ $factory->define(Empresa::class, function (Faker $faker) {
         'sector_id'         => Sector::all()->random()->id,
         'nit'               => $faker->unique()->numberBetween($min = 100, $max = 9000000),
         'direccion'         => $faker->streetAddress,
-        'nombre_contacto'   => $faker->firstName . ' ' . $faker->lastName,
-        'correo_contacto'   => $faker->safeEmail,
-        'telefono_contacto' => $faker->numerify('######'),
+        // 'nombre_contacto'   => $faker->firstName . ' ' . $faker->lastName,
+        // 'correo_contacto'   => $faker->safeEmail,
+        // 'telefono_contacto' => $faker->numerify('######'),
     ];
 });

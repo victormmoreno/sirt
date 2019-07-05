@@ -33,9 +33,6 @@ class EmpresaFormRequest extends FormRequest
       'txtdepartamento' => 'required',
       'txtciudad_id' => 'required',
       'txtsector' => 'required',
-      'nombre_contacto' => 'nullable|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:10|max:60',
-      'email_contacto' => 'nullable|email|min:7|max:100',
-      'telefono_contacto' => 'nullable|numeric|digits_between:7,11',
     ];
   }
 
