@@ -141,6 +141,11 @@ Route::group([
 ],
     function () {
 
+        
+        
+        
+
+
         Route::get('/talento/getTalentosDeTecnoparque', [
           'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
           'as' => 'talento.tecnoparque',
@@ -177,6 +182,8 @@ Route::group([
 
         Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
 
+
+
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
         Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario']);
@@ -188,6 +195,22 @@ Route::group([
         Route::resource('gestor', 'GestorController', ['as' => 'usuario']);
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
+
+        Route::get('/', [
+          'uses' => 'UserController@index',
+          'as' => 'usuario.index',
+        ]);
+
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
+            'create' => 'usuario.usuarios.create',
+            'update' => 'usuario.usuarios.update',
+            'edit' => 'usuario.usuarios.edit',
+            'destroy' => 'usuario.usuarios.destroy',
+            'show' => 'usuario.usuarios.show',
+           
+        ])->parameters([
+            'usuarios' => 'id'
+        ]);
 
     }
 );

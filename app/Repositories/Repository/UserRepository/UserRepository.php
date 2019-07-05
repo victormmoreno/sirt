@@ -11,6 +11,7 @@ use App\Models\GrupoSanguineo;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Ocupacion;
+use App\Models\Perfil;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
@@ -206,6 +207,18 @@ class UserRepository
     
     
     /*=====  End of metodo para consultar las lineas por nodo  ======*/
+
+    /*============================================================================
+    =            metodo para consultar todos los perfiles del talento            =
+    ============================================================================*/
+    
+    public function getAllPerfiles()
+    {
+        return Perfil::allPerfiles()->pluck('nombre','id');
+    }
+    
+    /*=====  End of metodo para consultar todos los perfiles del talento  ======*/
+    
     
     
 
