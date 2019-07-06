@@ -1,21 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\CentroRepository;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CentroController extends Controller
 {
+    public $centroRepository;
 
-    public $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(CentroRepository $centroRepository)
     {
-        $this->middleware('auth');
-        $this->userRepository = $userRepository;
+        $this->centroRepository = $centroRepository;
     }
+
+
+    /*=======================================================================================
+    =            metodo API para consultar los centros de formacion por regional            =
+    =======================================================================================*/
+    
+    public function getAllCentrosForRegional($regional)
+    {
+        $centros = $this->centroRepository->getAllCentrosRegional($regional);
+
+        return response()->json([
+            'centros' =>  $centros,
+        ]);
+    }
+    
+    /*=====  End of metodo API para consultar los centros de formacion por regional  ======*/
+    
 
     /**
      * Display a listing of the resource.
@@ -24,10 +38,7 @@ class UserController extends Controller
      */
     public function index()
     {
-
-        return view('users.administrador.index', [
-            'roles' => $this->userRepository->getAllRoles(),
-        ]);
+        //
     }
 
     /**
@@ -37,18 +48,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.administrador.create', [
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->userRepository->getAllNodo(),
-            'perfiles'          => $this->userRepository->getAllPerfiles(),
-            'regionales'        => $this->userRepository->getAllRegionales(),
-        ]);
+        //
     }
 
     /**

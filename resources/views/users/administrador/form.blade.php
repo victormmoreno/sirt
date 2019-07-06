@@ -489,11 +489,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="input-field col s12 m6 l6 ">
+        <div class="input-field col s12 m4 l4 ">
             <i class="material-icons prefix">
                  details
             </i>
-            <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1">
+            <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1" onchange="TipoTalento.getSelectTipoTalento(this)">
                 <option value="">Seleccione tipo de talento</option>
                 @foreach($perfiles as $id => $nombre)
                     @if(isset($user->gradoescolaridad_id))
@@ -508,6 +508,68 @@
             @error('txtperfil')
                 <label id="txtperfil-error" class="error" for="txtperfil">{{ $message }}</label>
             @enderror
+        </div>
+        <div class="input-field col s12 m4 l4 aprendizSena" >
+             <i class="material-icons prefix">
+                 details
+            </i>
+            <select class="" id="txtregional" name="txtregional" style="width: 100%" tabindex="-1" onchange="regional.getCentroFormacion()">
+                <option value="">Seleccione regional</option>
+                @foreach($regionales as $id => $nombre)
+                    @if(isset($user->gradoescolaridad_id))
+                    <option value="{{$id}}" {{old('txtregional',$user->gradoescolaridad_id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                    @else
+                        <option value="{{$id}}" {{old('txtregional') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                    @endif
+
+                @endforeach
+            </select>
+            <label for="txtregional">Regional <span class="red-text">*</span></label>
+            @error('txtregional')
+                <label id="txtregional-error" class="error" for="txtregional">{{ $message }}</label>
+            @enderror 
+        </div>
+        <div class="input-field col s12 m4 l4 aprendizSena" >
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <select class="" id="txtcentroformacion" name="txtcentroformacion" style="width: 100%" tabindex="-1">
+                <option value="">Seleccione Primero la regional</option> 
+            </select>
+            <label for="txtcentroformacion">Centro de formación <span class="red-text">*</span></label>
+            @error('txtcentroformacion')
+                <label id="txtcentroformacion-error" class="error" for="txtcentroformacion">{{ $message }}</label>
+            @enderror 
+        </div>
+        <div class="input-field col s12 m8 l8 " id="estudianteUniversitario">
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtuniversidad')}}">
+            <label for="txtuniversidad">Universidad</label>
+            @error('txtuniversidad')
+                <label id="txtuniversidad-error" class="error" for="txtuniversidad">{{ $message }}</label>
+            @enderror 
+        </div>
+        <div class="input-field col s12 m8 l8 " id="funcionarioEmpresa">
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtempresa')}}">
+            <label for="txtempresa">Empresa</label>
+            @error('txtempresa')
+                <label id="txtempresa-error" class="error" for="txtempresa">{{ $message }}</label>
+            @enderror 
+        </div>
+        <div class="input-field col s12 m8 l8 " id="otroTipoTalento">
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <input class="validate" id="txtotrotipotalento" name="txtotrotipotalento" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtotrotipotalento')}}">
+            <label for="txtotrotipotalento">¿Cuál?</label>
+            @error('txtotrotipotalento')
+                <label id="txtotrotipotalento-error" class="error" for="txtotrotipotalento">{{ $message }}</label>
+            @enderror 
         </div>
     </div>
 </div>

@@ -67,6 +67,7 @@ $(document).ready(function() {
       language: "es",
     });
     eps.getOtraEsp();
+    TipoTalento.getSelectTipoTalento();
   
     roles.getRoleSeleted();
     @if($errors->any())
@@ -89,6 +90,62 @@ var eps = {
         }
     }
 };
+
+var TipoTalento = {
+    getSelectTipoTalento:function (idperfil) {
+        let id = $(idperfil).val();
+        let nombrePerfil = $("#txtperfil option:selected").text();
+        console.log(nombrePerfil);
+        if (nombrePerfil == '{{App\Models\Perfil::IsEgresadoSena() }}' || nombrePerfil == '{{App\Models\Perfil::IsAprendizSena() }}') {
+                $('#estudianteUniversitario').hide();
+                $('#funcionarioEmpresa').hide();
+                $('#otroTipoTalento').hide();
+             $('.aprendizSena').show();
+        }else if(nombrePerfil == '{{App\Models\Perfil::IsEstudianteUniversitarioPregrado() }}' || nombrePerfil == '{{App\Models\Perfil::IsEstudianteUniversitarioPostgrado() }}'){
+             $('.aprendizSena').hide();
+             $('#funcionarioEmpresa').hide();
+             $('#otroTipoTalento').hide();
+             $('#estudianteUniversitario').show();
+        }else if(nombrePerfil == '{{App\Models\Perfil::IsFuncionarioEmpresaPublica() }}' || nombrePerfil == '{{App\Models\Perfil::IsFuncionarioMicroempresa() }}' || nombrePerfil == '{{App\Models\Perfil::IsFuncionarioMedianaEmpresa() }}' || nombrePerfil == '{{App\Models\Perfil::IsFuncionarioGrandeEmpresa() }}'){
+             $('.aprendizSena').hide();
+             $('#estudianteUniversitario').hide();
+             $('#otroTipoTalento').hide(); 
+             $('#funcionarioEmpresa').show(); 
+        }else if(nombrePerfil == '{{App\Models\Perfil::IsOtro() }}'){
+             $('.aprendizSena').hide();
+             $('#funcionarioEmpresa').hide();
+             $('#estudianteUniversitario').hide(); 
+             $('#otroTipoTalento').show(); 
+        }else{
+            $('.aprendizSena').hide();
+            $('#estudianteUniversitario').hide();
+            $('#funcionarioEmpresa').hide();
+            $('#otroTipoTalento').hide();
+        }
+        
+    }
+};
+
+var regional = {
+    getCentroFormacion:function (){
+        let regional = $('#txtregional').val();
+        $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/centro-formacion/getcentrosregional/'+regional
+      }).done(function(response){
+        console.log(response);
+        $('#txtcentroformacion').empty();
+        $('#txtcentroformacion').append('<option value="">Seleccione el centro de formación</option>')
+        $.each(response.centros, function(id, nombre) {
+          // console.log(e.id);
+          $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
+        });
+        $('#txtcentroformacion').material_select();
+       
+      });
+    }
+}
 
 var roles = {
     getRoleSeleted:function (idrol) {

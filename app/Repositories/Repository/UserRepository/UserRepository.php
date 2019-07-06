@@ -12,6 +12,7 @@ use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Perfil;
+use App\Models\Regional;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
@@ -218,6 +219,18 @@ class UserRepository
     }
     
     /*=====  End of metodo para consultar todos los perfiles del talento  ======*/
+
+    /*==================================================================
+    =            metodo para consultar todas las regionales            =
+    ==================================================================*/
+    
+    public function getAllRegionales()
+    {
+        return Regional::allRegionales()->pluck('nombre','id');
+    }
+    
+    /*=====  End of metodo para consultar todas las regionales  ======*/
+    
     
     
     

@@ -218,6 +218,15 @@ Route::group([
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/
+Route::get('centro-formacion/getcentrosregional/{regional}', 'CentroController@getAllCentrosForRegional')->name('centro.getcentrosregional');
+Route::resource('centro-formacion', 'CentroController');
+
+/*=====  End of seccion para las rutas del perfil  ======*/
+
+
+/*=========================================================
+=            seccion para las rutas del perfil            =
+=========================================================*/
 
 Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta');
 Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
