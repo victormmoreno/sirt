@@ -70,7 +70,7 @@
     // form.attr("action");
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
-    console.log(data);
+    // console.log(data);
     ajaxEditContactosDeEmpresa(form, url, data);
 
   });
@@ -80,22 +80,26 @@
     $("#contactosDeUnaEntidad_table").append(
       '<tr id='+cont+'>'
       +'<td>'
-      +'<input name="txtnombres_contactos[]" value="" />'
-      +'<label for="txtnombres_contactos[]">Nombres del Contacto</label>'
-      +'<small id="txtnombres_contactos[]-error" class="error red-text"></small>'
+      +'<input class="validate" required type="text" id="txtnombres_contactos'+cont+'" pattern=".{10,60}" maxlength="60" name="txtnombres_contactos[]" value="" />'
+      +'<span class="helper-text" data-error></span>'
+      // +'<label for="txtnombres_contactos[]">Nombres del Contacto</label>'
+      // +'<small id="txtnombres_contactos[]-error" class="error red-text"></small>'
       +'</td>'
       +'<td>'
-      +'<input name="txtcorreo_contacto[]" value="" />'
-      +'<label for="txtcorreo_contacto[]">Nombres del Contacto</label>'
-      +'<small id="txtcorreo_contacto[]-error" class="error red-text"></small>'
+      +'<input class="validate" required type="email" id="txtcorreo_contacto'+cont+'" pattern=".{7,100}" maxlength="100" name="txtcorreo_contacto[]" value="" />'
+      +'<span class="helper-text" data-error></span>'
+      // +'<label for="txtcorreo_contacto[]">Nombres del Contacto</label>'
+      // +'<small id="txtcorreo_contacto[]-error" class="error red-text"></small>'
       +'</td>'
       +'<td>'
-      +'<input name="txttelefono_contacto[]" value="" />'
-      +'<label for="txttelefono_contacto[]">Nombres del Contacto</label>'
-      +'<small id="txttelefono_contacto[]-error" class="error red-text"></small>'
+      +'<input class="validate" required type="text" id="txttelefono_contacto'+cont+'" patten=".{7,11}" maxlength="11" name="txttelefono_contacto[]" value="" />'
+      +'<span class="helper-text" data-error></span>'
+      // +'<label for="txttelefono_contacto[]">Nombres del Contacto</label>'
+      // +'<small id="txttelefono_contacto[]-error" class="error red-text"></small>'
       +'</td>'
       +'<td>'
       +'<input disabled value="{{ \NodoHelper::returnNodoUsuario() }}" />'
+      +'<label for="nodo">Nodo con contacto</label>'
       +'</td>'
       +'<td>'
       +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
@@ -115,13 +119,27 @@
       processData: false,
       success: function (data) {
         $('button[type="submit"]').removeAttr('disabled');
-        // $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();
+        // console.log(data.fail);
         if (data.fail) {
+          let dataFail = "";
+          let i = 0;
           for (control in data.errors) {
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
+            console.log(data.errors[control]);
+            // $('#' + control + '-error').html(data.errors[control]);
+            // $('#' + control + '-error').show();
+            // dataFail += "" + data.errors[control] + " del Contacto #" + i + "</br>";
+            Swal.fire({
+              title: 'Modificación Errónea!',
+              html: 'Estas ingresando información errónea, por favor verifica los datos.',
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
+            i++;
           }
+          // console.log(dataFail);
         } else if (data.fail == false && data.redirect_url == false) {
           Swal.fire({
             title: 'Modificación Errónea',
@@ -171,22 +189,23 @@
           $("#contactosDeUnaEntidad_table").append(
             '<tr id='+cont+'>'
             +'<td>'
-            +'<input name="txtnombres_contactos[]" value='+value.nombres_contacto+'>'
-            +'<label for="txtnombres_contactos[]">Nombres del Contacto</label>'
-            +'<small id="txtnombres_contactos[]-error" class="error red-text"></small>'
+            +'<input class="validate" required type="text" id="txtnombres_contactos'+cont+'" pattern=".{10,60}" maxlength="60" name="txtnombres_contactos[]" value="'+value.nombres_contacto+'">'
+            // +'<label for="txtnombres_contactos'+cont+'">Nombres del Contacto</label>'
+            +'<span class="helper-text" data-error></span>'
             +'</td>'
             +'<td>'
-            +'<input name="txtcorreo_contacto[]" value='+value.correo_contacto+'>'
-            +'<label for="txtcorreo_contacto[]">Correo del Contacto</label>'
-            +'<small id="txtcorreo_contacto[]-error" class="error red-text"></small>'
+            +'<input class="validate" required type="email" id="txtcorreo_contacto'+cont+'" pattern=".{7,100}" maxlength="100" name="txtcorreo_contacto[]" value="'+value.correo_contacto+'">'
+            // +'<label for="txtcorreo_contacto'+cont+'">Correo del Contacto</label>'
+            +'<span class="helper-text" data-error></span>'
             +'</td>'
             +'<td>'
-            +'<input name="txttelefono_contacto[]" value='+value.telefono_contacto+'>'
-            +'<label for="txttelefono_contacto[]">Teléfono del Contacto</label>'
-            +'<small id="txttelefono_contacto[]-error" class="error red-text"></small>'
+            +'<input class="validate" required type="text" id="txttelefono_contacto'+cont+'" patten=".{7,11}" maxlength="11"  name="txttelefono_contacto[]" value="'+value.telefono_contacto+'">'
+            // +'<label for="txttelefono_contacto'+cont+'">Teléfono del Contacto</label>'
+            +'<span class="helper-text" data-error></span>'
             +'</td>'
             +'<td>'
-            +'<input disabled value='+value.nodo+' />'
+            +'<input disabled id="nodo" value='+value.nodo+' />'
+            // +'<label for="nodo">Nodo con contacto</label>'
             +'</td>'
             +'<td>'
             +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'

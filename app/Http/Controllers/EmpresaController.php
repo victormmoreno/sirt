@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\EmpresaFormRequest;
+use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
 use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion};
-use App\Repositories\Repository\EmpresaRepository;
+use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository};
 use Illuminate\Support\Facades\DB;
-use App\Repositories\Repository\UserRepository\UserRepository;
 use App\Helpers\ArrayHelper;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,11 +14,13 @@ class EmpresaController extends Controller
 {
   private $empresaRepository;
   private $userRepository;
+  private $contactoEntidadRepository;
 
-  public function __construct(EmpresaRepository $empresaRepository, UserRepository $userRepository)
+  public function __construct(EmpresaRepository $empresaRepository, UserRepository $userRepository, ContactoEntidadRepository $contactoEntidadRepository)
   {
     $this->empresaRepository = $empresaRepository;
     $this->userRepository = $userRepository;
+    $this->contactoEntidadRepository = $contactoEntidadRepository;
     $this->middleware([
         'auth',
     ]);
@@ -28,18 +29,20 @@ class EmpresaController extends Controller
 
   public function updateContactosEmpresa(Request $request, $id)
   {
-    $rules = [
-      'txtnombres_contactos.*' => 'nullable|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:10|max:60',
-      'txtcorreo_contacto.*' => 'nullable|email|min:7|max:100',
-      'txttelefono_contacto.*' => 'nullable|numeric|digits_between:7,11',
-    ];
-    $validator = \Validator::make($request->all(), $rules);
-    // dd($validator->errors());
+    $req = new ContactoEntidadFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages(), $req->attributes());
     if ($validator->fails())
     return response()->json([
       'fail' => true,
-      'errors' => $validator->errors()
+      'errors' => $validator->errors(),
+      // 'aditional' => $validator->parseData($validator->attributes()),
     ]);
+    $result = $this->contactoEntidadRepository->update($request, $id);
+    if ($result == false) {
+      return response()->json([
+          'fail' => false
+      ]);
+    }
   }
 
   // Consulta los contactos que tiene un empresa, según el id de la ENTIDAD y el nodo

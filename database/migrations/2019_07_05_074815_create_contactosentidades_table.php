@@ -19,9 +19,9 @@ class CreateContactosentidadesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('entidad_id');
-            $table->string('nombres_contacto',60)->nullable();
-            $table->string('correo_contacto',100)->nullable();
-            $table->string('telefono_contacto', 11)->nullable();
+            $table->string('nombres_contacto',60);
+            $table->string('correo_contacto',100);
+            $table->string('telefono_contacto', 11);
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_contactoentidad_nodos1_idx');

@@ -56,7 +56,15 @@ class Nodo extends Model
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
             ->withTimestamps();
-            
+
+    }
+
+    // Relacion muchos a muchos con entidades
+    public function entidades()
+    {
+        return $this->belongsToMany(Entidad::class, 'contactosentidades')
+            ->withTimestamps()
+            ->withPivot('nombres_contacto', 'correo_contacto', 'telefono_contacto');
     }
 
     /*=====  End of relaciones eloquent  ======*/
