@@ -14,6 +14,8 @@
 Route::get('/', function () {
     // $linea = App\Models\Sublinea::getAllSublineas();
     // dd($linea);
+    // 
+    // dd(Spatie\Permission\Models\Role::where('name', App\User::IsDinamizador())->first()->id);
 
 // $empresa = "1234 - sol de juan";
 // $porciones = explode("-", $empresa);
@@ -407,6 +409,7 @@ Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
+Route::get('/lineas/getlineasnodo/{nodo}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
 Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/

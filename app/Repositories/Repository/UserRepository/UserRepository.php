@@ -5,7 +5,9 @@ namespace App\Repositories\Repository\UserRepository;
 use App\Models\ActivationToken;
 use App\Models\Ciudad;
 use App\Models\Departamento;
+use App\Models\Dinamizador;
 use App\Models\Eps;
+use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
 use App\Models\LineaTecnologica;
@@ -13,9 +15,11 @@ use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Perfil;
 use App\Models\Regional;
+use App\Models\Rols;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class UserRepository
@@ -231,6 +235,75 @@ class UserRepository
     
     /*=====  End of metodo para consultar todas las regionales  ======*/
     
+    /*======================================================
+    =            metodo para guardar un usuario            =
+    ======================================================*/
+    
+    public function Store($request, $password)
+    {
+        DB::beginTransaction();
+        try {
+
+
+            $user = User::create([
+                "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
+                "tipodocumento_id"    => $request->input('txttipo_documento'),
+                "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
+                "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
+                "eps_id"              => $request->input('txteps'),
+                "ciudad_id"           => $request->input('txtciudad'),
+                "nombres"             => $request->input('txtnombres'),
+                "apellidos"           => $request->input('txtapellidos'),
+                "documento"           => $request->input('txtdocumento'),
+                "email"               => $request->input('txtemail'),
+                "barrio"              => $request->input('txtbarrio'),
+                "direccion"           => $request->input('txtdireccion'),
+                "celular"             => $request->input('txtcelular'),
+                "telefono"            => $request->input('txttelefono'),
+                "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
+                "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+                "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
+                "estado"              => User::IsInactive(),
+                "password"            => $password,
+                "estrato"             => $request->input('txtestrato'),
+            ]);
+
+            $user->ocupaciones()->sync($request->get('txtocupaciones'));
+
+            if (collect($request->input('role'))->contains(User::IsAdministrador())) {
+                $user->assignRole(config('laravelpermission.roles.roleAdministrador'));
+            }
+
+            if(collect($request->input('role'))->contains(User::IsDinamizador())){
+                $dinamizador = Dinamizador::create([
+                    "user_id"    => $user->id,
+                    "nodo_id"    => $request->input('txtnododinamizador'),
+                ]);
+
+                $user->assignRole(config('laravelpermission.roles.roleDinamizador'));
+            }
+
+            if(collect($request->input('role'))->contains(User::IsGestor())){
+                $gestor = Gestor::create([
+                    "user_id"    => $user->id,
+                    "nodo_id"    => $request->input('txtnodogestor'),
+                    "lineatecnologica_id"    => $request->input('txtlinea'),
+                    "honorarios"    => $request->input('txthonorario'),
+                ]);
+            }
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;
+        }
+        
+
+        
+    }
+    
+    /*=====  End of metodo para guardar un usuario  ======*/
     
     
     

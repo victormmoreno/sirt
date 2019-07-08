@@ -54,7 +54,7 @@ class PerfilesTableSeeder extends Seeder
 
         Perfil::create([
             'id'     => 9,
-            'nombre' => 'Empleador independiente',
+            'nombre' => 'Emprendedor independiente',
         ]);
 
         Perfil::create([

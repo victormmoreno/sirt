@@ -15,7 +15,7 @@ class Perfil extends Model
     const IS_FUNCIONARIO_MICROEMPRESA  = 'Funcionario microempresa';
     const IS_FUNCIONARIO_MEDIANA_EMPRESA  = 'Funcionario mediana empresa';
     const IS_FUNCIONARIO_FUNCIONARIO_GRANDE_EMPRESA  = 'Funcionario grande empresa';
-    const IS_EMPLEADOR_INDEPENDIENTE  = 'Empleador independiente';
+    const IS_EMPLEADOR_INDEPENDIENTE  = 'Emprendedor independiente';
     const IS_OTRO  = 'Otro';
 
     protected $table = 'perfiles';

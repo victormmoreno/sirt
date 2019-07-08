@@ -44,7 +44,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.administrador.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                <form action="{{ route('usuario.usuarios.store')}}" method="POST" onsubmit="return checkSubmit()">
                                     @include('users.administrador.form', [
                                         'btnText' => 'Guardar',
                                     ])
@@ -71,7 +71,8 @@ $(document).ready(function() {
   
     roles.getRoleSeleted();
     @if($errors->any())
-        UserAdministradorCreate.getCiudad();
+        linea.getSelectLineaForNodo();
+        UserCreate.getCiudad();
     @endif
 
 });
@@ -150,19 +151,10 @@ var regional = {
 var roles = {
     getRoleSeleted:function (idrol) {
         let role = $(idrol).val();
-
-        // console.log($(idrol).prop('checked') );
-
-        // if(!$(idrol).prop('checked') && role !== 'Dinamizador'){
-        //     $('#dinamizador').hide();
-        // }else if($(idrol).prop('checked') && role === 'Dinamizador'){
-        //     $('#dinamizador').show();
-        // }else{
-        //     $('#dinamizador').hide();
-        // }
         $('#dinamizador').hide();
         $('#gestor').hide();
         $('#infocenter').hide();
+        $('#talento').hide();
         $("input[type=checkbox]:checked").each(function(){
         //cada elemento seleccionado
         // console.log($(this).val());
@@ -173,6 +165,8 @@ var roles = {
                 $('#gestor').show();
             }else if($(this).val() == 'Infocenter'){
                 $('#infocenter').show();
+            }else if($(this).val() == 'Talento'){
+                $('#talento').show();
             }
             
             
@@ -182,7 +176,36 @@ var roles = {
     }
 };
 
-var UserAdministradorCreate = {
+var linea = {
+    getSelectLineaForNodo:function(){
+      let nodo = $('#txtnodogestor').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/lineas/getlineasnodo/'+nodo
+      }).done(function(response){
+        console.log(response.lineasForNodo.lineas);
+        $('#txtlinea').empty();
+        if (response.lineasForNodo.lineas == '') {
+            $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
+        }else{
+            
+            $('#txtlinea').append('<option value="">Seleccione la linea</option>');
+
+            $.each(response.lineasForNodo.lineas, function(i, e) {
+
+                $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+            });
+        }
+        
+        
+        
+        $('#txtlinea').material_select();
+      });
+    },
+  }
+
+var UserCreate = {
     getCiudad:function(){
       let id;
       id = $('#txtdepartamento').val();
@@ -194,7 +217,6 @@ var UserAdministradorCreate = {
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
           $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())
@@ -203,7 +225,7 @@ var UserAdministradorCreate = {
         $('#txtciudad').material_select();
       });
     },
-  }
+}
 
 
 </script>

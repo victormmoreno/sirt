@@ -89,6 +89,20 @@ class LineaTecnologica extends Model
     
     /*=====  End of scope para seleccionar todas las lineas  ======*/
 
+    /*================================================================
+    =            scope para consultar las lineas por nodo            =
+    ================================================================*/
+    
+    public function scopeAllLineasForNodo($query, $nodo)
+    {
+        return $query->with(['nodos'])->find($nodo);
+    
+    }
+    
+    
+    /*=====  End of scope para consultar las lineas por nodo  ======*/
+    
+
     
     
     

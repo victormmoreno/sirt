@@ -34,23 +34,23 @@
         <div class="col s12 m12 l12">
             <ul class="collection with-header">
                 <li class="collection-header center"><h6><b>Roles</b></h6></li>
-                @forelse($roles as $role)
+
+                @forelse($roles as  $name)
                     <li class="collection-item">
                         <p class="p-v-xs">
-                            <input type="checkbox" name="role" {{collect(old('role'))->contains($role) ? 'checked' : ''  }} value="{{$role}}" id="test-{{$role}}" onchange="roles.getRoleSeleted(this)"> 
-                            <label for="test-{{$role}}">{{$role}}</label>
+                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
+                            <label for="test-{{$name}}">{{$name}}</label>
                         </p>
                     </li>
                 @empty
                 <p>No tienes roles asignados</p>
                 @endforelse
             </ul>
-
-            @if ($errors->any())
-                @error('role')
-                    <label id="role-error" class="error" for="role">{{ $message }}</label>
-                 @enderror
-            @endif
+            @error('role')
+                <div class="center">
+                    <label class="red-text error">{{ $message }}</label>
+                </div> 
+            @enderror
         </div>
         <div id="dinamizador">
             <div class="input-field col s12 m12 l12">
@@ -68,14 +68,14 @@
                 </select>
                 <label for="txtnododinamizador">Nodo Dinamizador<span class="red-text">*</span></label>
                 @error('txtnododinamizador')
-                    <label id="txtnododinamizador-error" class="error" for="txtnododinamizador">{{ $message }}</label>
+                    <label id="txtnododinamizador-error" class="error red-text" for="txtnododinamizador">{{ $message }}</label>
                 @enderror
             </div>
         </div>
         <div id="gestor">
             <div class="input-field col s12 m12 l12">
 
-                <select class="" id="txtnodogestor" name="txtnodogestor" onchange="UserGestorCreate.getLineasPorNodo()" style="width: 100%" tabindex="-1">
+                <select class="" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
                     <option value="">Seleccione Nodo</option>
 
                     @foreach($nodos as $id => $nodo)
@@ -109,7 +109,7 @@
             
                 <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}">
                 <label for="txthonorario">Honorario <span class="red-text">*</span></label>
-                <small>ingrese el valor separado por puntos (.)</small> 
+                <small>ingrese el valor separado por puntos (.)</small><br>
                 @error('txthonorario')
                     <label id="txthonorario-error" class="error" for="txthonorario">{{ $message }}</label>
                 @enderror
@@ -135,6 +135,15 @@
                     <label id="txtnodoinfocenter-error" class="error" for="txtnodoinfocenter">{{ $message }}</label>
                 @enderror
             </div>
+            <div class="input-field col s12 m12 l12">
+            
+                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txtextension')}}">
+                <label for="txtextension">Extensión <span class="red-text">*</span></label>
+                @error('txtextension')
+                    <label id="txtextension-error" class="error" for="txtextension">{{ $message }}</label>
+                @enderror
+            </div> 
+        
         </div>
 
     </div>
@@ -287,7 +296,7 @@
             details
         </i>
         @if(isset($user->ciudad->departamento->id))
-        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministradorEdit.getCiudad()" style="width: 100%" tabindex="-1">
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
             <option value="">Seleccione departamento</option>
             @foreach($departamentos as $value)
                 @if(isset($user->ciudad->departamento->id))
@@ -298,7 +307,7 @@
             @endforeach
         </select>
         @else
-        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserAdministradorCreate.getCiudad()" style="width: 100%" tabindex="-1">
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
             <option value="">Seleccione departamento</option>
             @foreach($departamentos as $value)
                 @if(isset($user->ciudad->departamento->id))

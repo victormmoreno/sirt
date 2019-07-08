@@ -6,11 +6,14 @@ use Alert;
 use App\Http\Requests\LineaFormRequest;
 use App\Models\LineaTecnologica;
 use App\Models\Rols;
+use App\Repositories\Repository\LineaRepository;
 use Illuminate\Http\Request;
 
 class LineaController extends Controller
 {
-    public function __construct()
+    public $lineaRepository;
+
+    public function __construct(LineaRepository $lineaRepository)
     {
        
         $this->middleware([
@@ -22,7 +25,27 @@ class LineaController extends Controller
                 .config('laravelpermission.permissions.linea.edit'),
             
         ]);
+
+        $this->lineaRepository = $lineaRepository;
+
     }
+
+
+    /*=====================================================================
+    =            metodo API para consultar las lineas por nodo            =
+    =====================================================================*/
+    
+    public function getAllLineasForNodo($nodo)
+    {
+       
+        return response()->json([
+            'lineasForNodo' =>  $this->lineaRepository->getAllLineaNodo($nodo),
+        ]);
+    }
+    
+    
+    /*=====  End of metodo API para consultar las lineas por nodo  ======*/
+    
 
     /**
      * Display a listing of the resource.

@@ -2,24 +2,12 @@
 
 namespace App;
 
-use App\Models\ActivationToken;
-use App\Models\Ciudad;
-use App\Models\Dinamizador;
-use App\Models\Eps;
-use App\Models\Gestor;
-use App\Models\GradoEscolaridad;
-use App\Models\GrupoSanguineo;
-use App\Models\GrupoSanquineo;
-use App\Models\Infocenter;
-use App\Models\Ingreso;
-use App\Models\Ocupacion;
-use App\Models\Rols;
-use App\Models\Talento;
-use App\Models\TipoDocumento;
+use App\Http\Traits\UsersTrait;
+use App\Models\{ActivationToken,Ciudad,Dinamizador,Eps,Gestor,GradoEscolaridad,GrupoSanguineo,Infocenter,Ingreso,Ocupacion,Rols,Talento,TipoDocumento};
+
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
@@ -28,15 +16,21 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
 
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles, UsersTrait;
 
     const IS_MASCULINO = 1;
     const IS_FEMENINO  = 0;
     const IS_ACTIVE    = true;
     const IS_INACTIVE  = false;
-    // const ESTRATO = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6');
+    const IS_ADMINISTRADOR = "Administrador";
+    const IS_DINAMIZADOR = "Dinamizador";
+    const IS_GESTOR = "Gestor";
+    const IS_INFOCENTER = "Infocenter";
+    const IS_TALENTO = "Talento";
+    const IS_INGRESO = "Ingreso";
+    const IS_PROVEEDOR = "Proveedor";
 
-    // protected $appends = ['nombre_completo','apellidos','nombres'];
+    
     protected $appends = ['nombre_completo'];
 
     protected $dates = [
@@ -93,76 +87,14 @@ class User extends Authenticatable implements JWTSubject
         'fechanacimiento'   => 'date:Y-m-d',
     ];
 
-    public function getRouteKeyName()
-    {
-        return 'documento'; // db column name
-    }
-
-    public static function IsMasculino()
-    {
-        return User::IS_MASCULINO;
-    }
-    public static function IsFemenino()
-    {
-        return User::IS_FEMENINO;
-    }
-
-    public static function IsActive()
-    {
-        return User::IS_ACTIVE;
-    }
-    public static function IsInactive()
-    {
-        return User::IS_INACTIVE;
-    }
-
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = Hash::make($password);
-    }
-
-    /*==============================================
-    =            mutador para el nombre            =
-    ==============================================*/
-
-    public function setNombresAttribute($nombres)
-    {
-        $this->attributes['nombres'] = strtolower($nombres);
-        $this->attributes['nombres'] = ucfirst($nombres);
-    }
-
-    // public function getNombresAttribute()
-    // {
-    //     return ucfirst(strtolower($this->nombres));
-    // }
-
-    /*=====  End of mutador para el nombre  ======*/
-
-    /*================================================
-    =            mutador para el apellido            =
-    ================================================*/
-
-    public function setApellidosAttribute($apellidos)
-    {
-        $this->attributes['apellidos'] = strtolower($apellidos);
-        $this->attributes['apellidos'] = ucfirst($apellidos);
-    }
-
-    // public function getApellidosAttribute()
-    // {
-    //     return ucfirst(strtolower($this->apellidos));
-    // }
-
-    /*=====  End of mutador para el apellido  ======*/
-
-    public function getNombreCompletoAttribute()
-    {
-        return ucfirst(strtolower($this->nombres)) . ' ' . ucfirst(strtolower($this->apellidos));
-    }
-
+    
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
+    public function users()
+    {
+      return $this->hasMany(User::class, 'rol_id', 'id');
+    }
 
     //relaciones muchos a muchos
 
@@ -228,67 +160,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
 
-    /*=====  End of relaciones eloquent  ======*/
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    // public function sendPasswordResetNotification($token)
-    // {
-    //     $this->notify((new ResetPasswordNotification($token))->send('authentication'));
-    //     // $this->notify((new ResetPasswordNotification($token))->onQueue('authentication')->delay(now()->addMinutes(10)));
-    //     // \Notification::send($this, new ResetPasswordNotification($token));
-    // }
-
-    public function activate()
-    {
-        $this->update(['estado' => true]);
-
-        Auth::login($this);
-
-        $this->token->delete();
-    }
-
     public function token()
     {
         return $this->hasOne(ActivationToken::class);
     }
 
-    public function generateToken()
-    {
-        $this->token()->create([
-            'token' => str_random(60),
-        ]);
+    /*=====  End of relaciones eloquent  ======*/
 
-        return $this;
-
-    }
-
-    /*================================================================
-    =            metodo para generar contraseña aleatoria            =
-    ================================================================*/
-    public static function generatePasswordRamdom()
-    {
-        return str_random(9);
-    }
-
-    /*=====  End of metodo para generar contraseña aleatoria  ======*/
 
     public function scopeInfoUserNodo($query, $role, $nodo)
     {
@@ -298,16 +176,5 @@ class User extends Authenticatable implements JWTSubject
             ->role($role)
             ->where('nodos.id', '=', $nodo);
     }
-
-    /*=================================================================
-    =            ejemplo para preguntar por fechas futuras            =
-    =================================================================*/
-
-    public function isUpdated()
-    {
-        return !is_null($this->updated_at) && $this->updated_at < today();
-    }
-
-    /*=====  End of ejemplo para preguntar por fechas futuras  ======*/
 
 }
