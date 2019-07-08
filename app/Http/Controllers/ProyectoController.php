@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 
 class ProyectoController extends Controller
 {
+
+  public function __construct()
+  {
+    $this->middleware([
+      'auth',
+    ]);
+  }
   /**
   * Display a listing of the resource.
   *
@@ -15,12 +22,12 @@ class ProyectoController extends Controller
   {
     switch (auth()->user()->rol()->first()->nombre) {
       case 'Gestor':
-        return view('proyectos.gestor.index');
-        break;
+      return view('proyectos.gestor.index');
+      break;
 
       default:
       // code...
-        break;
+      break;
     }
   }
 
@@ -31,7 +38,16 @@ class ProyectoController extends Controller
   */
   public function create()
   {
-    //
+    switch (auth()->user()->rol()->first()->nombre) {
+      case 'Gestor':
+      // dd();
+      return view('proyectos.gestor.create');
+      break;
+
+      default:
+      // code...
+      break;
+    }
   }
 
   /**

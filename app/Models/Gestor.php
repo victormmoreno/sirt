@@ -40,6 +40,12 @@ class Gestor extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
+    // Relación con la tabla de líneas tecnológicas
+    public function lineatecnologica()
+    {
+        return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
+    }
+
     // Relación a la tabla de articulaciones
     public function articulaciones()
     {

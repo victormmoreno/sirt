@@ -352,6 +352,7 @@ Route::group(
   ],
   function () {
     Route::get('/', 'ProyectoController@index')->name('proyecto');
+    Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
   }
 );
 

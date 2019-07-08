@@ -18,7 +18,7 @@
                     </div>
                     <div class="col s12 m2 l2">
                       <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                        <a href="" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nuevo Proyecto">
+                        <a href="{{route('proyecto.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nuevo Proyecto">
                           <i class="material-icons">library_add</i>
                         </a>
                       </div>
@@ -29,16 +29,16 @@
                     <div class="row">
                       <div class="col s12 m12 l12">
                         <div class="input-field col s12 m12 l12">
-                          <select class="js-states"  tabindex="-1" style="width: 100%" id="txtanhoProyectosGestor" name="txtanhoProyectosGestor" onchange="proyectosPorAnho();">
+                          <select class="js-states"  tabindex="-1" style="width: 100%" id="proyectoPorAnhoGestorNodo" name="proyectoPorAnhoGestorNodo" onchange="proyectosPorAnhoGestorNodo();">
                             {!!
                               $year = Carbon\Carbon::now();
                               $year = $year->isoFormat('YYYY');
                             !!}
                             @for ($i=2016; $i <= $year; $i++)
-                                <option value="{{$i}}">{{$i}}</option>
+                                <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
                             @endfor
                           </select>
-                          <label for="txtanhoProyectosGestor">Seleccione el Año</label>
+                          <label for="proyectoPorAnhoGestorNodo">Seleccione el Año</label>
                         </div>
                       </div>
                     </div>
@@ -54,7 +54,7 @@
       </div>
       <!--boton de abajo -->
       <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href=""  class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Proyecto">
+        <a href="{{route('proyecto.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Proyecto">
           <i class="material-icons">library_add</i>
         </a>
       </div>
