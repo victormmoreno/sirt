@@ -7,6 +7,25 @@ use Illuminate\Support\Facades\DB;
 
 class GrupoInvestigacionRepository
 {
+
+  // Consulta los contactos que tiene el nodo con las empresas
+  public function consultarContactosPorNodoDeUnGrupo($identidad, $idnodo)
+  {
+    return GrupoInvestigacion::select(
+      'contactosentidades.nombres_contacto',
+      'contactosentidades.correo_contacto',
+      'contactosentidades.telefono_contacto',
+      'nodos.nombre AS nodo',
+      'nodos.id'
+      )
+      ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+      ->join('contactosentidades', 'contactosentidades.entidad_id', '=', 'entidades.id')
+      ->join('nodos', 'nodos.id', '=', 'contactosentidades.nodo_id')
+      ->where('nodos.id', $idnodo)
+      ->where('entidades.id', $identidad)
+      ->groupBy('contactosentidades.id')
+      ->get();
+  }
   // Consulta los detalles de una empresa
   public function consultarDetalleDeUnGrupoDeInvestigacion($id)
   {
@@ -43,9 +62,9 @@ class GrupoInvestigacionRepository
       $grupo->codigo_grupo = strtoupper($request->input('txtcodigo_grupo'));
       $grupo->tipogrupo = $request->input('txttipogrupo');
       $grupo->institucion = $request->input('txtinstitucion');
-      $grupo->nombres_contacto = $request->input('txtnombres_contacto');
-      $grupo->correo_contacto = $request->input('txtcorreo_contacto');
-      $grupo->telefono_contacto = $request->input('txttelefono_contacto');
+      // $grupo->nombres_contacto = $request->input('txtnombres_contacto');
+      // $grupo->correo_contacto = $request->input('txtcorreo_contacto');
+      // $grupo->telefono_contacto = $request->input('txttelefono_contacto');
       $grupo->update();
       return $grupo;
     });
@@ -68,9 +87,9 @@ class GrupoInvestigacionRepository
         'tipogrupo' => $request->input('txttipogrupo'),
         'estado' => GrupoInvestigacion::IsActive(),
         'institucion' => $request->input('txtinstitucion'),
-        'nombres_contacto' => $request->input('txtnombres_contacto'),
-        'correo_contacto' => $request->input('txtcorreo_contacto'),
-        'telefono_contacto' => $request->input('txttelefono_contacto'),
+        // 'nombres_contacto' => $request->input('txtnombres_contacto'),
+        // 'correo_contacto' => $request->input('txtcorreo_contacto'),
+        // 'telefono_contacto' => $request->input('txttelefono_contacto'),
       ]);
     });
   }

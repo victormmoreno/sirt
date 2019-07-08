@@ -23,7 +23,7 @@ class CreateProyectosTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedInteger('ideas_id');
+            $table->unsignedInteger('idea_id');
             $table->unsignedInteger('sector_id');
             $table->unsignedInteger('sublinea_id');
             $table->unsignedInteger('areaconocimiento_id');

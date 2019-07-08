@@ -99,7 +99,7 @@
       +'</td>'
       +'<td>'
       +'<input disabled value="{{ \NodoHelper::returnNodoUsuario() }}" />'
-      +'<label for="nodo">Nodo con contacto</label>'
+      // +'<label for="nodo">Nodo con contacto</label>'
       +'</td>'
       +'<td>'
       +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
@@ -122,28 +122,9 @@
         $('.error').hide();
         // console.log(data.fail);
         if (data.fail) {
-          let dataFail = "";
-          let i = 0;
-          for (control in data.errors) {
-            console.log(data.errors[control]);
-            // $('#' + control + '-error').html(data.errors[control]);
-            // $('#' + control + '-error').show();
-            // dataFail += "" + data.errors[control] + " del Contacto #" + i + "</br>";
-            Swal.fire({
-              title: 'Modificación Errónea!',
-              html: 'Estas ingresando información errónea, por favor verifica los datos.',
-              type: 'error',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Ok'
-            });
-            i++;
-          }
-          // console.log(dataFail);
-        } else if (data.fail == false && data.redirect_url == false) {
           Swal.fire({
-            title: 'Modificación Errónea',
-            text: 'La articulación no se ha modificado, por favor inténtalo de nuevo',
+            title: 'Modificación Errónea!',
+            html: 'Estas ingresando información errónea, por favor verifica los datos.',
             type: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
@@ -152,15 +133,15 @@
         } else {
           Swal.fire({
             title: '<b>Modificación Exitosa</b>',
-            html: "La articulación ha sido modificada satisfactoriamente",
+            html: "Los contactos de la empresa han sido modificados satisfactoriamente",
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
           });
-          // setTimeout(function(){
-          //   window.location.replace("");
-          // }, 1000);
+          setTimeout(function(){
+            window.location.replace("empresa");
+          }, 1000);
         }
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -175,50 +156,42 @@
       type:'get',
       url:'/empresa/ajaxContactosDeUnaEntidad/'+id
     }).done(function (response) {
-      if (response.contactos.length == 0) {
-        Swal.fire(
-          'Ups!!',
-          'No se han encontrado contactos con esta empresa!',
-          'warning'
+      $("#contactosDeUnaEntidad_titulo").empty();
+      $("#contactosDeUnaEntidad_table").empty();
+      $("#contactosDeUnaEntidad_titulo").append("<span class='cyan-text text-darken-3'>Datos de los Contactos </span><br>");
+      $.each(response.contactos, function( index, value ) {
+        $("#contactosDeUnaEntidad_table").append(
+          '<tr id='+cont+'>'
+          +'<td>'
+          +'<input class="validate" required type="text" id="txtnombres_contactos'+cont+'" pattern=".{10,60}" maxlength="60" name="txtnombres_contactos[]" value="'+value.nombres_contacto+'">'
+          // +'<label for="txtnombres_contactos'+cont+'">Nombres del Contacto</label>'
+          +'<span class="helper-text" data-error></span>'
+          +'</td>'
+          +'<td>'
+          +'<input class="validate" required type="email" id="txtcorreo_contacto'+cont+'" pattern=".{7,100}" maxlength="100" name="txtcorreo_contacto[]" value="'+value.correo_contacto+'">'
+          // +'<label for="txtcorreo_contacto'+cont+'">Correo del Contacto</label>'
+          +'<span class="helper-text" data-error></span>'
+          +'</td>'
+          +'<td>'
+          +'<input class="validate" required type="text" id="txttelefono_contacto'+cont+'" patten=".{7,11}" maxlength="11"  name="txttelefono_contacto[]" value="'+value.telefono_contacto+'">'
+          // +'<label for="txttelefono_contacto'+cont+'">Teléfono del Contacto</label>'
+          +'<span class="helper-text" data-error></span>'
+          +'</td>'
+          +'<td>'
+          +'<input disabled id="nodo" value='+value.nodo+' />'
+          // +'<label for="nodo">Nodo con contacto</label>'
+          +'</td>'
+          +'<td>'
+          +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
+          +'</td>'
+          +'</tr>'
         );
-      } else {
-        $("#contactosDeUnaEntidad_titulo").empty();
-        $("#contactosDeUnaEntidad_table").empty();
-        $("#contactosDeUnaEntidad_titulo").append("<span class='cyan-text text-darken-3'>Datos de los Contactos </span><br>");
-        $.each(response.contactos, function( index, value ) {
-          $("#contactosDeUnaEntidad_table").append(
-            '<tr id='+cont+'>'
-            +'<td>'
-            +'<input class="validate" required type="text" id="txtnombres_contactos'+cont+'" pattern=".{10,60}" maxlength="60" name="txtnombres_contactos[]" value="'+value.nombres_contacto+'">'
-            // +'<label for="txtnombres_contactos'+cont+'">Nombres del Contacto</label>'
-            +'<span class="helper-text" data-error></span>'
-            +'</td>'
-            +'<td>'
-            +'<input class="validate" required type="email" id="txtcorreo_contacto'+cont+'" pattern=".{7,100}" maxlength="100" name="txtcorreo_contacto[]" value="'+value.correo_contacto+'">'
-            // +'<label for="txtcorreo_contacto'+cont+'">Correo del Contacto</label>'
-            +'<span class="helper-text" data-error></span>'
-            +'</td>'
-            +'<td>'
-            +'<input class="validate" required type="text" id="txttelefono_contacto'+cont+'" patten=".{7,11}" maxlength="11"  name="txttelefono_contacto[]" value="'+value.telefono_contacto+'">'
-            // +'<label for="txttelefono_contacto'+cont+'">Teléfono del Contacto</label>'
-            +'<span class="helper-text" data-error></span>'
-            +'</td>'
-            +'<td>'
-            +'<input disabled id="nodo" value='+value.nodo+' />'
-            // +'<label for="nodo">Nodo con contacto</label>'
-            +'</td>'
-            +'<td>'
-            +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
-            +'</td>'
-            +'</tr>'
-          );
-          cont++;
-        });
-        // console.log(response.route);
-        $('#frmContactosEntidades').attr('action', response.route);
-        // form.attr("action", response.ruta);
-        $('#contactosDeUnaEntidad_modal').openModal();
-      }
+        cont++;
+      });
+      // console.log(response.route);
+      $('#frmContactosEntidades').attr('action', response.route);
+      // form.attr("action", response.ruta);
+      $('#contactosDeUnaEntidad_modal').openModal();
     })
   }
 

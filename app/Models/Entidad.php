@@ -25,14 +25,6 @@ class Entidad extends Model
         return $this->hasOne(Centro::class, 'entidad_id', 'id');
     }
 
-    // Relacion muchos a muchos con nodos
-    public function nodos()
-    {
-        return $this->belongsToMany(Nodos::class, 'contactosentidades')
-            ->withTimestamps()
-            ->withPivot('nombres_contacto', 'correo_contacto', 'telefono_contacto');
-    }
-
     public function empresa()
     {
         return $this->hasOne(Empresa::class, 'entidad_id', 'id');

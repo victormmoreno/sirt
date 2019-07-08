@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class GrupoInvestigacion extends Model
 {
 
-    const IS_INTERNO  = 1; //ES INTENERNO SI ES DEL SENA
     const IS_EXTERNO  = 0; //ES EXTERNO SI ES DE OTRA INSTITUCION
-    const IS_ACTIVE   = 1; // ES ACTIVO EL GRUPO DE INVESTIGACIÓN
+    const IS_INTERNO  = 1; //ES INTENERNO SI ES DEL SENA
     const IS_INACTIVE = 0; // ES INACTIVO EL GRUPO DE INVESTIGACIÓN
+    const IS_ACTIVE   = 1; // ES ACTIVO EL GRUPO DE INVESTIGACIÓN
 
     protected $table = 'gruposinvestigacion';
 
@@ -26,9 +26,9 @@ class GrupoInvestigacion extends Model
         'tipogrupo',
         'estado',
         'institucion',
-        'nombres_contacto',
-        'correo_contacto',
-        'telefono_contacto',
+        // 'nombres_contacto',
+        // 'correo_contacto',
+        // 'telefono_contacto',
     ];
 
 
@@ -54,7 +54,14 @@ class GrupoInvestigacion extends Model
     // Consultas scope para la tabla de grupos de investigación
     public function scopeConsultarGruposDeInvestigaciónTecnoparque($query)
     {
-      return $query->select('codigo_grupo', 'entidades.nombre', 'institucion', 'clasificacionescolciencias.nombre AS clasificacioncolciencias', 'gruposinvestigacion.id')
+      return $query->select(
+        'codigo_grupo',
+        'entidades.nombre',
+        'institucion',
+        'clasificacionescolciencias.nombre AS clasificacioncolciencias',
+        'gruposinvestigacion.id',
+        'entidades.id AS id_entidad'
+        )
       ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
       ->selectRaw('IF(tipogrupo = ' . $this->IsInterno() . ', "Interno", "Externo") AS tipo_grupo')
       ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')

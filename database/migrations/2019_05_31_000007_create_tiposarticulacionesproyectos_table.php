@@ -23,7 +23,7 @@ class CreateTiposarticulacionesproyectosTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombre', 30);
+            $table->string('nombre', 50);
             $table->timestamps();
             $table->unique(["nombre"], 'nombre_UNIQUE');
         });

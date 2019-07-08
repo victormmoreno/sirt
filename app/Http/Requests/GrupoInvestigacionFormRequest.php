@@ -32,9 +32,9 @@ class GrupoInvestigacionFormRequest extends FormRequest
       'txtinstitucion' => 'required|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
       'txtdepartamento' => 'required',
       'txtciudad_id' => 'required',
-      'txtnombres_contacto' => 'nullable|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:10|max:60',
-      'txtcorreo_contacto' => 'nullable|email|min:7|max:100',
-      'txttelefono_contacto' => 'nullable|numeric|digits_between:7,11',
+      // 'txtnombres_contacto' => 'nullable|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:10|max:60',
+      // 'txtcorreo_contacto' => 'nullable|email|min:7|max:100',
+      // 'txttelefono_contacto' => 'nullable|numeric|digits_between:7,11',
     ];
   }
 
@@ -69,16 +69,16 @@ class GrupoInvestigacionFormRequest extends FormRequest
       // Mensajes personalizados para el campo de ciudad del grupo de investigación
       'txtciudad_id' => 'El :attribute es obligatorio.',
       // Mensajes personalizados para el campo de nombres del contacto
-      'txtnombres_contacto.regex' => 'El formato del campo <b>:attribute</b> es incorrecto.',
-      'txtnombres_contacto.min' => 'El :attribute debe ser mínimo de 10 caracteres.',
-      'txtnombres_contacto.max' => 'El :attribute debe ser máximo de 60 caracteres.',
-      // Mensajes personalizados paa el campo de email del contato
-      'email_contacto.email' => 'El formato del campo :attribute es incorrecto.',
-      'email_contacto.min' => 'El :attribute debe ser mínimo de 7 caracteres.',
-      'email_contacto.max' => 'El :attribute debe ser máximo de 100 caracteres.',
-      // Mensajes personalizados para el campo telefono del contacto
-      'telefono_contacto.numeric' => 'El :attribute debe ser numérico',
-      'telefono_contacto.digits_between' => 'El :attribute debe tener entre 7 y 11 digitos',
+      // 'txtnombres_contacto.regex' => 'El formato del campo <b>:attribute</b> es incorrecto.',
+      // 'txtnombres_contacto.min' => 'El :attribute debe ser mínimo de 10 caracteres.',
+      // 'txtnombres_contacto.max' => 'El :attribute debe ser máximo de 60 caracteres.',
+      // // Mensajes personalizados paa el campo de email del contato
+      // 'email_contacto.email' => 'El formato del campo :attribute es incorrecto.',
+      // 'email_contacto.min' => 'El :attribute debe ser mínimo de 7 caracteres.',
+      // 'email_contacto.max' => 'El :attribute debe ser máximo de 100 caracteres.',
+      // // Mensajes personalizados para el campo telefono del contacto
+      // 'telefono_contacto.numeric' => 'El :attribute debe ser numérico',
+      // 'telefono_contacto.digits_between' => 'El :attribute debe tener entre 7 y 11 digitos',
       ];
     }
 
@@ -93,9 +93,9 @@ class GrupoInvestigacionFormRequest extends FormRequest
       'txtinstitucion' => 'Institución que avala',
       'txtdepartamento' => 'Departamento del Grupo de Investigación',
       'txtciudad_id' => 'Ciudad del Grupo de Investigación',
-      'txtnombres_contacto' => 'Nombre del Contacto',
-      'email_contacto' => 'Email del Contacto',
-      'telefono_contacto' => 'Teléfono del Contacto',
+      // 'txtnombres_contacto' => 'Nombre del Contacto',
+      // 'email_contacto' => 'Email del Contacto',
+      // 'telefono_contacto' => 'Teléfono del Contacto',
       ];
     }
   }

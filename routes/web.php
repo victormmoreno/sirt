@@ -309,6 +309,8 @@ Route::group([
         Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');
         Route::get('/{id}/edit', 'GrupoInvestigacionController@edit')->name('grupo.edit');
         Route::get('/ajaxDetallesDeUnGrupoInvestigacion/{id}', 'GrupoInvestigacionController@detallesDeUnGrupoInvestigacion')->name('grupo.detalle');
+        Route::get('/ajaxContactosDeUnaEntidad/{identidad}', 'GrupoInvestigacionController@contactosDelGrupoPorNodo')->name('grupo.contactos.nodo');
+        Route::put('/updateContactoDeUnGrupo/{id}', 'GrupoInvestigacionController@updateContactosGrupo')->name('grupo.update.contactos');
         Route::put('/{id}', 'GrupoInvestigacionController@update')->name('grupo.update');
         Route::post('/', 'GrupoInvestigacionController@store')->name('grupo.store');
     }
@@ -340,6 +342,17 @@ Route::group([
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy');
 
     }
+);
+
+//Route group para el módulo de proyectos
+Route::group(
+  [
+    'prefix' => 'proyecto',
+    'middleware' => 'auth'
+  ],
+  function () {
+    Route::get('/', 'ProyectoController@index')->name('proyecto');
+  }
 );
 
 //-------------------Route group para todos los pdfs de la aplicacion

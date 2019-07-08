@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
-use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion};
+use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion, ContactoEntidad};
 use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository};
 use Illuminate\Support\Facades\DB;
 use App\Helpers\ArrayHelper;

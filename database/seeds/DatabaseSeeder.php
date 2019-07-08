@@ -60,6 +60,7 @@ class DatabaseSeeder extends Seeder
                 'estadosidea',
                 'sectores',
                 'tiposarticulaciones',
+                'tiposarticulacionesproyectos',
                 'perfiles',
                 'rols',//tabla vieja
                 'estadosproyecto',

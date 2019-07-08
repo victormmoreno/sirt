@@ -27,7 +27,6 @@ class EmpresaFormRequest extends FormRequest
     return [
       'nombre' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
       'nit' => 'required|numeric|digits_between:6,45|unique:empresas,nit,'.$this->route('id'),
-      // 'nit' => Rule::requiredIf(auth()->user()->rol()->first()->nombre == 'Gestor'),
       'email_entidad' => 'email|nullable|min:7|max:200',
       'direccion' => 'required|min:1|max:100',
       'txtdepartamento' => 'required',
@@ -39,7 +38,6 @@ class EmpresaFormRequest extends FormRequest
   public function messages()
   {
     return $messages = [
-      //
       'nombre.required' => 'El :attribute es obligatorio.',
       'nombre.min' => 'El :attribute debe ser mínimo de 1 caracter.',
       'nombre.max' => 'El :attribute debe ser máximo de 300 caracteres.',
@@ -64,17 +62,6 @@ class EmpresaFormRequest extends FormRequest
       'txtciudad_id' => 'La :attribute es obligatoria.',
 
       'txtsector' => 'El :attribute es obligatorio.',
-
-      'nombre_contacto.regex' => 'El formato del campo :attribute es incorrecto.',
-      'nombre_contacto.min' => 'El :attribute debe ser mínimo de 10 caracteres.',
-      'nombre_contacto.max' => 'El :attribute debe ser máximo de 60 caracteres.',
-
-      'email_contacto.email' => 'El formate del campo :attribute es incorrecto.',
-      'email_contacto.min' => 'El :attribute debe ser mínimo de 7 caracteres.',
-      'email_contacto.max' => 'El :attribute debe ser máximo de 100 caracteres.',
-
-      'telefono_contacto.numeric' => 'El :attribute debe ser numérico',
-      'telefono_contacto.digits_between' => 'El :attribute debe tener entre 7 y 11 digitos',
       ];
     }
 
@@ -88,9 +75,6 @@ class EmpresaFormRequest extends FormRequest
       'txtdepartamento' => 'Departamento de la Empresa',
       'txtciudad_id' => 'Ciudad de la Empresa',
       'txtsector' => 'Sector de la Empresa',
-      'nombre_contacto' => 'Nombre del Contacto',
-      'email_contacto' => 'Email del Contacto',
-      'telefono_contacto' => 'Teléfono del Contacto',
       ];
     }
   }

@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{Entidad, Nodo};
+use App\Models\{Entidad, Nodo, ContactoEntidad};
 use Carbon\Carbon;
 
 class ContactoEntidadRepository
@@ -12,33 +12,28 @@ class ContactoEntidadRepository
   // Modifica un articulación
   public function update($request,  $id)
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
-      $idnodo = auth()->user()->gestor->nodo_id;
-    }
-
-    if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
-    dd($idnodo);
     DB::beginTransaction();
     try {
 
-      $entidadConsultaId = Entidad::find($id);
-
-      $syncData = array();
       $idnodo = "";
-
-      // dd($idnodo);
-      foreach($request->get('txtnombres_contactos') as $id => $value) {
-        $syncData[$id] = array(
-          'nombres_contacto' => $value,
-          'correo_contacto' => $request->get('txtcorreo_contacto')[$id],
-          'telefono_contacto' => $request->get('txttelefono_contacto')[$id],
-          'nodo_id' => $idnodo,
-        );
-
+      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        $idnodo = auth()->user()->gestor->nodo_id;
       }
-      $entidadConsultaId->nodos()->sync($syncData);
+
+      if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+        $idnodo = auth()->user()->dinamizador->nodo_id;
+      }
+
+      $delete = ContactoEntidad::where('entidad_id', $id)->where('nodo_id', $idnodo)->delete();
+      for ($i=0; $i < count($request->get('txtnombres_contactos')) ; $i++) {
+        ContactoEntidad::create([
+          'entidad_id' => $id,
+          'nodo_id' => $idnodo,
+          'nombres_contacto' => $request->get('txtnombres_contactos')[$i],
+          'correo_contacto' => $request->get('txtcorreo_contacto')[$i],
+          'telefono_contacto' => $request->get('txttelefono_contacto')[$i],
+        ]);
+      }
 
       DB::commit();
       return true;
