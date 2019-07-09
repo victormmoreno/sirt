@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProductosTable extends Migration
+class CreateEstadosPrototiposTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'productos';
+    public $tableName = 'estadosprototipos';
 
     /**
      * Run the migrations.
@@ -23,7 +23,7 @@ class CreateProductosTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombre', 25);
+            $table->string('nombre', 45);
             $table->timestamps();
             $table->unique(["nombre"], 'nombre_UNIQUE');
         });

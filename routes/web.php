@@ -353,6 +353,9 @@ Route::group(
   function () {
     Route::get('/', 'ProyectoController@index')->name('proyecto');
     Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
+    Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
+    Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
+    Route::get('/datatableGruposInvestigacionTecnoparque/{tipo}', 'ProyectoController@datatableGruposInvestigacionTecnoparque')->name('proyecto.datatable.empresas');
   }
 );
 

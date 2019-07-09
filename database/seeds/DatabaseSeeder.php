@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
                 'estadosproyecto',
                 'departamentos',
                 'lineastecnologicas',
-                'productos',
+                'estadosprototipos',
                 'role_has_permissions',
                 'roles',
                 'permissions',
@@ -88,6 +88,7 @@ class DatabaseSeeder extends Seeder
                 'ocupaciones_users',
                 'fases',
                 'contactosentidades',
+                'areasconocimiento',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

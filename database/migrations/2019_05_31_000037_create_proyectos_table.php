@@ -29,10 +29,11 @@ class CreateProyectosTable extends Migration
             $table->unsignedInteger('areaconocimiento_id');
             $table->unsignedInteger('estadoproyecto_id');
             $table->unsignedInteger('gestor_id');
-            $table->unsignedInteger('producto_id');
+            $table->unsignedInteger('estadoprototipo_id');
             $table->unsignedInteger('entidad_id');
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('tipoarticulacionproyecto_id');
+            $table->string('otro_estadoprototipo', 50)->nullable();
             $table->string('codigo_proyecto', 20);
             $table->string('nombre', 200);
             $table->text('impacto_proyecto')->nullable();
@@ -76,7 +77,7 @@ class CreateProyectosTable extends Migration
 
             $table->index(["nodo_id"], 'fk_proyectos_nodos1_idx');
 
-            $table->index(["producto_id"], 'fk_proyectos_productos1_idx');
+            $table->index(["estadoprototipo_id"], 'fk_proyectos_estadosprototipos1_idx');
 
             $table->index(["tipoarticulacionproyecto_id"], 'fk_proyectos_tiposarticulacionesproyectos1_idx');
 
@@ -110,8 +111,8 @@ class CreateProyectosTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('producto_id', 'fk_proyectos_productos1_idx')
-                ->references('id')->on('productos')
+            $table->foreign('estadoprototipo_id', 'fk_proyectos_estadosprototipos1_idx')
+                ->references('id')->on('estadosprototipos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 

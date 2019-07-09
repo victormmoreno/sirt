@@ -1,5 +1,21 @@
 @extends('layouts.app')
 @section('meta-title', 'Proyectos de Base Tecnológica')
+@push('style')
+  <style media="screen">
+  #divPreload {
+    /* width: 150px;
+    height: 150px; */
+    position: fixed;
+    left:50%;
+    top:50%;
+    /* top: 50%;
+    left: 50%; */
+    /* margin-top: -75px;
+    margin-left: -75px; */
+
+  }
+  </style>
+@endpush
 @section('content')
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -15,7 +31,7 @@
               <div class="row">
                 <br>
                 <center>
-                  <span class="card-title center-align">Nuevo Proyecto</span>
+                  <span class="card-title center-align"><b>Nuevo Proyecto - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</b></span>
                 </center>
                 <div class="divider"></div>
                 <div class="card-panel red lighten-3">
@@ -25,15 +41,6 @@
                 </div>
                 <br />
                 <form action=""  method="POST">
-                  <div class="row">
-                    <div class="input-field col s12 m12 l12">
-                      <select class="js-states" id="txttipoproyecto" name="txttipoproyecto">
-                        <option value="">Seleccione el Tipo de Proyecto</option>
-
-                      </select>
-                      <label>Tipo de Proyecto <span class="red-text">*</span></label>
-                    </div>
-                  </div>
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
                       <input disabled id="txtgestor" name="txtgestor" value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
@@ -45,190 +52,115 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="input-field col s12 m6 l6">
-                      <small>Foco <span class="red-text">*</span></small>
-                      <select id="txtfoco" class="js-states" name="txtfoco" style="width: 100%">
-                        <option value="">Seleccione el Foco</option>
-
+                    <div class="input-field col s12 m12 l12">
+                      <select class="js-states" id="txttipoarticulacionproyecto_id" name="txttipoarticulacionproyecto_id" onchange="consultarEntidadesSegunElCaso(this.value);">
+                        <option value="">Seleccione el Tipo de Articulación</option>
+                        @forelse ($tipoarticulacion as $id => $value)
+                          <option value="{{$id}}">{{$value}}</option>
+                        @empty
+                          <option value="">No hay información disponible</option>
+                        @endforelse
                       </select>
+                      <label for="txttipoarticulacionproyecto_id">Tipo de Articulación <span class="red-text">*</span></label>
+                      <small id="txttipoarticulacionproyecto_id-error" class="error red-text"></small>
                     </div>
-                    <div class="input-field col s12 m6 l6">
-                      <small>Sector <span class="red-text">*</span></small>
-                      <select id="txtsector" class="js-states" name="txtsector" style="width: 100%;">
-                        <option value="">Seleccione el Sector</option>
-
-                      </select>
+                  </div>
+                  <div class="row" id="divOtroTipoArticulacion" >
+                    <div class="input-field col s12 m12 l12">
+                      <input type="text" name="txtotro_tipoarticulacion" id="otro_tipoarticulacion" value="">
+                      <label for="txtotro_tipoarticulacion">¿Cuál? <span class="red-text">*</span></label>
+                      <small id="txtotro_tipoarticulacion-error" class="error red-text"></small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
-                      <select id="txtestadoproyecto" name="txtestadoproyecto" style="width: 100%;">
-                        <option value="">Seleccione el Estado del Proyecto</option>
-
+                      <select id="txtsublinea_id" class="js-states" name="txtsublinea_id" style="width: 100%">
+                        <option value="">Seleccione la Sublínea</option>
+                        @forelse ($sublineas as $key => $value)
+                          <option value="{{$key}}">{{$value}}</option>
+                        @empty
+                          <option value="">No hay información disponible</option>
+                        @endforelse
                       </select>
-                      <label for="txtestadoproyecto">Estado del Proyecto <span class="red-text">*</span></label>
+                      <label for="txtsublinea_id">Sublínea <span class="red-text">*</span></label>
+                      <small id="txtsublinea_id-error" class="error red-text"></small>
+                    </div>
+                    <div class="input-field col s12 m6 l6">
+                      <select id="txtsector_id" class="js-states" name="txtsector_id" style="width: 100%;">
+                        <option value="">Seleccione el Sector</option>
+                        @forelse ($sectores as $id => $value)
+                          <option value="{{$id}}">{{$value}}</option>
+                        @empty
+                          <option value="">No hay información disponible</option>
+                        @endforelse
+                      </select>
+                      <label for="txtsector_id">Sector <span class="red-text">*</span></label>
+                      <small id="txtsector_id-error" class="error red-text"></small>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12 m6 l6">
+                      <select style="width: 100%" class="js-states" id="txtareaconocimiento_id" name="txtareaconocimiento_id">
+                        <option value="">Seleccione el área de conocimiento</option>
+                        @forelse ($areasconocimiento as $id => $value)
+                          <option value="{{$id}}">{{$value}}</option>
+                        @empty
+                          <option value=""> No hay información disponible</option>
+                        @endforelse
+                      </select>
+                      <label for="txtareaconocimiento_id">Áreas de Conocmiento <span class="red-text">*</span></label>
+                      <small id="txtareaconocimiento_id-error" class="error red-text"></small>
+                    </div>
+                    <div class="input-field col s12 m6 l6">
+                      <select id="txtestadoproyecto_id" name="txtestadoproyecto_id" style="width: 100%;">
+                        <option value="">Seleccione el Estado del Proyecto</option>
+                        @forelse ($estadosproyecto as $id => $value)
+                          <option value="{{$id}}"> {{$value}} </option>
+                        @empty
+                          <option value="">No hay información disponible.</option>
+                        @endforelse
+                      </select>
+                      <label for="txtestadoproyecto_id">Estado del Proyecto <span class="red-text">*</span></label>
+                      <small id="txtestadoproyecto_id-error" class="error red-text"></small>
                       <!-- <label>Estado del Proyecto *</label> -->
                     </div>
-                    <div id="fechaFinVigilancia">
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" name="fechacierre_vigilancia" id="fechacierre_vigilancia" class="passdatepicker picker__input">
-                        <label for="fechacierre_vigilancia">Fecha de Fin <span class="red-text">*</span></label>
-                      </div>
-                    </div>
                   </div>
-                  <div id="divNit">
-                    <div class="divider"></div>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <input id="txtnit" name="txtnit" class="empresaDatos" type="text" maxlength="15" required>
-                        <label for="txtnit">Nit <span class="red-text">*</span></label>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
-                        <input id="txtrazonsocial" name="txtrazonsocial" class="empresaDatos" maxlength="45" type="text" required>
-                        <label for="txtrazonsocial">Razón Social <span class="red-text">*</span></label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="divGruposInvestigacion">
-                    <div class="divider"></div>
-                    <div class="row">
-                      <div class="input-field col s12 m12 l12">
-                        <label for="txtgrupoinvestigacion" class="active">Grupo de Investigación <span class="red-text">*</span></label>
-                        <select class="js-states browser-default select2" style="width: 100%;" name="txtgrupoinvestigacion" id="txtgrupoinvestigacion">
-                          <option value="">Seleccione un Grupo de Investigación</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" name="institucionGrupo" id="institucionGrupo" disabled id="institucionGrupo" value="">
-                        <label for="institucionGrupo" id="labelinsGrupo">Institución <span class="red-text">*</span></label>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" name="clasificacionGrupo" id="clasificacionGrupo" disabled id="clasificacionGrupo">
-                        <label for="clasificacionGrupo" id="labelclaGrupo">Clasificación <span class="red-text">*</span></label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="preguntaIdea">
-                    <div class="divider"></div>
+                  <div class="divider"></div>
+                  {{-- <div class="divider"></div> --}}
+                  <div id="divEntidadesTecnoparque">
                     <div class="row">
                       <div class="col s12 m12 l12">
                         <center>
-                          <span class="black-text text-black">¿Viene de una idea de proyecto?</span>
-                          <div class="switch m-b-md">
-                            <label>
-                              No
-                              <input type="checkbox" name="ideaProyecto" id="ideaProyecto" value="1"/>
-                              <span class="lever"></span>
-                              Si
-                            </label>
-                          </div>
+                          <a class="btn-floating blue-grey modal-trigger" href="#modalInformacioDeLaEntidadesEnProyecto"><i class="material-icons left">info_outline</i></a>
+                          <span class="card-title center-align"><b>Datos de la Entidad con la que se articulará el proyecto.</b></span>
                         </center>
                       </div>
                     </div>
-                    <div id="ideaEmpresa">
-                      <div class="row">
-                        <div class="input-field col s11 m11 l11">
-                          <!-- <label class="active">Idea de Proyecto (CON EMPRESA) <span class="red-text">*</span></label> -->
-
-                        </div>
-                        <div class="col s1 m1 l1">
-                          <a class="waves-effect waves-blue btn-floating m-b-xs blue tooltipped" data-position="bottom" data-delay="50" data-tooltip="Únicamente se estan mostrando las ideas de proyecto vinculadas con EMPRESAS">
-                            <i class="material-icons">help_outline</i>
-                          </a>
-                        </div>
+                    <div class="divider"></div>
+                    <div id="divEntidadEmpresaProyecto" class="row">
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtnitEmpresa" id="txtnitEmpresa" disabled>
+                        <label for="txtnitEmpresa" class="active">Nit de la Empresa</label>
                       </div>
-                    </div>
-                    <div id="ideaAprobada">
-                      <div class="row">
-                        <div class="input-field col s11 m11 l11">
-                          <label class="active">Idea de Proyecto <span class="red-text">*</span></label>
-                          <select class="js-states browser-default select2" style="width: 100%;" name="txtideaproyecto" id="txtideaproyecto">
-                            <option value="">Seleccione una Idea de Proyecto <span class="red-text">*</span></option>
-                          </select>
-                        </div>
-                        <div class="col s1 m1 l1">
-                          <a class="waves-effect waves-blue btn-floating m-b-xs blue tooltipped" data-position="bottom" data-delay="50" data-tooltip="Únicamente se estan mostrando las ideas de proyecto que se APROBARON en el CSBIT">
-                            <i class="material-icons">help_outline</i>
-                          </a>
-                        </div>
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtnombreEmpresa" id="txtnombreEmpresa" disabled>
+                        <label for="txtnombreEmpresa" class="active">Nombre de la Empresa</label>
                       </div>
                     </div>
                   </div>
-                  <div id="nombreFechaVigilancia">
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreproyecto"  id="txtnombreproyecto" required class="validate" maxlength="200">
-                        <label id="labelNombreProyecto" for="txtnombreproyecto">Nombre del Proyecto <span class="red-text">*</span></label>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" name="fecha_crea" id="fecha_crea" value="<?= date("Y-m-d"); ?>" class="datepicker picker__input">
-                        <label for="fecha_crea">Fecha de Inicio <span class="red-text">*</span></label>
-                      </div>
-                    </div>
-                    <div class="input-field col m12 s12 l12">
-                      <select id="txtcedulalider" style="width: 100%;" class="js-states browser-default select2" required name="txtcedulalider">
-                        <option value="">Seleccione el Talento Líder</option>
-
-                      </select>
-                      <label class="active">Talento Líder <span class="red-text">*</span></label>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="row">
-                      <div class="col s12 m12 l12">
-                        <div class="card-content">
-                          <h5>
-                            <span class="red-text text-darken-2">Para registrar los talentos dar click en el botón <a class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a></span>
-                          </h5>
-                          <p>Si desea agregar mas integrantes al proyecto por favor seleccione..</p>
-                          <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
-                            <li>
-                              <div class="collapsible-header active blue-grey lighten-1"><i class="material-icons">people</i>Seleccione los Talentos que participarán en el proyecto</div>
-                              <div class="collapsible-body">
-                                <div class="card-content">
-                                  <div class="row">
-                                    <div class="input-field col s10 m10 l10">
-                                      <select id="txttalento" class="js-states browser-default select2" style="width: 100%;" required name="txttalento" onchange="noRepeat()" >
-                                        <option value="0">Seleccione los Talentos que participarán en el proyecto</option>
-
-                                      </select>
-                                      <label for="#txttalento" class="active">Talentos <span class="red-text">*</span></label>
-                                    </div>
-                                    <div class="col s2 m2 l2">
-                                      <a onclick="agregar()" class="btn-floating btn-large waves-effect waves-light indigo lighten-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Agregar el talento seleccionado al proyecto"><i class="material-icons">add</i></a>
-                                    </div>
-                                  </div>
-                                  <div class="card-content">
-                                    <table id="detalles" class="striped">
-                                      <thead>
-                                        <tr>
-                                          <th style="width: 80%">Talento</th>
-                                          <th style="width: 20%">Eliminar</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
+                  <div class="row">
+                    <div class="col s12 m12 l12">
+                      <center>
+                        <span class="black-text text-black">¿Viene de una idea de proyecto?</span>
+                        <div class="switch m-b-md">
+                          <label>
+                            No
+                            <input type="checkbox" name="ideaProyecto" id="ideaProyecto" value="1"/>
+                            <span class="lever"></span>
+                            Si
+                          </label>
                         </div>
-                      </div>
-                    </div>
-                    <div class="divider"></div>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <textarea name="txtdescripcion" class="materialize-textarea" length="400" maxlength="400" id="txtdescripcion" ></textarea>
-                        <label for="txtdescripcion">Descripción del proyecto</label>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
-                        <textarea  name="txtobservaciones" class="materialize-textarea" length="200" maxlength="200" id="txtobservaciones"></textarea>
-                        <label for="txtobservaciones">Observaciones</label>
-                      </div>
+                      </center>
                     </div>
                   </div>
                   <div class="divider"></div>
@@ -296,23 +228,175 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </main>
+@include('proyectos.modals')
 @endsection
 @push('script')
   <script>
+  // Contenedores
+  divPreload = $('#divPreload');
+  divEntidadEmpresaProyecto = $('#divEntidadEmpresaProyecto');
   divNombreActorCTi = $('#divNombreActorCTi');
+  divOtroTipoArticulacion = $('#divOtroTipoArticulacion');
+  divEntidadesTecnoparque = $('#divEntidadesTecnoparque');
+
+
+  // Ocultar contenedores
+  divPreload.hide();
+  divEntidadEmpresaProyecto.hide();
   divNombreActorCTi.hide();
-  // function nombreActorCTi() {
-  //   alert( "Handler for .change() called." );
-  // }
-    $('#txtarti_cti').change(function() {
-      if ( $('#txtarti_cti').is(':checked') ) {
-        divNombreActorCTi.show();
-      } else {
-        divNombreActorCTi.hide();
+  divOtroTipoArticulacion.hide();
+  divEntidadesTecnoparque.hide();
+  function consultarEntidadesSegunElCaso(id) {
+    let nombre = $("#txttipoarticulacionproyecto_id [value='"+id+"']").text();
+    if (nombre == 'Empresas') {
+      $('#empresasTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#empresasTecnoparque_proyecto_table').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: [ 0, 'desc' ],
+        ajax:{
+          url: "/proyecto/datatableEmpresasTecnoparque",
+          type: "get",
+        },
+        columns: [
+          {
+            data: 'nit',
+            name: 'nit',
+          },
+          {
+            data: 'nombre_empresa',
+            name: 'nombre_empresa',
+          },
+          {
+            width: '20%',
+            data: 'checkbox',
+            name: 'checkbox',
+            orderable: false,
+          },
+        ],
+      });
+      $('#empresasTecnoparque_modProyecto_modal').openModal();
+    }
+
+    if (nombre == 'Grupos y Semilleros del SENA' || nombre == 'Grupos y Semilleros Externos') {
+      let tipo_grupo = 0;
+      if (nombre == 'Grupos y Semilleros del SENA') {
+        tipo_grupo = 1;
       }
+      $('#gruposInvestigacionTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#gruposInvestigacionTecnoparque_proyecto_table').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: [ 0, 'desc' ],
+        ajax:{
+          url: "/proyecto/datatableGruposInvestigacionTecnoparque/"+tipo_grupo,
+          type: "get",
+        },
+        columns: [
+          {
+            data: 'codigo_grupo',
+            name: 'codigo_grupo',
+          },
+          {
+            data: 'nombre',
+            name: 'nombre',
+          },
+          {
+            width: '20%',
+            data: 'checkbox',
+            name: 'checkbox',
+            orderable: false,
+          },
+        ],
+      });
+      $('#gruposInvestigacionTecnoparque_modProyecto_modal').openModal();
+
+    }
+
+    // if (nombre == ) {
+    //
+    // }
+  }
+
+  // Función para cerrar el modal y asignarle un valor al
+  function asociarEmpresaAProyecto(id, nit, nombre) {
+    // console.log(id);
+    $('#empresasTecnoparque_modProyecto_modal').closeModal();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      type: 'success',
+      title: 'La siguiente empresa se ha asociado a la articulación: ' + nit + ' - ' + nombre
     });
-  </script>
+    $('#txtnombreEmpresa').val(nombre);
+    $('#txtnitEmpresa').val(nit);
+    $("label[for='txtnombreEmpresa']").addClass('active');
+    $("label[for='txtnitEmpresa']").addClass('active');
+    divEntidadEmpresaProyecto.show();
+  }
+
+  // Función para cerrar el modal y asignarle un valor al
+  function asociarGrupoInvestigacionAProyecto(id, codigo, nombre) {
+    // console.log(id);
+    $('#gruposInvestigacionTecnoparque_modProyecto_modal').closeModal();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      type: 'success',
+      title: 'El siguiente grupo de investigación se ha asociado a la articulación: ' + codigo + ' - ' + nombre
+    });
+    $('#txtnombreGrupo').val(nombre);
+    $('#txtcodigoGrupo').val(codigo);
+    $("label[for='txtnombreGrupo']").addClass('active');
+    $("label[for='txtcodigoGrupo']").addClass('active');
+    divEntidadEmpresaProyecto.show();
+  }
+
+  $('#txttipoarticulacionproyecto_id').change(function (){
+    let id =  $("#txttipoarticulacionproyecto_id").val();
+    let nombre = $("#txttipoarticulacionproyecto_id [value='"+id+"']").text();
+    if (nombre == 'Otro') {
+      divOtroTipoArticulacion.show();
+    } else {
+      divOtroTipoArticulacion.hide();
+    }
+
+    if (nombre != 'Empresas') {
+      divEntidadEmpresaProyecto.hide();
+    }
+
+    if (nombre == 'Empresas') {
+      divEntidadEmpresaProyecto.show();
+    }
+
+    if (nombre == 'Emprendedor' || nombre == 'Proyecto financiado por SENNOVA' || nombre == 'Otro') {
+      divEntidadesTecnoparque.hide();
+    } else {
+      divEntidadesTecnoparque.show();
+    }
+  });
+
+
+  $('#txtarti_cti').change(function() {
+    if ( $('#txtarti_cti').is(':checked') ) {
+      divNombreActorCTi.show();
+    } else {
+      divNombreActorCTi.hide();
+    }
+  });
+</script>
 @endpush

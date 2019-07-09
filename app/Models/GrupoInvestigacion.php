@@ -71,6 +71,48 @@ class GrupoInvestigacion extends Model
       ->where('gruposinvestigacion.estado', $this->IsActive());
     }
 
+    // Consultas scope para la tabla de grupos de investigación del sena
+    public function scopeConsultarGruposDeInvestigaciónTecnoparqueSena($query)
+    {
+      return $query->select(
+        'codigo_grupo',
+        'entidades.nombre',
+        'institucion',
+        'clasificacionescolciencias.nombre AS clasificacioncolciencias',
+        'gruposinvestigacion.id',
+        'entidades.id AS id_entidad'
+        )
+      ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+      ->selectRaw('IF(tipogrupo = ' . $this->IsInterno() . ', "Interno", "Externo") AS tipo_grupo')
+      ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+      ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+      ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+      ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+      ->where('gruposinvestigacion.estado', $this->IsActive())
+      ->where('tipogrupo', $this->IsInterno());
+    }
+
+    // Consultas scope para la tabla de grupos de investigación externos al sena
+    public function scopeConsultarGruposDeInvestigaciónTecnoparqueExterno($query)
+    {
+      return $query->select(
+        'codigo_grupo',
+        'entidades.nombre',
+        'institucion',
+        'clasificacionescolciencias.nombre AS clasificacioncolciencias',
+        'gruposinvestigacion.id',
+        'entidades.id AS id_entidad'
+        )
+      ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+      ->selectRaw('IF(tipogrupo = ' . $this->IsInterno() . ', "Interno", "Externo") AS tipo_grupo')
+      ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+      ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+      ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+      ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+      ->where('gruposinvestigacion.estado', $this->IsActive())
+      ->where('tipogrupo', $this->IsExterno());
+    }
+
     // Relación con la tabla de entidades
     public function entidad()
     {
