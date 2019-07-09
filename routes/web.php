@@ -12,8 +12,8 @@
  */
 
 Route::get('/', function () {
-    // $linea = App\Models\Sublinea::getAllSublineas();
-    // dd($linea);
+    // $grupos = App\Models\GrupoInvestigacion::scopeAllGrupoInvestigacion()->pluck('nombre','id');
+    // dd($grupos);
     // 
     // dd(Spatie\Permission\Models\Role::where('name', App\User::IsDinamizador())->first()->id);
 
@@ -342,6 +342,8 @@ Route::group([
     'middleware' => 'auth',
 ],
     function () {
+        Route::get('/getgrupodatatables/{ciudad}', 'GrupoInvestigacionController@getDataTablesForGrupoCiudad')->name('getallgruposdatatables');
+        Route::get('/getallgruposforciudad/{ciudad}', 'GrupoInvestigacionController@getAllGruposInvestigacionForCiudad')->name('getallgruposforciudad');
         Route::get('/', 'GrupoInvestigacionController@index')->name('grupo');
         Route::get('/create', 'GrupoInvestigacionController@create')->name('grupo.create');
         Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');

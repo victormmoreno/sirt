@@ -51,7 +51,7 @@ class Centro extends Model
 
     public function scopeAllCentros($query)
     {
-        return $query->select(['centros.id','entidades.nombre'])->join('entidades','entidades.id','centros.entidad_id');
+        return $query->select(['entidades.id','entidades.nombre'])->with(['centro']);
     }
 
     /*=====  End of scope para consultar todos los centros  ======*/

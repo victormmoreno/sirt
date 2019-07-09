@@ -580,6 +580,19 @@
                 <label id="txtotrotipotalento-error" class="error" for="txtotrotipotalento">{{ $message }}</label>
             @enderror 
         </div>
+        
+        <div class="input-field col s12 m4 l4 " id="investigador">
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <input class="validate" id="txtgrupoinvestigacion" name="txtgrupoinvestigacion"  type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtgrupoinvestigacion')}}">
+            
+            <label class="grupoInvestigacionLabel" for="txtgrupoinvestigacion">Grupo Investigación<span class="red-text">*</span></label>
+            <button data-target="modal1" class="btn modal-trigger" onclick="grupoInvestigacion.getGrupoInvestigacion()">Modal</button>
+            @error('txtgrupoinvestigacion')
+                <label id="txtgrupoinvestigacion-error" class="error" for="txtgrupoinvestigacion">{{ $message }}</label>
+            @enderror
+        </div>
     </div>
 </div>
 <br>
@@ -599,6 +612,17 @@
     </div>
 </div>
 
-        
+
+<!-- modal  -->
+
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4 class="center">Grupos de Invesitgacion</h4>
+      <div class="contenido"></div>
+    </div>
+    {{-- <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+    </div> --}}
+  </div> 
 
                                     

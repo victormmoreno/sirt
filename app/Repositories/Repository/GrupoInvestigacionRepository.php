@@ -53,4 +53,31 @@ class GrupoInvestigacionRepository
     });
   }
 
+  /*===============================================================================
+  =            metodo para consultar todos los grupos de investigacion            =
+  ===============================================================================*/
+  
+  public function getAllGruposInvestigacionesForCiudad($ciudad)
+  {
+     return Entidad::allGrupoInvestigacionForCiudad($ciudad)->pluck('nombre','id');
+  }
+  
+  
+  /*=====  End of metodo para consultar todos los grupos de investigacion  ======*/
+
+  /*==============================================================================================
+  =            metodo para mostrar grupos de investigaciones por ciudad en datatables            =
+  ==============================================================================================*/
+  
+  
+  public function getAllGruposInvestigacionDatatables($ciudad)
+  {
+    return Entidad::select(['entidades.id','entidades.nombre','gruposinvestigacion.institucion','gruposinvestigacion.codigo_grupo'])
+                ->join('gruposinvestigacion','gruposinvestigacion.entidad_id','entidades.id')
+                ->where('entidades.ciudad_id','=',$ciudad)->get();
+  }
+  /*=====  End of metodo para mostrar grupos de investigaciones por ciudad en datatables  ======*/
+  
+  
+
 }

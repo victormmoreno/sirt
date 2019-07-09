@@ -76,4 +76,8 @@ class GrupoInvestigacion extends Model
       return $this->belongsTo(ClasificacionColciencias::class, 'clasificacioncolciencias_id', 'id');
     }
 
+
+    
+    
+
 }

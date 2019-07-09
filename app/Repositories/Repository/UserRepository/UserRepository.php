@@ -2,21 +2,8 @@
 
 namespace App\Repositories\Repository\UserRepository;
 
-use App\Models\ActivationToken;
-use App\Models\Ciudad;
-use App\Models\Departamento;
-use App\Models\Dinamizador;
-use App\Models\Eps;
-use App\Models\Gestor;
-use App\Models\GradoEscolaridad;
-use App\Models\GrupoSanguineo;
-use App\Models\LineaTecnologica;
-use App\Models\Nodo;
-use App\Models\Ocupacion;
-use App\Models\Perfil;
-use App\Models\Regional;
-use App\Models\Rols;
-use App\Models\TipoDocumento;
+
+use App\Models\{ActivationToken,Ciudad,Departamento,Dinamizador,Eps,GradoEscolaridad,GrupoSanguineo,Infocenter,LineaTecnologica,Nodo,Ocupacion,Perfil,Regional,Rols,TipoDocumento};
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -289,6 +276,23 @@ class UserRepository
                     "nodo_id"    => $request->input('txtnodogestor'),
                     "lineatecnologica_id"    => $request->input('txtlinea'),
                     "honorarios"    => $request->input('txthonorario'),
+                ]);
+
+                $user->assignRole(config('laravelpermission.roles.roleGestor'));
+            }
+            if(collect($request->input('role'))->contains(User::IsInfocenter())){
+                $infocenter = Infocenter::create([
+                    "user_id"    => $user->id,
+                    "nodo_id"    => $request->input('txtnodoinfocenter'),
+                    "extension"    => $request->input('txtextension'),
+                ]);
+            }
+
+            if(collect($request->input('role'))->contains(User::IsTalento())){
+                $Talento = Talento::create([
+                    "user_id"    => $user->id,
+                    "nodo_id"    => $request->input('txtnodoinfocenter'),
+                    "extension"    => $request->input('txtextension'),
                 ]);
             }
 

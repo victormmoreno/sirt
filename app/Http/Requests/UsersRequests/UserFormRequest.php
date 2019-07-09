@@ -56,11 +56,12 @@ class UserFormRequest extends FormRequest
             'txtnodoinfocenter' => Rule::requiredIf(collect($this->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtextension' => Rule::requiredIf(collect($this->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtperfil' => Rule::requiredIf(collect($this->role)->contains(User::IsTalento())) . '|nullable',
-            'txtregional' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsAprendizSena())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsEgresadoSena())->first()->id ) . '|nullable',
-            'txtcentroformacion' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsAprendizSena())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsEgresadoSena())->first()->id) . '|nullable',
+            'txtregional' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsAprendizSenaSinApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsAprendizSenaConApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsEgresadoSena())->first()->id ) . '|nullable',
+            'txtcentroformacion' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsAprendizSenaSinApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsAprendizSenaConApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsEgresadoSena())->first()->id) . '|nullable',
             'txtuniversidad' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsEstudianteUniversitarioPregrado())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsEstudianteUniversitarioPostgrado())->first()->id) . '|nullable',
             'txtempresa' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioEmpresaPublica())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioMicroempresa())->first()->id|| $this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioMedianaEmpresa())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioGrandeEmpresa())->first()->id) . '|nullable',
             'txtotrotipotalento' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsOtro())->first()->id) . '|nullable',
+            'txtgrupoinvestigacion' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsInvestigador())->first()->id) . '|nullable|exists:gruposinvestigacion,codigo_grupo',
 
         ];
     }
