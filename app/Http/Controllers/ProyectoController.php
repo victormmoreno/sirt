@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion};
+use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea};
 use App\Repositories\Repository\{EmpresaRepository};
+use Alert;
 
 class ProyectoController extends Controller
 {
@@ -16,6 +17,97 @@ class ProyectoController extends Controller
     $this->middleware([
       'auth',
     ]);
+  }
+
+  // Datatable para listar las ideas de proyectos con emprendedores (que aprobaron el CSIBT)
+  public function datatableIdeasConEmprendedores()
+  {
+    if (request()->ajax()) {
+      $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id )->get();
+      return datatables()->of($ideas)
+      ->addColumn('checkbox', function ($data) {
+        $checkbox = '
+        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto('.$data->consecutivo.', \''.$data->nombre_proyecto.'\')">
+        <i class="material-icons">done</i>
+        </a>
+        ';
+        return $checkbox;
+      })->rawColumns(['checkbox'])->make(true);
+    }
+  }
+
+  // Datatable para listar las ideas de proyectos con emprendedores (que aprobaron el CSIBT)
+  public function datatableIdeasConEmpresasGrupo()
+  {
+
+    // dd('$ideas');
+    if (request()->ajax()) {
+      $ideas = Idea::ConsultarIdeasConEmpresasGrupos( auth()->user()->gestor->nodo_id )->get();
+      // dd($ideas);
+      return datatables()->of($ideas)
+      ->addColumn('checkbox', function ($data) {
+        $checkbox = '
+        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto('.$data->consecutivo.', \''.$data->nombre_proyecto.'\')">
+        <i class="material-icons">done</i>
+        </a>
+        ';
+        return $checkbox;
+      })->rawColumns(['checkbox'])->make(true);
+    }
+  }
+
+  // Datatable para listar los nodos de tecnoparque
+  public function datatableCentroFormacionTecnoparque()
+  {
+    if (request()->ajax()) {
+      $centros = Centro::CentroDeFormacionDeTecnoparque()->get();
+      return datatables()->of($centros)
+      ->addColumn('checkbox', function ($data) {
+        $checkbox = '
+        <input type="radio" class="with-gap" name="txtentidad_centrofomacion_id"
+        onclick="asociarCentroDeFormacionAProyecto('.$data->id_entidad.', \''.$data->codigo_centro.'\', \''.$data->nombre.'\')" id="radioButton'.$data->id_entidad.'"
+        value="'.$data->id_entidad.'"/>
+        <label for ="radioButton'.$data->id_entidad.'"></label>
+        ';
+        return $checkbox;
+      })->rawColumns(['checkbox'])->make(true);
+    }
+  }
+
+  // Datatable para listar los nodos de tecnoparque
+  public function datatableNodosTecnoparque()
+  {
+    if (request()->ajax()) {
+      $nodos = Nodo::NodoDeTecnoparque()->get();
+      return datatables()->of($nodos)
+      ->addColumn('checkbox', function ($data) {
+        $checkbox = '
+        <input type="radio" class="with-gap" name="txtentidad_nodo_id"
+        onclick="asociarNodoAProyecto('.$data->id_entidad.', \''.$data->codigo_centro.'\', \''.$data->nombre_nodo.'\', \''.$data->centro.'\')" id="radioButton'.$data->id_entidad.'"
+        value="'.$data->id_entidad.'"/>
+        <label for ="radioButton'.$data->id_entidad.'"></label>
+        ';
+        return $checkbox;
+      })->rawColumns(['checkbox'])->make(true);
+    }
+  }
+
+  public function datatableTecnoacademiasTecnoparque()
+  {
+    if (request()->ajax()) {
+      $tecnoacademias = Tecnoacademia::ConsultarTecnoAcademias()->get();
+      return datatables()->of($tecnoacademias)
+      ->addColumn('checkbox', function ($data) {
+        $nombre = strval($data->nombre);
+        $checkbox = '
+        <input type="radio" class="with-gap" name="txtentidad_tecnoacademia_id"
+        onclick="asociarTecnoacademiaAProyecto('.$data->id_entidad.', \''.$data->codigo_centro.'\', \''.$nombre.'\', \''.$data->codigo.'\')" id="radioButton'.$data->id_entidad.'"
+        value="'.$data->id_entidad.'"/>
+        <label for ="radioButton'.$data->id_entidad.'"></label>
+        ';
+        return $checkbox;
+      })->rawColumns(['checkbox'])->make(true);
+    }
   }
 
   // Consulta los grupos de investigación (se filtra por grupo de investigación)
@@ -32,7 +124,8 @@ class ProyectoController extends Controller
     ->addColumn('checkbox', function ($data) {
       $nombre = strval($data->nombre);
       $checkbox = '
-      <input type="radio" class="with-gap" name="txtentidad_grupo_id" onclick="asociarGrupoInvestigacionAProyecto('.$data->id_entidad.', \''.$data->codigo_grupo.'\', \''.$nombre.'\')" id="radioButton'.$data->id_entidad.'"
+      <input type="radio" class="with-gap" name="txtentidad_grupo_id"
+      onclick="asociarGrupoInvestigacionAProyecto('.$data->id_entidad.', \''.$data->codigo_grupo.'\', \''.$nombre.'\')" id="radioButton'.$data->id_entidad.'"
       value="'.$data->id_entidad.'"/>
       <label for ="radioButton'.$data->id_entidad.'"></label>
       ';
@@ -49,7 +142,8 @@ class ProyectoController extends Controller
       ->addColumn('checkbox', function ($data) {
         $nombre = strval($data->nombre_empresa);
         $checkbox = '
-        <input type="radio" class="with-gap" name="txtentidad_id" onclick="asociarEmpresaAProyecto('.$data->id_entidad.', '.$data->nit.', \''.$nombre.'\')" id="radioButton'.$data->id_entidad.'"
+        <input type="radio" class="with-gap" name="txtentidad_id"
+        onclick="asociarEmpresaAProyecto('.$data->id_entidad.', '.$data->nit.', \''.$nombre.'\')" id="radioButton'.$data->id_entidad.'"
         value="'.$data->id_entidad.'"/>
         <label for ="radioButton'.$data->id_entidad.'"></label>
         ';

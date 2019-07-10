@@ -20,17 +20,19 @@ class Proyecto extends Model
   * @var array
   */
   protected $fillable = [
-    'idea_id',
-    'sector_id',
-    'sublinea_id',
-    'areaconocimiento_id',
-    'estadoproyecto_id',
-    'gestor_id',
-    'producto_id',
-    'entidad_id',
-    'nodo_id',
-    'tipoarticulacionproyecto_id',
-    'codigo_proyecto',
+    'idea_id',// Llave foranea
+    'sector_id', // Llave foranea
+    'sublinea_id', // Llave foranea
+    'areaconocimiento_id', // Llave foranea
+    'estadoproyecto_id', // Llave foranea
+    'gestor_id', // Llave foranea
+    'entidad_id', // Llave foranea
+    'nodo_id', // Llave foranea
+    'tipoarticulacionproyecto_id', // Llave foranea
+    'estadoprototipo_id', // Llave foranea
+    'otro_estadoprototipo',
+    'universidad_proyecto',
+    'codigo_proyecto', // Unique
     'nombre',
     'impacto_proyecto',
     'economia_naranja',
@@ -38,7 +40,6 @@ class Proyecto extends Model
     'fecha_inicio',
     'fecha_fin',
     'fecha_ejecucion',
-    'estado_prototipo',
     'aporte_sena',
     'aporte_talento',
     'art_cti',
@@ -48,7 +49,7 @@ class Proyecto extends Model
     'dine_reg',
     'acc',
     'manual_uso_inf',
-    'ava_empresa_grupo',
+    'aval_empresa_grupo',
     'acta_inicio',
     'estado_arte',
     'actas_seguimiento',

@@ -88,8 +88,10 @@
                               <div class="row">
                                 <div class="input-field col s12 m6 l6">
                                   <i class="material-icons prefix">access_time</i>
-                                  <input id="txthoraidea" type="time" class="pickertime" name="txthoraidea">
-                                  <label class="active" for="txthoraidea">Hora <span class="red-text">*</span></label>
+                                  <input id="txthoraidea" type="text" class="pickertime" name="txthoraidea">
+                                  {{-- <span class="helper-text">Hora</span> --}}
+                                  <label for="txthoraidea">Hora <span class="red-text">*</span></label>
+                                  {{-- <small>Hora <span class="red-text">*</span></small> --}}
                                 </div>
                                 <div class="col s6 m3 l3">
                                   <span class="black-text text-black">¿Asistió?</span>

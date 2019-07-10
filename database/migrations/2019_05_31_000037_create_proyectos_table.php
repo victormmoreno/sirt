@@ -34,6 +34,7 @@ class CreateProyectosTable extends Migration
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('tipoarticulacionproyecto_id');
             $table->string('otro_estadoprototipo', 50)->nullable();
+            $table->string('universidad_proyecto', 50)->nullable();
             $table->string('codigo_proyecto', 20);
             $table->string('nombre', 200);
             $table->text('impacto_proyecto')->nullable();
@@ -42,7 +43,6 @@ class CreateProyectosTable extends Migration
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->date('fecha_ejecucion')->nullable();
-            $table->string('estado_prototipo', 35)->nullable();
             $table->double('aporte_sena')->nullable();
             $table->double('aporte_talento')->nullable();
             $table->tinyInteger('art_cti')->nullable()->default('0');
@@ -52,7 +52,7 @@ class CreateProyectosTable extends Migration
             $table->tinyInteger('dine_reg')->nullable()->default('0');
             $table->tinyInteger('acc')->nullable()->default('0');
             $table->tinyInteger('manual_uso_inf')->nullable()->default('0');
-            $table->tinyInteger('ava_empresa_grupo')->nullable()->default('0');
+            $table->tinyInteger('aval_empresa_grupo')->nullable()->default('0');
             $table->tinyInteger('acta_inicio')->nullable()->default('0');
             $table->tinyInteger('estado_arte')->nullable()->default('0');
             $table->tinyInteger('actas_seguimiento')->nullable()->default('0');

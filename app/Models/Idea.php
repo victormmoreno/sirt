@@ -90,6 +90,40 @@ class Idea extends Model
 
     /*=====  End of metodos para conocer los tipos de ideas  ======*/
 
+    public function scopeConsultarIdeasConEmpresasGrupos($query, $idnodo)
+    {
+      return $query->select(
+        'ideas.id AS consecutivo',
+        // 'nombres_contacto',
+        'nombre_proyecto',
+        'tipo_idea'
+        )
+        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+        ->where([
+          ['nodos.id', '=',$idnodo],
+          ['tipo_idea', '=', $this->IsEmpresa()],
+        ])
+        ->orWhere('tipo_idea', '=', $this->IsGrupoInvestigacion());
+    }
+
+    public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo)
+    {
+      return $query->select(
+        'ideas.id AS consecutivo',
+        // 'nombres_contacto',
+        'nombre_proyecto',
+        'tipo_idea'
+        )
+        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+        ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
+        ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
+        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+        ->where('nodos.id', $idnodo)
+        ->where('comite_idea.admitido', 1)
+        ->where('tipo_idea', $this->IsEmprendedor());
+    }
+
     public static function getAllIdeas()
     {
         return self::all();

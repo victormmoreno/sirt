@@ -16,7 +16,7 @@ class Nodo extends Model
      */
     protected $fillable = [
         'centro_id',
-        'nombre',
+        'entidad_id',
         'direccion',
         'anho_inicio',
     ];
@@ -27,6 +27,11 @@ class Nodo extends Model
     public function centro()
     {
         return $this->belongsTo(Centro::class, 'centro_id', 'id');
+    }
+
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
     }
 
 
@@ -59,6 +64,16 @@ class Nodo extends Model
 
     }
 
+    // Consulta los nodos de tecnoparque
+    public function scopeNodoDeTecnoparque($query)
+    {
+      return $query->select('entidades.id AS id_entidad', 'entidades.nombre AS nombre_nodo', 'nodos.id', 'nodos.direccion', 'centros.codigo_centro')
+      ->selectRaw('concat(centros.codigo_centro, " - ", e.nombre) AS centro')
+      ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+      ->join('centros', 'centros.id', '=', 'nodos.centro_id')
+      ->join('entidades AS e', 'e.id', '=', 'centros.entidad_id');
+    }
+
     /*=====  End of relaciones eloquent  ======*/
 
     /*==============================================================
@@ -67,7 +82,8 @@ class Nodo extends Model
 
     public function scopeSelectNodo($query)
     {
-        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"));
+        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"))
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
 
     }
 
@@ -81,14 +97,17 @@ class Nodo extends Model
 
     public function scopeListNodos($query)
     {
-      return $query->select(DB::raw('concat("Tecnoparque nodo ", nombre) AS nombre'), 'id');
+      return $query->select(DB::raw('concat("Tecnoparque nodo ", nombre) AS nombre'), 'id')
+      ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
     }
 
 
     public function scopeUserNodo($query, $nodo_id)
     {
 
-        return $query->where('id', '=', $nodo_id);
+        return $query->select('entidades.nombre')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->where('nodos.id', '=', $nodo_id);
 
     }
 

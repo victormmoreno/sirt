@@ -1,31 +1,81 @@
-<div class="modal" id="empresasTecnoparque_modProyecto_modal">
+<div class="modal" id="entidadesTecnoparque_modProyecto_modal">
   <div class="modal-content">
     <div class="row">
       <div class="col s12 m12 l12">
-        <table id="empresasTecnoparque_proyecto_table" style="width: 100%" class="centered">
+        <table id="entidadesTecnoparque_proyecto_table" style="width: 100%" class="centered">
           <thead>
-            <th>Nit de la Empresa</th>
-            <th>Nombre de la Empresa</th>
+            <th>Identificador de la entidad</th>
+            <th>Nombre de la entidad</th>
             <th>Seleccionar para asociar a proyecto</th>
           </thead>
         </table>
       </div>
     </div>
   </div>
+  <div class="modal-footer">
+    <a href="#!" onclick="volverSiElegirEntidad();" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+  </div>
 </div>
-<div class="modal" id="gruposInvestigacionTecnoparque_modProyecto_modal">
+
+<div class="modal" id="ideasDeProyectoConEmprendedores_modal">
   <div class="modal-content">
     <div class="row">
       <div class="col s12 m12 l12">
-        <table id="gruposInvestigacionTecnoparque_proyecto_table" style="width: 100%" class="centered">
+        <table id="ideasDeProyectoConEmprendedores_proyecto_table" style="width: 100%" class="centered">
           <thead>
-            <th>Código del Grupo de Investigación</th>
-            <th>Nombre del Grupo de Investigación</th>
+            <th>Código de la Idea de Proyecto</th>
+            <th>Nombre de la Idea</th>
+            <th>Nombres del Contacto</th>
             <th>Seleccionar para asociar a proyecto</th>
           </thead>
         </table>
       </div>
     </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+  </div>
+</div>
+
+<div class="modal" id="ideasDeProyectoConEmpresasGrupos_modal">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <table id="ideasDeProyectoConEmpresasGrupos_proyecto_table" style="width: 100%" class="centered">
+          <thead>
+            {{-- <th>Código de la Idea de Proyecto</th> --}}
+            <th>Nombre de la Idea</th>
+            <th>Nombres del Contacto</th>
+            <th>Seleccionar para asociar a proyecto</th>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+  </div>
+</div>
+
+<div id="modalInformacioSobreLasIdeasDeProyecto_Proyecto" class="modal">
+  <div class="modal-content">
+    <h4>A tener en cuenta:</h4>
+    <ul class="collection">
+      <li class="collection-item">
+        Para buscar una idea de proyecto y asociarla al registro del proyecto, debes seleccionar si la idea pasó o no por el CSIBT, acto seguido, seleccionar el botón con el ícono
+        <i class="material-icons">search</i>.
+      </li>
+      <li class="collection-item">
+        Para asociar una idea de proyecto debe presionar el botón con el ícono <i class="material-icons">done</i> (esto, luego de listar las ideas de proyecto).
+      </li>
+      <li class="collection-item">
+        En caso de que la idea de proyecto, no se haya inscrito como una idea y por tanto no haber pasado por entrenamientos y CSIBT, el/la Infocenter del nodo deberá registrarla desde su cuenta como
+        una idea de proyecto con empresa o grupo de investigación según el caso.
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok!</a>
   </div>
 </div>
 

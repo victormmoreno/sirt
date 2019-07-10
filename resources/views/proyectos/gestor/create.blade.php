@@ -147,11 +147,59 @@
                         <label for="txtnombreEmpresa" class="active">Nombre de la Empresa</label>
                       </div>
                     </div>
+                    <div id="divEntidadGrupoInvestigacionProyecto" class="row">
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtcodigoGrupo" id="txtcodigoGrupo" disabled>
+                        <label for="txtcodigoGrupo" class="active">Código del Grupo de Investigación</label>
+                      </div>
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtnombreGrupo" id="txtnombreGrupo" disabled>
+                        <label for="txtnombreGrupo" class="active">Nombre del Grupo de Investigación</label>
+                      </div>
+                    </div>
+                    <div id="divEntidadTecnoacademiaProyecto" class="row">
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtcentroFormacion" id="txtcentroFormacion" disabled>
+                        <label for="txtcentroFormacion" class="active">Centro de Formación de la Tecnoacademia</label>
+                      </div>
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtnombreTecnoacademia" id="txtnombreTecnoacademia" disabled>
+                        <label for="txtnombreTecnoacademia" class="active">Nombre de la Tecnoacademia</label>
+                      </div>
+                    </div>
+                    <div id="divEntidadNodoProyecto" class="row">
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtCentroFormacionNodo" id="txtCentroFormacionNodo" disabled>
+                        <label for="txtCentroFormacionNodo" class="active">Centro de Formación del Nodo</label>
+                      </div>
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtNombreNodo" id="txtNombreNodo" disabled>
+                        <label for="txtNombreNodo" class="active">Nombre del Nodo</label>
+                      </div>
+                    </div>
+                    <div id="divCentroFormacionProyecto" class="row">
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtCodigoCentroFormacion" id="txtCodigoCentroFormacion" disabled>
+                        <label for="txtCodigoCentroFormacion" class="active">Código del Centro de Formación</label>
+                      </div>
+                      <div class="input-field col s12 m6 l6">
+                        <input type="text" name="txtNombreCentroFormacion" id="txtNombreCentroFormacion" disabled>
+                        <label for="txtNombreCentroFormacion" class="active">Nombre del Centro del Formación</label>
+                      </div>
+                    </div>
+                    <div id="divUniversidadProyecto" class="row">
+                      <div class="input-field col s12 m6 l6 offset-l3 m3">
+                        <input type="text" name="txtuniversidad_proyecto" id="txtuniversidad_proyecto" onclick="editarNombreUniversidad(this.value);" readonly>
+                        <label for="txtuniversidad_proyecto" class="active">Universidad <span class="red-text">*</span></label>
+                      </div>
+                    </div>
+                    <input type="hidden" name="txtentidad_proyecto_id" id="txtentidad_proyecto_id" value="">
                   </div>
                   <div class="row">
                     <div class="col s12 m12 l12">
                       <center>
-                        <span class="black-text text-black">¿Viene de una idea de proyecto?</span>
+                        <a class="btn-floating blue-grey modal-trigger" href="#modalInformacioSobreLasIdeasDeProyecto_Proyecto"><i class="material-icons left">info_outline</i>Buscar</a>
+                        <span class="black-text text-black">¿La idea de proyecto se aprobó en el CSIBT?</span>
                         <div class="switch m-b-md">
                           <label>
                             No
@@ -161,6 +209,20 @@
                           </label>
                         </div>
                       </center>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s12 m6 l6 offset-l3 m3">
+                      <center>
+                        <div class="card-panel grey lighten-3">
+                          <div class="input-field col s12 m12 l12">
+                            <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" readonly>
+                            <label for="txtnombreIdeaProyecto_Proyecto">Idea de Proyecto</label>
+                          </div>
+                          <a class="btn-floating blue" onclick="consultarIdeasDeProyectoDelNodo();"><i class="material-icons left">search</i>Buscar</a>
+                        </div>
+                      </center>
+                      <input type="hidden" name="txtidea_id" id="txtidea_id" value="">
                     </div>
                   </div>
                   <div class="divider"></div>
@@ -239,6 +301,11 @@
   // Contenedores
   divPreload = $('#divPreload');
   divEntidadEmpresaProyecto = $('#divEntidadEmpresaProyecto');
+  divEntidadGrupoInvestigacionProyecto = $('#divEntidadGrupoInvestigacionProyecto');
+  divEntidadTecnoacademiaProyecto = $('#divEntidadTecnoacademiaProyecto');
+  divEntidadNodoProyecto = $('#divEntidadNodoProyecto');
+  divCentroFormacionProyecto = $('#divCentroFormacionProyecto');
+  divUniversidadProyecto = $('#divUniversidadProyecto');
   divNombreActorCTi = $('#divNombreActorCTi');
   divOtroTipoArticulacion = $('#divOtroTipoArticulacion');
   divEntidadesTecnoparque = $('#divEntidadesTecnoparque');
@@ -247,14 +314,19 @@
   // Ocultar contenedores
   divPreload.hide();
   divEntidadEmpresaProyecto.hide();
+  divEntidadGrupoInvestigacionProyecto.hide();
+  divEntidadTecnoacademiaProyecto.hide();
+  divEntidadNodoProyecto.hide();
+  divCentroFormacionProyecto.hide();
+  divUniversidadProyecto.hide();
   divNombreActorCTi.hide();
   divOtroTipoArticulacion.hide();
   divEntidadesTecnoparque.hide();
   function consultarEntidadesSegunElCaso(id) {
     let nombre = $("#txttipoarticulacionproyecto_id [value='"+id+"']").text();
     if (nombre == 'Empresas') {
-      $('#empresasTecnoparque_proyecto_table').dataTable().fnDestroy();
-      $('#empresasTecnoparque_proyecto_table').DataTable({
+      $('#entidadesTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#entidadesTecnoparque_proyecto_table').DataTable({
         language: {
           "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -267,10 +339,12 @@
         },
         columns: [
           {
+            title: 'Nit de la Empresa',
             data: 'nit',
             name: 'nit',
           },
           {
+            title: 'Nombre de la Empresa',
             data: 'nombre_empresa',
             name: 'nombre_empresa',
           },
@@ -282,7 +356,129 @@
           },
         ],
       });
-      $('#empresasTecnoparque_modProyecto_modal').openModal();
+      $('#entidadesTecnoparque_modProyecto_modal').openModal({
+        dismissible: false,
+      });
+    }
+
+    if (nombre == 'Tecnoacademias') {
+      $('#entidadesTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#entidadesTecnoparque_proyecto_table').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: [ 0, 'desc' ],
+        ajax:{
+          url: "/proyecto/datatableTecnoacademiasTecnoparque",
+          type: "get",
+        },
+        select: true,
+        columns: [
+          {
+            title: 'Centro de Formación',
+            data: 'codigo',
+            name: 'codigo',
+          },
+          {
+            title: 'Nombre de la Tecnoacademia',
+            data: 'nombre',
+            name: 'nombre',
+          },
+          {
+            // title: 'Seleccionar para asociar a proyecto',
+            width: '20%',
+            data: 'checkbox',
+            name: 'checkbox',
+            orderable: false,
+          },
+        ],
+      });
+      $('#entidadesTecnoparque_modProyecto_modal').openModal({
+        dismissible: false,
+      });
+
+    }
+
+    if (nombre == 'Tecnoparques') {
+      $('#entidadesTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#entidadesTecnoparque_proyecto_table').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: [ 0, 'desc' ],
+        ajax:{
+          url: "/proyecto/datatableNodosTecnoparque",
+          type: "get",
+        },
+        select: true,
+        columns: [
+          {
+            title: 'Centro de Formación',
+            data: 'centro',
+            name: 'centro',
+          },
+          {
+            title: 'Nombre del Nodo',
+            data: 'nombre_nodo',
+            name: 'nombre_nodo',
+          },
+          {
+            // title: 'Seleccionar para asociar a proyecto',
+            width: '20%',
+            data: 'checkbox',
+            name: 'checkbox',
+            orderable: false,
+          },
+        ],
+      });
+      $('#entidadesTecnoparque_modProyecto_modal').openModal({
+        dismissible: false,
+      });
+
+    }
+
+    if (nombre == 'Centros de Formación') {
+      $('#entidadesTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#entidadesTecnoparque_proyecto_table').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: [ 0, 'desc' ],
+        ajax:{
+          url: "/proyecto/datatableCentroFormacionTecnoparque",
+          type: "get",
+        },
+        select: true,
+        columns: [
+          {
+            title: 'Código del Centro de Formación',
+            data: 'codigo_centro',
+            name: 'codigo_centro',
+          },
+          {
+            title: 'Nombre del Centro de Formación',
+            data: 'nombre',
+            name: 'nombre',
+          },
+          {
+            // title: 'Seleccionar para asociar a proyecto',
+            width: '20%',
+            data: 'checkbox',
+            name: 'checkbox',
+            orderable: false,
+          },
+        ],
+      });
+      $('#entidadesTecnoparque_modProyecto_modal').openModal({
+        dismissible: false,
+      });
+
     }
 
     if (nombre == 'Grupos y Semilleros del SENA' || nombre == 'Grupos y Semilleros Externos') {
@@ -290,8 +486,8 @@
       if (nombre == 'Grupos y Semilleros del SENA') {
         tipo_grupo = 1;
       }
-      $('#gruposInvestigacionTecnoparque_proyecto_table').dataTable().fnDestroy();
-      $('#gruposInvestigacionTecnoparque_proyecto_table').DataTable({
+      $('#entidadesTecnoparque_proyecto_table').dataTable().fnDestroy();
+      $('#entidadesTecnoparque_proyecto_table').DataTable({
         language: {
           "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -302,16 +498,20 @@
           url: "/proyecto/datatableGruposInvestigacionTecnoparque/"+tipo_grupo,
           type: "get",
         },
+        select: true,
         columns: [
           {
+            title: 'Código del Grupo de Investigación',
             data: 'codigo_grupo',
             name: 'codigo_grupo',
           },
           {
+            title: 'Nombre del  Grupo de Investigación',
             data: 'nombre',
             name: 'nombre',
           },
           {
+            // title: 'Seleccionar para asociar a proyecto',
             width: '20%',
             data: 'checkbox',
             name: 'checkbox',
@@ -319,8 +519,35 @@
           },
         ],
       });
-      $('#gruposInvestigacionTecnoparque_modProyecto_modal').openModal();
+      $('#entidadesTecnoparque_modProyecto_modal').openModal({
+        dismissible: false,
+      });
 
+    }
+
+    if (nombre == 'Universidades') {
+      Swal.fire({
+        title: '¿Cuál es la universidad con la que se realizará el proyecto?',
+        input: 'text',
+        inputValue: "",
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        cancelButtonText: '<a class="white-text" onclick="volverSiElegirEntidad(); Swal.close()">Cancelar</a>',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'El nombre de la universidad es obligatorio!'
+          }
+          if (value.length > 50) {
+            return 'El nombre de la universidad debe ser máximo de 50 carácteres!'
+          }
+          if (value) {
+            $('#txtuniversidad_proyecto').val(value);
+            $("label[for='txtuniversidad_proyecto']").addClass('active');
+            divUniversidadProyecto.show();
+          }
+        }
+      })
     }
 
     // if (nombre == ) {
@@ -328,42 +555,243 @@
     // }
   }
 
-  // Función para cerrar el modal y asignarle un valor al
-  function asociarEmpresaAProyecto(id, nit, nombre) {
-    // console.log(id);
-    $('#empresasTecnoparque_modProyecto_modal').closeModal();
+  // Consultas las ideas de proyecto si fueron aprobadas en el comité ó si son con empresa  emprendedor
+  function consultarIdeasDeProyectoDelNodo() {
+    let tipo = 0;
+    if ( $('#ideaProyecto').is(':checked') ) {
+      tipo = 1;
+    }
+    if (tipo == 1) {
+      consultarIdeasDeProyectoEmprendedores_Proyecto();
+    } else {
+      consultarIdeasDeProyectoGruposOEmpresas_Proyecto();
+    }
+
+  }
+  //
+  function consultarIdeasDeProyectoEmprendedores_Proyecto() {
+    $('#ideasDeProyectoConEmprendedores_proyecto_table').dataTable().fnDestroy();
+    $('#ideasDeProyectoConEmprendedores_proyecto_table').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      processing: true,
+      serverSide: true,
+      order: [ 0, 'desc' ],
+      ajax:{
+        url: "/proyecto/datatableIdeasConEmprendedores",
+        type: "get",
+      },
+      select: true,
+      columns: [
+        {
+          data: 'consecutivo',
+          name: 'consecutivo',
+        },
+        {
+          data: 'nombre_proyecto',
+          name: 'nombre_proyecto',
+        },
+        {
+          data: 'nombres_contacto',
+          name: 'nombres_contacto',
+        },
+        {
+          width: '20%',
+          data: 'checkbox',
+          name: 'checkbox',
+          orderable: false,
+        },
+      ],
+    });
+    $('#ideasDeProyectoConEmprendedores_modal').openModal({
+      dismissible: false,
+    });
+  }
+
+  //
+  function consultarIdeasDeProyectoGruposOEmpresas_Proyecto() {
+    $('#ideasDeProyectoConEmpresasGrupos_proyecto_table').dataTable().fnDestroy();
+    $('#ideasDeProyectoConEmpresasGrupos_proyecto_table').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      processing: true,
+      serverSide: true,
+      order: [ 0, 'desc' ],
+      ajax:{
+        url: "/proyecto/datatableIdeasConEmpresasGrupo",
+        type: "get",
+      },
+      select: true,
+      columns: [
+        {
+          data: 'consecutivo',
+          name: 'consecutivo',
+        },
+        // {
+        //   data: 'nombre_proyecto',
+        //   name: 'nombre_proyecto',
+        // },
+        {
+          data: 'nombre_proyecto',
+          name: 'nombre_proyecto',
+        },
+        {
+          width: '20%',
+          data: 'checkbox',
+          name: 'checkbox',
+          orderable: false,
+        },
+      ],
+    });
+    $('#ideasDeProyectoConEmpresasGrupos_modal').openModal({
+      dismissible: false,
+    });
+  }
+
+  function asociarIdeaDeProyectoAProyecto(id, nombre) {
+    $('#txtidea_id').val(id);
+    $('#ideasDeProyectoConEmprendedores_modal').closeModal();
+    $('#ideasDeProyectoConEmpresasGrupos_modal').closeModal();
     Swal.fire({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
       timer: 1500,
       type: 'success',
-      title: 'La siguiente empresa se ha asociado a la articulación: ' + nit + ' - ' + nombre
+      title: 'La siguiente idea se ha asociado al proyecto: ' + id + ' - ' + nombre
+    });
+    $('#txtnombreIdeaProyecto_Proyecto').val(id +" - "+ nombre);
+    $("label[for='txtnombreIdeaProyecto_Proyecto']").addClass('active');
+  }
+
+
+  // Edita el nombre de la universidad que se asociará con el proyecto
+  function editarNombreUniversidad(value) {
+    Swal.fire({
+      title: '¿Cuál es la universidad con la que se realizará el proyecto?',
+      input: 'text',
+      inputValue: value,
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Debes ingresar el nombre de una universidad!'
+        }
+        if (value) {
+          $('#txtuniversidad_proyecto').val(value);
+          $("label[for='txtuniversidad_proyecto']").addClass('active');
+          divUniversidadProyecto.show();
+        }
+      }
+    })
+  }
+
+  // En caso de que no se asocie ninguna entidad al proyecto
+  function volverSiElegirEntidad() {
+    divEntidadesTecnoparque.hide();
+    $('#txttipoarticulacionproyecto_id').val("");
+    $('#txttipoarticulacionproyecto_id').material_select();
+  }
+
+  // Función para cerrar el modal y asignarle un valor al
+  function asociarEmpresaAProyecto(id, nit, nombre) {
+    // console.log(id);
+    $('#entidadesTecnoparque_modProyecto_modal').closeModal();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      type: 'success',
+      title: 'La siguiente empresa se ha asociado al proyecto: ' + nit + ' - ' + nombre
     });
     $('#txtnombreEmpresa').val(nombre);
     $('#txtnitEmpresa').val(nit);
     $("label[for='txtnombreEmpresa']").addClass('active');
     $("label[for='txtnitEmpresa']").addClass('active');
+    $('#txtentidad_proyecto_id').val(id);
     divEntidadEmpresaProyecto.show();
   }
 
   // Función para cerrar el modal y asignarle un valor al
-  function asociarGrupoInvestigacionAProyecto(id, codigo, nombre) {
+  function asociarNodoAProyecto(id, codigo, nombre, centro) {
     // console.log(id);
-    $('#gruposInvestigacionTecnoparque_modProyecto_modal').closeModal();
+    $('#entidadesTecnoparque_modProyecto_modal').closeModal();
     Swal.fire({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
       timer: 1500,
       type: 'success',
-      title: 'El siguiente grupo de investigación se ha asociado a la articulación: ' + codigo + ' - ' + nombre
+      title: 'El siguiente centro de formación se ha asociado al proyecto: ' + codigo + ' con el siguiente nodo ' + nombre
+    });
+    $('#txtCentroFormacionNodo').val(centro);
+    $('#txtNombreNodo').val(nombre);
+    $("label[for='txtCentroFormacionNodo']").addClass('active');
+    $("label[for='txtNombreNodo']").addClass('active');
+    $('#txtentidad_proyecto_id').val(id);
+    divEntidadNodoProyecto.show();
+  }
+
+  // Función para cerrar el modal y asignarle un valor al
+  function asociarCentroDeFormacionAProyecto(id, codigo, nombre) {
+    // console.log(id);
+    $('#entidadesTecnoparque_modProyecto_modal').closeModal();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      type: 'success',
+      title: 'El siguiente centro de formación se ha asociado al proyecto: ' + codigo + ' - ' + nombre
+    });
+    $('#txtCodigoCentroFormacion').val(codigo);
+    $('#txtNombreCentroFormacion').val(nombre);
+    $("label[for='txtCodigoCentroFormacion']").addClass('active');
+    $("label[for='txtNombreCentroFormacion']").addClass('active');
+    $('#txtentidad_proyecto_id').val(id);
+    divCentroFormacionProyecto.show();
+  }
+
+  // Función para cerrar el modal y asignarle un valor al
+  function asociarTecnoacademiaAProyecto(id, codigo, nombre, centro) {
+    // console.log(id);
+    $('#entidadesTecnoparque_modProyecto_modal').closeModal();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      type: 'success',
+      title: 'El siguiente centro de formación se ha asociado al proyecto: ' + codigo + ' con la siguiente tecnoacademia: ' + nombre
+    });
+    $('#txtcentroFormacion').val(centro);
+    $('#txtnombreTecnoacademia').val(nombre);
+    $("label[for='txtcentroFormacion']").addClass('active');
+    $("label[for='txtnombreTecnoacademia']").addClass('active');
+    $('#txtentidad_proyecto_id').val(id);
+    divEntidadTecnoacademiaProyecto.show();
+  }
+
+  // Función para cerrar el modal y asignarle un valor al
+  function asociarGrupoInvestigacionAProyecto(id, codigo, nombre) {
+    // console.log(id);
+    $('#entidadesTecnoparque_modProyecto_modal').closeModal();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      type: 'success',
+      title: 'El siguiente grupo de investigación se ha asociado al proyecto: ' + codigo + ' - ' + nombre
     });
     $('#txtnombreGrupo').val(nombre);
     $('#txtcodigoGrupo').val(codigo);
     $("label[for='txtnombreGrupo']").addClass('active');
     $("label[for='txtcodigoGrupo']").addClass('active');
-    divEntidadEmpresaProyecto.show();
+    $('#txtentidad_proyecto_id').val(id);
+    divEntidadGrupoInvestigacionProyecto.show();
   }
 
   $('#txttipoarticulacionproyecto_id').change(function (){
@@ -381,6 +809,26 @@
 
     if (nombre == 'Empresas') {
       divEntidadEmpresaProyecto.show();
+    }
+
+    if (nombre != 'Grupos y Semilleros del Sena' || nombre != 'Grupos y Semilleros Externos') {
+      divEntidadGrupoInvestigacionProyecto.hide();
+    }
+
+    if (nombre != 'Tecnoacademias') {
+      divEntidadTecnoacademiaProyecto.hide();
+    }
+
+    if (nombre != 'Tecnoparques') {
+      divEntidadNodoProyecto.hide();
+    }
+
+    if (nombre != 'Centros de Formación') {
+      divCentroFormacionProyecto.hide();
+    }
+
+    if (nombre != 'Universidades') {
+      divUniversidadProyecto.hide();
     }
 
     if (nombre == 'Emprendedor' || nombre == 'Proyecto financiado por SENNOVA' || nombre == 'Otro') {
