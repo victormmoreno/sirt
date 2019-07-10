@@ -235,9 +235,7 @@
             <label id="txtgruposanguineo-error" class="error" for="txtgruposanguineo">{{ $message }}</label>
         @enderror 
     </div>
-    
 </div>
-
 <div class="row">
     <div class="input-field col s12 m6 l6" >
         <i class="material-icons prefix">
@@ -430,13 +428,23 @@
             </i>               
         </div>
         <div class="center">
-            <span class="mailbox-title">Otros</span>
+            <span class="mailbox-title">Último estudio</span>
         </div>
     </div>
 </div>
 <div class="divider mailbox-divider"></div>
 <div class="row">
-    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            settings_cell
+        </i>
+        <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtinstitucion')}}">
+        <label for="txtinstitucion">Institución <span class="red-text">*</span></label>
+        @error('txtinstitucion')
+            <label id="txtinstitucion-error" class="error" for="txtinstitucion">{{ $message }}</label>
+        @enderror 
+    </div>
+    <div class="input-field col s12 m6 l6 ">
         <i class="material-icons prefix">
              details
         </i>
@@ -457,7 +465,28 @@
         @enderror
     </div>
 </div>
-{{-- {{var_dump(old('txtocupaciones'))}} --}}
+<div class="row">
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            settings_cell
+        </i>
+        <input class="validate" id="txttitulo" name="txttitulo" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txttitulo')}}">
+        <label for="txttitulo">Titulo Obtenido <span class="red-text">*</span></label>
+        @error('txttitulo')
+            <label id="txttitulo-error" class="error" for="txttitulo">{{ $message }}</label>
+        @enderror 
+    </div>
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            date_range
+        </i>
+        <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfechaterminacion')}}">
+        <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
+        @error('txtfechaterminacion')
+            <label id="txtfechaterminacion-error" class="error" for="txtfechaterminacion">{{ $message }}</label>
+        @enderror
+    </div>
+</div>
 
 <div class="divider mailbox-divider"></div>
 <div class="row">
@@ -466,7 +495,7 @@
              details
         </i> --}}
         <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple>
-            <option value="">Seleccione ocupación</option>
+            
             @foreach($ocupaciones as $id => $nombre)
                 @if(isset($user))
                 <option value="{{$id}}" {{collect(old('txtocupaciones',$user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : ''  }} >{{$nombre}}</option>
@@ -538,7 +567,7 @@
                 <label id="txtregional-error" class="error" for="txtregional">{{ $message }}</label>
             @enderror 
         </div>
-        <div class="input-field col s12 m4 l4 aprendizSena" >
+        <div class="input-field col s12 m4 l4  aprendizSena" >
             <i class="material-icons prefix">
             settings_cell
             </i>
@@ -550,7 +579,17 @@
                 <label id="txtcentroformacion-error" class="error" for="txtcentroformacion">{{ $message }}</label>
             @enderror 
         </div>
-        <div class="input-field col s12 m8 l8 " id="estudianteUniversitario">
+        <div class="input-field col s12 m6 l6 offset-l3 m3 aprendizSena" >
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <input class="validate" id="txtprogramaformacion" name="txtprogramaformacion" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtprogramaformacion')}}">
+            <label for="txtprogramaformacion">Programa de Formación <span class="red-text">*</span></label>
+            @error('txtprogramaformacion')
+                <label id="txtprogramaformacion-error" class="error" for="txtprogramaformacion">{{ $message }}</label>
+            @enderror 
+        </div>
+        <div class="input-field col s12 m8 l8 estudianteUniversitario">
             <i class="material-icons prefix">
             settings_cell
             </i>
@@ -558,6 +597,16 @@
             <label for="txtuniversidad">Universidad</label>
             @error('txtuniversidad')
                 <label id="txtuniversidad-error" class="error" for="txtuniversidad">{{ $message }}</label>
+            @enderror 
+        </div>
+        <div class="input-field col s12 m6 l6 offset-l3 m3 estudianteUniversitario">
+            <i class="material-icons prefix">
+            settings_cell
+            </i>
+            <input class="validate" id="txtcarrerauniversitaria" name="txtcarrerauniversitaria" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtcarrerauniversitaria')}}">
+            <label for="txtcarrerauniversitaria">Carrera</label>
+            @error('txtcarrerauniversitaria')
+                <label id="txtcarrerauniversitaria-error" class="error" for="txtcarrerauniversitaria">{{ $message }}</label>
             @enderror 
         </div>
         <div class="input-field col s12 m8 l8 " id="funcionarioEmpresa">
@@ -581,17 +630,20 @@
             @enderror 
         </div>
         
-        <div class="input-field col s12 m4 l4 " id="investigador">
+        <div class="input-field col s12 m6 l6 investigador" >
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtgrupoinvestigacion" name="txtgrupoinvestigacion"  type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtgrupoinvestigacion')}}">
+            <input class="validate" id="txtgrupoinvestigacion" name="txtgrupoinvestigacion"  type="text" readonly  value="{{ isset($user->celular) ? $user->celular : old('txtgrupoinvestigacion')}}">
             
             <label class="grupoInvestigacionLabel" for="txtgrupoinvestigacion">Grupo Investigación<span class="red-text">*</span></label>
-            <button data-target="modal1" class="btn modal-trigger" onclick="grupoInvestigacion.getGrupoInvestigacion()">Modal</button>
+            
             @error('txtgrupoinvestigacion')
                 <label id="txtgrupoinvestigacion-error" class="error" for="txtgrupoinvestigacion">{{ $message }}</label>
             @enderror
+        </div>
+        <div class="input-field col s12 m2 l2 investigador" >
+            <button data-target="modal1" class="btn modal-trigger" onclick="grupoInvestigacion.getGrupoInvestigacion()">VER</button>
         </div>
     </div>
 </div>

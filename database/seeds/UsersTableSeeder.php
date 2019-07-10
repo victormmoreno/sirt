@@ -14,6 +14,7 @@ use App\Models\Perfil;
 use App\Models\Rols;
 use App\Models\TipoDocumento;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
@@ -62,13 +63,17 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'perez',
             'documento'           => '523422321',
             'email'               => 'victor543@misena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => '413324',
             'celular'             => '342452323',
             'fechanacimiento'     => '1996-09-12',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
@@ -81,7 +86,6 @@ class UsersTableSeeder extends Seeder
 
         $userAdmin->ocupaciones()->attach($ocupacion);
 
-
         $userDinamizador = User::create([
             'rol_id'              => Rols::where('nombre', '=', 'Dinamizador')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
@@ -93,20 +97,21 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'Benitez',
             'documento'           => '53244223',
             'email'               => 'juan543@misena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => '413324',
             'celular'             => '342452323',
             'fechanacimiento'     => '1996-09-12',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
-
-        
-
 
         $userDinamizador->dinamizador()->create([
             'user_id' => $userDinamizador->id,
@@ -127,12 +132,16 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'Isaza Escobar',
             'documento'           => 3414298,
             'email'               => 'risazaes@misena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => null,
             'fechanacimiento'     => '1999-01-19',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
@@ -156,12 +165,16 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'Patiño',
             'documento'           => 8102363,
             'email'               => 'japatino@sena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => null,
             'fechanacimiento'     => '1999-01-19',
             'genero'              => User::IsMasculino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'password'            => 8102363,
             'estrato'             => rand(1, 6),
         ]);
@@ -184,21 +197,25 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'Lopez',
             'documento'           => '435442232',
             'email'               => 'nataliainfo@misena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => '413324',
             'celular'             => '342452323',
             'fechanacimiento'     => '1980-09-12',
             'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
         ]);
 
         $userInfocenter->infocenter()->create([
-            'nodo_id' => Nodo::where('nombre', '=', 'Medellin')->first()->id,
-            'user_id' => $userInfocenter->id,
+            'nodo_id'   => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'user_id'   => $userInfocenter->id,
             'extension' => 413342,
         ]);
 
@@ -213,13 +230,17 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'Fernandez',
             'documento'           => '54224442',
             'email'               => 'anafernadez@misena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => '413324',
             'celular'             => '342452323',
             'fechanacimiento'     => '1980-09-12',
             'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
@@ -241,13 +262,17 @@ class UsersTableSeeder extends Seeder
             'apellidos'           => 'Restrepo',
             'documento'           => '75434533',
             'email'               => 'luisa@misena.edu.co',
-            'barrio'           => 'El Poblado',
+            'barrio'              => 'El Poblado',
             'direccion'           => 'calle 40 #45 65',
             'telefono'            => '413324',
             'celular'             => '342452323',
             'fechanacimiento'     => '1980-09-12',
             'genero'              => User::IsFemenino(),
             'estado'              => User::IsActive(),
+            //ultimo estudio
+            'institucion'         => 'Universidad de Antiquia',
+            'titulo_obtenido'     => 'Ingeniero Quimico',
+            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
             'remember_token'      => Str::random(60),
             'password'            => '123456789',
             'estrato'             => rand(1, 6),
@@ -257,7 +282,7 @@ class UsersTableSeeder extends Seeder
             'user_id'    => $userTalento->id,
             'perfil_id'  => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
             'entidad_id' => Entidad::all()->random()->id,
-            'programa'   => 'Analsis y desarrollo de sistemas de información',
+            
         ]);
 
         //
