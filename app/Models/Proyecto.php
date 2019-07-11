@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proyecto extends Model
 {
+  //Constatens del campo revisado_final
+  const IS_POREVALUAR = 0;
+  const IS_APROBADO = 1;
+  const IS_NOAPROBADO = 2;
+
+  // Retorno para las constantes del campo revisado_final
+  public static function IsPorEvaluar() {
+    return self::IS_POREVALUAR;
+  }
+
+  public static function IsAprobado() {
+    return self::IS_APROBADO;
+  }
+
+  public static function IsNoAprobado() {
+    return self::IS_NOAPROBADO;
+  }
   protected $table = 'proyectos';
 
   protected $casts = [
@@ -34,9 +51,11 @@ class Proyecto extends Model
     'universidad_proyecto',
     'codigo_proyecto', // Unique
     'nombre',
+    'observaciones_proyecto',
     'impacto_proyecto',
     'economia_naranja',
     'resultado_proyecto',
+    'revisado_final',
     'fecha_inicio',
     'fecha_fin',
     'fecha_ejecucion',
@@ -59,6 +78,14 @@ class Proyecto extends Model
     'lecciones_aprendidas',
     'encuesta'
   ];
+
+  // Relacion muchos a muchos con talentos
+  public function talentos()
+  {
+    return $this->belongsToMany(Talento::class, 'proyecto_talento')
+    ->withTimestamps()
+    ->withPivot('talento_lider');
+  }
 
 
 

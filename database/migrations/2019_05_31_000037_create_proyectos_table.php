@@ -37,9 +37,11 @@ class CreateProyectosTable extends Migration
             $table->string('universidad_proyecto', 50)->nullable();
             $table->string('codigo_proyecto', 20);
             $table->string('nombre', 200);
-            $table->text('impacto_proyecto')->nullable();
-            $table->tinyInteger('economia_naranja')->default('0');
-            $table->text('resultado_proyecto')->nullable();
+            $table->string('observaciones_proyecto', 1000)->nullable();
+            $table->string('impacto_proyecto', 1000)->nullable();
+            $table->tinyInteger('economia_naranja')->nullable()->default('0');
+            $table->string('resultado_proyecto', 1000)->nullable();
+            $table->tinyInteger('revisado_final')->default('0');
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->date('fecha_ejecucion')->nullable();

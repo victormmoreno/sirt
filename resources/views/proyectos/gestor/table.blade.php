@@ -3,7 +3,7 @@
     <tr>
       <th>Código de Proyecto</th>
       <th>Nombre</th>
-      <th>Foco</th>
+      <th>Sublínea</th>
       <th>Estado</th>
       <th>Revisado Final</th>
       <th>Talentos</th>

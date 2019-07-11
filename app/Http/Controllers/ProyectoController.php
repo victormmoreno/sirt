@@ -3,20 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea};
-use App\Repositories\Repository\{EmpresaRepository};
+use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea, Entidad};
+use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository};
+use App\Http\Requests\ProyectoFormRequest;
+use Illuminate\Support\Facades\Validator;
 use Alert;
 
 class ProyectoController extends Controller
 {
   public $empresaRepository;
+  public $proyectoRepository;
 
-  public function __construct(EmpresaRepository $empresaRepository)
+  public function __construct(EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository)
   {
     $this->empresaRepository = $empresaRepository;
+    $this->proyectoRepository = $proyectoRepository;
     $this->middleware([
       'auth',
     ]);
+  }
+
+  // Consulta los proyectos de un gestor por año (De la fecha de cierre)
+  public function datatableProyectosDelGestorPorAnho($idgestor, $anho)
+  {
+    if (request()->ajax()) {
+      $idgestor = "";
+      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        $idgestor = auth()->user()->gestor->id;
+      }
+      $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
+      dd($proyectos);
+    }
   }
 
   // Datatable para listar las ideas de proyectos con emprendedores (que aprobaron el CSIBT)
@@ -24,6 +41,7 @@ class ProyectoController extends Controller
   {
     if (request()->ajax()) {
       $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id )->get();
+      // dd($ideas);
       return datatables()->of($ideas)
       ->addColumn('checkbox', function ($data) {
         $checkbox = '
@@ -217,7 +235,26 @@ class ProyectoController extends Controller
   */
   public function store(Request $request)
   {
-    //
+    $req = new ProyectoFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'fail' => true,
+        'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->proyectoRepository->store($request);
+    if ($result == false) {
+      return response()->json([
+          'fail' => false,
+          'redirect_url' => false
+      ]);
+    } else {
+      return response()->json([
+          'fail' => false,
+          'redirect_url' => url(route('proyecto'))
+      ]);
+    }
   }
 
   /**

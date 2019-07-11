@@ -29,6 +29,14 @@ class Talento extends Model
             ->withPivot('talento_lider');
     }
 
+    // Relacion muchos a muchos con articulaciones
+    public function proyectos()
+    {
+      return $this->belongsToMany(Proyecto::class, 'proyecto_talento')
+      ->withTimestamps()
+      ->withPivot('talento_lider');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

@@ -26,11 +26,8 @@ class CreateEntrenamientosTable extends Migration
             $table->date('fecha_sesion1');
             $table->date('fecha_sesion2');
             $table->tinyInteger('correos')->nullable()->default('0');
-            $table->string('dir_correos',1000)->nullable();
             $table->tinyInteger('fotos')->nullable()->default('0');
-            $table->string('dir_fotos',1000)->nullable();
             $table->tinyInteger('listado_asistencia')->nullable()->default('0');
-            $table->string('dir_listado_asistencia',1000)->nullable();
             $table->timestamps();
         });
     }

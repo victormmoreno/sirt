@@ -36,11 +36,13 @@
                 <div class="divider"></div>
                 <div class="card-panel red lighten-3">
                   <div class="card-content white-text">
-                    <a class="btn-floating red"><i class="material-icons left">info_outline</i></a><span>Los elementos con (*) son obligatorios</span>
+                    <a class="btn-floating red"><i class="material-icons left">info_outline</i></a>
+                    <span>Los elementos con (*) son obligatorios</span>
                   </div>
                 </div>
                 <br />
-                <form action=""  method="POST">
+                <form id="frmProyectosCreate" action="{{route('proyecto.store')}}" method="POST">
+                  {!! csrf_field() !!}
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
                       <input disabled id="txtgestor" name="txtgestor" value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
@@ -125,9 +127,18 @@
                       <!-- <label>Estado del Proyecto *</label> -->
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="input-field col s12 m6 l6 offset-l3 m3">
+                      <input type="text" name="txtfecha_inicio" id="txtfecha_inicio" value="{{ \Carbon\Carbon::now()->toDateString() }}" class="datepicker picker__input">
+                      <label for="txtfecha_inicio">Fecha de Inicio <span class="red-text">*</span></label>
+                    </div>
+                  </div>
                   <div class="divider"></div>
                   {{-- <div class="divider"></div> --}}
                   <div id="divEntidadesTecnoparque">
+                    <center>
+                      <div id="txtentidad_proyecto_id-error" class="error red-text"></div>
+                    </center>
                     <div class="row">
                       <div class="col s12 m12 l12">
                         <center>
@@ -194,7 +205,9 @@
                       </div>
                     </div>
                     <input type="hidden" name="txtentidad_proyecto_id" id="txtentidad_proyecto_id" value="">
+                    {{-- <div id="txtentidad_proyecto_id-error" class="error red-text">Error</div> --}}
                   </div>
+                  <div class="divider"></div>
                   <div class="row">
                     <div class="col s12 m12 l12">
                       <center>
@@ -203,7 +216,7 @@
                         <div class="switch m-b-md">
                           <label>
                             No
-                            <input type="checkbox" name="ideaProyecto" id="ideaProyecto" value="1"/>
+                            <input type="checkbox" name="ideaProyecto" id="ideaProyecto" onchange="resetIdeaDeProyectoAsociadaAlProyecto();" value="1"/>
                             <span class="lever"></span>
                             Si
                           </label>
@@ -215,17 +228,109 @@
                     <div class="col s12 m6 l6 offset-l3 m3">
                       <center>
                         <div class="card-panel grey lighten-3">
-                          <div class="input-field col s12 m12 l12">
-                            <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" readonly>
-                            <label for="txtnombreIdeaProyecto_Proyecto">Idea de Proyecto</label>
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12">
+                              <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" readonly>
+                              <label for="txtnombreIdeaProyecto_Proyecto">Idea de Proyecto</label>
+                              <small id="txtidea_id-error" class="error red-text"></small>
+                            </div>
+                            <a class="btn-floating blue" onclick="consultarIdeasDeProyectoDelNodo();"><i class="material-icons left">search</i>Buscar</a>
                           </div>
-                          <a class="btn-floating blue" onclick="consultarIdeasDeProyectoDelNodo();"><i class="material-icons left">search</i>Buscar</a>
+                          <div class="row">
+                            <div class="input-field col s12 m12 l12">
+                              <input type="text" id="txtnombre" name="txtnombre">
+                              <label for="txtnombre">Nombre de Proyecto <span class="red-text">*</span></label>
+                              <small id="txtnombre-error" class="error red-text"></small>
+                            </div>
+                          </div>
                         </div>
                       </center>
                       <input type="hidden" name="txtidea_id" id="txtidea_id" value="">
                     </div>
                   </div>
                   <div class="divider"></div>
+                  {{-- <div class="row"> --}}
+                  <div class="row">
+                    <div class="col s12 m12 l12">
+                      <center>
+                        <a class="btn-floating blue-grey modal-trigger" href="#modalInformacioTalentosQueDesarrollaranElProyecto"><i class="material-icons left">info_outline</i></a>
+                        <span class="card-title center-align"><b>Talentos que desarrollarán el proyecto.</b></span>
+                      </center>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s12 m12 l12">
+                      <div class="card-content">
+                        <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+                          <li>
+                            <div class="collapsible-header active blue-grey lighten-1"><i class="material-icons">people</i>Pulse aquí para ver la información de los talentos.</div>
+                            <div class="collapsible-body">
+                              <div class="card-content">
+                                <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+                                  <li>
+                                    <div class="collapsible-header cyan lighten-1"><i class="material-icons">group_add</i>Pulse aquí para ver los talentos y asociarlos al proyecto.</div>
+                                    <div class="collapsible-body">
+                                      {{-- Collapsible 1 --}}
+                                      <div class="card-content">
+                                        <div class="row">
+                                          <table id="talentosDeTecnoparque_ProyectoCreate_table" style="width: 100%">
+                                            <thead>
+                                              <th>Documento de Identidad</th>
+                                              <th>Nombres del Talento</th>
+                                              <th>Asociar al Proyecto</th>
+                                            </thead>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                                <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+                                  <li>
+                                    <div class="collapsible-header green lighten-1"><i class="material-icons">people</i>Pulse aquí para la información de los talentos asociados al proyecto.</div>
+                                    <div class="collapsible-body">
+                                      {{-- Collapsible 2 --}}
+                                      <div class="card-content">
+                                        <div class="row">
+                                          <table id="detalleTalentosDeUnProyecto_Create" class="striped">
+                                            <thead>
+                                              <tr>
+                                                <th style="width: 15%">Talento Líder</th>
+                                                <th style="width: 40%">Talento</th>
+                                                <th style="width: 20%">Eliminar</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                        <div id="talentos-error" class="error red-text"></div>
+                                        <div id="radioTalentoLider-error" class="error red-text"></div>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="row">
+                    <div class="input-field col s12 m6 l6">
+                      <textarea name="txtimpacto_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtimpacto_proyecto" ></textarea>
+                      <label for="txtimpacto_proyecto">Impacto del proyecto</label>
+                      <small id="txtimpacto_proyecto-error" class="error red-text"></small>
+                    </div>
+                    <div class="input-field col s12 m6 l6">
+                      <textarea  name="txtobservaciones_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtobservaciones_proyecto"></textarea>
+                      <label for="txtobservaciones_proyecto">Observaciones</label>
+                      <small id="txtobservaciones_proyecto-error" class="error red-text"></small>
+                    </div>
+                  </div>
                   <div class="row">
                     <div class="col s6 m6 l6">
                       <span class="black-text text-black">Articulado con CT+i <span class="red-text">*</span></span>
@@ -239,8 +344,9 @@
                       </div>
                     </div>
                     <div id="divNombreActorCTi" class="input-field col s6 m6 l6">
-                      <input type="text" name="nom_act_cti" id="nom_act_cti" value="">
-                      <label for="nom_act_cti">Nombre del Actor CT+i<span class="red-text">*</span></label>
+                      <input type="text" name="txtnom_act_cti" id="txtnom_act_cti">
+                      <label for="txtnom_act_cti">Nombre del Actor CT+i <span class="red-text">*</span></label>
+                      <small id="txtnom_act_cti-error" class="error red-text"></small>
                     </div>
                   </div>
                   <div class="row">
@@ -279,6 +385,17 @@
                         </label>
                       </div>
                     </div>
+                    <div class="col s6 m6 l6">
+                      <span class="black-text text-black">¿El proyecto pertenece a la economía naranja? <span class="red-text">*</span></span>
+                      <div class="switch m-b-md">
+                        <label>
+                          No
+                          <input type="checkbox" name="txteconomia_naranja" id="txteconomia_naranja" value="1">
+                          <span class="lever"></span>
+                          Si
+                        </label>
+                      </div>
+                    </div>
                   </div>
                   <div class="divider"></div>
                   <center>
@@ -298,6 +415,71 @@
 @endsection
 @push('script')
   <script>
+
+  //Enviar formulario
+  $(document).on('submit', 'form#frmProyectosCreate', function (event) {
+    // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+      type: form.attr('method'),
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        $('button[type="submit"]').removeAttr('disabled');
+        // $('button[type="submit"]').prop("disabled", false);
+        $('.error').hide();
+        if (data.fail) {
+            Swal.fire({
+              title: 'Registro Erróneo',
+              text: "Estas ingresando mal los datos!",
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            })
+          for (control in data.errors) {
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+          }
+        }
+        if (data.fail == false && data.redirect_url == false) {
+          Swal.fire({
+            title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
+            // text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+        }
+        if (data.fail == false && data.redirect_url != false) {
+          Swal.fire({
+            title: 'Registro Exitoso',
+            text: "El proyecto ha sido creado satisfactoriamente",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          });
+          setTimeout(function(){
+            window.location.replace("{{route('proyecto')}}");
+          }, 1000);
+        }
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      }
+    });
+  });
+
+
   // Contenedores
   divPreload = $('#divPreload');
   divEntidadEmpresaProyecto = $('#divEntidadEmpresaProyecto');
@@ -322,6 +504,38 @@
   divNombreActorCTi.hide();
   divOtroTipoArticulacion.hide();
   divEntidadesTecnoparque.hide();
+
+  $('#talentosDeTecnoparque_ProyectoCreate_table').DataTable({
+    // "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/usuario/talento/getTalentosDeTecnoparque/",
+      type: "get",
+    },
+    columns: [
+    {
+      data: 'documento',
+      name: 'documento',
+    },
+    {
+      data: 'talento',
+      name: 'talento',
+    },
+    {
+      data: 'add_proyecto',
+      name: 'add_proyecto',
+      orderable: false,
+    },
+    ],
+  });
+
+
+
   function consultarEntidadesSegunElCaso(id) {
     let nombre = $("#txttipoarticulacionproyecto_id [value='"+id+"']").text();
     if (nombre == 'Empresas') {
@@ -555,6 +769,13 @@
     // }
   }
 
+  // -- Cambia la idea asociada a null en caso de que se cambie el check del campo "¿La idea de proyecto se aprobó en el CSIBT?"
+  function resetIdeaDeProyectoAsociadaAlProyecto() {
+    $('#txtidea_id').val("");
+    $('#txtnombreIdeaProyecto_Proyecto').val("");
+    $("label[for='txtnombreIdeaProyecto_Proyecto']").removeClass('active');
+  }
+
   // Consultas las ideas de proyecto si fueron aprobadas en el comité ó si son con empresa  emprendedor
   function consultarIdeasDeProyectoDelNodo() {
     let tipo = 0;
@@ -663,7 +884,9 @@
       title: 'La siguiente idea se ha asociado al proyecto: ' + id + ' - ' + nombre
     });
     $('#txtnombreIdeaProyecto_Proyecto').val(id +" - "+ nombre);
+    $('#txtnombre').val(nombre);
     $("label[for='txtnombreIdeaProyecto_Proyecto']").addClass('active');
+    $("label[for='txtnombre']").addClass('active');
   }
 
 
@@ -838,7 +1061,6 @@
     }
   });
 
-
   $('#txtarti_cti').change(function() {
     if ( $('#txtarti_cti').is(':checked') ) {
       divNombreActorCTi.show();
@@ -846,5 +1068,61 @@
       divNombreActorCTi.hide();
     }
   });
+
+  function noRepeat(id) {
+    let idTalento = id;
+    let retorno = true;
+    let a = document.getElementsByName("talentos[]");
+    for (x=0;x<a.length;x++){
+      if (a[x].value == idTalento) {
+        retorno = false;
+        break;
+      }
+    }
+    return retorno;
+  }
+
+  // Método para agregar talentos a una articulación
+  function addTalentoProyecto(id) {
+    if (noRepeat(id) == false) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        type: 'warning',
+        title: 'El talento ya se encuentra asociado al proyecto!'
+      });
+    } else {
+      // let talentos = document.getElementsByName("talentos[]");
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/talento/consultarTalentoPorId/'+id,
+      }).done(function(ajax){
+        // <input type="text" id="rolTalento'+idTalento+'" value="" readonly>
+        // El ajax.talento.id es el id del TALENTO, no del usuario
+        let idTalento = ajax.talento.id;
+        let fila = '<tr class="selected" id=talentoAsociadoAProyecto'+idTalento+'>'
+        +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'" /><label for ="radioButton'+idTalento+'"></label></td>'
+        +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.documento+' - '+ajax.talento.talento+'</td>'
+        +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
+        +'</tr>';
+        $('#detalleTalentosDeUnProyecto_Create').append(fila);
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          type: 'success',
+          title: 'El talento se ha asociado al proyecto!'
+        });
+      });
+      }
+    }
+
+    function eliminar(index){
+      $('#talentoAsociadoAProyecto'+index).remove();
+    }
 </script>
 @endpush

@@ -57,6 +57,28 @@
   </div>
 </div>
 
+<div id="modalInformacioTalentosQueDesarrollaranElProyecto" class="modal">
+  <div class="modal-content">
+    <h4>A tener en cuenta:</h4>
+    <ul class="collection">
+      <li class="collection-item">
+        Para asociar un talento a un proyecto, se debe buscar el talento en la tabla, después se debe presionar el botón con el ícono <i class="material-icons">done</i>,
+        luego el talento se asociará al proyecto.
+      </li>
+      <li class="collection-item">
+        Para seleccionar el talento líder del proyecto, debe presionar en la casilla "<b>Talento Líder</b>" del talento que será Talento líder del proyecto, esto se debe hacer luego de haber
+        seleccionado los talentos que se asociarán al proyecto.
+      </li>
+      <li class="collection-item">
+        Solo un talento asociado al proyecto puede ser <b>Talento Líder</b>.
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok!</a>
+  </div>
+</div>
+
 <div id="modalInformacioSobreLasIdeasDeProyecto_Proyecto" class="modal">
   <div class="modal-content">
     <h4>A tener en cuenta:</h4>

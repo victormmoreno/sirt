@@ -99,10 +99,12 @@ class Idea extends Model
         'tipo_idea'
         )
         ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+        ->join('estadosidea', 'estadosidea.id', 'ideas.estadoidea_id')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
         ->where([
           ['nodos.id', '=',$idnodo],
           ['tipo_idea', '=', $this->IsEmpresa()],
+          ['estadosidea.nombre', '=', 'Inicio'],
         ])
         ->orWhere('tipo_idea', '=', $this->IsGrupoInvestigacion());
     }
@@ -119,8 +121,10 @@ class Idea extends Model
         ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
         ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
         ->where('nodos.id', $idnodo)
         ->where('comite_idea.admitido', 1)
+        ->where('estadosidea.nombre', 'Admitido')
         ->where('tipo_idea', $this->IsEmprendedor());
     }
 
@@ -204,7 +208,8 @@ class Idea extends Model
       return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id',
       'telefono_contacto', 'ideas.id', 'estadosidea.nombre AS estado_idea')
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-      ->where('estadosidea.nombre', 'Inicio');
+      ->where('estadosidea.nombre', 'Inicio')
+      ->where('tipo_idea', $this->IsEmprendedor());
     }
 
 }
