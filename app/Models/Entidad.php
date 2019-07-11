@@ -52,6 +52,11 @@ class Entidad extends Model
       return $this->hasMany(Articulacion::class, 'entidad_id', 'id');
     }
 
+    public function talentos()
+    {
+      return $this->hasMany(Talento::class, 'entidad_id', 'id');
+    }
+
     /*========================================================================
     =            scope para consultar los grupos de investigacion            =
     ========================================================================*/

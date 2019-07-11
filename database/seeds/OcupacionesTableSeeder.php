@@ -24,6 +24,6 @@ class OcupacionesTableSeeder extends Seeder
             'nombre' => 'Empleado',
         ]);
 
-        factory(Ocupacion::class, 20)->create();
+        // factory(Ocupacion::class, 20)->create();
     }
 }

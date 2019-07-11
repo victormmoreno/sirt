@@ -16,6 +16,7 @@ use App\Models\Ocupacion;
 use App\Models\Perfil;
 use App\Models\Regional;
 use App\Models\Rols;
+use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
@@ -235,17 +236,14 @@ class UserRepository
     /*======================================================
     =            metodo para guardar un usuario            =
     ======================================================*/
-
     public function Store($request, $password)
     {
-        return Entidad::join('gruposinvestigacion','gruposinvestigacion.entidad_id','entidades.id')
-                ->where('gruposinvestigacion.codigo_grupo',$request->get('txtgrupoinvestigacion'))
-                ->first()->id;
-                 
+      
         DB::beginTransaction();
         try {
 
             $user = $this->storeUser($request, $password);
+
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
             if (collect($request->input('role'))->contains(User::IsAdministrador())) {
@@ -282,11 +280,18 @@ class UserRepository
             }
 
             if (collect($request->input('role'))->contains(User::IsTalento())) {
-                
+                    $this->storeTalento($request,$user);
+                    $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
             }
 
+            if (collect($request->input('role'))->contains(User::IsIngreso()) || collect($request->input('role'))->contains(User::IsProveedor())) {
+                    
+                    $this->assignRoleUser($user, $request->input('role'));
+            }
+
+
             DB::commit();
-            return true;
+            return $user;
         } catch (Exception $e) {
             DB::rollback();
             return false;
@@ -333,27 +338,54 @@ class UserRepository
         return $user->assignRole($role);
     }
 
-    protected function storeTalento($request)
+    protected function storeTalento($request,$user)
     {
+
         $entidad = null;  
 
         if ($request->get('txtperfil') == Perfil::IsAprendizSenaConApoyo() || $request->get('txtperfil') == Perfil::IsAprendizSenaSinApoyo() || $request->get('txtperfil') == Perfil::IsEgresadoSena()) {
-            $entidad = $request->input('txtcentroformacion');
+            $entidad = $request->input('txtcentroformacion') ? : $this->getIdNoAplicaEntidad();
         }else if($request->get('txtperfil') == Perfil::IsInvestigador()){
-            $entidad = Entidad::where('nombre','No Aplica')->first()->id;
+            $entidad = $this->getIdGrupoInvesitgacion($request) ? : $this->getIdNoAplicaEntidad();
         }else{
-            $entidad = Entidad::where('nombre','No Aplica')->first()->id;
+            $entidad = $this->getIdNoAplicaEntidad();
         }
         return Talento::create([
                     "user_id"   => $user->id,
                     "perfil_id"   => $request->input('txtperfil'),
                     "entidad_id" => $entidad,
-                    "universidad" => $request->input('txtuniversidad'),
-                    "programa_formacion" => $request->input('txtprogramaformacion'),
-                    "carrera_universitaria" => $request->input('txtcarrerauniversitaria'),
-                    "empresa" => $request->input('txtempresa'),
-                    "otro_tipo_talento" => $request->input('txtotrotipotalento'),
+                    "universidad" => $request->input('txtuniversidad') ? : null,
+                    "programa_formacion" => $request->input('txtprogramaformacion') ? : 'No Aplica',
+                    "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ? : 'No Aplica',
+                    "empresa" => $request->input('txtempresa') ? $request->input('txtempresa') : null,
+                    "otro_tipo_talento" => $request->input('txtotrotipotalento') ? : null,
                 ]);
     }
+
+    /*===============================================================================
+    =            metodo para consultar el id del grupo de investigacion (table entidad)            =
+    ===============================================================================*/
+    private function getIdGrupoInvesitgacion($request)
+    {
+        return Entidad::select('entidades.id')->join('gruposinvestigacion','gruposinvestigacion.entidad_id','entidades.id')
+                ->where('entidades.nombre',$request->get('txtgrupoinvestigacion'))
+                ->first()->id;
+    }
+    
+    
+    /*=====  End of metodo para consultar el id del grupo de investigacion (table entidad)  ======*/
+
+    /*====================================================================================
+    =            metodo para consultar el id de no aplica en la tabla entidad            =
+    ====================================================================================*/
+    protected function getIdNoAplicaEntidad()
+    {
+        return Entidad::where('nombre','No Aplica')->first()->id;
+    }
+    
+    
+    /*=====  End of metodo para consultar el id de no aplica en la tabla entidad  ======*/
+    
+    
 
 }

@@ -64,8 +64,8 @@ class Centro extends Model
     {
 
         return $query->select(['centros.id','entidades.nombre'])
-                ->join('entidades','entidades.id','centros.entidad_id')
-                ->join('regionales','regionales.id','centros.regional_id')
+                ->join('entidades','entidades.id','=','centros.entidad_id')
+                ->join('regionales','regionales.id', '=','centros.regional_id')
                 ->where('centros.regional_id',$regional);
 
     }

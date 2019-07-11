@@ -22,7 +22,7 @@
 
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Usuario
+                                        Editar Usuario: <b>{{$user->nombres}} {{$user->apellidos}}</b>
                                     </span>
                                     <i class="Small material-icons prefix">
                                         supervised_user_circle
@@ -44,9 +44,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.usuarios.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                <form action="{{ route('usuario.usuarios.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                    {!! method_field('PUT')!!}
                                     @include('users.administrador.form', [
-                                        'btnText' => 'Guardar',
+                                        'btnText' => 'Modificar',
                                     ])
                                 </form>
                             
@@ -71,6 +72,7 @@ $(document).ready(function() {
     roles.getRoleSeleted();
     grupoInvestigacion.getGrupoInvestigacion();
         TipoTalento.getSelectTipoTalento();
+    regional.getCentroFormacion();
     @if($errors->any())
         linea.getSelectLineaForNodo();
         UserCreate.getCiudad();
@@ -312,10 +314,17 @@ var regional = {
         $.each(response.centros, function(id, nombre) {
           // console.log(e.id);
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
-        });
+          @if($errors->any())
+        $('#txtcentroformacion').val({{old('txtcentroformacion')}});
+        @else
+        $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+        @endif
         $('#txtcentroformacion').material_select();
-       
-      });
+        
+        });
+         
+      });    
+      
     }
 }
 

@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Http\Controllers\PDF\PdfComiteController;
 
-class SendEmailIdeaComite extends Mailable
+class SendEmailIdeaComite extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
     public $datosIdea;
@@ -22,7 +22,7 @@ class SendEmailIdeaComite extends Mailable
     public function __construct($datosIdea, $pdf)
     {
         $this->datosIdea = $datosIdea;
-        $this->pdf = $pdf;
+        $this->pdf = base64_encode($pdf);
     }
 
     /**
@@ -33,7 +33,7 @@ class SendEmailIdeaComite extends Mailable
     public function build()
     {
         return $this->markdown('emails.comite.send-email-ideas-comite')
-        ->attachData($this->pdf, 'name.pdf', [
+        ->attachData(base64_decode($this->pdf), 'name.pdf', [
           'mime' => 'application/pdf',
         ]);
     }

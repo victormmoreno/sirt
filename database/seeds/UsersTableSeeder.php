@@ -79,7 +79,7 @@ class UsersTableSeeder extends Seeder
             'estrato'             => rand(1, 6),
         ]);
 
-        $userAdmin->assignRole($roleAdministrador);
+        $userAdmin->assignRole([$roleAdministrador,$roleDinamizador]);
         $userAdmin->givePermissionTo($registrarIdeaPermission);
 
         $ocupacion = Ocupacion::all()->random()->id;

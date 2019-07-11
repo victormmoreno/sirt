@@ -46,7 +46,7 @@ class GrupoInvestigacionController extends Controller
         return datatables()->of($this->grupoInvestigacionRepository->getAllGruposInvestigacionDatatables($ciudad))
                       ->addColumn('details', function ($data) {
                               $input = '
-                                    <input class="with-gap" id="grupoInvestigacion'.$data->id.'" name="grupoInvestigacion" type="radio" value="'.$data->codigo_grupo.'" onchange="grupoInvestigacion.getCheckoxSeletedDatatables(this)"/>
+                                    <input class="with-gap" id="grupoInvestigacion'.$data->id.'" name="grupoInvestigacion" type="radio" value="'.$data->nombre.'" onchange="grupoInvestigacion.getCheckoxSeletedDatatables(this)"/>
                                   <label for="grupoInvestigacion'.$data->id.'"></label>
                               ';
                               return $input;

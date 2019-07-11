@@ -20,7 +20,7 @@ class AdminRepository
             ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
             ->Join('rols', 'rols.id', '=', 'users.rol_id')
-            ->where('rols.nombre', '=', Rols::IsAdministrador())
+            ->role(User::IsAdministrador())
             ->orderby('users.created_at', 'desc')
             ->get();
 

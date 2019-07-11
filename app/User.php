@@ -163,6 +163,8 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
 
+
+
     public function token()
     {
         return $this->hasOne(ActivationToken::class);

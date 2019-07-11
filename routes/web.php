@@ -143,11 +143,6 @@ Route::group([
 ],
     function () {
 
-        
-        
-        
-
-
         Route::get('/talento/getTalentosDeTecnoparque', [
           'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
           'as' => 'talento.tecnoparque',
@@ -162,24 +157,7 @@ Route::group([
         'uses' => 'AdminController@getOcupacionSesion',
         ]);
 
-        Route::get('/administrador/remove-ocupacion/{id}', [
-        'uses' => 'AdminController@removerItemOcupacion',
-        ]);
-
-        Route::get('/administrador/anadir-ocupacion/{id}', [
-        'uses' => 'AdminController@anadirOcupacion',
-        'as' => 'administrador.anadirocupacion'
-        ]);
-
-        Route::get('/administrador/anadir-ocupacion-edit/{idOcupacion}/{idUser}', [
-        'uses' => 'AdminController@anadirOcupacionEdit',
-        'as' => 'administrador.anadirocupacion.edit'
-        ]);
-
-        Route::post('/anadir-ocupacion', [
-            'uses' => 'AdminController@postanadirOcupacion',
-            'as'   => 'administrador.postanadirocupacion',
-        ]);
+        
         Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
 
         Route::resource('administrador', 'AdminController', ['as' => 'usuario']);

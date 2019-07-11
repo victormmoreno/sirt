@@ -29,6 +29,18 @@ class Perfil extends Model
         'nombre',
     ];
 
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
+    
+    public function talentos()
+    {
+      return $this->hasMany(Talento::class, 'perfil_id', 'id');
+    }
+    
+    /*=====  End of relaciones eloquent  ======*/
+    
+
     /*===========================================================================
     =            scope para consultar todos los perfiles del talento            =
     ===========================================================================*/

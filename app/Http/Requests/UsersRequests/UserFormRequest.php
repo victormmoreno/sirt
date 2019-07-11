@@ -64,7 +64,7 @@ class UserFormRequest extends FormRequest
             'txtuniversidad' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsEstudianteUniversitarioPregrado())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsEstudianteUniversitarioPostgrado())->first()->id) . '|nullable',
             'txtempresa' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioEmpresaPublica())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioMicroempresa())->first()->id|| $this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioMedianaEmpresa())->first()->id || $this->txtperfil == Perfil::where('nombre',Perfil::IsFuncionarioGrandeEmpresa())->first()->id) . '|nullable',
             'txtotrotipotalento' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsOtro())->first()->id) . '|nullable',
-            'txtgrupoinvestigacion' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsInvestigador())->first()->id) . '|nullable|exists:gruposinvestigacion,codigo_grupo',
+            'txtgrupoinvestigacion' => Rule::requiredIf($this->txtperfil == Perfil::where('nombre',Perfil::IsInvestigador())->first()->id) . '|nullable|exists:entidades,nombre',
 
         ];
     }

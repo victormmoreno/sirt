@@ -33,7 +33,7 @@ class DinamizadorRepository
             ->Join('dinamizador', 'dinamizador.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'dinamizador.nodo_id')
             ->Join('rols', 'rols.id', '=', 'users.rol_id')
-            ->where('rols.nombre', '=', Rols::IsDinamizador())
+            ->role(User::IsDinamizador())
             ->where('nodos.id', '=', $nodo)
             ->orderby('users.created_at', 'desc')
             ->get();

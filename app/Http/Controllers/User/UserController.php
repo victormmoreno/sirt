@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormRequest;
 use App\Repositories\Repository\UserRepository\UserRepository;
@@ -61,15 +62,23 @@ class UserController extends Controller
      */
     public function store(UserFormRequest $request)
     {
-        // dd($request->all());
-        
+
         //generar contraseña
         $password = User::generatePasswordRamdom();
         //guardar registro
-        $user = $this->userRepository->Store($request, $password);
+        $user            = $this->userRepository->Store($request, $password);
+        $activationToken = $this->userRepository->activationToken($user->id);
 
-        dd($user);
+        //envio de email con contraseña
+        if ($user != null) {
+            event(new UserWasRegistered($user, $password));
+            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $user->nombres . ' ' . $user->apellidos . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+        } else {
+            alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
+        }
+        //redireccion
 
+        return redirect()->route('usuario.administrador.index');
 
     }
 
@@ -92,7 +101,21 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        
+
+        return view('users.administrador.edit', [
+            'user'              => $this->userRepository->findById($id),
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+            'roles'             => $this->userRepository->getAllRoles(),
+            'nodos'             => $this->userRepository->getAllNodo(),
+            'perfiles'          => $this->userRepository->getAllPerfiles(),
+            'regionales'        => $this->userRepository->getAllRegionales(),
+        ]);
     }
 
     /**

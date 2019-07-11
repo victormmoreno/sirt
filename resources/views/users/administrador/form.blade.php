@@ -1,5 +1,9 @@
 
 @if ($errors->any())
+
+@foreach($errors as $error)
+    <li> {{$error}}</li>
+@endforeach
 <div class="card red lighten-3">
     <div class="row">
         <div class="col s12 m12">
@@ -34,11 +38,15 @@
         <div class="col s12 m12 l12">
             <ul class="collection with-header">
                 <li class="collection-header center"><h6><b>Roles</b></h6></li>
-
+                
                 @forelse($roles as  $name)
                     <li class="collection-item">
                         <p class="p-v-xs">
-                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
+                            @if(isset($user))
+                                <input type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
+                            @else
+                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">  
+                            @endif
                             <label for="test-{{$name}}">{{$name}}</label>
                         </p>
                     </li>
@@ -52,6 +60,7 @@
                 </div> 
             @enderror
         </div>
+        
         <div id="dinamizador">
             <div class="input-field col s12 m12 l12">
                 
@@ -438,7 +447,7 @@
         <i class="material-icons prefix">
             settings_cell
         </i>
-        <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtinstitucion')}}">
+        <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion')}}">
         <label for="txtinstitucion">Institución <span class="red-text">*</span></label>
         @error('txtinstitucion')
             <label id="txtinstitucion-error" class="error" for="txtinstitucion">{{ $message }}</label>
@@ -470,7 +479,7 @@
         <i class="material-icons prefix">
             settings_cell
         </i>
-        <input class="validate" id="txttitulo" name="txttitulo" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txttitulo')}}">
+        <input class="validate" id="txttitulo" name="txttitulo" type="text"  value="{{ isset($user->titulo_obtenido) ? $user->titulo_obtenido : old('txttitulo')}}">
         <label for="txttitulo">Titulo Obtenido <span class="red-text">*</span></label>
         @error('txttitulo')
             <label id="txttitulo-error" class="error" for="txttitulo">{{ $message }}</label>
@@ -526,6 +535,7 @@
             </div>
         </div>
     </div>
+    
     <div class="row">
         <div class="input-field col s12 m4 l4 ">
             <i class="material-icons prefix">
@@ -534,8 +544,8 @@
             <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1" onchange="TipoTalento.getSelectTipoTalento(this)">
                 <option value="">Seleccione tipo de talento</option>
                 @foreach($perfiles as $id => $nombre)
-                    @if(isset($user->gradoescolaridad_id))
-                    <option value="{{$id}}" {{old('txtperfil',$user->gradoescolaridad_id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                    @if(isset($user->talento->perfil->id))
+                    <option value="{{$id}}" {{old('txtperfil',$user->talento->perfil->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
                     @else
                         <option value="{{$id}}" {{old('txtperfil') ==$id ? 'selected':''}}>{{$nombre}}</option>
                     @endif
@@ -554,8 +564,8 @@
             <select class="" id="txtregional" name="txtregional" style="width: 100%" tabindex="-1" onchange="regional.getCentroFormacion()">
                 <option value="">Seleccione regional</option>
                 @foreach($regionales as $id => $nombre)
-                    @if(isset($user->gradoescolaridad_id))
-                    <option value="{{$id}}" {{old('txtregional',$user->gradoescolaridad_id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                    @if(isset($user->talento->entidad->centro->regional))
+                    <option value="{{$id}}" {{old('txtregional',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
                     @else
                         <option value="{{$id}}" {{old('txtregional') ==$id ? 'selected':''}}>{{$nombre}}</option>
                     @endif
@@ -583,7 +593,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtprogramaformacion" name="txtprogramaformacion" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtprogramaformacion')}}">
+            <input class="validate" id="txtprogramaformacion" name="txtprogramaformacion" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion')}}">
             <label for="txtprogramaformacion">Programa de Formación <span class="red-text">*</span></label>
             @error('txtprogramaformacion')
                 <label id="txtprogramaformacion-error" class="error" for="txtprogramaformacion">{{ $message }}</label>
@@ -593,7 +603,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtuniversidad')}}">
+            <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ?  : old('txtuniversidad')}}">
             <label for="txtuniversidad">Universidad</label>
             @error('txtuniversidad')
                 <label id="txtuniversidad-error" class="error" for="txtuniversidad">{{ $message }}</label>
@@ -603,7 +613,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtcarrerauniversitaria" name="txtcarrerauniversitaria" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtcarrerauniversitaria')}}">
+            <input class="validate" id="txtcarrerauniversitaria" name="txtcarrerauniversitaria" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrerauniversitaria')}}">
             <label for="txtcarrerauniversitaria">Carrera</label>
             @error('txtcarrerauniversitaria')
                 <label id="txtcarrerauniversitaria-error" class="error" for="txtcarrerauniversitaria">{{ $message }}</label>
@@ -613,7 +623,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtempresa')}}">
+            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->empresa) ? $user->empresa : old('txtempresa')}}">
             <label for="txtempresa">Empresa</label>
             @error('txtempresa')
                 <label id="txtempresa-error" class="error" for="txtempresa">{{ $message }}</label>
@@ -623,7 +633,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtotrotipotalento" name="txtotrotipotalento" type="text"  value="{{ isset($user->celular) ? $user->celular : old('txtotrotipotalento')}}">
+            <input class="validate" id="txtotrotipotalento" name="txtotrotipotalento" type="text"  value="{{ isset($user->talento->otro_tipo_talento) ? $user->talento->otro_tipo_talento : old('txtotrotipotalento')}}">
             <label for="txtotrotipotalento">¿Cuál?</label>
             @error('txtotrotipotalento')
                 <label id="txtotrotipotalento-error" class="error" for="txtotrotipotalento">{{ $message }}</label>
@@ -634,9 +644,9 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtgrupoinvestigacion" name="txtgrupoinvestigacion"  type="text" readonly  value="{{ isset($user->celular) ? $user->celular : old('txtgrupoinvestigacion')}}">
+            <input class="validate" id="txtgrupoinvestigacion" name="txtgrupoinvestigacion"  type="text" readonly  value="{{ isset($user->talento->entidad->grupoinvestigacion->entidad->nombre) ?  : old('txtgrupoinvestigacion')}}">
             
-            <label class="grupoInvestigacionLabel" for="txtgrupoinvestigacion">Grupo Investigación<span class="red-text">*</span></label>
+            <label class="active" for="txtgrupoinvestigacion">Grupo Investigación<span class="red-text">*</span></label>
             
             @error('txtgrupoinvestigacion')
                 <label id="txtgrupoinvestigacion-error" class="error" for="txtgrupoinvestigacion">{{ $message }}</label>
