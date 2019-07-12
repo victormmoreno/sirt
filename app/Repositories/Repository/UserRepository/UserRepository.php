@@ -238,7 +238,7 @@ class UserRepository
     ======================================================*/
     public function Store($request, $password)
     {
-      
+
         DB::beginTransaction();
         try {
 
@@ -280,15 +280,14 @@ class UserRepository
             }
 
             if (collect($request->input('role'))->contains(User::IsTalento())) {
-                    $this->storeTalento($request,$user);
-                    $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
+                $this->storeTalento($request, $user);
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
             }
 
             if (collect($request->input('role'))->contains(User::IsIngreso()) || collect($request->input('role'))->contains(User::IsProveedor())) {
-                    
-                    $this->assignRoleUser($user, $request->input('role'));
-            }
 
+                $this->assignRoleUser($user, $request->input('role'));
+            }
 
             DB::commit();
             return $user;
@@ -301,35 +300,34 @@ class UserRepository
 
     /*=====  End of metodo para guardar un usuario  ======*/
 
-
     private function storeUser($request, $password)
     {
-        
+
         return User::create([
-                "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
-                "tipodocumento_id"    => $request->input('txttipo_documento'),
-                "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
-                "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
-                "eps_id"              => $request->input('txteps'),
-                "ciudad_id"           => $request->input('txtciudad'),
-                "nombres"             => $request->input('txtnombres'),
-                "apellidos"           => $request->input('txtapellidos'),
-                "documento"           => $request->input('txtdocumento'),
-                "email"               => $request->input('txtemail'),
-                "barrio"              => $request->input('txtbarrio'),
-                "direccion"           => $request->input('txtdireccion'),
-                "celular"             => $request->input('txtcelular'),
-                "telefono"            => $request->input('txttelefono'),
-                "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
-                "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
-                "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
-                "estado"              => User::IsInactive(),
-                "institucion"         => $request->input('txtinstitucion'),
-                "titulo_obtenido"     => $request->get('txttitulo'),
-                "fecha_terminacion"   => $request->get('txtfechaterminacion'),
-                "password"            => $password,
-                "estrato"             => $request->input('txtestrato'),
-            ]);
+            "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
+            "tipodocumento_id"    => $request->input('txttipo_documento'),
+            "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
+            "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
+            "eps_id"              => $request->input('txteps'),
+            "ciudad_id"           => $request->input('txtciudad'),
+            "nombres"             => $request->input('txtnombres'),
+            "apellidos"           => $request->input('txtapellidos'),
+            "documento"           => $request->input('txtdocumento'),
+            "email"               => $request->input('txtemail'),
+            "barrio"              => $request->input('txtbarrio'),
+            "direccion"           => $request->input('txtdireccion'),
+            "celular"             => $request->input('txtcelular'),
+            "telefono"            => $request->input('txttelefono'),
+            "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
+            "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
+            "estado"              => User::IsInactive(),
+            "institucion"         => $request->input('txtinstitucion'),
+            "titulo_obtenido"     => $request->get('txttitulo'),
+            "fecha_terminacion"   => $request->get('txtfechaterminacion'),
+            "password"            => $password,
+            "estrato"             => $request->input('txtestrato'),
+        ]);
 
     }
 
@@ -338,28 +336,28 @@ class UserRepository
         return $user->assignRole($role);
     }
 
-    protected function storeTalento($request,$user)
+    protected function storeTalento($request, $user)
     {
 
-        $entidad = null;  
+        $entidad = null;
 
         if ($request->get('txtperfil') == Perfil::IsAprendizSenaConApoyo() || $request->get('txtperfil') == Perfil::IsAprendizSenaSinApoyo() || $request->get('txtperfil') == Perfil::IsEgresadoSena()) {
-            $entidad = $request->input('txtcentroformacion') ? : $this->getIdNoAplicaEntidad();
-        }else if($request->get('txtperfil') == Perfil::IsInvestigador()){
-            $entidad = $this->getIdGrupoInvesitgacion($request) ? : $this->getIdNoAplicaEntidad();
-        }else{
+            $entidad = $request->input('txtcentroformacion') ?: $this->getIdNoAplicaEntidad();
+        } else if ($request->get('txtperfil') == Perfil::IsInvestigador()) {
+            $entidad = $this->getIdGrupoInvesitgacion($request) ?: $this->getIdNoAplicaEntidad();
+        } else {
             $entidad = $this->getIdNoAplicaEntidad();
         }
         return Talento::create([
-                    "user_id"   => $user->id,
-                    "perfil_id"   => $request->input('txtperfil'),
-                    "entidad_id" => $entidad,
-                    "universidad" => $request->input('txtuniversidad') ? : null,
-                    "programa_formacion" => $request->input('txtprogramaformacion') ? : 'No Aplica',
-                    "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ? : 'No Aplica',
-                    "empresa" => $request->input('txtempresa') ? $request->input('txtempresa') : null,
-                    "otro_tipo_talento" => $request->input('txtotrotipotalento') ? : null,
-                ]);
+            "user_id"               => $user->id,
+            "perfil_id"             => $request->input('txtperfil'),
+            "entidad_id"            => $entidad,
+            "universidad"           => $request->input('txtuniversidad') ?: null,
+            "programa_formacion"    => $request->input('txtprogramaformacion') ?: 'No Aplica',
+            "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ?: 'No Aplica',
+            "empresa"               => $request->input('txtempresa') ? $request->input('txtempresa') : null,
+            "otro_tipo_talento"     => $request->input('txtotrotipotalento') ?: null,
+        ]);
     }
 
     /*===============================================================================
@@ -367,12 +365,11 @@ class UserRepository
     ===============================================================================*/
     private function getIdGrupoInvesitgacion($request)
     {
-        return Entidad::select('entidades.id')->join('gruposinvestigacion','gruposinvestigacion.entidad_id','entidades.id')
-                ->where('entidades.nombre',$request->get('txtgrupoinvestigacion'))
-                ->first()->id;
+        return Entidad::select('entidades.id')->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', 'entidades.id')
+            ->where('entidades.nombre', $request->get('txtgrupoinvestigacion'))
+            ->first()->id;
     }
-    
-    
+
     /*=====  End of metodo para consultar el id del grupo de investigacion (table entidad)  ======*/
 
     /*====================================================================================
@@ -380,12 +377,65 @@ class UserRepository
     ====================================================================================*/
     protected function getIdNoAplicaEntidad()
     {
-        return Entidad::where('nombre','No Aplica')->first()->id;
+        return Entidad::where('nombre', 'No Aplica')->first()->id;
     }
-    
-    
+
     /*=====  End of metodo para consultar el id de no aplica en la tabla entidad  ======*/
-    
-    
+
+    /*=========================================================
+    =            metodo para actualizar un usuario            =
+    =========================================================*/
+
+    public function Update($request, $user)
+    {
+        DB::beginTransaction();
+        try {
+
+            $user = $this->updateUser($request, $user);
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;
+        }
+    }
+
+    /*=====  End of metodo para actualizar un usuario  ======*/
+
+    /*==============================================================================================
+    =            metodo privado para actualizar un usuario y se llamdo en $this->Update            =
+    ==============================================================================================*/
+
+    private function updateUser($request, $user)
+    {
+
+        return $user->update([
+            "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
+            "tipodocumento_id"    => $request->input('txttipo_documento'),
+            "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
+            "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
+            "eps_id"              => $request->input('txteps'),
+            "ciudad_id"           => $request->input('txtciudad'),
+            "nombres"             => $request->input('txtnombres'),
+            "apellidos"           => $request->input('txtapellidos'),
+            "documento"           => $request->input('txtdocumento'),
+            "email"               => $request->input('txtemail'),
+            "barrio"              => $request->input('txtbarrio'),
+            "direccion"           => $request->input('txtdireccion'),
+            "celular"             => $request->input('txtcelular'),
+            "telefono"            => $request->input('txttelefono'),
+            "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
+            "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
+            "estado"              => User::IsInactive(),
+            "institucion"         => $request->input('txtinstitucion'),
+            "titulo_obtenido"     => $request->get('txttitulo'),
+            "fecha_terminacion"   => $request->get('txtfechaterminacion'),
+            "estrato"             => $request->input('txtestrato'),
+        ]);
+
+    }
+
+    /*=====  End of metodo privado para actualizar un usuario y se llamdo en Update  ======*/
 
 }

@@ -102,7 +102,8 @@ class UserController extends Controller
     public function edit($id)
     {
         
-
+        // dd(auth()->user()->getRoleNames()->implode(', '));
+        
         return view('users.administrador.edit', [
             'user'              => $this->userRepository->findById($id),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
@@ -125,9 +126,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserFormRequest $request, $id)
     {
-        //
+        $user = $this->userRepository->findById($id);
+        if ($user != null) {
+            $userUpdate = $this->userRepository->Update($request, $user);
+            alert()->success("El Usuario {$userUpdate->nombre_completo} ha sido  modificado.", 'Modificación Exitosa', "success");
+        }
     }
 
     /**

@@ -195,6 +195,8 @@ Route::group([
     }
 );
 
+Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')->name('user.changerole');
+
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/

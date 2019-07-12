@@ -37,10 +37,11 @@ class LineaController extends Controller
     
     public function getAllLineasForNodo($nodo)
     {
-       
-        return response()->json([
-            'lineasForNodo' =>  $this->lineaRepository->getAllLineaNodo($nodo),
-        ]);
+       if (request()->ajax()) {
+            return response()->json([
+                'lineasForNodo' =>  $this->lineaRepository->getAllLineaNodo($nodo),
+            ]);
+        }
     }
     
     

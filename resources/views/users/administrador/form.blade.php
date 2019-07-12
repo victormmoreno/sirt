@@ -296,6 +296,7 @@
         @enderror 
     </div>
 </div>
+
 <div class="row">
     <div class="input-field col s12 m6 l6">
 
@@ -303,7 +304,7 @@
             details
         </i>
         @if(isset($user->ciudad->departamento->id))
-        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserEdit.getCiudad()" style="width: 100%" tabindex="-1">
             <option value="">Seleccione departamento</option>
             @foreach($departamentos as $value)
                 @if(isset($user->ciudad->departamento->id))
