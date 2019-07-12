@@ -47,6 +47,8 @@ class Proyecto extends Model
     'nodo_id', // Llave foranea
     'tipoarticulacionproyecto_id', // Llave foranea
     'estadoprototipo_id', // Llave foranea
+    'tipo_ideaproyecto',
+    'otro_tipoarticulacion',
     'otro_estadoprototipo',
     'universidad_proyecto',
     'codigo_proyecto', // Unique

@@ -29,10 +29,12 @@ class CreateProyectosTable extends Migration
             $table->unsignedInteger('areaconocimiento_id');
             $table->unsignedInteger('estadoproyecto_id');
             $table->unsignedInteger('gestor_id');
-            $table->unsignedInteger('estadoprototipo_id');
             $table->unsignedInteger('entidad_id');
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('tipoarticulacionproyecto_id');
+            $table->unsignedInteger('estadoprototipo_id');
+            $table->tinyInteger('tipo_ideaproyecto')->default('0');
+            $table->string('otro_tipoarticulacion', 50)->nullable();
             $table->string('otro_estadoprototipo', 50)->nullable();
             $table->string('universidad_proyecto', 50)->nullable();
             $table->string('codigo_proyecto', 20);

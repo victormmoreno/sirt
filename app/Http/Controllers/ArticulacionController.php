@@ -269,22 +269,22 @@ class ArticulacionController extends Controller
   {
     switch (auth()->user()->rol()->first()->nombre) {
       case 'Administrador':
-      return view('articulaciones.administrador.index', [
-        'nodos' => Nodo::SelectNodo()->get(),
-      ]);
-      break;
+        return view('articulaciones.administrador.index', [
+          'nodos' => Nodo::SelectNodo()->get(),
+        ]);
+        break;
       case 'Dinamizador':
-      return view('articulaciones.dinamizador.index', [
-        'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
-      ]);
-      break;
+        return view('articulaciones.dinamizador.index', [
+          'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+        ]);
+        break;
       case 'Gestor':
-      return view('articulaciones.gestor.index');
-      break;
+        return view('articulaciones.gestor.index');
+        break;
 
       default:
-      return back();
-      break;
+        return back();
+        break;
     }
   }
 
@@ -355,17 +355,6 @@ class ArticulacionController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -424,14 +413,4 @@ class ArticulacionController extends Controller
     }
   }
 
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
 }

@@ -94,6 +94,10 @@
         En caso de que la idea de proyecto, no se haya inscrito como una idea y por tanto no haber pasado por entrenamientos y CSIBT, el/la Infocenter del nodo deberá registrarla desde su cuenta como
         una idea de proyecto con empresa o grupo de investigación según el caso.
       </li>
+      <li class="collection-item">
+        El nombre del proyecto se registrará por defecto con el nombre de la idea de proyecto, en caso de que se quiera cambiar, solo se debe editar el nombre del proyecto una vez se elige
+        la idea de proyecto, el campo para cambiar el nombre del proyecto es: <b>Nombre de Proyecto</b>.
+      </li>
     </ul>
   </div>
   <div class="modal-footer">
@@ -131,33 +135,33 @@
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
-<div id="modal1" class="modal modal-fixed-footer">
+<div id="detallesDeUnProyecto_modal" class="modal modal-fixed-footer">
   <div class="modal-content">
-    <div id="titulo">
+    <div id="detallesDeUnProyecto_titulo">
 
     </div>
-    <div id="detalleproyecto"></div>
+    <div id="detallesDeUnProyecto_detalle"></div>
   </div>
   <div class="modal-footer  white-text">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
-<div id="modal_talentos_proyecto" class="modal modal-fixed-footer">
+<div id="talentosAsociadosAUnProyecto_modal" class="modal">
   <div class="modal-content">
-    <center><h4 id="tituloPro" class="center-aling"></h4></center>
+    <center><h4 id="talentosAsociadosAUnProyecto_titulo" class="center-aling"></h4></center>
     <div class="divider"></div>
     <div>
       <table class="striped">
         <thead>
           <tr>
-            <th>Documento de Identidad</th>
-            <th>Nombres</th>
-            <th>Correo</th>
+            <th>Rol del Talento</th>
+            <th>Talento</th>
+            {{-- <th>Correo</th>
             <th>Contacto</th>
-            <th>Información del Talento</th>
+            <th>Información del Talento</th> --}}
           </tr>
         </thead>
-        <tbody id="talentos">
+        <tbody id="talentosAsociadosAUnProyecto_table">
 
         </tbody>
       </table>

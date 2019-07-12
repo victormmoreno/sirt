@@ -8,6 +8,7 @@ use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository};
 use App\Http\Requests\ProyectoFormRequest;
 use Illuminate\Support\Facades\Validator;
 use Alert;
+use App\Helpers\ArrayHelper;
 
 class ProyectoController extends Controller
 {
@@ -23,6 +24,41 @@ class ProyectoController extends Controller
     ]);
   }
 
+  public function consultarDetallesDeUnProyecto($id)
+  {
+    if (request()->ajax()) {
+      $proyecto = ArrayHelper::validarDatoNullDeUnArray($this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id)->toArray());
+      // $proyecto = ArrayHelper::validarDatoNullDeUnArray($proyecto);
+      return response()->json([
+        'proyecto' => $proyecto,
+      ]);
+    }
+  }
+
+  // Consulta los talentos que hay en un proyecto
+  public function consultarTalentosDeUnProyecto($id)
+  {
+    if (request()->ajax()) {
+      $talentos = $this->proyectoRepository->consultarTalentosDeUnProyectoRepository($id);
+      if (count($talentos) == 0) {
+        $proyecto = "";
+      } else {
+        $proyecto = $talentos[0]->codigo_proyecto;
+      }
+
+      return response()->json([
+        'talentos' => $talentos,
+        'proyecto' => $proyecto
+      ]);
+    }
+  }
+
+  // Vista de la vista de los entregables de un proyecto
+  public function entregables($id)
+  {
+    // code...
+  }
+
   // Consulta los proyectos de un gestor por año (De la fecha de cierre)
   public function datatableProyectosDelGestorPorAnho($idgestor, $anho)
   {
@@ -32,7 +68,32 @@ class ProyectoController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
-      dd($proyectos);
+      return datatables()->of($proyectos)
+      ->addColumn('details', function ($data) {
+        $details = '
+        <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
+        <i class="material-icons">info</i>
+        </a>
+        ';
+        return $details;
+      })->addColumn('edit', function ($data) {
+        $edit = '<a class="btn m-b-xs" href='.route('proyecto.edit', $data->id).'><i class="material-icons">edit</i></a>';
+        return $edit;
+      })->addColumn('entregables', function ($data) {
+        $entregables = '
+        <a class="btn blue-grey m-b-xs" href='. route('proyecto.entregables', $data->id) .'>
+        <i class="material-icons">library_books</i>
+        </a>
+        ';
+        return $entregables;
+      })->addColumn('talentos', function ($data) {
+        $talentos = '
+        <a class="btn cyan m-b-xs" onclick="verTalentosDeUnProyecto(' . $data->id . ')">
+        <i class="material-icons">assignment_ind</i>
+        </a>
+        ';
+        return $talentos;
+      })->rawColumns(['details', 'edit', 'entregables', 'talentos'])->make(true);
     }
   }
 
@@ -276,7 +337,24 @@ class ProyectoController extends Controller
   */
   public function edit($id)
   {
-    //
+    switch (auth()->user()->rol()->first()->nombre) {
+      case 'Gestor':
+      // dd($this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id)->sublinea_id);
+        return view('proyectos.gestor.edit', [
+          'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
+          'sublineas' => Sublinea::SubLineasDeUnaLinea( auth()->user()->gestor->lineatecnologica->id )->get()->pluck('nombre', 'id'),
+          'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
+          'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+          'estadosproyecto' => EstadoProyecto::ConsultarEstadosDeProyectoNoCierre()->pluck('nombre', 'id'),
+          'proyecto' => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
+          'pivot' => $this->proyectoRepository->consultarTalentosDeUnProyectoRepository($id),
+        ]);
+        break;
+
+      default:
+        // code...
+        break;
+    }
   }
 
   /**

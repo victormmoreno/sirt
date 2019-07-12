@@ -1,21 +1,5 @@
 @extends('layouts.app')
 @section('meta-title', 'Proyectos de Base Tecnológica')
-@push('style')
-  <style media="screen">
-  #divPreload {
-    /* width: 150px;
-    height: 150px; */
-    position: fixed;
-    left:50%;
-    top:50%;
-    /* top: 50%;
-    left: 50%; */
-    /* margin-top: -75px;
-    margin-left: -75px; */
-
-  }
-  </style>
-@endpush
 @section('content')
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -69,7 +53,7 @@
                   </div>
                   <div class="row" id="divOtroTipoArticulacion" >
                     <div class="input-field col s12 m12 l12">
-                      <input type="text" name="txtotro_tipoarticulacion" id="otro_tipoarticulacion" value="">
+                      <input type="text" name="txtotro_tipoarticulacion" id="txtotro_tipoarticulacion" value="">
                       <label for="txtotro_tipoarticulacion">¿Cuál? <span class="red-text">*</span></label>
                       <small id="txtotro_tipoarticulacion-error" class="error red-text"></small>
                     </div>
@@ -216,7 +200,7 @@
                         <div class="switch m-b-md">
                           <label>
                             No
-                            <input type="checkbox" name="ideaProyecto" id="ideaProyecto" onchange="resetIdeaDeProyectoAsociadaAlProyecto();" value="1"/>
+                            <input type="checkbox" name="txttipo_ideaproyecto" id="txttipo_ideaproyecto" onchange="resetIdeaDeProyectoAsociadaAlProyecto();" value="1"/>
                             <span class="lever"></span>
                             Si
                           </label>
@@ -287,7 +271,7 @@
                                 </ul>
                                 <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                                   <li>
-                                    <div class="collapsible-header green lighten-1"><i class="material-icons">people</i>Pulse aquí para la información de los talentos asociados al proyecto.</div>
+                                    <div class="collapsible-header active green lighten-1"><i class="material-icons">how_to_reg</i>Pulse aquí para la información de los talentos asociados al proyecto.</div>
                                     <div class="collapsible-body">
                                       {{-- Collapsible 2 --}}
                                       <div class="card-content">
@@ -779,7 +763,7 @@
   // Consultas las ideas de proyecto si fueron aprobadas en el comité ó si son con empresa  emprendedor
   function consultarIdeasDeProyectoDelNodo() {
     let tipo = 0;
-    if ( $('#ideaProyecto').is(':checked') ) {
+    if ( $('#txttipo_ideaproyecto').is(':checked') ) {
       tipo = 1;
     }
     if (tipo == 1) {
