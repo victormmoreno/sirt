@@ -115,7 +115,7 @@ class UsersTableSeeder extends Seeder
 
         $userDinamizador->dinamizador()->create([
             'user_id' => $userDinamizador->id,
-            'nodo_id' => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
         ]);
 
         $userDinamizador->assignRole($roleDinamizador);
@@ -149,7 +149,7 @@ class UsersTableSeeder extends Seeder
 
         $userGestorRamiro->gestor()->create([
             'user_id'             => $userGestorRamiro->id,
-            'nodo_id'             => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'             => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
             'honorarios'          => 4000000,
         ]);
@@ -181,7 +181,7 @@ class UsersTableSeeder extends Seeder
 
         $userGestorJulian->gestor()->create([
             'user_id'             => $userGestorJulian->id,
-            'nodo_id'             => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'             => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'ETC')->first()->id,
             'honorarios'          => 4000000,
         ]);
@@ -214,7 +214,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userInfocenter->infocenter()->create([
-            'nodo_id'   => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'   => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'user_id'   => $userInfocenter->id,
             'extension' => 413342,
         ]);
@@ -247,7 +247,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userIngreso->ingreso()->create([
-            'nodo_id' => Nodo::where('nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'user_id' => $userIngreso->id,
         ]);
 

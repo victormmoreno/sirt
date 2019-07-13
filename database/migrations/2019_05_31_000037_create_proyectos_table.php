@@ -77,7 +77,7 @@ class CreateProyectosTable extends Migration
 
             $table->index(["areaconocimiento_id"], 'fk_proyectos_areasconocimiento1_idx');
 
-            $table->index(["ideas_id"], 'fk_proyectos_ideas1_idx');
+            $table->index(["idea_id"], 'fk_proyectos_idea1_idx');
 
             $table->index(["nodo_id"], 'fk_proyectos_nodos1_idx');
 
@@ -135,7 +135,7 @@ class CreateProyectosTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('ideas_id', 'fk_proyectos_ideas1_idx')
+            $table->foreign('idea_id', 'fk_proyectos_idea1_idx')
                 ->references('id')->on('ideas')
                 ->onDelete('no action')
                 ->onUpdate('no action');
