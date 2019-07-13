@@ -29,7 +29,7 @@ class Sublinea extends Model
         $this->attributes['nombre'] = ucfirst($nombre);
     }
 
-    
+
     /*=====  End of mutador para el nombre  ======*/
 
 
@@ -53,4 +53,12 @@ class Sublinea extends Model
     }
 
     /*=====  End of scope para consultar todas las lineass  ======*/
+
+    public function scopeSubLineasDeUnaLinea($query, $id)
+    {
+      return $query->select('sublineas.id')
+      ->selectRaw('concat(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre')
+      ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+      ->where('lineastecnologicas.id', $id);
+    }
 }

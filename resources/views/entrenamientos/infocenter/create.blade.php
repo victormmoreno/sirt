@@ -61,7 +61,7 @@
                           <option value="{{$value['id']}}">{{$value['nombre_proyecto']}}</option>
                         @endforeach
                       </select>
-                      <label>Idea de Proyecto <span class="red-text">*</span></label>
+                      <label for="txtidea" class="active">Idea de Proyecto <span class="red-text">*</span></label>
                     </div>
                   </div>
                   <div class="row">

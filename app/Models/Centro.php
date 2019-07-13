@@ -45,6 +45,12 @@ class Centro extends Model
         return $this->hasMany(Nodo::class, 'centro_id', 'id');
     }
 
+    public function scopeCentroDeFormacionDeTecnoparque($query)
+    {
+      return $query->select('entidades.nombre', 'centros.codigo_centro', 'entidades.id AS id_entidad')
+      ->join('entidades', 'entidades.id', '=', 'centros.entidad_id');
+    }
+
     /*==================================================================
     =            scope para consultar todos los centros            =
     ==================================================================*/

@@ -42,44 +42,44 @@ class IdeaFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-            'txtnodo.required'                => 'El :attribute es obligatorio.',
+            'txtnodo.required'                => 'El Nodo es obligatorio.',
 
-            'txtnombres.required'             => 'Los :attribute son obligatorios.',
-            'txtnombres.min'                  => 'Los :attribute deben ser minimo 1 caracter',
-            'txtnombres.max'                  => 'Los :attribute deben ser máximo 45 caracteres',
-            'txtnombres.regex'                => 'El formato del campo :attribute es incorrecto',
+            'txtnombres.required'             => 'Los Nombres son obligatorios.',
+            'txtnombres.min'                  => 'Los Nombres deben ser minimo 1 caracter',
+            'txtnombres.max'                  => 'Los Nombres deben ser máximo 45 caracteres',
+            'txtnombres.regex'                => 'El formato del campo Nombres es incorrecto',
 
-            'txtapellidos.required'           => 'Los :attribute son obligatorios.',
-            'txtapellidos.min'                => 'Los :attribute deben ser minimo 1 caracter',
-            'txtapellidos.max'                => 'Los :attribute deben ser máximo 45 caracteres',
-            'txtapellidos.regex'              => 'El formato del campo :attribute es incorrecto',
+            'txtapellidos.required'           => 'Los Apellidos son obligatorios.',
+            'txtapellidos.min'                => 'Los Apellidos deben ser minimo 1 caracter',
+            'txtapellidos.max'                => 'Los Apellidos deben ser máximo 45 caracteres',
+            'txtapellidos.regex'              => 'El formato del campo Apellidos es incorrecto',
 
-            'txtcorreo.required'              => 'El :attribute es obligatorio.',
-            'txtcorreo.min'                   => 'El :attribute debe ser minimo 1 caracter',
-            'txtcorreo.max'                   => 'El :attribute debe ser máximo 100 caracteres',
+            'txtcorreo.required'              => 'El Correo Electrónico es obligatorio.',
+            'txtcorreo.min'                   => 'El Correo Electrónico debe ser minimo 1 caracter',
+            'txtcorreo.max'                   => 'El Correo Electrónico debe ser máximo 100 caracteres',
 
-            'txttelefono.required'            => 'El :attribute es obligatorio.',
-            'txttelefono.numeric'             => 'El :attribute debe ser numérico',
-            'txttelefono.min'                 => 'El :attribute debe ser minimo 6 caracteres',
-            'txttelefono.max'                 => 'El :attribute debe ser máximo 11 caracteres',
-            'txttelefono.digits_between'      => 'El :attribute debe tener entre 6 y 11 digitos',
+            'txttelefono.required'            => 'El Telefono es obligatorio.',
+            'txttelefono.numeric'             => 'El Telefono debe ser numérico',
+            'txttelefono.min'                 => 'El Telefono debe ser minimo 6 caracteres',
+            'txttelefono.max'                 => 'El Telefono debe ser máximo 11 caracteres',
+            'txttelefono.digits_between'      => 'El Telefono debe tener entre 6 y 11 digitos',
 
-            'txtnombre_proyecto.required'     => 'El :attribute es obligatorio.',
-            'txtnombre_proyecto.min'          => 'El :attribute debe ser minimo 1 caracter',
-            'txtnombre_proyecto.required.max' => 'El :attribute debe ser máximo 200 caracteres',
-            'txtnombre_proyecto.regex'        => 'El formato del campo :attribute es incorrecto',
+            'txtnombre_proyecto.required'     => 'El Nombre de Proyecto es obligatorio.',
+            'txtnombre_proyecto.min'          => 'El Nombre de Proyecto debe ser minimo 1 caracter',
+            'txtnombre_proyecto.required.max' => 'El Nombre de Proyecto debe ser máximo 200 caracteres',
+            'txtnombre_proyecto.regex'        => 'El formato del campo Nombre de Proyecto es incorrecto',
 
-            'txtdescripcion.required'         => 'La :attribute es obligatoria.',
-            'txtdescripcion.min'              => 'La :attribute debe ser minimo 1 caracter',
-            'txtdescripcion.max'              => 'La :attribute debe ser máximo 2000 caracteres',
+            'txtdescripcion.required'         => 'La Descripcion es obligatoria.',
+            'txtdescripcion.min'              => 'La Descripcion debe ser minimo 1 caracter',
+            'txtdescripcion.max'              => 'La Descripcion debe ser máximo 2000 caracteres',
 
-            'txtobjetivo.required'            => 'El :attribute es obligatorio.',
-            'txtobjetivo.min'                 => 'El :attribute debe ser minimo 1 caracter',
-            'txtobjetivo.max'                 => 'El :attribute debe ser máximo 2000 caracteres',
+            'txtobjetivo.required'            => 'El Objetivo es obligatorio.',
+            'txtobjetivo.min'                 => 'El Objetivo debe ser minimo 1 caracter',
+            'txtobjetivo.max'                 => 'El Objetivo debe ser máximo 2000 caracteres',
 
-            'txtalcance.required'             => 'El :attribute es obligatorio.',
-            'txtalcance.min'                  => 'El :attribute debe ser minimo 1 caracter',
-            'txtalcance.max'                  => 'El :attribute debe ser máximo 2000 caracteres',
+            'txtalcance.required'             => 'El Alcance es obligatorio.',
+            'txtalcance.min'                  => 'El Alcance debe ser minimo 1 caracter',
+            'txtalcance.max'                  => 'El Alcance debe ser máximo 2000 caracteres',
 
         ];
     }
@@ -92,7 +92,7 @@ class IdeaFormRequest extends FormRequest
             'txtapellidos'       => 'Apellidos',
             'txtcorreo'          => 'Correo Electrónico',
             'txttelefono'        => 'Telefono',
-            'txtnombre_proyecto' => 'Nombre de proyecto',
+            'txtnombre_proyecto' => 'Nombre de Proyecto',
             'txtdescripcion'     => 'Descripcion',
             'txtobjetivo'        => 'Objetivo',
             'txtalcance'         => 'Alcance',

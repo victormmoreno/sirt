@@ -24,17 +24,24 @@ class CreateNodosTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('centro_id');
-            $table->string('nombre',100);
+            $table->unsignedInteger('entidad_id');
+            // $table->string('nombre',100);
             $table->string('direccion', 200)->nullable();
             $table->year('anho_inicio');
             $table->timestamps();
+
             $table->index(["centro_id"], 'fk_nodos_centros1_idx');
 
-            $table->unique(["nombre"], 'nombre_UNIQUE');
+            $table->index(["entidad_id"], 'fk_nodos_entidades1_idx');
+
+            // $table->unique(["nombre"], 'nombre_UNIQUE');
 
 
             $table->foreign('centro_id', 'fk_nodos_centros1_idx')
                 ->references('id')->on('centros');
+
+            $table->foreign('entidad_id', 'fk_nodos_entidades1_idx')
+                ->references('id')->on('entidades');
         });
     }
 

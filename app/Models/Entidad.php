@@ -41,6 +41,11 @@ class Entidad extends Model
         return $this->hasOne(Tecnoacademia::class, 'entidad_id', 'id');
     }
 
+    public function nodo()
+    {
+        return $this->hasOne(Nodo::class, 'entidad_id', 'id');
+    }
+
     public function ciudad()
     {
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');

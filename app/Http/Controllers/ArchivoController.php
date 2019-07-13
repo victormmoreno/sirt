@@ -44,7 +44,7 @@ class ArchivoController extends Controller
   public function datatableArchivosDeUnaArticulacion($id)
   {
     if (request()->ajax()) {
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (auth()->user()->rol()->first()->nombre == 'Gestor' || auth()->user()->rol()->first()->nombre == 'Dinamizador' || auth()->user()->rol()->first()->nombre == 'Administrador') {
         $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacion($id);
         return datatables()->of($archivosDeLaArticulacion)
         ->addColumn('download', function ($data) {

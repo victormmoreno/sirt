@@ -1,3 +1,13 @@
+var $loading = $('#loadingModal');
+$(document)
+.ajaxStart(function () {
+  $loading.openModal({
+    dismissible:false,
+  });
+})
+.ajaxStop(function () {
+  $loading.closeModal();
+});
 $(document).ready(function() {
     $('.dataTables_length select').addClass('browser-default');
     $('.select2').select2({

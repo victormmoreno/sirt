@@ -60,12 +60,13 @@ class DatabaseSeeder extends Seeder
                 'estadosidea',
                 'sectores',
                 'tiposarticulaciones',
+                'tiposarticulacionesproyectos',
                 'perfiles',
                 'rols',//tabla vieja
                 'estadosproyecto',
                 'departamentos',
                 'lineastecnologicas',
-                'productos',
+                'estadosprototipos',
                 'role_has_permissions',
                 'roles',
                 'permissions',
@@ -86,6 +87,8 @@ class DatabaseSeeder extends Seeder
                 'empresas',
                 'ocupaciones_users',
                 'fases',
+                'contactosentidades',
+                'areasconocimiento',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";

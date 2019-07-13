@@ -27,9 +27,6 @@ class CreateEmpresasTable extends Migration
             $table->unsignedInteger('sector_id');
             $table->string('nit', 45);
             $table->string('direccion', 100);
-            $table->string('nombre_contacto', 60)->nullable();
-            $table->string('correo_contacto', 100)->nullable();
-            $table->string('telefono_contacto', 11)->nullable();
             $table->timestamps();
             $table->index(["entidad_id"], 'fk_empresa_entidad1_idx');
 

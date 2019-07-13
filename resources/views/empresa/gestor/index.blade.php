@@ -24,8 +24,9 @@
                     </div>
                   </div>
                 </div>
-                <center>
-                </center>
+                {{-- <a class="btn orange lighten-3 m-b-xs modal-trigger" id="modalContactos2" href="#contactosDeUnaEntidad_modal"> --}}
+                <i class="material-icons">local_phone</i>
+                </a>
                 <div class="divider"></div>
                 <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
                   <thead>
@@ -36,6 +37,7 @@
                       <th>Ciudad - Departamento</th>
                       <th>Dirección</th>
                       <th>Detalles</th>
+                      <th>Contactos</th>
                       <th>Editar</th>
                     </tr>
                   </thead>
@@ -56,14 +58,145 @@
     </div>
   </div>
 </main>
-<div id="detalleDeUnaEmpresaTecnoparque" class="modal">
-  <div class="modal-content">
-    <center><h4 id="modalDetalleDeUnaEmpresaTecnoparque_titulo" class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div id="modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa"></div>
-  </div>
-  <div class="modal-footer white-text">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat">Cerrar</a>
-  </div>
-</div>
+@include('empresa.modals')
 @endsection
+@push('script')
+  <script>
+  var cont = 1;
+  $(document).on('submit', 'form#frmContactosEntidades', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    // form.attr("action");
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    // console.log(data);
+    ajaxEditContactosDeEmpresa(form, url, data);
+
+  });
+
+  // Método para agregar talentos a una articulación
+  function addNuevoContacto() {
+    $("#contactosDeUnaEntidad_table").append(
+      '<tr id='+cont+'>'
+      +'<td>'
+      +'<input class="validate" required type="text" id="txtnombres_contactos'+cont+'" pattern=".{10,60}" maxlength="60" name="txtnombres_contactos[]" value="" />'
+      +'<span class="helper-text" data-error></span>'
+      // +'<label for="txtnombres_contactos[]">Nombres del Contacto</label>'
+      // +'<small id="txtnombres_contactos[]-error" class="error red-text"></small>'
+      +'</td>'
+      +'<td>'
+      +'<input class="validate" required type="email" id="txtcorreo_contacto'+cont+'" pattern=".{7,100}" maxlength="100" name="txtcorreo_contacto[]" value="" />'
+      +'<span class="helper-text" data-error></span>'
+      // +'<label for="txtcorreo_contacto[]">Nombres del Contacto</label>'
+      // +'<small id="txtcorreo_contacto[]-error" class="error red-text"></small>'
+      +'</td>'
+      +'<td>'
+      +'<input class="validate" required type="text" id="txttelefono_contacto'+cont+'" patten=".{7,11}" maxlength="11" name="txttelefono_contacto[]" value="" />'
+      +'<span class="helper-text" data-error></span>'
+      // +'<label for="txttelefono_contacto[]">Nombres del Contacto</label>'
+      // +'<small id="txttelefono_contacto[]-error" class="error red-text"></small>'
+      +'</td>'
+      +'<td>'
+      +'<input disabled value="{{ \NodoHelper::returnNodoUsuario() }}" />'
+      // +'<label for="nodo">Nodo con contacto</label>'
+      +'</td>'
+      +'<td>'
+      +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
+      +'</td>'
+      +'</tr>'
+    );
+    cont++;
+  }
+
+  function ajaxEditContactosDeEmpresa(form, url, data) {
+    $.ajax({
+      type: form.attr('method'),
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        $('button[type="submit"]').removeAttr('disabled');
+        $('.error').hide();
+        // console.log(data.fail);
+        if (data.fail) {
+          Swal.fire({
+            title: 'Modificación Errónea!',
+            html: 'Estas ingresando información errónea, por favor verifica los datos.',
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          });
+        } else {
+          Swal.fire({
+            title: '<b>Modificación Exitosa</b>',
+            html: "Los contactos de la empresa han sido modificados satisfactoriamente",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          });
+          setTimeout(function(){
+            window.location.replace("empresa");
+          }, 1000);
+        }
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      }
+    });
+  }
+
+  function consultarContactosDeUnaEntidad(id){
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:'/empresa/ajaxContactosDeUnaEntidad/'+id
+    }).done(function (response) {
+      $("#contactosDeUnaEntidad_titulo").empty();
+      $("#contactosDeUnaEntidad_table").empty();
+      $("#contactosDeUnaEntidad_titulo").append("<span class='cyan-text text-darken-3'>Datos de los Contactos </span><br>");
+      $.each(response.contactos, function( index, value ) {
+        $("#contactosDeUnaEntidad_table").append(
+          '<tr id='+cont+'>'
+          +'<td>'
+          +'<input class="validate" required type="text" id="txtnombres_contactos'+cont+'" pattern=".{10,60}" maxlength="60" name="txtnombres_contactos[]" value="'+value.nombres_contacto+'">'
+          // +'<label for="txtnombres_contactos'+cont+'">Nombres del Contacto</label>'
+          +'<span class="helper-text" data-error></span>'
+          +'</td>'
+          +'<td>'
+          +'<input class="validate" required type="email" id="txtcorreo_contacto'+cont+'" pattern=".{7,100}" maxlength="100" name="txtcorreo_contacto[]" value="'+value.correo_contacto+'">'
+          // +'<label for="txtcorreo_contacto'+cont+'">Correo del Contacto</label>'
+          +'<span class="helper-text" data-error></span>'
+          +'</td>'
+          +'<td>'
+          +'<input class="validate" required type="text" id="txttelefono_contacto'+cont+'" patten=".{7,11}" maxlength="11"  name="txttelefono_contacto[]" value="'+value.telefono_contacto+'">'
+          // +'<label for="txttelefono_contacto'+cont+'">Teléfono del Contacto</label>'
+          +'<span class="helper-text" data-error></span>'
+          +'</td>'
+          +'<td>'
+          +'<input disabled id="nodo" value='+value.nodo+' />'
+          // +'<label for="nodo">Nodo con contacto</label>'
+          +'</td>'
+          +'<td>'
+          +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
+          +'</td>'
+          +'</tr>'
+        );
+        cont++;
+      });
+      // console.log(response.route);
+      $('#frmContactosEntidades').attr('action', response.route);
+      // form.attr("action", response.ruta);
+      $('#contactosDeUnaEntidad_modal').openModal();
+    })
+  }
+
+  function eliminar(index){
+    $('#'+index).remove();
+  }
+  </script>
+@endpush

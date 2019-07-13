@@ -18,9 +18,9 @@ class Empresa extends Model
     'sector_id',
     'nit',
     'direccion',
-    'nombre_contacto',
-    'correo_contacto',
-    'telefono_contacto',
+    // 'nombre_contacto',
+    // 'correo_contacto',
+    // 'telefono_contacto',
   ];
 
   // Relación a la tabla entidades

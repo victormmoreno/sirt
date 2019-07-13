@@ -16,4 +16,11 @@ class EstadoProyecto extends Model
     protected $fillable = [
         'nombre',
     ];
+
+    // Scope para consultar los estados de proyecto
+    public function scopeConsultarEstadosDeProyectoNoCierre($query)
+    {
+      return $query->select('id', 'nombre')
+      ->whereIn('nombre', ['Inicio', 'Planeación', 'En ejecución']);
+    }
 }

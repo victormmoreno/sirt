@@ -174,9 +174,9 @@
                                   @foreach ($pivot as $key => $value)
                                     {{-- {{$value}} --}}
                                     <tr id="{{$value->talento_id}}">
-                                      <td></td>
-                                      <td>{{$value->talento}}</td>
-                                      <td></td>
+                                      <td><input type="radio" class="with-gap" {{$value->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->talento_id}}'" value="{{$value->talento_id}}"/><label for ="radioButton'{{$value->talento_id}}'"></label></td>
+                                      <td><input type="hidden" name="talentos[]" value="{{$value->talento_id}}">{{$value->talento}}</td>
+                                      <td><a class="waves-effect red lighten-3 btn" onclick="eliminar({{$value->talento_id}});"><i class="material-icons">delete_sweep</i></a></td>
                                     </tr>
                                   @endforeach
                                 </tbody>
@@ -208,14 +208,21 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="input-field col s12 m6 l6">
+                      <div class="input-field col s12 m5 l5">
                         <select id="txttipoarticulacion_id" name="txttipoarticulacion_id" class="js-states">
                           <option value="">Primero debes seleccionar con quién se hará la articulación</option>
                         </select>
                         <label for="txttipoarticulacion_id">Seleccione el Tipo de Articulación <span class="red-text">*</span></label>
                         <small id="txttipoarticulacion_id-error" class="error red-text"></small>
                       </div>
-                      <div class="input-field col s12 m6 l6">
+                      <div class="col s12 m3 l3">
+                        <blockquote>
+                          <ul class="collection">
+                            <li class="collection-item">Debes tener en cuenta que para cerrar una articulación, <b>el dinamizador del nodo debe haberla aprobado o no aprobado.</b></li>
+                          </ul>
+                        </blockquote>
+                      </div>
+                      <div class="input-field col s12 m4 l4">
                         <select class="js-states" id="txtestado" name="txtestado" onchange="estadoArticulacion(this.value);">
                           <option value="">Seleccione el Estado de la Articulación</option>
                           <option value="0">Inicio</option>
@@ -251,7 +258,7 @@
                     </div>
                     <div class="divider"></div>
                     <center>
-                      <button type="submit" class="cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
+                      <button type="submit" class="cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                       <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                     </center>
                   </form>
@@ -366,13 +373,33 @@
       $('#txtestado').material_select();
     });
 
-    $(document).on('submit', 'form#frmArticulacionesCreate', function (event) {
-      // $('button[type="submit"]').prop("disabled", true);
+    $(document).on('submit', 'form#frmArticulacionesEdit', function (event) {
       $('button[type="submit"]').attr('disabled', 'disabled');
       event.preventDefault();
       var form = $(this);
       var data = new FormData($(this)[0]);
       var url = form.attr("action");
+      if ($('#txtestado').val() == 2) {
+        Swal.fire({
+          title: 'Advertencia!',
+          text: "Al cerrar la articulación con el código {{$articulacion->codigo_articulacion}}, ten en cuenta que no podrás realizar ningún cambio una vez cerrada la articulación!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Sí, cerrar la articulación'
+        }).then((result) => {
+          ajaxEdit(form, url, data);
+        })
+      } else {
+        ajaxEdit(form, url, data);
+      }
+
+    });
+
+
+    function ajaxEdit(form, url, data) {
       $.ajax({
         type: form.attr('method'),
         url: url,
@@ -391,17 +418,17 @@
             }
           } else if (data.fail == false && data.redirect_url == false) {
             Swal.fire({
-              title: 'La articulación no se ha registrado, por favor inténtalo de nuevo',
-              // text: "You won't be able to revert this!",
-              type: 'warning',
+              title: 'Modificación Errónea',
+              text: 'La articulación no se ha modificado, por favor inténtalo de nuevo',
+              type: 'error',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
-            })
+            });
           } else {
             Swal.fire({
-              title: 'Registro Exitoso',
-              text: "La articulación ha sido creado satisfactoriamente",
+              title: '<b>Modificación Exitosa</b>',
+              html: "La articulación <b>{{$articulacion->codigo_articulacion}}</b> ha sido modificada satisfactoriamente",
               type: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
@@ -416,7 +443,8 @@
           alert("Error: " + errorThrown);
         }
       });
-    });
+    }
+
 
     function addEmpresaArticulacion(id) {
       $.ajax({
@@ -502,7 +530,14 @@
     // Método para agregar talentos a una articulación
     function addTalentoArticulacion(id) {
       if (noRepeat(id) == false) {
-        swal("Error!", "El talento ya esta listado en la articulación!", "warning");
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
+          type: 'warning',
+          title: 'El talento ya está asociado a la articulación!'
+        });
       } else {
         // let talentos = document.getElementsByName("talentos[]");
         $.ajax({
@@ -514,10 +549,18 @@
           let idTalento = ajax.talento.id;
           let fila = '<tr class="selected" id='+idTalento+'>'
           +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'"/><label for ="radioButton'+idTalento+'"></label></td>'
-          +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.talento+'</td>'
+          +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.documento+' - '+ajax.talento.talento+'</td>'
           +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
           +'</tr>';
           $('#detalleTalentosDeUnaArticulacion').append(fila);
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'El talento se ha asociado a la articulación!'
+          });
         });
         }
       }

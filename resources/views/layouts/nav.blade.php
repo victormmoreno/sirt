@@ -203,9 +203,9 @@
           Inicio
         </a>
       </li>
-      <li>
-        <a href="" class="waves-effect waves-grey">
-          <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
+      <li class="no-padding {{setActiveRoute('proyecto')}}">
+        <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica
         </a>
       </li>
       <li class="no-padding {{setActiveRoute('articulacion')}}">
@@ -367,9 +367,9 @@
           <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">toll</i>Articulaciones
+      <li class="no-padding {{setActiveRoute('articulacion')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
         </a>
       </li>
       <li class="no-padding">
@@ -589,6 +589,11 @@
             </li>
           </ul>
         </div>
+      </li>
+      <li class="no-padding {{setActiveRoute('articulacion')}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
+        </a>
       </li>
       <li class="no-padding">
         <a href="">
