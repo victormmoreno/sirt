@@ -119,7 +119,7 @@
 
               {{-- @hasrole('Administrador')
                   {{ auth()->user()->getRoleNames()-> }} Tecnoparques
-                  
+
                   @endhasrol --}}
 
             <i class="material-icons right">
@@ -158,7 +158,7 @@
 
       <div class="row">
           <div class="input-field col s12 m12 offset-m0">
-            
+
             <select name="change-role" id="change-role" onchange="roleUserSession.setRoleSession(this)">
                 @forelse(auth()->user()->getRoleNames() as  $name)
                   <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
@@ -178,12 +178,12 @@
         </a>
       </li>
 
-      
 
-      
+
+
     @switch( \Session::get('login_role'))
     @case(App\User::IsInfocenter())
-    
+
       <li class="no-padding">
         <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}} {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
           <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('csibt/create') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
@@ -219,82 +219,23 @@
           <i class="material-icons">description</i>Reportes
         </a>
       </li>
-  
+
     @break
 
-    @case('Gestor')
-    
-      <li>
-        <a href="" class="waves-effect waves-grey">
-          <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('articulacion')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
-        </a>
-      </li>
-      <li>
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">record_voice_over</i>EDT's
-        </a>
-      </li>
-      <li class="no-padding">
-        <a href="" class="waves-effect waves-grey">
-          <i class="material-icons">supervisor_account</i>Talentos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">domain</i>Uso de Infraestructura
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('empresa')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('grupo')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">attach_money</i>Costos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.ideas')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas
-        </a>
-      </li>
-      <li class="no-padding">
-        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">search</i>Seguimiento
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">description</i>Reportes
-        </a>
-      </li>
-   
+    @case(App\User::IsGestor())
+
+    @include('layouts.navrole.gestor')
+
     @break
 
     @case('Talento')
-    
+
       <li class="no-padding">
         <a href="">
           <i class="material-icons">domain</i>Uso de Infraestructura
         </a>
       </li>
-   
+
     @break
 
     @case('Ingreso')
@@ -336,23 +277,23 @@
     @break
 
     @case('Dinamizador')
-    
+
       @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
-    
+
           @include('layouts.navrole.dinamizador')
-     
-     
+
+
       @endif
-  
+
     @break
-    
+
     @case(App\User::IsAdministrador())
-    
+
       @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
-    
+
           @include('layouts.navrole.admin')
-     
-     
+
+
       @endif
     @break
 
