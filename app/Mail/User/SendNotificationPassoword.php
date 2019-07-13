@@ -34,13 +34,13 @@ class SendNotificationPassoword extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->markdown('emails.users.send-notificacion-password')
-                    ->subject('Contraseña de ingreso a  '.config('app.name'))
+                    ->subject('Contraseña de ingreso a  '.config('app.name'));
                     
                     // ->attach(public_path('\images\favicon.ico'));
-                    ->attach(public_path('\images\favicon.ico'), [
-                        'as' => 'name.png',
-                        'mime' => 'application/png',
-                    ]);
+                    // ->attach(public_path('\images\favicon.ico'), [
+                    //     'as' => 'name.png',
+                    //     'mime' => 'application/png',
+                    // ]);
 
     }
 }

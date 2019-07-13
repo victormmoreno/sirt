@@ -2,7 +2,7 @@
 # Contraseña de ingreso a {{config('app.name')}}
 
 Hola, 
-{{$user->nombre_completo}}<br>
+{{$user->nombres}}<br>
 {{$user->rol->nombre}} {{config('app.name')}}.
 
 Cordial Saludo.

@@ -238,6 +238,7 @@ class UserRepository
     ======================================================*/
     public function Store($request, $password)
     {
+        // dd($this->existRoleInArray($request,User::IsAdministrador()));
 
         DB::beginTransaction();
         try {
@@ -246,7 +247,10 @@ class UserRepository
 
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
-            if (collect($request->input('role'))->contains(User::IsAdministrador())) {
+
+
+            if ($this->existRoleInArray($request,User::IsAdministrador())) {
+
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
             }
 
@@ -401,6 +405,24 @@ class UserRepository
     }
 
     /*=====  End of metodo para actualizar un usuario  ======*/
+
+    /*==========================================================================
+    =            metodo para preguntar si existe el rol en el array            =
+    ==========================================================================*/
+    
+    private function existRoleInArray($request, $role)
+    {
+        if ($request->filled('role')) {
+            if (collect($request->input('role'))->contains($role)) {
+                return true;
+            }
+            return false;
+        }
+    }
+    
+    
+    /*=====  End of metodo para preguntar si existe el rol en el array  ======*/
+    
 
     /*==============================================================================================
     =            metodo privado para actualizar un usuario y se llamdo en $this->Update            =
