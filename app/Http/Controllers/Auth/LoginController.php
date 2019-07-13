@@ -65,8 +65,8 @@ class LoginController extends Controller
 
         if ($this->attemptLogin($request)) {
             session()->put('login_role', collect(\Auth::user()->roles)->first()->name);
-            alert()->info('Señor(a), '.collect(auth()->user()->roles)->firstWhere('name', 'Administrador')->name.' '.auth()->user()->nombres. ' '. auth()->user()->apellidos. ' bienvenido a '. config('app.name'))->toToast();
-            
+            alert()->info('Señor(a), '.collect(auth()->user()->roles)->firstWhere('name', auth()->user()->roles->first()->name)->name.' '.auth()->user()->nombres. ' '. auth()->user()->apellidos. ' bienvenido a '. config('app.name'))->toToast();
+
             return $this->sendLoginResponse($request);
 
         }
@@ -110,7 +110,7 @@ class LoginController extends Controller
         // Session::flush();
 
         // return redirect()->route('/');
-        
+
         return $this->loggedOut($request) ?: redirect('/');
     }
 
