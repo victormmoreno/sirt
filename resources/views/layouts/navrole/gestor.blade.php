@@ -1,6 +1,6 @@
 <li>
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey">
-    <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
+    <i class="material-icons">library_books</i>Proyectos de Base Tecnológica
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('articulacion')}}">
