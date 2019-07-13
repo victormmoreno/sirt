@@ -5,18 +5,27 @@ namespace App\Repositories\Repository\UserRepository;
 use App\Models\ActivationToken;
 use App\Models\Ciudad;
 use App\Models\Departamento;
+use App\Models\Dinamizador;
+use App\Models\Entidad;
 use App\Models\Eps;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
+use App\Models\Infocenter;
+use App\Models\Nodo;
 use App\Models\Ocupacion;
+use App\Models\Perfil;
+use App\Models\Regional;
+use App\Models\Rols;
+use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class UserRepository
 {
-	/*===========================================================================
+    /*===========================================================================
     =            metodo para consultar todos los tipos de documentos            =
     ===========================================================================*/
 
@@ -60,7 +69,6 @@ class UserRepository
 
     /*=====  End of metodo para consultar las ciudades por departmamento  ======*/
 
-    
     /*=============================================================================
     =            metodo para consultar todos los grados de escolaridad            =
     =============================================================================*/
@@ -109,17 +117,16 @@ class UserRepository
 
     /*=====  End of metodod para registrar   ======*/
 
-
     /*====================================================================
     =            metodo para  consultar todas las ocupaciones            =
     ====================================================================*/
-    
+
     public function getAllOcupaciones()
     {
-        
-        return Ocupacion::allOcupaciones()->pluck('nombre','id');
+
+        return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
     }
-    
+
     /*=====  End of metodo para  consultar todas las ocupaciones  ======*/
 
     /*=====  End of metodo para consultar todo el detalle del usuario por su id  ======*/
@@ -138,12 +145,12 @@ class UserRepository
     /*========================================================================
     =            metodo para consultar la informacion del usuario            =
     ========================================================================*/
-    
+
     public function account($documento)
     {
-        return User::where('documento',$documento)->firstOrFail();
+        return User::where('documento', $documento)->firstOrFail();
     }
-    
+
     /*=====  End of metodo para consultar la informacion del usuario  ======*/
 
     /*========================================================================
@@ -156,7 +163,7 @@ class UserRepository
     }
 
     /*=====  End of metodo para obtener todos los roles laravel permision  ======*/
-    
+
     /*========================================================================
     =            metodo para obtener todos los roles menos el inidicado laravel permision            =
     ========================================================================*/
@@ -164,7 +171,7 @@ class UserRepository
     public function getRoleWhereNotInRole(array $role)
     {
 
-       // return $role;
+        // return $role;
         return Role::whereNotIn('name', $role)->pluck('name', 'id');
     }
 
@@ -177,10 +184,258 @@ class UserRepository
     public function getRoleWhereInRole(array $role)
     {
 
-       // return $role;
         return Role::whereIn('name', $role)->pluck('name', 'id');
     }
 
     /*=====  End of metodo para obtener todos los roles inidicados laravel permision  ======*/
+
+    /*=============================================================
+    =            metodo para consultar todos los nodos            =
+    =============================================================*/
+
+    public function getAllNodo()
+    {
+        return Nodo::selectNodo()->pluck('nodos', 'id');
+    }
+
+    /*=====  End of metodo para consultar todos los nodos  ======*/
+
+    /*=================================================================
+    =            metodo para consultar las lineas por nodo            =
+    =================================================================*/
+
+    public function getAllLineaNodo($nodo)
+    {
+        return Nodo::allLineasPorNodo($nodo);
+    }
+
+    /*=====  End of metodo para consultar las lineas por nodo  ======*/
+
+    /*============================================================================
+    =            metodo para consultar todos los perfiles del talento            =
+    ============================================================================*/
+
+    public function getAllPerfiles()
+    {
+        return Perfil::allPerfiles()->pluck('nombre', 'id');
+    }
+
+    /*=====  End of metodo para consultar todos los perfiles del talento  ======*/
+
+    /*==================================================================
+    =            metodo para consultar todas las regionales            =
+    ==================================================================*/
+
+    public function getAllRegionales()
+    {
+        return Regional::allRegionales()->pluck('nombre', 'id');
+    }
+
+    /*=====  End of metodo para consultar todas las regionales  ======*/
+
+    /*======================================================
+    =            metodo para guardar un usuario            =
+    ======================================================*/
+    public function Store($request, $password)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            $user = $this->storeUser($request, $password);
+
+            $user->ocupaciones()->sync($request->get('txtocupaciones'));
+
+            if (collect($request->input('role'))->contains(User::IsAdministrador())) {
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
+            }
+
+            if (collect($request->input('role'))->contains(User::IsDinamizador())) {
+                Dinamizador::create([
+                    "user_id" => $user->id,
+                    "nodo_id" => $request->input('txtnododinamizador'),
+                ]);
+
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
+            }
+
+            if (collect($request->input('role'))->contains(User::IsGestor())) {
+                Gestor::create([
+                    "user_id"             => $user->id,
+                    "nodo_id"             => $request->input('txtnodogestor'),
+                    "lineatecnologica_id" => $request->input('txtlinea'),
+                    "honorarios"          => $request->input('txthonorario'),
+                ]);
+
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
+            }
+            if (collect($request->input('role'))->contains(User::IsInfocenter())) {
+                Infocenter::create([
+                    "user_id"   => $user->id,
+                    "nodo_id"   => $request->input('txtnodoinfocenter'),
+                    "extension" => $request->input('txtextension'),
+                ]);
+
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
+            }
+
+            if (collect($request->input('role'))->contains(User::IsTalento())) {
+                $this->storeTalento($request, $user);
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
+            }
+
+            if (collect($request->input('role'))->contains(User::IsIngreso()) || collect($request->input('role'))->contains(User::IsProveedor())) {
+
+                $this->assignRoleUser($user, $request->input('role'));
+            }
+
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;
+        }
+
+    }
+
+    /*=====  End of metodo para guardar un usuario  ======*/
+
+    private function storeUser($request, $password)
+    {
+
+        return User::create([
+            "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
+            "tipodocumento_id"    => $request->input('txttipo_documento'),
+            "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
+            "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
+            "eps_id"              => $request->input('txteps'),
+            "ciudad_id"           => $request->input('txtciudad'),
+            "nombres"             => $request->input('txtnombres'),
+            "apellidos"           => $request->input('txtapellidos'),
+            "documento"           => $request->input('txtdocumento'),
+            "email"               => $request->input('txtemail'),
+            "barrio"              => $request->input('txtbarrio'),
+            "direccion"           => $request->input('txtdireccion'),
+            "celular"             => $request->input('txtcelular'),
+            "telefono"            => $request->input('txttelefono'),
+            "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
+            "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
+            "estado"              => User::IsInactive(),
+            "institucion"         => $request->input('txtinstitucion'),
+            "titulo_obtenido"     => $request->get('txttitulo'),
+            "fecha_terminacion"   => $request->get('txtfechaterminacion'),
+            "password"            => $password,
+            "estrato"             => $request->input('txtestrato'),
+        ]);
+
+    }
+
+    private function assignRoleUser($user, $role)
+    {
+        return $user->assignRole($role);
+    }
+
+    protected function storeTalento($request, $user)
+    {
+
+        $entidad = null;
+
+        if ($request->get('txtperfil') == Perfil::IsAprendizSenaConApoyo() || $request->get('txtperfil') == Perfil::IsAprendizSenaSinApoyo() || $request->get('txtperfil') == Perfil::IsEgresadoSena()) {
+            $entidad = $request->input('txtcentroformacion') ?: $this->getIdNoAplicaEntidad();
+        } else if ($request->get('txtperfil') == Perfil::IsInvestigador()) {
+            $entidad = $this->getIdGrupoInvesitgacion($request) ?: $this->getIdNoAplicaEntidad();
+        } else {
+            $entidad = $this->getIdNoAplicaEntidad();
+        }
+        return Talento::create([
+            "user_id"               => $user->id,
+            "perfil_id"             => $request->input('txtperfil'),
+            "entidad_id"            => $entidad,
+            "universidad"           => $request->input('txtuniversidad') ?: null,
+            "programa_formacion"    => $request->input('txtprogramaformacion') ?: 'No Aplica',
+            "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ?: 'No Aplica',
+            "empresa"               => $request->input('txtempresa') ? $request->input('txtempresa') : null,
+            "otro_tipo_talento"     => $request->input('txtotrotipotalento') ?: null,
+        ]);
+    }
+
+    /*===============================================================================
+    =            metodo para consultar el id del grupo de investigacion (table entidad)            =
+    ===============================================================================*/
+    private function getIdGrupoInvesitgacion($request)
+    {
+        return Entidad::select('entidades.id')->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', 'entidades.id')
+            ->where('entidades.nombre', $request->get('txtgrupoinvestigacion'))
+            ->first()->id;
+    }
+
+    /*=====  End of metodo para consultar el id del grupo de investigacion (table entidad)  ======*/
+
+    /*====================================================================================
+    =            metodo para consultar el id de no aplica en la tabla entidad            =
+    ====================================================================================*/
+    protected function getIdNoAplicaEntidad()
+    {
+        return Entidad::where('nombre', 'No Aplica')->first()->id;
+    }
+
+    /*=====  End of metodo para consultar el id de no aplica en la tabla entidad  ======*/
+
+    /*=========================================================
+    =            metodo para actualizar un usuario            =
+    =========================================================*/
+
+    public function Update($request, $user)
+    {
+        DB::beginTransaction();
+        try {
+
+            $user = $this->updateUser($request, $user);
+            DB::commit();
+            return $user;
+        } catch (Exception $e) {
+            DB::rollback();
+            return false;
+        }
+    }
+
+    /*=====  End of metodo para actualizar un usuario  ======*/
+
+    /*==============================================================================================
+    =            metodo privado para actualizar un usuario y se llamdo en $this->Update            =
+    ==============================================================================================*/
+
+    private function updateUser($request, $user)
+    {
+
+        return $user->update([
+            "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
+            "tipodocumento_id"    => $request->input('txttipo_documento'),
+            "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
+            "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
+            "eps_id"              => $request->input('txteps'),
+            "ciudad_id"           => $request->input('txtciudad'),
+            "nombres"             => $request->input('txtnombres'),
+            "apellidos"           => $request->input('txtapellidos'),
+            "documento"           => $request->input('txtdocumento'),
+            "email"               => $request->input('txtemail'),
+            "barrio"              => $request->input('txtbarrio'),
+            "direccion"           => $request->input('txtdireccion'),
+            "celular"             => $request->input('txtcelular'),
+            "telefono"            => $request->input('txttelefono'),
+            "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
+            "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
+            "estado"              => User::IsInactive(),
+            "institucion"         => $request->input('txtinstitucion'),
+            "titulo_obtenido"     => $request->get('txttitulo'),
+            "fecha_terminacion"   => $request->get('txtfechaterminacion'),
+            "estrato"             => $request->input('txtestrato'),
+        ]);
+
+    }
+
+    /*=====  End of metodo privado para actualizar un usuario y se llamdo en Update  ======*/
 
 }

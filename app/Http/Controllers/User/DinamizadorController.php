@@ -29,9 +29,7 @@ class DinamizadorController extends Controller
      */
     public function index()
     {
-        $nodos = $this->dinamizadorRepository->getAllNodos();
-
-
+       
         return view('users.administrador.dinamizador.index', [
             'nodos' => $this->dinamizadorRepository->getAllNodos(),
         ]);
@@ -44,13 +42,13 @@ class DinamizadorController extends Controller
             return datatables()->of($this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo))
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick=""><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#modal1" onclick="UserAdministradorDinamizador.detalleDinamizador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
                 ->addColumn('edit', function ($data) {
                     if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.dinamizador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     } else {
                         $button = '';
                     }
@@ -121,10 +119,27 @@ class DinamizadorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $nombre)
+    public function show($id)
     {
-        // $user = User::where('nombres',$nombre)->where('apellidos',$apellido)->first();
-        // dd($nombre);
+        $user = $this->userRepository->findById($id);
+
+
+
+        $data = [
+                    'user' =>$user,
+                    'role' =>$user->getRoleNames()->implode(', '),
+                    'tipodocumento' =>$user->tipoDocumento->nombre,
+                    'eps' =>$user->eps->nombre,
+                    'departamento' =>$user->ciudad->departamento->nombre,
+                    'ciudad' =>$user->ciudad->nombre,
+                    'gruposanguineo' =>$user->grupoSanguineo->nombre,
+                    'gradosescolaridad' =>$user->gradoEscolaridad->nombre,
+
+                ];
+                
+        return response()->json([
+            'data' =>  $data,
+        ]);
     }
 
     /**

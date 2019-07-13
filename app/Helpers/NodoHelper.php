@@ -1,8 +1,10 @@
 <?php
 namespace App\Helpers;
 
+use App\Models\Nodo;
+use App\Models\Rols;
+use App\User;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Nodo, Rols};
 
 class NodoHelper {
 
@@ -12,8 +14,17 @@ class NodoHelper {
   }
 
   public static function returnNodoUsuario() {
-    if (auth()->user()->rol()->first()->nombre == Rols::IsGestor()) {
-      return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+    // $value = session()->get('login_role');
+    if (collect(auth()->user()->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
+      return collect(auth()->user()->roles)->firstWhere('name', User::IsAdministrador())->name .' '. config('app.name') ;
+    }
+
+    if (collect(auth()->user()->getRoleNames())->contains(User::IsTalento()) && session()->get('login_role') == User::IsTalento()) {
+      return collect(auth()->user()->roles)->firstWhere('name', User::IsTalento())->name .' '. config('app.name') ;
+    }
+    else if(collect(auth()->user()->getRoleNames())->contains(User::IsGestor())) {
+      
+      return 'Gestor Nodo' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
     } else if ( auth()->user()->rol()->first()->nombre == Rols::IsInfocenter() ){
       return Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
     } else if ( auth()->user()->rol()->first()->nombre == Rols::IsIngreso() ) {

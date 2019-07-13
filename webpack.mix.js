@@ -64,6 +64,8 @@ mix.scripts([
 		'resources/app/grupoinvestigacion/index.js',
 		'resources/app/user/administrador/index-administrador.js',
 		'resources/app/user/administrador/index-dinamizador.js',
+		'resources/app/user/administrador/index-gestor.js',
+		'resources/app/user/role/roleuser.js',
 		'resources/app/sublinea/administrador/index.js',
 		'resources/app/articulaciones/gestor/index.js',
 		'resources/app/articulaciones/index.js',

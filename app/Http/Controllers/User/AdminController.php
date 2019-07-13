@@ -38,93 +38,7 @@ class AdminController extends Controller
         ]);
     }
 
-    /*=====  End of metodo para consultar las ciudedes segun el departamento  ======*/
-
-    public function anadirOcupacion(Request $request, $id)
-    {
-        $ocupacion      = Ocupacion::findOrFail($id);
-        $oldCart        = Session::has('ocupacion') ? Session::get('ocupacion') : null;
-        $OcupacionModel = new OcupacionModel($oldCart);
-        $OcupacionModel->add($ocupacion, $ocupacion->id);
-        $request->session()->put('ocupacion', $OcupacionModel);
-
-        $notificacion = [
-            'message'    => $ocupacion->nombre . ' añadido exitosamente',
-            'alert-type' => 'success',
-        ];
-        return response()->json([
-            'notificacion' => $notificacion,
-            'ocupacion'    => $OcupacionModel,
-        ]);
-
-    }
-
-    /*==============================================================
-    =            metodo para añadir ocupaciones session            =
-    ==============================================================*/
-
-    public function anadirOcupacionEdit(Request $request, $idOcupacion, $idUser)
-    {
-
-        $ocupacion = Ocupacion::findOrFail($idOcupacion);
-        $ocupacion->users;
-
-        $user        = User::findOrFail($idUser);
-        $sessionUser = Session::put('ocupacionEdit', $user);
-        $request->session()->put('ocupacionEdit', $user->ocupaciones);
-
-        // dd($sessionUser);
-
-        // foreach ($user->ocupaciones as  $value) {
-        //    $datos =$request->session()->put(   $value);
-        // }
-
-        $oldOcupacion = Session::has('ocupacionEdit') ? Session::get('ocupacionEdit', $user->ocupaciones) : null;
-        // $OcupacionModel = new OcupacionModel($oldOcupacion);
-        // $OcupacionModel->add($ocupacion->users, $ocupacion->id);
-
-        return response()->json([
-            'getOcupacion' => $oldOcupacion,
-        ]);
-    }
-
-    /*=====  End of metodo para añadir ocupaciones session  ======*/
-
-    public function getOcupacionSesion()
-    {
-
-        return response()->json([
-            'getOcupacion' => Session::get('ocupacion'),
-        ]);
-    }
-
-    public function removerItemOcupacion($id)
-    {
-        $ocupacion      = Ocupacion::findOrFail($id);
-        $oldCart        = Session::has('ocupacion') ? Session::get('ocupacion') : null;
-        $OcupacionModel = new OcupacionModel($oldCart);
-        $OcupacionModel->removeitem($id);
-
-        if (count($OcupacionModel->items) > 0) {
-            Session::put('ocupacion', $OcupacionModel);
-        } else {
-            Session::forget('ocupacion');
-        }
-
-        Session::put('ocupacion', $OcupacionModel);
-
-        $notificacion = array(
-            'message'    => $ocupacion->nombre . ' ha sido eliminado',
-            'alert-type' => 'success',
-        );
-
-        return response()->json([
-            'notificacion' => $notificacion,
-            'ocupacion'    => $OcupacionModel,
-        ]);
-
-    }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -137,13 +51,13 @@ class AdminController extends Controller
             return datatables()->of($this->adminRepository->getAllAdministradores())
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
                 ->addColumn('edit', function ($data) {
                     if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.administrador.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     } else {
                         $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
                     }

@@ -93,4 +93,41 @@
 
   </div>
 </main>
+
+<!-- modal  -->
+
+  <div id="loginrole" class="modal" style="width: 30%">
+    <div class="modal-content">
+      <h4 class="center red-text ">Roles {{auth()->user()->nombres}} {{auth()->user()->apellidos}}</h4>
+      <div class="col s12 m12 l12">
+            <ul class="collection with-header">
+                {{-- <li class="collection-header center"><h6><b>Roles</b></h6></li> --}}
+                
+                @forelse(auth()->user()->getRoleNames() as  $name)
+                    <li class="collection-item">
+                        <p class="p-v-xs">
+                          <input class="with-gap" id="rolesesion{{$name}}" name="rolesesion" type="radio" value="{{$name}}" />
+                          <label for="rolesesion{{$name}}">{{$name}}</label>
+                        </p>
+                    </li>
+                @empty
+                <p>No tienes roles asignados</p>
+                @endforelse
+            </ul>
+          
+        </div>
+    </div>
+    {{-- <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+    </div> --}}
+  </div> 
 @endsection
+@push('script')
+<script>
+$(document).ready(function() {
+  // $('#loginrole').openModal({
+  //   dismissible:false
+  // });
+});
+</script>
+@endpush

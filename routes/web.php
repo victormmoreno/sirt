@@ -12,8 +12,10 @@
  */
 
 Route::get('/', function () {
-    // $linea = App\Models\Sublinea::getAllSublineas();
-    // dd($linea);
+    // $grupos = App\Models\GrupoInvestigacion::scopeAllGrupoInvestigacion()->pluck('nombre','id');
+    // dd($grupos);
+    // 
+    // dd(Spatie\Permission\Models\Role::where('name', App\User::IsDinamizador())->first()->id);
 
 // $empresa = "1234 - sol de juan";
 // $porciones = explode("-", $empresa);
@@ -155,36 +157,54 @@ Route::group([
         'uses' => 'AdminController@getOcupacionSesion',
         ]);
 
-        Route::get('/administrador/remove-ocupacion/{id}', [
-        'uses' => 'AdminController@removerItemOcupacion',
-        ]);
-
-        Route::get('/administrador/anadir-ocupacion/{id}', [
-        'uses' => 'AdminController@anadirOcupacion',
-        'as' => 'administrador.anadirocupacion'
-        ]);
-
-        Route::get('/administrador/anadir-ocupacion-edit/{idOcupacion}/{idUser}', [
-        'uses' => 'AdminController@anadirOcupacionEdit',
-        'as' => 'administrador.anadirocupacion.edit'
-        ]);
-
-        Route::post('/anadir-ocupacion', [
-            'uses' => 'AdminController@postanadirOcupacion',
-            'as'   => 'administrador.postanadirocupacion',
-        ]);
+        
         Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
 
         Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
 
+
+
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
 
-        Route::resource('dinamizador', 'DinamizadorController', ['except' => 'show', 'as' => 'usuario']);
+        Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario']);
+
+        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
+
+        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
+
+        Route::resource('gestor', 'GestorController', ['as' => 'usuario']);
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
 
+        Route::get('/', [
+          'uses' => 'UserController@index',
+          'as' => 'usuario.index',
+        ]);
+
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
+            'create' => 'usuario.usuarios.create',
+            'update' => 'usuario.usuarios.update',
+            'edit' => 'usuario.usuarios.edit',
+            'destroy' => 'usuario.usuarios.destroy',
+            'show' => 'usuario.usuarios.show',
+           
+        ])->parameters([
+            'usuarios' => 'id'
+        ]);
+
     }
 );
+
+Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')->name('user.changerole');
+
+/*=========================================================
+=            seccion para las rutas del perfil            =
+=========================================================*/
+Route::get('centro-formacion/getcentrosregional/{regional}', 'CentroController@getAllCentrosForRegional')->name('centro.getcentrosregional');
+Route::resource('centro-formacion', 'CentroController');
+
+/*=====  End of seccion para las rutas del perfil  ======*/
+
 
 /*=========================================================
 =            seccion para las rutas del perfil            =
@@ -304,6 +324,8 @@ Route::group([
     'middleware' => 'auth',
 ],
     function () {
+        Route::get('/getgrupodatatables/{ciudad}', 'GrupoInvestigacionController@getDataTablesForGrupoCiudad')->name('getallgruposdatatables');
+        Route::get('/getallgruposforciudad/{ciudad}', 'GrupoInvestigacionController@getAllGruposInvestigacionForCiudad')->name('getallgruposforciudad');
         Route::get('/', 'GrupoInvestigacionController@index')->name('grupo');
         Route::get('/create', 'GrupoInvestigacionController@create')->name('grupo.create');
         Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');
@@ -402,6 +424,7 @@ Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
+Route::get('/lineas/getlineasnodo/{nodo}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
 Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/

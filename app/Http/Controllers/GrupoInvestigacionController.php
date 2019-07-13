@@ -27,6 +27,43 @@ class GrupoInvestigacionController extends Controller
 
   }
 
+
+  /*===================================================================================
+  =            metodo Api para consultar todos los grupos de investigacion            =
+  ===================================================================================*/
+  
+  public function getAllGruposInvestigacionForCiudad($ciudad)
+  {
+      return response()->json([
+      'gruposInvestigaciones' => $this->grupoInvestigacionRepository->getAllGruposInvestigacionesForCiudad($ciudad),
+      ]);
+  }
+  
+  /*=====  End of metodo Api para consultar todos los grupos de investigacion  ======*/
+
+  /*====================================================================================================
+  =            metodo Api para mostrar los grupos de investigacion por ciudad en datatables            =
+  ====================================================================================================*/
+  
+  public function getDataTablesForGrupoCiudad($ciudad)
+  {
+    if (request()->ajax()) {
+        return datatables()->of($this->grupoInvestigacionRepository->getAllGruposInvestigacionDatatables($ciudad))
+                      ->addColumn('details', function ($data) {
+                              $input = '
+                                    <input class="with-gap" id="grupoInvestigacion'.$data->id.'" name="grupoInvestigacion" type="radio" value="'.$data->nombre.'" onchange="grupoInvestigacion.getCheckoxSeletedDatatables(this)"/>
+                                  <label for="grupoInvestigacion'.$data->id.'"></label>
+                              ';
+                              return $input;
+                      })->rawColumns(['details'])
+        ->make(true);
+    }
+  }
+  
+  /*=====  End of metodo Api para mostrar los grupos de investigacion por ciudad en datatables  ======*/
+  
+  
+
   // Modificar los contactos de un grupo de investigación
   public function updateContactosGrupo(Request $request, $id)
   {
@@ -70,6 +107,7 @@ class GrupoInvestigacionController extends Controller
       // }
     }
   }
+
 
   /**
   * Display a listing of the resource.
@@ -183,7 +221,7 @@ class GrupoInvestigacionController extends Controller
   public function store(GrupoInvestigacionFormRequest $request)
   {
     $reg = $this->grupoInvestigacionRepository->store($request);
-    // dd($reg);
+
     if ($reg == null) {
       alert()->success('El grupo de investigación ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
       return redirect()->route('grupo');

@@ -57,4 +57,25 @@ class Entidad extends Model
       return $this->hasMany(Articulacion::class, 'entidad_id', 'id');
     }
 
+    public function talentos()
+    {
+      return $this->hasMany(Talento::class, 'entidad_id', 'id');
+    }
+
+    /*========================================================================
+    =            scope para consultar los grupos de investigacion            =
+    ========================================================================*/
+
+    public function scopeAllGrupoInvestigacionForCiudad($query, $ciudad)
+    {
+        // return $query->select(['entidades.id','entidades.nombre'])
+        // ->with(['grupoinvestigacion'])->where('entidades.ciudad_id',$ciudad);
+
+        return $query->select(['entidades.id','entidades.nombre'])
+                ->join('gruposinvestigacion','gruposinvestigacion.entidad_id','entidades.id')
+                ->where('entidades.ciudad_id','=',$ciudad);
+    }
+
+    /*=====  End of scope para consultar los grupos de investigacion  ======*/
+
 }

@@ -68,6 +68,8 @@ class DatabaseSeeder extends Seeder
                 'lineastecnologicas',
                 'estadosprototipos',
                 'role_has_permissions',
+                'model_has_roles',
+                'model_has_permissions',
                 'roles',
                 'permissions',
                 'sublineas',

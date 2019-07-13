@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nodo;
+use App\User;
+use Illuminate\Support\Facades\Session;
+
 
 class HomeController extends Controller
 {
@@ -24,6 +27,14 @@ class HomeController extends Controller
     public function index()
     {
 
+        return view('home.home');
+        // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');
+         // session()->put('login_role', 'value');
+            
+         //    $value = Session::all();
+
+         //    dd($value);
+
         // if (auth()->user()->hasRole('Infocenter')) {
         // $nodo = Nodo::where('id','=',auth()->user()->infocenter->nodo_id)->first()->nombre;
 
@@ -33,14 +44,17 @@ class HomeController extends Controller
 
         // $user  = auth()->user()->infocenter->nodo_id;
 
-
-            // dd($administradores);
-            return view('home.home');
+       //  $filtered = collect(auth()->user()->roles)->firstWhere('name', 'Administrador')->name;
+       // // $filtered->all();
+       //  dd($filtered);
+       //      // dd($administradores);
+       //      return view('home.home');
         // } else if(auth()->user()->hasRole('Dinamizador')){
         //     echo "Infocenter";
         // }else{
         //   abort(403);
         // }
+        //
 
     }
 }

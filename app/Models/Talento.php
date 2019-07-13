@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Perfil;
 use Illuminate\Database\Eloquent\Model;
 
 class Talento extends Model
@@ -18,7 +19,10 @@ class Talento extends Model
         'perfil_id',
         'entidad_id',
         'ciudad_id',
-        'programa',
+        'programa_formacion',
+        'carrera_universitaria',
+        'empresa',
+        'otro_tipo_talento',
     ];
 
     // Relacion muchos a muchos con articulaciones
@@ -40,6 +44,16 @@ class Talento extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class, 'perfil_id', 'id');
+    }
+
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
     }
 
     // Métodos scope

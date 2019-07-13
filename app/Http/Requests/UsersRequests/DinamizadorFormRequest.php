@@ -25,7 +25,6 @@ class DinamizadorFormRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
             'txtnodo'              => 'required',
             'txtocupaciones'       => 'required',

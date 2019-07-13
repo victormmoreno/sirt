@@ -107,13 +107,21 @@
           <span>
             @guest
             @else
-              @if(auth()->user()->rol->nombre != 'Administrador' && auth()->user()->rol->nombre != 'Talento')
+              @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento()))
 
-                {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }}
+                {{ \NodoHelper::returnNodoUsuario() }}
+                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsAdministrador())->name}} Red Tecnoparque --}}
+                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsTalento())->name}} --}}
               @else
-                {{ auth()->user()->rol->nombre }} Tecnoparques
+                {{-- {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }} --}}
                 {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
               @endif
+
+              {{-- @hasrole('Administrador')
+                  {{ auth()->user()->getRoleNames()-> }} Tecnoparques
+                  
+                  @endhasrol --}}
+
             <i class="material-icons right">
               arrow_drop_down
             </i>
@@ -123,6 +131,7 @@
       </div>
     </div>
     <div class="sidebar-account-settings">
+
       <ul>
         <li class="no-padding">
           <a class="waves-effect waves-grey ">
@@ -144,9 +153,22 @@
         </li>
       </ul>
     </div>
-    @switch( auth()->user()->rol->nombre )
-    @case('Infocenter')
-    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
+
+  <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
+
+      <div class="row">
+          <div class="input-field col s12 m12 offset-m0">
+            
+            <select name="change-role" id="change-role" onchange="roleUserSession.setRoleSession(this)">
+                @forelse(auth()->user()->getRoleNames() as  $name)
+                  <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
+                @empty
+                  <p>No tienes roles asignados</p>
+                @endforelse
+            </select>
+            {{-- <small>Seleccione Su rol</small> --}}
+          </div>
+        </div>
       <li class="no-padding {{setActiveRoute('home')}}">
         <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}">
           <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">
@@ -155,6 +177,13 @@
           Inicio
         </a>
       </li>
+
+      
+
+      
+    @switch( \Session::get('login_role'))
+    @case(App\User::IsInfocenter())
+    
       <li class="no-padding">
         <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}} {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
           <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('csibt/create') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
@@ -190,22 +219,14 @@
           <i class="material-icons">description</i>Reportes
         </a>
       </li>
-    </ul>
+  
     @break
 
     @case('Gestor')
-    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-      <li class="no-padding {{setActiveRoute('home')}}">
-        <a href="{{route('home')}}">
-          <i class="material-icons">
-            home
-          </i>
-          Inicio
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('proyecto')}}">
-        <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica
+    
+      <li>
+        <a href="" class="waves-effect waves-grey">
+          <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
         </a>
       </li>
       <li class="no-padding {{setActiveRoute('articulacion')}}">
@@ -263,25 +284,17 @@
           <i class="material-icons">description</i>Reportes
         </a>
       </li>
-    </ul>
+   
     @break
 
     @case('Talento')
-    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-      <li class="no-padding {{setActiveRoute('home')}}">
-        <a href="{{route('home')}}">
-          <i class="material-icons">
-            home
-          </i>
-          Inicio
-        </a>
-      </li>
+    
       <li class="no-padding">
         <a href="">
           <i class="material-icons">domain</i>Uso de Infraestructura
         </a>
       </li>
-    </ul>
+   
     @break
 
     @case('Ingreso')
@@ -323,330 +336,30 @@
     @break
 
     @case('Dinamizador')
-    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-      <li class="no-padding {{setActiveRoute('home')}}">
-        <a href="{{route('home')}}">
-          <i class="material-icons">
-            home
-          </i>
-          Inicio
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey">
-          <i class="material-icons">supervised_user_circle</i> Usuarios
-          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
-        </a>
-        <div class="collapsible-body">
-          <ul>
-            <li>
-              <a href="">
-                Gestores
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Infocenter
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Talentos
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Ingreso
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">library_books</i>Proyectos de Base Tecnológica (PBT)
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('articulacion')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">settings_input_svideo</i>Costos Administrativos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">filter_center_focus</i>Focos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
-          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
-        </a>
-        <div class="collapsible-body">
-          <ul>
-            <li>
-              <a href="{{route('idea.ideas')}}" class="{{setActiveRouteActivePage('idea')}}">
-                <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
-              </a>
-            </li>
-            <li>
-              <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
-                <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Entrenamientos
-              </a>
-            </li>
-            <li class="no-padding">
-              <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
-                <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="no-padding {{setActiveRoute('grupo')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('empresa')}}">
-        <a class="{{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">local_drink</i>Laboratorios
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">trending_down</i>Depreciación
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">build</i>Mantenimiento
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">local_library</i>Materiales de Formación
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">attachment</i>Link's de Drive
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">attach_money</i>Costos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">show_chart</i>Indicadores
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">search</i>Seguimiento
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey">
-          <i class="material-icons">description</i> Reportes<i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
-        </a>
-        <div class="collapsible-body">
-          <ul>
-            <li>
-              <a href="">
-                Infocenter
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Ingresos
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Gestor
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Dinamizador
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
+    
+      @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
+    
+          @include('layouts.navrole.dinamizador')
+     
+     
+      @endif
+  
     @break
-
-    @case('Administrador')
-    <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-      <li class="no-padding {{setActiveRoute('home')}}">
-        <a href="{{route('home')}}">
-          <i class="material-icons">
-            home
-          </i>
-          Inicio
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey">
-          <i class="material-icons">supervised_user_circle</i>Usuarios
-          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
-        </a>
-        <div class="collapsible-body">
-          <ul>
-            <li>
-              <a href="{{route('usuario.administrador.index')}}">
-                Administrador
-              </a>
-            </li>
-            <li>
-              <a href="{{route('usuario.dinamizador.index')}}">
-                Dinamizador
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Gestores
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Infocenter
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Talentos
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="no-padding {{setActiveRouteActivePage('csibt')}} ">
-        <a class="collapsible-header waves-effect waves-grey">
-          <i class="material-icons">location_city</i>Nodos
-          <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
-        </a>
-        <div class="collapsible-body">
-          <ul>
-            <li>
-              <a href="{{route('nodo.index')}}">Nodos</a>
-            </li>
-            <li>
-              <a href="">Mapa</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="no-padding {{setActiveRoute('lineas')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('sublineas')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('sublineas')}}" href="{{route('sublineas.index')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('sublineas') }}">linear_scale</i>Sublineas
-        </a>
-      </li>
-      <li class="no-padding">
-        <a href="">
-          <i class="material-icons">settings_input_svideo</i>Costos Administrativos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
-          <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
-        </a>
-        <div class="collapsible-body">
-          <ul>
-            <li>
-              <a href="{{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}">
-                <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
-              </a>
-            </li>
-            <li>
-              <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
-                <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Entrenamientos
-              </a>
-            </li>
-            <li class="no-padding">
-              <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}">
-                <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="no-padding {{setActiveRoute('articulacion')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
-        </a>
-      </li>
-      <li class="no-padding">
-        <a href="">
-          <i class="material-icons">library_books</i>Proyectos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">filter_center_focus</i>Focos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">local_drink</i>Laboratorios
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('grupo')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
-        </a>
-      </li>
-      <li class="no-padding {{setActiveRoute('empresa')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">local_library</i>Materiales de Formación
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">attachment</i>Link's de Drive
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">attach_money</i>Costos
-        </a>
-      </li>
-      <li class="no-padding">
-        <a class="waves-effect waves-grey" href="">
-          <i class="material-icons">show_chart</i>Indicadores
-        </a>
-      </li>
-    </ul>
+    
+    @case(App\User::IsAdministrador())
+    
+      @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
+    
+          @include('layouts.navrole.admin')
+     
+     
+      @endif
     @break
 
     @default
 
     @endswitch
-
+  </ul>
     <div class="footer">
       <p class="copyright">Tecnoparque <?php echo date("Y"); ?> © </p>
       <a href="#!">Privacidad</a> &amp; <a href="#!">Terminos</a>

@@ -42,6 +42,10 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('genero');
             $table->string('otra_eps',60)->nullable();
             $table->tinyInteger('estado')->default('1');
+            //ultimo estudio
+            $table->string('institucion',100);
+            $table->string('titulo_obtenido',200);
+            $table->date('fecha_terminacion');
             $table->rememberToken();
             $table->string('password', 255)->nullable();
             $table->tinyInteger('estrato')->nullable();
