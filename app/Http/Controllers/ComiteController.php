@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ComiteFormRequest;
-use App\Repositories\Repository\ComiteRepository;
-use App\Repositories\Repository\IdeaRepository;
-use App\Models\Nodo;
-use App\Models\Idea;
-use App\Models\Comite;
-use App\Models\ComiteIdea;
-use App\Http\Controllers\ArchivoComiteController;
-use App\Http\Controllers\PDF\PdfComiteController;
+use App\Repositories\Repository\{ComiteRepository, IdeaRepository};
+use App\Models\{Nodo, Idea, Comite, ComiteIdea};
+use App\Http\Controllers\{ArchivoComiteController, PDF\PdfComiteController};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Events\Comite\ComiteWasRegistered;
+Use App\User;
 
 class ComiteController extends Controller
 {
@@ -36,7 +32,7 @@ class ComiteController extends Controller
   */
   public function index()
   {
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
       if (request()->ajax()) {
         $csibt = $this->comiteRepository->consultarComitesPorNodo( auth()->user()->infocenter->nodo_id );
         return datatables()->of($csibt)
@@ -60,7 +56,7 @@ class ComiteController extends Controller
         })->rawColumns(['details', 'edit', 'evidencias'])->make(true);
       }
       return view('comite.infocenter.index');
-    } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+    } else if ( \Session::get('login_role') == User::IsGestor() ) {
       if (request()->ajax()) {
         $csibt = $this->comiteRepository->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
         return datatables()->of($csibt)
@@ -74,10 +70,10 @@ class ComiteController extends Controller
         })->rawColumns(['details'])->make(true);
       }
       return view('comite.gestor.index');
-    } else if ( auth()->user()->rol()->first()->nombre == 'Administrador' ) {
+    } else if ( \Session::get('login_role') == User::IsAdministrador() ) {
       $nodos = Nodo::SelectNodo()->get();
       return view('comite.administrador.index', compact('nodos'));
-    } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+    } else if ( \Session::get('login_role') == User::IsDinamizador() ) {
       if (request()->ajax()) {
         $csibt = $this->comiteRepository->consultarComitesPorNodo( auth()->user()->dinamizador->nodo_id );
         return datatables()->of($csibt)
@@ -105,7 +101,7 @@ class ComiteController extends Controller
   public function datatableArchivosDeUnComite($id)
   {
     if (request()->ajax()) {
-      if (auth()->user()->rol()->first()->nombre == 'Infocenter') {
+      if ( \Session::get('login_role') == User::IsInfocenter() ) {
         $archivosComite = $this->comiteRepository->consultarRutasArchivosDeUnComite( $id );
         return datatables()->of($archivosComite)
         ->addColumn('download', function ($data) {
@@ -192,7 +188,7 @@ class ComiteController extends Controller
   {
     // session(['ideasComiteCreate' => []]);
 
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
        $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
        // dd($ideas);
       return view('comite.infocenter.create', compact('ideas'));
@@ -244,11 +240,11 @@ class ComiteController extends Controller
   // Muestra las evidencias/entregables de un comité
   public function evidencias($id)
   {
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
       $comite = $this->comiteRepository->consultarComitePorId($id)->last();
       // dd($comite);
       return view('comite.infocenter.evidencias', compact('comite'));
-    } else if (auth()->user()->rol()->first()->nombre != 'Ingreso' && auth()->user()->rol()->first()->nombre != 'Talento')  {
+    } else if (\Session::get('login_role') != User::IsIngreso() && \Session::get('login_role') != User::IsTalento())  {
       $comite = $this->comiteRepository->consultarComitePorId($id)->last();
       return view('comite.evidencias', compact('comite'));
     }

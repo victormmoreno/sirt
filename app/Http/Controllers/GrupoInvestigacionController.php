@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{GrupoInvestigacionFormRequest, ContactoEntidadFormRequest};
-use App\Models\GrupoInvestigacion;
-use App\Models\ClasificacionColciencias;
-use App\Models\Departamento;
+use App\Models\{GrupoInvestigacion, ClasificacionColciencias, Departamento};
 use App\Repositories\Repository\{GrupoInvestigacionRepository, ContactoEntidadRepository};
 use App\Helpers\ArrayHelper;
 use Illuminate\Support\Facades\Validator;
+Use App\User;
 
 class GrupoInvestigacionController extends Controller
 {
@@ -31,20 +30,20 @@ class GrupoInvestigacionController extends Controller
   /*===================================================================================
   =            metodo Api para consultar todos los grupos de investigacion            =
   ===================================================================================*/
-  
+
   public function getAllGruposInvestigacionForCiudad($ciudad)
   {
       return response()->json([
       'gruposInvestigaciones' => $this->grupoInvestigacionRepository->getAllGruposInvestigacionesForCiudad($ciudad),
       ]);
   }
-  
+
   /*=====  End of metodo Api para consultar todos los grupos de investigacion  ======*/
 
   /*====================================================================================================
   =            metodo Api para mostrar los grupos de investigacion por ciudad en datatables            =
   ====================================================================================================*/
-  
+
   public function getDataTablesForGrupoCiudad($ciudad)
   {
     if (request()->ajax()) {
@@ -59,10 +58,10 @@ class GrupoInvestigacionController extends Controller
         ->make(true);
     }
   }
-  
+
   /*=====  End of metodo Api para mostrar los grupos de investigacion por ciudad en datatables  ======*/
-  
-  
+
+
 
   // Modificar los contactos de un grupo de investigación
   public function updateContactosGrupo(Request $request, $id)
@@ -88,7 +87,7 @@ class GrupoInvestigacionController extends Controller
   {
     if (request()->ajax()) {
       $idnodo_user = "";
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         $idnodo_user = auth()->user()->gestor->nodo_id;
       } else {
         $idnodo_user = auth()->user()->dinamizador->nodo_id;
@@ -102,9 +101,6 @@ class GrupoInvestigacionController extends Controller
         'contactos' => $contactos,
         'route' => url('/grupo/updateContactoDeUnGrupo') . '/' . $id,
       ]);
-      // if (auth()->user()->rol()->first()->nombre == 'Gestor') {
-        // code...
-      // }
     }
   }
 
@@ -116,14 +112,14 @@ class GrupoInvestigacionController extends Controller
   */
   public function index()
   {
-    switch (auth()->user()->rol()->first()->nombre) {
-      case 'Gestor':
+    switch (\Session::get('login_role')) {
+      case User::IsGestor():
       return view('gruposdeinvestigacion.gestor.index');
       break;
-      case 'Dinamizador':
+      case User::IsDinamizador():
       return view('gruposdeinvestigacion.dinamizador.index');
       break;
-      case 'Administrador':
+      case User::IsAdministrador():
       return view('gruposdeinvestigacion.administrador.index');
       break;
       default:
@@ -155,7 +151,7 @@ class GrupoInvestigacionController extends Controller
     if (request()->ajax()) {
       $gruposInvestigacion = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparque()->get();
       // dd($gruposInvestigacion);
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         return datatables()->of($gruposInvestigacion)
         ->addColumn('details', function ($data) {
           $button = '
@@ -204,7 +200,7 @@ class GrupoInvestigacionController extends Controller
   */
   public function create()
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+    if (\Session::get('login_role') == User::IsGestor()) {
       return view('gruposdeinvestigacion.gestor.create', [
         'clasificaciones' => ClasificacionColciencias::all(),
         'departamentos' => Departamento::AllDepartamentos()->get(),
@@ -250,7 +246,7 @@ class GrupoInvestigacionController extends Controller
   */
   public function edit($id)
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+    if (\Session::get('login_role') == User::IsGestor()) {
       return view('gruposdeinvestigacion.gestor.edit', [
         'clasificaciones' => ClasificacionColciencias::all(),
         'departamentos' => Departamento::AllDepartamentos()->get(),

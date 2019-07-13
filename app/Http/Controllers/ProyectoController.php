@@ -9,6 +9,7 @@ use App\Http\Requests\ProyectoFormRequest;
 use Illuminate\Support\Facades\Validator;
 use Alert;
 use App\Helpers\ArrayHelper;
+Use App\User;
 
 class ProyectoController extends Controller
 {
@@ -64,7 +65,7 @@ class ProyectoController extends Controller
   {
     if (request()->ajax()) {
       $idgestor = "";
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         $idgestor = auth()->user()->gestor->id;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
@@ -251,8 +252,8 @@ class ProyectoController extends Controller
   */
   public function index()
   {
-    switch (auth()->user()->rol()->first()->nombre) {
-      case 'Gestor':
+    switch (\Session::get('login_role')) {
+      case User::IsGestor():
       return view('proyectos.gestor.index');
       break;
 
@@ -269,8 +270,8 @@ class ProyectoController extends Controller
   */
   public function create()
   {
-    switch (auth()->user()->rol()->first()->nombre) {
-      case 'Gestor':
+    switch (\Session::get('login_role')) {
+      case User::IsGestor():
       // dd(AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'));
       // dd();
       return view('proyectos.gestor.create', [
@@ -337,8 +338,8 @@ class ProyectoController extends Controller
   */
   public function edit($id)
   {
-    switch (auth()->user()->rol()->first()->nombre) {
-      case 'Gestor':
+    switch (\Session::get('login_role')) {
+      case User::IsGestor():
       // dd($this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id)->sublinea_id);
         return view('proyectos.gestor.edit', [
           'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),

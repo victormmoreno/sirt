@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EntrenamientoFormRequest;
-use App\Models\Idea;
-use App\Models\Nodo;
-use App\Repositories\Repository\EntrenamientoRepository;
-use App\Repositories\Repository\IdeaRepository;
+use App\Models\{Idea, Nodo};
+use App\Repositories\Repository\{EntrenamientoRepository, IdeaRepository};
 use Illuminate\Support\Facades\DB;
 use App\User;
 use Carbon\Carbon;
@@ -38,7 +36,8 @@ class EntrenamientoController extends Controller
   public function index()
   {
 
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
       if (request()->ajax()) {
         $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo( auth()->user()->infocenter->nodo_id );
         return datatables()->of($entrenamientos)
@@ -59,10 +58,10 @@ class EntrenamientoController extends Controller
       }
       $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
       return view('entrenamientos.infocenter.index', compact('nodo'));
-    } else if (auth()->user()->rol()->first()->nombre == 'Administrador') {
+    } else if (\Session::get('login_role') == User::IsAdministrador()) {
       $nodos = Nodo::SelectNodo()->get();
       return view('entrenamientos.administrador.index', compact('nodos'));
-    } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+    } else if (\Session::get('login_role') == User::IsDinamizador()) {
       return view('entrenamientos.dinamizador.index');
     }
   }
@@ -115,7 +114,7 @@ class EntrenamientoController extends Controller
   {
     $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
     $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
       return view('entrenamientos.infocenter.create', compact('nodo' ,'ideas'));
     }
 
@@ -203,7 +202,7 @@ class EntrenamientoController extends Controller
     $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
     $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
     // $detalles = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id);
-    if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
       return view('entrenamientos.infocenter.edit', compact('nodo' ,'ideas', 'entrenamiento'));
     }
   }
@@ -275,28 +274,6 @@ class EntrenamientoController extends Controller
       return json_encode(['data' => 2]);
   }
 
-  /**
-  * Update the specified resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function update(Request $request, $id)
-  {
-    //
-  }
-
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
   //Manejo de sesiones para la lista de las ideas de un entrenamiento
   public function add_idea(Request $request)
   {
@@ -313,7 +290,6 @@ class EntrenamientoController extends Controller
         $dato   = null;
 
         $ideas = session("ideasEntrenamiento");
-        // var_dump(session("ideasEntrenamiento"));
         foreach ($ideas as $key => $value) {
           if ($value["id"] == $input["Idea"]) {
             $dato = $value;

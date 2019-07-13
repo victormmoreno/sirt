@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
 use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion, ContactoEntidad};
 use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository};
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Validator};
 use App\Helpers\ArrayHelper;
-use Illuminate\Support\Facades\Validator;
+Use App\User;
 
 class EmpresaController extends Controller
 {
@@ -50,7 +50,7 @@ class EmpresaController extends Controller
   {
     if (request()->ajax()) {
       $idnodo_user = "";
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         $idnodo_user = auth()->user()->gestor->nodo_id;
       } else {
         $idnodo_user = auth()->user()->dinamizador->nodo_id;
@@ -64,9 +64,6 @@ class EmpresaController extends Controller
         'contactos' => $contactos,
         'route' => url('/empresa/updateContactoDeUnaEmpresa') . '/' . $id,
       ]);
-      // if (auth()->user()->rol()->first()->nombre == 'Gestor') {
-        // code...
-      // }
     }
   }
 
@@ -77,14 +74,14 @@ class EmpresaController extends Controller
   */
   public function index()
   {
-    switch (auth()->user()->rol()->first()->nombre) {
-      case 'Gestor':
+    switch (\Session::get('login_role')) {
+      case User::IsGestor():
         return view('empresa.gestor.index');
         break;
-      case 'Dinamizador':
+      case User::IsDinamizador():
         return view('empresa.dinamizador.index');
         break;
-      case 'Administrador':
+      case User::IsAdministrador():
         return view('empresa.administrador.index');
         break;
       default:
@@ -97,7 +94,7 @@ class EmpresaController extends Controller
   public function datatableEmpresasDeTecnoparque()
   {
     if (request()->ajax()) {
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
         return datatables()->of($empresas)
         ->addColumn('details', function ($data) {
@@ -177,7 +174,7 @@ class EmpresaController extends Controller
   */
   public function create()
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+    if (\Session::get('login_role') == User::IsGestor()) {
       return view('empresa.gestor.create', [
       'departamentos' => $this->userRepository->getAllDepartamentos(),
       'sectores' => Sector::SelectAllSectors()->get(),
@@ -219,7 +216,7 @@ class EmpresaController extends Controller
   */
   public function edit($id)
   {
-    if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+    if ( \Session::get('login_role') == User::IsGestor() ) {
       // dd(Empresa::find($id)->entidad->ciudad->departamento->nombre);
       return view('empresa.gestor.edit', [
       'empresa' => Empresa::find($id),

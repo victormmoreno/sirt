@@ -4,20 +4,15 @@ namespace App\Http\Controllers;
 
 
 use App\Events\Idea\IdeaHasReceived;
-use App\Http\Requests\IdeaFormRequest;
-use App\Http\Requests\IdeaEditFormRequest;
-use App\Http\Requests\IdeaEGIFormRequest;
+use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest, IdeaEGIFormRequest};
 use App\Mail\IdeaEnviadaEmprendedor;
-use App\Models\EstadoIdea;
-use App\Models\Idea;
-use App\Models\Nodo;
+use App\Models\{EstadoIdea, Idea, Nodo};
 use App\Notifications\IdeaRecibidaInfocenter;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\{Cache, Mail};
 use App\Events\Idea\IdeaSend;
 use Alert;
 
@@ -59,28 +54,10 @@ class IdeaController extends Controller
     // ------------------------------- Método registrar una idea de proyecto con empresas o grupos de investigación
     public function empresasGI()
     {
-      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+      if ( \Session::get('login_role') == User::IsInfocenter() ) {
         return view('ideas.infocenter.egi');
       }
     }
-
-    //------------------ Datatable que muestra las ideas con grupos de investigación/empresas
-    public function ideasEmpGI()
-    {
-
-      // if (request()->ajax()) {
-      //   $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo(auth()->user()->infocenter->nodo_id);
-      //   return datatables()->of($consultaIdeasEmpGI)->make(true);
-      // }
-
-      // if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
-      //   return view('ideas.infocenter.index');
-      // } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
-      //   return view('ideas.gestor.index');
-      // }
-    }
-
-
 
     /*=====  End of metodo para mostrar el registro de ideas en la pagina principal de la aplicacion  ======*/
 
@@ -88,7 +65,7 @@ class IdeaController extends Controller
     public function ideas()
     {
       // var_dump( Idea::ConsultarIdeasDelNodo(auth()->user()->gestor->nodo_id)->get());
-      if ( auth()->user()->rol()->first()->nombre == 'Infocenter' ) {
+      if ( \Session::get('login_role') == User::IsInfocenter() ) {
         if (request()->ajax()) {
           $consultaIdeas = Idea::ConsultarIdeasDelNodo(auth()->user()->infocenter->nodo_id)->get();
           return datatables()->of($consultaIdeas)
@@ -113,12 +90,12 @@ class IdeaController extends Controller
         }
         $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
         return view('ideas.infocenter.index', compact('nodo'));
-      } else if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+      } else if ( \Session::get('login_role') == User::IsGestor() ) {
         return view('ideas.gestor.index');
-      } else if ( auth()->user()->rol()->first()->nombre == 'Administrador' ) {
+      } else if ( \Session::get('login_role') == User::IsAdministrador() ) {
         $nodos = Nodo::SelectNodo()->get();
         return view('ideas.administrador.index', compact('nodos'));
-      } else if ( auth()->user()->rol()->first()->nombre == 'Dinamizador' ) {
+      } else if ( \Session::get('login_role') == User::IsDinamizador() ) {
         return view('ideas.dinamizador.index');
       }
     }
@@ -128,9 +105,9 @@ class IdeaController extends Controller
     public function dataTableIdeasEmprendedoresPorNodo($id)
     {
 
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         $id = auth()->user()->gestor->nodo_id;
-      } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      } else if (\Session::get('login_role') == User::IsDinamizador()) {
         $id = auth()->user()->dinamizador->nodo_id;
       }
 
@@ -150,9 +127,9 @@ class IdeaController extends Controller
 
     public function dataTableIdeasEmpresasGIPorNodo($id)
     {
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         $id = auth()->user()->gestor->nodo_id;
-      } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      } else if (\Session::get('login_role') == User::IsDinamizador()) {
         $id = auth()->user()->dinamizador->nodo_id;
       }
 
@@ -230,7 +207,7 @@ class IdeaController extends Controller
      */
     public function edit($id)
     {
-      if (auth()->user()->rol()->first()->nombre == 'Infocenter') {
+      if (\Session::get('login_role') == User::Isinfocenter()) {
         $idea = Idea::ConsultarIdeaId($id)->first();
         $nodos = Nodo::SelectNodo()->get();
         return view('ideas.infocenter.edit', compact('idea', 'nodos'));
