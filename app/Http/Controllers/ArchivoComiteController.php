@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Comite;
-use App\Models\Nodo;
-use App\Models\ArchivoComite;
+use App\Models\{Comite, Nodo, ArchivoComite};
 use Carbon\Carbon;
 use App\Repositories\Repository\ArchivoComiteRepository;
 use Alert;
+Use App\User;
 
 class ArchivoComiteController extends Controller
 {

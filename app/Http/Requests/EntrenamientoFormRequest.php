@@ -24,8 +24,8 @@ class EntrenamientoFormRequest extends FormRequest
   public function rules()
   {
     return [
-      'txtfecha_sesion1'            => 'required|date_format:"Y-m-d"',
-      'txtfecha_sesion2'         => 'required|date_format:"Y-m-d"',
+      'txtfecha_sesion1' => 'required|date_format:"Y-m-d"',
+      'txtfecha_sesion2' => 'required|date_format:"Y-m-d"',
     ];
   }
   public function messages()
@@ -33,18 +33,18 @@ class EntrenamientoFormRequest extends FormRequest
     return $messages = [
       // 'txtnodo_id.required'                => 'El :attribute es obligatorio.',
 
-      'txtfecha_sesion1.required'             => 'La :attribute es obligatorios.',
-      'txtfecha_sesion1.date_format'             => 'La :attribute no tiene un formato válido.',
+      'txtfecha_sesion1.required' => 'La Fecha de la Primera Sesión es obligatorios.',
+      'txtfecha_sesion1.date_format' => 'La Fecha de la Primera Sesión no tiene un formato válido.',
 
-      'txtfecha_sesion2.required'                  => 'La :attribute es obligatorios.',
-      'txtfecha_sesion2.date_format'                  => 'La :attribute no tiene un formato válido.',
+      'txtfecha_sesion2.required' => 'La Fecha de la Segunda Sesión es obligatorios.',
+      'txtfecha_sesion2.date_format' => 'La Fecha de la Segunda Sesión no tiene un formato válido.',
     ];
   }
 
   public function attributes()
   {
     return [
-      'txtfecha_sesion1'            => 'Fecha de la Primera Sesión',
+      'txtfecha_sesion1' => 'Fecha de la Primera Sesión',
       'txtfecha_sesion2'         => 'Fecha de la Segunda Sesión',
     ];
   }

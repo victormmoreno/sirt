@@ -8,6 +8,7 @@ use App\Http\Requests\ArticulacionFormRequest;
 use Carbon\Carbon;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository};
 use App\Helpers\ArrayHelper;
+Use App\User;
 
 class ArticulacionController extends Controller
 {
@@ -73,7 +74,7 @@ class ArticulacionController extends Controller
   // Modificar los entregable para una articulación
   public function updateEntregables(Request $request, $id)
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+    if (\Session::get('login_role') == User::IsGestor()) {
       !isset($request['entregable_acta_inicio']) ? $request['entregable_acta_inicio'] = 0 : $request['entregable_acta_inicio'] = 1;
       !isset($request['entregable_acuerdo_confidencialidad_compromiso']) ? $request['entregable_acuerdo_confidencialidad_compromiso'] = 0 : $request['entregable_acuerdo_confidencialidad_compromiso'] = 1;
       !isset($request['entregable_acta_seguimiento']) ? $request['entregable_acta_seguimiento'] = 0 : $request['entregable_acta_seguimiento'] = 1;
@@ -85,7 +86,7 @@ class ArticulacionController extends Controller
       alert()->success('Modificación Exitosa!','Los entregables de la articulación se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
       return redirect('articulacion');
     }
-    if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+    if (\Session::get('login_role') == User::IsDinamizador()) {
       $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
       if ($request['txtrevisado'] == 0) {
         $articulacionRevisadoFinal = $this->articulacionRepository->updateRevisadoFinalArticulacion($request, $id);
@@ -108,16 +109,16 @@ class ArticulacionController extends Controller
   public function entregables($id)
   {
     $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
-    if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+    if ( \Session::get('login_role') == User::IsGestor() ) {
       // $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
       return view('articulaciones.gestor.entregables',[
         'articulacion' => $articulacion,
       ]);
-    } else if ( auth()->user()->rol()->first()->nombre == 'Dinamizador' ) {
+    } else if ( \Session::get('login_role') == User::IsDinamizador() ) {
       return view('articulaciones.dinamizador.entregables', [
         'articulacion' => $articulacion,
       ]);
-    } else if (auth()->user()->rol()->first()->nombre == 'Administrador') {
+    } else if (\Session::get('login_role') == User::IsAdministrador()) {
       return view('articulaciones.administrador.entregables', [
         'articulacion' => $articulacion,
       ]);
@@ -130,8 +131,7 @@ class ArticulacionController extends Controller
   public function datatableArticulacionesPorNodo($id)
   {
     if (request()->ajax()) {
-      // if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
-      if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      if (\Session::get('login_role') == User::IsDinamizador()) {
         $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( auth()->user()->dinamizador->nodo_id );
       } else {
         $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
@@ -178,7 +178,7 @@ class ArticulacionController extends Controller
   // Datatable para mostrar las articulaciones POR GESTOR
   public function datatableArticulaciones($id)
   {
-    if ( auth()->user()->rol()->first()->nombre == 'Gestor' ) {
+    if ( \Session::get('login_role') == User::IsGestor() ) {
       if (request()->ajax()) {
         $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( auth()->user()->gestor->id );
         // dd($articulaciones);
@@ -219,7 +219,7 @@ class ArticulacionController extends Controller
           return '<span class="red-text">'.$data->revisado_final.'</span>';
         })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
       }
-    } else if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+    } else if (\Session::get('login_role') == User::IsDinamizador()) {
       $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( $id );
       return datatables()->of($articulaciones)
       ->addColumn('details', function ($data) {
@@ -267,18 +267,18 @@ class ArticulacionController extends Controller
   */
   public function index()
   {
-    switch (auth()->user()->rol()->first()->nombre) {
-      case 'Administrador':
+    switch (\Session::get('login_role') {
+      case User::IsAdministrador():
         return view('articulaciones.administrador.index', [
           'nodos' => Nodo::SelectNodo()->get(),
         ]);
         break;
-      case 'Dinamizador':
+      case User::IsDinamizador():
         return view('articulaciones.dinamizador.index', [
           'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         ]);
         break;
-      case 'Gestor':
+      case User::IsGestor():
         return view('articulaciones.gestor.index');
         break;
 
@@ -319,7 +319,7 @@ class ArticulacionController extends Controller
   */
   public function create()
   {
-    if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+    if (\Session::get('login_role') == User::IsGestor()) {
       return view('articulaciones.gestor.create');
     }
   }
@@ -371,7 +371,7 @@ class ArticulacionController extends Controller
       if (Articulacion::find($id)->tipo_articulacion == Articulacion::IsEmprendedor()) {
         $pivot = $this->articulacionRepository->consultarArticulacionTalento($id);
       }
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if (\Session::get('login_role') == User::IsGestor()) {
         return view('articulaciones.gestor.edit', [
           'articulacion' => $articulacion,
           'pivot' => $pivot,

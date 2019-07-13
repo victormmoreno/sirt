@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 Use App\Models\{ArchivoArticulacion, Fase};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository};
 use Illuminate\Support\Facades\Storage;
+Use App\User;
 
 class ArchivoController extends Controller
 {
@@ -44,7 +45,7 @@ class ArchivoController extends Controller
   public function datatableArchivosDeUnaArticulacion($id)
   {
     if (request()->ajax()) {
-      if (auth()->user()->rol()->first()->nombre == 'Gestor' || auth()->user()->rol()->first()->nombre == 'Dinamizador' || auth()->user()->rol()->first()->nombre == 'Administrador') {
+      if (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsDinamizador() || \Session::get('login_role') == User::IsAdministrador()) {
         $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacion($id);
         return datatables()->of($archivosDeLaArticulacion)
         ->addColumn('download', function ($data) {
