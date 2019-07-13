@@ -30,6 +30,6 @@
         </div>
         <script  src="{{ asset('js/app.js') }}"></script>
         <script  src="{{ asset('js/libs.js') }}"></script>
-        {{-- @include('sweet::alert') --}}    
+        {{-- @include('sweet::alert')     --}}
     </body>
 </html>

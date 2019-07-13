@@ -63,15 +63,20 @@ class UserController extends Controller
     public function store(UserFormRequest $request)
     {
 
-        //generar contraseña
+        //validamos formularios
+            //UserFormRequest
+            
+        //generar una contraseña
         $password = User::generatePasswordRamdom();
-        //guardar registro
+        //creamos el usuario
         $user            = $this->userRepository->Store($request, $password);
         $activationToken = $this->userRepository->activationToken($user->id);
 
-        //envio de email con contraseña
+        
         if ($user != null) {
+            //envio de email con contraseña
             event(new UserWasRegistered($user, $password));
+            //regresamos una respuesta al usuario
             alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $user->nombres . ' ' . $user->apellidos . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
         } else {
             alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();

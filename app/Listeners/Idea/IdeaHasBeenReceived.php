@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Idea;
 
 use App\Events\Idea\IdeaHasReceived;
 use Illuminate\Contracts\Queue\ShouldQueue;

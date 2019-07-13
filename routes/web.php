@@ -68,6 +68,17 @@ DB::listen(function ($query) {
     // echo "<pre>{$query->time}</pre>";
 });
 
+/*===========================================================
+=            ruta para revisar estilos de los ema           =
+===========================================================*/
+
+Route::get('email',function(){
+    return new App\Mail\User\SendNotificationPassoword(App\User::first(),'2342342');
+});
+
+/*=====  End of ruta para revisar estilos d los ema  ======*/
+
+
 // Route::get('/', function () {
 // $departaments = App\Models\Departamento::with(['cities'])->get();
 // $departaments = App\Models\Departamento::first();
