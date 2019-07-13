@@ -36,6 +36,11 @@ $(document).ready(function() {
         orderable: false
       },
       {
+        data: 'contacts',
+        name: 'contacts',
+        orderable: false
+      },
+      {
         data: 'edit',
         name: 'edit',
         orderable: false
@@ -143,33 +148,6 @@ var empresaIndex = {
         +'</div>'
         +'<div class="col s12 m6 l6">'
         +'<span class="black-text">'+respuesta.detalles.email_entidad+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Nombre del Contacto: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.nombre_contacto+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Teléfono del Contacto: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">' + respuesta.detalles.telefono_contacto + '</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Correo del Contacto: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.correo_contacto+'</span>'
         +'</div>'
         +'</div>'
       );

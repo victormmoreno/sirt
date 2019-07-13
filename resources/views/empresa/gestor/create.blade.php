@@ -99,36 +99,6 @@
                         @enderror
                       </div>
                     </div>
-                    <center>
-                      <i class="material-icons">person</i>
-                    </center>
-                    <center>
-                      <span class="card-title center-align">Datos del Contacto</span>
-                    </center>
-                    <div class="divider"></div>
-                    <div class="row">
-                      <div class="input-field col s12 m4 l4">
-                        <input type="text" name="nombre_contacto" id="nombre_contacto" value="{{old('nombre_contacto')}}">
-                        <label for="nombre_contacto">Nombre del Contacto <span class="red-text"></span></label>
-                        @error('nombre_contacto')
-                            <label id="nombre_contacto-error" class="error" for="nombre_contacto">{{ $message }}</label>
-                        @enderror
-                      </div>
-                      <div class="input-field col s12 m4 l4">
-                        <input type="email" name="email_contacto" id="email_contacto" value="{{old('email_contacto')}}">
-                        <label for="email_contacto">Email del Contacto </label>
-                        @error('email_contacto')
-                            <label id="email_contacto-error" class="error" for="email_contacto">{{ $message }}</label>
-                        @enderror
-                      </div>
-                      <div class="input-field col s12 m4 l4">
-                        <input type="email" name="telefono_contacto" id="telefono_contacto" value="{{old('telefono_contacto')}}">
-                        <label for="telefono_contacto">Teléfono/Celular del Contacto </label>
-                        @error('telefono_contacto')
-                            <label id="telefono_contacto-error" class="error" for="telefono_contacto">{{ $message }}</label>
-                        @enderror
-                      </div>
-                    </div>
                     <div class="divider"></div>
                     <center>
                       <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>

@@ -28,11 +28,8 @@ class Entrenamiento extends Model
       'fecha_sesion1',
       'fecha_sesion2',
       'correos',
-      'dir_correos',
       'fotos',
-      'dir_fotos',
       'listado_asistencia',
-      'dir_listado_asistencia',
   ];
 
 }

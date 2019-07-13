@@ -19,6 +19,98 @@ class EntidadesTableSeeder extends Seeder
           'nombre'    => 'No Aplica',
         ]);
 
+
+        // Nodos de Tecnoparque
+        Entidad::create([
+          'id' => 2,
+          'ciudad_id' => 70,
+          'nombre'    => 'Medellin',
+        ]);
+
+        Entidad::create([
+          'id' => 3,
+          'ciudad_id' => 86,
+          'nombre'    => 'Rionegro',
+        ]);
+
+        Entidad::create([
+          'id' => 4,
+          'ciudad_id' => 1064,
+          'nombre'    => 'Calí',
+        ]);
+
+        Entidad::create([
+          'id' => 5,
+          'ciudad_id' => 525,
+          'nombre'    => 'DC',
+        ]);
+
+        Entidad::create([
+          'id' => 6,
+          'ciudad_id' => 603,
+          'nombre'    => 'Cazuca',
+        ]);
+
+        Entidad::create([
+          'id' => 7,
+          'ciudad_id' => 888,
+          'nombre'    => 'Pereira',
+        ]);
+
+        Entidad::create([
+          'id' => 8,
+          'ciudad_id' => 655,
+          'nombre'    => 'Neiva',
+        ]);
+
+        Entidad::create([
+          'id' => 9,
+          'ciudad_id' => 902,
+          'nombre'    => 'Bucaramanga',
+        ]);
+
+        Entidad::create([
+          'id' => 10,
+          'ciudad_id' => 336,
+          'nombre'    => 'Manizales',
+        ]);
+
+        Entidad::create([
+          'id' => 11,
+          'ciudad_id' => 1021,
+          'nombre'    => 'Granja',
+        ]);
+
+        Entidad::create([
+          'id' => 12,
+          'ciudad_id' => 662,
+          'nombre'    => 'Pitalito',
+        ]);
+
+        Entidad::create([
+          'id' => 13,
+          'ciudad_id' => 455,
+          'nombre'    => 'Valledupar',
+        ]);
+
+        Entidad::create([
+          'id' => 14,
+          'ciudad_id' => 837,
+          'nombre'    => 'Ocaña',
+        ]);
+
+        Entidad::create([
+          'id' => 15,
+          'ciudad_id' => 10,
+          'nombre'    => 'Angostura',
+        ]);
+
+        Entidad::create([
+          'id' => 16,
+          'ciudad_id' => 971,
+          'nombre'    => 'Socorro',
+        ]);
+
         //centros de formacion
         Entidad::create([
             'ciudad_id' => 431,

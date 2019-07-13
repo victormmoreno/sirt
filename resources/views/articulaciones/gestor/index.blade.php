@@ -34,8 +34,6 @@
                   <th>Detalles</th>
                   <th>Entregables</th>
                   <th>Editar</th>
-                  {{-- <th>Fecha de Articulación</th> --}}
-                  {{-- <th>Tipo de Articulación</th> --}}
                 </tr>
               </thead>
               <tbody>
@@ -53,14 +51,5 @@
     </div>
   </div>
 </main>
-<div id="articulacionGestorDetalle" class="modal">
-  <div class="modal-content">
-    <center><h4 id="articulacionGestorDetalle_titulo" class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div id="detalleArticulacionGestor"></div>
-  </div>
-  <div class="modal-footer  white-text">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
+@include('articulaciones.modals')
 @endsection

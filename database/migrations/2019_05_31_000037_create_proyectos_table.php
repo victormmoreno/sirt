@@ -23,58 +23,48 @@ class CreateProyectosTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedInteger('ideas_id');
+            $table->unsignedInteger('idea_id');
             $table->unsignedInteger('sector_id');
             $table->unsignedInteger('sublinea_id');
             $table->unsignedInteger('areaconocimiento_id');
             $table->unsignedInteger('estadoproyecto_id');
             $table->unsignedInteger('gestor_id');
-            $table->unsignedInteger('producto_id');
             $table->unsignedInteger('entidad_id');
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('tipoarticulacionproyecto_id');
+            $table->unsignedInteger('estadoprototipo_id');
+            $table->tinyInteger('tipo_ideaproyecto')->default('0');
+            $table->string('otro_tipoarticulacion', 50)->nullable();
+            $table->string('otro_estadoprototipo', 50)->nullable();
+            $table->string('universidad_proyecto', 50)->nullable();
             $table->string('codigo_proyecto', 20);
             $table->string('nombre', 200);
-            $table->text('impacto_proyecto')->nullable();
-            $table->tinyInteger('economia_naranja')->default('0');
-            $table->text('resultado_proyecto')->nullable();
+            $table->string('observaciones_proyecto', 1000)->nullable();
+            $table->string('impacto_proyecto', 1000)->nullable();
+            $table->tinyInteger('economia_naranja')->nullable()->default('0');
+            $table->string('resultado_proyecto', 1000)->nullable();
+            $table->tinyInteger('revisado_final')->default('0');
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->date('fecha_ejecucion')->nullable();
-            $table->string('estado_prototipo', 35)->nullable();
             $table->double('aporte_sena')->nullable();
             $table->double('aporte_talento')->nullable();
-            $table->tinyInteger('pro_art_tecnoaca')->nullable()->default('0');
-            $table->tinyInteger('apre_apoyo')->nullable()->default('0');
-            $table->tinyInteger('apre_sinapoyo')->nullable()->default('0');
             $table->tinyInteger('art_cti')->nullable()->default('0');
-            $table->tinyInteger('nom_act_cti')->nullable()->default('0');
+            $table->string('nom_act_cti', 50)->nullable();
             $table->tinyInteger('diri_ar_emp')->nullable()->default('0');
             $table->tinyInteger('reci_ar_emp')->nullable()->default('0');
             $table->tinyInteger('dine_reg')->nullable()->default('0');
-            $table->tinyInteger('aco_pro_pate')->nullable()->default('0');
-            $table->tinyInteger('pata_publi')->nullable()->default('0');
             $table->tinyInteger('acc')->nullable()->default('0');
-            $table->string('dir_acc',1000)->nullable();
             $table->tinyInteger('manual_uso_inf')->nullable()->default('0');
-            $table->string('dir_manual_uso_inf', 1000)->nullable();
-            $table->tinyInteger('ava_empresa_grupo')->nullable()->default('0');
-            $table->string('dir_ava_empresa_grupo', 1000)->nullable();
+            $table->tinyInteger('aval_empresa_grupo')->nullable()->default('0');
             $table->tinyInteger('acta_inicio')->nullable()->default('0');
-            $table->string('dir_acta_inicio', 1000)->nullable();
             $table->tinyInteger('estado_arte')->nullable()->default('0');
-            $table->string('dir_estado_arte', 1000)->nullable();
             $table->tinyInteger('actas_seguimiento')->nullable()->default('0');
-            $table->string('dir_actas_seguimiento', 1000)->nullable();
             $table->tinyInteger('video_tutorial')->nullable()->default('0');
             $table->tinyInteger('fecha_caracterizacion')->nullable()->default('0');
-            $table->string('dir_fecha_caracterizacion',1000)->nullable();
             $table->tinyInteger('acta_cierre')->nullable()->default('0');
-            $table->string('dir_acta_cierre', 1000)->nullable();
             $table->tinyInteger('lecciones_aprendidas')->nullable()->default('0');
-            $table->string('dir_lecciones_aprendidas', 1000)->nullable();
             $table->tinyInteger('encuesta')->nullable()->default('0');
-            $table->string('dir_encuesta', 1000)->nullable();
             $table->timestamps();
 
             $table->index(["entidad_id"], 'fk_proyectos_entidades1_idx');
@@ -91,7 +81,7 @@ class CreateProyectosTable extends Migration
 
             $table->index(["nodo_id"], 'fk_proyectos_nodos1_idx');
 
-            $table->index(["producto_id"], 'fk_proyectos_productos1_idx');
+            $table->index(["estadoprototipo_id"], 'fk_proyectos_estadosprototipos1_idx');
 
             $table->index(["tipoarticulacionproyecto_id"], 'fk_proyectos_tiposarticulacionesproyectos1_idx');
 
@@ -125,8 +115,8 @@ class CreateProyectosTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('producto_id', 'fk_proyectos_productos1_idx')
-                ->references('id')->on('productos')
+            $table->foreign('estadoprototipo_id', 'fk_proyectos_estadosprototipos1_idx')
+                ->references('id')->on('estadosprototipos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 

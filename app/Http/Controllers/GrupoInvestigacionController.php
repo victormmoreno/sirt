@@ -3,25 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\GrupoInvestigacionFormRequest;
+use App\Http\Requests\{GrupoInvestigacionFormRequest, ContactoEntidadFormRequest};
 use App\Models\GrupoInvestigacion;
 use App\Models\ClasificacionColciencias;
 use App\Models\Departamento;
-use App\Repositories\Repository\GrupoInvestigacionRepository;
+use App\Repositories\Repository\{GrupoInvestigacionRepository, ContactoEntidadRepository};
+use App\Helpers\ArrayHelper;
+use Illuminate\Support\Facades\Validator;
 
 class GrupoInvestigacionController extends Controller
 {
 
   private $grupoInvestigacionRepository;
+  private $contactoEntidadRepository;
 
-  public function __construct(GrupoInvestigacionRepository $grupoInvestigacionRepository)
+  public function __construct(GrupoInvestigacionRepository $grupoInvestigacionRepository, ContactoEntidadRepository $contactoEntidadRepository)
   {
     $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
+    $this->contactoEntidadRepository = $contactoEntidadRepository;
     $this->middleware([
         'auth',
     ]);
 
   }
+
 
   /*===================================================================================
   =            metodo Api para consultar todos los grupos de investigacion            =
@@ -58,6 +63,51 @@ class GrupoInvestigacionController extends Controller
   /*=====  End of metodo Api para mostrar los grupos de investigacion por ciudad en datatables  ======*/
   
   
+
+  // Modificar los contactos de un grupo de investigación
+  public function updateContactosGrupo(Request $request, $id)
+  {
+    $req = new ContactoEntidadFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages(), $req->attributes());
+    if ($validator->fails())
+    return response()->json([
+      'fail' => true,
+      'errors' => $validator->errors(),
+      // 'aditional' => $validator->parseData($validator->attributes()),
+    ]);
+    $result = $this->contactoEntidadRepository->update($request, $id);
+    if ($result == false) {
+      return response()->json([
+          'fail' => false
+      ]);
+    }
+  }
+
+  // Consulta los contactos que tiene un empresa, según el id de la ENTIDAD y el nodo
+  public function contactosDelGrupoPorNodo($id)
+  {
+    if (request()->ajax()) {
+      $idnodo_user = "";
+      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        $idnodo_user = auth()->user()->gestor->nodo_id;
+      } else {
+        $idnodo_user = auth()->user()->dinamizador->nodo_id;
+      }
+
+      $contactos = $this->grupoInvestigacionRepository->consultarContactosPorNodoDeUnGrupo($id, $idnodo_user)->toArray();
+
+      $contactos = ArrayHelper::validarDatoNullDeUnArray($contactos);
+      // dd($contactos);
+      return response()->json([
+        'contactos' => $contactos,
+        'route' => url('/grupo/updateContactoDeUnGrupo') . '/' . $id,
+      ]);
+      // if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+        // code...
+      // }
+    }
+  }
+
 
   /**
   * Display a listing of the resource.
@@ -114,13 +164,25 @@ class GrupoInvestigacionController extends Controller
           </a>
           ';
           return $button;
+        })->addColumn('contacts', function ($data) {
+          $contact = '
+          <a class="btn orange lighten-3 m-b-xs modal-trigger" id="#contactosDeUnaEntidad_modal" onclick="consultarContactosDeUnaEntidad('.$data->id_entidad.');">
+          <i class="material-icons">local_phone</i>
+          </a>
+          ';
+          // $contact = '
+          // <a class="btn orange lighten-3 m-b-xs modal-trigger" href="#modal1" onclick="consultarContactosDeUnaEntidad('. $data->id_entidad .')">
+          // <i class="material-icons">local_phone</i>
+          // </a>
+          // ';
+          return $contact;
         })->addColumn('edit', function ($data) {
           $edit = '<a href="'. route("grupo.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
         })->addColumn('add_articulacion', function ($data) {
           $add = '<a onclick="addGrupoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add;
-        })->rawColumns(['details', 'edit', 'add_articulacion'])->make(true);
+        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts'])->make(true);
       } else {
         return datatables()->of($gruposInvestigacion)
         ->addColumn('details', function ($data) {

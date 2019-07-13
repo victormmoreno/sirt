@@ -86,6 +86,7 @@ class IdeaRepository
         WHEN '$estadoACambiar' = 'No Admitido' THEN 4
         WHEN '$estadoACambiar' = 'No Convocado' THEN 5
         WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
+        WHEN '$estadoACambiar' = 'En Proyecto' THEN 7
         END
       ) WHERE id = $idIdea ");
     }

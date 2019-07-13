@@ -187,11 +187,11 @@ class IdeaController extends Controller
         $idea = $this->ideaRepository->Store($request);
 
         // $user = User::infoUserNodo('Infocenter',$idea->nodo_id)->first();
-
+        // alert()->success('La empresa ha sido creada satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
         if ($idea != null) {
-            Alert::success("La idea {$idea->nombreproyecto} ha sido creado satisfactoriamente.",'Registro Exitoso',"success");
+          alert()->success('Registro Exitoso!','La idea ha sido creado satisfactoriamente.')->showConfirmButton('Ok', '#3085d6');
         }else{
-            Alert::error("La idea  no se ha creado.",'Registro Erróneo', "error");
+          alert()->error('Registro Erróneo!','La idea  no se ha creado.')->showConfirmButton('Ok', '#3085d6');
         }
 
          return redirect('ideas');
@@ -203,9 +203,9 @@ class IdeaController extends Controller
       // $request1 = $request;
       $idea = $this->ideaRepository->StoreIdeaEmpGI($request);
       if ($idea != null) {
-          Alert::success('this is success alert');
+          Alert::success('Registro Exitoso!', 'La idea se ha registrado exitosamente')->showConfirmButton('Ok', '#3085d6');
       }else{
-          Alert::error("La idea  no se ha creado.",'Registro Erróneo', "error");
+          Alert::error("La idea  no se ha creado.",'Registro Erróneo')->showConfirmButton('Ok', '#3085d6');
       }
       return redirect('idea');
     }

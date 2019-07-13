@@ -2,12 +2,28 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\Empresa;
-use App\Models\Sector;
-use App\Models\Entidad;
+use App\Models\{Empresa, Sector, Entidad};
 
 class EmpresaRepository
 {
+
+  // Consulta los contactos que tiene el nodo con las empresas
+  public function consultarContactosPorNodoDeUnaEmpresa($identidad, $idnodo)
+  {
+    return Empresa::select(
+      'contactosentidades.nombres_contacto',
+      'contactosentidades.correo_contacto',
+      'contactosentidades.telefono_contacto',
+      'nodos.nombre AS nodo'
+      )
+      ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
+      ->join('contactosentidades', 'contactosentidades.entidad_id', '=', 'entidades.id')
+      ->join('nodos', 'nodos.id', '=', 'contactosentidades.nodo_id')
+      ->where('nodos.id', $idnodo)
+      ->where('entidades.id', $identidad)
+      ->groupBy('contactosentidades.id')
+      ->get();
+  }
 
   // Modifica los datos de una empresa
   public function update($request, $empresa)
@@ -19,9 +35,9 @@ class EmpresaRepository
     $empresa->sector_id = $request->input('txtsector');
     $empresa->nit = $request->input('nit');
     $empresa->direccion = $request->input('direccion');
-    $empresa->nombre_contacto = $request->input('nombre_contacto');
-    $empresa->correo_contacto = $request->input('email_contacto');
-    $empresa->telefono_contacto = $request->input('telefono_contacto');
+    // $empresa->nombre_contacto = $request->input('nombre_contacto');
+    // $empresa->correo_contacto = $request->input('email_contacto');
+    // $empresa->telefono_contacto = $request->input('telefono_contacto');
     $empresa->update();
     return $empresa;
   }
@@ -40,36 +56,49 @@ class EmpresaRepository
       'sector_id' => $request->input('txtsector'),
       'nit' => $request->input('nit'),
       'direccion' => $request->input('direccion'),
-      'nombre_contacto' => $request->input('nombre_contacto'),
-      'correo_contacto' => $request->input('email_contacto'),
-      'telefono_contacto' => $request->input('telefono_contacto'),
+      // 'nombre_contacto' => $request->input('nombre_contacto'),
+      // 'correo_contacto' => $request->input('email_contacto'),
+      // 'telefono_contacto' => $request->input('telefono_contacto'),
     ]);
   }
 
   // Consulta las empresas de la red de tecnoparque
   public function consultarEmpresasDeRedTecnoparque()
   {
-    return Empresa::select('nit', 'direccion', 'entidades.nombre AS nombre_empresa', 'empresas.id', 'sectores.nombre AS sector_empresa')
-    ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
-    ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
-    ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
-    ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
-    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-    ->get();
+    return Empresa::select(
+      'nit',
+      'direccion',
+      'entidades.nombre AS nombre_empresa',
+      'empresas.id',
+      'sectores.nombre AS sector_empresa',
+      'entidades.id AS id_entidad'
+      )
+      ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+      ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
+      ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
+      ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+      ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+      ->get();
   }
 
   // Consulta los detalles de una empresa
   public function consultarDetallesDeUnaEmpresa($id)
   {
-    return Empresa::select('nit', 'direccion', 'entidades.nombre AS nombre_empresa', 'empresas.id', 'nombre_contacto', 'correo_contacto', 'telefono_contacto', 'email_entidad')
-    ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
-    ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
-    ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
-    ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
-    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-    ->where('empresas.id', $id)
-    ->get()
-    ->last();
+    return Empresa::select(
+      'nit',
+      'direccion',
+      'entidades.nombre AS nombre_empresa',
+      'empresas.id',
+      'email_entidad'
+      )
+      ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+      ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
+      ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
+      ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+      ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+      ->where('empresas.id', $id)
+      ->get()
+      ->last();
   }
 
 }

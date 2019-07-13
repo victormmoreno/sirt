@@ -74,8 +74,8 @@
                     <div class="input-field col s12 m6 l6">
                       <select id="txttipogrupo" name="txttipogrupo">
                         <option value="">Seleccione el Tipo de Grupo de Investigación</option>
-                        <option value="0"{{ $grupo->tipogrupo == 0 ? 'selected' : '' }} {{ old('txttipogrupo') == '0' ? 'selected':'' }}>SENA</option>
-                        <option value="1"{{ $grupo->tipogrupo == 1 ? 'selected' : '' }} {{ old('txttipogrupo') == '1' ? 'selected':'' }}>Externo</option>
+                        <option value="0"{{ $grupo->tipogrupo == 1 ? 'selected' : '' }} {{ old('txttipogrupo') == '1' ? 'selected':'' }}>Externo</option>
+                        <option value="1"{{ $grupo->tipogrupo == 0 ? 'selected' : '' }} {{ old('txttipogrupo') == '0' ? 'selected':'' }}>SENA</option>
                       </select>
                       <label for="txttipogrupo">Tipo de Grupo de Investigación <span class="red-text">*</span></label>
                       @error('txttipogrupo')
@@ -115,37 +115,6 @@
                   </div>
                   <div class="divider"></div>
                   <center>
-                    <i class="material-icons">person</i>
-                  </center>
-                  <center>
-                    <span class="card-title center-align">Datos del Contacto</span>
-                  </center>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <div class="input-field col s12 m4 l4">
-                      <input type="text" name="txtnombres_contacto" id="txtnombres_contacto" value="{{old('txtnombres_contacto', $grupo->nombres_contacto)}}">
-                      <label for="txtnombres_contacto">Nombre del Contacto <span class="red-text"></span></label>
-                      @error('txtnombres_contacto')
-                          <label id="txtnombres_contacto-error" class="error" for="txtnombres_contacto">{{ $message }}</label>
-                      @enderror
-                    </div>
-                    <div class="input-field col s12 m4 l4">
-                      <input type="email" name="txtcorreo_contacto" id="txtcorreo_contacto" value="{{old('txtcorreo_contacto', $grupo->email_contacto)}}">
-                      <label for="txtcorreo_contacto">Email del Contacto </label>
-                      @error('txtcorreo_contacto')
-                          <label id="txtcorreo_contacto-error" class="error" for="txtcorreo_contacto">{{ $message }}</label>
-                      @enderror
-                    </div>
-                    <div class="input-field col s12 m4 l4">
-                      <input type="text" name="txttelefono_contacto" id="txttelefono_contacto" value="{{old('txttelefono_contacto', $grupo->telefono_contacto)}}">
-                      <label for="txttelefono_contacto">Teléfono/Celular del Contacto </label>
-                      @error('txttelefono_contacto')
-                          <label id="txttelefono_contacto-error" class="error" for="txttelefono_contacto">{{ $message }}</label>
-                      @enderror
-                    </div>
-                  </div>
-                  <div class="divider"></div>
-                  <center>
                     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                     <a href="{{route('grupo')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                   </center>
@@ -168,11 +137,11 @@
   $('#txttipogrupo').change(function () {
     let idtipo = $('#txttipogrupo').val();
     if (idtipo == '' || idtipo == 1) {
-      $('#txtinstitucion').val('');
-      $('#labelins').removeClass('active')
-    } else if (idtipo == 0) {
       $('#txtinstitucion').val('SENA');
       $('#labelins').addClass('active', true)
+    } else if (idtipo == 0) {
+      $('#txtinstitucion').val('');
+      $('#labelins').removeClass('active')
     }
   });
 

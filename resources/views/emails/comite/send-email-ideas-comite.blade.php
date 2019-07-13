@@ -1,5 +1,5 @@
 @component('mail::message')
-# Contraseña de ingreso a {{config('app.name')}}
+# Resultados del Comité de Selección de Ideas
 
 Hola,
 <br>

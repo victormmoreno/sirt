@@ -29,9 +29,6 @@ class CreateGruposinvestigacionTable extends Migration
             $table->tinyInteger('tipogrupo')->default(1);
             $table->tinyInteger('estado')->default(1);
             $table->string('institucion',200);
-            $table->string('nombres_contacto',60)->nullable();
-            $table->string('correo_contacto',100)->nullable();
-            $table->string('telefono_contacto', 11)->nullable();
             $table->timestamps();
 
             $table->index(["entidad_id"], 'fk_gruposinvestigacion_entidades1_idx');
