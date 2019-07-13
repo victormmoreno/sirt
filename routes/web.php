@@ -14,7 +14,7 @@
 Route::get('/', function () {
     // $grupos = App\Models\GrupoInvestigacion::scopeAllGrupoInvestigacion()->pluck('nombre','id');
     // dd($grupos);
-    // 
+    //
     // dd(Spatie\Permission\Models\Role::where('name', App\User::IsDinamizador())->first()->id);
 
 // $empresa = "1234 - sol de juan";
@@ -157,7 +157,7 @@ Route::group([
         'uses' => 'AdminController@getOcupacionSesion',
         ]);
 
-        
+
         Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
 
         Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
@@ -187,7 +187,7 @@ Route::group([
             'edit' => 'usuario.usuarios.edit',
             'destroy' => 'usuario.usuarios.destroy',
             'show' => 'usuario.usuarios.show',
-           
+
         ])->parameters([
             'usuarios' => 'id'
         ]);
@@ -242,7 +242,6 @@ Route::group([
         Route::get('/consultarIdeasEmpresasGIPorNodo/{idea}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
         Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
-        Route::get('/ideasEmpGI', 'IdeaController@ideasEmpGI')->name('idea.empgi');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
         Route::post('/', 'IdeaController@store')->name('idea.store');
         Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
