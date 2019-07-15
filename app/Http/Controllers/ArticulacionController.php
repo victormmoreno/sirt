@@ -267,7 +267,7 @@ class ArticulacionController extends Controller
   */
   public function index()
   {
-    switch (\Session::get('login_role') {
+    switch (\Session::get('login_role')) {
       case User::IsAdministrador():
         return view('articulaciones.administrador.index', [
           'nodos' => Nodo::SelectNodo()->get(),

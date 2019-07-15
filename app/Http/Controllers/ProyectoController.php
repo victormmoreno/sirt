@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea, Entidad};
-use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository};
+use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
 use App\Http\Requests\ProyectoFormRequest;
 use Illuminate\Support\Facades\Validator;
 use Alert;
@@ -15,16 +15,85 @@ class ProyectoController extends Controller
 {
   public $empresaRepository;
   public $proyectoRepository;
+  public $gestorRepository;
 
-  public function __construct(EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository)
+  public function __construct(EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository)
   {
     $this->empresaRepository = $empresaRepository;
     $this->proyectoRepository = $proyectoRepository;
+    $this->gestorRepository = $gestorRepository;
     $this->middleware([
       'auth',
     ]);
   }
 
+  public function consultarEntregablesDeUnProyectoController($id)
+  {
+    if (request()->ajax()) {
+      $entregables = ArrayHelper::validarEntregablesNullDeUnArrayString($this->proyectoRepository->consultarEntregablesDeUnProyectoRepository($id)->toArray());
+      return response()->json([
+        'entregables' => $entregables
+      ]);
+    } else {
+      return ArrayHelper::validarEntregablesNullDeUnArrayString($this->proyectoRepository->consultarEntregablesDeUnProyectoRepository($id)->toArray());
+    }
+  }
+
+  // Muestra la datatable
+  private function datatableProyectos($proyectos)
+  {
+    return datatables()->of($proyectos)
+    ->addColumn('details', function ($data) {
+      $details = '
+      <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
+      <i class="material-icons">info</i>
+      </a>
+      ';
+      return $details;
+    })->addColumn('edit', function ($data) {
+      $edit = '<a class="btn m-b-xs" href='.route('proyecto.edit', $data->id).'><i class="material-icons">edit</i></a>';
+      return $edit;
+    })->addColumn('entregables', function ($data) {
+      $entregables = '
+      <a class="btn blue-grey m-b-xs" href='. route('proyecto.entregables', $data->id) .'>
+      <i class="material-icons">library_books</i>
+      </a>
+      ';
+      return $entregables;
+    })->editColumn('revisado_final', function ($data) {
+      if ($data->revisado_final == 'Por Evaluar') {
+        return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>'.$data->revisado_final.'</span></div>';
+      } else if ($data->revisado_final == 'Aprobado') {
+        return '<div class="card-panel green lighten-4"><span><i class="material-icons left">done_all</i>'.$data->revisado_final.'</span></div>';
+      } else {
+        return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
+      }
+      return '<span class="red-text">'.$data->revisado_final.'</span>';
+    })->addColumn('talentos', function ($data) {
+      $talentos = '
+      <a class="btn cyan m-b-xs" onclick="verTalentosDeUnProyecto(' . $data->id . ')">
+      <i class="material-icons">assignment_ind</i>
+      </a>
+      ';
+      return $talentos;
+    })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final'])->make(true);
+  }
+
+  // Muestra los proyectos de un nodo por año
+  public function datatableProyectosDelNodoPorAnho($idnodo, $anho)
+  {
+    if (request()->ajax()) {
+      $idnodo = "";
+      if (\Session::get('login_role') == User::IsDinamizador()) {
+        $idnodo = auth()->user()->dinamizador->nodo_id;
+      }
+      $proyectos = $this->proyectoRepository->ConsultarProyectosPorNodoYPorAnho($idnodo, $anho);
+      // dd($proyectos);
+      return $this->datatableProyectos($proyectos);
+    }
+  }
+
+  // Consulta los detalle de un proyecto
   public function consultarDetallesDeUnProyecto($id)
   {
     if (request()->ajax()) {
@@ -54,10 +123,21 @@ class ProyectoController extends Controller
     }
   }
 
+  // modifica los entregables de un proyecto
+  public function updateEntregables(Request $request, $id)
+  {
+    // code...
+  }
+
   // Vista de la vista de los entregables de un proyecto
   public function entregables($id)
   {
-    // code...
+    if ( \Session::get('login_role') == User::IsGestor() ) {
+      return view('proyectos.gestor.entregables', [
+        'proyecto' => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
+        'entregables' => (object) $this->consultarEntregablesDeUnProyectoController($id)
+      ]);
+    }
   }
 
   // Consulta los proyectos de un gestor por año (De la fecha de cierre)
@@ -69,32 +149,7 @@ class ProyectoController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
-      return datatables()->of($proyectos)
-      ->addColumn('details', function ($data) {
-        $details = '
-        <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
-        <i class="material-icons">info</i>
-        </a>
-        ';
-        return $details;
-      })->addColumn('edit', function ($data) {
-        $edit = '<a class="btn m-b-xs" href='.route('proyecto.edit', $data->id).'><i class="material-icons">edit</i></a>';
-        return $edit;
-      })->addColumn('entregables', function ($data) {
-        $entregables = '
-        <a class="btn blue-grey m-b-xs" href='. route('proyecto.entregables', $data->id) .'>
-        <i class="material-icons">library_books</i>
-        </a>
-        ';
-        return $entregables;
-      })->addColumn('talentos', function ($data) {
-        $talentos = '
-        <a class="btn cyan m-b-xs" onclick="verTalentosDeUnProyecto(' . $data->id . ')">
-        <i class="material-icons">assignment_ind</i>
-        </a>
-        ';
-        return $talentos;
-      })->rawColumns(['details', 'edit', 'entregables', 'talentos'])->make(true);
+      return $this->datatableProyectos($proyectos);
     }
   }
 
@@ -252,10 +307,14 @@ class ProyectoController extends Controller
   */
   public function index()
   {
+    // dd(\Session::get('login_role'));
     switch (\Session::get('login_role')) {
       case User::IsGestor():
-      return view('proyectos.gestor.index');
-      break;
+        return view('proyectos.gestor.index');
+        break;
+      case User::IsDinamizador():
+        return view('proyectos.dinamizador.index');
+        break;
 
       default:
       // code...
@@ -320,17 +379,6 @@ class ProyectoController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -352,6 +400,16 @@ class ProyectoController extends Controller
         ]);
         break;
 
+      case User::IsDinamizador():
+        // dd($this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository(3, 1));
+        $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+        $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+        return view('proyectos.dinamizador.edit', [
+          'proyecto' => $proyecto,
+          'gestores' => $gestores,
+        ]);
+        break;
+
       default:
         // code...
         break;
@@ -367,17 +425,29 @@ class ProyectoController extends Controller
   */
   public function update(Request $request, $id)
   {
-    //
+    $messages = [
+      'txtgestor_id.required' => 'El Gestor es obligatorio.',
+    ];
+
+    $validator = Validator::make($request->all(), [
+      'txtgestor_id' => 'required',
+    ], $messages);
+
+    if ($validator->fails()) {
+      return back()
+      ->withErrors($validator)
+      ->withInput();
+    }
+
+    if ( \Session::get('login_role') == User::IsDinamizador() ) {
+      $update = $this->proyectoRepository->updateProyectoDinamizadorRepository($request, $id);
+      if ($update) {
+        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Existosa!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+      }
+    }
   }
 
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
 }

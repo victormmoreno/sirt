@@ -41,6 +41,7 @@
                         </div>
                       </div>
                     </div>
+                  </div>
                 </div>
                 <div class="row">
                   @include('proyectos.gestor.table')

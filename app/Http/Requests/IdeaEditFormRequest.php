@@ -24,59 +24,59 @@ class IdeaEditFormRequest extends FormRequest
   public function rules()
   {
     return [
-      'txtnodo_id'            => 'required',
-      'txtnombres_contacto'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-      'txtapellidos_contacto'       => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-      'txtcorreo_contacto'          => 'required|email|min:1|max:100',
-      'txttelefono_contacto'        => 'required|digits_between:6,11|numeric',
+      'txtnodo_id' => 'required',
+      'txtnombres_contacto' => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+      'txtapellidos_contacto' => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+      'txtcorreo_contacto' => 'required|email|min:1|max:100',
+      'txttelefono_contacto' => 'required|digits_between:6,11|numeric',
       'txtnombre_proyecto' => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-      'txtdescripcion'     => 'required|min:1|max:2000',
-      'txtobjetivo'        => 'required|min:1|max:2000',
-      'txtalcance'         => 'required|min:1|max:2000',
+      'txtdescripcion' => 'required|min:1|max:2000',
+      'txtobjetivo' => 'required|min:1|max:2000',
+      'txtalcance' => 'required|min:1|max:2000',
     ];
   }
 
   public function messages()
   {
     return $messages = [
-      'txtnodo_id.required'                => 'El :attribute es obligatorio.',
+      'txtnodo_id.required' => 'El Nodo es obligatorio.',
 
-      'txtnombres.required'             => 'Los :attribute son obligatorios.',
-      'txtnombres_contacto.min'                  => 'Los :attribute deben ser minimo 1 caracter',
-      'txtnombres_contacto.max'                  => 'Los :attribute deben ser máximo 45 caracteres',
-      'txtnombres_contacto.regex'                => 'El formato del campo :attribute es incorrecto',
+      'txtnombres_contacto.required' => 'Los Nombres del Contacto son obligatorios.',
+      'txtnombres_contacto.min' => 'Los Nombres del Contacto deben ser minimo 1 caracter',
+      'txtnombres_contacto.max' => 'Los Nombres del Contacto deben ser máximo 45 caracteres',
+      'txtnombres_contacto.regex' => 'El formato del campo Nombres del Contacto es incorrecto',
 
-      'txtapellidos_contacto.required'           => 'Los :attribute son obligatorios.',
-      'txtapellidos_contacto.min'                => 'Los :attribute deben ser minimo 1 caracter',
-      'txtapellidos_contacto.max'                => 'Los :attribute deben ser máximo 45 caracteres',
-      'txtapellidos_contacto.regex'              => 'El formato del campo :attribute es incorrecto',
+      'txtapellidos_contacto.required'=> 'Los Apellidos del Contacto son obligatorios.',
+      'txtapellidos_contacto.min' => 'Los Apellidos del Contacto deben ser minimo 1 caracter',
+      'txtapellidos_contacto.max' => 'Los Apellidos del Contacto deben ser máximo 45 caracteres',
+      'txtapellidos_contacto.regex' => 'El formato del campo Apellidos del Contacto es incorrecto',
 
-      'txtcorreo_contacto.required'              => 'El :attribute es obligatorio.',
-      'txtcorreo_contacto.min'                   => 'El :attribute debe ser minimo 1 caracter',
-      'txtcorreo_contacto.max'                   => 'El :attribute debe ser máximo 100 caracteres',
+      'txtcorreo_contacto.required' => 'El Correo del Contacto es obligatorio.',
+      'txtcorreo_contacto.min' => 'El Correo del Contacto debe ser minimo 1 caracter',
+      'txtcorreo_contacto.max' => 'El Correo del Contacto debe ser máximo 100 caracteres',
 
-      'txttelefono_contacto.required'            => 'El :attribute es obligatorio.',
-      'txttelefono_contacto.numeric'             => 'El :attribute debe ser numérico',
-      'txttelefono_contacto.min'                 => 'El :attribute debe ser minimo 6 caracteres',
-      'txttelefono_contacto.max'                 => 'El :attribute debe ser máximo 11 caracteres',
-      'txttelefono_contacto.digits_between'                 => 'El :attribute debe tener entre 6 y 11 dígitos',
+      'txttelefono_contacto.required' => 'El Teléfono del Contacto es obligatorio.',
+      'txttelefono_contacto.numeric' => 'El Teléfono del Contacto debe ser numérico',
+      'txttelefono_contacto.min' => 'El Teléfono del Contacto debe ser minimo 6 caracteres',
+      'txttelefono_contacto.max' => 'El Teléfono del Contacto debe ser máximo 11 caracteres',
+      'txttelefono_contacto.digits_between' => 'El Teléfono del Contacto debe tener entre 6 y 11 dígitos',
 
-      'txtnombre_proyecto.required'     => 'El :attribute es obligatorio.',
-      'txtnombre_proyecto.min'          => 'El :attribute debe ser minimo 1 caracter',
-      'txtnombre_proyecto.required.max' => 'El :attribute debe ser máximo 200 caracteres',
-      'txtnombre_proyecto.regex'        => 'El formato del campo :attribute es incorrecto',
+      'txtnombre_proyecto.required' => 'El Nombre del Proyecto es obligatorio.',
+      'txtnombre_proyecto.min' => 'El Nombre del Proyecto debe ser minimo 1 caracter',
+      'txtnombre_proyecto.required.max' => 'El Nombre del Proyecto debe ser máximo 200 caracteres',
+      'txtnombre_proyecto.regex' => 'El formato del campo Nombre del Proyecto es incorrecto',
 
-      'txtdescripcion.required'         => 'La :attribute es obligatoria.',
-      'txtdescripcion.min'              => 'La :attribute debe ser minimo 1 caracter',
-      'txtdescripcion.max'              => 'La :attribute debe ser máximo 2000 caracteres',
+      'txtdescripcion.required' => 'La Descripción del Proyecto es obligatoria.',
+      'txtdescripcion.min' => 'La Descripción del Proyecto debe ser minimo 1 caracter',
+      'txtdescripcion.max' => 'La Descripción del Proyecto debe ser máximo 2000 caracteres',
 
-      'txtobjetivo.required'            => 'El :attribute es obligatorio.',
-      'txtobjetivo.min'                 => 'El :attribute debe ser minimo 1 caracter',
-      'txtobjetivo.max'                 => 'El :attribute debe ser máximo 2000 caracteres',
+      'txtobjetivo.required' => 'El Objetivo del Proyecto es obligatorio.',
+      'txtobjetivo.min' => 'El Objetivo del Proyecto debe ser minimo 1 caracter',
+      'txtobjetivo.max' => 'El Objetivo del Proyecto debe ser máximo 2000 caracteres',
 
-      'txtalcance.required'             => 'El :attribute es obligatorio.',
-      'txtalcance.min'                  => 'El :attribute debe ser minimo 1 caracter',
-      'txtalcance.max'                  => 'El :attribute debe ser máximo 2000 caracteres',
+      'txtalcance.required' => 'El Alcance del Proyecto es obligatorio.',
+      'txtalcance.min' => 'El Alcance del Proyecto debe ser minimo 1 caracter',
+      'txtalcance.max' => 'El Alcance del Proyecto debe ser máximo 2000 caracteres',
 
       ];
     }
@@ -84,15 +84,15 @@ class IdeaEditFormRequest extends FormRequest
     public function attributes()
     {
       return [
-      'txtnodo_id'            => 'Nodo',
-      'txtnombres_contacto'         => 'Nombre',
-      'txtapellidos_contacto'       => 'Apellido',
-      'txtcorreo_contacto'          => 'Correo Electrónico',
-      'txttelefono_contacto'        => 'Telefono',
+      'txtnodo_id' => 'Nodo',
+      'txtnombres_contacto' => 'Nombre',
+      'txtapellidos_contacto' => 'Apellido',
+      'txtcorreo_contacto' => 'Correo Electrónico',
+      'txttelefono_contacto' => 'Telefono',
       'txtnombre_proyecto' => 'Nombre de proyecto',
-      'txtdescripcion'     => 'Descripcion',
-      'txtobjetivo'        => 'Objetivo',
-      'txtalcance'         => 'Alcance',
+      'txtdescripcion' => 'Descripcion',
+      'txtobjetivo' => 'Objetivo',
+      'txtalcance' => 'Alcance',
       ];
     }
   }

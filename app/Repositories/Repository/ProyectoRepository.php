@@ -16,6 +16,72 @@ class ProyectoRepository
     $this->ideaRepository = $ideaRepository;
   }
 
+  // Consulta los entregables de un proyecto (Si/No)
+  public function consultarEntregablesDeUnProyectoRepository($id)
+  {
+    return Proyecto::select('acc',
+    'manual_uso_inf',
+    // Fase de planeación
+    'acta_inicio',
+    'estado_arte',
+    // Fase de ejecución
+    'actas_seguimiento',
+    'video_tutorial',
+    // Fase de Cierre
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta',
+    'lecciones_aprendidas')
+    ->where('id', $id)
+    ->get()
+    ->last();
+  }
+
+  // Modifica el gestor a cargo del proyecto
+  public function updateProyectoDinamizadorRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyectoFindById = Proyecto::find($id);
+      $proyectoFindById->update([
+        'gestor_id' => request()->txtgestor_id,
+      ]);
+      DB::commit();
+      return true;
+    } catch (Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+  // Consulta los proyectos de un nodo por año
+  public function ConsultarProyectosPorNodoYPorAnho($idnodo, $anho)
+  {
+    return Proyecto::select('proyectos.codigo_proyecto',
+    'proyectos.nombre',
+    'sublineas.nombre AS sublinea_nombre',
+    'estadosproyecto.nombre AS estado_nombre',
+    'proyectos.fecha_fin',
+    'proyectos.id')
+    ->selectRaw('IF(revisado_final = '.Proyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Proyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
+    ->join('gestores', 'gestores.id', '=', 'proyectos.gestor_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->where('proyectos.nodo_id', $idnodo)
+    ->where(function($q) use ($anho) {
+      $q->where(function($query) use ($anho) {
+        $query->whereYear('proyectos.fecha_fin', '=', $anho)
+        ->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV', 'Suspendido']);
+      })
+      ->orWhere(function($query) {
+        $query->whereIn('estadosproyecto.nombre', ['Inicio', 'Planeacion', 'En ejecución']);
+      });
+    })
+    ->get();
+  }
+
   // COnsulta la información de un proyecto
   public function consultarDetallesDeUnProyectoRepository($id)
   {
@@ -38,10 +104,13 @@ class ProyectoRepository
     'proyectos.entidad_id',
     'proyectos.tipoarticulacionproyecto_id',
     'proyectos.otro_tipoarticulacion',
+    'proyectos.gestor_id',
     'proyectos.estadoprototipo_id',
     'entidades.nombre AS nombreentidad_edit',
     'proyectos.universidad_proyecto AS universidad_proyecto_edit',
     'proyectos.tipo_ideaproyecto',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sublineas.lineatecnologica_id',
     'nodoentidad.nombre AS nombre_nodo')
     ->selectRaw('CONCAT(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre_sublinea')
     ->selectRaw('CONCAT(ideas.id, " - ", ideas.nombre_proyecto) AS nombre_idea')

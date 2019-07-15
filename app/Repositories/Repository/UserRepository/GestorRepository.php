@@ -11,6 +11,21 @@ use App\User;
 class GestorRepository
 {
 
+
+	// Consulta los gestores de una línea tecnológica por nodo
+	public function consultarGestoresPorLineaTecnologicaYNodoRepository($id, $idnodo)
+	{
+		// return User::roles('Gestor')->get();
+		return User::select('gestores.id')
+		->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
+		->join('gestores', 'gestores.user_id', '=', 'users.id')
+		->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+		->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+		->where('nodos.id', $idnodo)
+		->where('lineastecnologicas.id', $id)
+		->get();
+	}
+
 	public function getAllGestoresPorNodo($nodo)
     {
         return User::select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'rols.nombre as rol', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
@@ -29,7 +44,7 @@ class GestorRepository
     /*=================================================================
     =            metodo para registrar un usuario - gestor            =
     =================================================================*/
-    
+
     public function Store($request, $password)
     {
 
@@ -71,8 +86,8 @@ class GestorRepository
         return $user;
 
     }
-    
+
     /*=====  End of metodo para registrar un usuario - gestor  ======*/
-    
+
 
 }

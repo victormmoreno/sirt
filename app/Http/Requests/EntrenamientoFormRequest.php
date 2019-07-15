@@ -45,7 +45,7 @@ class EntrenamientoFormRequest extends FormRequest
   {
     return [
       'txtfecha_sesion1' => 'Fecha de la Primera Sesión',
-      'txtfecha_sesion2'         => 'Fecha de la Segunda Sesión',
+      'txtfecha_sesion2' => 'Fecha de la Segunda Sesión',
     ];
   }
 }

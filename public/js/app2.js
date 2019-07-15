@@ -205,51 +205,6 @@ $(document).ready(function() {
 
 });
 
-function secondDataTable() {
-  if (!$.fn.dataTable.isDataTable('#tblideasempresas')) {
-    $('#tblideasempresas').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: false,
-      // order: [[0, 'desc']],
-      // buttons: [
-        //     'csv', 'excel', 'pdf', 'print', 'reset', 'reload'
-        // ],
-            ajax:{
-              url: "idea/ideasEmpGI",
-              type: "get",
-            },
-        // ajax: 'idea/ideasEmpGI',
-        columns: [
-          {
-            data: 'consecutivo',
-            name: 'consecutivo',
-          },
-          {
-            data: 'fecha_registro',
-            name: 'fecha_registro',
-          },
-          {
-            data: 'nit',
-            name: 'nit',
-          },
-          {
-            data: 'razon_social',
-            name: 'razon_social',
-          },
-          {
-            data: 'nombre_idea',
-            name: 'nombre_idea',
-          },
-        ],
-        // order: [[0, 'desc']]
-      });
-    }
-  }
-
 $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
 
 function detallesIdeaPorId(id){
@@ -3073,6 +3028,7 @@ function verDetallesDeLosEntregablesDeUnaArticulacion(id) {
 
 $(document).ready(function() {
   consultarProyectosDelGestorPorAnho();
+  consultarProyectosDelNodoPorAnho();
 })
 
 // Muestra información de un proyecto en un modal
@@ -3109,7 +3065,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Observaciones del Proyecto: </span>'
@@ -3119,7 +3075,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Impacto del Proyecto: </span>'
@@ -3129,7 +3085,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Resultados del Proyecto: </span>'
@@ -3139,7 +3095,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Estado del Proyecto: </span>'
@@ -3149,7 +3105,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Fecha de Inicio: </span>'
@@ -3159,7 +3115,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Fecha de Cierre: </span>'
@@ -3169,7 +3125,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Tipo de Articulación: </span>'
@@ -3211,7 +3167,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Área de Conocimiento: </span>'
@@ -3221,7 +3177,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Proyecto del Nodo: </span>'
@@ -3231,7 +3187,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Gestor: </span>'
@@ -3241,7 +3197,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Sublínea: </span>'
@@ -3280,7 +3236,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Recibido a través del área de emprendimiento SENA: </span>'
@@ -3378,6 +3334,75 @@ function consultarProyectosDelGestorPorAnho() {
         width: '15%',
         data: 'codigo_proyecto',
         name: 'codigo_proyecto',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'sublinea_nombre',
+        name: 'sublinea_nombre',
+      },
+      {
+        data: 'estado_nombre',
+        name: 'estado_nombre',
+      },
+      {
+        data: 'revisado_final',
+        name: 'revisado_final',
+      },
+      {
+        width: '8%',
+        data: 'talentos',
+        name: 'talentos',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'entregables',
+        name: 'entregables',
+        orderable: false
+      },
+    ],
+  });
+}
+
+// Ajax que muestra los proyectos de un NODO por año
+function consultarProyectosDelNodoPorAnho() {
+  let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
+  $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
+  $('#tblproyectosDelNodoPorAnho').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+      },
+      {
+        data: 'gestor',
+        name: 'gestor',
       },
       {
         data: 'nombre',
