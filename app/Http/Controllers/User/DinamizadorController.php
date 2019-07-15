@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UsersRequests\DinamizadorFormRequest;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\UserRepository\{DinamizadorRepository, UserRepository};
 use App\User;
 use Illuminate\Http\Request;
 
@@ -29,7 +26,7 @@ class DinamizadorController extends Controller
      */
     public function index()
     {
-       
+
         return view('users.administrador.dinamizador.index', [
             'nodos' => $this->dinamizadorRepository->getAllNodos(),
         ]);
@@ -68,52 +65,6 @@ class DinamizadorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // $nodos = $this->dinamizadorRepository->getAllNodosPluck();
-        // dd($nodos);
-        return view('users.administrador.dinamizador.create', [
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->dinamizadorRepository->getAllNodosPluck(),
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(DinamizadorFormRequest $request)
-    {
-        //generar contraseña
-        $password = User::generatePasswordRamdom();
-        //guardar registro
-        $dinamizador = $this->dinamizadorRepository->Store($request, $password);
-        $activationToken = $this->userRepository->activationToken($dinamizador->id);
-        //envio de email con contraseña
-        if ($dinamizador != null) {
-            event(new UserWasRegistered($dinamizador, $password));
-            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $dinamizador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
-        } else {
-            alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
-        }
-        //redireccion
-
-        return redirect()->route('usuario.dinamizador.index');
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -122,75 +73,20 @@ class DinamizadorController extends Controller
     public function show($id)
     {
         $user = $this->userRepository->findById($id);
-
-
-
         $data = [
-                    'user' =>$user,
-                    'role' =>$user->getRoleNames()->implode(', '),
-                    'tipodocumento' =>$user->tipoDocumento->nombre,
-                    'eps' =>$user->eps->nombre,
-                    'departamento' =>$user->ciudad->departamento->nombre,
-                    'ciudad' =>$user->ciudad->nombre,
-                    'gruposanguineo' =>$user->grupoSanguineo->nombre,
-                    'gradosescolaridad' =>$user->gradoEscolaridad->nombre,
+            'user'              => $user,
+            'role'              => $user->getRoleNames()->implode(', '),
+            'tipodocumento'     => $user->tipoDocumento->nombre,
+            'eps'               => $user->eps->nombre,
+            'departamento'      => $user->ciudad->departamento->nombre,
+            'ciudad'            => $user->ciudad->nombre,
+            'gruposanguineo'    => $user->grupoSanguineo->nombre,
+            'gradosescolaridad' => $user->gradoEscolaridad->nombre,
+        ];
 
-                ];
-                
         return response()->json([
-            'data' =>  $data,
+            'data' => $data,
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('users.administrador.dinamizador.edit',[
-            'user'              => $this->userRepository->findById($id),
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->dinamizadorRepository->getAllNodosPluck(),
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(DinamizadorFormRequest $request, $id)
-    {
-        $user = $this->userRepository->findById($id);
-        if ($user != null) {
-            $userUpdate = $this->dinamizadorRepository->Update($request, $user);
-            alert()->success("El Usuario {$userUpdate->nombre_completo} ha sido  modificado.", 'Modificación Exitosa', "success");
-        } else {
-            alert()->error("El Usuario no se ha modificado.", 'Modificación Errónea', "error");
-        }
-
-        return redirect()->route('usuario.dinamizador.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

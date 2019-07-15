@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Administrador" href="{{route('usuario.administrador.create')}}">
+                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Usuario" href="{{route('usuario.usuarios.create')}}">
                                             <i class="material-icons">
                                                 how_to_reg
                                             </i>

@@ -154,6 +154,26 @@
             </div> 
         
         </div>
+        <div id="ingreso">
+            <div class="input-field col s12 m12 l12">
+
+                <select class="" id="txtnodoingreso" name="txtnodoingreso"  style="width: 100%" tabindex="-1">
+                    <option value="">Seleccione Nodo</option>
+
+                    @foreach($nodos as $id => $nodo)
+                        @if(isset($user->gestor->nodo->id))
+                            <option value="{{$id}}" {{old('txtnodoingreso',$user->gestor->nodo->id) ==  $id ? 'selected':''}}>{{$nodo}}</option> 
+                        @else
+                            <option value="{{$id}}" {{old('txtnodoingreso') ==  $id ? 'selected':''}}>{{$nodo}}</option> 
+                        @endif                        
+                    @endforeach
+                </select>
+                <label for="txtnodoingreso">Nodo Ingreso<span class="red-text">*</span></label>
+                @error('txtnodoingreso')
+                    <label id="txtnodoingreso-error" class="error" for="txtnodoingreso">{{ $message }}</label>
+                @enderror
+            </div>
+        </div>
 
     </div>
     <div class="col s12 m9 l9">
@@ -624,7 +644,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->empresa) ? $user->empresa : old('txtempresa')}}">
+            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}">
             <label for="txtempresa">Empresa</label>
             @error('txtempresa')
                 <label id="txtempresa-error" class="error" for="txtempresa">{{ $message }}</label>

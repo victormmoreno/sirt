@@ -50,7 +50,7 @@
                                         'btnText' => 'Modificar',
                                     ])
                                 </form>
-                            
+                                
                                     </div>
                                 </div>
                             </div>
@@ -125,7 +125,9 @@ var TipoTalento = {
               @if($errors->any())
                 $('#txtempresa').val({{old('txtempresa')}});
               @else
-                  $('#txtempresa').val();
+                @if(isset($user->talento->empresa) )
+                  $('#txtempresa').val('{{$user->talento->empresa}}');
+                @endif
               @endif 
         }
         
@@ -306,16 +308,17 @@ var regional = {
         type:'get',
         url:'/centro-formacion/getcentrosregional/'+regional
       }).done(function(response){
-        console.log(response);
+
         $('#txtcentroformacion').empty();
         $('#txtcentroformacion').append('<option value="">Seleccione el centro de formación</option>')
         $.each(response.centros, function(id, nombre) {
-          // console.log(e.id);
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
           @if($errors->any())
-        $('#txtcentroformacion').val({{old('txtcentroformacion')}});
+        $('#txtcentroformacion').val("{{old('txtcentroformacion')}}");
         @else
-        $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+          @if(isset($user->talento->entidad->centro->id))
+          $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+          @endif
         @endif
         $('#txtcentroformacion').material_select();
         
@@ -394,6 +397,7 @@ var roles = {
         $('#gestor').hide();
         $('#infocenter').hide();
         $('#talento').hide();
+        $('#ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
         
             if ($(this).val() == 'Dinamizador') {
@@ -406,6 +410,8 @@ var roles = {
                 $('#infocenter').show();
             }else if($(this).val() == 'Talento'){
                 $('#talento').show();
+            }else if($(this).val() == 'Ingreso'){
+                $('#ingreso').show();
             }
 
         });
@@ -454,7 +460,6 @@ var UserEdit = {
         type:'get',
         url:'/usuario/getciudad/'+id
       }).done(function(response){
-        console.log(response);
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {

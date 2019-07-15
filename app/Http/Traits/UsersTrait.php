@@ -2,6 +2,7 @@
 
 namespace App\Http\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -80,22 +81,78 @@ trait UsersTrait {
     public function setNombresAttribute($nombres)
     {
         $this->attributes['nombres'] = strtolower($nombres);
-        $this->attributes['nombres'] = ucfirst($nombres);
+        $this->attributes['nombres'] = ucwords($nombres);
     }
 
 
     public function setApellidosAttribute($apellidos)
     {
-        $this->attributes['apellidos'] = strtolower($apellidos);
-        $this->attributes['apellidos'] = ucfirst($apellidos);
+        $this->attributes['apellidos'] = ucwords(strtolower(trim($apellidos)));
+        // $this->attributes['apellidos'] = ucwords($apellidos);
     }
 
     public function getNombreCompletoAttribute()
     {
-        return ucfirst(strtolower($this->nombres)) . ' ' . ucfirst(strtolower($this->apellidos));
+        return ucwords(strtolower($this->nombres)) . ' ' . ucwords(strtolower($this->apellidos));
     }
 
-    
+    public function setDocumentoAttribute($documento)
+    {
+        $this->attributes['documento'] = trim($documento);
+    }
+
+    public function setEmailAttribute($email)
+    {
+        $this->attributes['email'] = trim($email);
+    }
+
+    public function setBarrioAttribute($barrio)
+    {
+        $this->attributes['barrio'] = ucwords(strtolower(trim($barrio)));
+    }
+
+    public function setDireccionAttribute($direccion)
+    {
+        $this->attributes['direccion'] = ucwords(strtolower(trim($direccion)));
+    }
+
+
+    public function setCelularAttribute($celular)
+    {
+        $this->attributes['celular'] = trim($celular);
+    }
+
+
+    public function setTelefonoAttribute($telefono)
+    {
+        $this->attributes['telefono'] = trim($telefono);
+    }
+
+    public function setFechaNacimientoAttribute($fechanacimiento)
+    {
+        $this->attributes['fechanacimiento'] = Carbon::parse($fechanacimiento)->format('Y-m-d');
+    }
+
+    public function setOtraEpsAttribute($otra_eps)
+    {
+        $this->attributes['otra_eps'] = ucwords(strtolower(trim($otra_eps)));
+    }
+
+    public function setInstitucionAttribute($institucion)
+    {
+        $this->attributes['institucion'] = ucwords(strtolower(trim($institucion)));
+    }
+
+    public function setTituloObtenidoAttribute($titulo_obtenido)
+    {
+        $this->attributes['titulo_obtenido'] = ucwords(strtolower(trim($titulo_obtenido)));
+    }
+
+    public function setFechaTerminacionAttribute($fecha_terminacion)
+    {
+        $this->attributes['fecha_terminacion'] = Carbon::parse($fecha_terminacion)->format('Y-m-d');
+    }
+
     /*=====  End of mutadores eloquent  ======*/
     
 

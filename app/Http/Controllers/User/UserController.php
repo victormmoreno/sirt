@@ -20,6 +20,22 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    /*===============================================================================
+    =            metodo API para consultar las ciudades por departamento            =
+    ===============================================================================*/
+    
+    public function getCiudad($departamento)
+    {
+
+        return response()->json([
+            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
+        ]);
+    }
+
+    
+    /*=====  End of metodo API para consultar las ciudades por departamento  ======*/
+    
+
     /**
      * Display a listing of the resource.
      *
@@ -63,17 +79,14 @@ class UserController extends Controller
     public function store(UserFormRequest $request)
     {
 
-        //validamos formularios
-            //UserFormRequest
-            
         //generar una contraseña
         $password = User::generatePasswordRamdom();
         //creamos el usuario
-        $user            = $this->userRepository->Store($request, $password);
-        $activationToken = $this->userRepository->activationToken($user->id);
+        $user = $this->userRepository->Store($request, $password);
 
-        
         if ($user != null) {
+            //evento para crear token para activacion de cuenta
+            $this->userRepository->activationToken($user->id);
             //envio de email con contraseña
             event(new UserWasRegistered($user, $password));
             //regresamos una respuesta al usuario
@@ -82,8 +95,7 @@ class UserController extends Controller
             alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
         }
         //redireccion
-
-        return redirect()->route('usuario.administrador.index');
+        return redirect()->route('usuario.index');
 
     }
 
@@ -106,9 +118,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
+
         // dd(auth()->user()->getRoleNames()->implode(', '));
-        
+
         return view('users.administrador.edit', [
             'user'              => $this->userRepository->findById($id),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),

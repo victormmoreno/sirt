@@ -1,66 +1,8 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
- */
 
 Route::get('/', function () {
-    // $grupos = App\Models\GrupoInvestigacion::scopeAllGrupoInvestigacion()->pluck('nombre','id');
-    // dd($grupos);
-    //
-    // dd(Spatie\Permission\Models\Role::where('name', App\User::IsDinamizador())->first()->id);
-
-// $empresa = "1234 - sol de juan";
-// $porciones = explode("-", $empresa);
-// dd($porciones);
-// $ocupacion = App\Models\Ocupacion::first();
-// dd($ocupacion->users);
-//
-//
-
-
-// dd($ocupaciones->items);
-// $user = App\User::first();
-    // dd($user->grupoSanguineo);
-
-    // dd(config('laravelpermission.permissions.linea.index'));
-    //
-    // $user = App\User::all()->last();
-
-    // dd($user->getRoleNames()[0]);
-
-
-    // $user = App\Models\Departamento::allDepartamentos()->pluck('id','nombre');
-    // dd($user);
-    // $user = App\User::infoUserNodo('Infocenter','Medellin')
-    // ->first()->nodo_direccion;
-
-    // $user = App\User::with(['nodo'=>function($query){
-    //        $query->select('nombre', 'direccion');
-    //    }])->get();
-    //
-    //
-    // $user = App\User::select(['id','documento','nombres', 'apellidos','email','direccion','telefono', 'celular','fechanacimiento','descripcion_ocupacion','estado'])
-    //     ->with(['dinamizadorInfocenters' => function($query) {
-    //         $query->select('profesion');
-    //     }])->get();
-    // dd($user);
-    // dd(config('mail.host'));
-    // dd($user);
-    // dd($user->ultimo_login->createFromIsoFormat('LLLL', 'Monday 11 March 2019 16:28', null, 'fr'));
-
-    // $entidad = App\Models\Entidad::whereBetween('id', [119, 128])->get()->random()->id;
-    // dd($entidad);
-
     return view('spa');
-
 })->name('/');
 
 DB::listen(function ($query) {
@@ -78,38 +20,6 @@ Route::get('email',function(){
 
 /*=====  End of ruta para revisar estilos d los ema  ======*/
 
-
-// Route::get('/', function () {
-// $departaments = App\Models\Departamento::with(['cities'])->get();
-// $departaments = App\Models\Departamento::first();
-// dd($departaments->cities);
-
-// $users = App\User::allowed()->get();
-// dd($users->departament);
-
-// $tiposdocumentos = App\Models\TipoDocumento::first();
-// $tiposdocumentos->created_at->year //año
-// $tiposdocumentos->created_at->month //mes
-// $tiposdocumentos->created_at->day //dia
-// $tiposdocumentos->created_at->addDays(2) //añadir dias
-// $tiposdocumentos->created_at->subDays(2) //restar dias
-// $tiposdocumentos->created_at->addWeeks(2) //sumar semanas
-// $tiposdocumentos->created_at->addMonths(2) //sumar meses
-// $tiposdocumentos->created_at->yesterday() //dia de ayer
-// $tiposdocumentos->created_at->tomorrow() //dia de mañana
-// $tiposdocumentos->created_at->dayOfWeek //dia de la semana
-// $tiposdocumentos->created_at->diffForHumans() //leible para humanos
-// $tiposdocumentos->created_at->startOfMonth() //dia que inicio el mes
-// $tiposdocumentos->created_at->endOfMonth() //dia que finalizo el mes
-// $tiposdocumentos->created_at->toDateString() //fecha sting
-// $tiposdocumentos->created_at->toFormattedDateString() //fecha sting
-
-// dd($tiposdocumentos->created_at->subDays(3)->isoFormat('dddd MMM  YYYY'));
-// dd($tiposdocumentos->created_at->subDays(3)->diffForHumans());
-//
-
-//     return view('spa');
-// });
 
 /*===================================================================================
 =            rutas modulos de login registro, recuperacion de contraseña            =
@@ -164,26 +74,14 @@ Route::group([
           'as' => 'talento.tecnoparque.byid',
         ]);
 
-        Route::get('/administrador/getOcupaciones', [
-        'uses' => 'AdminController@getOcupacionSesion',
-        ]);
-
-
-        Route::get('getciudad/{departamento}', 'AdminController@getCiudad');
-
-        Route::resource('administrador', 'AdminController', ['as' => 'usuario']);
-
-
-
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
-
-        Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario']);
 
         Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
 
         Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
 
-        Route::resource('gestor', 'GestorController', ['as' => 'usuario']);
+        Route::get('getciudad/{departamento}', 'UserController@getCiudad');
+
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
 
@@ -191,6 +89,12 @@ Route::group([
           'uses' => 'UserController@index',
           'as' => 'usuario.index',
         ]);
+
+        Route::resource('gestor', 'GestorController', ['as' => 'usuario', 'only'=> ['index','show']]);
+
+        Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario', 'only'=> ['index','show']]);
+
+        Route::resource('administrador', 'AdminController', ['as' => 'usuario', 'only'=> ['index','show']]);
 
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
             'create' => 'usuario.usuarios.create',

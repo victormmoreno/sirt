@@ -11,6 +11,7 @@ use App\Models\Eps;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
+use App\Models\Ingreso;
 use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Perfil;
@@ -247,14 +248,12 @@ class UserRepository
 
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
-
-
             if ($this->existRoleInArray($request,User::IsAdministrador())) {
 
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
             }
 
-            if (collect($request->input('role'))->contains(User::IsDinamizador())) {
+            if ($this->existRoleInArray($request,User::IsDinamizador())) {
                 Dinamizador::create([
                     "user_id" => $user->id,
                     "nodo_id" => $request->input('txtnododinamizador'),
@@ -263,7 +262,7 @@ class UserRepository
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
             }
 
-            if (collect($request->input('role'))->contains(User::IsGestor())) {
+            if ($this->existRoleInArray($request,User::IsGestor())) {
                 Gestor::create([
                     "user_id"             => $user->id,
                     "nodo_id"             => $request->input('txtnodogestor'),
@@ -273,7 +272,7 @@ class UserRepository
 
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
-            if (collect($request->input('role'))->contains(User::IsInfocenter())) {
+            if ($this->existRoleInArray($request,User::IsGestor())) {
                 Infocenter::create([
                     "user_id"   => $user->id,
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
@@ -283,12 +282,21 @@ class UserRepository
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
 
-            if (collect($request->input('role'))->contains(User::IsTalento())) {
+            if ($this->existRoleInArray($request,User::IsTalento())) {
                 $this->storeTalento($request, $user);
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
             }
 
-            if (collect($request->input('role'))->contains(User::IsIngreso()) || collect($request->input('role'))->contains(User::IsProveedor())) {
+            if ($this->existRoleInArray($request,User::IsIngreso())) {
+                Ingreso::create([
+                    "nodo_id" => $request->input('txtnodoingreso'),
+                    "user_id" => $user->id,
+                ]);
+
+                $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
+            }
+
+            if ($this->existRoleInArray($request,User::IsProveedor())) {
 
                 $this->assignRoleUser($user, $request->input('role'));
             }
@@ -359,7 +367,7 @@ class UserRepository
             "universidad"           => $request->input('txtuniversidad') ?: null,
             "programa_formacion"    => $request->input('txtprogramaformacion') ?: 'No Aplica',
             "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ?: 'No Aplica',
-            "empresa"               => $request->input('txtempresa') ? $request->input('txtempresa') : null,
+            "empresa"               => $request->input('txtempresa') ? : null,
             "otro_tipo_talento"     => $request->input('txtotrotipotalento') ?: null,
         ]);
     }

@@ -306,11 +306,9 @@ var regional = {
         type:'get',
         url:'/centro-formacion/getcentrosregional/'+regional
       }).done(function(response){
-        console.log(response);
         $('#txtcentroformacion').empty();
         $('#txtcentroformacion').append('<option value="">Seleccione el centro de formación</option>')
         $.each(response.centros, function(id, nombre) {
-          // console.log(e.id);
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
         });
         $('#txtcentroformacion').material_select();
@@ -325,7 +323,7 @@ var roles = {
         if($('#dinamizador').css('display') === 'block')
         {
               @if($errors->any())
-                  $("#txtnododinamizador").val({{old('txtnododinamizador')}});
+                  $("#txtnododinamizador").val("{{old('txtnododinamizador')}}");
               @else
                 $("#txtnododinamizador").val();
               @endif
@@ -335,9 +333,9 @@ var roles = {
         if ($('#gestor').css('display') === 'block') {
             
             @if($errors->any())
-                $('#txtnodogestor').val({{old('txtnodogestor')}});
-                $('#txtlinea').val({{old('txtlinea')}});
-                $("#txthonorario").val({{old('txthonorario')}});
+                $('#txtnodogestor').val("{{old('txtnodogestor')}}");
+                $('#txtlinea').val("{{old('txtlinea')}}");
+                $("#txthonorario").val("{{old('txthonorario')}}");
             @else
                 $("#txtnodogestor").val();
                 $("#txtlinea").val();
@@ -353,14 +351,24 @@ var roles = {
 
         if ($('#infocenter').css('display') === 'block') {
             @if($errors->any())
-                $('#txtnodoinfocenter').val({{old('txtnodoinfocenter')}});
-                $('#txtextension').val({{old('txtextension')}});
+                $('#txtnodoinfocenter').val("{{old('txtnodoinfocenter')}}");
+                $('#txtextension').val("{{old('txtextension')}}");
             @else 
                 $("#txtnodoinfocenter").val();
                 $("#txtextension").val();
             @endif
             $("#txtnodoinfocenter").material_select();
 
+        }
+
+        if($('#ingreso').css('display') === 'block')
+        {
+              @if($errors->any())
+                  $("#txtnodoingreso").val({{old('txtnodoingreso')}});
+              @else
+                $("#txtnodoingreso").val();
+              @endif
+              $("#txtnodoingreso").material_select(); 
         }
 
         if ($('#talento').css('display') === 'block') {
@@ -387,6 +395,7 @@ var roles = {
         $('#gestor').hide();
         $('#infocenter').hide();
         $('#talento').hide();
+        $('#ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
         
             if ($(this).val() == 'Dinamizador') {
@@ -399,6 +408,8 @@ var roles = {
                 $('#infocenter').show();
             }else if($(this).val() == 'Talento'){
                 $('#talento').show();
+            }else if($(this).val() == 'Ingreso'){
+                $('#ingreso').show();
             }
 
         });
