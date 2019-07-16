@@ -108,7 +108,7 @@
             @guest
             @else
               {{-- @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento())) --}}
-              @if( \Session::get('login_role') != App\User::IsTalento() || \Session::get('login_role') != App\User::IsAdministrador() )
+              @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
 
                 {{ \NodoHelper::returnNodoUsuario() }}
                 {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsAdministrador())->name}} Red Tecnoparque --}}

@@ -17,23 +17,23 @@
                 {!! method_field('PUT')!!}
                 {!! csrf_field() !!}
                 <div class="row">
-                  <div class="col s12 m6 l6">
+                  <div class="input-field col s12 m6 l6">
                     <input name="txtcodigo_proyecto" disabled value="{{ $proyecto->codigo_proyecto }}" id="txtcodigo_proyecto">
-                    <label for="txtcodigo_proyecto">Código de Proyecto</label>
+                    <label class="active" for="txtcodigo_proyecto">Código de Proyecto</label>
                   </div>
-                  <div class="col s12 m6 l6">
+                  <div class="input-field col s12 m6 l6">
                     <input name="txtnombre" value="{{ $proyecto->nombre }}" disabled id="txtnombre" required >
-                    <label for="txtnombre">Nombre del Proyecto</label>
+                    <label class="active" for="txtnombre">Nombre del Proyecto</label>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col s12 m6 l6">
+                  <div class="input-field col s12 m6 l6">
                     <input name="txtgestor_id" value="{{ $proyecto->nombre_gestor }}" disabled id="txtgestor_id">
-                    <label for="txtgestor_id">Gestor</label>
+                    <label class="active" for="txtgestor_id">Gestor</label>
                   </div>
-                  <div class="col s12 m6 l6">
+                  <div class="input-field col s12 m6 l6">
                     <input name="txtlinea" id="txtlinea" value="{{ $proyecto->nombre_linea }}" disabled>
-                    <label for="txtlinea">Línea Tecnológica</label>
+                    <label class="active" for="txtlinea">Línea Tecnológica</label>
                   </div>
                 </div>
                 <div class="divider"></div>
@@ -118,15 +118,15 @@
                     </p>
                   </div>
                 </div>
-                {{-- Inicio para subir entregables en la fase de planeacion --}}
+                {{-- Inicio para subir entregables en la fase de ejecucion --}}
                 <div class="row">
                   <ul class="collapsible" data-collapsible="accordion">
                     <li>
-                      <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Planeación.</div>
+                      <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Ejecución.</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="center col s12 m12 l12">
-                            <h6>Pulse aquí para subir los entregables de la fase de Planeación.</h6>
+                            <h6>Pulse aquí para subir los entregables de la fase de Ejecución.</h6>
                             <div class="dropzone" id="fase_ejecucion_proyecto"></div>
                           </div>
                         </div>
@@ -134,7 +134,7 @@
                     </li>
                   </ul>
                 </div>
-                {{-- Fin para subir entregables en la fase de planeacion --}}
+                {{-- Fin para subir entregables en la fase de ejecucion --}}
                 <div class="divider"></div>
                 <div class="row">
                   <h5>Entregables Fase de Cierre</h5>
@@ -148,6 +148,7 @@
                     <p class="p-v-xs">
                       <input type="checkbox" {{ $entregables->acta_cierre == 'Si' ? 'checked' : '' }} id="txtacta_cierre" name="txtacta_cierre" value="1">
                       <label for="txtacta_cierre">Acta de Cierre.</label>
+                      <a class="btn btn-floating modal-trigger" href="#modalContenidoActaCierre_Proyecto"><i class="material-icons left">info_outline</i></a>
                     </p>
                   </div>
                   <div class="col s12 m4 l4">
@@ -196,11 +197,13 @@
                     </p>
                   </div>
                 </div>
+                <div class="divider"></div>
                 <center>
                   <button class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                   <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
               </form>
+              @include('proyectos.archivos_table')
             </div>
           </div>
         </div>
@@ -208,11 +211,72 @@
     </div>
   </div>
 </main>
+<div id="modalContenidoActaCierre_Proyecto" class="modal">
+  <div class="modal-content">
+    <h4>Información sobre el acta de cierre</h4>
+    <ul class="collection">
+      <li class="collection-item">El acto de cierre debe tener las <b>Lecciones Aprendidas</b>.</li>
+      <li class="collection-item">En caso de que el proyecto se vaya a suspender, el acta de cierre deberá ser el acta de suspensión de proyecto.</li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok!</a>
+  </div>
+</div>
 @endsection
 @push('script')
   <script>
+  datatableArchivosDeUnProyecto();
+  function datatableArchivosDeUnProyecto() {
+    $('#archivosDeUnProyecto').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      processing: true,
+      serverSide: true,
+      order: false,
+      ajax:{
+        url: "{{route('proyecto.files', $proyecto->id)}}",
+        type: "get",
+      },
+      columns: [
+        {
+          data: 'file',
+          name: 'file',
+          orderable: false,
+        },
+        {
+          data: 'fase',
+          name: 'fase',
+          orderable: false,
+        },
+        {
+          data: 'download',
+          name: 'download',
+          orderable: false,
+        },
+        {
+          data: 'delete',
+          name: 'delete',
+          orderable: false,
+        },
+      ],
+      initComplete: function () {
+        this.api().columns().every(function () {
+          var column = this;
+          var input = document.createElement("input");
+          $(input).appendTo($(column.footer()).empty())
+          .on('change', function () {
+            column.search($(this).val(), false, false, true).draw();
+          });
+        });
+      }
+    });
+  }
+
   var DropzoneProyectoCierre = new Dropzone('#fase_cierre_proyecto', {
-    url: '/proyecto/store/{{ $proyecto->id }}/files',
+    url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
+    uploadMultiple: false,
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
@@ -224,7 +288,7 @@
   });
 
   var DropzoneProyectoEjecucion = new Dropzone('#fase_ejecucion_proyecto', {
-    url: '/articulacion/store/{{ $proyecto->id }}/files',
+    url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
@@ -236,19 +300,19 @@
   });
 
   var DropzoneProyectoPlaneacion = new Dropzone('#fase_planeacion_proyecto', {
-    url: '/articulacion/store/{{ $proyecto->id }}/files',
+    url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
     dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
     params: {
-      fase: 'Ejecución'
+      fase: 'Planeación'
     },
     paramName: 'nombreArchivo'
   });
 
   var DropzoneProyectoInicio = new Dropzone('#fase_inicio_proyecto', {
-    url: '/articulacion/store/{{ $proyecto->id }}/files',
+    url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
@@ -260,8 +324,8 @@
   });
 
   DropzoneProyectoInicio.on('success', function (res) {
-    // $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
-    // datatableArchivosDeUnaArticulacion();
+    $('#archivosDeUnProyecto').dataTable().fnDestroy();
+    datatableArchivosDeUnProyecto();
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -273,8 +337,8 @@
   })
 
   DropzoneProyectoEjecucion.on('success', function (res) {
-    // $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
-    // datatableArchivosDeUnaArticulacion();
+    $('#archivosDeUnProyecto').dataTable().fnDestroy();
+    datatableArchivosDeUnProyecto();
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -286,8 +350,8 @@
   })
 
   DropzoneProyectoPlaneacion.on('success', function (res) {
-    // $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
-    // datatableArchivosDeUnaArticulacion();
+    $('#archivosDeUnProyecto').dataTable().fnDestroy();
+    datatableArchivosDeUnProyecto();
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -299,8 +363,8 @@
   })
 
   DropzoneProyectoCierre.on('success', function (res) {
-    // $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
-    // datatableArchivosDeUnaArticulacion();
+    $('#archivosDeUnProyecto').dataTable().fnDestroy();
+    datatableArchivosDeUnProyecto();
     Swal.fire({
       toast: true,
       position: 'top-end',

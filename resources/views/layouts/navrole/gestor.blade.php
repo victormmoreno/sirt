@@ -14,16 +14,16 @@
     <i class="material-icons">record_voice_over</i>EDT's
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a href="" class="waves-effect waves-grey">
     <i class="material-icons">supervisor_account</i>Talentos
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">domain</i>Uso de Infraestructura
   </a>
-</li>
+</li> --}}
 <li class="no-padding {{setActiveRoute('empresa')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}">
     <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
@@ -49,13 +49,13 @@
     <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">search</i>Seguimiento
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">description</i>Reportes
   </a>
-</li>
+</li> --}}

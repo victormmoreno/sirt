@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ArchivoArticulacion extends Model
+class ArchivoProyecto extends Model
 {
-  protected $table = 'archivosarticulaciones';
+  protected $table = 'archivosproyecto';
 
   protected $fillable = [
       'fase_id',
-      'articulacion_id',
+      'proyecto_id',
       'ruta',
   ];
 
@@ -20,10 +20,9 @@ class ArchivoArticulacion extends Model
       return $this->belongsTo(Fase::class, 'fase_id', 'id');
   }
 
-  // Relacion a la tabla de articulaciones
-  public function articulacion()
+  // Relacion a la tabla de proyectos
+  public function proyecto()
   {
-      return $this->belongsTo(Articulacion::class, 'articulacion_id', 'id');
+      return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
   }
-
 }

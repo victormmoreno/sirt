@@ -3316,7 +3316,9 @@ function verTalentosDeUnProyecto(id) {
 
 // Ajax que muestra los proyectos de un gestor por año
 function consultarProyectosDelGestorPorAnho() {
+  // console.log('event');
   let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+  // let gestor = $('#txtgestor_id').val();
   $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
   $('#tblproyectosGestorPorAnho').DataTable({
     language: {

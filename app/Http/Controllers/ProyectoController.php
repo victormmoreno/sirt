@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea, Entidad};
+use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea, Entidad, Gestor};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
 use App\Http\Requests\ProyectoFormRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 use Alert;
 use App\Helpers\ArrayHelper;
 Use App\User;
@@ -22,8 +23,15 @@ class ProyectoController extends Controller
     $this->empresaRepository = $empresaRepository;
     $this->proyectoRepository = $proyectoRepository;
     $this->gestorRepository = $gestorRepository;
+    // dd( Session::get('login_role') );
+    // $role = Session::get('login_role');
+    // var_dump($role);
+
     $this->middleware([
       'auth',
+      // 'role:Dinamizador'
+      // 'role:' . Session::get('login_role', config('laravelpermission.roles.roleDinamizador')),
+      // 'role:' . Session::get('login_role', config('laravelpermission.roles.roleAdministrador')),
     ]);
   }
 
@@ -126,7 +134,24 @@ class ProyectoController extends Controller
   // modifica los entregables de un proyecto
   public function updateEntregables(Request $request, $id)
   {
-    // code...
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      $update = $this->proyectoRepository->updateEntregablesProyectoRepository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Existosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'Los entregables del proyecto no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+      }
+    } else {
+      // dd($request->txtrevisado_final);
+      $update = $this->proyectoRepository->updateRevisadoFinalProyectoRepository($request, $id);
+      if ( $update ) {
+        Alert::success('Modificación Existosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'El revisado final del proyecto no se modificado!')->showConfirmButton('Ok', '#3085d6');
+      }
+    }
   }
 
   // Vista de la vista de los entregables de un proyecto
@@ -137,14 +162,19 @@ class ProyectoController extends Controller
         'proyecto' => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
         'entregables' => (object) $this->consultarEntregablesDeUnProyectoController($id)
       ]);
+    } else if ( \Session::get('login_role') == User::IsDinamizador() ) {
+      return view('proyectos.dinamizador.entregables', [
+        'proyecto' => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
+        'entregables' => (object) $this->consultarEntregablesDeUnProyectoController($id)
+      ]);
     }
   }
 
   // Consulta los proyectos de un gestor por año (De la fecha de cierre)
-  public function datatableProyectosDelGestorPorAnho($idgestor, $anho)
+  public function datatableProyectosDelGestorPorAnho($id, $anho)
   {
     if (request()->ajax()) {
-      $idgestor = "";
+      $idgestor = $id;
       if (\Session::get('login_role') == User::IsGestor()) {
         $idgestor = auth()->user()->gestor->id;
       }
@@ -307,13 +337,18 @@ class ProyectoController extends Controller
   */
   public function index()
   {
-    // dd(\Session::get('login_role'));
-    switch (\Session::get('login_role')) {
+    switch ( \Session::get('login_role') ) {
       case User::IsGestor():
         return view('proyectos.gestor.index');
         break;
       case User::IsDinamizador():
-        return view('proyectos.dinamizador.index');
+        return view('proyectos.dinamizador.index', [
+          'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+        ]);
+        break;
+
+      case User::IsAdministrador():
+        return view('proyectos.administrador.index');
         break;
 
       default:

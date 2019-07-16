@@ -44,7 +44,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  @include('proyectos.gestor.table')
+                  @include('proyectos.table')
                 </div>
               </div>
             </div>

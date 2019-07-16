@@ -16,6 +16,95 @@ class ProyectoRepository
     $this->ideaRepository = $ideaRepository;
   }
 
+  public function updateRevisadoFinalProyectoRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyectoFindById = Proyecto::find($id);
+      $proyectoFindById->update([
+        'revisado_final' => $request->txtrevisado_final
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+  // Modifica los entregables de un proyecto
+  public function updateEntregablesProyectoRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $acc = 1;
+      $manual_uso_inf = 1;
+      $acta_inicio = 1;
+      $estado_arte = 1;
+      $actas_seguimiento = 1;
+      $video_tutorial = 1;
+      $ficha_caracterizacion = 1;
+      $acta_cierre = 1;
+      $encuesta = 1;
+
+      if ( !isset($request->txtacc) ) {
+        $acc = 0;
+      }
+
+      if ( !isset($request->txtmanual_uso_inf) ) {
+        $manual_uso_inf = 0;
+      }
+
+      if ( !isset($request->txtacta_inicio) ) {
+        $acta_inicio = 0;
+      }
+
+      if ( !isset($request->txtestado_arte) ) {
+        $estado_arte = 0;
+      }
+
+      if ( !isset($request->txtactas_seguimiento) ) {
+        $actas_seguimiento = 0;
+      }
+
+      if ( !isset($request->txtvideo_tutorial) ) {
+        $video_tutorial = 0;
+      }
+
+      if ( !isset($request->txtficha_caracterizacion) ) {
+        $ficha_caracterizacion = 0;
+      }
+
+      if ( !isset($request->txtacta_cierre) ) {
+        $acta_cierre = 0;
+      }
+
+      if ( !isset($request->txtencuesta) ) {
+        $encuesta = 0;
+      }
+
+      $proyectoFindById = Proyecto::find($id);
+      $proyectoFindById->update([
+        'acc' => $acc,
+        'manual_uso_inf' => $manual_uso_inf,
+        'acta_inicio' => $acta_inicio,
+        'estado_arte' => $estado_arte,
+        'actas_seguimiento' => $actas_seguimiento,
+        'video_tutorial' => $video_tutorial,
+        'ficha_caracterizacion' => $ficha_caracterizacion,
+        'acta_cierre' => $acta_cierre,
+        'encuesta' => $encuesta,
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
   // Consulta los entregables de un proyecto (Si/No)
   public function consultarEntregablesDeUnProyectoRepository($id)
   {
@@ -170,9 +259,11 @@ class ProyectoRepository
     'proyectos.fecha_fin',
     'proyectos.id')
     ->selectRaw('IF(revisado_final = '.Proyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Proyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
     ->join('gestores', 'gestores.id', '=', 'proyectos.gestor_id')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('gestores.id', $idgestor)
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {

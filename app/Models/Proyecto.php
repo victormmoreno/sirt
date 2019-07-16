@@ -75,7 +75,7 @@ class Proyecto extends Model
     'estado_arte',
     'actas_seguimiento',
     'video_tutorial',
-    'fecha_caracterizacion',
+    'ficha_caracterizacion',
     'acta_cierre',
     'lecciones_aprendidas',
     'encuesta'
@@ -87,6 +87,12 @@ class Proyecto extends Model
     return $this->belongsToMany(Talento::class, 'proyecto_talento')
     ->withTimestamps()
     ->withPivot('talento_lider');
+  }
+
+  // Relación a la tabla de archivosproyecto
+  public function archivosproyecto()
+  {
+    return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
   }
 
 
