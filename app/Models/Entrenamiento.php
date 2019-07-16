@@ -2,34 +2,93 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 
 class Entrenamiento extends Model
 {
-  // use Notifiable;
-  protected $table = 'entrenamientos';
+    // use Notifiable;
+    protected $table = 'entrenamientos';
 
-  // protected $dates = [
-  //     'fecha_sesion1',
-  //     'fecha_sesion2',
-  // ];
-  protected $casts = [
-    'fecha_sesion1'  => 'date:Y-m-d',
-    'fecha_sesion2' => 'date:Y-m-d',
-];
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array
-   */
-  protected $fillable = [
-      'fecha_sesion1',
-      'fecha_sesion2',
-      'correos',
-      'fotos',
-      'listado_asistencia',
-  ];
+    // protected $dates = [
+    //     'fecha_sesion1',
+    //     'fecha_sesion2',
+    // ];
+    protected $casts = [
+        'fecha_sesion1' => 'date:Y-m-d',
+        'fecha_sesion2' => 'date:Y-m-d',
+    ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'fecha_sesion1',
+        'fecha_sesion2',
+        'correos',
+        'fotos',
+        'listado_asistencia',
+    ];
+
+    /*=========================================
+    =            asesores eloquent            =
+    =========================================*/
+
+    public function getFechaSession1Attribute($fecha_sesion1)
+    {
+        return Carbon::parse($fecha_sesion1)->format('Y-m-d');
+    }
+
+    public function getFechaSession2Attribute($fecha_sesion2)
+    {
+        return Carbon::parse($fecha_sesion2)->format('Y-m-d');
+    }
+
+    public function getCorreosAttribute($correos)
+    {
+        return trim($correos);
+    }
+
+    public function getFotosAttribute($fotos)
+    {
+        return trim($fotos);
+    }
+
+    public function getListadoAsistenciaAttribute($listado_asistencia)
+    {
+        return trim($listado_asistencia);
+    }
+    /*=====  End of asesores eloquent  ======*/
+
+    /*========================================
+    =            mutador eloquent            =
+    ========================================*/
+
+    public function setFechaSession1Attribute($fecha_sesion1)
+    {
+        $this->attributes['fecha_sesion1'] = Carbon::parse($fecha_sesion1)->format('Y-m-d');
+    }
+
+    public function setFechaSession2Attribute($fecha_sesion2)
+    {
+        $this->attributes['fecha_sesion2'] = Carbon::parse($fecha_sesion2)->format('Y-m-d');
+    }
+
+    public function setCorreosAttribute($correos)
+    {
+        $this->attributes['correos'] = trim($correos);
+    }
+
+    public function setFotosAttribute($fotos)
+    {
+        $this->attributes['fotos'] = trim($fotos);
+    }
+
+    public function setListadoAsistenciaAttribute($listado_asistencia)
+    {
+        $this->attributes['listado_asistencia'] = trim($listado_asistencia);
+    }
+    /*=====  End of mutador eloquent  ======*/
 
 }

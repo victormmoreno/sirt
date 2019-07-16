@@ -272,7 +272,7 @@ class UserRepository
 
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
-            if ($this->existRoleInArray($request,User::IsGestor())) {
+            if ($this->existRoleInArray($request,User::IsInfocenter())) {
                 Infocenter::create([
                     "user_id"   => $user->id,
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
@@ -300,6 +300,10 @@ class UserRepository
 
                 $this->assignRoleUser($user, $request->input('role'));
             }
+
+        
+
+            
 
             DB::commit();
             return $user;
@@ -403,9 +407,18 @@ class UserRepository
         DB::beginTransaction();
         try {
 
-            $user = $this->updateUser($request, $user);
+            $userUpdated = $this->updateUser($request, $user);
+
+            if ($request->filled('role')) {
+                if (!$userUpdated->hasRole('Talento')) {
+                    return "no tiene estos: ".$request->role; 
+                }
+                // $userUpdated->syncRoles($request->role);
+            }
+
             DB::commit();
-            return $user;
+            
+            // return $userUpdated;
         } catch (Exception $e) {
             DB::rollback();
             return false;
@@ -439,7 +452,7 @@ class UserRepository
     private function updateUser($request, $user)
     {
 
-        return $user->update([
+        $user->update([
             "rol_id"              => Rols::where('nombre', '=', Rols::IsAdministrador())->first()->id,
             "tipodocumento_id"    => $request->input('txttipo_documento'),
             "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
@@ -463,6 +476,8 @@ class UserRepository
             "fecha_terminacion"   => $request->get('txtfechaterminacion'),
             "estrato"             => $request->input('txtestrato'),
         ]);
+
+        return $user;
 
     }
 

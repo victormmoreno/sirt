@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class EstadoIdea extends Model
 {
 
-    const IS_INICIO = 'Inicio';
-    const IS_CONVOCADO = 'Convocado';
-    const IS_ADMITIDO  = 'Admitido';
+    const IS_INICIO       = 'Inicio';
+    const IS_CONVOCADO    = 'Convocado';
+    const IS_ADMITIDO     = 'Admitido';
     const IS_NO_ADMITIDO  = 'No Admitido';
-    const IS_NO_CONVOCADO  = 'No Convocado';
-    const IS_INHABILITADO  = 'Inhabilitado';
+    const IS_NO_CONVOCADO = 'No Convocado';
+    const IS_INHABILITADO = 'Inhabilitado';
 
     protected $table = 'estadosidea';
 
@@ -27,14 +27,15 @@ class EstadoIdea extends Model
 
     public $timestamps = false;
 
-    public function ideas()
+    /*===========================================================
+    =            metodo para retornar las constantes            =
+    ===========================================================*/
+
+    public static function IsOtraEps()
     {
-        return $this->hasMany(Ideas::class, 'estadoidea_id', 'id');
+        return self::OTRA_EPS;
     }
 
-    public function scopeFilterEstadoIdea($query,$filtro ,$name='') {
-        
-        return  $query->select('id','nombre')->where($filtro,'=',$name);
+    /*=====  End of metodo para retornar las constantes  ======*/
 
-    }
 }

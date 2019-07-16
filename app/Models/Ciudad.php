@@ -47,9 +47,9 @@ class Ciudad extends Model
     }
     
     /*=====  End of relaciones eloquent  ======*/
+
+
     
-
-
     /*================================================================================
     =            metodo para consultar las ciudades según el departamento            =
     ================================================================================*/
@@ -62,6 +62,5 @@ class Ciudad extends Model
     }
 
     /*=====  End of metodo para consultar las ciudades según el departamento  ======*/
-
 
 }

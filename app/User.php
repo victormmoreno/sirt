@@ -2,14 +2,11 @@
 
 namespace App;
 
-use App\Http\Traits\UsersTrait;
+use App\Http\Traits\UserTrait\UsersTrait;
 use App\Models\{ActivationToken,Ciudad,Dinamizador,Eps,Gestor,GradoEscolaridad,GrupoSanguineo,Infocenter,Ingreso,Ocupacion,Rols,Talento,TipoDocumento};
-
-use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
-
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -181,5 +178,7 @@ class User extends Authenticatable implements JWTSubject
             ->role($role)
             ->where('nodos.id', '=', $nodo);
     }
+
+
 
 }

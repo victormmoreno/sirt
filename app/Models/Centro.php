@@ -21,6 +21,38 @@ class Centro extends Model
         'descripcion',
     ];
 
+    /*=========================================
+    =            asesores eloquent            =
+    =========================================*/
+
+    public function getCodigoCentroAttribute($codigo_centro)
+    {
+        return trim($codigo_centro);
+    }
+
+    public function getDescripcionAttribute($descripcion)
+    {
+        return ucfirst(strtolower(trim($descripcion)));
+    }
+
+    /*=====  End of asesores eloquent  ======*/
+
+    /*========================================
+    =            mutador eloquent            =
+    ========================================*/
+
+    public function setCodigoCentroAttribute($codigo_centro)
+    {
+        $this->attributes['codigo_centro'] = trim($codigo_centro);
+    }
+
+    public function setDescripcionAttribute($descripcion)
+    {
+        $this->attributes['descripcion'] = ucfirst(strtolower(trim($descripcion)));
+    }
+
+    /*=====  End of mutador eloquent  ======*/
+
     public function regional()
     {
         return $this->belongsTo(Regional::class, 'regional_id', 'id');

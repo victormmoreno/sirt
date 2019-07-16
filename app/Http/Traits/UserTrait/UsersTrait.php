@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Traits;
+namespace App\Http\Traits\UserTrait;
 
+use App\Notifications\ResetPasswordNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -76,24 +77,21 @@ trait UsersTrait {
         $this->attributes['password'] = Hash::make($password);
     }
 
-    
-
     public function setNombresAttribute($nombres)
     {
-        $this->attributes['nombres'] = strtolower($nombres);
-        $this->attributes['nombres'] = ucwords($nombres);
+        $this->attributes['nombres'] = ucwords(mb_strtolower(trim($nombres),'UTF-8'));
     }
 
 
     public function setApellidosAttribute($apellidos)
     {
-        $this->attributes['apellidos'] = ucwords(strtolower(trim($apellidos)));
-        // $this->attributes['apellidos'] = ucwords($apellidos);
+        $this->attributes['apellidos'] = ucwords(mb_strtolower(trim($apellidos),'UTF-8'));
+    
     }
 
     public function getNombreCompletoAttribute()
     {
-        return ucwords(strtolower($this->nombres)) . ' ' . ucwords(strtolower($this->apellidos));
+        return ucwords(strtolower($this->nombres)) . ' ' . ucwords(mb_strtolower($this->apellidos),'UTF-8');
     }
 
     public function setDocumentoAttribute($documento)
@@ -108,12 +106,12 @@ trait UsersTrait {
 
     public function setBarrioAttribute($barrio)
     {
-        $this->attributes['barrio'] = ucwords(strtolower(trim($barrio)));
+        $this->attributes['barrio'] = ucwords(mb_strtolower(trim($barrio),'UTF-8'));
     }
 
     public function setDireccionAttribute($direccion)
     {
-        $this->attributes['direccion'] = ucwords(strtolower(trim($direccion)));
+        $this->attributes['direccion'] = ucwords(mb_strtolower(trim($direccion),'UTF-8'));
     }
 
 
@@ -135,17 +133,17 @@ trait UsersTrait {
 
     public function setOtraEpsAttribute($otra_eps)
     {
-        $this->attributes['otra_eps'] = ucwords(strtolower(trim($otra_eps)));
+        $this->attributes['otra_eps'] = ucwords(mb_strtolower(trim($otra_eps),'UTF-8'));
     }
 
     public function setInstitucionAttribute($institucion)
     {
-        $this->attributes['institucion'] = ucwords(strtolower(trim($institucion)));
+        $this->attributes['institucion'] = ucwords(mb_strtolower(trim($institucion),'UTF-8'));
     }
 
     public function setTituloObtenidoAttribute($titulo_obtenido)
     {
-        $this->attributes['titulo_obtenido'] = ucwords(strtolower(trim($titulo_obtenido)));
+        $this->attributes['titulo_obtenido'] = ucwords(mb_strtolower(trim($titulo_obtenido),'UTF-8'));
     }
 
     public function setFechaTerminacionAttribute($fecha_terminacion)
@@ -155,8 +153,6 @@ trait UsersTrait {
 
     /*=====  End of mutadores eloquent  ======*/
     
-
-
     /*================================================================
     =            metodo para generar contraseña aleatoria            =
     ================================================================*/
@@ -227,7 +223,10 @@ trait UsersTrait {
     
     /*=====  End of metodo para activar la cuenta del usuario  ======*/
     
-
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
     
 
 }

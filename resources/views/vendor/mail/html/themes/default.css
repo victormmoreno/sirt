@@ -32,7 +32,9 @@ blockquote {
 }
 
 a {
-    color: #3869d4;
+    color: #00838f;
+    text-decoration:none;
+    font-weight: 600;
 }
 
 a img {
@@ -66,7 +68,7 @@ h3 {
 }
 
 p {
-    color: #3d4852;
+    color: #000000;
     font-size: 16px;
     line-height: 1.5em;
     margin-top: 0;
@@ -81,10 +83,11 @@ img {
     max-width: 100%;
 }
 
+
 /* Layout */
 
 .wrapper {
-    background-color: #f8fafc;
+    background-color: #008981;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -102,6 +105,7 @@ img {
     -premailer-width: 100%;
 }
 
+
 /* Header */
 
 .header {
@@ -110,7 +114,7 @@ img {
 }
 
 .header a {
-    color: #bbbfc3;
+    color: #008981;
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
@@ -119,8 +123,9 @@ img {
 
 /* Body */
 
+
 .body {
-    background-color: #ffffff;
+    background-color: #e0f2f1;
     border-bottom: 1px solid #edeff2;
     border-top: 1px solid #edeff2;
     margin: 0;
@@ -129,10 +134,13 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
+
 }
 
 .inner-body {
-    background-color: #ffffff;
+    background-color: rgba(178, 223, 219, 0.2);
+    /*opacity:0.6;*/
+    border: 4px solid #009688;
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -144,7 +152,7 @@ img {
 /* Subcopy */
 
 .subcopy {
-    border-top: 1px solid #edeff2;
+    border-top: 1px solid #008981;
     margin-top: 25px;
     padding-top: 25px;
 }
@@ -166,8 +174,8 @@ img {
 }
 
 .footer p {
-    color: #aeaeae;
-    font-size: 12px;
+    color: white;
+    font-size: 13px;
     text-align: center;
 }
 
@@ -182,22 +190,27 @@ img {
 }
 
 .table th {
-    border-bottom: 1px solid #edeff2;
+    border-bottom: 1px solid #00796b;
     padding-bottom: 8px;
     margin: 0;
 }
 
 .table td {
-    color: #74787e;
-    font-size: 15px;
+    color: #000000;
+    font-size: 18px;
     line-height: 18px;
     padding: 10px 0;
     margin: 0;
+    border: 4px;
 }
 
 .content-cell {
     padding: 35px;
+    text-align: center;
+
 }
+
+
 
 /* Buttons */
 
@@ -222,11 +235,11 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #3490dc;
-    border-top: 10px solid #3490dc;
-    border-right: 18px solid #3490dc;
-    border-bottom: 10px solid #3490dc;
-    border-left: 18px solid #3490dc;
+    background-color: #008981;
+    border-top: 10px solid #008981;
+    border-right: 18px solid #008981;
+    border-bottom: 10px solid #008981;
+    border-left: 18px solid #008981;
 }
 
 .button-green,

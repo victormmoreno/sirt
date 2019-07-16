@@ -1,7 +1,4 @@
 @component('mail::message')
-<center>
-    <img  width="200px" height="60px" src="http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C" class="chapter-title responsive-img"></img>
-</center>
 
 <br>
 

@@ -1,9 +1,7 @@
 
 @if ($errors->any())
 
-@foreach($errors as $error)
-    <li> {{$error}}</li>
-@endforeach
+
 <div class="card red lighten-3">
     <div class="row">
         <div class="col s12 m12">
@@ -12,7 +10,7 @@
                     <i class="material-icons left">
                         info_outline
                     </i>
-                    Los datos marcados con * son obligatorios
+                    Tienes {{collect($errors->all())->count()}} errores
                 </p>
             </div>
         </div>

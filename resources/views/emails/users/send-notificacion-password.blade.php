@@ -3,15 +3,18 @@
 
 Hola, 
 {{$user->nombres}}<br>
-{{$user->rol->nombre}} {{config('app.name')}}.
+{{$user->getRoleNames()->implode(', ')}} {{config('app.name')}}.
 
 Cordial Saludo.
 
 Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar al sistema {{config('app.name')}}
 
-<h3><b>Correo Electrónico: </b> {{$user->email}}</h3> 
-<h3><b>Contraseña: </b> {{$password}}</h3> 
-<br>
+
+@component('mail::table')
+	| Correo Electrónico | Contraseña |
+	|--------------------|------------|
+	| {{$user->email}}  | {{$password}} |
+@endcomponent
 Con las anteriores credenciales podrás iniciar sesión mediante el siguiente boton.
 <br>
 @component('mail::button', ['url' => route('login')])

@@ -398,17 +398,17 @@ var roles = {
         $('#ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
         
-            if ($(this).val() == 'Dinamizador') {
+            if ($(this).val() == '{{App\User::IsDinamizador()}}') {
                 
                 $('#dinamizador').show();
    
-            }else if($(this).val() == 'Gestor'){
+            }else if($(this).val() == '{{App\User::IsGestor()}}'){
                 $('#gestor').show();
-            }else if($(this).val() == 'Infocenter'){
+            }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
                 $('#infocenter').show();
-            }else if($(this).val() == 'Talento'){
+            }else if($(this).val() == '{{App\User::IsTalento()}}'){
                 $('#talento').show();
-            }else if($(this).val() == 'Ingreso'){
+            }else if($(this).val() == '{{App\User::IsIngreso()}}'){
                 $('#ingreso').show();
             }
 

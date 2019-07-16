@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Http\Traits\PerfilTrait;
+
+use App\Http\Traits\PerfilTrait\PerfilTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Perfil extends Model

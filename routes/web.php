@@ -80,7 +80,7 @@ Route::group([
 
         Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
 
-        Route::get('getciudad/{departamento}', 'UserController@getCiudad');
+        Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
 
 
         Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
@@ -338,7 +338,7 @@ Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
-Route::get('/lineas/getlineasnodo/{nodo}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
+Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
 Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/

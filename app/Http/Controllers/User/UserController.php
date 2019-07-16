@@ -16,7 +16,9 @@ class UserController extends Controller
 
     public function __construct(UserRepository $userRepository)
     {
-        $this->middleware('auth');
+        $this->middleware('role_session:Administrador|Dinamizador');
+
+
         $this->userRepository = $userRepository;
     }
 
@@ -24,7 +26,7 @@ class UserController extends Controller
     =            metodo API para consultar las ciudades por departamento            =
     ===============================================================================*/
     
-    public function getCiudad($departamento)
+    public function getCiudad($departamento = '1')
     {
 
         return response()->json([
@@ -43,7 +45,7 @@ class UserController extends Controller
      */
     public function index()
     {
-
+        // dd(session()->get('login_role'));       
         return view('users.administrador.index', [
             'roles' => $this->userRepository->getAllRoles(),
         ]);
@@ -146,10 +148,17 @@ class UserController extends Controller
     public function update(UserFormRequest $request, $id)
     {
         $user = $this->userRepository->findById($id);
+       
         if ($user != null) {
             $userUpdate = $this->userRepository->Update($request, $user);
-            alert()->success("El Usuario {$userUpdate->nombre_completo} ha sido  modificado.", 'Modificación Exitosa', "success");
+            dd($userUpdate);
+            alert()->success("El Usuario {$userUpdate->nombres} {$userUpdate->apellidos} ha sido  modificado.", 'Modificación Exitosa', "success");
+        }else{
+            alert()->error("El Usuario {$user->nombres} {$user->apellidos} no ha sido  modificado.", 'Modificación Errónea', "error");
         }
+
+        //redireccion
+        return redirect()->route('usuario.index');
     }
 
     /**
