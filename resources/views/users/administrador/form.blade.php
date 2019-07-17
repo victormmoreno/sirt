@@ -79,6 +79,7 @@
                 @enderror
             </div>
         </div>
+        {{-- {{var_dump($user->gestor->lineatecnologica_id)}} --}}
         <div id="gestor">
             <div class="input-field col s12 m12 l12">
 
@@ -123,6 +124,7 @@
             </div> 
         
         </div>
+
         <div id="infocenter">
            <div class="input-field col s12 m12 l12">
 
@@ -130,8 +132,8 @@
                     <option value="">Seleccione Nodo</option>
 
                     @foreach($nodos as $id => $nodo)
-                        @if(isset($user->gestor->nodo->id))
-                            <option value="{{$id}}" {{old('txtnodoinfocenter',$user->gestor->nodo->id) ==  $id ? 'selected':''}}>{{$nodo}}</option> 
+                        @if(isset($user->infocenter->nodo->id))
+                            <option value="{{$id}}" {{old('txtnodoinfocenter',$user->infocenter->nodo->id) ==  $id ? 'selected':''}}>{{$nodo}}</option> 
                         @else
                             <option value="{{$id}}" {{old('txtnodoinfocenter') ==  $id ? 'selected':''}}>{{$nodo}}</option> 
                         @endif                        
@@ -144,7 +146,7 @@
             </div>
             <div class="input-field col s12 m12 l12">
             
-                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txtextension')}}">
+                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) ? $user->infocenter->extension : old('txtextension')}}">
                 <label for="txtextension">Extensión <span class="red-text">*</span></label>
                 @error('txtextension')
                     <label id="txtextension-error" class="error" for="txtextension">{{ $message }}</label>
@@ -518,11 +520,9 @@
 
 <div class="divider mailbox-divider"></div>
 <div class="row">
-    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
-        {{-- <i class="material-icons prefix">
-             details
-        </i> --}}
-        <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple>
+    <div class="input-field col s12 m6 l6 offset-l3 m-3">
+        
+        <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple onchange="ocupacion.getOtraOcupacion(this)">
             
             @foreach($ocupaciones as $id => $nombre)
                 @if(isset($user))
@@ -537,6 +537,13 @@
         <label for="txtocupaciones" class="active">Ocupación <span class="red-text">*</span></label>
         @error('txtocupaciones')
             <label id="txtocupaciones-error" class="error" for="txtocupaciones">{{ $message }}</label>
+        @enderror
+    </div>
+    <div class="input-field col s12 m6 l6 offset-l3 m-3" id="otraocupacion">
+        <input class="validate" id="txtotra_ocupacion" name="txtotra_ocupacion" type="text"  value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('txtotra_ocupacion')}}">
+        <label for="txtotra_ocupacion" class="active">¿Cuál? <span class="red-text">*</span></label>
+        @error('txtotra_ocupacion')
+            <label id="txtotra_ocupacion-error" class="error" for="txtotra_ocupacion">{{ $message }}</label>
         @enderror
     </div>
 </div>

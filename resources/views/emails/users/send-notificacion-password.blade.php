@@ -2,7 +2,7 @@
 # Contraseña de ingreso a {{config('app.name')}}
 
 Hola, 
-{{$user->nombres}}<br>
+{{$user->nombres}} {{$user->apellidos}}<br>
 {{$user->getRoleNames()->implode(', ')}} {{config('app.name')}}.
 
 Cordial Saludo.

@@ -65,9 +65,9 @@
 $(document).ready(function() {
     $('.selectMultipe').select2({
       language: "es",
-      // tags: true,
     });
     eps.getOtraEsp();
+    ocupacion.getOtraOcupacion();
     roles.getRoleSeleted();
     grupoInvestigacion.getGrupoInvestigacion();
         TipoTalento.getSelectTipoTalento();
@@ -89,6 +89,28 @@ var eps = {
              
         }else{
             $('#otraeps').show();
+        }
+    }
+};
+
+var ocupacion = {
+    getOtraOcupacion:function (idocupacion) {
+        $('#otraocupacion').hide();
+        let id = $(idocupacion).val();
+        let nombre = $("#txtocupaciones option:selected").text();
+        let resultado = nombre.match(/[A-Z][a-z]+/g);
+        @if($errors->any())
+            $('#otraocupacion').hide();
+            if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                $('#otraocupacion').show();
+            }
+        @endif
+
+        if (idocupacion != null) {
+          if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+
+            $('#otraocupacion').show();
+          }
         }
     }
 };

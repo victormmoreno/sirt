@@ -68,13 +68,14 @@ $(document).ready(function() {
       language: "es",
     });
     eps.getOtraEsp();
+    ocupacion.getOtraOcupacion();
     roles.getRoleSeleted();
     grupoInvestigacion.getGrupoInvestigacion();
     TipoTalento.getSelectTipoTalento();
     regional.getCentroFormacion();
     UserEdit.getCiudad();
-    @if($errors->any())
         linea.getSelectLineaForNodo();
+    @if($errors->any())
     @endif
 });
     
@@ -84,12 +85,34 @@ var eps = {
     getOtraEsp:function (ideps) {
         let id = $(ideps).val();
         let nombre = $("#txteps option:selected").text();
+
         if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
             $('#otraeps').hide();
              
         }else{
             $('#otraeps').show();
         }
+    }
+};
+
+var ocupacion = {
+    getOtraOcupacion:function (idocupacion) {
+        $('#otraocupacion').hide();
+        let id = $(idocupacion).val();
+        let nombre = $("#txtocupaciones option:selected").text();
+        let resultado = nombre.match(/[A-Z][a-z]+/g);
+        @if($errors->any())
+            $('#otraocupacion').hide();
+            if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                $('#otraocupacion').show();
+            }
+        @endif
+       
+          if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+            $('#otraocupacion').show();
+
+          }
+      
     }
 };
 
@@ -123,7 +146,7 @@ var TipoTalento = {
         if($('#funcionarioEmpresa').css('display') === 'block')
         {
               @if($errors->any())
-                $('#txtempresa').val({{old('txtempresa')}});
+                $('#txtempresa').val('{{old('txtempresa')}}');
               @else
                 @if(isset($user->talento->empresa) )
                   $('#txtempresa').val('{{$user->talento->empresa}}');
@@ -227,9 +250,7 @@ var grupoInvestigacion = {
                                             
                                         </select>
                                         <label for="txtciudadgrupo">Ciudad <span class="red-text">*</span></label>
-                                        @error('txtciudadgrupo')
-                                            <label id="txtciudadgrupo-error" class="error" for="txtciudadgrupo">{{ $message }}</label>
-                                        @enderror
+                                       
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <table class="display responsive-table" id="gruposmodal_table">
@@ -436,12 +457,16 @@ var linea = {
             
             $('#txtlinea').append('<option value="">Seleccione la linea</option>');
 
-            $.each(response.lineasForNodo.lineas, function(i, e) {
+            $.each(response.lineasForNodo.lineas, function(i, e) {               
                 $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             });
+
+            @if($errors->any())
+                $('#txtlinea').val('{{old('txtlinea')}}');
+            @else
+                $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+            @endif
         }
-        
-        
         
         $('#txtlinea').material_select();
       });

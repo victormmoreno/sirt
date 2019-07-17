@@ -248,12 +248,12 @@ class UserRepository
 
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
-            if ($this->existRoleInArray($request,User::IsAdministrador())) {
+            if ($this->existRoleInArray($request, User::IsAdministrador())) {
 
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
             }
 
-            if ($this->existRoleInArray($request,User::IsDinamizador())) {
+            if ($this->existRoleInArray($request, User::IsDinamizador())) {
                 Dinamizador::create([
                     "user_id" => $user->id,
                     "nodo_id" => $request->input('txtnododinamizador'),
@@ -262,7 +262,7 @@ class UserRepository
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
             }
 
-            if ($this->existRoleInArray($request,User::IsGestor())) {
+            if ($this->existRoleInArray($request, User::IsGestor())) {
                 Gestor::create([
                     "user_id"             => $user->id,
                     "nodo_id"             => $request->input('txtnodogestor'),
@@ -272,7 +272,7 @@ class UserRepository
 
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
-            if ($this->existRoleInArray($request,User::IsInfocenter())) {
+            if ($this->existRoleInArray($request, User::IsInfocenter())) {
                 Infocenter::create([
                     "user_id"   => $user->id,
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
@@ -282,12 +282,12 @@ class UserRepository
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
 
-            if ($this->existRoleInArray($request,User::IsTalento())) {
+            if ($this->existRoleInArray($request, User::IsTalento())) {
                 $this->storeTalento($request, $user);
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
             }
 
-            if ($this->existRoleInArray($request,User::IsIngreso())) {
+            if ($this->existRoleInArray($request, User::IsIngreso())) {
                 Ingreso::create([
                     "nodo_id" => $request->input('txtnodoingreso'),
                     "user_id" => $user->id,
@@ -296,14 +296,10 @@ class UserRepository
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
             }
 
-            if ($this->existRoleInArray($request,User::IsProveedor())) {
+            if ($this->existRoleInArray($request, User::IsProveedor())) {
 
                 $this->assignRoleUser($user, $request->input('role'));
             }
-
-        
-
-            
 
             DB::commit();
             return $user;
@@ -343,6 +339,7 @@ class UserRepository
             "fecha_terminacion"   => $request->get('txtfechaterminacion'),
             "password"            => $password,
             "estrato"             => $request->input('txtestrato'),
+            "otra_ocupacion"      => collect($request->input('txtocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('txtotra_ocupacion') : null,
         ]);
 
     }
@@ -371,7 +368,7 @@ class UserRepository
             "universidad"           => $request->input('txtuniversidad') ?: null,
             "programa_formacion"    => $request->input('txtprogramaformacion') ?: 'No Aplica',
             "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ?: 'No Aplica',
-            "empresa"               => $request->input('txtempresa') ? : null,
+            "empresa"               => $request->input('txtempresa') ?: null,
             "otro_tipo_talento"     => $request->input('txtotrotipotalento') ?: null,
         ]);
     }
@@ -409,16 +406,74 @@ class UserRepository
 
             $userUpdated = $this->updateUser($request, $user);
 
-            if ($request->filled('role')) {
-                if (!$userUpdated->hasRole('Talento')) {
-                    return "no tiene estos: ".$request->role; 
-                }
-                // $userUpdated->syncRoles($request->role);
+            $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
+
+            // if ($newRole != null) {
+            if ($newRole != null && !isset($userUpdated->dinamizador) && $this->notExistRoleInArray($request, $userUpdated, User::IsDinamizador())) {
+                Dinamizador::create([
+                    "user_id" => $userUpdated->id,
+                    "nodo_id" => $request->input('txtnododinamizador'),
+                ]);
+
             }
 
-            DB::commit();
+            if ($newRole != null && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
+                Gestor::create([
+                    "user_id"             => $userUpdated->id,
+                    "nodo_id"             => $request->input('txtnodogestor'),
+                    "lineatecnologica_id" => $request->input('txtlinea'),
+                    "honorarios"          => $request->input('txthonorario'),
+                ]);
+            }
+
+            if ($newRole != null && !isset($userUpdated->infocenter) && $this->notExistRoleInArray($request, $userUpdated, User::IsInfocenter())) {
+                Infocenter::create([
+                    "user_id"   => $user->id,
+                    "nodo_id"   => $request->input('txtnodoinfocenter'),
+                    "extension" => $request->input('txtextension'),
+                ]);
+            }
+
+            if ($newRole != null && !isset($userUpdated->talento) && $this->notExistRoleInArray($request, $userUpdated, User::IsTalento())) {
+                $this->storeTalento($request, $userUpdated);
+            }
+
+            //update dinamizador
+            if (isset($userUpdated->dinamizador)) {
+       
+                Dinamizador::find($userUpdated->dinamizador->id)->update([
+                    "nodo_id" => $request->input('txtnododinamizador')
+                ]);
+
+            }
+
+            //update gestor
+            if (isset($userUpdated->gestor)) {
+       
+                \App\Models\Gestor::find($userUpdated->gestor->id)->update([
+                    "nodo_id"             => $request->input('txtnodogestor'),
+                    "lineatecnologica_id" => $request->input('txtlinea'),
+                    "honorarios"          => $request->input('txthonorario'),
+                ]);
+  
+            }
+
+            //update infocenter
+            if (isset($userUpdated->infocenter)) {
+       
+                Infocenter::find($userUpdated->infocenter->id)->update([
+                    "nodo_id"   => $request->input('txtnodoinfocenter'),
+                    "extension" => $request->input('txtextension'),
+                ]);
+
+            }
             
-            // return $userUpdated;
+
+            $userUpdated->syncRoles($request->role);
+
+            DB::commit();
+
+            return $userUpdated;
         } catch (Exception $e) {
             DB::rollback();
             return false;
@@ -430,7 +485,7 @@ class UserRepository
     /*==========================================================================
     =            metodo para preguntar si existe el rol en el array            =
     ==========================================================================*/
-    
+
     private function existRoleInArray($request, $role)
     {
         if ($request->filled('role')) {
@@ -440,10 +495,38 @@ class UserRepository
             return false;
         }
     }
-    
-    
+
     /*=====  End of metodo para preguntar si existe el rol en el array  ======*/
-    
+
+    /**
+     * undocumented function
+     * metodo para comprobar comprobar que el no exista en array
+     *
+     * @author julian londoño
+     **/
+    private function notExistRoleInArray($request, $userUpdated, $role)
+    {
+        if ($request->filled('role')) {
+            if (!collect($userUpdated->getRoleNames())->contains($role)) {
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+    /*==================================================================================
+    =            metodo para conocer que roles tiene un usuario determinado            =
+    ==================================================================================*/
+
+    // public function roleAssignedToUser($request, $user)
+    // {
+    //     $rolename = collect($user->getRoleNames());
+
+    //     if($rolename->diff($request->input('role')));
+    // }
+
+    /*=====  End of metodo para conocer que roles tiene un usuario determinado  ======*/
 
     /*==============================================================================================
     =            metodo privado para actualizar un usuario y se llamdo en $this->Update            =

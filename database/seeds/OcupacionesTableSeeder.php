@@ -5,6 +5,8 @@ use Illuminate\Database\Seeder;
 
 class OcupacionesTableSeeder extends Seeder
 {
+
+
     /**
      * Run the database seeds.
      *
@@ -12,6 +14,10 @@ class OcupacionesTableSeeder extends Seeder
      */
     public function run()
     {
+        Ocupacion::create([
+            'nombre' => 'Otra',
+        ]);
+
         Ocupacion::create([
             'nombre' => 'Estudiante',
         ]);

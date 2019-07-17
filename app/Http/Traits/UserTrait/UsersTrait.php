@@ -101,7 +101,7 @@ trait UsersTrait {
 
     public function setEmailAttribute($email)
     {
-        $this->attributes['email'] = trim($email);
+        $this->attributes['email'] = mb_strtolower(trim($email),'UTF-8');
     }
 
     public function setBarrioAttribute($barrio)
@@ -149,6 +149,11 @@ trait UsersTrait {
     public function setFechaTerminacionAttribute($fecha_terminacion)
     {
         $this->attributes['fecha_terminacion'] = Carbon::parse($fecha_terminacion)->format('Y-m-d');
+    }
+
+    public function setOtraOcupacionAttribute($otra_ocupacion)
+    {
+        $this->attributes['otra_ocupacion'] = ucwords(mb_strtolower(trim($otra_ocupacion),'UTF-8'));
     }
 
     /*=====  End of mutadores eloquent  ======*/

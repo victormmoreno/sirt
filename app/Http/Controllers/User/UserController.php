@@ -121,6 +121,10 @@ class UserController extends Controller
     public function edit($id)
     {
 
+        // $user = $this->userRepository->findById($id);
+        
+          
+
         // dd(auth()->user()->getRoleNames()->implode(', '));
 
         return view('users.administrador.edit', [
