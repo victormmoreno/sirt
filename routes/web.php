@@ -401,6 +401,7 @@ Route::group(
     Route::get('/ajaxVerDetallesDeUnProyecto/{id}', 'ProyectoController@consultarDetallesDeUnProyecto')->name('proyecto.detalles');
     Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
     Route::get('/archivosDeUnProyecto/{id}', 'ArchivoController@datatableArchivosDeUnProyecto')->name('proyecto.files');
+    Route::get('/ajaxDetallesDeLosEntregablesDeUnProyecto/{id}', 'ProyectoController@detallesDeLosEntregablesDeUnProyecto')->name('proyecto.detalle.entregables');
     Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update');
     Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables');
     Route::post('/', 'ProyectoController@store')->name('proyecto.store');

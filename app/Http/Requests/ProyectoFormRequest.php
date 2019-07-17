@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\TipoArticulacionProyecto;
+use App\Models\{TipoArticulacionProyecto, EstadoProyecto};
 use Illuminate\Validation\Rule;
 
 class ProyectoFormRequest extends FormRequest
@@ -42,6 +42,7 @@ class ProyectoFormRequest extends FormRequest
           'txtuniversidad_proyecto' => Rule::requiredIf(request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id) . '|max:50',
           'txtfecha_inicio' => 'required|date_format:"Y-m-d"',
           'txtidea_id' => 'required',
+          'txtfecha_fin' => Rule::requiredIf(request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id). '|date_format:"Y-m-d"|nullable',
           'txtnom_act_cti' => Rule::requiredIf(request()->txtarti_cti == 1). '|min:5|max:50|nullable',
           'txtimpacto_proyecto' => 'max:1000',
           'txtobservaciones_proyecto' => 'max:1000',
@@ -78,6 +79,9 @@ class ProyectoFormRequest extends FormRequest
         // Mensajes para el input txtfecha_inicio
         'txtfecha_inicio.required' => 'La Fecha de Inicio es obligartoria.',
         'txtfecha_inicio.date_format' => 'El formato de la Fecha de Inicio es incorrecto.',
+        // Mensajes para el input txtfecha_fin
+        'txtfecha_fin.required' => 'La Fecha de Cierre es obligatoria.',
+        'txtfecha_fin.date_format' => 'El formato de la Fecha de Cierre es incorrecto.',
         // Mensajes para el input
         'txtidea_id.required' => 'La idea de proyecto es obligatoria.',
         // Mensajes para el input txtnom_act_cti

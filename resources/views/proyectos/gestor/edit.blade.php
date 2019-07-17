@@ -25,7 +25,8 @@
                   </div>
                 </div>
                 <br />
-                <form id="frmProyectosCreate" action="{{route('proyecto.store')}}" method="POST">
+                <form id="frmProyectosCreate" action="{{route('proyecto.update', $proyecto->id)}}" method="POST">
+                  {!! method_field('PUT')!!}
                   {!! csrf_field() !!}
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
@@ -98,10 +99,10 @@
                       <small id="txtareaconocimiento_id-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col s12 m6 l6">
-                      <select id="txtestadoproyecto_id" name="txtestadoproyecto_id" style="width: 100%;">
+                      <select id="txtestadoproyecto_id" name="txtestadoproyecto_id" style="width: 100%;" onchange="setFechaCierreProyecto()">
                         <option value="">Seleccione el Estado del Proyecto</option>
                         @forelse ($estadosproyecto as $id => $value)
-                          <option value="{{$id}}" {{ $proyecto->estadoproyecto_id == $id ? 'selected' : '' }}> {{$value}} </option>
+                          <option value="{{$id}}" {{ $proyecto->estadoproyecto_id == $id ? 'selected' : '' }}>{{$value}}</option>
                         @empty
                           <option value="">No hay información disponible.</option>
                         @endforelse
@@ -115,7 +116,22 @@
                     <div class="input-field col s12 m6 l6 offset-l3 m3">
                       <input type="text" name="txtfecha_inicio" id="txtfecha_inicio" value="{{ $proyecto->fecha_inicio->toDateString() }}" class="datepicker picker__input">
                       <label for="txtfecha_inicio">Fecha de Inicio <span class="red-text">*</span></label>
+                      <small id="txtfecha_inicio-error" class="error red-text"></small>
                     </div>
+                  </div>
+                  <div class="row">
+                    {{-- <div id="divFechaCierreProyecto"> --}}
+                      <div class="card indigo lighten-5">
+                        <div class="card-content">
+                          <div class="input-field">
+                            <input type="text" name="txtfecha_fin" id="txtfecha_fin" value="" class="datepicker picker__input">
+                            <label for="txtfecha_fin">Fecha de Cierre <span class="red-text">*</span></label>
+                            <small id="txtfecha_fin-error" class="error red-text"></small>
+                          </div>
+                        </div>
+                      </div>
+                    {{-- </div> --}}
+
                   </div>
                   <div class="divider"></div>
                   {{-- <div class="divider"></div> --}}
@@ -131,54 +147,54 @@
                         </center>
                       </div>
                     </div>
-                    <div class="divider"></div>
+                    {{-- <div class="divider"></div> --}}
                     <div id="divEntidadEmpresaProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnitEmpresa" id="txtnitEmpresa" disabled>
+                        <input type="text" name="txtnitEmpresa" id="txtnitEmpresa" value="{{ $entidad->nit }}" disabled>
                         <label for="txtnitEmpresa" class="active">Nit de la Empresa</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreEmpresa" id="txtnombreEmpresa" value="{{ $proyecto->nombreentidad_edit }}" disabled>
+                        <input type="text" name="txtnombreEmpresa" id="txtnombreEmpresa" value="{{ $entidad->nombre }}" disabled>
                         <label for="txtnombreEmpresa" class="active">Nombre de la Empresa</label>
                       </div>
                     </div>
                     <div id="divEntidadGrupoInvestigacionProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtcodigoGrupo" id="txtcodigoGrupo" disabled>
+                        <input type="text" name="txtcodigoGrupo" id="txtcodigoGrupo" value="{{ $entidad->codigo_grupo }}" disabled>
                         <label for="txtcodigoGrupo" class="active">Código del Grupo de Investigación</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreGrupo" id="txtnombreGrupo" value="{{ $proyecto->nombreentidad_edit }}" disabled>
+                        <input type="text" name="txtnombreGrupo" id="txtnombreGrupo" value="{{ $entidad->nombre }}" disabled>
                         <label for="txtnombreGrupo" class="active">Nombre del Grupo de Investigación</label>
                       </div>
                     </div>
                     <div id="divEntidadTecnoacademiaProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtcentroFormacion" id="txtcentroFormacion" disabled>
+                        <input type="text" name="txtcentroFormacion" id="txtcentroFormacion" value="{{ $entidad->centro_formacion }}" disabled>
                         <label for="txtcentroFormacion" class="active">Centro de Formación de la Tecnoacademia</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreTecnoacademia" id="txtnombreTecnoacademia"  value="{{ $proyecto->nombreentidad_edit }}" disabled>
+                        <input type="text" name="txtnombreTecnoacademia" id="txtnombreTecnoacademia"  value="{{ $entidad->nombre }}" disabled>
                         <label for="txtnombreTecnoacademia" class="active">Nombre de la Tecnoacademia</label>
                       </div>
                     </div>
                     <div id="divEntidadNodoProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtCentroFormacionNodo" id="txtCentroFormacionNodo" disabled>
+                        <input type="text" name="txtCentroFormacionNodo" id="txtCentroFormacionNodo" value="{{ $entidad->centro }}" disabled>
                         <label for="txtCentroFormacionNodo" class="active">Centro de Formación del Nodo</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtNombreNodo" id="txtNombreNodo"  value="{{ $proyecto->nombreentidad_edit }}" disabled>
+                        <input type="text" name="txtNombreNodo" id="txtNombreNodo"  value="{{ $entidad->nombre }}" disabled>
                         <label for="txtNombreNodo" class="active">Nombre del Nodo</label>
                       </div>
                     </div>
                     <div id="divCentroFormacionProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtCodigoCentroFormacion" id="txtCodigoCentroFormacion" disabled>
+                        <input type="text" name="txtCodigoCentroFormacion" id="txtCodigoCentroFormacion" value="{{ $entidad->codigo_centro }}" disabled>
                         <label for="txtCodigoCentroFormacion" class="active">Código del Centro de Formación</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtNombreCentroFormacion" id="txtNombreCentroFormacion"  value="{{ $proyecto->nombreentidad_edit }}" disabled>
+                        <input type="text" name="txtNombreCentroFormacion" id="txtNombreCentroFormacion"  value="{{ $entidad->nombre }}" disabled>
                         <label for="txtNombreCentroFormacion" class="active">Nombre del Centro del Formación</label>
                       </div>
                     </div>
@@ -228,7 +244,7 @@
                           </div>
                         </div>
                       </center>
-                      <input type="hidden" name="txtidea_id" id="txtidea_id" value="">
+                      <input type="hidden" name="txtidea_id" id="txtidea_id" value="{{ $proyecto->idea_id }}">
                     </div>
                   </div>
                   <div class="divider"></div>
@@ -405,7 +421,9 @@
 @endsection
 @push('script')
   <script>
-
+    $( document ).ready(function() {
+      resetDatosEntidad();
+    });
     //Enviar formulario
     $(document).on('submit', 'form#frmProyectosCreate', function (event) {
       // $('button[type="submit"]').prop("disabled", true);
@@ -439,6 +457,17 @@
               $('#' + control + '-error').show();
             }
           }
+          if (data.revisado_final == 'Por Evaluar') {
+            Swal.fire({
+              title: 'Error!',
+              text: "Para poder cerrar el proyecto, debe estar Aprobado o No Aprobado por el Dinamizador!",
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            })
+          }
+
           if (data.fail == false && data.redirect_url == false) {
             Swal.fire({
               title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
@@ -449,19 +478,19 @@
               confirmButtonText: 'Ok'
             })
           }
-          if (data.fail == false && data.redirect_url != false) {
-            Swal.fire({
-              title: 'Registro Exitoso',
-              text: "El proyecto ha sido creado satisfactoriamente",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Ok'
-            });
-            setTimeout(function(){
-              window.location.replace("{{route('proyecto')}}");
-            }, 1000);
-          }
+          // if (data.fail == false && data.redirect_url != false) {
+          //   Swal.fire({
+          //     title: 'Registro Exitoso',
+          //     text: "El proyecto ha sido creado satisfactoriamente",
+          //     type: 'success',
+          //     showCancelButton: false,
+          //     confirmButtonColor: '#3085d6',
+          //     confirmButtonText: 'Ok'
+          //   });
+          //   setTimeout(function(){
+          //     window.location.replace("{{route('proyecto')}}");
+          //   }, 1000);
+          // }
         },
         error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
@@ -481,6 +510,7 @@
     divNombreActorCTi = $('#divNombreActorCTi');
     divOtroTipoArticulacion = $('#divOtroTipoArticulacion');
     divEntidadesTecnoparque = $('#divEntidadesTecnoparque');
+    divFechaCierreProyecto = $('#divFechaCierreProyecto');
 
 
     // Ocultar contenedores
@@ -494,51 +524,65 @@
     divNombreActorCTi.hide();
     divOtroTipoArticulacion.hide();
     divEntidadesTecnoparque.hide();
+    divFechaCierreProyecto.hide();
 
+
+    function setFechaCierreProyecto() {
+      // console.log('fecha de cierre');
+      let id = $("#txtestadoproyecto_id").val();
+      let nombre = $("#txtestadoproyecto_id [value='"+id+"']").text();
+
+      if (nombre == "Cierre PF" || nombre == "Cierre PMV") {
+        divFechaCierreProyecto.show();
+      } else {
+        divFechaCierreProyecto.hide();
+      }
+    }
 
     @if($proyecto->art_cti == 'Si')
     divNombreActorCTi.show();
     @endif
 
+    function resetDatosEntidad() {
+      @if($proyecto->nombre_tipoarticulacion == 'Otro')
+      divOtroTipoArticulacion.show();
+      @endif
 
-    @if($proyecto->nombre_tipoarticulacion == 'Otro')
-    divOtroTipoArticulacion.show();
-    @endif
-
-    @if ($proyecto->nombre_tipoarticulacion == 'Empresas')
-    divEntidadEmpresaProyecto.show();
-    @endif
-
-
-    @if($proyecto->nombre_tipoarticulacion == 'Empresas')
+      @if ($proyecto->nombre_tipoarticulacion == 'Empresas')
       divEntidadEmpresaProyecto.show();
-    @endif
+      @endif
 
-    @if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del Sena' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos')
-    divEntidadGrupoInvestigacionProyecto.show();
-    @endif
 
-    @if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias')
-    divEntidadTecnoacademiaProyecto.show();
-    @endif
+      @if($proyecto->nombre_tipoarticulacion == 'Empresas')
+      divEntidadEmpresaProyecto.show();
+      @endif
 
-    @if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques')
-    divEntidadNodoProyecto.show();
-    @endif
+      @if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del Sena' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos')
+      divEntidadGrupoInvestigacionProyecto.show();
+      @endif
 
-    @if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación')
-    divCentroFormacionProyecto.show();
-    @endif
+      @if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias')
+      divEntidadTecnoacademiaProyecto.show();
+      @endif
 
-    @if ($proyecto->nombre_tipoarticulacion == 'Universidades')
-    divUniversidadProyecto.hide();
-    @endif
+      @if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques')
+      divEntidadNodoProyecto.show();
+      @endif
 
-    @if ($proyecto->nombre_tipoarticulacion != 'Emprendedor' && $proyecto->nombre_tipoarticulacion != 'Proyecto financiado por SENNOVA' || $proyecto->nombre_tipoarticulacion != 'Otro')
-    divEntidadesTecnoparque.show();
-    @else
-    divEntidadesTecnoparque.hide();
-    @endif
+      @if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación')
+      divCentroFormacionProyecto.show();
+      @endif
+
+      @if ($proyecto->nombre_tipoarticulacion == 'Universidades')
+      divUniversidadProyecto.hide();
+      @endif
+
+      @if ($proyecto->nombre_tipoarticulacion != 'Emprendedor' && $proyecto->nombre_tipoarticulacion != 'Proyecto financiado por SENNOVA' || $proyecto->nombre_tipoarticulacion != 'Otro')
+      divEntidadesTecnoparque.show();
+      @else
+      divEntidadesTecnoparque.hide();
+      @endif
+    }
 
     $('#talentosDeTecnoparque_ProyectoCreate_table').DataTable({
       // "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
@@ -827,7 +871,8 @@
     // En caso de que no se asocie ninguna entidad al proyecto
     function volverSiElegirEntidad() {
       divEntidadesTecnoparque.hide();
-      $('#txttipoarticulacionproyecto_id').val("");
+      resetDatosEntidad();
+      $('#txttipoarticulacionproyecto_id').val({{ $proyecto->tipoarticulacionproyecto_id }});
       $('#txttipoarticulacionproyecto_id').material_select();
     }
 

@@ -16,6 +16,30 @@ class ProyectoRepository
     $this->ideaRepository = $ideaRepository;
   }
 
+  /**
+   * Método el cuál actualiza ALGUNOS campos de la tabla de proyecto
+   *
+   * @param int id - Id del proyecto que se va a modificar
+   * @param request request Request con los datos del formulario
+   * @return return boolean
+   */
+  public function update($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::find($id);
+      $proyecto->update([
+
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
+
   public function updateRevisadoFinalProyectoRepository($request, $id)
   {
     DB::beginTransaction();
@@ -199,6 +223,7 @@ class ProyectoRepository
     'proyectos.universidad_proyecto AS universidad_proyecto_edit',
     'proyectos.tipo_ideaproyecto',
     'lineastecnologicas.nombre AS nombre_linea',
+    'proyectos.idea_id',
     'sublineas.lineatecnologica_id',
     'nodoentidad.nombre AS nombre_nodo')
     ->selectRaw('CONCAT(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre_sublinea')

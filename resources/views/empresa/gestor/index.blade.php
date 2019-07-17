@@ -98,7 +98,7 @@
       // +'<small id="txttelefono_contacto[]-error" class="error red-text"></small>'
       +'</td>'
       +'<td>'
-      +'<input disabled value="{{ \NodoHelper::returnNodoUsuario() }}" />'
+      +'<input disabled value="{{ \NodoHelper::returnNameNodoUsuario() }}" />'
       // +'<label for="nodo">Nodo con contacto</label>'
       +'</td>'
       +'<td>'

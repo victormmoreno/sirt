@@ -15,12 +15,13 @@ class GrupoInvestigacionRepository
       'contactosentidades.nombres_contacto',
       'contactosentidades.correo_contacto',
       'contactosentidades.telefono_contacto',
-      'nodos.nombre AS nodo',
+      'enodo.nombre AS nodo',
       'nodos.id'
       )
       ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
       ->join('contactosentidades', 'contactosentidades.entidad_id', '=', 'entidades.id')
       ->join('nodos', 'nodos.id', '=', 'contactosentidades.nodo_id')
+      ->join('entidades AS enodo', 'enodo.id', '=', 'nodos.entidad_id')
       ->where('nodos.id', $idnodo)
       ->where('entidades.id', $identidad)
       ->groupBy('contactosentidades.id')

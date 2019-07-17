@@ -14,7 +14,7 @@ class EmpresaRepository
       'contactosentidades.nombres_contacto',
       'contactosentidades.correo_contacto',
       'contactosentidades.telefono_contacto',
-      'nodos.nombre AS nodo'
+      'entidades.nombre AS nodo'
       )
       ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
       ->join('contactosentidades', 'contactosentidades.entidad_id', '=', 'entidades.id')
