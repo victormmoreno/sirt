@@ -26,7 +26,7 @@ class CreateGestoresTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('nodo_id');
             $table->unsignedInteger('lineatecnologica_id');
-            $table->decimal('honorarios', 10, 0);
+            $table->float('honorarios', 10, 0);
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_gestores_nodos1_idx');

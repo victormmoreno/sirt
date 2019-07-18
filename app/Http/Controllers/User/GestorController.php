@@ -57,7 +57,7 @@ class GestorController extends Controller
                 })
                 ->addColumn('edit', function ($data) {
                     if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.gestor.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     } else {
                         $button = '';
                     }

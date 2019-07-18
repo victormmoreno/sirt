@@ -3,7 +3,20 @@
 namespace App;
 
 use App\Http\Traits\UserTrait\UsersTrait;
-use App\Models\{ActivationToken,Ciudad,Dinamizador,Eps,Gestor,GradoEscolaridad,GrupoSanguineo,Infocenter,Ingreso,Ocupacion,Rols,Talento,TipoDocumento};
+
+use App\Models\ActivationToken;
+use App\Models\Ciudad;
+use App\Models\Dinamizador;
+use App\Models\Eps;
+use App\Models\Gestor;
+use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanguineo;
+use App\Models\Infocenter;
+use App\Models\Ingreso;
+use App\Models\Ocupacion;
+use App\Models\Rols;
+use App\Models\Talento;
+use App\Models\TipoDocumento;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -15,19 +28,18 @@ class User extends Authenticatable implements JWTSubject
 
     use Notifiable, HasRoles, UsersTrait;
 
-    const IS_MASCULINO = 1;
-    const IS_FEMENINO  = 0;
-    const IS_ACTIVE    = true;
-    const IS_INACTIVE  = false;
+    const IS_MASCULINO     = 1;
+    const IS_FEMENINO      = 0;
+    const IS_ACTIVE        = true;
+    const IS_INACTIVE      = false;
     const IS_ADMINISTRADOR = "Administrador";
-    const IS_DINAMIZADOR = "Dinamizador";
-    const IS_GESTOR = "Gestor";
-    const IS_INFOCENTER = "Infocenter";
-    const IS_TALENTO = "Talento";
-    const IS_INGRESO = "Ingreso";
-    const IS_PROVEEDOR = "Proveedor";
+    const IS_DINAMIZADOR   = "Dinamizador";
+    const IS_GESTOR        = "Gestor";
+    const IS_INFOCENTER    = "Infocenter";
+    const IS_TALENTO       = "Talento";
+    const IS_INGRESO       = "Ingreso";
+    const IS_PROVEEDOR     = "Proveedor";
 
-    
     protected $appends = ['nombre_completo'];
 
     protected $dates = [
@@ -69,8 +81,6 @@ class User extends Authenticatable implements JWTSubject
         'otra_ocupacion',
     ];
 
-
-    
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -90,13 +100,12 @@ class User extends Authenticatable implements JWTSubject
         'fechanacimiento'   => 'date:Y-m-d',
     ];
 
-    
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
     public function users()
     {
-      return $this->hasMany(User::class, 'rol_id', 'id');
+        return $this->hasMany(User::class, 'rol_id', 'id');
     }
 
     //relaciones muchos a muchos
@@ -163,15 +172,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
 
-
-
     public function token()
     {
         return $this->hasOne(ActivationToken::class);
     }
 
     /*=====  End of relaciones eloquent  ======*/
-
 
     public function scopeInfoUserNodo($query, $role, $nodo)
     {
@@ -181,7 +187,5 @@ class User extends Authenticatable implements JWTSubject
             ->role($role)
             ->where('nodos.id', '=', $nodo);
     }
-
-
 
 }

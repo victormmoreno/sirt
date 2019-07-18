@@ -226,14 +226,12 @@ var grupoInvestigacion = {
                                         <i class="material-icons prefix">
                                              details
                                         </i>
-                                        <select class="" id="txtdepartamentogrupo" name="txtdepartamentogrupo" onchange="UserCreate.getCiudadForModal()" style="width: 100%" tabindex="-1" >
+                                        <select class="" id="txtdepartamentogrupo" name="txtdepartamentogrupo" onchange="UserEdit.getCiudadForModal()" style="width: 100%" tabindex="-1" >
                                             <option value="">Seleccione Departamento</option>
                                             @foreach($departamentos as $value)
-                                                @if(isset($user->ciudad->departamento->id))
-                                                    <option value="{{$value->id}}" {{old('txtdepartamento',$user->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
-                                                @else
+                                               
                                                     <option value="{{$value->id}}" {{old('txtdepartamento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
-                                                @endif
+                                               
                                             @endforeach
                                         </select>
                                         <label for="txtdepartamentogrupo">Departamento</option> <span class="red-text">*</span></label>
@@ -464,7 +462,9 @@ var linea = {
             @if($errors->any())
                 $('#txtlinea').val('{{old('txtlinea')}}');
             @else
+                @if(isset($user->gestor->lineatecnologica_id))
                 $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+                @endif
             @endif
         }
         

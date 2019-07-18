@@ -25,6 +25,7 @@ class Talento extends Model
         'otro_tipo_talento',
     ];
 
+
     // Relacion muchos a muchos con articulaciones
     public function articulaciones()
     {

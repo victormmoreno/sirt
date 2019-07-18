@@ -57,7 +57,7 @@ class UserFormRequest extends FormRequest
             'txtnododinamizador'    => Rule::requiredIf(collect($this->role)->contains(User::IsDinamizador())) . '|nullable',
             'txtnodogestor'         => Rule::requiredIf(collect($this->role)->contains(User::IsGestor())) . '|nullable',
             'txtlinea'              => Rule::requiredIf(collect($this->role)->contains(User::IsGestor())) . '|nullable',
-            'txthonorario'          => Rule::requiredIf(collect($this->role)->contains(User::IsGestor())) . '|nullable|regex:/^\d{1,3}(?:\.?\d{3})*(?:,\d\d)?$/',
+            'txthonorario'          => Rule::requiredIf(collect($this->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'     => Rule::requiredIf(collect($this->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtextension'          => Rule::requiredIf(collect($this->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtperfil'             => Rule::requiredIf(collect($this->role)->contains(User::IsTalento())) . '|nullable',

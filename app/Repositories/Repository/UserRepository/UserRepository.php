@@ -8,6 +8,7 @@ use App\Models\Departamento;
 use App\Models\Dinamizador;
 use App\Models\Entidad;
 use App\Models\Eps;
+use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
@@ -406,10 +407,26 @@ class UserRepository
 
             $userUpdated = $this->updateUser($request, $user);
 
-            $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
+            $newRole    = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
 
-            // if ($newRole != null) {
-            if ($newRole != null && !isset($userUpdated->dinamizador) && $this->notExistRoleInArray($request, $userUpdated, User::IsDinamizador())) {
+            $removeRole = array_diff(collect($userUpdated->getRoleNames())->toArray(), $request->input('role'));
+
+
+
+            if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsDinamizador()) && isset($userUpdated->dinamizador)) {
+                Dinamizador::find($userUpdated->dinamizador->id)->delete();
+
+            }
+
+            if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsInfocenter()) && isset($userUpdated->infocenter)) {
+                Infocenter::find($userUpdated->infocenter->id)->delete();
+            }
+
+            if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsIngreso()) && isset($userUpdated->ingreso)) {
+                Ingreso::find($userUpdated->ingreso->id)->delete();
+            }
+
+            if ($newRole != null && $this->roleIsAssigned($newRole, User::IsDinamizador()) && !isset($userUpdated->dinamizador) && $this->notExistRoleInArray($request, $userUpdated, User::IsDinamizador())) {
                 Dinamizador::create([
                     "user_id" => $userUpdated->id,
                     "nodo_id" => $request->input('txtnododinamizador'),
@@ -417,16 +434,20 @@ class UserRepository
 
             }
 
-            if ($newRole != null && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
-                Gestor::create([
-                    "user_id"             => $userUpdated->id,
-                    "nodo_id"             => $request->input('txtnodogestor'),
-                    "lineatecnologica_id" => $request->input('txtlinea'),
-                    "honorarios"          => $request->input('txthonorario'),
-                ]);
+            if ($newRole != null && $this->roleIsAssigned($newRole, User::IsGestor()) && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
+
+                if ($request->filled('txtnodogestor')) {
+                    Gestor::create([
+                        "user_id"             => $userUpdated->id,
+                        "nodo_id"             => $request->input('txtnodogestor'),
+                        "lineatecnologica_id" => $request->input('txtlinea'),
+                        "honorarios"          => $request->input('txthonorario'),
+                    ]);
+                }
+
             }
 
-            if ($newRole != null && !isset($userUpdated->infocenter) && $this->notExistRoleInArray($request, $userUpdated, User::IsInfocenter())) {
+            if ($newRole != null && $this->roleIsAssigned($newRole, User::IsInfocenter()) && !isset($userUpdated->infocenter) && $this->notExistRoleInArray($request, $userUpdated, User::IsInfocenter())) {
                 Infocenter::create([
                     "user_id"   => $user->id,
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
@@ -434,40 +455,60 @@ class UserRepository
                 ]);
             }
 
-            if ($newRole != null && !isset($userUpdated->talento) && $this->notExistRoleInArray($request, $userUpdated, User::IsTalento())) {
+            if ($newRole != null && $this->roleIsAssigned($newRole, User::IsTalento()) && !isset($userUpdated->talento) && $this->notExistRoleInArray($request, $userUpdated, User::IsTalento())) {
                 $this->storeTalento($request, $userUpdated);
+            }
+            if ($newRole != null && $this->roleIsAssigned($newRole, User::IsIngreso()) && !isset($userUpdated->ingreso) && $this->notExistRoleInArray($request, $userUpdated, User::IsIngreso())) {
+                Ingreso::create([
+                    "nodo_id" => $request->input('txtnodoingreso'),
+                    "user_id" => $user->id,
+                ]);
             }
 
             //update dinamizador
-            if (isset($userUpdated->dinamizador)) {
-       
+            if (isset($userUpdated->dinamizador->id) && !$this->roleIsAssigned($removeRole, User::IsDinamizador())) {
+
                 Dinamizador::find($userUpdated->dinamizador->id)->update([
-                    "nodo_id" => $request->input('txtnododinamizador')
+                    "nodo_id" => $request->input('txtnododinamizador'),
                 ]);
+
 
             }
 
             //update gestor
-            if (isset($userUpdated->gestor)) {
-       
-                \App\Models\Gestor::find($userUpdated->gestor->id)->update([
+            if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor())) {
+
+                Gestor::find($userUpdated->gestor->id)->update([
                     "nodo_id"             => $request->input('txtnodogestor'),
                     "lineatecnologica_id" => $request->input('txtlinea'),
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
-  
+
             }
 
             //update infocenter
-            if (isset($userUpdated->infocenter)) {
-       
+            if (isset($userUpdated->infocenter->id) && !$this->roleIsAssigned($removeRole, User::IsInfocenter())) {
+
                 Infocenter::find($userUpdated->infocenter->id)->update([
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
                     "extension" => $request->input('txtextension'),
                 ]);
 
             }
-            
+
+            if (isset($userUpdated->talento) && !$this->roleIsAssigned($removeRole, User::IsTalento())) {
+
+                $this->updateTalento($request, $userUpdated);
+
+            }
+
+            if (isset($userUpdated->ingreso) && !$this->roleIsAssigned($removeRole, User::IsIngreso())) {
+
+                Ingreso::find($userUpdated->ingreso->id)->update([
+                    "nodo_id" => $request->input('txtnodoingreso'),
+                ]);
+
+            }
 
             $userUpdated->syncRoles($request->role);
 
@@ -515,18 +556,16 @@ class UserRepository
 
     }
 
-    /*==================================================================================
-    =            metodo para conocer que roles tiene un usuario determinado            =
-    ==================================================================================*/
+    /*===================================================================================================
+    =            metodo para cononcer si el nuevo rol esta asignado a un usuario determinado            =
+    ===================================================================================================*/
 
-    // public function roleAssignedToUser($request, $user)
-    // {
-    //     $rolename = collect($user->getRoleNames());
+    private function roleIsAssigned($newRole, $role)
+    {
+        return collect($newRole)->contains($role);
+    }
 
-    //     if($rolename->diff($request->input('role')));
-    // }
-
-    /*=====  End of metodo para conocer que roles tiene un usuario determinado  ======*/
+    /*=====  End of metodo para cononcer si el nuevo rol esta asignado a un usuario determinado  ======*/
 
     /*==============================================================================================
     =            metodo privado para actualizar un usuario y se llamdo en $this->Update            =
@@ -565,5 +604,34 @@ class UserRepository
     }
 
     /*=====  End of metodo privado para actualizar un usuario y se llamdo en Update  ======*/
+
+    /*=================================================================
+    =            metodo para actualizar un usuario talento            =
+    =================================================================*/
+    public function updateTalento($request, $userUpdated)
+    {
+        $entidad = null;
+
+        if ($request->get('txtperfil') == Perfil::IsAprendizSenaConApoyo() || $request->get('txtperfil') == Perfil::IsAprendizSenaSinApoyo() || $request->get('txtperfil') == Perfil::IsEgresadoSena()) {
+            $entidad = $request->input('txtcentroformacion') ?: $this->getIdNoAplicaEntidad();
+        } else if ($request->get('txtperfil') == Perfil::IsInvestigador()) {
+            $entidad = $this->getIdGrupoInvesitgacion($request) ?: $this->getIdNoAplicaEntidad();
+        } else {
+            $entidad = $this->getIdNoAplicaEntidad();
+        }
+
+        return Talento::find($userUpdated->talento->id)->update([
+            "perfil_id"             => $request->input('txtperfil'),
+            "entidad_id"            => $entidad,
+            "universidad"           => $request->input('txtuniversidad') ?: null,
+            "programa_formacion"    => $request->input('txtprogramaformacion') ?: 'No Aplica',
+            "carrera_universitaria" => $request->input('txtcarrerauniversitaria') ?: 'No Aplica',
+            "empresa"               => $request->input('txtempresa') ?: null,
+            "otro_tipo_talento"     => $request->input('txtotrotipotalento') ?: null,
+        ]);
+
+    }
+
+    /*=====  End of metodo para actualizar un usuario talento  ======*/
 
 }

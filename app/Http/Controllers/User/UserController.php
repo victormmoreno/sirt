@@ -5,8 +5,10 @@ namespace App\Http\Controllers\User;
 use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormRequest;
+use App\Models\Nodo;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -18,14 +20,13 @@ class UserController extends Controller
     {
         $this->middleware('role_session:Administrador|Dinamizador');
 
-
         $this->userRepository = $userRepository;
     }
 
     /*===============================================================================
     =            metodo API para consultar las ciudades por departamento            =
     ===============================================================================*/
-    
+
     public function getCiudad($departamento = '1')
     {
 
@@ -34,9 +35,7 @@ class UserController extends Controller
         ]);
     }
 
-    
     /*=====  End of metodo API para consultar las ciudades por departamento  ======*/
-    
 
     /**
      * Display a listing of the resource.
@@ -45,7 +44,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        // dd(session()->get('login_role'));       
+        // dd(session()->get('login_role'));
         return view('users.administrador.index', [
             'roles' => $this->userRepository->getAllRoles(),
         ]);
@@ -58,18 +57,53 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.administrador.create', [
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->userRepository->getAllNodo(),
-            'perfiles'          => $this->userRepository->getAllPerfiles(),
-            'regionales'        => $this->userRepository->getAllRegionales(),
-        ]);
+
+
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                $role = ['Administrador', 'Dinamizador'];
+                return view('users.administrador.create', [
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'nodos'             => $this->userRepository->getAllNodo(),
+                    'perfiles'          => $this->userRepository->getAllPerfiles(),
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                ]);
+
+                break;
+
+            case User::IsDinamizador():
+
+                // dd(auth()->user()->dinamizador->nodo->entidad->nombre);
+                $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
+               
+                $role = ['Gestor','Infocenter','Ingreso'];
+                return view('users.dinamizador.create', [
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'nodos'             => $nodo,
+                    'perfiles'          => $this->userRepository->getAllPerfiles(),
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                ]);
+
+                break;
+
+            default:
+                
+                break;
+        }
+        
+
     }
 
     /**
@@ -122,8 +156,6 @@ class UserController extends Controller
     {
 
         // $user = $this->userRepository->findById($id);
-        
-          
 
         // dd(auth()->user()->getRoleNames()->implode(', '));
 
@@ -152,12 +184,12 @@ class UserController extends Controller
     public function update(UserFormRequest $request, $id)
     {
         $user = $this->userRepository->findById($id);
-       
+
         if ($user != null) {
             $userUpdate = $this->userRepository->Update($request, $user);
             dd($userUpdate);
             alert()->success("El Usuario {$userUpdate->nombres} {$userUpdate->apellidos} ha sido  modificado.", 'Modificación Exitosa', "success");
-        }else{
+        } else {
             alert()->error("El Usuario {$user->nombres} {$user->apellidos} no ha sido  modificado.", 'Modificación Errónea', "error");
         }
 

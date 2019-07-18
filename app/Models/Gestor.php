@@ -21,6 +21,15 @@ class Gestor extends Model
         'honorarios',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'honorarios' => 'float',
+    ];
+
     public function scopeConsultarGestoresPorNodo($query, $id)
     {
         return $query->select('gestores.id')
