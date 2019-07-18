@@ -120,18 +120,47 @@
                     </div>
                   </div>
                   <div class="row">
-                    {{-- <div id="divFechaCierreProyecto"> --}}
-                      <div class="card indigo lighten-5">
+                    <div id="divFechaCierreProyecto">
+                      <div class="card indigo lighten-5 col s12 m8 l8">
                         <div class="card-content">
-                          <div class="input-field">
+                          <div class="input-field col s12 m6 l6">
                             <input type="text" name="txtfecha_fin" id="txtfecha_fin" value="" class="datepicker picker__input">
                             <label for="txtfecha_fin">Fecha de Cierre <span class="red-text">*</span></label>
                             <small id="txtfecha_fin-error" class="error red-text"></small>
                           </div>
+                          <div class="input-field col s12 m6 l6">
+                            <select id="txtestadoprototipo_id" name="txtestadoprototipo_id" style="width: 100%;" onchange="setOtroEstadoPrototipo(this.value);">
+                              <option value="">Seleccione el Estado del Prototipo</option>
+                              @forelse ($estadosprototipos as $id => $value)
+                                <option value="{{$id}}" {{ $proyecto->estadoprototipo_id == $id ? 'selected' : '' }}>{{$value}}</option>
+                              @empty
+                                <option value="">No hay información disponible.</option>
+                              @endforelse
+                            </select>
+                            <label for="txtestadoprototipo_id">Estado del Prototipo <span class="red-text">*</span></label>
+                            <small id="txtestadoprototipo_id-error" class="error red-text"></small>
+                          </div>
                         </div>
                       </div>
-                    {{-- </div> --}}
-
+                      <div id="divOtroEstadoPrototipo">
+                        <div class="card blue lighten-5 col s12 m4 l4">
+                          <div class="card-content">
+                            <div class="input-field col s12 m12 l12">
+                              <input type="text" name="txtotro_estadoprototipo" id="txtotro_estadoprototipo" value="">
+                              <label for="txtotro_estadoprototipo">¿Cuál? <span class="red-text">*</span></label>
+                              <small id="txtotro_estadoprototipo-error" class="error red-text"></small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col 12 m6 l6 offset-l3 m3">
+                          <textarea name="txtresultado_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtresultado_proyecto" ></textarea>
+                          <label for="txtresultado_proyecto">Resultado del proyecto <span>*</span></label>
+                          <small id="txtresultado_proyecto-error" class="error red-text"></small>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="divider"></div>
                   {{-- <div class="divider"></div> --}}
@@ -405,7 +434,7 @@
                   </div>
                   <div class="divider"></div>
                   <center>
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
+                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                   </center>
                 </form>
@@ -424,14 +453,9 @@
     $( document ).ready(function() {
       resetDatosEntidad();
     });
-    //Enviar formulario
-    $(document).on('submit', 'form#frmProyectosCreate', function (event) {
-      // $('button[type="submit"]').prop("disabled", true);
+
+    function ajaxUpdateProyecto(form, data, url) {
       $('button[type="submit"]').attr('disabled', 'disabled');
-      event.preventDefault();
-      var form = $(this);
-      var data = new FormData($(this)[0]);
-      var url = form.attr("action");
       $.ajax({
         type: form.attr('method'),
         url: url,
@@ -467,35 +491,68 @@
               confirmButtonText: 'Ok'
             })
           }
-
-          if (data.fail == false && data.redirect_url == false) {
+          if ( data.result ) {
             Swal.fire({
-              title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
-              // text: "You won't be able to revert this!",
-              type: 'warning',
+              title: 'Modificación Exitosa',
+              text: "El proyecto se modificado satisfactoriamente",
+              type: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
-            })
+            });
+            setTimeout(function(){
+              window.location.replace("{{route('proyecto')}}");
+            }, 1000);
           }
-          // if (data.fail == false && data.redirect_url != false) {
-          //   Swal.fire({
-          //     title: 'Registro Exitoso',
-          //     text: "El proyecto ha sido creado satisfactoriamente",
-          //     type: 'success',
-          //     showCancelButton: false,
-          //     confirmButtonColor: '#3085d6',
-          //     confirmButtonText: 'Ok'
-          //   });
-          //   setTimeout(function(){
-          //     window.location.replace("{{route('proyecto')}}");
-          //   }, 1000);
-          // }
+          if ( data.resulta == false ) {
+            Swal.fire({
+              title: 'Modificación Errónea!',
+              text: "El proyecto no se ha modificado.",
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
+          }
         },
         error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
         }
       });
+    }
+
+    //Enviar formulario
+    $(document).on('submit', 'form#frmProyectosCreate', function (event) {
+      // $('button[type="submit"]').prop("disabled", true);
+      event.preventDefault();
+      let id = $("#txtestadoproyecto_id").val();
+      let nombre = $("#txtestadoproyecto_id [value='"+id+"']").text();
+
+      var form = $(this);
+      var data = new FormData($(this)[0]);
+      var url = form.attr("action");
+
+      if (nombre == "Cierre PF" || nombre == "Cierre PMV") {
+        Swal.fire({
+          title: 'Advertenica!',
+          html: "<p class='red-text'>Una vez cerrado un proyecto, no podrás volver a modificar los datos de este!</br>"
+          +"<b>¿Estás seguro(a) de cerrar este proyecto?</b></p>",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Sí, cerrar definitivamente!'
+        }).then((result) => {
+          if (result.value) {
+            ajaxUpdateProyecto(form, data, url);
+          }
+        })
+      } else {
+        ajaxUpdateProyecto(form, data, url);
+      }
+
+
     });
 
 
@@ -511,6 +568,7 @@
     divOtroTipoArticulacion = $('#divOtroTipoArticulacion');
     divEntidadesTecnoparque = $('#divEntidadesTecnoparque');
     divFechaCierreProyecto = $('#divFechaCierreProyecto');
+    divOtroEstadoPrototipo = $('#divOtroEstadoPrototipo');
 
 
     // Ocultar contenedores
@@ -525,6 +583,7 @@
     divOtroTipoArticulacion.hide();
     divEntidadesTecnoparque.hide();
     divFechaCierreProyecto.hide();
+    divOtroEstadoPrototipo.hide();
 
 
     function setFechaCierreProyecto() {
@@ -847,6 +906,18 @@
       //
       // }
     }
+
+    /**
+     * Método que muestra una alerta para ingresar otro estado de prototipo
+     */
+     function setOtroEstadoPrototipo(id) {
+       let nombre = $("#txtestadoprototipo_id [value='"+id+"']").text();
+       if (nombre == 'Otro.') {
+         divOtroEstadoPrototipo.show();
+       } else {
+         divOtroEstadoPrototipo.hide();
+       }
+     }
 
     // Edita el nombre de la universidad que se asociará con el proyecto
     function editarNombreUniversidad(value) {

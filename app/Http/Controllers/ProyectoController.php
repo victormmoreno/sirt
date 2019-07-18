@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea, Entidad, Gestor};
+use App\Models\{Proyecto, TipoArticulacionProyecto, Sublinea, Sector, AreaConocimiento, EstadoProyecto, GrupoInvestigacion, Tecnoacademia, Nodo, Centro, Idea, Entidad, Gestor, EstadoPrototipo};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository, EntidadRepository};
 use App\Http\Requests\ProyectoFormRequest;
 use Illuminate\Support\Facades\Validator;
@@ -75,7 +75,11 @@ class ProyectoController extends Controller
       ';
       return $details;
     })->addColumn('edit', function ($data) {
-      $edit = '<a class="btn m-b-xs" href='.route('proyecto.edit', $data->id).'><i class="material-icons">edit</i></a>';
+      if ( $data->estado_nombre == 'Cierre PMV' || $data->estado_nombre == 'Cierre PF' || $data->estado_nombre == 'Suspendido' ) {
+        $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
+      } else {
+        $edit = '<a class="btn m-b-xs" href='.route('proyecto.edit', $data->id).'><i class="material-icons">edit</i></a>';
+      }
       return $edit;
     })->addColumn('entregables', function ($data) {
       $entregables = '
@@ -453,60 +457,67 @@ class ProyectoController extends Controller
   */
   public function edit($id)
   {
-    switch (\Session::get('login_role')) {
-      case User::IsGestor():
-      // dd($this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id)->sublinea_id);
-      $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
-      $entidad = "";
-      /**
-      * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
-      */
-      if ( $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos' ) {
-        $entidad = $this->entidadRepository->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
+    $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+    if ( $proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido' ) {
+      Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      switch (\Session::get('login_role')) {
+        case User::IsGestor():
+        // dd($this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id)->sublinea_id);
+        // $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+        $entidad = "";
+        /**
+        * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
+        */
+        if ( $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos' ) {
+          $entidad = $this->entidadRepository->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
+        }
+
+        if ( $proyecto->nombre_tipoarticulacion == 'Tecnoacademias' ) {
+          $entidad = $this->entidadRepository->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
+        }
+
+        if ( $proyecto->nombre_tipoarticulacion == 'Empresas' ) {
+          $entidad = $this->entidadRepository->consultarEmpresaEntidadRepository($proyecto->entidad_id);
+        }
+
+        if ( $proyecto->nombre_tipoarticulacion == 'Tecnoparques' ) {
+          $entidad = $this->entidadRepository->consultarNodoEntidadRepository($proyecto->entidad_id);
+        }
+
+        if ( $proyecto->nombre_tipoarticulacion == 'Centros de Formación' ) {
+          $entidad = $this->entidadRepository->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
+        }
+
+
+        return view('proyectos.gestor.edit', [
+          'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
+          'sublineas' => Sublinea::SubLineasDeUnaLinea( auth()->user()->gestor->lineatecnologica->id )->get()->pluck('nombre', 'id'),
+          'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
+          'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+          'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
+          'proyecto' => $proyecto,
+          'pivot' => $this->proyectoRepository->consultarTalentosDeUnProyectoRepository($id),
+          'entidad' => $entidad,
+          'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
+        ]);
+        break;
+
+        case User::IsDinamizador():
+        // dd($this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository(3, 1));
+        // $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+        $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+        return view('proyectos.dinamizador.edit', [
+          'proyecto' => $proyecto,
+          'gestores' => $gestores,
+        ]);
+        break;
+
+        default:
+        // code...
+        break;
       }
-
-      if ( $proyecto->nombre_tipoarticulacion == 'Tecnoacademias' ) {
-        $entidad = $this->entidadRepository->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
-      }
-
-      if ( $proyecto->nombre_tipoarticulacion == 'Empresas' ) {
-        $entidad = $this->entidadRepository->consultarEmpresaEntidadRepository($proyecto->entidad_id);
-      }
-
-      if ( $proyecto->nombre_tipoarticulacion == 'Tecnoparques' ) {
-        $entidad = $this->entidadRepository->consultarNodoEntidadRepository($proyecto->entidad_id);
-      }
-
-      if ( $proyecto->nombre_tipoarticulacion == 'Centros de Formación' ) {
-        $entidad = $this->entidadRepository->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
-      }
-
-
-      return view('proyectos.gestor.edit', [
-      'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
-      'sublineas' => Sublinea::SubLineasDeUnaLinea( auth()->user()->gestor->lineatecnologica->id )->get()->pluck('nombre', 'id'),
-      'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
-      'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-      'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
-      'proyecto' => $proyecto,
-      'pivot' => $this->proyectoRepository->consultarTalentosDeUnProyectoRepository($id),
-      'entidad' => $entidad,
-      ]);
-      break;
-
-      case User::IsDinamizador():
-      // dd($this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository(3, 1));
-      $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
-      $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
-      return view('proyectos.dinamizador.edit', [
-      'proyecto' => $proyecto,
-      'gestores' => $gestores,
-      ]);
-      break;
-
-      default:
-      // code...
-      break;
     }
   }
 
@@ -562,8 +573,16 @@ class ProyectoController extends Controller
         }
       }
 
-      
-
+      $result = $this->proyectoRepository->update($request, $id);
+      if ( $result ) {
+        return response()->json([
+          'result' => true
+        ]);
+      } else {
+        return response()->json([
+          'result' => false
+        ]);
+      }
 
     }
   }

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{GrupoInvestigacion, Empresa, Entidad, Tecnoacademia, Nodo, CentroFormacion};
+use App\Models\{GrupoInvestigacion, Empresa, Entidad, Tecnoacademia, Nodo, Centro};
 use Illuminate\Support\Facades\DB;
 
 class EntidadRepository
@@ -81,7 +81,7 @@ class EntidadRepository
    */
   public function consultarCentroFormacionEntidadRepository($id)
   {
-    return CentroFormacion::select('centros.codigo_centro', 'entidades.nombre')
+    return Centro::select('centros.codigo_centro', 'entidades.nombre')
     ->join('entidades', 'entidades.id', '=', 'centros.entidad_id')
     ->where('entidades.id', $id)
     ->get()
