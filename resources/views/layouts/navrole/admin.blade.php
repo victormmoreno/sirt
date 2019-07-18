@@ -89,9 +89,14 @@
           </ul>
         </div>
       </li>
-      <li class="no-padding">
-        <a href="">
-          <i class="material-icons">library_books</i>Proyectos
+      <li class="no-padding {{setActiveRoute('proyecto')}}">
+        <a href="{{ route('proyecto') }}" class="{{setActiveRouteActivePage('proyecto')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos de Base Tecnológica
+        </a>
+      </li>
+      <li class="no-padding {{setActiveRoute('articulacion')}}">
+        <a href="{{ route('articulacion') }}" class="{{setActiveRouteActivePage('articulacion')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones
         </a>
       </li>
       <li class="no-padding">

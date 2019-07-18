@@ -38,30 +38,30 @@ class EmpresaFormRequest extends FormRequest
   public function messages()
   {
     return $messages = [
-      'nombre.required' => 'El :attribute es obligatorio.',
-      'nombre.min' => 'El :attribute debe ser mínimo de 1 caracter.',
-      'nombre.max' => 'El :attribute debe ser máximo de 300 caracteres.',
-      'nombre.regex' => 'El formate del campo :attribute es incorrecto.',
+      'nombre.required' => 'El Nombre de la Empresa es obligatorio.',
+      'nombre.min' => 'El Nombre de la Empresa debe ser mínimo de 1 caracter.',
+      'nombre.max' => 'El Nombre de la Empresa debe ser máximo de 300 caracteres.',
+      'nombre.regex' => 'El formate del campo Nombre de la Empresa es incorrecto.',
 
-      'nit.required' => 'El :attribute es obligatorio.',
-      'nit.numeric' => 'El :attribute debe ser numérico (Sin puntos ni número de verificación).',
-      'nit.unique' => 'El :attribute ya se encuentra registrado.',
-      'nit.digits_between' => 'El :attribute debe tener entre 6 y 45 digitos.',
+      'nit.required' => 'El Nit de la Empresa es obligatorio.',
+      'nit.numeric' => 'El Nit de la Empresa debe ser numérico (Sin puntos ni número de verificación).',
+      'nit.unique' => 'El Nit de la Empresa ya se encuentra registrado.',
+      'nit.digits_between' => 'El Nit de la Empresa debe tener entre 6 y 45 digitos.',
 
-      'email_entidad.email' => 'El formato del campo :attribute es incorrecto.',
-      'email_entidad.min' => 'El :attribute debe ser minimo de 7 caracteres.',
-      'email_entidad.max' => 'El :attribute debe ser máximo de 200 caracteres.',
+      'email_entidad.email' => 'El formato del campo Email de la Empresa es incorrecto.',
+      'email_entidad.min' => 'El Email de la Empresa debe ser minimo de 7 caracteres.',
+      'email_entidad.max' => 'El Email de la Empresa debe ser máximo de 200 caracteres.',
 
-      'direccion.required' => 'La :attribute es obligatoria.',
-      'direccion.min' => 'La :attribute deben ser minimo de 1 caracter.',
-      'direccion.max' => 'La :attribute deben ser máximo de 100 caracteres.',
-      'direccion.regex' => 'El formato del campo :attribute es incorrecto.',
+      'direccion.required' => 'La Dirección de la Empresa es obligatoria.',
+      'direccion.min' => 'La Dirección de la Empresa deben ser minimo de 1 caracter.',
+      'direccion.max' => 'La Dirección de la Empresa deben ser máximo de 100 caracteres.',
+      'direccion.regex' => 'El formato del campo Dirección de la Empresa es incorrecto.',
 
-      'txtdepartamento' => 'El :attribute es obligatorio.',
+      'txtdepartamento' => 'El Departamento de la Empresa es obligatorio.',
 
-      'txtciudad_id' => 'La :attribute es obligatoria.',
+      'txtciudad_id' => 'La Ciudad de la Empresa es obligatoria.',
 
-      'txtsector' => 'El :attribute es obligatorio.',
+      'txtsector' => 'El Sector de la Empresa es obligatorio.',
       ];
     }
 

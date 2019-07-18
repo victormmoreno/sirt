@@ -13,24 +13,36 @@ class NodoHelper {
       $this->middleware('auth');
   }
 
+  // Retorna el rol y el nodo al que pertenece un usuario
   public static function returnNodoUsuario() {
     // $value = session()->get('login_role');
-    if (collect(auth()->user()->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
-      return collect(auth()->user()->roles)->firstWhere('name', User::IsAdministrador())->name .' '. config('app.name') ;
+    if (\Session::get('login_role') == User::IsGestor()) {
+      return 'Gestor nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+    } else if (\Session::get('login_role') == User::IsDinamizador()) {
+      return 'Dinamizador nodo ' . Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
+    } else if (\Session::get('login_role') == User::IsInfocenter()) {
+      return 'Infocenter nodo ' . Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+    } else if (\Session::get('login_role') == User::IsIngreso()) {
+      return 'Ingreso nodo ' . Nodo::userNodo(auth()->user()->ingreso->nodo_id)->first()->nombre;
+    } else {
+      return 'No hay información disponible.';
     }
+  }
 
-    if (collect(auth()->user()->getRoleNames())->contains(User::IsTalento()) && session()->get('login_role') == User::IsTalento()) {
-      return collect(auth()->user()->roles)->firstWhere('name', User::IsTalento())->name .' '. config('app.name') ;
-    }
-    else if(collect(auth()->user()->getRoleNames())->contains(User::IsGestor())) {
-      
-      return 'Gestor Nodo' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
-    } else if ( auth()->user()->rol()->first()->nombre == Rols::IsInfocenter() ){
-      return Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
-    } else if ( auth()->user()->rol()->first()->nombre == Rols::IsIngreso() ) {
-      return Nodo::userNodo(auth()->user()->ingreso->nodo_id)->first()->nombre;
-    } else if ( auth()->user()->rol()->first()->nombre == Rols::IsDinamizador() ){
+
+  // Retorna únicamente el nombre del nodo al que pertenece el usuario
+  public static function returnNameNodoUsuario() {
+    // $value = session()->get('login_role');
+    if (\Session::get('login_role') == User::IsGestor()) {
+      return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+    } else if (\Session::get('login_role') == User::IsDinamizador()) {
       return Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
+    } else if (\Session::get('login_role') == User::IsInfocenter()) {
+      return Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+    } else if (\Session::get('login_role') == User::IsIngreso()) {
+      return Nodo::userNodo(auth()->user()->ingreso->nodo_id)->first()->nombre;
+    } else {
+      return 'No hay información disponible.';
     }
   }
 

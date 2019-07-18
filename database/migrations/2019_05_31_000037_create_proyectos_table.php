@@ -61,7 +61,7 @@ class CreateProyectosTable extends Migration
             $table->tinyInteger('estado_arte')->nullable()->default('0');
             $table->tinyInteger('actas_seguimiento')->nullable()->default('0');
             $table->tinyInteger('video_tutorial')->nullable()->default('0');
-            $table->tinyInteger('fecha_caracterizacion')->nullable()->default('0');
+            $table->tinyInteger('ficha_caracterizacion')->nullable()->default('0');
             $table->tinyInteger('acta_cierre')->nullable()->default('0');
             $table->tinyInteger('lecciones_aprendidas')->nullable()->default('0');
             $table->tinyInteger('encuesta')->nullable()->default('0');

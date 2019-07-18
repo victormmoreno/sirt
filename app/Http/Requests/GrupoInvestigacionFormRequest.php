@@ -42,43 +42,32 @@ class GrupoInvestigacionFormRequest extends FormRequest
   {
     return $messages = [
       // Mensajes personalizados para el campo del código de grupo
-      'txtcodigo_grupo.required' => 'El :attribute es obligatorio.',
-      'txtcodigo_grupo.max' => 'El :attribute debe ser máximo 15 caracteres.',
-      'txtcodigo_grupo.min' => 'El :attribute debe ser mínimo 4 caracteres.',
-      'txtcodigo_grupo.regex' => 'El formato del campo :attribute no es correcto',
-      'txtcodigo_grupo.unique' => 'El :attribute ya se encuentra registrado.',
+      'txtcodigo_grupo.required' => 'El Código del Grupo de Investigación es obligatorio.',
+      'txtcodigo_grupo.max' => 'El Código del Grupo de Investigación debe ser máximo 15 caracteres.',
+      'txtcodigo_grupo.min' => 'El Código del Grupo de Investigación debe ser mínimo 4 caracteres.',
+      'txtcodigo_grupo.regex' => 'El formato del campo Código del Grupo de Investigación no es correcto',
+      'txtcodigo_grupo.unique' => 'El Código del Grupo de Investigación ya se encuentra registrado.',
       // Mensajes personalizados para el campo de nombre del grupo de investigación
-      'txtnombre.required' => 'El :attribute es obligatorio.',
-      'txtnombre.min' => 'El :attribute debe ser mínimo de 1 caracter.',
-      'txtnombre.max' => 'El :attribute debe ser máximo de 300 caracteres.',
-      'txtnombre.regex' => 'El formato del campo :attribute es incorrecto.',
+      'txtnombre.required' => 'El Nombre del Grupo de Investigación es obligatorio.',
+      'txtnombre.min' => 'El Nombre del Grupo de Investigación debe ser mínimo de 1 caracter.',
+      'txtnombre.max' => 'El Nombre del Grupo de Investigación debe ser máximo de 300 caracteres.',
+      'txtnombre.regex' => 'El formato del campo Nombre del Grupo de Investigación es incorrecto.',
       // Mensajes personalizados para el campo de email del grupo de investigación
-      'txtemail_entidad.email' => 'El formato del campo :attribute es incorrecto.',
-      'txtemail_entidad.min' => 'El :attribute debe ser minimo de 7 caracteres.',
-      'txtemail_entidad.max' => 'El :attribute debe ser máximo de 200 caracteres.',
+      'txtemail_entidad.email' => 'El formato del campo Email del Grupo de Investigación es incorrecto.',
+      'txtemail_entidad.min' => 'El Email del Grupo de Investigación debe ser minimo de 7 caracteres.',
+      'txtemail_entidad.max' => 'El Email del Grupo de Investigación debe ser máximo de 200 caracteres.',
       // Mensajes personalizados para el campo de clasificacion de colciencias
-      'txtclasificacionclociencias_id' => 'La :attribute es obligatoria.',
+      'txtclasificacionclociencias_id' => 'La Clasificación de Colciencias es obligatoria.',
       // Mensajes personalizados para el campo de tipo de grupo de investigación
-      'txttipogrupo' => 'El :attribute es obligatorio.',
+      'txttipogrupo' => 'El Tipo de Grupo de Investigación es obligatorio.',
       // Mensajes personalizados para el campo de institución del grupo de investigación
-      'txtinstitucion.required' => 'La :attribute es obligatoria.',
-      'txtinstitucion.max' => 'La :attribute debe ser máxima de 200 caracteres',
-      'txtinstitucion.regex' => 'El formato del campo :attribute es incorrecto.',
+      'txtinstitucion.required' => 'La Institución que avala es obligatoria.',
+      'txtinstitucion.max' => 'La Institución que avala debe ser máxima de 200 caracteres',
+      'txtinstitucion.regex' => 'El formato del campo Institución que avala es incorrecto.',
       // Mensajes personalizados para el campo de departamento del grupo de investigación
-      'txtdepartamento' => 'El :attribute es obligatorio.',
+      'txtdepartamento' => 'El Departamento del Grupo de Investigación es obligatorio.',
       // Mensajes personalizados para el campo de ciudad del grupo de investigación
-      'txtciudad_id' => 'El :attribute es obligatorio.',
-      // Mensajes personalizados para el campo de nombres del contacto
-      // 'txtnombres_contacto.regex' => 'El formato del campo <b>:attribute</b> es incorrecto.',
-      // 'txtnombres_contacto.min' => 'El :attribute debe ser mínimo de 10 caracteres.',
-      // 'txtnombres_contacto.max' => 'El :attribute debe ser máximo de 60 caracteres.',
-      // // Mensajes personalizados paa el campo de email del contato
-      // 'email_contacto.email' => 'El formato del campo :attribute es incorrecto.',
-      // 'email_contacto.min' => 'El :attribute debe ser mínimo de 7 caracteres.',
-      // 'email_contacto.max' => 'El :attribute debe ser máximo de 100 caracteres.',
-      // // Mensajes personalizados para el campo telefono del contacto
-      // 'telefono_contacto.numeric' => 'El :attribute debe ser numérico',
-      // 'telefono_contacto.digits_between' => 'El :attribute debe tener entre 7 y 11 digitos',
+      'txtciudad_id' => 'La Ciudad del Grupo de Investigación es obligatoria.',
       ];
     }
 

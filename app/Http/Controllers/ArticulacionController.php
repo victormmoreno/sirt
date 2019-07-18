@@ -37,9 +37,8 @@ class ArticulacionController extends Controller
       $entidad = $this->empresaRepository->consultarDetallesDeUnaEmpresa($articulacionObj->entidad->empresa->id)->toArray();
       $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
     } else if ($articulacionObj->tipo_articulacion == Articulacion::IsGrupo()) {
-      $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion(21)->toArray();
+      $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion($articulacionObj->entidad->grupoinvestigacion->id)->toArray();
       $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
-      // $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion($articulacionObj->entidad->grupoinvestigacion->id)->toArray();
     } else {
       $entidad = $this->articulacionRepository->consultarArticulacionTalento($id)->toArray();
     }
@@ -267,7 +266,7 @@ class ArticulacionController extends Controller
   */
   public function index()
   {
-    switch (\Session::get('login_role') {
+    switch (\Session::get('login_role')) {
       case User::IsAdministrador():
         return view('articulaciones.administrador.index', [
           'nodos' => Nodo::SelectNodo()->get(),

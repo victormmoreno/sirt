@@ -22,6 +22,9 @@ class Comite extends Model
     'codigo',
     'fechacomite',
     'observaciones',
+    'correos',
+    'listado_asistencia',
+    'otros',
   ];
 
   public function archivos()

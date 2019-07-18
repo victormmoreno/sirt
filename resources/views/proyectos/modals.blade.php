@@ -125,16 +125,18 @@
     <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok!</a>
   </div>
 </div>
-<div id="modal2" class="modal modal-fixed-footer">
+
+<div id="detallesEntregablesDeUnProyecto_modal" class="modal modal-fixed-footer">
   <div class="modal-content">
-    <center><h4 id="tituloTalento" class="center-aling"></h4></center>
+    <center><h4 id="detallesEntregablesDeUnProyecto_titulo" class="center-aling"></h4></center>
     <div class="divider"></div>
-    <div id="detallemodaltalento"></div>
+    <div id="detallesEntregablesDeUnProyecto_body"></div>
   </div>
   <div class="modal-footer  white-text">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
+
 <div id="detallesDeUnProyecto_modal" class="modal modal-fixed-footer">
   <div class="modal-content">
     <div id="detallesDeUnProyecto_titulo">
@@ -146,6 +148,7 @@
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
+
 <div id="talentosAsociadosAUnProyecto_modal" class="modal">
   <div class="modal-content">
     <center><h4 id="talentosAsociadosAUnProyecto_titulo" class="center-aling"></h4></center>

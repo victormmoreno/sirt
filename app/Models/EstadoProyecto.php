@@ -23,4 +23,11 @@ class EstadoProyecto extends Model
       return $query->select('id', 'nombre')
       ->whereIn('nombre', ['Inicio', 'Planeación', 'En ejecución']);
     }
+
+    // Scope para consultar los estados de proyecto
+    public function scopeConsultarTodosEstadosDeProyecto($query)
+    {
+      return $query->select('id', 'nombre')
+      ->whereIn('nombre', ['Inicio', 'Planeación', 'En ejecución', 'Cierre PF', 'Cierre PMV']);
+    }
 }
