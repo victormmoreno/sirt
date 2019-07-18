@@ -82,14 +82,12 @@ Route::group([
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
 
-
-        Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
-
         Route::get('/', [
           'uses' => 'UserController@index',
           'as' => 'usuario.index',
         ]);
 
+        Route::resource('talento', 'TalentoController', ['as' => 'usuario', 'only'=> ['index','show']]);
         Route::resource('gestor', 'GestorController', ['as' => 'usuario', 'only'=> ['index','show']]);
 
         Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario', 'only'=> ['index','show']]);

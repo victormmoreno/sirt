@@ -49,6 +49,7 @@
                                                 person_pin
                                             </i>
                                             </div>
+
                                             <div class="card-content">
                                               <span class="card-title activator grey-text text-darken-4 center">{{$role}}<i class="material-icons right">more_vert</i></span>
                                               
@@ -62,14 +63,25 @@
                                                     @case(config('laravelpermission.roles.roleGestor'))
                                                         <p class="center"><a href="{{route('usuario.gestor.index')}}">ir a {{$role}}</a></p>
                                                     @break
+                                                    @case(config('laravelpermission.roles.roleTalento'))
+                                                        <p class="center"><a href="{{route('usuario.talento.index')}}">ir a {{$role}}</a></p>
+                                                    @break
                                                 @default
                                                     <p class="center"><a href="">ir a {{$role}}</a></p>
                                                 @endswitch
 
                                             </div>
                                             <div class="card-reveal ">
-                                              <span class="card-title grey-text text-darken-4 center">{{$role}}<i class="material-icons right">close</i></span>
-                                              <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                                            <span class="card-title grey-text text-darken-4 center">{{$role}}<i class="material-icons right">close</i></span>
+                                            @switch($role)
+                                                @case(config('laravelpermission.roles.roleAdministrador'))
+                                                    <p>Rol {{config('laravelpermission.roles.roleAdministrador')}}</p>
+                                                    
+                                                @break
+                                              
+                                            @default
+                                                <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                                            @endswitch
                                             </div>
                                           </div> 
                                     </div>

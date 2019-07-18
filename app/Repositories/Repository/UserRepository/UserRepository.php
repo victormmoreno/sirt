@@ -38,6 +38,18 @@ class UserRepository
 
     /*=====  End of metodo para consultar todos los tipos de documentos  ======*/
 
+    /*=============================================================
+    =            metodo para consultar todos los nodos            =
+    =============================================================*/
+
+    public function getAllNodos()
+    {
+        return Nodo::selectNodo()->pluck('nodos','id');
+    }
+
+    /*=====  End of metodo para consultar todos los nodos  ======*/
+    
+
     /*=====================================================================
     =            metodo para consultar todos los departamentos            =
     =====================================================================*/
