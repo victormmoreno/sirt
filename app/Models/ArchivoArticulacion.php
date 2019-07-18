@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArchivoArticulacion extends Model
 {
+
     protected $table = 'archivosarticulaciones';
 
     protected $fillable = [

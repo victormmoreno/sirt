@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comite extends Model
 {
+
     protected $table = 'comites';
 
     protected $casts = [
@@ -77,5 +78,6 @@ class Comite extends Model
     }
 
     /*=====  End of relaciones eloquent  ======*/
+
 
 }

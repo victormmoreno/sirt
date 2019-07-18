@@ -9,19 +9,19 @@
   </a>
 </li>
 
-<li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">toll</i>Articulaciones
+<li class="no-padding {{setActiveRoute('articulacion')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">settings_input_svideo</i>Costos Administrativos
   </a>
-</li>
+</li> --}}
 <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">filter_center_focus</i>Focos
+    <i class="material-icons">filter_center_focus</i>Sublineas
   </a>
 </li>
 <li class="no-padding">
@@ -59,47 +59,42 @@
     <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">local_drink</i>Laboratorios
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">trending_down</i>Depreciación
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">build</i>Mantenimiento
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">local_library</i>Materiales de Formación
   </a>
-</li>
-<li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">attachment</i>Link's de Drive
-  </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">attach_money</i>Costos
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">show_chart</i>Indicadores
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">search</i>Seguimiento
   </a>
-</li>
-<li class="no-padding">
+</li> --}}
+{{-- <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey">
     <i class="material-icons">description</i> Reportes<i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
   </a>
@@ -127,4 +122,4 @@
       </li>
     </ul>
   </div>
-</li>
+</li> --}}

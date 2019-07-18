@@ -1,5 +1,6 @@
 $(document).ready(function() {
   consultarProyectosDelGestorPorAnho();
+  consultarProyectosDelNodoPorAnho();
 })
 
 // Muestra información de un proyecto en un modal
@@ -36,7 +37,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Observaciones del Proyecto: </span>'
@@ -46,7 +47,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Impacto del Proyecto: </span>'
@@ -56,7 +57,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Resultados del Proyecto: </span>'
@@ -66,7 +67,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Estado del Proyecto: </span>'
@@ -76,7 +77,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Fecha de Inicio: </span>'
@@ -86,7 +87,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Fecha de Cierre: </span>'
@@ -96,7 +97,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Tipo de Articulación: </span>'
@@ -138,7 +139,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Área de Conocimiento: </span>'
@@ -148,7 +149,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Proyecto del Nodo: </span>'
@@ -158,7 +159,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Gestor: </span>'
@@ -168,7 +169,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Sublínea: </span>'
@@ -207,7 +208,7 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'
-      
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Recibido a través del área de emprendimiento SENA: </span>'
@@ -233,7 +234,7 @@ function detallesDeUnProyecto(id){
       +'<span class="teal-text text-darken-3">Entregables: </span>'
       +'</div>'
       +'<div class="col s12 m6 l6">'
-      +'<span class="black-text"><a onclick="verDetallesDeLosEntregablesDeUnaArticulacion()" class="btn btn-small teal darken-3">Pulse aquí para ver los entregables</a></span>'
+      +'<span class="black-text"><a onclick="verDetallesDeLosEntregablesDeUnProyecto('+respuesta.proyecto.id+')" class="btn btn-small teal darken-3">Pulse aquí para ver los entregables</a></span>'
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>');
@@ -242,6 +243,126 @@ function detallesDeUnProyecto(id){
     }
     // Modal title
 
+  });
+}
+function verDetallesDeLosEntregablesDeUnProyecto(id) {
+  $.ajax({
+     dataType:'json',
+     type:'get',
+     url:"/proyecto/ajaxDetallesDeLosEntregablesDeUnProyecto/"+id,
+  }).done(function(respuesta){
+    console.log(respuesta);
+
+    $("#detallesEntregablesDeUnProyecto_titulo").empty();
+    $("#detallesEntregablesDeUnProyecto_body").empty();
+    if (respuesta.entregables == null) {
+      Swal.fire(
+        'Ups!!',
+        'Ha ocurrido un error',
+        'error'
+      );
+    } else {
+      $("#detallesEntregablesDeUnProyecto_titulo").append("<a class='btn btn-small blue-grey' target='_blank' href='/proyecto/"+respuesta.proyecto.id+"/entregables'>Ver los Archivos</a> <span class='teal-text text-darken-3'>Código del Proyecto: </span><b>"+respuesta.proyecto.codigo_proyecto+"</b>");
+      $("#detallesEntregablesDeUnProyecto_body").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Formator de Confidencialidad y Compromiso Firmado: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.acc+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+      );
+      $("#detallesEntregablesDeUnProyecto_body").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Manual de uso de Infraestructura: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.manual_uso_inf+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+      );
+      $("#detallesEntregablesDeUnProyecto_body").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Acta de Inicio: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.acta_inicio+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+      );
+      $("#detallesEntregablesDeUnProyecto_body").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Estado del Arte: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.estado_arte+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+      );
+
+      $("#detallesEntregablesDeUnProyecto_body").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Actas de Seguimiento: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.actas_seguimiento+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Video Tutorial: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.video_tutorial+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+      );
+
+      $("#detallesEntregablesDeUnProyecto_body").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Ficha de Caracterización del Prototipo: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.ficha_caracterizacion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Acta de Cierre: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.acta_cierre+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Encuesta de satisfacción del servicio: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.entregables.encuesta+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+      );
+    $("#detallesEntregablesDeUnProyecto_modal").openModal();
+    }
   });
 }
 
@@ -287,7 +408,9 @@ function verTalentosDeUnProyecto(id) {
 
 // Ajax que muestra los proyectos de un gestor por año
 function consultarProyectosDelGestorPorAnho() {
+  // console.log('event');
   let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+  // let gestor = $('#txtgestor_id').val();
   $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
   $('#tblproyectosGestorPorAnho').DataTable({
     language: {
@@ -305,6 +428,75 @@ function consultarProyectosDelGestorPorAnho() {
         width: '15%',
         data: 'codigo_proyecto',
         name: 'codigo_proyecto',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'sublinea_nombre',
+        name: 'sublinea_nombre',
+      },
+      {
+        data: 'estado_nombre',
+        name: 'estado_nombre',
+      },
+      {
+        data: 'revisado_final',
+        name: 'revisado_final',
+      },
+      {
+        width: '8%',
+        data: 'talentos',
+        name: 'talentos',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'entregables',
+        name: 'entregables',
+        orderable: false
+      },
+    ],
+  });
+}
+
+// Ajax que muestra los proyectos de un NODO por año
+function consultarProyectosDelNodoPorAnho() {
+  let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
+  $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
+  $('#tblproyectosDelNodoPorAnho').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+      },
+      {
+        data: 'gestor',
+        name: 'gestor',
       },
       {
         data: 'nombre',

@@ -99,11 +99,6 @@
           name: 'entregables',
           orderable: false
         },
-        {
-          data: 'edit',
-          name: 'edit',
-          orderable: false
-        },
         ],
       });
     }
@@ -154,11 +149,6 @@
         {
           data: 'entregables',
           name: 'entregables',
-          orderable: false
-        },
-        {
-          data: 'edit',
-          name: 'edit',
           orderable: false
         },
         ],

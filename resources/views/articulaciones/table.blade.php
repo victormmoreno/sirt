@@ -9,12 +9,9 @@
       <th>Revisado Final</th>
       <th>Detalles</th>
       <th>Entregables</th>
-      @if (auth()->user()->rol()->first()->nombre == 'Dinamizador')
+      @if ( \Session::get('login_role') == App\User::IsGestor() )
         <th>Editar</th>
       @endif
     </tr>
   </thead>
-  <tbody>
-
-  </tbody>
 </table>

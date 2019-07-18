@@ -15,12 +15,13 @@ class GrupoInvestigacionRepository
       'contactosentidades.nombres_contacto',
       'contactosentidades.correo_contacto',
       'contactosentidades.telefono_contacto',
-      'nodos.nombre AS nodo',
+      'enodo.nombre AS nodo',
       'nodos.id'
       )
       ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
       ->join('contactosentidades', 'contactosentidades.entidad_id', '=', 'entidades.id')
       ->join('nodos', 'nodos.id', '=', 'contactosentidades.nodo_id')
+      ->join('entidades AS enodo', 'enodo.id', '=', 'nodos.entidad_id')
       ->where('nodos.id', $idnodo)
       ->where('entidades.id', $identidad)
       ->groupBy('contactosentidades.id')
@@ -34,10 +35,7 @@ class GrupoInvestigacionRepository
       'entidades.nombre AS nombre_grupo',
       'email_entidad AS correo_grupo',
       'institucion',
-      'clasificacionescolciencias.nombre AS nombre_clasificacion',
-      'nombres_contacto',
-      'correo_contacto',
-      'telefono_contacto'
+      'clasificacionescolciencias.nombre AS nombre_clasificacion'
       )
     ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
     ->selectRaw('IF(tipogrupo = 0, "Externo", "Interno") AS tipogrupo')
@@ -97,20 +95,20 @@ class GrupoInvestigacionRepository
   /*===============================================================================
   =            metodo para consultar todos los grupos de investigacion            =
   ===============================================================================*/
-  
+
   public function getAllGruposInvestigacionesForCiudad($ciudad)
   {
      return Entidad::allGrupoInvestigacionForCiudad($ciudad)->pluck('nombre','id');
   }
-  
-  
+
+
   /*=====  End of metodo para consultar todos los grupos de investigacion  ======*/
 
   /*==============================================================================================
   =            metodo para mostrar grupos de investigaciones por ciudad en datatables            =
   ==============================================================================================*/
-  
-  
+
+
   public function getAllGruposInvestigacionDatatables($ciudad)
   {
     return Entidad::select(['entidades.id','entidades.nombre','gruposinvestigacion.institucion','gruposinvestigacion.codigo_grupo'])
@@ -118,7 +116,7 @@ class GrupoInvestigacionRepository
                 ->where('entidades.ciudad_id','=',$ciudad)->get();
   }
   /*=====  End of metodo para mostrar grupos de investigaciones por ciudad en datatables  ======*/
-  
-  
+
+
 
 }

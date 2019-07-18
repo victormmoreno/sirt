@@ -107,12 +107,18 @@
           <span>
             @guest
             @else
-              @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento()))
+              {{-- @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento())) --}}
+              @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
 
                 {{ \NodoHelper::returnNodoUsuario() }}
                 {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsAdministrador())->name}} Red Tecnoparque --}}
                 {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsTalento())->name}} --}}
               @else
+                @if (\Session::get('login_role') == App\User::IsTalento())
+                  Talento de Tecnoparque
+                @else
+                  Administrador de Tecnoparque
+                @endif
                 {{-- {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }} --}}
                 {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
               @endif
