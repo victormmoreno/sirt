@@ -79,7 +79,7 @@ class UsersTableSeeder extends Seeder
             'estrato'             => rand(1, 6),
         ]);
 
-        $userAdmin->assignRole([$roleAdministrador,$roleDinamizador]);
+        $userAdmin->assignRole([$roleAdministrador]);
         $userAdmin->givePermissionTo($registrarIdeaPermission);
 
         $ocupacion = Ocupacion::all()->random()->id;
@@ -282,7 +282,7 @@ class UsersTableSeeder extends Seeder
             'user_id'    => $userTalento->id,
             'perfil_id'  => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
             'entidad_id' => Entidad::all()->random()->id,
-            
+
         ]);
 
         //

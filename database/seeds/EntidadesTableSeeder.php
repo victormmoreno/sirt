@@ -308,622 +308,512 @@ class EntidadesTableSeeder extends Seeder
       ]);
 
       /**
-       * Centros de Caquetá
-       */
+      * Centros de Caquetá
+      */
       Entidad::create([
       'ciudad_id' => 360,
       'nombre'    => 'Centro Tecnológico de la Amazonía',
       ]);
 
       /**
-       * Centros del Casanare
-       */
+      * Centros del Casanare
+      */
       Entidad::create([
       'ciudad_id' => 388,
       'nombre'    => 'Centro Agroindustrial y Fortalecimiento Empresarial de Casanare',
       ]);
 
       /**
-       * Centros del cauca
-       */
-       Entidad::create([
-         'ciudad_id' => 414,
-         'nombre'    => 'Centro Agropecuario',
-       ]);
+      * Centros del Cauca
+      */
+      Entidad::create([
+      'ciudad_id' => 414,
+      'nombre'    => 'Centro Agropecuario',
+      ]);
 
-       Entidad::create([
-         'ciudad_id' => 414,
-         'nombre'    => 'Centro de Teleinformática y Producción Industrial',
-       ]);
+      Entidad::create([
+      'ciudad_id' => 414,
+      'nombre'    => 'Centro de Teleinformática y Producción Industrial',
+      ]);
 
-      // Entidad::create([
-      // 'ciudad_id' => 13,
-      // 'nombre'    => 'COMPLEJO TECNOLÓGICO AGROINDUSTRIAL, PECUARIO Y TURÍSTICO ',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 128,
-      // 'nombre'    => 'CENTRO DE GESTIÓN Y DESARROLLO AGROINDUSTRIAL DE ARAUCA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 867,
-      // 'nombre'    => 'CENTRO DE COMERCIO, INDUSTRIA Y TURISMO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 899,
-      // 'nombre'    => 'CENTRO INDUSTRIAL Y DEL DESARROLLO TECNOLÓGICO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 136,
-      // 'nombre'    => 'CENTRO PARA EL DESARROLLO AGROECOLÓGICO Y AGROINDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 136,
-      // 'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 136,
-      // 'nombre'    => 'CENTRO NACIONAL COLOMBO ALEMAN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 136,
-      // 'nombre'    => 'CENTRO INDUSTRIAL Y DE AVIACIÓN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE SERVICIOS FINANCIEROS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE TECNOLOGIAS PARA LA CONSTRUCCIÓN Y LA MADERA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE ELECTRICIDAD, ELECTRÓNICA Y TELECOMUNICACIONES',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE MANUFACTURA EN TEXTILES Y CUERO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO METALMECÁNICO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE MATERIALES Y ENSAYOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE GESTIÓN INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE DISEÑO Y METROLOGIA ',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO PARA LA INDUSTRIA DE LA COMUNICACIÓN GRÁFICA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO NACIONAL DE HOTELERIA, TURISMO Y ALIMENTOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE DISEÑO TECNOLÓGICO INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE GESTIÓN ADMINISTRATIVA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE GESTIÓN Y FORTALECIMIENTO SOCIO EMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 525,
-      // 'nombre'    => 'CENTRO DE GESTIÓN DE MERCADOS, LOGÍSITICA Y TECNOLOGIAS DE LA INFORMACIÓN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 902,
-      // 'nombre'    => 'CENTRO DE SERVICIOS EMPRESARIALES Y TURÍSTICOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1059,
-      // 'nombre'    => 'CENTRO NÁUTICO PESQUERO DE BUENAVENTURA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1060,
-      // 'nombre'    => 'CENTRO AGROPECUARIO DE BUGA',
-      // ]);
-      //
+      Entidad::create([
+      'ciudad_id' => 414,
+      'nombre'    => 'Centro de Comercio y Servicios',
+      ]);
 
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1064,
-      // 'nombre'    => 'CENTRO DE ELECTRICIDAD Y AUTOMATIZACIÓN INDUSTRIAL - CEAI',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1064,
-      // 'nombre'    => 'CENTRO DE DISEÑO TECNOLÓGICO INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1064,
-      // 'nombre'    => 'CENTRO NACIONAL DE ASISTENCIA TÉCNICA A LA INDUSTRIA - ASTIN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1064,
-      // 'nombre'    => 'CENTRO DE GESTIÓN TECNOLÓGICA DE SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1064,
-      // 'nombre'    => 'CENTRO DE LA CONSTRUCCIÓN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 645,
-      // 'nombre'    => 'CENTRO DE FORMACIÓN AGROINDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 200,
-      // 'nombre'    => 'CENTRO AGROEMPRESARIAL Y MINERO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 200,
-      // 'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 166,
-      // 'nombre'    => 'CENTRO  NAUTICO INTERNACIONAL, FLUVIAL Y PORTUARIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 166,
-      // 'nombre'    => 'CENTRO PARA LA INDUSTRIA PETROQUÍMICA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1066,
-      // 'nombre'    => 'CENTRO DE TECNOLOGÍAS AGROINDUSTRIALES',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 33,
-      // 'nombre'    => 'COMPLEJO TECNOLÓGICO PARA LA GESTIÓN AGROEMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 536,
-      // 'nombre'    => 'CENTRO DE DESARROLLO AGROEMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 823,
-      // 'nombre'    => 'CENTRO ATENCIÓN SECTOR AGROPECUARIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 823,
-      // 'nombre'    => 'CENTRO DE LA INDUSTRIA, LA EMPRESA Y LOS SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 882,
-      // 'nombre'    => 'CENTRO DE DISEÑO E INNOVACIÓN TECNOLÓGICA INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 236,
-      // 'nombre'    => 'CENTRO DE DESARROLLO AGROPECUARIO Y AGROINDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1021,
-      // 'nombre'    => 'CENTRO AGROPECUARIO LA GRANJA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 360,
-      // 'nombre'    => 'CENTRO TECNOLÓGICO DE LA AMAZONÍA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 925,
-      // 'nombre'    => 'CENTRO INDUSTRIAL DEL DISEÑO Y LA MANUFACTURA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 681,
-      // 'nombre'    => 'CENTRO AGROEMPRESARIAL Y ACUÍCOLA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 547,
-      // 'nombre'    => 'CENTRO AGROECOLÓGICO Y EMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 716,
-      // 'nombre'    => 'CENTRO ACUÍCOLA Y AGROINDUSTRIAL DE GAIRA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 648,
-      // 'nombre'    => 'CENTRO AGROEMPRESARIAL Y DESARROLLO PECUARIO DEL HUILA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 554,
-      // 'nombre'    => 'CENTRO DE LA TECNOLOGÍA DEL DISEÑO Y LA PRODUCTIVIDAD EMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 928,
-      // 'nombre'    => 'CENTRO INDUSTRIAL DE MANTENIMIENTO INTEGRAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1028,
-      // 'nombre'    => 'CENTRO DE INDUSTRIA Y CONSTRUCCIÓN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1028,
-      // 'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 778,
-      // 'nombre'    => 'CENTRO SUR COLOMBIANO DE LOGÍSTICA INTERNACIONAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 59,
-      // 'nombre'    => 'CENTRO DEL DISEÑO Y MANUFACTURA DE CUERO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 59,
-      // 'nombre'    => 'CENTRO DE FORMACIÓN EN DISEÑO, CONFECCION Y MODA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 59,
-      // 'nombre'    => 'CENTRO TECNOLÓGICO DEL MOBILIARIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 500,
-      // 'nombre'    => 'CENTRO AGROPECUARIO Y DE BIOTECNOLOGÍA EL PORVENIR',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 333,
-      // 'nombre'    => 'CENTRO PECUARIO Y AGROEMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 654,
-      // 'nombre'    => 'CENTRO DE DESARROLLO AGROEMPRESARIAL Y TURÍSTICO DEL HUILA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1,
-      // 'nombre'    => 'CENTRO PARA LA BIODIVERSIDAD Y EL TURISMO DEL AMAZONAS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 947,
-      // 'nombre'    => 'CENTRO AGROEMPRESARIAL Y TURÍSITICO DE LOS ANDES',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 336,
-      // 'nombre'    => 'CENTRO PARA LA FORMACIÓN CAFETERA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 336,
-      // 'nombre'    => 'CENTRO DE AUTOMATIZACIÓN INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 336,
-      // 'nombre'    => 'CENTRO DE PROCESOS INDUSTRIALES',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 336,
-      // 'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 70,
-      // 'nombre'    => 'CENTRO DE COMERCIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 70,
-      // 'nombre'    => 'CENTRO DE SERVICIOS DE SALUD',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 70,
-      // 'nombre'    => 'CENTRO DE SERVICIOS Y GESTIÓN EMPRESARIAL ',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 70,
-      // 'nombre'    => 'CENTRO PARA EL DESARROLLO DEL HABITAT Y LA CONSTRUCCIÓN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 70,
-      // 'nombre'    => 'CENTRO DE TECNOLOGÍA DE LA MANUFACTURA AVANZADA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 70,
-      // 'nombre'    => 'TECNOLÓGICO DE GESTIÓN INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1097,
-      // 'nombre'    => 'CENTRO AGROPECUARIO Y DE SERVICIOS AMBIENTALES JIRI-JIRIMO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 500,
-      // 'nombre'    => 'CENTRO DE COMERCIO, INDUSTRIA Y TURISMO DE CÓRDOBA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 298,
-      // 'nombre'    => 'CENTRO MINERO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 576,
-      // 'nombre'    => 'CENTRO DE BIOTECNOLOGÍA AGROPECUARIA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 655,
-      // 'nombre'    => 'CENTRO DE LA INDUSTRIA, LA EMPRESA Y LOS SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1080,
-      // 'nombre'    => 'CENTRO DE BIOTECNOLOGÍA INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 801,
-      // 'nombre'    => 'CENTRO INTERNACIONAL DE PRODUCCION LIMPIA - LOPE',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 888,
-      // 'nombre'    => 'CENTRO ATENCIÓN SECTOR AGROPECUARIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 888,
-      // 'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 953,
-      // 'nombre'    => 'CENTRO ATENCIÓN SECTOR AGROPECUARIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 662,
-      // 'nombre'    => 'CENTRO DE GESTIÓN Y DESARROLLO SOSTENIBLE SURCOLOMBIANO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 414,
-      // 'nombre'    => 'CENTRO AGROPECUARIO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 414,
-      // 'nombre'    => 'CENTRO DE TELEINFORMÁTICA Y PRODUCCIÓN INDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 414,
-      // 'nombre'    => 'CENTRO DE COMERCIO Y SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 857,
-      // 'nombre'    => 'CENTRO AGROFORESTAL Y ACUÍCOLA ARAPAIMA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 81,
-      // 'nombre'    => 'COMPLEJO TECNOLÓGICO MINERO AGROEMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1101,
-      // 'nombre'    => 'CENTRO DE PRODUCCIÓN Y TRANSFORMACIÓN AGROINDUSTRIAL DE LA ORINOQUÍA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 634,
-      // 'nombre'    => 'CENTRO AMBIENTAL Y ECOTURÍSTICO DEL NORORIENTE AMAZÓNICO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 740,
-      // 'nombre'    => 'CENTRO AGROINDUSTRIAL DEL META',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 477,
-      // 'nombre'    => 'CENTRO DE RECURSOS NATURALES, INDUSTRIA Y BIODIVERSIDAD',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 686,
-      // 'nombre'    => 'CENTRO INDUSTRIAL Y DE ENERGÍAS ALTERNATIVAS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 86,
-      // 'nombre'    => 'CENTRO DE LA INNOVACIÓN, LA AGROINDUSTRIA Y EL TURISMO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 961,
-      // 'nombre'    => 'CENTRO DE FORMACION TURISTICA, GENTE DE MAR Y DE SERVICIOS ',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 963,
-      // 'nombre'    => 'CENTRO AGROTURÍSTICO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 638,
-      // 'nombre'    => 'CENTRO DE DESARROLLO AGROINDUSTRIAL, TURÍSTICO Y TECNOLÓGICO DEL GUAVIARE',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 716,
-      // 'nombre'    => 'CENTRO DE LOGÍSTICA Y PROMOCIÓN ECOTURÍSTICA DEL MAGDALENA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1002,
-      // 'nombre'    => 'CENTRO DE LA INNOVACIÓN, LA TECNOLOGÍA Y LOS SERVICIOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 603,
-      // 'nombre'    => 'CENTRO DE TECNOLOGÍAS PARA LA CONSTRUCCIÓN Y LA MADERA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 603,
-      // 'nombre'    => 'CENTRO DE TECNOLOGÍAS DEL TRANSPORTE',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 603,
-      // 'nombre'    => 'CENTRO INDUSTRIAL Y DESARROLLO EMPRESARIAL DE SOACHA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 603,
-      // 'nombre'    => 'CENTRO INDUSTRIAL Y DESARROLLO EMPRESARIAL DE SOACHA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 603,
-      // 'nombre'    => 'CENTRO NACIONAL DE HOTELERÍA, TURISMO Y ALIMENTOS',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 298,
-      // 'nombre'    => 'CENTRO INDUSTRIAL DE MANTENIMIENTO Y MANUFACTURA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 1089,
-      // 'nombre'    => 'CENTRO LATINOAMERICANO DE  ESERVICIO PUBLICO DE EMPLEOCIES MENORES',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 811,
-      // 'nombre'    => 'CENTRO AGROINDUSTRIAL Y PESQUERO DE LA COSTA PACÍFICA',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 317,
-      // 'nombre'    => 'CENTRO DE GESTIÓN ADMINISTRATIVA Y FORTALECIMIENTO EMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 455,
-      // 'nombre'    => 'CENTRO DE OPERACIÓN Y MANTENIMIENTO MINERO',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 455,
-      // 'nombre'    => 'CENTRO BIOTECNOLÓGICO DEL CARIBE',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 979,
-      // 'nombre'    => 'CENTRO DE GESTIÓN AGROEMPRESARIAL DEL ORIENTE',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 867,
-      // 'nombre'    => 'CENTRO AGROINDUSTRIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 867,
-      // 'nombre'    => 'CENTRO PARA EL DESARROLLO TECNOLÓGICO DE LA CONSTRUCCIÓN',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 748,
-      // 'nombre'    => 'CENTRO DE INDUSTRIA Y SERVICIOS DEL META',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 628,
-      // 'nombre'    => 'CENTRO DE DESARROLLO AGROINDUSTRIAL Y EMPRESARIAL',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 388,
-      // 'nombre'    => 'CENTRO AGROINDUSTRIAL Y FORTALECIMIENTO EMPRESARIAL DE CASANARE',
-      // ]);
-      //
-      // Entidad::create([
-      // 'ciudad_id' => 86,
-      // 'nombre'    => 'CENTRO DE LA INNOVACIÓN, LA AGROINDUSTRIA Y LA AVIACIÓN​',
-      // ]);
       /**
-      * Fin de los Centros de Formación
+      * Centros del Cesa
+      */
+
+      Entidad::create([
+      'ciudad_id' => 455,
+      'nombre'    => 'Centro Biotecnológico del Caribe',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 431,
+      'nombre'    => 'Centro Agroempresarial',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 455,
+      'nombre'    => 'Centro de Operación y Mantenimiento Minero',
+      ]);
+      /**
+      * Centros del Chocó
+      */
+      Entidad::create([
+      'ciudad_id' => 477,
+      'nombre'    => 'Centro de Recursos Naturales, Industria y Biodiversidad',
+      ]);
+      /**
+      * Centros de Córdoba
+      */
+      Entidad::create([
+      'ciudad_id' => 500,
+      'nombre'    => 'Centro Agropecuario y de Biotecnología el Porvenir',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 500,
+      'nombre'    => 'Centro de Comercio, Industria y Turismo de Córdoba',
+      ]);
+      /**
+      * Centros de Cundinamarca
+      */
+      Entidad::create([
+      'ciudad_id' => 554,
+      'nombre'    => 'Centro de la Tecnología de Diseño y la Productividad Empresarial',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 576,
+      'nombre'    => 'Centro de Biotecnología Agropecuaria',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 603,
+      'nombre'    => 'Centro Industrial y de Desarrollo Empresarial de Soacha',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 628,
+      'nombre'    => 'Centro de Desarrollo Agroindustrial y Empresarial',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 536,
+      'nombre'    => 'Centro de Desarrollo Agroempresarial',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 547,
+      'nombre'    => 'Centro Agroecológico y Empresarial',
+      ]);
+
+      /**
+      * Centros del Distrito Capital
+      */
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Tecnologías para la Construcción y la Madera',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Electricidad, Electrónica y Telecomunicaciones',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Gestión Industrial',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Manufactura en Textil y Cuero',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Tecnologías del Transporte',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro Metalmecánico',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Materiales y Ensayos',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Diseño y Metrología',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro para la Industria de la Comunicación Gráfica',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Gestión de Mercados, Logística y Tecnologías de la Información',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Formación de Talento Humano en Salud',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Gestión Administrativa',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Servicios Financieros',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro Nacional de Hotelería, Turismo y Alimentos',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 525,
+      'nombre'    => 'Centro de Formación en Actividad Física y Cultura',
+      ]);
+
+      /**
+      * Centros del Guinia
+      */
+
+      Entidad::create([
+      'ciudad_id' => 634,
+      'nombre'    => 'Centro Ambiental y Ecoturistico del Nororiente Amazónico',
+      ]);
+
+      /**
+      * Centros de la Guajira
+      */
+
+      Entidad::create([
+      'ciudad_id' => 686,
+      'nombre'    => 'Centro Industrial y de Energías Alternativas',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 681,
+      'nombre'    => 'Centro Agroempresarial y Acuícola',
+      ]);
+
+      /**
+      * Centros del Guaviare
+      */
+
+      Entidad::create([
+      'ciudad_id' => 638,
+      'nombre'    => 'Centro de Desarrollo Agroindustrial, Turístico y Tecnológico del Guaviare',
+      ]);
+
+      /**
+      * Centros de formación del Huila
+      */
+
+      Entidad::create([
+      'ciudad_id' => 645,
+      'nombre'    => 'Centro de Formación Agroindustrial',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 648,
+      'nombre'    => 'Centro Agroempresarial y Desarrollo Pecuario del Huila',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 654,
+      'nombre'    => 'Centro de Desarrollo Agroempresarial y Turístico del Huila',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 655,
+      'nombre'    => 'Centro de la Industria, la Empresa y los Servicios',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 662,
+      'nombre'    => 'Centro de Gestión y Desarrollo Sostenible Surcolombiano',
+      ]);
+
+      /**
+      * Centros de Formación del Magdalena
+      */
+
+      Entidad::create([
+      'ciudad_id' => 716,
+      'nombre'    => 'Centro Acuícola y Agroindustrial de Gaira',
+      ]);
+
+      Entidad::create([
+      'ciudad_id' => 716,
+      'nombre'    => 'Centro de Logística y Promoción Ecoturística del Magdalena',
+      ]);
+
+      /**
+      * Centros de Formación del Meta
+      */
+
+      Entidad::create([
+        'ciudad_id' => 731,
+        'nombre'    => 'Centro Agroindustrial del Meta',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 748,
+        'nombre'    => 'Centro de Industria y Servicios del Meta',
+      ]);
+
+      /**
+      * Centros de Formación de Nariño
+      */
+
+      Entidad::create([
+        'ciudad_id' => 778,
+        'nombre'    => 'Centro Sur Colombiano de Logística Internacional',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 811,
+        'nombre'    => 'Centro Agroindustrial y Pesquero de la Costa Pacífica',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 801,
+        'nombre'    => 'Centro Internacional de Producción Limpia - Lope',
+      ]);
+
+      /**
+      * Centros de Formación del Norte del Santander
+      */
+
+      Entidad::create([
+        'ciudad_id' => 823,
+        'nombre'    => 'Centro de Formación para el Desarrollo Rural y Minero',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 837,
+        'nombre'    => 'Centro de la Industria, la Empresa y los Servicios',
+      ]);
+
+      /**
+      * Centros de Formación del Putumayo
+      */
+
+      Entidad::create([
+        'ciudad_id' => 857,
+        'nombre'    => 'Centro Agroforestal y Acuícola Arapaima',
+      ]);
+
+      /**
+      * Centros de Formación del Quindio
+      */
+
+      Entidad::create([
+        'ciudad_id' => 867,
+        'nombre'    => 'Centro Agroindustrial',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 867,
+        'nombre'    => 'Centro para el Desarrollo Tecnológico de la Construcción y la Industria',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 867,
+        'nombre'    => 'Centro de Comercio y Turismo',
+      ]);
+
+      /**
+      * Centros de Formarción del Risaralda
+      */
+
+      Entidad::create([
+        'ciudad_id' => 888,
+        'nombre'    => 'Centro Atención Sector Agropecuario',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 882,
+        'nombre'    => 'Centro de Diseño e Innovación Tecnológica Industrial',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 888,
+        'nombre'    => 'Centro de Comercio y Servicios',
+      ]);
+
+      /**
+      * Centros de formación de San Andrés
+      */
+
+      Entidad::create([
+        'ciudad_id' => 893,
+        'nombre'    => 'Centro de Formación Turística, Gente de Mar y de Servicio',
+      ]);
+
+      /**
+      * Centros de formación de Santander
+      */
+
+      Entidad::create([
+        'ciudad_id' => 953,
+        'nombre'    => 'Centro Atención Sector Agropecuario',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 928,
+        'nombre'    => 'Centro Industrial de Mantenimiento Integral',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 925,
+        'nombre'    => 'Centro Industrial del Diseño y la Manufactura',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 902,
+        'nombre'    => 'Centro de Servicios Empresariales y Turísticos',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 899,
+        'nombre'    => 'Centro Industrial y del Desarrollo Tecnológico',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 963,
+        'nombre'    => 'Centro Agroturístico',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 947,
+        'nombre'    => 'Centro Agroempresarial y Turístico de los Andes',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 897,
+        'nombre'    => 'Centro de Gestión Agroempresarial del Oriente',
+      ]);
+
+      /**
+      * Centros de Formación de Sucre
+      */
+
+      Entidad::create([
+        'ciudad_id' => 1002,
+        'nombre'    => 'Centro de la Innovación, la Tecnología y los Servicios',
+      ]);
+
+      /**
+      * Centros de Formación del Tolima
+      */
+
+      Entidad::create([
+        'ciudad_id' => 1021,
+        'nombre'    => 'Centro Agropecuario la Granja',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1028,
+        'nombre'    => 'Centro de Industria y Construcción',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1028,
+        'nombre'    => 'Centro de Comercio y Servicios',
+      ]);
+
+      /**
+      * Centros de Formación del Valle
+      */
+
+      Entidad::create([
+        'ciudad_id' => 1060,
+        'nombre'    => 'Centro Agropecuario de Buga',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1089,
+        'nombre'    => 'Centro Latinoamericano de Especies Menores',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1059,
+        'nombre'    => 'Centro Náutico Pesquero de Buenaventura',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1064,
+        'nombre'    => 'Centro de Electricidad y Automatización Industrial -CEAI',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1064,
+        'nombre'    => 'Centro de la Construcción',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1064,
+        'nombre'    => 'Centro de Diseño Tecnológico Industrial',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1064,
+        'nombre'    => 'Centro Nacional de Asistencia Técnica a la Industria -ASTIN',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1064,
+        'nombre'    => 'Centro de Gestión Tecnológica de Servicios',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1066,
+        'nombre'    => 'Centro de Tecnologías Agroindustriales',
+      ]);
+
+      Entidad::create([
+        'ciudad_id' => 1080,
+        'nombre'    => 'Centro de Biotecnología Industrial',
+      ]);
+
+      /**
+      * Centros de Formación del Vaupés
+      */
+
+      Entidad::create([
+        'ciudad_id' => 1097,
+        'nombre'    => 'Centro Agropecuario y de Servicios Ambientales "Jiri-jirimo"',
+      ]);
+
+      /**
+      * Centros de Formación del Vichada
+      */
+
+      Entidad::create([
+        'ciudad_id' => 1101,
+        'nombre'    => 'Centro de Producción y Transformación Agroindustrial de la Orinoquía',
+      ]);
+
+
+      /**
+      * Fin de los centros de formación
       */
 
       //tecnoacademias
