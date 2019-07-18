@@ -124,4 +124,19 @@ class Nodo extends Model
     
     /*=====  End of scope para consultar todas las lineas por departamento  ======*/
 
+   /*===========================================================================
+   =            scope para retornar el nodo del usuario autenticada            =
+   ===========================================================================*/
+   
+   public function scopeNodoUserAthenticated($query, $nodo)
+   {
+       return $query->select('nodos.id',DB::raw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre'))
+                    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+                    ->where('nodos.id', '=', $nodo);
+
+   }
+   
+   /*=====  End of scope para retornar el nodo del usuario autenticada  ======*/
+   
+
 }

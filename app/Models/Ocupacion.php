@@ -4,9 +4,16 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Traits\OcupacionTrait\OcupacionTrait;
+
 
 class Ocupacion extends Model
 {
+
+    use OcupacionTrait;
+
+    const IS_OTRA_OCUPACION = "Otra";
+
     protected $table = 'ocupaciones';
 
     /**
@@ -21,20 +28,7 @@ class Ocupacion extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'ocupaciones_users')
-           ->withTimestamps();
+            ->withTimestamps();
     }
 
-    /*==================================================================
-    =            scope para consultar todas las ocupaciones            =
-    ==================================================================*/
-    
-    public function scopeAllOcupaciones($query)
-    {
-
-        return $query->with('users')->orderby('nombre');
-            
-    }
-
-    /*=====  End of scope para consultar todas las ocupaciones  ======*/
-    
 }

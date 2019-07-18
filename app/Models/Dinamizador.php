@@ -18,6 +18,11 @@ class Dinamizador extends Model
         'user_id',
     ];
 
+    
+
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -27,5 +32,7 @@ class Dinamizador extends Model
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
+
+    /*=====  End of relaciones eloquent  ======*/
 
 }

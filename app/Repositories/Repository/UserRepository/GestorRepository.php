@@ -2,14 +2,11 @@
 
 namespace App\Repositories\Repository\UserRepository;
 
-use App\Models\Eps;
-use App\Models\Gestor;
-use App\Models\Rols;
 use App\User;
-
 
 class GestorRepository
 {
+
 
 
 	// Consulta los gestores de una línea tecnológica por nodo
@@ -27,17 +24,21 @@ class GestorRepository
 	}
 
 	public function getAllGestoresPorNodo($nodo)
+
     {
-        return User::select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'rols.nombre as rol', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
+        return User::select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
             ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
             ->Join('gestores', 'gestores.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-            ->Join('rols', 'rols.id', '=', 'users.rol_id')
             ->role(User::IsGestor())
             ->where('nodos.id', '=', $nodo)
             ->orderby('users.created_at', 'desc')
             ->get();
+
+    }
+
+
 
     }
 
@@ -88,6 +89,5 @@ class GestorRepository
     }
 
     /*=====  End of metodo para registrar un usuario - gestor  ======*/
-
 
 }

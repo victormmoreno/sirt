@@ -21,18 +21,27 @@ class Gestor extends Model
         'honorarios',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'honorarios' => 'float',
+    ];
+
     public function scopeConsultarGestoresPorNodo($query, $id)
     {
-      return $query->select('gestores.id')
-      ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')
-      ->join('users', 'users.id', '=', 'gestores.user_id')
-      ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-      ->where('nodos.id', $id);
+        return $query->select('gestores.id')
+            ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')
+            ->join('users', 'users.id', '=', 'gestores.user_id')
+            ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+            ->where('nodos.id', $id);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function nodo()
@@ -49,6 +58,26 @@ class Gestor extends Model
     // Relación a la tabla de articulaciones
     public function articulaciones()
     {
-      return $this->hasMany(Articulacion::class, 'gestor_id', 'id');
+        return $this->hasMany(Articulacion::class, 'gestor_id', 'id');
     }
+
+    /*=========================================
+    =            asesores eloquent            =
+    =========================================*/
+    public function getHonorariosAttribute($honorarios)
+    {
+        return trim($honorarios);
+    }
+
+    /*=====  End of asesores eloquent  ======*/
+
+    /*========================================
+    =            mutador eloquent            =
+    ========================================*/
+    public function setHonorariosAttribute($honorarios)
+    {
+        $this->attributes['honorarios'] = trim($honorarios);
+    }
+
+    /*=====  End of mutador eloquent  ======*/
 }

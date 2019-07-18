@@ -45,7 +45,7 @@
                                             </div>
                                         </div>
                                 <form action="{{ route('usuario.usuarios.store')}}" method="POST" onsubmit="return checkSubmit()">
-                                    @include('users.administrador.form', [
+                                    @include('users.dinamizador.form', [
                                         'btnText' => 'Guardar',
                                     ])
                                 </form>

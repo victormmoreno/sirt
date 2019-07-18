@@ -2,33 +2,82 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\ArchivoComite;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class Comite extends Model
 {
-  protected $table = 'comites';
 
-  protected $casts = [
-    'fechacomite' => 'date:Y-m-d',
-  ];
+    protected $table = 'comites';
 
-  /**
-  * The attributes that are mass assignable.
-  *
-  * @var array
-  */
-  protected $fillable = [
-    'codigo',
-    'fechacomite',
-    'observaciones',
-    'correos',
-    'listado_asistencia',
-    'otros',
-  ];
+    protected $casts = [
+        'fechacomite' => 'date:Y-m-d',
+    ];
 
-  public function archivos()
-  {
-    return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
-  }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'codigo',
+        'fechacomite',
+        'observaciones',
+    ];
+
+    /*=========================================
+    =            asesores eloquent            =
+    =========================================*/
+
+    public function getCodigoAttribute($codigo)
+    {
+        return trim($codigo);
+    }
+
+    public function getFechaComiteAttribute($fechacomite)
+    {
+        return Carbon::parse($fechacomite)->format('Y-m-d');
+    }
+
+    public function getObservacionesAttribute($observaciones)
+    {
+        return ucfirst(strtolower(trim($observaciones)));
+    }
+
+    /*=====  End of asesores eloquent  ======*/
+
+    /*========================================
+    =            mutador eloquent            =
+    ========================================*/
+
+    public function setCodigoAttribute($codigo)
+    {
+        $this->attributes['codigo'] = trim($codigo);
+    }
+
+    public function setFechaComiteAttribute($fechacomite)
+    {
+        $this->attributes['fechacomite'] = Carbon::parse($fechacomite)->format('Y-m-d');
+    }
+
+    public function setObservacionesAttribute($observaciones)
+    {
+        $this->attributes['observaciones'] = ucfirst(strtolower(trim($observaciones)));
+    }
+
+    /*=====  End of mutador eloquent  ======*/
+
+    /*===========================================
+    =            relaciones eloquent            =
+    ===========================================*/
+
+    public function archivos()
+    {
+        return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
+    }
+
+    /*=====  End of relaciones eloquent  ======*/
+
+
 }

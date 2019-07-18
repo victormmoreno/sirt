@@ -1,32 +1,7 @@
-<li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey">
-    <i class="material-icons">supervised_user_circle</i> Usuarios
-    <i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
+<li class="no-padding {{setActiveRoute('usuario')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
   </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="">
-          Gestores
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Infocenter
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Talentos
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Ingreso
-        </a>
-      </li>
-    </ul>
-  </div>
 </li>
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}">

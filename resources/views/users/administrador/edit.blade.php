@@ -50,7 +50,7 @@
                                         'btnText' => 'Modificar',
                                     ])
                                 </form>
-                            
+                                
                                     </div>
                                 </div>
                             </div>
@@ -68,13 +68,14 @@ $(document).ready(function() {
       language: "es",
     });
     eps.getOtraEsp();
+    ocupacion.getOtraOcupacion();
     roles.getRoleSeleted();
     grupoInvestigacion.getGrupoInvestigacion();
     TipoTalento.getSelectTipoTalento();
     regional.getCentroFormacion();
     UserEdit.getCiudad();
-    @if($errors->any())
         linea.getSelectLineaForNodo();
+    @if($errors->any())
     @endif
 });
     
@@ -84,12 +85,34 @@ var eps = {
     getOtraEsp:function (ideps) {
         let id = $(ideps).val();
         let nombre = $("#txteps option:selected").text();
+
         if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
             $('#otraeps').hide();
              
         }else{
             $('#otraeps').show();
         }
+    }
+};
+
+var ocupacion = {
+    getOtraOcupacion:function (idocupacion) {
+        $('#otraocupacion').hide();
+        let id = $(idocupacion).val();
+        let nombre = $("#txtocupaciones option:selected").text();
+        let resultado = nombre.match(/[A-Z][a-z]+/g);
+        @if($errors->any())
+            $('#otraocupacion').hide();
+            if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                $('#otraocupacion').show();
+            }
+        @endif
+       
+          if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+            $('#otraocupacion').show();
+
+          }
+      
     }
 };
 
@@ -123,9 +146,11 @@ var TipoTalento = {
         if($('#funcionarioEmpresa').css('display') === 'block')
         {
               @if($errors->any())
-                $('#txtempresa').val({{old('txtempresa')}});
+                $('#txtempresa').val('{{old('txtempresa')}}');
               @else
-                  $('#txtempresa').val();
+                @if(isset($user->talento->empresa) )
+                  $('#txtempresa').val('{{$user->talento->empresa}}');
+                @endif
               @endif 
         }
         
@@ -201,14 +226,12 @@ var grupoInvestigacion = {
                                         <i class="material-icons prefix">
                                              details
                                         </i>
-                                        <select class="" id="txtdepartamentogrupo" name="txtdepartamentogrupo" onchange="UserCreate.getCiudadForModal()" style="width: 100%" tabindex="-1" >
+                                        <select class="" id="txtdepartamentogrupo" name="txtdepartamentogrupo" onchange="UserEdit.getCiudadForModal()" style="width: 100%" tabindex="-1" >
                                             <option value="">Seleccione Departamento</option>
                                             @foreach($departamentos as $value)
-                                                @if(isset($user->ciudad->departamento->id))
-                                                    <option value="{{$value->id}}" {{old('txtdepartamento',$user->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
-                                                @else
+                                               
                                                     <option value="{{$value->id}}" {{old('txtdepartamento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
-                                                @endif
+                                               
                                             @endforeach
                                         </select>
                                         <label for="txtdepartamentogrupo">Departamento</option> <span class="red-text">*</span></label>
@@ -225,9 +248,7 @@ var grupoInvestigacion = {
                                             
                                         </select>
                                         <label for="txtciudadgrupo">Ciudad <span class="red-text">*</span></label>
-                                        @error('txtciudadgrupo')
-                                            <label id="txtciudadgrupo-error" class="error" for="txtciudadgrupo">{{ $message }}</label>
-                                        @enderror
+                                       
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <table class="display responsive-table" id="gruposmodal_table">
@@ -306,16 +327,17 @@ var regional = {
         type:'get',
         url:'/centro-formacion/getcentrosregional/'+regional
       }).done(function(response){
-        console.log(response);
+
         $('#txtcentroformacion').empty();
         $('#txtcentroformacion').append('<option value="">Seleccione el centro de formación</option>')
         $.each(response.centros, function(id, nombre) {
-          // console.log(e.id);
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
           @if($errors->any())
-        $('#txtcentroformacion').val({{old('txtcentroformacion')}});
+        $('#txtcentroformacion').val("{{old('txtcentroformacion')}}");
         @else
-        $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+          @if(isset($user->talento->entidad->centro->id))
+          $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+          @endif
         @endif
         $('#txtcentroformacion').material_select();
         
@@ -394,6 +416,7 @@ var roles = {
         $('#gestor').hide();
         $('#infocenter').hide();
         $('#talento').hide();
+        $('#ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
         
             if ($(this).val() == 'Dinamizador') {
@@ -406,6 +429,8 @@ var roles = {
                 $('#infocenter').show();
             }else if($(this).val() == 'Talento'){
                 $('#talento').show();
+            }else if($(this).val() == 'Ingreso'){
+                $('#ingreso').show();
             }
 
         });
@@ -430,12 +455,18 @@ var linea = {
             
             $('#txtlinea').append('<option value="">Seleccione la linea</option>');
 
-            $.each(response.lineasForNodo.lineas, function(i, e) {
+            $.each(response.lineasForNodo.lineas, function(i, e) {               
                 $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             });
+
+            @if($errors->any())
+                $('#txtlinea').val('{{old('txtlinea')}}');
+            @else
+                @if(isset($user->gestor->lineatecnologica_id))
+                $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+                @endif
+            @endif
         }
-        
-        
         
         $('#txtlinea').material_select();
       });
@@ -454,7 +485,6 @@ var UserEdit = {
         type:'get',
         url:'/usuario/getciudad/'+id
       }).done(function(response){
-        console.log(response);
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {

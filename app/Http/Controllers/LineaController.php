@@ -35,7 +35,7 @@ class LineaController extends Controller
     =            metodo API para consultar las lineas por nodo            =
     =====================================================================*/
     
-    public function getAllLineasForNodo($nodo)
+    public function getAllLineasForNodo($nodo = '1')
     {
        if (request()->ajax()) {
             return response()->json([

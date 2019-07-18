@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class AddLastLoginToUsersTable extends Migration
+class AddOtraOcupacionToUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddLastLoginToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->datetime('ultimo_login')->nullable()->after('remember_token');
+            $table->string('otra_ocupacion',45)->nullable()->after('estrato');
         });
     }
 
@@ -26,7 +26,7 @@ class AddLastLoginToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['ultimo_login']);
+            $table->dropColumn(['otra_ocupacion']);
         });
     }
 }

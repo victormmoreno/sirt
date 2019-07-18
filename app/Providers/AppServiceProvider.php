@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
 
 
 
@@ -35,7 +36,8 @@ class AppServiceProvider extends ServiceProvider
         //     return "App\\Policies\\{$modelName}Policy";
         // });
         
-
+        // App::isLocale('es');
+        // App::setLocale('es');
         Schema::defaultStringLength(191);
 
         Route::pattern('id', '[0-9]+');

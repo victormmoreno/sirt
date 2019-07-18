@@ -1,9 +1,7 @@
 
 @if ($errors->any())
 
-@foreach($errors as $error)
-    <li> {{$error}}</li>
-@endforeach
+
 <div class="card red lighten-3">
     <div class="row">
         <div class="col s12 m12">
@@ -12,7 +10,7 @@
                     <i class="material-icons left">
                         info_outline
                     </i>
-                    Los datos marcados con * son obligatorios
+                    Tienes {{collect($errors->all())->count()}} errores
                 </p>
             </div>
         </div>
@@ -81,6 +79,7 @@
                 @enderror
             </div>
         </div>
+        {{-- {{var_dump($user->gestor->lineatecnologica_id)}} --}}
         <div id="gestor">
             <div class="input-field col s12 m12 l12">
 
@@ -115,16 +114,18 @@
         
         
             <div class="input-field col s12 m12 l12">
-            
+                <i class="material-icons prefix">
+                    attach_money
+                </i>
                 <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}">
                 <label for="txthonorario">Honorario <span class="red-text">*</span></label>
-                <small>ingrese el valor separado por puntos (.)</small><br>
                 @error('txthonorario')
                     <label id="txthonorario-error" class="error" for="txthonorario">{{ $message }}</label>
                 @enderror
             </div> 
         
         </div>
+
         <div id="infocenter">
            <div class="input-field col s12 m12 l12">
 
@@ -132,8 +133,8 @@
                     <option value="">Seleccione Nodo</option>
 
                     @foreach($nodos as $id => $nodo)
-                        @if(isset($user->gestor->nodo->id))
-                            <option value="{{$id}}" {{old('txtnodoinfocenter',$user->gestor->nodo->id) ==  $id ? 'selected':''}}>{{$nodo}}</option> 
+                        @if(isset($user->infocenter->nodo->id))
+                            <option value="{{$id}}" {{old('txtnodoinfocenter',$user->infocenter->nodo->id) ==  $id ? 'selected':''}}>{{$nodo}}</option> 
                         @else
                             <option value="{{$id}}" {{old('txtnodoinfocenter') ==  $id ? 'selected':''}}>{{$nodo}}</option> 
                         @endif                        
@@ -146,13 +147,33 @@
             </div>
             <div class="input-field col s12 m12 l12">
             
-                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txtextension')}}">
+                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) ? $user->infocenter->extension : old('txtextension')}}">
                 <label for="txtextension">Extensión <span class="red-text">*</span></label>
                 @error('txtextension')
                     <label id="txtextension-error" class="error" for="txtextension">{{ $message }}</label>
                 @enderror
             </div> 
         
+        </div>
+        <div id="ingreso">
+            <div class="input-field col s12 m12 l12">
+
+                <select class="" id="txtnodoingreso" name="txtnodoingreso"  style="width: 100%" tabindex="-1">
+                    <option value="">Seleccione Nodo</option>
+
+                    @foreach($nodos as $id => $nodo)
+                        @if(isset($user->ingreso->nodo->id))
+                            <option value="{{$id}}" {{old('txtnodoingreso',$user->ingreso->nodo->id) ==  $id ? 'selected':''}}>{{$nodo}}</option> 
+                        @else
+                            <option value="{{$id}}" {{old('txtnodoingreso') ==  $id ? 'selected':''}}>{{$nodo}}</option> 
+                        @endif                        
+                    @endforeach
+                </select>
+                <label for="txtnodoingreso">Nodo Ingreso<span class="red-text">*</span></label>
+                @error('txtnodoingreso')
+                    <label id="txtnodoingreso-error" class="error" for="txtnodoingreso">{{ $message }}</label>
+                @enderror
+            </div>
         </div>
 
     </div>
@@ -500,11 +521,9 @@
 
 <div class="divider mailbox-divider"></div>
 <div class="row">
-    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
-        {{-- <i class="material-icons prefix">
-             details
-        </i> --}}
-        <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple>
+    <div class="input-field col s12 m6 l6 offset-l3 m-3">
+        
+        <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple onchange="ocupacion.getOtraOcupacion(this)">
             
             @foreach($ocupaciones as $id => $nombre)
                 @if(isset($user))
@@ -519,6 +538,13 @@
         <label for="txtocupaciones" class="active">Ocupación <span class="red-text">*</span></label>
         @error('txtocupaciones')
             <label id="txtocupaciones-error" class="error" for="txtocupaciones">{{ $message }}</label>
+        @enderror
+    </div>
+    <div class="input-field col s12 m6 l6 offset-l3 m-3" id="otraocupacion">
+        <input class="validate" id="txtotra_ocupacion" name="txtotra_ocupacion" type="text"  value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('txtotra_ocupacion')}}">
+        <label for="txtotra_ocupacion" class="active">¿Cuál? <span class="red-text">*</span></label>
+        @error('txtotra_ocupacion')
+            <label id="txtotra_ocupacion-error" class="error" for="txtotra_ocupacion">{{ $message }}</label>
         @enderror
     </div>
 </div>
@@ -624,7 +650,7 @@
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->empresa) ? $user->empresa : old('txtempresa')}}">
+            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}">
             <label for="txtempresa">Empresa</label>
             @error('txtempresa')
                 <label id="txtempresa-error" class="error" for="txtempresa">{{ $message }}</label>

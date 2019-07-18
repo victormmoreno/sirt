@@ -83,7 +83,7 @@
                     <div class="col s12 center-align m-t-sm">
 
                       
-                      <button type="submit" class="waves-effect waves-light btn center-align">
+                      <button type="submit" id="login-btn" class="waves-effect waves-light btn center-align">
                             <i class="material-icons left">fingerprint</i>
                                     {{ __('Login') }}
                                 </button>

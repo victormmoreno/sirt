@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Events\User\UserWasRegistered;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UsersRequests\AdminFormRequest;
-use App\Models\Ocupacion;
-use App\Models\OcupacionModel;
-use App\Repositories\Repository\UserRepository\AdminRepository;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\UserRepository\{AdminRepository,UserRepository};
 use App\User;
 use Illuminate\Http\Request;
-use Session;
 
 class AdminController extends Controller
 {
@@ -21,24 +15,15 @@ class AdminController extends Controller
 
     public function __construct(AdminRepository $adminRepository, UserRepository $userRepository)
     {
-        $this->middleware('auth');
+        $this->middleware([
+            'auth',
+            'role_or_permission:'                
+                .session()->get('login_role', config('laravelpermission.roles.roleAdministrador')),
+        ]);
         $this->adminRepository = $adminRepository;
         $this->userRepository  = $userRepository;
     }
 
-    /*================================================================================
-    =            metodo para consultar las ciudedes segun el departamento            =
-    ================================================================================*/
-
-    public function getCiudad($departamento)
-    {
-
-        return response()->json([
-            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
-        ]);
-    }
-
-    
     /**
      * Display a listing of the resource.
      *
@@ -79,53 +64,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // $ocupacion$this->userRepository->getAllOcupaciones();
-
-        return view('users.administrador.administrador.create', [
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(AdminFormRequest $request)
-    {
-        //generar contraseña
-        $password = User::generatePasswordRamdom();
-        //guardar registro
-        $administrador = $this->adminRepository->Store($request, $password);
-
-        $activationToken = $this->userRepository->activationToken($administrador->id);
-        //envio de email con contraseña
-        if ($administrador != null) {
-            event(new UserWasRegistered($administrador, $password));
-            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un link de activación al correo del usuario ' . $administrador->nombre_completo . '</p>')->showConfirmButton('Ok', '#009891')->toHtml();
-        } else {
-            alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
-        }
-        //redireccion
-
-        return redirect()->route('usuario.administrador.index');
-
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -133,75 +71,23 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        $user = $this->adminRepository->getFindDetailByid($id);
+        $user = $this->userRepository->findById($id);
 
         $data = [
-                    'user' =>$user,
-                    'role' =>$user->getRoleNames()->implode(', '),
-                    'tipodocumento' =>$user->tipoDocumento->nombre,
-                    'eps' =>$user->eps->nombre,
-                    'departamento' =>$user->ciudad->departamento->nombre,
-                    'ciudad' =>$user->ciudad->nombre,
-                    'gruposanguineo' =>$user->grupoSanguineo->nombre,
-                    'gradosescolaridad' =>$user->gradoEscolaridad->nombre,
+            'user'              => $user,
+            'role'              => $user->getRoleNames()->implode(', '),
+            'tipodocumento'     => $user->tipoDocumento->nombre,
+            'eps'               => $user->eps->nombre,
+            'departamento'      => $user->ciudad->departamento->nombre,
+            'ciudad'            => $user->ciudad->nombre,
+            'gruposanguineo'    => $user->grupoSanguineo->nombre,
+            'gradosescolaridad' => $user->gradoEscolaridad->nombre,
 
-                ];
-                
+        ];
 
         return response()->json([
-            'data' =>  $data,
+            'data' => $data,
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('users.administrador.administrador.edit', [
-            'user'              => $this->userRepository->findById($id),
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-    
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(AdminFormRequest $request, $id)
-    {
-        $user = $this->userRepository->findById($id);
-        if ($user != null) {
-            $userUpdate = $this->adminRepository->Update($request, $user);
-            alert()->success("El Usuario {$userUpdate->nombre_completo} ha sido  modificado.", 'Modificación Exitosa', "success");
-        } else {
-            alert()->error("El Usuario no se ha modificado.", 'Modificación Errónea', "error");
-        }
-
-        return redirect()->route('usuario.administrador.index');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function delete($id)
-    {
-        //
-    }
 }
