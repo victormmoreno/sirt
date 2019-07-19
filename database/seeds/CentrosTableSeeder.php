@@ -134,7 +134,7 @@ class CentrosTableSeeder extends Seeder
 
     Centro::create([
     'regional_id'   => Regional::where('nombre', 'ATLANTICO')->first()->id,
-    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->first()->id,
+    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->where('ciudad_id', 136)->first()->id,
     'codigo_centro' => 9302,
     ]);
 
@@ -161,12 +161,12 @@ class CentrosTableSeeder extends Seeder
 
     Centro::create([
     'regional_id'   => Regional::where('nombre', 'BOLIVAR')->first()->id,
-    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->first()->id,
+    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->where('ciudad_id', 166)->first()->id,
     'codigo_centro' => 9304,
     ]);
 
     /**
-    * Centros de Formaci´pn de Boyacá
+    * Centros de Formación de Boyacá
     */
     Centro::create([
     'regional_id'   => Regional::where('nombre', 'BOYACA')->first()->id,
@@ -216,7 +216,7 @@ class CentrosTableSeeder extends Seeder
 
     Centro::create([
     'regional_id'   => Regional::where('nombre', 'CALDAS')->first()->id,
-    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->first()->id,
+    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->where('ciudad_id', 336)->first()->id,
     'codigo_centro' => 9306,
     ]);
 
@@ -260,7 +260,7 @@ class CentrosTableSeeder extends Seeder
 
     Centro::create([
     'regional_id'   => Regional::where('nombre', 'CAUCA')->first()->id,
-    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->first()->id,
+    'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->where('ciudad_id', 414)->first()->id,
     'codigo_centro' => 9307,
     ]);
     /**
@@ -495,7 +495,7 @@ class CentrosTableSeeder extends Seeder
 
      Centro::create([
        'regional_id'   => Regional::where('nombre', 'HUILA')->first()->id,
-       'entidad_id'    => Entidad::where('nombre', 'Centro de la Industria, la Empresa y los Servicios')->first()->id,
+       'entidad_id'    => Entidad::where('nombre', 'Centro de la Industria, la Empresa y los Servicios')->where('ciudad_id', 655)->first()->id,
        'codigo_centro' => 9527,
      ]);
 
@@ -570,7 +570,7 @@ class CentrosTableSeeder extends Seeder
 
      Centro::create([
        'regional_id'   => Regional::where('nombre', 'NORTE S/DER')->first()->id,
-       'entidad_id'    => Entidad::where('nombre', 'Centro de la Industria, la Empresa y los Servicios')->first()->id,
+       'entidad_id'    => Entidad::where('nombre', 'Centro de la Industria, la Empresa y los Servicios')->where('ciudad_id', 837)->first()->id,
        'codigo_centro' => 9537,
      ]);
 
@@ -624,7 +624,7 @@ class CentrosTableSeeder extends Seeder
 
      Centro::create([
        'regional_id'   => Regional::where('nombre', 'RISARALDA')->first()->id,
-       'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->first()->id,
+       'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->where('ciudad_id', 888)->first()->id,
        'codigo_centro' => 9308,
      ]);
 
@@ -718,7 +718,7 @@ class CentrosTableSeeder extends Seeder
 
      Centro::create([
        'regional_id'   => Regional::where('nombre', 'TOLIMA')->first()->id,
-       'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->first()->id,
+       'entidad_id'    => Entidad::where('nombre', 'Centro de Comercio y Servicios')->where('ciudad_id', 1028)->first()->id,
        'codigo_centro' => 9310,
      ]);
 
@@ -805,7 +805,6 @@ class CentrosTableSeeder extends Seeder
        'entidad_id'    => Entidad::where('nombre', 'Centro de Producción y Transformación Agroindustrial de la Orinoquía')->first()->id,
        'codigo_centro' => 9531,
      ]);
-
 
   }
 }
