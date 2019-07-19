@@ -83,7 +83,7 @@ class EntidadesTableSeeder extends Seeder
       Entidad::create([
       'id' => 11,
       'ciudad_id' => 1021,
-      'nombre'    => 'Granja',
+      'nombre'    => 'La Granja',
       ]);
 
       Entidad::create([
@@ -816,7 +816,10 @@ class EntidadesTableSeeder extends Seeder
       * Fin de los centros de formación
       */
 
-      //tecnoacademias
+      /**
+      * Tecnoacademias
+      */
+      
       Entidad::create([
       'ciudad_id' => 902,
       'nombre'    => 'TECNOACADEMIA BUCARAMANGA',
