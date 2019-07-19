@@ -43,7 +43,7 @@ class UserFormRequest extends FormRequest
             'txtapellidos'          => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'   => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'            => 'required',
-            'txtemail'              => 'required|email|min:1|max:100,|unique:users,email,' . $this->route('id'),
+            'txtemail'              => 'required|email|min:1|max:100|unique:users,email,' . $this->route('id'),
             'txtbarrio'             => 'required|min:1|max:100',
             'txtdireccion'          => 'required|min:1|max:200',
             'txttelefono'           => 'nullable|digits_between:6,11|numeric',

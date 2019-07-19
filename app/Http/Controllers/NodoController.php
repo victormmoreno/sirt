@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\NodoFormRequest;
 use Illuminate\Http\Request;
+use App\Repositories\Repository\DepartamentoRepository;
 use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller
 {
 
     public $nodoRepository;
+    public $departamentoRepository;
 
-    public function __construct(NodoRepository $nodoRepository)
+    public function __construct(NodoRepository $nodoRepository, DepartamentoRepository $departamentoRepository)
     {
         $this->middleware('auth');
-        $this->nodoRepository = $nodoRepository;
+        $this->nodoRepository         = $nodoRepository;
+        $this->departamentoRepository = $departamentoRepository;
     }
     /**
      * Display a listing of the resource.
@@ -23,8 +26,6 @@ class NodoController extends Controller
      */
     public function index()
     {
-
-        // dd($this->nodoRepository->getAlltNodo());
         if (request()->ajax()) {
             return datatables()->of($this->nodoRepository->getAlltNodo())
                 ->addColumn('detail', function ($data) {
@@ -37,7 +38,7 @@ class NodoController extends Controller
 
                     return $button;
                 })
-                ->rawColumns(['detail','edit'])
+                ->rawColumns(['detail', 'edit'])
                 ->make(true);
         }
         return view('nodos.administrador.index');
@@ -50,10 +51,11 @@ class NodoController extends Controller
      */
     public function create()
     {
-        
-        return view('nodos.administrador.create',[
-            'lineas' => $this->nodoRepository->getAllLineas(),
-            'regionales' => $this->nodoRepository->getAllRegionales(),
+
+        return view('nodos.administrador.create', [
+            'lineas'        => $this->nodoRepository->getAllLineas(),
+            'regionales'    => $this->nodoRepository->getAllRegionales(),
+            'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
         ]);
     }
 
@@ -64,15 +66,15 @@ class NodoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(NodoFormRequest $request)
-    {   
+    {
         //metodo para guardad
-        $nodoCreate = $this->nodoRepository->create($request);
+        $nodoCreate = $this->nodoRepository->storeNodo($request);
 
         if ($nodoCreate == true) {
-          
+
             alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
-        }else{
-            alert()->error('Registro Erróneo.','El nodo no se ha creado.');
+        } else {
+            alert()->error('Registro Erróneo.', 'El nodo no se ha creado.');
         }
         return redirect()->route('nodo.index');
     }
@@ -97,10 +99,11 @@ class NodoController extends Controller
     public function edit($id)
     {
         // $nodo = $this->nodoRepository->findByid($id);
-        return view('nodos.administrador.edit',[
-            'nodo' => $this->nodoRepository->findByid($id),
-            'lineas' => $this->nodoRepository->getAllLineas(),
+        return view('nodos.administrador.edit', [
+            'entidad'       => $this->nodoRepository->findByid($id),
+            'lineas'     => $this->nodoRepository->getAllLineas(),
             'regionales' => $this->nodoRepository->getAllRegionales(),
+            'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
         ]);
     }
 
@@ -119,10 +122,10 @@ class NodoController extends Controller
         $nodoUdate = $this->nodoRepository->update($request, $nodo);
 
         if ($nodoUdate == true) {
-          
+
             alert()->success('Modificación Exitoso.', 'El nodo ha sido modificado satisfactoriamente');
-        }else{
-            alert()->error('Modificación Erróneo.','El nodo no se ha modificado.');
+        } else {
+            alert()->error('Modificación Erróneo.', 'El nodo no se ha modificado.');
         }
         return redirect()->route('nodo.index');
     }
