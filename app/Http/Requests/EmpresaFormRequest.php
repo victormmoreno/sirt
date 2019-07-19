@@ -28,7 +28,7 @@ class EmpresaFormRequest extends FormRequest
       'nombre' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
       'nit' => 'required|numeric|digits_between:6,45|unique:empresas,nit,'.$this->route('id'),
       'email_entidad' => 'email|nullable|min:7|max:200',
-      'direccion' => 'required|min:1|max:100',
+      'direccion' => 'max:100',
       'txtdepartamento' => 'required',
       'txtciudad_id' => 'required',
       'txtsector' => 'required',

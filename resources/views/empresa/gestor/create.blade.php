@@ -70,7 +70,7 @@
                       </div>
                       <div class="input-field col s12 m6 l6">
                         <input type="text" name="direccion" id="direccion" value="{{ old('direccion') }}">
-                        <label for="direccion">Dirección de la Empresa <span class="red-text">*</span></label>
+                        <label for="direccion">Dirección de la Empresa</label>
                         @error('direccion')
                              <label id="direccion-error" class="error" for="direccion">{{ $message }}</label>
                         @enderror
