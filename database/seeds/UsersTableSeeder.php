@@ -79,7 +79,37 @@ class UsersTableSeeder extends Seeder
             'estrato'             => rand(1, 6),
         ]);
 
-        $userAdmin->assignRole([$roleAdministrador]);
+        $userAdmin->dinamizador()->create([
+            'user_id' => $userAdmin->id,
+            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+        ]);
+
+        $userAdmin->gestor()->create([
+            'user_id'             => $userAdmin->id,
+            'nodo_id'             => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
+            'honorarios'          => 4000000,
+        ]);
+
+        $userAdmin->infocenter()->create([
+            'nodo_id'   => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'user_id'   => $userAdmin->id,
+            'extension' => 413342,
+        ]);
+
+        $userAdmin->ingreso()->create([
+            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'user_id' => $userAdmin->id,
+        ]);
+
+        $userAdmin->talento()->create([
+            'user_id'    => $userAdmin->id,
+            'perfil_id'  => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
+            'entidad_id' => Entidad::all()->random()->id,
+
+        ]);
+
+        $userAdmin->assignRole([$roleAdministrador,$roleDinamizador,$roleGestor,$roleInfocenter,$roleIngreso,$roleTalento]);
         $userAdmin->givePermissionTo($registrarIdeaPermission);
 
         $ocupacion = Ocupacion::all()->random()->id;
@@ -153,6 +183,7 @@ class UsersTableSeeder extends Seeder
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
             'honorarios'          => 4000000,
         ]);
+        $userGestorRamiro->assignRole($roleGestor);
 
         $userGestorJulian = User::create([
             'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
@@ -185,6 +216,8 @@ class UsersTableSeeder extends Seeder
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'ETC')->first()->id,
             'honorarios'          => 4000000,
         ]);
+
+        $userGestorJulian->assignRole($roleGestor);
 
         $userInfocenter = User::create([
             'rol_id'              => Rols::where('nombre', '=', 'Infocenter')->first()->id,

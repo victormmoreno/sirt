@@ -38,7 +38,7 @@
                 <div class="row">
                   <div class="input-field col s12 m6 l6">
                     <i class="material-icons prefix">location_city</i>
-                    <input id="txtnombrenodo" type="text" value="{{ \NodoHelper::returnNodoUsuario() }}" name="txtnombrenodo" disabled>
+                    <input id="txtnombrenodo" type="text" value="{{ \NodoHelper::returnNameNodoUsuario() }}" name="txtnombrenodo" disabled>
                     <label for="txtnombrenodo">Nodo <span class="red-text">*</span></label>
                   </div>
                   <div class="input-field col s12 m6 l6">
