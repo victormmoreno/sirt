@@ -35,10 +35,10 @@ class Comite extends Model
         return trim($codigo);
     }
 
-    public function getFechaComiteAttribute($fechacomite)
-    {
-        return Carbon::parse($fechacomite)->format('Y-m-d');
-    }
+    // public function getFechaComiteAttribute($fechacomite)
+    // {
+    //     return Carbon::parse($fechacomite)->format('Y-m-d');
+    // }
 
     public function getObservacionesAttribute($observaciones)
     {
