@@ -155,23 +155,48 @@ class UserController extends Controller
     public function edit($id)
     {
 
-        // $user = $this->userRepository->findById($id);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                $role = ['Administrador', 'Dinamizador'];
 
-        // dd(auth()->user()->getRoleNames()->implode(', '));
+                return view('users.administrador.edit', [
+                    'user'              => $this->userRepository->findById($id),
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'nodos'             => $this->userRepository->getAllNodo(),
+                    'perfiles'          => $this->userRepository->getAllPerfiles(),
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                $role = ['Gestor','Infocenter','Ingreso'];
 
-        return view('users.administrador.edit', [
-            'user'              => $this->userRepository->findById($id),
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'roles'             => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->userRepository->getAllNodo(),
-            'perfiles'          => $this->userRepository->getAllPerfiles(),
-            'regionales'        => $this->userRepository->getAllRegionales(),
-        ]);
+                return view('users.administrador.edit', [
+                    'user'              => $this->userRepository->findById($id),
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'nodos'             => $this->userRepository->getAllNodo(),
+                    'perfiles'          => $this->userRepository->getAllPerfiles(),
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                ]);
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        
     }
 
     /**
@@ -187,7 +212,6 @@ class UserController extends Controller
 
         if ($user != null) {
             $userUpdate = $this->userRepository->Update($request, $user);
-            dd($userUpdate);
             alert()->success("El Usuario {$userUpdate->nombres} {$userUpdate->apellidos} ha sido  modificado.", 'Modificación Exitosa', "success");
         } else {
             alert()->error("El Usuario {$user->nombres} {$user->apellidos} no ha sido  modificado.", 'Modificación Errónea', "error");
