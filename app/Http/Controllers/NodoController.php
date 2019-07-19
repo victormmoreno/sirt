@@ -117,9 +117,9 @@ class NodoController extends Controller
     public function update(NodoFormRequest $request, $id)
     {
 
-        $nodo = $this->nodoRepository->findById($id);
+        $entidadNodo = $this->nodoRepository->findById($id);
         // dd($nodo);
-        $nodoUdate = $this->nodoRepository->update($request, $nodo);
+        $nodoUdate = $this->nodoRepository->update($request, $entidadNodo);
 
         if ($nodoUdate == true) {
 

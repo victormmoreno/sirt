@@ -14,9 +14,10 @@ class NodoRepository
 {
     public function getAlltNodo()
     {
-        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',entidades.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"))
+        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"))
             ->join('centros', 'centros.id', '=', 'nodos.centro_id')
-            ->join('entidades', 'entidades.id', '=', 'centros.entidad_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->join('entidades as ent', 'ent.id', '=', 'centros.entidad_id')
             ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
             ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
             ->get();
@@ -103,22 +104,24 @@ class NodoRepository
     /*======================================================
     =            metodo para actualizar un nodo            =
     ======================================================*/
-    public function Update($request, $nodo)
+    public function Update($request, $entidadNodo)
     {
         DB::beginTransaction();
 
         try {
 
-
-            $nodo->update([
-                'centro_id' => $request->input('txtcentro'),
+            $entidadNodo->update([
+                'ciudad_id' => $request->input('txtciudad'),    
                 'nombre' => $request->input('txtnombre'),
-                'direccion' => $request->input('txtdireccion'),
-                'anho_inicio' => Carbon::now()->format('Y'),
+                'email_entidad' => $request->input('txtemail_entidad'),
             ]);
 
+            $nodoUpdate = Nodo::find($entidadNodo->nodo->id)->update([
+                'centro_id' => $request->input('txtcentro'),
+                'direccion' => $request->input('txtdireccion'),
+            ]);
 
-            $nodo->lineas()->sync($request->get('txtlineas'));
+            $entidadNodo->nodo->lineas()->sync($request->get('txtlineas'));
 
             DB::commit();
             return true;
