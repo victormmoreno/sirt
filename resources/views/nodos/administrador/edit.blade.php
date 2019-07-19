@@ -20,7 +20,7 @@
                             <div class="row">
                                 <center><span class="card-title center-align">Editar Nodo <b>{{$entidad->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
                                 <div class="divider mailbox-divider"></div>
-                                {{$entidad->nodo->centro->id}}
+                               
                                 <form action="{{ route('nodo.update', $entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
                                 	{!! method_field('PUT')!!}
 	                                @include('nodos.administrador.form', [

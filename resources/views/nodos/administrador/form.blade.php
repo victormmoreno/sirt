@@ -6,12 +6,12 @@
         <i class="material-icons prefix">
             details
         </i>
-        
+        {{-- {{var_dump()}} --}}
         @if(isset($entidad->ciudad->departamento->id))
         <select class="" id="txtdepartamento" name="txtdepartamento" onchange="DepartamentsEdit.getCiudad()" style="width: 100%" tabindex="-1">
             <option value="">Seleccione departamento</option>
             @foreach($departamentos as $id =>$nombre)
-                @if(isset($nodo->entidad->ciudad))
+                @if(isset($entidad->ciudad->departamento->id))
                     <option value="{{$id}}" {{old('txtdepartamento',$entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
                 @else
                     <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option> 
@@ -68,8 +68,8 @@
         <select class="" id="txtregional" name="txtregional" onchange="Regional.getCentrosFormacion()" style="width: 100%" tabindex="-1" >
             <option value="">Seleccione regional </option>
             @foreach($regionales as $id => $nombre)
-                @if(isset($enttidad->nodo->centro->regional_id))
-                <option value="{{$id}}" {{old('txtregional',$entidad->nodo->centro->regional_id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                @if(isset($entidad->nodo->centro->regional->id))
+                <option value="{{$id}}" {{old('txtregional',$entidad->nodo->centro->regional->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
                 @else
                     <option value="{{$id}}" {{old('txtregional') == $id  ? 'selected':''}}> {{$nombre}}</option> 
                 @endif
