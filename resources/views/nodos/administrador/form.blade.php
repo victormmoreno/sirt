@@ -2,15 +2,74 @@
 
 <div class="row">
     <div class="input-field col s12 m6 l6">
+
+        <i class="material-icons prefix">
+            details
+        </i>
+        
+        @if(isset($entidad->ciudad->departamento->id))
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="DepartamentsEdit.getCiudad()" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione departamento</option>
+            @foreach($departamentos as $id =>$nombre)
+                @if(isset($nodo->entidad->ciudad))
+                    <option value="{{$id}}" {{old('txtdepartamento',$entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                @else
+                    <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option> 
+                @endif
+            @endforeach
+        </select>
+        @else
+        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="DepartamentsCreate.getCiudad()" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione departamento</option>
+            @foreach($departamentos as $id => $nombre)
+                @if(isset($entidad->ciudad->departamento->id))
+                    <option value="{{$id}}" {{old('txtdepartamento',$entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                @else
+                    <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option> 
+                @endif
+            @endforeach
+        </select>
+        @endif
+        <label for="txtdepartamento">Departamento de Ubicación <span class="red-text">*</span></label>
+        @error('txtdepartamento')
+            <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
+        @enderror 
+    </div>
+ 
+    <div class="input-field col s12 m6 l6">
+        <i class="material-icons prefix">
+            details
+        </i>
+        @if(isset($entidad->ciudad->id))
+        <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione Primero el Departamento</option>
+            
+        </select>
+        @else
+        <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+            <option value="">Seleccione Primero el Departamento</option> 
+        </select>
+        @endif
+        
+        <label for="txtciudad">Ciudad de Ubicación <span class="red-text">*</span></label>
+        @error('txtciudad')
+            <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
+        @enderror 
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
             details
         </i>
 
         <select class="" id="txtregional" name="txtregional" onchange="Regional.getCentrosFormacion()" style="width: 100%" tabindex="-1" >
-            <option value="0">Seleccione regional </option>
+            <option value="">Seleccione regional </option>
             @foreach($regionales as $id => $nombre)
-                @if(isset($nodo->centro->regional_id))
-                <option value="{{$id}}" {{old('txtregional',$nodo->centro->regional_id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                @if(isset($enttidad->nodo->centro->regional_id))
+                <option value="{{$id}}" {{old('txtregional',$entidad->nodo->centro->regional_id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
                 @else
                     <option value="{{$id}}" {{old('txtregional') == $id  ? 'selected':''}}> {{$nombre}}</option> 
                 @endif
@@ -38,12 +97,14 @@
     
 </div>
 
+
+
 <div class="row">
 	<div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">
             account_circle
         </i>
-        <input class="validate" id="txtnombre" name="txtnombre" type="text"  value="{{ isset($nodo->nombre) ? $nodo->nombre : old('txtnombre')}}">
+        <input class="validate" id="txtnombre" name="txtnombre" type="text"  value="{{ isset($entidad->nombre) ? $entidad->nombre : old('txtnombre')}}">
         <label for="txtnombre">Nombre Nodo <span class="red-text">*</span></label>
         @error('txtnombre')
             <label id="txtnombre-error" class="error" for="txtnombre">{{ $message }}</label>
@@ -53,13 +114,27 @@
         <i class="material-icons prefix">
             account_circle
         </i>
-        <input class="validate" id="txtdireccion" name="txtdireccion" type="text"  value="{{ isset($nodo->direccion) ? $nodo->direccion : old('txtdireccion')}}">
+        <input class="validate" id="txtdireccion" name="txtdireccion" type="text"  value="{{ isset($entidad->nodo->direccion) ? $entidad->nodo->direccion : old('txtdireccion')}}">
         <label for="txtdireccion">Dirección <span class="red-text">*</span></label>
         @error('txtdireccion')
             <label id="txtdireccion-error" class="error" for="txtdireccion">{{ $message }}</label>
         @enderror
     </div>
 </div>
+<div class="row">
+    
+    <div class="input-field col s12 m6 l6 offset-l3 m-3">
+        <i class="material-icons prefix">
+            email
+        </i>
+        <input class="validate" id="txtemail_entidad" name="txtemail_entidad" type="text"  value="{{ isset($entidad->email_entidad) ? $entidad->email_entidad : old('txtemail_entidad')}}">
+        <label for="txtemail_entidad">Correo Electrónico </label>
+        @error('txtemail_entidad')
+            <label id="txtemail_entidad-error" class="error" for="txtemail_entidad">{{ $message }}</label>
+        @enderror
+    </div>
+</div>
+
 
 <div class="col s12 m6 l6 offset-l3 m3">
             <ul class="collection with-header">
@@ -74,8 +149,8 @@
                 @forelse($lineas as $value)
                     <li class="collection-item">
                         <p class="p-v-xs">
-                            @if(isset($nodo))
-                            <input {{collect(old('txtlineas',$nodo->lineas->pluck('id')))->contains($value->id) ? 'checked' : ''  }}  type="checkbox" id="txtlineas-{{$value->nombre}}" name="txtlineas[]"  value="{{$value->id}}">
+                            @if(isset($entidad))
+                            <input {{collect(old('txtlineas',$entidad->nodo->lineas->pluck('id')))->contains($value->id) ? 'checked' : ''  }}  type="checkbox" id="txtlineas-{{$value->nombre}}" name="txtlineas[]"  value="{{$value->id}}">
                             @else
                             <input {{collect(old('txtlineas'))->contains($value->id) ? 'checked' : ''  }}  type="checkbox" id="txtlineas-{{$value->nombre}}" name="txtlineas[]"  value="{{$value->id}}">
                             @endif

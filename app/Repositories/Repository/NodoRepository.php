@@ -6,6 +6,7 @@ use App\Models\Centro;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Regional;
+use App\Models\Entidad;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,7 @@ class NodoRepository
 {
     public function getAlltNodo()
     {
-        return Nodo::select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',entidades.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"))
+        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',entidades.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"))
             ->join('centros', 'centros.id', '=', 'nodos.centro_id')
             ->join('entidades', 'entidades.id', '=', 'centros.entidad_id')
             ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
@@ -23,8 +24,10 @@ class NodoRepository
 
     public function findByid($id)
     {
-        return Nodo::findOrFail($id);
+        return Entidad::findOrFail($id);
     }
+
+    
 
     /*=================================================================================
     =            metodo para consultar todos los centros de formacion SENA            =
@@ -64,18 +67,26 @@ class NodoRepository
     =            metodo para guardar un nodo            =
     ===================================================*/
     
-    public function create($request)
+    public function storeNodo($request)
     {
         
         DB::beginTransaction();
 
         try {
+
+            $entidad = Entidad::create([
+                'ciudad_id' => $request->input('txtciudad'),    
+                'nombre' => $request->input('txtnombre'),
+                'email_entidad' => $request->input('txtemail_entidad'),
+            ]);
+
             $nodo = Nodo::create([
                 'centro_id' => $request->input('txtcentro'),
-                'nombre' => $request->input('txtnombre'),
+                'entidad_id' => $entidad->id,
                 'direccion' => $request->input('txtdireccion'),
                 'anho_inicio' => Carbon::now()->format('Y'),
             ]);
+
             $nodo->lineas()->sync($request->get('txtlineas'), false);
 
             DB::commit();
@@ -97,12 +108,16 @@ class NodoRepository
         DB::beginTransaction();
 
         try {
+
+
             $nodo->update([
                 'centro_id' => $request->input('txtcentro'),
                 'nombre' => $request->input('txtnombre'),
                 'direccion' => $request->input('txtdireccion'),
                 'anho_inicio' => Carbon::now()->format('Y'),
             ]);
+
+
             $nodo->lineas()->sync($request->get('txtlineas'));
 
             DB::commit();

@@ -20,7 +20,7 @@ class HelpController extends Controller
     =            metodo para consultar las ciudedes segun el departamento            =
     ================================================================================*/
 
-    public function getCiudad($departamento)
+    public function getCiudad($departamento = '1')
     {
 
         return response()->json([
@@ -34,7 +34,7 @@ class HelpController extends Controller
     =            metodo para consultar los centros de formación segun la regional            =
     ======================================================================================*/
     
-    public function getCentrosRegional($regional)
+    public function getCentrosRegional($regional = '1')
     {
 
         return response()->json([
