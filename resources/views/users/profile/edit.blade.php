@@ -23,52 +23,10 @@
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m12 l12">
-                                        <div class="mailbox-options">
-                                            <ul>
-                                                <li>
-                                                    <a href="{{{route('perfil.index',$user->documento)}}}">
-                                                        Información Personal
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.roles',$user->documento)}}}">
-                                                        Roles
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.permisos', $user->documento)}}}">
-                                                        Permisos Adicionales
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.cuenta')}}}">
-                                                        Cambiar Contraseña
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        @include('users.profile.nav.navbar')
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
-                                                <div class="left">
-                                                    <div class="left">
-                                                        <img alt="" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}">
-                                                        </img>
-                                                    </div>
-                                                    <div class="left">
-                                                        <span class="mailbox-title">
-                                                            {{auth()->check() ? auth()->user()->nombres.' '.auth()->user()->apellidos : ''}}
-                                                        </span>
-                                                        <span class="mailbox-author">
-                                                            {{$user->getRoleNames()->implode(', ')}}
-                                                            <br>
-                                                                Miembro desde {{$user->created_at->isoFormat('LL')}}
-                                                                <br>
-                                                                    {{$user->fechanacimiento->age}} años
-                                                                </br>
-                                                            </br>
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                @include('users.profile.nav.header')
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                         <p class="center">
@@ -83,7 +41,7 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('perfil.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('perfil.update')}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
                                                     <div class="row">

@@ -1,7 +1,7 @@
 
-      <li class="no-padding {{setActiveRoute('usuario')}}">
-        <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}">
-          <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
+      <li class="no-padding {{setActiveRoute(['usuario','usuario.usuarios.create'])}}">
+        <a class="waves-effect waves-grey {{setActiveRouteActivePage(['usuario','usuario.usuarios.create'])}}" href="{{route('usuario.index')}}">
+          <i class="material-icons {{ setActiveRouteActiveIcon(['usuario','usuario.usuarios.create']) }}">supervised_user_circle</i>Usuarios
         </a>
       </li>
       <li class="no-padding {{setActiveRouteActivePage('csibt')}} ">

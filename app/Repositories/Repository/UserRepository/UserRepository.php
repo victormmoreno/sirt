@@ -21,8 +21,10 @@ use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\User;
+use Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Session;
 use Spatie\Permission\Models\Role;
 
 class UserRepository
@@ -44,11 +46,10 @@ class UserRepository
 
     public function getAllNodos()
     {
-        return Nodo::selectNodo()->pluck('nodos','id');
+        return Nodo::selectNodo()->pluck('nodos', 'id');
     }
 
     /*=====  End of metodo para consultar todos los nodos  ======*/
-    
 
     /*=====================================================================
     =            metodo para consultar todos los departamentos            =
@@ -160,9 +161,9 @@ class UserRepository
     =            metodo para consultar la informacion del usuario            =
     ========================================================================*/
 
-    public function account($documento)
+    public function account($id)
     {
-        return User::where('documento', $documento)->firstOrFail();
+        return User::where('id', $id)->firstOrFail();
     }
 
     /*=====  End of metodo para consultar la informacion del usuario  ======*/
@@ -419,11 +420,9 @@ class UserRepository
 
             $userUpdated = $this->updateUser($request, $user);
 
-            $newRole    = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
+            $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
 
             $removeRole = array_diff(collect($userUpdated->getRoleNames())->toArray(), $request->input('role'));
-
-
 
             if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsDinamizador()) && isset($userUpdated->dinamizador)) {
                 Dinamizador::find($userUpdated->dinamizador->id)->delete();
@@ -483,7 +482,6 @@ class UserRepository
                 Dinamizador::find($userUpdated->dinamizador->id)->update([
                     "nodo_id" => $request->input('txtnododinamizador'),
                 ]);
-
 
             }
 
@@ -645,5 +643,17 @@ class UserRepository
     }
 
     /*=====  End of metodo para actualizar un usuario talento  ======*/
+
+    /*===========================================================================
+    =            metodo para destruir la session y cache del usuario            =
+    ===========================================================================*/
+
+    public function destroySessionUser()
+    {
+        Session::flush();
+        Cache::flush();
+    }
+
+    /*=====  End of metodo para destruir la session y cache del usuario  ======*/
 
 }

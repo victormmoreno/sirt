@@ -140,7 +140,7 @@
 
       <ul>
         <li class="no-padding">
-          <a class="waves-effect waves-grey ">
+          <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}">
             <i class="material-icons">
               perm_contact_calendar
             </i>
@@ -150,11 +150,14 @@
         <li class="divider">
         </li>
         <li class="no-padding">
-          <a class="waves-effect waves-grey" href="">
+          <a class="waves-effect waves-grey" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <i class="material-icons">
               power_settings_new
             </i>
-            Salir
+            <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none;">
+              @csrf
+            </form>
+            {{ __('Logout') }}
           </a>
         </li>
       </ul>

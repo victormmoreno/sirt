@@ -22,100 +22,12 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    <div class="col s12 m5 l3">
-                                        <div class="mailbox-list">
-                                            <ul>
-                                                <li>
-                                                    <a href="{{{route('perfil.index')}}}">
-                                                        <h4 class="mail-title">
-                                                            Información Personal
-                                                        </h4>
-                                                        <p align="justify" class="hide-on-small-and-down mail-text">
-                                                           En este apartado podrás ver y actualizar tu información personal.
-                                                        </p>
-                                                        
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.roles')}}}">
-                                                        <h4 class="mail-title">
-                                                            Roles
-                                                        </h4>
-                                                        <p align="justify" class="hide-on-small-and-down mail-text">
-                                                            En este apartado podrás ver los roles asignados.
-                                                        </p>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a  href="{{{route('perfil.permisos')}}}">
-                                                        <h4 class="mail-title">
-                                                            Permisos Adicionales
-                                                        </h4>
-                                                        <p align="justify" class="hide-on-small-and-down mail-text">
-                                                            En este apartado podrás ver los permisos adicionales que se te han asignado.
-                                                        </p>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a  href="{{{route('perfil.cuenta')}}}">
-                                                        <h4 class="mail-title">
-                                                            Cambiar Contraseña
-                                                        </h4>
-                                                        <p align="justify" class="hide-on-small-and-down mail-text">
-                                                            En este apartado podrás ver los permisos cambiar tu contraseña de ingreso a la plataforma {{config('app.name')}}
-                                                        </p>
-                                                    </a>
-                                                </li>
-                                                
-                                                
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @include('users.profile.nav.nav-profile')
                                     <div class="col s12 m7 l9">
-                                        <div class="mailbox-options">
-                                            <ul>
-                                                <li>
-                                                    <a href="{{{route('perfil.index')}}}">
-                                                        Información Personal
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.roles')}}}">
-                                                        Roles
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.permisos')}}}">
-                                                        Permisos Adicionales
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.cuenta')}}}">
-                                                        Cambiar Contraseña
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                         @include('users.profile.nav.navbar')
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
-                                                <div class="left">
-                                                    <div class="left">
-                                                        <img alt="" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}">
-                                                        </img>
-                                                    </div>
-                                                    <div class="left">
-                                                        <span class="mailbox-title">
-                                                            {{auth()->check() ? auth()->user()->nombres.' '.auth()->user()->apellidos : ''}} 
-                                                        </span>
-
-                                                        <span class="mailbox-author">
-                                                            
-                                                            {{$user->getRoleNames()->implode(', ')}}<br>
-                                                            Miembro desde {{$user->created_at->isoFormat('LL')}} <br>
-                                                            {{$user->fechanacimiento->age}} años
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                @include('users.profile.nav.header')
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                        <p class="center">Información Personal
@@ -123,24 +35,18 @@
                                                             <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Más Información</a>
                                                             <!-- Dropdown Structure -->
                                                             <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="{{route('perfil.edit',$user->documento)}}">Cambiar Información</a></li>
-                                                                <li><a href="#!">two</a></li>
+                                                                <li><a href="{{route('perfil.edit')}}">Cambiar Información</a></li>
+                                                                {{-- <li><a href="#!">Mis Notificaciónes</a></li> --}}
                                                                 <li class="divider"></li>
-                                                                <li><a href="#!">three</a></li>
+                                                                <li><a href="#!">Obtener certificado de registro en el sistema</a></li>
                                                             </ul> 
                                                         </div>
                                                        </p>
                                                     </span>
                                                 </div>
-
-                                                <div class="right mailbox-buttons">
-                                                    {{-- <a class="waves-effect waves-red btn-flat m-t-xs">
-                                                        Delete
-                                                    </a> --}} 
-                                                </div>
                                             </div>
                                             <div class="right">
-                                                <small>{{{$user->genero == 1 ? 'Masculino' : 'Femenino'}}}  </small>
+                                                <small>{{{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}}  </small>
                                             </div>
                                             <div class="divider mailbox-divider">
                                             </div>
@@ -306,43 +212,90 @@
                                                                         {{$user->celular ? $user->celular : 'No registra'}} 
                                                                     </p>
                                                                 </div>
+                                                            </li> 
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                @if(isset($user->dinamizador) && collect($user->getRoleNames())->contains(App\User::IsDinamizador()))
+                                                <div class="right">
+                                                    <small>Información Dinamizador</small>
+                                                </div>
+                                                <div class="divider mailbox-divider"></div>
+                                                <div class="row">
+                                                    <div class="col s12 m6 l6 offset-l3 m-3">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    play_arrow
+                                                                </i>
+                                                                <span class="title">
+                                                                    Nodo del Dinamizador
+                                                                </span>
+                                                                <p>
+                                                                    Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}<br>
+                                                                    <small><b>Dirección: </b>{{$user->dinamizador->nodo->direccion}}</small> 
+                                                                </p>
                                                             </li>
                                                         </ul>
                                                     </div>
                                                 </div>
+                                                @endif
+
+                                                @if(isset($user->gestor) && collect($user->getRoleNames())->contains(App\User::IsGestor()))
+                                                <div class="right">
+                                                    <small>Información {{App\User::IsGestor()}}</small>
+                                                </div>
+                                                <div class="divider mailbox-divider"></div>
+                                                <div class="row">
+                                                    <div class="col s12 m6 l6 ">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    play_arrow
+                                                                </i>
+                                                                <span class="title">
+                                                                    Nodo del {{App\User::IsGestor()}}
+                                                                </span>
+                                                                <p>
+                                                                    Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}<br>
+                                                                    <small><b>Dirección: </b>{{$user->gestor->nodo->direccion}}</small> 
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col s12 m6 l6 ">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    play_arrow
+                                                                </i>
+                                                                <span class="title">
+                                                                    Linea {{App\User::IsGestor()}}
+                                                                </span>
+                                                                <p>
+                                                                     {{$user->gestor}}<br>
+                                                                    <small><b>Dirección: </b>{{$user->gestor->nodo->direccion}}</small> 
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {{var_dump($user->gestor->lineatecnologica)}}
+                                                @endif
+                                         
                                                 <div class="divider mailbox-divider">
                                                 </div>
                                                 
                                                 <div class="right">
-                                                    <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
+                                                    <a href="{{route('perfil.edit',$user->documento)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
                                                         Cambiar Información Personal
                                                     </a>
                                                     <a class="waves-effect waves-red btn-flat m-t-xs">
-                                                        Delete
+                                                        Eliminar Usuario
                                                     </a>
-                                                    {{-- <ul class="attachment-list">
-                                                        <li>
-                                                            <a class="waves-effect waves-red btn-flat m-t-xs">
-                                                                Delete
-                                                            </a>
-                                                        </li> --}}
-                                                        {{-- <li>
-                                                            <a class="attachment z-depth-1" href="#">
-                                                                <div class="attachment-content">
-                                                                    <img alt="" src="assets/images/card-image2.jpg">
-                                                                    </img>
-                                                                </div>
-                                                                <div class="attachment-info">
-                                                                    <p>
-                                                                        Attachment2.jpg
-                                                                    </p>
-                                                                    <span>
-                                                                        548 KB
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li> --}}
-                                                    {{-- </ul> --}}
+                                                    
                                                 </div>
                                             </div>
                                         </div>

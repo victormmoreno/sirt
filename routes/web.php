@@ -128,7 +128,10 @@ Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
 Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles');
 Route::get('perfil/permisos', 'User\ProfileController@permisos')->name('perfil.permisos');
 Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña');
-Route::resource('perfil', 'User\ProfileController', ['only' => ['edit','update','destroy']]);
+Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset');
+Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit');
+Route::put('perfil/update', 'User\ProfileController@updateAccount')->name('perfil.update');
+// Route::resource('perfil', 'User\ProfileController', ['only' => ['update','destroy']]);
 
 /*=====  End of seccion para las rutas del perfil  ======*/
 
