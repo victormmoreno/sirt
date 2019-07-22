@@ -103,16 +103,17 @@ var ocupacion = {
         let resultado = nombre.match(/[A-Z][a-z]+/g);
         @if($errors->any())
             $('#otraocupacion').hide();
-            if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
-                $('#otraocupacion').show();
-            }
-        @endif
-       
-          if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
-            $('#otraocupacion').show();
+           
+              if (resultado != null  && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                  $('#otraocupacion').show();
+              }
 
-          }
-      
+        @endif
+          if (resultado != null ) {
+              if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                  $('#otraocupacion').show();
+              }
+          }     
     }
 };
 

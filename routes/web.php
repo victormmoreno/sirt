@@ -82,14 +82,12 @@ Route::group([
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
 
-
-        Route::get('/talento', 'TalentoController@index')->name('usuario.talento.index');
-
         Route::get('/', [
           'uses' => 'UserController@index',
           'as' => 'usuario.index',
         ]);
 
+        Route::resource('talento', 'TalentoController', ['as' => 'usuario', 'only'=> ['index','show']]);
         Route::resource('gestor', 'GestorController', ['as' => 'usuario', 'only'=> ['index','show']]);
 
         Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario', 'only'=> ['index','show']]);
@@ -138,8 +136,8 @@ Route::resource('perfil', 'User\ProfileController', ['only' => ['edit','update',
 =            sesccion para las rutas de ayuda            =
 ========================================================*/
 
-Route::get('help/getciudades/{departamento}', 'Help\HelpController@getCiudad')->name('help.getciudades');
-Route::get('help/getcentrosformacion/{regional}', 'Help\HelpController@getCentrosRegional')->name('help.getcentrosformacion');
+Route::get('help/getciudades/{departamento?}', 'Help\HelpController@getCiudad')->name('help.getciudades');
+Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentrosRegional')->name('help.getcentrosformacion');
 
 /*=====  End of sesccion para las rutas de ayuda  ======*/
 

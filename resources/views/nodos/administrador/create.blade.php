@@ -71,5 +71,27 @@ var Regional = {
       });
     },
 }
+
+var DepartamentsCreate = {
+    getCiudad:function(){
+      let id;
+      id = $('#txtdepartamento').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/help/getciudades/'+id
+      }).done(function(response){
+        $('#txtciudad').empty();
+        $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+          $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudad').val({{old('txtciudad')}});
+        @endif
+        $('#txtciudad').material_select();
+      });
+    },
+}
 </script>
 @endpush

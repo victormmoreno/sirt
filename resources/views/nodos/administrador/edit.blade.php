@@ -12,15 +12,16 @@
                             arrow_back
                         </i>
                     </a>
-                    Lineas
+                    Nodos
                 </h5>
                 <div class="card stats-card">
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <center><span class="card-title center-align">Editar Nodo <b>{{$nodo->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
+                                <center><span class="card-title center-align">Editar Nodo <b>{{$entidad->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
                                 <div class="divider mailbox-divider"></div>
-                                <form action="{{ route('nodo.update', $nodo->id)}}" method="POST" onsubmit="return checkSubmit()">
+                               
+                                <form action="{{ route('nodo.update', $entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
                                 	{!! method_field('PUT')!!}
 	                                @include('nodos.administrador.form', [
 								    	'btnText' => 'Modificar',
@@ -41,6 +42,7 @@
 <script>
     $(document).ready(function() {
         Regional.getCentrosFormacion();
+        DepartamentsEdit.getCiudad();
 });
 
 var Regional = {
@@ -61,11 +63,37 @@ var Regional = {
           $('#txtcentro').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
          @if($errors->any())
-        $('#txtcentro').val({{old('txtcentro')}});
+        $('#txtcentro').val('{{old('txtcentro')}}');
         @else
-        $('#txtcentro').val({{$nodo->centro->id}});
+        $('#txtcentro').val('{{$entidad->nodo->centro->id}}');
         @endif
         $('#txtcentro').material_select();
+      });
+    },
+}
+
+var DepartamentsEdit = {
+    getCiudad:function(){
+      let id;
+      id = $('#txtdepartamento').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/help/getciudades/'+id
+      }).done(function(response){
+        $('#txtciudad').empty();
+        $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
+    
+        $.each(response.ciudades, function(i, e) {
+          $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+
+        })
+        @if($errors->any())
+        $('#txtciudad').val('{{old('txtciudad')}}');
+        @else
+            $('#txtciudad').val('{{$entidad->ciudad->id}}');
+        @endif
+        $('#txtciudad').material_select();
       });
     },
 }
