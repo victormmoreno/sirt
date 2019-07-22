@@ -5,14 +5,17 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
+    paging: false,
     ajax:{
-      url: "entrenamientos",
+      url: "/entrenamientos",
       type: "get",
     },
+
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -35,22 +38,40 @@ $(document).ready(function() {
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
+        width: '8%',
         data: 'edit',
         name: 'edit',
         orderable: false
       },
       {
+        width: '8%',
         data: 'update_state',
         name: 'update_state',
         orderable: false
       },
+      {
+        width: '8%',
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
     ],
   });
+  $('a.toggle-vis').on( 'click', function (e) {
+    e.preventDefault();
+
+    // Get the column API object
+    var column = table.column( $(this).attr('data-column') );
+
+    // Toggle the visibility
+    column.visible( ! column.visible() );
+  } );
 });
 
 // function inhabilitarEntrenamientoPorId(id) {

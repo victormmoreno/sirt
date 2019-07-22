@@ -41,7 +41,7 @@
                   <table id="ideas_emprendedores_table" class="dataTable js-state browser-default" style="width: 100%">
                     <thead>
                       <tr>
-                        <th>Consecutivo de la Idea</th>
+                        <th>Código de la Idea</th>
                         <th>Fecha de Registro</th>
                         <th>Persona</th>
                         <th>Correo</th>
@@ -60,13 +60,13 @@
                   </table>
                 </div>
                 <div id="ideasProyectoEmpresa">
-                  <table id="tblideasempresas" class="dataTable js-state browser-default">
+                  <table id="tblideasempresas" class="dataTable js-state browser-default" style="width: 100%">
                     <thead>
                       <tr>
-                        <th>Consecutivo de la Idea</th>
+                        <th>Código de la Idea</th>
                         <th>Fecha de Registro</th>
-                        <th>Nit</th>
-                        <th>Razón Social</th>
+                        <th>Nit/Código del Grupo de Investigación</th>
+                        <th>Razón Social/Nombre del Grupo</th>
                         <th>Nombre de la Idea</th>
                       </tr>
                     </thead>

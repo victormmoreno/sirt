@@ -77,10 +77,18 @@ class IdeaController extends Controller
             ';
             return $button;
           })->addColumn('soft_delete', function ($data) {
-            $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
+            if ($data->estado != 'Inicio') {
+              $delete = '<a class="btn red lighten-3 m-b-xs" disabled><i class="material-icons">delete_sweep</i></a>';
+            } else {
+              $delete = '<a class="btn red lighten-3 m-b-xs"><i class="material-icons">delete_sweep</i></a>';
+            }
             return $delete;
           })->addColumn('dont_apply', function ($data) {
-            $notapply = '<a class="btn brown lighten-3 m-b-xs"><i class="material-icons">thumb_down</i></a>';
+            if ($data->estado != 'Inicio') {
+              $notapply = '<a class="btn brown lighten-3 m-b-xs" disabled><i class="material-icons">thumb_down</i></a>';
+            } else {
+              $notapply = '<a class="btn brown lighten-3 m-b-xs"><i class="material-icons">thumb_down</i></a>';
+            }
             return $notapply;
           })->addColumn('edit', function ($data) {
             $edit = '<a href="' . route("idea.edit", $data->consecutivo) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
@@ -127,26 +135,18 @@ class IdeaController extends Controller
 
     public function dataTableIdeasEmpresasGIPorNodo($id)
     {
-      if (\Session::get('login_role') == User::IsGestor()) {
+      if ( \Session::get('login_role') == User::IsGestor() ) {
         $id = auth()->user()->gestor->nodo_id;
-      } else if (\Session::get('login_role') == User::IsDinamizador()) {
+      } else if ( \Session::get('login_role') == User::IsDinamizador() ) {
         $id = auth()->user()->dinamizador->nodo_id;
+      } else if ( \Session::get('login_role') == User::IsInfocenter() ) {
+        $id = auth()->user()->infocenter->nodo_id;
       }
 
       if (request()->ajax()) {
         $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo($id);
         return datatables()->of($consultaIdeasEmpGI)->make(true);
       }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
     }
 
     /**

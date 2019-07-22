@@ -3,10 +3,36 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{ArchivoArticulacion, ArchivoProyecto};
+use App\Models\{ArchivoArticulacion, ArchivoProyecto, ArchivoEntrenamiento};
 
 class ArchivoRepository
 {
+
+  /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   * @param int id Id del archivo de la tabla archivosentrenamiento
+   * @return Collection
+   */
+  public function consultarRutaDeArchivoDeUnEntrenamientoPorId($id)
+  {
+    return ArchivoEntrenamiento::select('id', 'ruta')->where('id', $id)->get()->last();
+  }
+
+  /**
+  * Guarda la ruta del archivo del entrenamiento en la base de datos
+  * @param int id Id del entrenamiento
+  * @param string fileUrl Ruta con la que se guardará el arcivo en el servidor
+  * @return return void
+  */
+  public function storeFileEntrenamiento($id, $fileUrl)
+  {
+    return ArchivoEntrenamiento::create([
+      'entrenamiento_id' => $id,
+      'ruta' => $fileUrl,
+    ]);
+  }
 
   // Consulta la ruta de un archivo de la articulación según su id (Principalmente para descargarlo)
   public function consultarRutaDeArchivoDeLaArticulacionPorId($id)

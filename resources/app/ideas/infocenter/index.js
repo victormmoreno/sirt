@@ -6,15 +6,15 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
-      url: "idea",
+      url: "/idea",
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -61,6 +61,51 @@ $(document).ready(function() {
         orderable: false
       },
 
+    ],
+    initComplete: function () {
+      this.api().columns().every(function () {
+        var column = this;
+        var input = document.createElement("input");
+        $(input).appendTo($(column.footer()).empty())
+        .on('change', function () {
+          column.search($(this).val(), false, false, true).draw();
+        });
+      });
+    }
+  });
+
+  $('#tblideasempresas').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/idea/consultarIdeasEmpresasGIPorNodo/"+0,
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_idea',
+        name: 'codigo_idea',
+      },
+      {
+        data: 'fecha_registro',
+        name: 'fecha_registro',
+      },
+      {
+        data: 'nit',
+        name: 'nit',
+      },
+      {
+        data: 'razon_social',
+        name: 'razon_social',
+      },
+      {
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
     ],
     initComplete: function () {
       this.api().columns().every(function () {

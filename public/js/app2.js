@@ -135,15 +135,15 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
-      url: "idea",
+      url: "/idea",
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -190,6 +190,51 @@ $(document).ready(function() {
         orderable: false
       },
 
+    ],
+    initComplete: function () {
+      this.api().columns().every(function () {
+        var column = this;
+        var input = document.createElement("input");
+        $(input).appendTo($(column.footer()).empty())
+        .on('change', function () {
+          column.search($(this).val(), false, false, true).draw();
+        });
+      });
+    }
+  });
+
+  $('#tblideasempresas').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/idea/consultarIdeasEmpresasGIPorNodo/"+0,
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_idea',
+        name: 'codigo_idea',
+      },
+      {
+        data: 'fecha_registro',
+        name: 'fecha_registro',
+      },
+      {
+        data: 'nit',
+        name: 'nit',
+      },
+      {
+        data: 'razon_social',
+        name: 'razon_social',
+      },
+      {
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
     ],
     initComplete: function () {
       this.api().columns().every(function () {
@@ -293,15 +338,15 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
       url: "/idea/consultarIdeasEmprendedoresPorNodo/"+idNodo,
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -336,7 +381,7 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     ],
   });
 }
-//--- Server side de la datatable que muestra las
+
 function consultarIdeasEmpresasGIPorNodo(idNodo) {
   $('#ideasEmpresasGIPorNodo_table').dataTable().fnDestroy();
   $('#ideasEmpresasGIPorNodo_table').DataTable({
@@ -345,15 +390,15 @@ function consultarIdeasEmpresasGIPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
       url: "/idea/consultarIdeasEmpresasGIPorNodo/"+idNodo,
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -397,7 +442,7 @@ function detallesIdeasDelEntrenamiento(id){
       $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
       $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
       $.each(respuesta, function(i, item) {
-        $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
+        $("#ideasEntrenamiento").append("<tr><td>"+item.codigo_idea+" - "+item.nombre_proyecto+
           "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
       });
       $('#modalIdeasEntrenamiento').openModal();
@@ -418,8 +463,9 @@ $(document).ready(function() {
     },
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -434,14 +480,17 @@ $(document).ready(function() {
         name: 'correos',
       },
       {
+        width: '8%',
         data: 'fotos',
         name: 'fotos',
       },
       {
+        width: '8%',
         data: 'listado_asistencia',
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
@@ -464,8 +513,9 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
     },
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -488,6 +538,7 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
@@ -515,14 +566,17 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
+    paging: false,
     ajax:{
-      url: "entrenamientos",
+      url: "/entrenamientos",
       type: "get",
     },
+
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -545,22 +599,40 @@ $(document).ready(function() {
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
+        width: '8%',
         data: 'edit',
         name: 'edit',
         orderable: false
       },
       {
+        width: '8%',
         data: 'update_state',
         name: 'update_state',
         orderable: false
       },
+      {
+        width: '8%',
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
     ],
   });
+  $('a.toggle-vis').on( 'click', function (e) {
+    e.preventDefault();
+
+    // Get the column API object
+    var column = table.column( $(this).attr('data-column') );
+
+    // Toggle the visibility
+    column.visible( ! column.visible() );
+  } );
 });
 
 // function inhabilitarEntrenamientoPorId(id) {
@@ -699,7 +771,7 @@ entrenamiento = {
         let assists = elemento.AssistS == 1 ? "checked" : "";
         let convocado = elemento.Convocado == 1 ? "checked" : "";
         $('#tblIdeasEntrenamientoCreate').append('<tr>'
-        +'<td>'+elemento.nombre_proyecto+'</td>'
+        +'<td>'+elemento.codigo_idea+' - '+elemento.nombre_proyecto+'</td>'
         +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
         +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
         +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'
@@ -768,112 +840,6 @@ entrenamiento = {
   }
 }
 
-$(document).ready(function() {
-  entrenamientoEdit.cargarIdeasEdit();
-});
-entrenamientoEdit = {
-  cargarIdeasEdit:function(){
-    let entrenamiento = $("#xxx").val();
-    let token = $("#formEntrenamientosEdit input[name=_token]").val();
-
-    $.ajax({
-      dataType:'json',
-      type:'post',
-      url:'/entrenamientos/cargarIdeas',
-      data: {
-        'entrenamiento':entrenamiento,
-        '_token':token
-      }
-    }).done(function(response){
-      if (response.data == 3) {
-        swal("Error!", "La idea de proyecto ya está asociada al entrenamiento!", "warning");
-      } else {
-        entrenamientoEdit.getIdeasEdit();
-      }
-    })
-  },
-  getIdeasEdit:function(){
-    $.ajax({
-      dataType:'json',
-      type:'get',
-      url:'/entrenamientos/getideasEntrenamientoEdit'
-    }).done(function(respuesta){
-      $('#tblIdeasEntrenamientoCreateEdit').empty();
-      $.each(respuesta, function (i,elemento){
-        let confirm = elemento.Confirm == 1 ? "checked" : "";
-        let canvas = elemento.Canvas == 1 ? "checked" : "";
-        let assistf = elemento.AssistF == 1 ? "checked" : "";
-        let assists = elemento.AssistS == 1 ? "checked" : "";
-        let convocado = elemento.Convocado == 1 ? "checked" : "";
-        $('#tblIdeasEntrenamientoCreate').append('<tr>'
-        +'<td>'+elemento.nombre_proyecto+'</td>'
-        +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+assistf+' onclick="entrenamiento.getAssistF('+elemento.id+', '+(elemento.AssistF == 1 ? 1 : 0)+')" name="asistencia_primera_sesion" id="asistencia_primera_sesion'+elemento.id+'" value="1"/><label for="asistencia_primera_sesion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+assists+' onclick="entrenamiento.getAssistS('+elemento.id+', '+(elemento.AssistS == 1 ? 1 : 0)+')" name="asistencia_segunda_sesion" id="asistencia_segunda_sesion'+elemento.id+'" value="1"/><label for="asistencia_segunda_sesion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+convocado+' onclick="entrenamiento.getConvocado('+elemento.id+', '+(elemento.Convocado == 1 ? 1 : 0)+')" name="csibt_convocado" id="csibt_convocado'+elemento.id+'" value="1"/><label for="csibt_convocado'+elemento.id+'"></label></p></td>'
-        +'<td><a class="waves-effect red lighten-3 btn" onclick="entrenamiento.getEliminar('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
-        +'</tr>');
-      })
-    })
-  },
-  // <p class="p-v-xs"><input type="checkbox" id="txtfotos" name="txtfotos" value="1"/><label for="txtfotos">Evidencias Fotográficas</label></p>
-  // getEliminar:function (idIdea) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/eliminar/'+idIdea,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   })
-  // },
-  // getConfirm:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getConfirm/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getCanvas:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getCanvas/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getAssistF:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getAssistF/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getAssistS:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getAssistS/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getConvocado:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getConvocado/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // }
-}
 
 $(document).ready(function() {
 $('.dataTables_length select').addClass('browser-default');
@@ -1292,7 +1258,11 @@ function consultarCsibtPorNodo() {
 }
 
 $(document).ready(function() {
-  $('#empresasDeTecnoparque_table').DataTable({
+  // $('#empresasDeTecnoparque_table tfoot th').each( function () {
+  //   var title = $(this).text();
+  //   $(this).html( '<input type="text" placeholder="Buscar por: '+title+'" />' );
+  // } );
+  var datatableEmpresas = $('#empresasDeTecnoparque_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
@@ -1302,6 +1272,7 @@ $(document).ready(function() {
       url: "/empresa/datatableEmpresasDeTecnoparque",
       type: "get",
     },
+    deferRender: true,
     columns: [
       {
         data: 'nit',
@@ -1339,7 +1310,39 @@ $(document).ready(function() {
         orderable: false
       },
     ],
+    initComplete: function () {
+      this.api().columns().every( function () {
+        var column = this;
+        var select = $('<select><option value=""></option></select>')
+        .appendTo( $(column.footer()).empty() )
+        .on( 'change', function () {
+          var val = $.fn.dataTable.util.escapeRegex(
+            $(this).val()
+          );
+
+          column
+          .search( val ? '^'+val+'$' : '', true, false )
+          .draw();
+        } );
+
+        column.data().unique().sort().each( function ( d, j ) {
+          select.append( '<option value="'+d+'">'+d+'</option>' )
+        } );
+      } );
+    },
   });
+
+  // datatableEmpresas.columns().every( function () {
+  //   var that = this;
+  //
+  //   $( 'input', this.footer() ).on( 'keyup change', function () {
+  //     if ( that.search() !== this.value ) {
+  //       that
+  //       .search( this.value )
+  //       .draw();
+  //     }
+  //   } );
+  // } );
 
   $('#empresasDeTecnoparque_tableNoGestor').DataTable({
     language: {

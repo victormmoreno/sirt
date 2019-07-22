@@ -489,7 +489,7 @@ class ProyectoController extends Controller
         if ( $proyecto->nombre_tipoarticulacion == 'Centros de Formación' ) {
           $entidad = $this->entidadRepository->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
         }
-
+        // dd($entidad);
 
         return view('proyectos.gestor.edit', [
           'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),

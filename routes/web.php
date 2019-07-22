@@ -151,8 +151,8 @@ Route::group([
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
         Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
-        Route::get('/consultarIdeasEmprendedoresPorNodo/{idea}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
-        Route::get('/consultarIdeasEmpresasGIPorNodo/{idea}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
+        Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
+        Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
         Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
@@ -174,18 +174,21 @@ Route::group([
         Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
         Route::get('/inhabilitarEntrenamiento/{id}/{tipoCambioEstado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
-        Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento');
-        Route::get('/getideasEntrenamientoEdit', 'EntrenamientoController@get_ideasEntrenamientoEdit');
+        Route::get('/{id}/evidencias', 'EntrenamientoController@evidencias')->name('entrenamientos.evidencias');
         Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm');
         Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas');
         Route::get('/getAssistF/{id}/{estado}', 'EntrenamientoController@getAssistF');
         Route::get('/getAssistS/{id}/{estado}', 'EntrenamientoController@getAssistS');
         Route::get('/getConvocado/{id}/{estado}', 'EntrenamientoController@getConvocado');
         Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea');
-        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store');
-        Route::post('/addidea', 'EntrenamientoController@add_idea');
-        Route::post('/cargarIdeas', 'EntrenamientoController@cargarIdeasDelEntrenamientoEnLaSesion');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
+        Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
         Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
+        Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias');
+        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('entrenamientos.files.store');
+        Route::post('/addidea', 'EntrenamientoController@add_idea');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('entrenamientos.files.destroy');
     }
 );
 

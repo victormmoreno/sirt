@@ -42,7 +42,7 @@
                   </div>
                   <table id="tbl_ideaunica" class="display responsive-table datatable-example dataTable">
                     <thead>
-                      <th>Consecutivo de la Idea</th>
+                      <th>Código de la Idea</th>
                       <th>Fecha de Registro</th>
                       <th>Persona</th>
                       <th>Correo</th>
@@ -63,7 +63,7 @@
                   <table id="ideasEmprendedoresPorNodo_table" class="display responsive-table datatable-example" style="width: 100%">
                     <thead>
                       <tr>
-                        <th>Consecutivo de la Idea</th>
+                        <th>Código de la Idea</th>
                         <th>Fecha de Registro</th>
                         <th>Persona</th>
                         <th>Correo</th>
@@ -82,7 +82,7 @@
                   <table id="ideasEmpresasGIPorNodo_table" class="display responsive-table datatable-example" style="width: 100%">
                     <thead>
                       <tr>
-                        <th>Consecutivo de la Idea</th>
+                        <th>Código de la Idea</th>
                         <th>Fecha de Registro</th>
                         <th>Nit</th>
                         <th>Razón Social</th>

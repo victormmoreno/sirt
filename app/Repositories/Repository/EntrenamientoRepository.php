@@ -2,19 +2,29 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\EstadoIdea;
-// use App\Models\Idea;
-use App\Models\Entrenamiento;
-use App\Models\EntrenamientoIdea;
-use App\Models\Nodo;
+use App\Models\{Entrenamiento, EntrenamientoIdea, Nodo, EstadoIdea};
 use Illuminate\Support\Facades\DB;
 
 class EntrenamientoRepository
 {
+
+  /**
+  * undocumented function summary
+  * @param int id Id del entrenamiento por el cual se consultaran sus archivos
+  * @return return Collection
+  */
+  public function consultarArchivosDeUnEntrenamiento($id)
+  {
+    return Entrenamiento::select('ruta', 'entrenamiento_id', 'archivosentrenamiento.id')
+    ->join('archivosentrenamiento', 'archivosentrenamiento.entrenamiento_id', '=', 'entrenamientos.id')
+    ->where('entrenamientos.id', $id)
+    ->get();
+  }
+
   // Consulta todos los entrenamientos por nodo
   public function consultarEntrenamientosPorNodo($id)
   {
-    return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2' , 'entrenamientos.id')
+    return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2' , 'entrenamientos.id', 'entrenamientos.codigo_entrenamiento')
     ->selectRaw('IF(correos = 0, "No", "Si") AS correos')
     ->selectRaw('IF(fotos = 0, "No", "Si") AS fotos')
     ->selectRaw('IF(listado_asistencia = 0, "No", "Si") AS listado_asistencia')
@@ -27,7 +37,7 @@ class EntrenamientoRepository
   // Consulta el entrenamiento por id
   public function consultarEntrenamientoPorId($id)
   {
-    return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2' , 'entrenamientos.id')
+    return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2' , 'entrenamientos.id', 'entrenamientos.codigo_entrenamiento')
     ->selectRaw('IF(correos = 0, "No", "Si") AS correos')
     ->selectRaw('IF(fotos = 0, "No", "Si") AS fotos')
     ->selectRaw('IF(listado_asistencia = 0, "No", "Si") AS listado_asistencia')
@@ -38,7 +48,7 @@ class EntrenamientoRepository
 
   public function consultarIdeasDelEntrenamiento($id)
   {
-    return Entrenamiento::select('nombre_proyecto', 'fecha_sesion1', 'fecha_sesion2', 'ideas.id')
+    return Entrenamiento::select('nombre_proyecto', 'fecha_sesion1', 'fecha_sesion2', 'ideas.id', 'ideas.codigo_idea')
     ->selectRaw('IF(confirmacion = 0,"No", "Si") AS confirmacion')
     ->selectRaw('IF(convocado_csibt = 0,"No", "Si") AS convocado')
     ->selectRaw('IF(canvas = 0,"No", "Si") AS canvas')
@@ -50,20 +60,30 @@ class EntrenamientoRepository
     ->get();
   }
 
-  // public function getSelectNodo()
-  // {
-  //     return Nodo::SelectNodo()->get();
-  // }
+  /**
+   * genera un código de entrenamiento
+   * @return return string
+   */
+  public function generarCodigoEntrenamiento()
+  {
+    $anho = Carbon::now()->isoFormat('YYYY');
+    $tecnoparque = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+    $id = Entrenamiento::selectRaw('MAX(id+1) AS max')->get()->last();
+    $id->max == null ? $id->max = 1 : $id->max = $id->max;
+    $id->max = sprintf("%04d", $id->max);
+    $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
+    $codigo_entrenamiento = 'E' . $anho . '-' . $tecnoparque . $infocenter . '-' . $id->max;
+    return $codigo_entrenamiento;
+  }
 
   // Hace el registro del entrenamiento
   public function store($request)
   {
+    $codigo_entrenamiento = $this->generarCodigoEntrenamiento();
     return Entrenamiento::create([
-      "fecha_sesion1"            => $request->input('txtfecha_sesion1'),
-      "fecha_sesion2"   => $request->input('txtfecha_sesion2'),
-      "correos" => $request->txtcorreos,
-      "fotos" => $request->txtfotos,
-      "listado_asistencia" => $request->txtlistado_asistencia,
+      "fecha_sesion1" => $request->input('txtfecha_sesion1'),
+      "fecha_sesion2" => $request->input('txtfecha_sesion2'),
+      "codigo_entrenamiento" => $codigo_entrenamiento,
       ]);
     }
 
@@ -72,8 +92,8 @@ class EntrenamientoRepository
     public function storeEntrenamientoIdea($value, $idEntrenamiento)
     {
       return EntrenamientoIdea::create([
-        "entrenamiento_id"   => $idEntrenamiento,
-        "idea_id"            => $value['id'],
+        "entrenamiento_id" => $idEntrenamiento,
+        "idea_id" => $value['id'],
         "confirmacion" => isset($value['Confirm']) ? 1 : 0,
         "canvas" => isset($value['Canvas']) ? 1 : 0,
         "asistencia1" => isset($value['AssistF']) ? 1 : 0,
@@ -85,7 +105,7 @@ class EntrenamientoRepository
     // Consulta los entrenamientos que se hicieron en la fecha de la primera y segunda sesion
     public function consultarEntrenamientoPorFechas($nodo_id, $fecha_sesion1, $fecha_sesion2)
     {
-      return Entrenamiento::select('entrenamientos.id', 'fecha_sesion1', 'fecha_sesion2')
+      return Entrenamiento::select('entrenamientos.id', 'fecha_sesion1', 'fecha_sesion2', 'codigo_entrenamiento')
       ->join('entrenamiento_idea', 'entrenamiento_idea.entrenamiento_id', '=', 'entrenamientos.id')
       ->join('ideas', 'ideas.id', '=', 'entrenamiento_idea.idea_id')
       ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
@@ -94,46 +114,5 @@ class EntrenamientoRepository
       ->where('fecha_sesion2', $fecha_sesion2)
       ->get();
     }
-
-    //
-    // public function StoreIdeaEmpGI($request)
-    // {
-    //
-    //     // dd($request->all());
-    //     $idea = Idea::create([
-    //       "nodo_id"            => auth()->user()->infocenter->nodo_id,
-    //       "nombres_contacto"   => $request->input('txtnidcod'),
-    //       "apellidos_contacto" => $request->input('txtnombreempgi'),
-    //       "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
-    //       "tipo_idea"    => $request->txttipo_idea[1],
-    //       "estadoidea_id" => 1,
-    //     ]);
-    //
-    //     return $idea;
-    // }
-
-    // public function Update($request, $idea)
-    // {
-    //
-    //     $idea->nodo_id            = $request->input('txtnodo_id');
-    //     $idea->nombres_contacto   = $request->input('txtnombres_contacto');
-    //     $idea->apellidos_contacto = $request->input('txtapellidos_contacto');
-    //     $idea->correo_contacto    = $request->input('txtcorreo_contacto');
-    //     $idea->telefono_contacto  = $request->input('txttelefono_contacto');
-    //     $idea->nombre_proyecto    = $request->input('txtnombre_proyecto');
-    //     $idea->descripcion        = $request->input('txtdescripcion');
-    //     $idea->objetivo           = $request->input('txtobjetivo');
-    //     $idea->alcance            = $request->input('txtalcance');
-    //
-    //     $idea = $idea->update();
-    //     return $idea;
-    // }
-    //
-    // public function findByid($id)
-    // {
-    //
-    //     return Idea::findOrFail($id);
-    //
-    // }
 
   }

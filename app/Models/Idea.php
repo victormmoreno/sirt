@@ -42,6 +42,7 @@ class Idea extends Model
         'correo_contacto',
         'telefono_contacto',
         'nombre_proyecto',
+        'codigo_idea',
         'aprendiz_sena',
         'pregunta1',
         'pregunta2',
@@ -94,6 +95,7 @@ class Idea extends Model
     {
       return $query->select(
         'ideas.id AS consecutivo',
+        'ideas.codigo_idea',
         // 'nombres_contacto',
         'nombre_proyecto',
         'tipo_idea'
@@ -113,6 +115,7 @@ class Idea extends Model
     {
       return $query->select(
         'ideas.id AS consecutivo',
+        'ideas.codigo_idea',
         // 'nombres_contacto',
         'nombre_proyecto',
         'tipo_idea'
@@ -135,7 +138,7 @@ class Idea extends Model
 
     public function scopeConsultarIdeasConvocadasAComite($query, $id)
     {
-      return $query->select('ideas.id', 'ideas.created_at AS fecha_registro',
+      return $query->select('ideas.id', 'ideas.created_at AS fecha_registro', 'ideas.codigo_idea',
       'correo_contacto AS correo', 'telefono_contacto AS contacto', 'nombre_proyecto AS nombre_idea', 'estadosidea.nombre AS estado')
       ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
@@ -150,30 +153,32 @@ class Idea extends Model
 
     public function scopeConsultarIdeasDelNodo($query, $id)
     {
-      return $query->select('ideas.id AS consecutivo', 'created_at AS fecha_registro',
+      return $query->select('ideas.id AS consecutivo', 'created_at AS fecha_registro', 'ideas.codigo_idea',
       'correo_contacto AS correo', 'telefono_contacto AS contacto', 'nombre_proyecto AS nombre_idea', 'estadosidea.nombre AS estado')
       ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
       ->where('tipo_idea', $this->IsEmprendedor())
+      ->where('estadosidea.nombre', '!=', 'En Proyecto')
       ->orderBy('ideas.id', 'desc')
       ->groupBy('ideas.id');
     }
 
     public function scopeConsultarIdeasEmpGIDelNodo($query, $id)
     {
-      return $query->select(DB::raw("nombres_contacto AS 'nit', apellidos_contacto AS 'razon_social', ideas.id AS consecutivo, created_at AS fecha_registro,
+      return $query->select(DB::raw("nombres_contacto AS 'nit', apellidos_contacto AS 'razon_social', ideas.id AS consecutivo, created_at AS fecha_registro, ideas.codigo_idea,
       correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
       ->where('tipo_idea', '!=', $this->IsEmprendedor())
+      ->where('estadosidea.nombre', '!=', 'En Proyecto')
       ->orderBy('ideas.id', 'desc');
     }
 
     // -------------------------------- Método para consulta el detalle de una idea de proyecto
     public function scopeConsultarIdeaId($query, $id)
     {
-      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id',
+      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id', 'ideas.codigo_idea',
       'telefono_contacto', 'ideas.id', 'estadosidea.nombre AS estado_idea')
       ->selectRaw('IF(aprendiz_sena = 1, "Si", "No") AS aprendiz_sena')
       ->selectRaw('IF(pregunta1=1, "Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo",
@@ -205,7 +210,7 @@ class Idea extends Model
     // -------------------------------- Método para consulta el detalle de una idea de proyecto
     public function scopeConsultarIdeasEnInicio($query)
     {
-      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id',
+      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id', 'ideas.codigo_idea',
       'telefono_contacto', 'ideas.id', 'estadosidea.nombre AS estado_idea')
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('estadosidea.nombre', 'Inicio')

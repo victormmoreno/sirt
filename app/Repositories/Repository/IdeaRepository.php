@@ -4,98 +4,114 @@ namespace App\Repositories\Repository;
 
 use App\Models\EstadoIdea;
 use Illuminate\Support\Facades\DB;
-use App\Models\Idea;
-use App\Models\Nodo;
+use App\Models\{Idea, Nodo};
+use Carbon\Carbon;
 
 class IdeaRepository
 {
 
-    public function getSelectNodo()
-    {
-        return Nodo::SelectNodo()->get();
-    }
+  public function getSelectNodo()
+  {
+    return Nodo::SelectNodo()->get();
+  }
 
-    public function Store($request)
-    {
+  /**
+   * Función que genera el código de una idea de proyecto
+   * @param int $tipo Indica que tipo de idea de proyecto es.
+   * @param int $idnodo Indica a que nodo se va a registrar la idea.
+   * @return return string
+   */
+  private function generarCodigoIdea($tipo, $idnodo)
+  {
+    $anho = Carbon::now()->isoFormat('YYYY');
+    $tecnoparque = sprintf("%02d", $idnodo);
+    $id = Idea::selectRaw('MAX(id+1) AS max')->get()->last();
+    $id->max == null ? $id->max = 1 : $id->max = $id->max;
+    $id->max = sprintf("%04d", $id->max);
+    $codigo_idea = 'I' . $anho . '-' . $tecnoparque . $tipo . '-' . $id->max;
+    return $codigo_idea;
+  }
 
-        $idea = Idea::create([
-            "nodo_id"            => $request->input('txtnodo'),
-            "nombres_contacto"   => $request->input('txtnombres'),
-            "apellidos_contacto" => $request->input('txtapellidos'),
-            "correo_contacto"    => $request->input('txtcorreo'),
-            "telefono_contacto"  => $request->input('txttelefono'),
-            "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
-            "aprendiz_sena"      => $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0,
-            "pregunta1"          => $request->input('pregunta1'),
-            "pregunta2"          => $request->input('pregunta2'),
-            "pregunta3"          => $request->input('pregunta3'),
-            "descripcion"        => $request->input('txtdescripcion'),
-            "objetivo"           => $request->input('txtobjetivo'),
-            "alcance"            => $request->input('txtalcance'),
-            "tipo_idea"          => Idea::IsEmprendedor(),
-            "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
+  public function Store($request)
+  {
 
+    $codigo_idea = $this->generarCodigoIdea(Idea::IsEmprendedor(), $request->input('txtnodo'));
 
-        ]);
+    $idea = Idea::create([
+      "nodo_id" => $request->input('txtnodo'),
+      "nombres_contacto" => $request->input('txtnombres'),
+      "apellidos_contacto" => $request->input('txtapellidos'),
+      "correo_contacto" => $request->input('txtcorreo'),
+      "telefono_contacto" => $request->input('txttelefono'),
+      "nombre_proyecto" => $request->input('txtnombre_proyecto'),
+      "codigo_idea" => $codigo_idea,
+      "aprendiz_sena" => $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0,
+      "pregunta1" => $request->input('pregunta1'),
+      "pregunta2" => $request->input('pregunta2'),
+      "pregunta3" => $request->input('pregunta3'),
+      "descripcion" => $request->input('txtdescripcion'),
+      "objetivo" => $request->input('txtobjetivo'),
+      "alcance" => $request->input('txtalcance'),
+      "tipo_idea" => Idea::IsEmprendedor(),
+      "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
+    ]);
 
-        return $idea;
-    }
+    return $idea;
+  }
 
-    public function StoreIdeaEmpGI($request)
-    {
+  public function StoreIdeaEmpGI($request)
+  {
+    $codigo_idea = $this->generarCodigoIdea($request->txttipo_idea[1], auth()->user()->infocenter->nodo_id);
+    // dd($request->all());
+    $idea = Idea::create([
+      "nodo_id" => auth()->user()->infocenter->nodo_id,
+      "nombres_contacto" => $request->input('txtnidcod'),
+      "apellidos_contacto" => $request->input('txtnombreempgi'),
+      "nombre_proyecto" => $request->input('txtnombre_proyecto'),
+      "codigo_idea" => $codigo_idea,
+      "tipo_idea" => $request->txttipo_idea[1],
+      "estadoidea_id" => 1,
+      ]);
 
-        // dd($request->all());
-        $idea = Idea::create([
-          "nodo_id"            => auth()->user()->infocenter->nodo_id,
-          "nombres_contacto"   => $request->input('txtnidcod'),
-          "apellidos_contacto" => $request->input('txtnombreempgi'),
-          "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
-          "tipo_idea"    => $request->txttipo_idea[1],
-          "estadoidea_id" => 1,
-        ]);
-
-        return $idea;
+      return $idea;
     }
 
     public function Update($request, $idea)
     {
 
-        $idea->nodo_id            = $request->input('txtnodo_id');
-        $idea->nombres_contacto   = $request->input('txtnombres_contacto');
-        $idea->apellidos_contacto = $request->input('txtapellidos_contacto');
-        $idea->correo_contacto    = $request->input('txtcorreo_contacto');
-        $idea->telefono_contacto  = $request->input('txttelefono_contacto');
-        $idea->nombre_proyecto    = $request->input('txtnombre_proyecto');
-        $idea->descripcion        = $request->input('txtdescripcion');
-        $idea->objetivo           = $request->input('txtobjetivo');
-        $idea->alcance            = $request->input('txtalcance');
+      $idea->nodo_id = $request->input('txtnodo_id');
+      $idea->nombres_contacto = $request->input('txtnombres_contacto');
+      $idea->apellidos_contacto = $request->input('txtapellidos_contacto');
+      $idea->correo_contacto = $request->input('txtcorreo_contacto');
+      $idea->telefono_contacto = $request->input('txttelefono_contacto');
+      $idea->nombre_proyecto = $request->input('txtnombre_proyecto');
+      $idea->descripcion = $request->input('txtdescripcion');
+      $idea->objetivo = $request->input('txtobjetivo');
+      $idea->alcance = $request->input('txtalcance');
 
-        $idea = $idea->update();
-        return $idea;
+      $idea = $idea->update();
+      return $idea;
     }
-
 
     // Cambiar el estado de una idea según el parametro que se le envia, (el parametro es el NOMBRE DEL ESTADO DE IDEAS)
     public function updateEstadoIdea($idIdea, $estadoACambiar)
     {
       return DB::update("UPDATE ideas SET estadoidea_id = (
-        CASE
-        WHEN '$estadoACambiar' = 'Inicio' THEN 1
-        WHEN '$estadoACambiar' = 'Convocado' THEN 2
-        WHEN '$estadoACambiar' = 'Admitido' THEN 3
-        WHEN '$estadoACambiar' = 'No Admitido' THEN 4
-        WHEN '$estadoACambiar' = 'No Convocado' THEN 5
-        WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
-        WHEN '$estadoACambiar' = 'En Proyecto' THEN 7
-        END
+      CASE
+      WHEN '$estadoACambiar' = 'Inicio' THEN 1
+      WHEN '$estadoACambiar' = 'Convocado' THEN 2
+      WHEN '$estadoACambiar' = 'Admitido' THEN 3
+      WHEN '$estadoACambiar' = 'No Admitido' THEN 4
+      WHEN '$estadoACambiar' = 'No Convocado' THEN 5
+      WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
+      WHEN '$estadoACambiar' = 'En Proyecto' THEN 7
+      END
       ) WHERE id = $idIdea ");
     }
 
     public function findByid($id)
     {
-
-        return Idea::findOrFail($id);
-
+      return Idea::findOrFail($id);
     }
 
-}
+  }

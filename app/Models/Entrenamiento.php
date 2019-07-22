@@ -26,6 +26,7 @@ class Entrenamiento extends Model
     protected $fillable = [
         'fecha_sesion1',
         'fecha_sesion2',
+        'codigo_entrenamiento',
         'correos',
         'fotos',
         'listado_asistencia',
@@ -44,21 +45,6 @@ class Entrenamiento extends Model
     {
         return Carbon::parse($fecha_sesion2)->format('Y-m-d');
     }
-
-    public function getCorreosAttribute($correos)
-    {
-        return trim($correos);
-    }
-
-    public function getFotosAttribute($fotos)
-    {
-        return trim($fotos);
-    }
-
-    public function getListadoAsistenciaAttribute($listado_asistencia)
-    {
-        return trim($listado_asistencia);
-    }
     /*=====  End of asesores eloquent  ======*/
 
     /*========================================
@@ -75,20 +61,6 @@ class Entrenamiento extends Model
         $this->attributes['fecha_sesion2'] = Carbon::parse($fecha_sesion2)->format('Y-m-d');
     }
 
-    public function setCorreosAttribute($correos)
-    {
-        $this->attributes['correos'] = trim($correos);
-    }
-
-    public function setFotosAttribute($fotos)
-    {
-        $this->attributes['fotos'] = trim($fotos);
-    }
-
-    public function setListadoAsistenciaAttribute($listado_asistencia)
-    {
-        $this->attributes['listado_asistencia'] = trim($listado_asistencia);
-    }
     /*=====  End of mutador eloquent  ======*/
 
 }

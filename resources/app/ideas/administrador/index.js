@@ -12,15 +12,15 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
       url: "/idea/consultarIdeasEmprendedoresPorNodo/"+idNodo,
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -55,7 +55,7 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     ],
   });
 }
-//--- Server side de la datatable que muestra las
+
 function consultarIdeasEmpresasGIPorNodo(idNodo) {
   $('#ideasEmpresasGIPorNodo_table').dataTable().fnDestroy();
   $('#ideasEmpresasGIPorNodo_table').DataTable({
@@ -64,15 +64,15 @@ function consultarIdeasEmpresasGIPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
       url: "/idea/consultarIdeasEmpresasGIPorNodo/"+idNodo,
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',

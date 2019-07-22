@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\EntrenamientoFormRequest;
 use App\Models\{Idea, Nodo};
 use App\Repositories\Repository\{EntrenamientoRepository, IdeaRepository};
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Session};
 use App\User;
 use Carbon\Carbon;
 use Alert;
@@ -17,17 +17,30 @@ class EntrenamientoController extends Controller
 
   public $entrenamientoRepository;
   public $ideaRepository;
-  public $cont = 0;
 
   public function __construct(EntrenamientoRepository $entrenamientoRepository, IdeaRepository $ideaRepository)
   {
     $this->entrenamientoRepository = $entrenamientoRepository;
     $this->ideaRepository = $ideaRepository;
-    $this->middleware('auth');
-    // if (url()->current() == route('entrenamientos.edit', $entrenamiento->id)) {
-    //   dd(url()->current());
-    // }
+    $this->middleware('auth', ['role_session:Infocenter|Administrador|Dinamizador']);
   }
+
+  /**
+  * Retorna la vista donde el infocenter podrá subir las evidencias de lo entrenamientos (Por el id)
+  * @param int id Id del entrenamientos del que se registrarán y subiran las evidencias
+  * @return \Illuminate\Http\Response
+  */
+  public function evidencias($id)
+  {
+    $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
+    if ( \Session::get('login_role') == User::IsInfocenter() ) {
+      return view('entrenamientos.infocenter.evidencias', [
+        'entrenamiento' => $entrenamiento,
+      ]);
+    }
+  }
+
+
   /**
   * Display a listing of the resource.
   *
@@ -35,7 +48,6 @@ class EntrenamientoController extends Controller
   */
   public function index()
   {
-
 
     if ( \Session::get('login_role') == User::IsInfocenter() ) {
       if (request()->ajax()) {
@@ -51,10 +63,17 @@ class EntrenamientoController extends Controller
         })->addColumn('update_state', function ($data) {
           $delete = '<a class="btn red lighten-3 m-b-xs" onclick="inhabilitarEntrenamientoPorId('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';
           return $delete;
+        })->addColumn('evidencias', function ($data) {
+          $evidencias = '
+          <a class="btn blue-grey m-b-xs" href='. route('entrenamientos.evidencias', $data->id) .'>
+            <i class="material-icons">library_books</i>
+          </a>
+          ';
+          return $evidencias;
         })->addColumn('edit', function ($data) {
           $edit = '<a href="' . route("entrenamientos.edit", $data->id) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
-        })->rawColumns(['details', 'edit', 'update_state'])->make(true);
+        })->rawColumns(['details', 'edit', 'update_state', 'evidencias'])->make(true);
       }
       $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
       return view('entrenamientos.infocenter.index', compact('nodo'));
@@ -102,7 +121,7 @@ class EntrenamientoController extends Controller
   // Consulta las ideas que asistieron al entrenamiento
   public function details($id)
   {
-    echo json_encode($this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id));
+    return response()->json($this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id));
   }
 
   /**
@@ -174,17 +193,6 @@ class EntrenamientoController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -193,10 +201,6 @@ class EntrenamientoController extends Controller
   public function edit($id)
   {
     // exit;
-    if (url()->previous() == route('entrenamientos.edit', $id)) {
-      $this->cont++;
-    }
-
 
     $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
     $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
@@ -205,73 +209,6 @@ class EntrenamientoController extends Controller
     if ( \Session::get('login_role') == User::IsInfocenter() ) {
       return view('entrenamientos.infocenter.edit', compact('nodo' ,'ideas', 'entrenamiento'));
     }
-  }
-
-  public function cargarIdeasDelEntrenamientoEnLaSesion(Request $request)
-  {
-    $detalles = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($request->entrenamiento);
-
-    foreach ($detalles as $key => $value) {
-
-      $idea = Idea::ConsultarIdeaId($value['id'])->get($value['id'])->last();
-      if (session("ideasEntrenamientoEdit") != null) {
-        $existe = false;
-        $dato   = null;
-        $ideas = session("ideasEntrenamientoEdit");
-        foreach ($ideas as $key => $value) {
-          if ($value["id"] == $input["Idea"]) {
-            $dato = $value;
-            unset($ideas[$key]);
-            $existe = true;
-          }
-        }
-        if (!$existe) {
-          array_push($ideas, $idea);
-        } else {
-          return json_encode(['data' => 3]);
-        }
-        session(["ideasEntrenamientoEdit" => $ideas]);
-      } else {
-        session(["ideasEntrenamientoEdit" => [$idea]] );
-      }
-
-    }
-
-
-  }
-
-  // Devuelve los elemento de la sesion de las ideas del entrenamiento
-  public function get_ideasEntrenamientoEdit()
-  {
-      return json_encode(session("ideasEntrenamientoEdit"));
-  }
-
-  // Carga las ideas del entrenamiento a una sesion (Esta sesion es diferente a la del registro del entrenamiento)
-  public function add_IdeasEdit(Request $request)
-  {
-    $input = $request->all();
-    $idea = Idea::ConsultarIdeaId($request['Idea'])->get($request['Idea'])->last();
-      if (session("ideasEntrenamientoEdit") != null) {
-        $existe = false;
-        $dato   = null;
-        $ideas = session("ideasEntrenamientoEdit");
-        foreach ($ideas as $key => $value) {
-          if ($value["id"] == $input["Idea"]) {
-            $dato = $value;
-            unset($ideas[$key]);
-            $existe = true;
-          }
-        }
-        if (!$existe) {
-          array_push($ideas, $idea);
-        } else {
-          return json_encode(['data' => 3]);
-        }
-        session(["ideasEntrenamientoEdit" => $ideas]);
-      } else {
-        session(["ideasEntrenamientoEdit" => [$idea]] );
-      }
-      return json_encode(['data' => 2]);
   }
 
   //Manejo de sesiones para la lista de las ideas de un entrenamiento
