@@ -22,31 +22,168 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    @include('users.profile.nav.nav-profile')
+                                    <div class="col s12 m5 l3">
+                                        <div class="row">
+                                            @include('users.profile.nav.nav-profile')
+                                        </div>
+                                        <div class="row">
+                                            @if(isset($user->dinamizador) && collect($user->getRoleNames())->contains(App\User::IsDinamizador()))
+                                            <div class="right">
+                                                <small>
+                                                    Información Dinamizador
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12 m12 l12 ">
+                                                    <ul class="collection">
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                play_arrow
+                                                            </i>
+                                                            <span class="title">
+                                                                Nodo del Dinamizador
+                                                            </span>
+                                                            <p>
+                                                                Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre ? : 'No registra'}}
+                                                                <br>
+                                                                    <small>
+                                                                        <b>
+                                                                            Dirección:
+                                                                        </b>
+                                                                        {{$user->dinamizador->nodo->direccion ? : 'No registra'}}
+                                                                    </small>
+                                                                </br>
+                                                            </p>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            @endif
+
+            @if(isset($user->gestor) && collect($user->getRoleNames())->contains(App\User::IsGestor()))
+                                            <div class="right">
+                                                <small>
+                                                    Información {{App\User::IsGestor()}}
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12 m12 l12 ">
+                                                    <ul class="collection">
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                play_arrow
+                                                            </i>
+                                                            <span class="title">
+                                                                <b class="teal-text darken-2">
+                                                                    Nodo del {{App\User::IsGestor()}}:
+                                                                </b>
+                                                                Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}
+                                                                <br>
+                                                                    <b class="teal-text darken-2">
+                                                                        Linea del {{App\User::IsGestor()}}:
+                                                                    </b>
+                                                                    {{$user->gestor->lineatecnologica->nombre}}
+                                                                    <br>
+                                                                        <b class="teal-text darken-2">
+                                                                            Honorario del {{App\User::IsGestor()}}:
+                                                                        </b>
+                                                                        ${{ number_format($user->gestor->honorarios,0) ? : 'No registra'}}
+                                                                    </br>
+                                                                </br>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            @endif
+
+                                            @if(isset($user->infocenter) && collect($user->getRoleNames())->contains(App\User::IsInfocenter()))
+                                            <div class="right">
+                                                <small>
+                                                    Información {{App\User::IsInfocenter()}}
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12 m12 l12 ">
+                                                    <ul class="collection">
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                play_arrow
+                                                            </i>
+                                                            <span class="title">
+                                                                <b class="teal-text darken-2">
+                                                                    Nodo del {{App\User::IsInfocenter()}}:
+                                                                </b>
+                                                                Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre ? : 'No registra'}}
+                                                                <br>
+                                                                    <b class="teal-text darken-2">
+                                                                        Extensión del {{App\User::IsInfocenter()}}:
+                                                                    </b>
+                                                                    {{$user->infocenter->extension ? : 'No registra'}}
+                                                                    <br>
+                                                                    </br>
+                                                                </br>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
                                     <div class="col s12 m7 l9">
-                                         @include('users.profile.nav.navbar')
+                                        @include('users.profile.nav.navbar')
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
                                                 @include('users.profile.nav.header')
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
-                                                       <p class="center">Información Personal
+                                                        <p class="center">
+                                                            Información Personal
                                                             <div class="right">
-                                                            <a class="waves-effect waves-light btn m-t-xs dropdown-button "  href='#' data-activates='actifiad'><i class="material-icons right" >cloud</i>Más Información</a>
-                                                            <!-- Dropdown Structure -->
-                                                            <ul id='actifiad' class='dropdown-content'>
-                                                                <li><a href="{{route('perfil.edit')}}">Cambiar Información</a></li>
-                                                                {{-- <li><a href="#!">Mis Notificaciónes</a></li> --}}
-                                                                <li class="divider"></li>
-                                                                <li><a href="#!">Obtener certificado de registro en el sistema</a></li>
-                                                            </ul> 
-                                                        </div>
-                                                       </p>
+                                                                <a class="waves-effect waves-light btn m-t-xs dropdown-button " data-activates="actifiad" href="#">
+                                                                    <i class="material-icons right">
+                                                                        cloud
+                                                                    </i>
+                                                                    Más Información
+                                                                </a>
+                                                                <!-- Dropdown Structure -->
+                                                                <ul class="dropdown-content" id="actifiad">
+                                                                    <li>
+                                                                        <a href="{{route('perfil.edit')}}">
+                                                                            Cambiar Información
+                                                                        </a>
+                                                                    </li>
+                                                                    {{--
+                                                                    <li>
+                                                                        <a href="#!">
+                                                                            Mis Notificaciónes
+                                                                        </a>
+                                                                    </li>
+                                                                    --}}
+                                                                    <li class="divider">
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#!">
+                                                                            Obtener certificado de registro en el sistema
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </p>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="right">
-                                                <small>{{{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}}  </small>
+                                                <small>
+                                                    {{{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}}
+                                                </small>
                                             </div>
                                             <div class="divider mailbox-divider">
                                             </div>
@@ -63,10 +200,7 @@
                                                                 </span>
                                                                 <p>
                                                                     {{$user->tipodocumento->nombre ? $user->tipodocumento->nombre : 'No se encontraron resultados' }}
-                                                                    
                                                                 </p>
-                                                                
-                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
@@ -76,30 +210,29 @@
                                                                     Fecha de Nacimiento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->fechanacimiento->isoFormat('LL')}} 
+                                                                    {{$user->fechanacimiento->isoFormat('LL')}}
                                                                 </p>
-                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
                                                                     insert_chart
                                                                 </i>
                                                                 <div class="left">
-                                                                   <span class="title">
+                                                                    <span class="title">
                                                                         Eps
                                                                     </span>
                                                                     <p>
-                                                                       {{$user->eps->nombre}}   
-                                                                    </p> 
+                                                                        {{$user->eps->nombre}}
+                                                                    </p>
                                                                 </div>
                                                                 @if($user->eps->nombre == App\Models\Eps::OTRA_EPS)
                                                                 <div class="right">
-                                                                   <span class="title">
+                                                                    <span class="title">
                                                                         Otra Eps
                                                                     </span>
                                                                     <p>
-                                                                       {{$user->otra_eps}}   
-                                                                    </p> 
+                                                                        {{$user->otra_eps ? : 'No registra'}}
+                                                                    </p>
                                                                 </div>
                                                                 @endif
                                                             </li>
@@ -109,18 +242,18 @@
                                                                 </i>
                                                                 <div class="left">
                                                                     <span class="title">
-                                                                       Dirección
+                                                                        Dirección
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->direccion}} 
+                                                                        {{$user->direccion ? : 'No registra'}}
                                                                     </p>
                                                                 </div>
                                                                 <div class="right">
                                                                     <span class="title">
-                                                                       Barrio
+                                                                        Barrio
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->barrio}} 
+                                                                        {{$user->barrio ? : 'No registra'}}
                                                                     </p>
                                                                 </div>
                                                             </li>
@@ -129,10 +262,10 @@
                                                                     play_arrow
                                                                 </i>
                                                                 <span class="title">
-                                                                   Correo Electrónico
+                                                                    Correo Electrónico
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->email}} 
+                                                                    {{$user->email ?: 'No registra'}}
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -147,9 +280,8 @@
                                                                     Documento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->documento}} 
+                                                                    {{$user->documento ? : 'No registra'}}
                                                                 </p>
-                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
@@ -159,10 +291,8 @@
                                                                     Grupo Sanguineo
                                                                 </span>
                                                                 <p>
-                                                                   {{$user->grupoSanguineo->nombre}}
-                                                                   
+                                                                    {{$user->grupoSanguineo->nombre ? : 'No registra'}}
                                                                 </p>
-                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
@@ -172,10 +302,8 @@
                                                                     Estrato Social
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->estrato}}
-                                                                    
+                                                                    {{$user->estrato ? : 'No registra'}}
                                                                 </p>
-                                                                
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
@@ -185,117 +313,168 @@
                                                                     Lugar de Residencia
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->ciudad->nombre}} - {{$user->ciudad->departamento->nombre}}   
+                                                                    {{$user->ciudad->nombre ? : 'No registra'}} - {{$user->ciudad->departamento->nombre ? : 'No registra'}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
-                                                                
                                                                 <div class="center">
                                                                     <span class="title">
-                                                                       Datos contacto
+                                                                        Datos contacto
                                                                     </span>
                                                                 </div>
                                                                 <div class="left">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
-                                                                </i>
+                                                                        play_arrow
+                                                                    </i>
                                                                     <p>
-                                                                        Telefono <br>
-                                                                        {{$user->telefono ? $user->telefono : 'No registra'}} 
+                                                                        Telefono
+                                                                        <br>
+                                                                            {{$user->telefono ? $user->telefono : 'No registra'}}
+                                                                        </br>
                                                                     </p>
                                                                 </div>
                                                                 <div class="right">
                                                                     <span class="title">
-                                                                       Celular
+                                                                        Celular
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->celular ? $user->celular : 'No registra'}} 
+                                                                        {{$user->celular ? $user->celular : 'No registra'}}
                                                                     </p>
                                                                 </div>
-                                                            </li> 
+                                                            </li>
                                                         </ul>
-                                                    </div>
+                                                      </div>
                                                 </div>
-
-                                                @if(isset($user->dinamizador) && collect($user->getRoleNames())->contains(App\User::IsDinamizador()))
-                                                <div class="right">
-                                                    <small>Información Dinamizador</small>
-                                                </div>
-                                                <div class="divider mailbox-divider"></div>
                                                 <div class="row">
-                                                    <div class="col s12 m6 l6 offset-l3 m-3">
+                                                    <div class="col s12 m12 l12">
                                                         <ul class="collection">
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
+                                                                    assignment_ind
                                                                 </i>
                                                                 <span class="title">
-                                                                    Nodo del Dinamizador
+                                                                    Ocupaciones
                                                                 </span>
                                                                 <p>
-                                                                    Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}<br>
-                                                                    <small><b>Dirección: </b>{{$user->dinamizador->nodo->direccion}}</small> 
+                                                                    {{$user->getOcupacionesNames()->implode(', ') ? : 'No registra'}}
                                                                 </p>
                                                             </li>
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                @endif
-
-                                                @if(isset($user->gestor) && collect($user->getRoleNames())->contains(App\User::IsGestor()))
-                                                <div class="right">
-                                                    <small>Información {{App\User::IsGestor()}}</small>
+                                                 <div class="right">
+                                                    <small>
+                                                        Información Último Estudio
+                                                    </small>
                                                 </div>
-                                                <div class="divider mailbox-divider"></div>
-                                                <div class="row">
-                                                    <div class="col s12 m6 l6 ">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
-                                                                </i>
-                                                                <span class="title">
-                                                                    Nodo del {{App\User::IsGestor()}}
-                                                                </span>
-                                                                <p>
-                                                                    Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}<br>
-                                                                    <small><b>Dirección: </b>{{$user->gestor->nodo->direccion}}</small> 
-                                                                </p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col s12 m6 l6 ">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
-                                                                </i>
-                                                                <span class="title">
-                                                                    Linea {{App\User::IsGestor()}}
-                                                                </span>
-                                                                <p>
-                                                                     {{$user->gestor}}<br>
-                                                                    <small><b>Dirección: </b>{{$user->gestor->nodo->direccion}}</small> 
-                                                                </p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-
-                                                {{var_dump($user->gestor->lineatecnologica)}}
-                                                @endif
-                                         
                                                 <div class="divider mailbox-divider">
                                                 </div>
-                                                
+                                                <div class="mailbox-text">
+                                                    <div class="row">
+                                                        <div class="col s12 m6 l6">
+                                                            <ul class="collection">
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Institución
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->institucion ? : 'No registra'}}
+                                                                    </p>
+                                                                </li>
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Titulo obtenido
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->titulo_obtenido ? : 'No registra'}}
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col s12 m6 l6">
+                                                            <ul class="collection">
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Grado de escolaridad
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->gradoescolaridad->nombre ? : 'No registra'}}
+                                                                    </p>
+                                                                </li>
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Fecha de terminación
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$user->fecha_terminacion->isoFormat('LL') ? : 'No registra'}}
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if(isset($user->talento) && collect($user->getRoleNames())->contains(App\User::IsTalento()))
                                                 <div class="right">
-                                                    <a href="{{route('perfil.edit',$user->documento)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
+                                                    <small>
+                                                        Información {{App\User::IsTalento()}}
+                                                    </small>
+                                                </div>
+                                                <div class="divider mailbox-divider">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s12 m12 l12 ">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    play_arrow
+                                                                </i>
+                                                                {{-- <span class="title">
+                                                                    <b class="teal-text darken-2">
+                                                                        Tipo {{App\User::IsTalento()}}:
+                                                                    </b>
+                                                                    {{$user->talento->perfil->nombre ? : 'Información no disponible'}}
+                                                                    <br>
+                                                                        <b class="teal-text darken-2">
+                                                                            {{App\User::IsGestor()}}:
+                                                                        </b>
+                                                                        {{$user->talento->perfil->nombre == App\Models\Perfil::IS_APRENDIZ_SENA_CON_APOYO ? $user->talento->entidad->centro->regional->nombre: ''}}
+                                                                        {{$user->talento->perfil->nombre == App\Models\Perfil::IS_EGRESADO_SENA ? $user->talento->entidad->nombre: ''}} -
+                                                                        {{$user->talento->perfil->nombre == App\Models\Perfil::IS_EGRESADO_SENA ? $user->talento->entidad->centro->regional->nombre: ''}}
+                                                                        <br>
+                                                                        {{var_dump($user->talento->entidad->centro->regional->nombre)}}
+                                                                            <b class="teal-text darken-2">
+                                                                                Honorario del {{App\User::IsGestor()}}:
+                                                                            </b>
+                                                                            ${{ number_format($user->gestor->honorarios,0)}}
+                                                                        </br>
+                                                                    </br>
+                                                                </span> --}}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                <div class="divider mailbox-divider">
+                                                </div>
+                                                <div class="right">
+                                                    <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs" href="{{route('perfil.edit')}}">
                                                         Cambiar Información Personal
                                                     </a>
-                                                    <a class="waves-effect waves-red btn-flat m-t-xs">
+                                                    {{-- <a class="waves-effect waves-red btn-flat m-t-xs">
                                                         Eliminar Usuario
-                                                    </a>
-                                                    
+                                                    </a> --}}
                                                 </div>
                                             </div>
                                         </div>

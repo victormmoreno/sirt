@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Http\Traits\UserTrait\UsersTrait;
-
 use App\Models\ActivationToken;
 use App\Models\Ciudad;
 use App\Models\Dinamizador;
@@ -45,6 +44,7 @@ class User extends Authenticatable implements JWTSubject
     protected $dates = [
         'ultimo_login',
         'fechanacimiento',
+        'fecha_terminacion',
     ];
 
     public $items = null;

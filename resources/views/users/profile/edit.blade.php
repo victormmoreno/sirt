@@ -41,7 +41,7 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('perfil.update')}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('perfil.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
                                                     <div class="row">
@@ -283,28 +283,7 @@
                                                                     @enderror 
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
-                                                                        <i class="material-icons prefix">
-                                                                             details
-                                                                        </i>
-                                                                        <select class="" id="txtgrado_escolaridad" name="txtgrado_escolaridad" style="width: 100%" tabindex="-1">
-                                                                            <option value="">Seleccione grado de escolaridad</option>
-                                                                            @foreach($gradosescolaridad as $value)
-                                                                                @if(isset($user->gradoescolaridad_id))
-                                                                                <option value="{{$value->id}}" {{old('txtgrado_escolaridad',$user->gradoescolaridad_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
-                                                                                @else
-                                                                                    <option value="{{$value->id}}" {{old('txtgrado_escolaridad') ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
-                                                                                @endif
-
-                                                                            @endforeach
-                                                                        </select>
-                                                                        <label for="txtgrado_escolaridad">Grado Escolaridad <span class="red-text">*</span></label>
-                                                                        @error('txtgrado_escolaridad')
-                                                                            <label id="txtgrado_escolaridad-error" class="error" for="txtgrado_escolaridad">{{ $message }}</label>
-                                                                        @enderror
-                                                                    </div>
-                                                                </div>
+                                                            
                                                         </div>
                                                     </div>
                                                     <div class="divider mailbox-divider">
@@ -348,18 +327,124 @@
                                                         </div>
                                                          
                                                     </div>
+                                                    <div class="divider mailbox-divider"></div>
+                                                    <div class="row">
+                                                        <div class="col s12 m3 l3">
+                                                            <blockquote>
+                                                                <ul class="collection">
+                                                                    <li class="collection-item">
+                                                                        <span class="title"><b>Ocupaciones</b></span>
+                                                                        <p>Puedes seleccionar varias ocupaciones si es el caso de que las tenga, sino seleccione una</p>
+                                                                        
+                                                                    </li>
+                                                                </ul>
+                                                            </blockquote>
+                                                            <div class="row">
+                                                            <div class="input-field col s12 m12 l12">
+                                                                
+                                                                <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple onchange="ocupacion.getOtraOcupacion(this)">
+                                                                    
+                                                                    @foreach($ocupaciones as $id => $nombre)
+                                                                        
+                                                                        <option value="{{$id}}" {{collect(old('txtocupaciones',$user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : ''  }} >{{$nombre}}</option>
+                                                                    
+                                                                    @endforeach
+                                                                </select>
+                                                                <label for="txtocupaciones" class="active">Ocupación <span class="red-text">*</span></label>
+                                                                @error('txtocupaciones')
+                                                                    <label id="txtocupaciones-error" class="error" for="txtocupaciones">{{ $message }}</label>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="input-field col s12 m12 l12" id="otraocupacion">
+                                                                <input class="validate" id="txtotra_ocupacion" name="txtotra_ocupacion" type="text"  value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('txtotra_ocupacion')}}">
+                                                                <label for="txtotra_ocupacion" class="active">¿Cuál? <span class="red-text">*</span></label>
+                                                                @error('txtotra_ocupacion')
+                                                                    <label id="txtotra_ocupacion-error" class="error" for="txtotra_ocupacion">{{ $message }}</label>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                        <div class="col s12 m9 l9"><br>
+                                                            <div class="mailbox-view-header">
+                                                            <div class="center">
+                                                                <div class="center">
+                                                                    <i class="Small material-icons prefix">
+                                                                        supervised_user_circle
+                                                                    </i>               
+                                                                </div>
+                                                                <div class="center">
+                                                                    <span class="mailbox-title">Último estudio</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="divider mailbox-divider"></div>
+                                                        <div class="row">
+                                                            <div class="input-field col s12 m6 l6">
+                                                                <i class="material-icons prefix">
+                                                                    settings_cell
+                                                                </i>
+                                                                <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion')}}">
+                                                                <label for="txtinstitucion">Institución <span class="red-text">*</span></label>
+                                                                @error('txtinstitucion')
+                                                                    <label id="txtinstitucion-error" class="error" for="txtinstitucion">{{ $message }}</label>
+                                                                @enderror 
+                                                            </div>
+                                                            <div class="input-field col s12 m6 l6 ">
+                                                                <i class="material-icons prefix">
+                                                                     details
+                                                                </i>
+                                                                <select class="" id="txtgrado_escolaridad" name="txtgrado_escolaridad" style="width: 100%" tabindex="-1">
+                                                                    <option value="">Seleccione grado de escolaridad</option>
+                                                                    @foreach($gradosescolaridad as $value)
+                                                                        <option value="{{$value->id}}" {{old('txtgrado_escolaridad',$user->gradoescolaridad_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <label for="txtgrado_escolaridad">Grado Escolaridad <span class="red-text">*</span></label>
+                                                                @error('txtgrado_escolaridad')
+                                                                    <label id="txtgrado_escolaridad-error" class="error" for="txtgrado_escolaridad">{{ $message }}</label>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="input-field col s12 m6 l6">
+                                                                <i class="material-icons prefix">
+                                                                    settings_cell
+                                                                </i>
+                                                                <input class="validate" id="txttitulo" name="txttitulo" type="text"  value="{{ isset($user->titulo_obtenido) ? $user->titulo_obtenido : old('txttitulo')}}">
+                                                                <label for="txttitulo">Titulo Obtenido <span class="red-text">*</span></label>
+                                                                @error('txttitulo')
+                                                                    <label id="txttitulo-error" class="error" for="txttitulo">{{ $message }}</label>
+                                                                @enderror 
+                                                            </div>
+                                                            <div class="input-field col s12 m6 l6">
+                                                                <i class="material-icons prefix">
+                                                                    date_range
+                                                                </i>
+                                                                <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfechaterminacion')}}">
+                                                                <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
+                                                                @error('txtfechaterminacion')
+                                                                    <label id="txtfechaterminacion-error" class="error" for="txtfechaterminacion">{{ $message }}</label>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="divider mailbox-divider"></div>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                        
                                                     <div class="divider mailbox-divider">
                                                     </div>
                                                     <div class="right">
                                                         <button type="submit" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
                                                             Cambiar Información Personal
                                                         </button>
-                                                        <a class="waves-effect waves-red btn-flat m-t-xs">
+                                                        {{-- <a class="waves-effect waves-red btn-flat m-t-xs">
                                                             Eliminar Cuenta
                                                         </a>
                                                         <a class="waves-effect waves-red btn-flat m-t-xs">
                                                             Salir
-                                                        </a>
+                                                        </a> --}}
                                                     </div>
                                                 </form>
                                             </div>
@@ -381,8 +466,34 @@
 $(document).ready(function() {
 // UserAdmininstradorOcupacion.getOcupaciones();
     eps.getOtraEsp();
+    ocupacion.getOtraOcupacion();
     UserAdministradorEdit.getCiudad();
+    $('.selectMultipe').select2({
+      language: "es",
+    });
 });
+
+var ocupacion = {
+    getOtraOcupacion:function (idocupacion) {
+        $('#otraocupacion').hide();
+        let id = $(idocupacion).val();
+        let nombre = $("#txtocupaciones option:selected").text();
+        let resultado = nombre.match(/[A-Z][a-z]+/g);
+        @if($errors->any())
+            $('#otraocupacion').hide();
+           
+              if (resultado != null  && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                  $('#otraocupacion').show();
+              }
+
+        @endif
+          if (resultado != null ) {
+              if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                  $('#otraocupacion').show();
+              }
+          }     
+    }
+};
     
 
 
@@ -397,7 +508,7 @@ var eps = {
             console.log(nombre);
             $('#otraeps').show();
         }
-        console.log(id);
+        
         
     }
 }
@@ -411,7 +522,7 @@ var UserAdministradorEdit = {
         type:'get',
         url:'/usuario/getciudad/'+id
       }).done(function(response){
-        console.log(response);
+       
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {

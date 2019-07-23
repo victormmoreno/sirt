@@ -22,7 +22,11 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    @include('users.profile.nav.nav-profile')
+                                    <div class="col s12 m5 l3">
+                                        <div class="row">
+                                            @include('users.profile.nav.nav-profile')
+                                        </div>
+                                    </div>
                                     <div class="col s12 m7 l9">
                                         @include('users.profile.nav.navbar')
                                         <div class="mailbox-view">

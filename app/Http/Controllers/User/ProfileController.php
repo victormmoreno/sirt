@@ -83,6 +83,7 @@ class ProfileController extends Controller
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
         ]);
     }
 
@@ -93,7 +94,7 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function updateAccount(ProfileFormRequest $request)
+    public function update(ProfileFormRequest $request,$id)
     {
 
         //buscar usuario por su id
@@ -101,10 +102,15 @@ class ProfileController extends Controller
         $this->authorize('update',$user);
         //acutalizar usuario
         $userUpdated = $this->profileRepostory->Update($request, $user);
-        //alerta
-        alert()->success('Modificación Exitosa', "El Usuario {$userUpdated->nombre_completo} ha sido  modificado.", "success")
-            ->showConfirmButton('Ok', '#009891')->toHtml();
-        return redirect()->route('perfil.index');
+
+        if ($userUpdated != null) {
+            $this->userRepository->destroySessionUser();
+            return redirect()->route('login')->withSuccess('Tu perfil ha sido actualizado exitosamente.');
+        }
+
+        return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
+
+        
 
     }
 

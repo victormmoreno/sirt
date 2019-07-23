@@ -10,22 +10,22 @@
               <div class="col s12 m6 l6 offset-l3 offset-m3">
                   <div class="card white darken-1">
                     <div class="center">
-                        @if (session()->has('success'))
-                          <div class="card green darken-1">
-                              <div class="row">
-                                  <div class="col s12 m10">
-                                      <div class="card-content white-text">
-                                          <p>
-                                              <i class="material-icons left">
-                                                  info_outline
-                                              </i>
-                                              {{ session('success') }}
-                                          </p>
+                          @if (session('status') || session()->has('success'))
+                            <div class="card green darken-1">
+                                <div class="row">
+                                    <div class="col s12 m12">
+                                      <div class="center">
+                                        <div class="card-content white-text center-align">
+                                            <p class="center-aling text-center" align="justify">
+                                                {{ session()->has('status') ? session('status') : '' }}
+                                                {{ session()->has('success') ? session('success') : '' }}
+                                            </p>
+                                        </div>
                                       </div>
-                                  </div>
-                              </div>
-                          </div>
-                          @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                       </div>
                       <div class="card-content ">
                           <span class="card-title center-align">
@@ -52,7 +52,7 @@
                                 <div class="input-field col s12">
                                   <i class="material-icons prefix">mail</i>
                                   
-                                  <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Ingresa tu correo">
+                                  <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email" autofocus placeholder="Ingresa tu correo">
                                   <label for="email" class="active">{{ __('E-Mail Address') }}</label>
                                   @error('email')
                                    <label id="email-error" class="error" for="email">{{ $message }}</label>
@@ -61,7 +61,7 @@
                                 <div class="input-field col s12">
                                   <i class="material-icons prefix">lock_outline</i>
                                   
-                                  <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Ingresa tu contraseña">
+                                  <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="current-password" placeholder="Ingresa tu contraseña">
                                   <label for="password" class="active">{{ __('Password') }}</label>
                                   @error('password')
                                        <label id="password-error" class="error" for="password">{{ $message }}</label>

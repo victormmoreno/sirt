@@ -1,4 +1,4 @@
-<div class="col s12 m5 l3">
+<div class="col s12 m12 l12">
     <div class="mailbox-list">
         <ul>
             <li>
@@ -42,5 +42,8 @@
                 </a>
             </li>
         </ul>
+
     </div>
 </div>
+
+

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\UsersRequests;
 
-use App\Models\Perfil;
 use App\Models\Ocupacion;
+use App\Models\Perfil;
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -33,6 +33,7 @@ class UserFormRequest extends FormRequest
 
         return [
             'txttipo_documento'     => 'required',
+            'txtocupaciones'        => 'required',
             'txtgrado_escolaridad'  => 'required',
             'txtgruposanguineo'     => 'required',
             'txteps'                => 'required',
@@ -52,7 +53,7 @@ class UserFormRequest extends FormRequest
             'txttitulo'             => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfechaterminacion'   => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtotraeps'            => Rule::requiredIf($this->txteps == Eps::where('nombre', Eps::OTRA_EPS)->first()->id) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
-            'txtotra_ocupacion'     => Rule::requiredIf(collect($this->txtocupaciones)->contains( Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'txtotra_ocupacion'     => Rule::requiredIf(collect($this->txtocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'role'                  => 'required',
             'txtnododinamizador'    => Rule::requiredIf(collect($this->role)->contains(User::IsDinamizador())) . '|nullable',
             'txtnodogestor'         => Rule::requiredIf(collect($this->role)->contains(User::IsGestor())) . '|nullable',
@@ -135,6 +136,8 @@ class UserFormRequest extends FormRequest
 
             'txthonorario.required'               => 'El honorario es obligatorio.',
             'txthonorario.regex'                  => 'El formato del campo honorario es incorrecto',
+            'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
+            'txtocupaciones.required'          => 'seleccione al menos una ocupación',
 
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ProfileRequest;
 
+use App\Models\Ocupacion;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use \App\Models\Eps;
@@ -25,16 +26,17 @@ class ProfileFormRequest extends FormRequest
      */
     public function rules()
     {
-       
+
         return [
             'txttipo_documento'    => 'required',
             'txtgrado_escolaridad' => 'required',
             'txtgruposanguineo'    => 'required',
+            'txtocupaciones'       => 'required',
             'txteps'               => 'required',
             'txtciudad'            => 'required',
             'txtdepartamento'      => 'required',
             // 'txtdocumento'         => ['required|digits_between:6,11|numeric|unique:users,documento,' . $this->route('administrador')],
-            'txtdocumento'         => ['required','digits_between:6,11','numeric', Rule::unique('users','documento')->ignore($this->route('perfil'))],
+            'txtdocumento'         => ['required', 'digits_between:6,11', 'numeric', Rule::unique('users', 'documento')->ignore($this->route('perfil'))],
             'txtnombres'           => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
@@ -45,6 +47,10 @@ class ProfileFormRequest extends FormRequest
             'txttelefono'          => 'nullable|digits_between:6,11|numeric',
             'txtcelular'           => 'nullable|digits_between:10,11|numeric',
             'txtotraeps'           => Rule::requiredIf($this->txteps == Eps::where('nombre', Eps::OTRA_EPS)->first()->id) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'txtinstitucion'       => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txttitulo'            => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtfechaterminacion'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'txtotra_ocupacion'    => Rule::requiredIf(collect($this->txtocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
 
         ];
     }
@@ -98,10 +104,13 @@ class ProfileFormRequest extends FormRequest
             'txtcelular.numeric'                  => 'El :attribute debe ser numérico',
             'txtcelular.digits_between'           => 'El :attribute debe tener entre 10 y 11 digitos',
 
-            'txtotraeps.required'                  => 'Por favor ingrese :attribute',
-            'txtotraeps.min'                  => 'El :attribute debe ser minimo 1 caracter',
-            'txtotraeps.max'                  => 'El :attribute debe ser minimo 45 caracteres',
-            'txtotraeps.regex'                  => 'El formato del campo :attribute es incorrecto',
+            'txtotraeps.required'                 => 'Por favor ingrese :attribute',
+            'txtotraeps.min'                      => 'El :attribute debe ser minimo 1 caracter',
+            'txtotraeps.max'                      => 'El :attribute debe ser minimo 45 caracteres',
+            'txtotraeps.regex'                    => 'El formato del campo :attribute es incorrecto',
+
+            'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
+            'txtocupaciones.required'             => 'seleccione al menos una ocupación',
 
         ];
     }
@@ -125,7 +134,7 @@ class ProfileFormRequest extends FormRequest
             'txtbarrio'            => 'barrio',
             'txttelefono'          => 'telefono',
             'txtcelular'           => 'celular',
-            'txtotraeps'            => 'otra eps',
+            'txtotraeps'           => 'otra eps',
         ];
     }
 }

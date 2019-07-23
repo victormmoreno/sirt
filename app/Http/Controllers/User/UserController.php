@@ -82,7 +82,7 @@ class UserController extends Controller
                 // dd(auth()->user()->dinamizador->nodo->entidad->nombre);
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
                
-                $role = ['Gestor','Infocenter','Ingreso'];
+                $role = ['Gestor','Infocenter','Ingreso','Talento'];
                 return view('users.dinamizador.create', [
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),

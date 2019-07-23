@@ -86,15 +86,13 @@
                                                                         account_circle
                                                                     </i>
                                                                     <input class="validate" id="txtpassword" name="txtpassword" type="password"  value="{{ old('txtpassword')}}">
-                                                                    <div class="center-align">
-                                                                        <small class="black-text">Debe proporcionar su contraseña actual para poder cambiarla.</small>
-                                                                    </div>
-                                                                    
-
                                                                     <label for="txtpassword">Contraseña actual <span class="red-text">*</span></label>
                                                                     @error('txtpassword')
                                                                         <label id="txtpassword-error" class="error" for="txtpassword">{{ $message }}</label>
                                                                     @enderror
+                                                                    <div class="center-align">
+                                                                        <small class="black-text">Debe proporcionar su contraseña actual para poder cambiarla.</small>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row">

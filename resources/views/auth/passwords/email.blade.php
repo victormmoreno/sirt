@@ -8,6 +8,19 @@
             <div class="row">
                 <div class="col s12 m6 l4 offset-l4 offset-m3">
                     <div class="card white darken-1">
+                        @if (session('status'))
+                            <div class="card green darken-1">
+                                <div class="row">
+                                    <div class="col s12 m12">
+                                        <div class="card-content white-text">
+                                            <p class="justify_aling" align="justify">
+                                                {{ session('status') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="card-content ">
                             <span class="card-title center-align">
                                 <div class="row">
@@ -21,7 +34,7 @@
                                             <div class="col s12 m12 l12">
                                                 <div class="divider" style="background:#008981;">
                                                 </div>
-                                                <a class="footer-text left-align" href="">
+                                                <a class="footer-text left-align" href="{{route('login')}}">
                                                     <i class="material-icons arrow-l">
                                                         arrow_back
                                                     </i>
@@ -36,22 +49,7 @@
                                 <p align="center" class="description text-center">
                                     Ingresa tu email aquí debajo para enviarte tu nueva contraseña
                                 </p>
-                                @if (session('status'))
-                                <div class="card green darken-1">
-                                    <div class="row">
-                                        <div class="col s12 m10">
-                                            <div class="card-content white-text">
-                                                <p>
-                                                    <i class="material-icons left">
-                                                        info_outline
-                                                    </i>
-                                                    {{ session('status') }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
+                                
                             </div>
                             <div class="row">
                                 <form action="{{ route('password.email') }}" method="POST" onsubmit="return checkSubmit()">
@@ -60,7 +58,7 @@
                                         <i class="material-icons prefix">
                                             mail
                                         </i>
-                                        <input autocomplete="email" autofocus="" class="validate @error('email') is-invalid @enderror" id="email" name="email" required="" type="email" value="{{ old('email') }}">
+                                        <input autocomplete="email" autofocus="" class="validate @error('email') is-invalid @enderror" id="email" name="email" type="email" value="{{ old('email') }}">
                                         <label for="email">
                                             {{ __('E-Mail Address') }}
                                          </label>
@@ -77,9 +75,13 @@
                                             </i>
                                             {{ __('Send Password Reset Link') }}
                                         </button>
+                                        <div class="divider"></div>
+                                        <small>¿Ya estas registrado? <a class="m-t-sm cyan-accent-1-text center-align " href="{{route('login')}}" style="color: #008987">
+                                                    {{__('Login')}}
+                                                </a></small>
                                         <br>
                                             <br>
-                                                <a class="m-t-sm cyan-accent-1-text center-align " href="" style="color: #008987">
+                                                <a class="m-t-sm cyan-accent-1-text center-align " href="{{route('/')}}" style="color: #008987">
                                                     Inicio
                                                 </a>
                                             </br>
