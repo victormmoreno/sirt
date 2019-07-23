@@ -121,6 +121,42 @@ $(document).ready(function() {
 
 });
 
+function cambiarEstadoIdeaDeProyecto(id, estado) {
+  Swal.fire({
+    title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí'
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/idea/updateEstadoIdea/'+id+'/'+estado,
+        success: function (data) {
+          Swal.fire({
+            title: 'El estado de la idea se ha cambiado exitosamente!',
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Sí'
+          }).then((result) => {
+            window.location.replace(data.route);
+          })
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      })
+    }
+  })
+
+}
+
 $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
 
 function detallesIdeaPorId(id){
@@ -136,61 +172,62 @@ function detallesIdeaPorId(id){
       swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
       $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.detalles.nombre_proyecto+"");
-      $("#detalle_idea").append('<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Objetivo: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Alcance: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
-      +'</div>'
-      +'</div>'
-    );
-    $('#modal1').openModal();
-  }
-})
+      $("#detalle_idea").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Descripcion: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Objetivo: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Alcance: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
+        +'</div>'
+        +'</div>'
+      );
+      $('#modal1').openModal();
+    }
+  })
 }

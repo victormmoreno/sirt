@@ -25,22 +25,7 @@
                 </ul>
                 <div class="divider"></div>
                 <div id="ideaUnica">
-                  <div class="row">
-                    <div class="input-field col s2 m2 l2">
-                      <select name="txtfiltro" id="txtfiltro">
-                        <option value="0">Todo</option>
-                        <option value="1">Nombre de Idea</option>
-                        <option value="2">Persona</option>
-                        <option value="3">Contacto</option>
-                        <option value="4">Correo</option>
-                      </select>
-                    </div>
-                    <div class="input-field col s10 m10 l10">
-                      <input type="text" name="txtparametros" id="txtparametros">
-                      <label for="parametros">Buscar Idea</label>
-                    </div>
-                  </div>
-                  <table id="tbl_ideaunica" class="display responsive-table datatable-example dataTable">
+                  <table id="tbl_TodasLasIdeasDeProyecto" class="display responsive-table datatable-example dataTable" style="width: 100%">
                     <thead>
                       <th>Código de la Idea</th>
                       <th>Fecha de Registro</th>

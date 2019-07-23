@@ -2,9 +2,8 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\EstadoIdea;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Idea, Nodo};
+use App\Models\{Idea, Nodo, EstadoIdea};
 use Carbon\Carbon;
 
 class IdeaRepository
@@ -13,6 +12,22 @@ class IdeaRepository
   public function getSelectNodo()
   {
     return Nodo::SelectNodo()->get();
+  }
+
+  /**
+  * Consulta si una idea de proyecto está en registrada en un csibt
+  *
+  * @param int id Id de la idea que se consultará para saber si está en un comité
+  * @return Collection
+  */
+  public function consultarIdeaEnComite($id)
+  {
+    return Idea::select('ideas.id', 'ideas.nombre_proyecto', 'ideas.codigo_idea')
+    ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
+    ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
+    ->where('ideas.id', $id)
+    ->get()
+    ->last();
   }
 
   /**
@@ -62,7 +77,6 @@ class IdeaRepository
   public function StoreIdeaEmpGI($request)
   {
     $codigo_idea = $this->generarCodigoIdea($request->txttipo_idea[1], auth()->user()->infocenter->nodo_id);
-    // dd($request->all());
     $idea = Idea::create([
       "nodo_id" => auth()->user()->infocenter->nodo_id,
       "nombres_contacto" => $request->input('txtnidcod'),
@@ -105,6 +119,7 @@ class IdeaRepository
       WHEN '$estadoACambiar' = 'No Convocado' THEN 5
       WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
       WHEN '$estadoACambiar' = 'En Proyecto' THEN 7
+      WHEN '$estadoACambiar' = 'No Aplica' THEN 8
       END
       ) WHERE id = $idIdea ");
     }

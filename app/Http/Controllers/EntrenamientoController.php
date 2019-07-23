@@ -26,6 +26,25 @@ class EntrenamientoController extends Controller
   }
 
   /**
+  * Modifica los entregables de un entrenamiento
+  *
+  * @param Request request Datos del formulario de las evidencias de un entrenamiento
+  * @param int id Id del entrenamiento al que se le van a modificar los entregables
+  * @return Response
+  */
+  public function updateEvidencias(Request $request, $id)
+  {
+    $update = $this->entrenamientoRepository->updateEvidencias($request, $id);
+    if ($update) {
+      Alert::success('Modificación Existosa!', 'Los entregables del entrenamiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
+      return redirect('entrenamientos');
+    } else {
+      Alert::error('Modificación Errónea!', 'Los entregables del entrenamiento no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    }
+  }
+
+  /**
   * Retorna la vista donde el infocenter podrá subir las evidencias de lo entrenamientos (Por el id)
   * @param int id Id del entrenamientos del que se registrarán y subiran las evidencias
   * @return \Illuminate\Http\Response
@@ -139,13 +158,64 @@ class EntrenamientoController extends Controller
 
   }
 
-  // Inhabilita el entrenamiento, pero se puede elegir si las ideas asociadas al mismo se cambien el estado a Inicio o se inhabiliten al igual que las ideas
+  /**
+  * Cambiar el estado de la ideas de proyecto que están asociadas a un entrenamiento e inhabilitado este
+  * @param int id Id del entrenamiento que se va a inhabilitar
+  * @param string estado El estado a que se le cambiarán el estado a las ideas de proyecto
+  * @return Response\Ajax
+  */
   public function inhabilitarEntrenamiento($id, $estado)
   {
-    $ideasDelEntrenamiento = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id);
-    return json_encode([
-      'respuesta' => 1
-    ]);
+    if (request()->ajax()) {
+      if ( Session::get('login_role') == User::IsInfocenter() ) {
+        $ideasDelEntrenamiento = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id);
+        $ideasEnComite = "";
+        foreach ($ideasDelEntrenamiento as $key => $value) {
+          $v = $this->ideaRepository->consultarIdeaEnComite($value->id);
+          if ($v != "") {
+            if ($key != 0) {
+              $ideasEnComite = $ideasEnComite . ', ' . $v->codigo_idea;
+            } else {
+              $ideasEnComite = $v->codigo_idea;
+            }
+          }
+        }
+        if ($ideasEnComite != "") {
+          return response()->json([
+            'ideas' => $ideasEnComite,
+            'update' => "1"
+          ]);
+        } else {
+          /**
+          * Función que cambia el estado de las ideas de proyecto que están asociadas al entrenamiento
+          */
+          $updateEntrenamiento = "";
+          DB::beginTransaction();
+          try {
+            foreach ($ideasDelEntrenamiento as $key => $value) {
+              $this->ideaRepository->updateEstadoIdea($value->id, $estado);
+            }
+            $archivosEntrenamiento = $this->entrenamientoRepository->consultarArchivosDeUnEntrenamiento($id);
+            foreach ($archivosEntrenamiento as $key => $value) {
+              $this->entrenamientoRepository->deleteArchivoEntrenamientoPorEntrenamiento($value->id);
+            }
+            $this->entrenamientoRepository->deleteEntrenamientoIdea($id);
+            $this->entrenamientoRepository->deleteEntrenamiento($id);
+            DB::commit();
+            $updateEntrenamiento = "true";
+          } catch (\Exception $e) {
+            DB::rollback();
+            $updateEntrenamiento = "false";
+          }
+          return response()->json([
+            'update' => $updateEntrenamiento,
+            'estado' => $estado
+          ]);
+
+        }
+      }
+    }
+
   }
 
   /**

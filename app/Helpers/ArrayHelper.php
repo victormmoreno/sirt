@@ -8,6 +8,19 @@ class ArrayHelper {
       $this->middleware('auth');
   }
 
+  // Método para validar en caso de que un elemento de un array/objecto sea null
+  public static function validarDatoNullDeUnObject($datos) {
+    foreach ($datos as $key => $value) {
+      foreach ($value as $key2 => $value2) {
+        if ($value2 == null) {
+          $value[$key2] = 'No hay información disponible.';
+        }
+        $datos[$key] = $value;
+      }
+    }
+    return $datos;
+  }
+
   // Método para validar en caso de que un elemento de un array sea null
   public static function validarDatoNullDeUnArray($datos) {
     foreach ($datos as $key => $value) {

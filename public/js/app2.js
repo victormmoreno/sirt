@@ -250,6 +250,42 @@ $(document).ready(function() {
 
 });
 
+function cambiarEstadoIdeaDeProyecto(id, estado) {
+  Swal.fire({
+    title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí'
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/idea/updateEstadoIdea/'+id+'/'+estado,
+        success: function (data) {
+          Swal.fire({
+            title: 'El estado de la idea se ha cambiado exitosamente!',
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Sí'
+          }).then((result) => {
+            window.location.replace(data.route);
+          })
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      })
+    }
+  })
+
+}
+
 $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
 
 function detallesIdeaPorId(id){
@@ -265,63 +301,64 @@ function detallesIdeaPorId(id){
       swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
       $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.detalles.nombre_proyecto+"");
-      $("#detalle_idea").append('<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Objetivo: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Alcance: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
-      +'</div>'
-      +'</div>'
-    );
-    $('#modal1').openModal();
-  }
-})
+      $("#detalle_idea").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Descripcion: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Objetivo: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Alcance: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
+        +'</div>'
+        +'</div>'
+      );
+      $('#modal1').openModal();
+    }
+  })
 }
 
 function consultarIdeasPorNodo() {
@@ -424,8 +461,38 @@ $(document).ready(function() {
 
   consultarIdeasEmprendedoresPorNodo(0);
   consultarIdeasEmpresasGIPorNodo(0);
+  consultaIdeasEmprendedoresTodosPorNodo(0);
 
 });
+
+function consultaIdeasEmprendedoresTodosPorNodo(idNodo) {
+  $('#tbl_TodasLasIdeasDeProyecto').dataTable().fnDestroy();
+  $('#tbl_TodasLasIdeasDeProyecto').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/idea/consultarIdeasTodosPorNodo/"+idNodo,
+      type: "get",
+    },
+    columns: [
+      { data: 'codigo_idea', name: 'codigo_idea' },
+      { data: 'fecha_registro', name: 'fecha_registro' },
+      { data: 'persona', name: 'persona' },
+      { data: 'correo', name: 'correo' },
+      { data: 'contacto', name: 'contacto' },
+      { data: 'nombre_idea', name: 'nombre_idea' },
+      { data: 'fecha_sesion1', name: 'fecha_sesion1' },
+      { data: 'fecha_sesion2', name: 'fecha_sesion2' },
+      { data: 'fecha_comite', name: 'fecha_comite' },
+      { data: 'hora', name: 'hora' },
+      { data: 'admitido', name: 'admitido' },
+    ],
+  });
+}
 
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
@@ -635,29 +702,9 @@ $(document).ready(function() {
   } );
 });
 
-// function inhabilitarEntrenamientoPorId(id) {
-//   $.ajax({
-//      dataType:'json',
-//      type:'get',
-//      url:"entrenamientos/inhabilitarEntrenamiento/"+id,
-//   }).done(function(respuesta){
-//     // $("#ideasEntrenamiento").empty();
-//     // if (respuesta != null ) {
-//     //   $("#fechasEntrenamiento").empty();
-//     //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-//     //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
-//     //   $.each(respuesta, function(i, item) {
-//     //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
-//     //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
-//     //   });
-//     //   $('#modalIdeasEntrenamiento').openModal();
-//     // }
-//   });
-// }
-
 function inhabilitarEntrenamientoPorId(id, e) {
   Swal.fire({
-    title: '¿Desea inhabilitar elentrenamiento?',
+    title: '¿Desea inhabilitar el entrenamiento?',
     // text: "You won't be able to revert this!",
     type: 'warning',
     showCancelButton: true,
@@ -672,35 +719,50 @@ function inhabilitarEntrenamientoPorId(id, e) {
         text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
         type: 'warning',
         footer: '<a onclick="Swal.close()" href="#">Cancelar</a>',
-        confirmButtonText: '<a class="white-text" onclick="meth('+id+',6); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
+        confirmButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inhabilitado\'); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
         cancelButtonColor: '#d33',
         showCancelButton: true,
-        cancelButtonText: '<a class="white-text" onclick="meth('+id+',1); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
+        cancelButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inicio\'); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
         focusConfirm: false,
       })
     }
   })
 }
 
-function meth(idea, estado) {
-  // console.log(idea+', '+estado);
-    $.ajax({
-       dataType:'json',
-       type:'get',
-       url:"entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
-    }).done(function(respuesta){
-      // $("#ideasEntrenamiento").empty();
-      // if (respuesta != null ) {
-      //   $("#fechasEntrenamiento").empty();
-      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
-      //   $.each(respuesta, function(i, item) {
-      //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
-      //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
-      //   });
-      //   $('#modalIdeasEntrenamiento').openModal();
-      // }
-    });
+function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
+    success: function (data) {
+      console.log(data);
+      if (data.update == "true") {
+        Swal.fire({
+          title: 'El entrenamiento se ha inhabilitado!',
+          html: 'Las ideas de proyecto del entrenamiento han cambiado su estado a: ' + data.estado ,
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        })
+      }
+      if (data.update == "1") {
+        // console.log('No se cambió');
+        Swal.fire({
+          title: 'No se puede inhabilitar el entrenamiento!',
+          html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +
+          'Si deseas hacer esto, las ideas de proyecto asociadas al entrenamiento no pueden estar en proyecto ó CSIBT' ,
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Entiendo!'
+        })
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
 }
 
 $(document).ready(function() {

@@ -48,6 +48,11 @@ class EstadosIdeasTableSeeder extends Seeder
             'nombre'      => 'En Proyecto',
         ]);
 
+        EstadoIdea::create([
+            'id'          => 8,
+            'nombre'      => 'No Aplica',
+        ]);
+
 
     }
 }

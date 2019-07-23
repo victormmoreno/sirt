@@ -153,8 +153,10 @@ Route::group([
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
         Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
+        Route::get('/consultarIdeasTodosPorNodo/{id}', 'IdeaController@dataTableIdeasTodosPorNodo')->name('idea.todas');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
         Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
+        Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
         Route::post('/', 'IdeaController@store')->name('idea.store');
         Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
@@ -165,16 +167,19 @@ Route::group([
 //-------------------Route group para el módulo de Entrenamientos
 Route::group([
     'prefix' => 'entrenamientos',
+    'middleware' => 'role_session:Infocenter|Administrador|Dinamizador'
 ],
     function () {
         Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
+        // Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
         Route::get('/consultarEntrenamientosPorNodo/{id}', 'EntrenamientoController@datatableEntrenamientosPorNodo');
         Route::get('/consultarEntrenamientosPorNodo', 'EntrenamientoController@datatableEntrenamientosPorNodo_Dinamizador');
         Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create');
-        Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit');
+        Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
-        Route::get('/inhabilitarEntrenamiento/{id}/{tipoCambioEstado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
+        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
         Route::get('/{id}/evidencias', 'EntrenamientoController@evidencias')->name('entrenamientos.evidencias');
+        Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento');
         Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm');
         Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas');
         Route::get('/getAssistF/{id}/{estado}', 'EntrenamientoController@getAssistF');

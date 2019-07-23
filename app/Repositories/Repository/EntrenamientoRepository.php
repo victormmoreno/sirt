@@ -2,11 +2,84 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Entrenamiento, EntrenamientoIdea, Nodo, EstadoIdea};
-use Illuminate\Support\Facades\DB;
+use App\Models\{Entrenamiento, EntrenamientoIdea, Nodo, EstadoIdea, ArchivoEntrenamiento};
+use Illuminate\Support\Facades\{DB, Storage};
+use Carbon\Carbon;
 
 class EntrenamientoRepository
 {
+
+  /**
+   * Permite eliminar los archivos almacenados en la base de datos (por el id de un entrenamiento)
+   * @param int id Id del archivo del entrenamiento del cual se le van a borrar los archivos (ruta de la base de datos)
+   * @return void
+   */
+  public function deleteArchivoEntrenamientoPorEntrenamiento($id)
+  {
+    $file = ArchivoEntrenamiento::find($id);
+    $file->delete();
+    $filePath = str_replace('storage', 'public', $file->ruta);
+    Storage::delete($filePath);
+  }
+
+  /**
+   * Permite eliminar un entrenamiento de la base de datos
+   * @param int id Id del entrenamiento que se va a eliminar de la base de datos
+   * @return boolean
+   */
+  public function deleteEntrenamiento($id)
+  {
+    return Entrenamiento::where('id', $id)->delete();
+  }
+
+  /**
+   * Elimina los datos de la tabla entre entrenamientos e ideas (entrenamiento_idea) por el id del entrenamiento
+   * @param int id Id del entrenamiento pro el cual se va a eliminar los datos
+   * @return boolean
+   */
+  public function deleteEntrenamientoIdea($id)
+  {
+    return EntrenamientoIdea::where('entrenamiento_id', $id)->delete();
+  }
+
+  /**
+   * Modifica lo entregables de un entrenamiento
+   * @param Request request Datos del formulario
+   * @param int id Id del entrenamiento
+   * @return boolean type
+   */
+  public function updateEvidencias($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $correos = 1;
+      $fotos = 1;
+      $listado_asistencia = 1;
+      if (!isset($request->txtcorreos))
+      $correos = 0;
+
+      if (!isset($request->txtfotos))
+      $fotos = 0;
+
+      if (!isset($request->txtlistado_asistencia))
+      $listado_asistencia = 0;
+
+      $entrenamiento = Entrenamiento::findOrFail($id);
+
+      $entrenamiento->update([
+        'correos' => $correos,
+        'fotos' => $fotos,
+        'listado_asistencia' => $listado_asistencia
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
 
   /**
   * undocumented function summary

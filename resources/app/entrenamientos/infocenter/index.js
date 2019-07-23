@@ -74,29 +74,9 @@ $(document).ready(function() {
   } );
 });
 
-// function inhabilitarEntrenamientoPorId(id) {
-//   $.ajax({
-//      dataType:'json',
-//      type:'get',
-//      url:"entrenamientos/inhabilitarEntrenamiento/"+id,
-//   }).done(function(respuesta){
-//     // $("#ideasEntrenamiento").empty();
-//     // if (respuesta != null ) {
-//     //   $("#fechasEntrenamiento").empty();
-//     //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-//     //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
-//     //   $.each(respuesta, function(i, item) {
-//     //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
-//     //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
-//     //   });
-//     //   $('#modalIdeasEntrenamiento').openModal();
-//     // }
-//   });
-// }
-
 function inhabilitarEntrenamientoPorId(id, e) {
   Swal.fire({
-    title: '¿Desea inhabilitar elentrenamiento?',
+    title: '¿Desea inhabilitar el entrenamiento?',
     // text: "You won't be able to revert this!",
     type: 'warning',
     showCancelButton: true,
@@ -111,33 +91,48 @@ function inhabilitarEntrenamientoPorId(id, e) {
         text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
         type: 'warning',
         footer: '<a onclick="Swal.close()" href="#">Cancelar</a>',
-        confirmButtonText: '<a class="white-text" onclick="meth('+id+',6); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
+        confirmButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inhabilitado\'); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
         cancelButtonColor: '#d33',
         showCancelButton: true,
-        cancelButtonText: '<a class="white-text" onclick="meth('+id+',1); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
+        cancelButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inicio\'); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
         focusConfirm: false,
       })
     }
   })
 }
 
-function meth(idea, estado) {
-  // console.log(idea+', '+estado);
-    $.ajax({
-       dataType:'json',
-       type:'get',
-       url:"entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
-    }).done(function(respuesta){
-      // $("#ideasEntrenamiento").empty();
-      // if (respuesta != null ) {
-      //   $("#fechasEntrenamiento").empty();
-      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
-      //   $.each(respuesta, function(i, item) {
-      //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
-      //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
-      //   });
-      //   $('#modalIdeasEntrenamiento').openModal();
-      // }
-    });
+function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
+    success: function (data) {
+      console.log(data);
+      if (data.update == "true") {
+        Swal.fire({
+          title: 'El entrenamiento se ha inhabilitado!',
+          html: 'Las ideas de proyecto del entrenamiento han cambiado su estado a: ' + data.estado ,
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        })
+      }
+      if (data.update == "1") {
+        // console.log('No se cambió');
+        Swal.fire({
+          title: 'No se puede inhabilitar el entrenamiento!',
+          html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +
+          'Si deseas hacer esto, las ideas de proyecto asociadas al entrenamiento no pueden estar en proyecto ó CSIBT' ,
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Entiendo!'
+        })
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
 }
