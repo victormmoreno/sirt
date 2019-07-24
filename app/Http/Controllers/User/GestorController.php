@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\{GestorRepository, UserRepository};
+
+use App\Repositories\Repository\UserRepository\GestorRepository;
+use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -39,9 +41,23 @@ class GestorController extends Controller
      */
     public function index()
     {
-        return view('users.administrador.gestor.index', [
-            'nodos' => $this->userRepository->getAllNodo(),
-        ]);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.gestor.index', [
+                    'nodos' => $this->userRepository->getAllNodo(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                // return view('users.dinamizador.gestor.index', [
+                //     'nodos' => $this->dinamizadorRepository->getAllNodos(),
+                // ]);
+                break;
+
+            default:
+
+                break;
+        }
+
     }
 
     public function getGestor($nodo)
@@ -59,7 +75,7 @@ class GestorController extends Controller
                     if ($data->id != auth()->user()->id) {
                         $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     } else {
-                        $button = '';
+                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
                     }
                     return $button;
                 })

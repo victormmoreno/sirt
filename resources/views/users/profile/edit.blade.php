@@ -84,7 +84,7 @@
                                                                     <i class="material-icons prefix">
                                                                         assignment_ind
                                                                     </i>
-                                                                    <input id="txtdocumento" name="txtdocumento" type="text" value="{{ isset($user->documento) ? $user->documento : old('txtdocumento',$user->documento)}}">
+                                                                    <input id="txtdocumento" name="txtdocumento" type="text" value="{{ isset($user->documento) ? $user->documento : old('txtdocumento')}}">
                                                                     <label for="txtdocumento">Documento <span class="red-text">*</span></label> 
                                                                     @error('txtdocumento')
                                                                         <label id="txtdocumento-error" class="error" for="txtdocumento">{{ $message }}</label>

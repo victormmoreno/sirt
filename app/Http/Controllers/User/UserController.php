@@ -44,10 +44,23 @@ class UserController extends Controller
      */
     public function index()
     {
-        // dd(session()->get('login_role'));
-        return view('users.administrador.index', [
-            'roles' => $this->userRepository->getAllRoles(),
-        ]);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getAllRoles(),
+                ]);
+            break;
+            case User::IsDinamizador():
+                $role = ['Gestor','Infocenter','Ingreso','Talento'];
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getRoleWhereInRole($role),
+                ]);
+            break;
+            default:
+                
+            break;
+        }
+
     }
 
     /**

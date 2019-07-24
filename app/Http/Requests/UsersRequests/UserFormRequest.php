@@ -139,6 +139,20 @@ class UserFormRequest extends FormRequest
             'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
             'txtocupaciones.required'          => 'seleccione al menos una ocupación',
 
+            'txtinstitucion.required'             => 'La institución es obligatoria.',
+            'txtinstitucion.min'                  => 'La institución  debe ser minimo 1 caracter',
+            'txtinstitucion.max'                  => 'La institución  debe ser minimo 100 caracteres',
+            'txtinstitucion.regex'                => 'El formato del campo institución es incorrecto',
+
+            'txttitulo.required'                  => 'El titulo es obligatorio.',
+            'txttitulo.min'                       => 'El titulo  debe ser minimo 1 caracter',
+            'txttitulo.max'                       => 'El titulo  debe ser minimo 200 caracteres',
+            'txttitulo.regex'                     => 'El formato del campo titulo es incorrecto',
+
+            'txtfechaterminacion.required'        => 'La fecha de terminación es obligatoria.',
+            'txtfechaterminacion.date'            => 'La fecha de terminación no es una fecha válida.',
+            'txtfechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
+
         ];
     }
 

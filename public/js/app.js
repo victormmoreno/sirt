@@ -1738,9 +1738,7 @@ __webpack_require__.r(__webpack_exports__);
       date: null
     };
   },
-  mounted: function mounted() {
-    console.log('Component mounted.');
-  },
+  mounted: function mounted() {},
   methods: {
     updateCurrentTime: function updateCurrentTime() {
       this.currentTime = moment().format('LTS');

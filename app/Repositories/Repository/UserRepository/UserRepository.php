@@ -152,7 +152,40 @@ class UserRepository
 
     public function findById($id)
     {
-        return User::with('ocupaciones')->findOrFail($id);
+
+        return User::with(
+            [
+                'tipodocumento'=> function ($query) {
+                    $query->select('id','nombre');
+                },
+                'roles'=> function ($query) {
+                    $query->select('id','name');
+                },
+                'ocupaciones',
+                'eps',
+                'gradoescolaridad',
+                'gruposanguineo',
+                'ciudad',
+                'ciudad.departamento',
+                'dinamizador',
+                'dinamizador.nodo',
+                'dinamizador.nodo.entidad',
+                'gestor',
+                'gestor.nodo',
+                'gestor.nodo.entidad',
+                'gestor.nodo.centro',
+                'gestor.nodo.centro.regional',
+                'gestor.nodo.centro.entidad',
+                'gestor.lineatecnologica',
+                'infocenter',
+                'infocenter.nodo',
+                'infocenter.nodo.entidad',
+                'talento',
+                'talento.perfil',
+                'talento.entidad',
+            ]
+        )->findOrFail($id);
+        // return User::with(['ocupaciones', 'roles', 'ciudad', 'ciudad.departamento'])->findOrFail($id);
     }
 
     /*=====  End of metodo para consultar el usuario por id  ======*/
@@ -163,7 +196,7 @@ class UserRepository
 
     public function account($id)
     {
-        return User::where('id', $id)->firstOrFail();
+        return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->where('id', $id)->firstOrFail();
     }
 
     /*=====  End of metodo para consultar la informacion del usuario  ======*/
@@ -654,5 +687,22 @@ class UserRepository
     }
 
     /*=====  End of metodo para destruir la session y cache del usuario  ======*/
+
+    /*===========================================================
+    =            metodo para buscar usuarios por rol            =
+    ===========================================================*/
+
+
+    public function getAllUsersForRole(string $role)
+    {
+        return User::InfoUserDatatable()
+            ->role($role)
+            ->orderby('users.created_at', 'desc')
+            ->get();
+    }
+
+    
+    
+    /*=====  End of metodo para buscar usuarios por rol  ======*/
 
 }

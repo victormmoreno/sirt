@@ -8,10 +8,15 @@
                 <div class="row">
                     <div class="col s10 m10 l10">
                         <h5 class="left-align">
-                            <i class="material-icons left">
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
+                            Usuarios | Gestores
+                            <i class="material-icons">
                                 supervised_user_circle
                             </i>
-                            Usuarios | Gestores
                         </h5>
                     </div>
                 </div>
@@ -24,6 +29,9 @@
                                         <span class="card-title center-align">
                                             Gestores {{config('app.name')}}
                                         </span>
+                                        <i class="material-icons">
+                                            supervised_user_circle
+                                        </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">

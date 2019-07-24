@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
                 'centrosformacion',
                 'nodos',
                 'estratos',
-                'rol', //tabla vieja
                 'roles',
                 'ocupaciones',
                 'ingresos',
@@ -62,7 +61,6 @@ class DatabaseSeeder extends Seeder
                 'tiposarticulaciones',
                 'tiposarticulacionesproyectos',
                 'perfiles',
-                'rols',//tabla vieja
                 'estadosproyecto',
                 'departamentos',
                 'lineastecnologicas',

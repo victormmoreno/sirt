@@ -1,12 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Models\Ciudad;
-use App\Models\Eps;
-use App\Models\GradoEscolaridad;
-use App\Models\GrupoSanguineo;
-use App\Models\Rols;
-use App\Models\TipoDocumento;
+use App\Models\{Ciudad,Eps,GradoEscolaridad,GrupoSanguineo,TipoDocumento};
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +22,6 @@ $factory->define(User::class, function (Faker $faker) {
 
     return [
 
-        'rol_id'              => Rols::all()->random()->id,
         'gradoescolaridad_id' => GradoEscolaridad::all()->random()->id,
         'tipodocumento_id'    => TipoDocumento::all()->random()->id,
         'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -44,9 +38,9 @@ $factory->define(User::class, function (Faker $faker) {
         'fechanacimiento'     => $faker->date($format = 'Y-m-d', $max = 'now'),
         'genero'              => $faker->randomElement([User::IS_MASCULINO, User::IS_FEMENINO]),
         'estado'              => $faker->boolean,
-        'institucion' => $faker->company,
-        'titulo_obtenido' => $faker->jobTitle,
-        'fecha_terminacion' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'institucion'         => $faker->company,
+        'titulo_obtenido'     => $faker->jobTitle,
+        'fecha_terminacion'   => $faker->date($format = 'Y-m-d', $max = 'now'),
         'password'            => Hash::make('123456789'),
         'remember_token'      => Str::random(10),
         'estrato'             => rand(1, 6),

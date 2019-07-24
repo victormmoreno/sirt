@@ -3,28 +3,20 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\AdminRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
-use App\User;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class InfocenterController extends Controller
 {
 
-    public $adminRepository;
+    
     public $userRepository;
 
-    public function __construct(AdminRepository $adminRepository, UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->middleware([
-            'auth',
-            'role_or_permission:'
-            . session()->get('login_role', config('laravelpermission.roles.roleAdministrador')),
-        ]);
-        $this->adminRepository = $adminRepository;
-        $this->userRepository  = $userRepository;
+        $this->middleware('auth');
+        $this->userRepository        = $userRepository;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -33,8 +25,10 @@ class AdminController extends Controller
     public function index()
     {
 
+        // $user = $this->userRepository->getAllUsersForRole('Infocenter');
+        // dd($user);
         if (request()->ajax()) {
-            return datatables()->of($this->adminRepository->getAllAdministradores())
+            return datatables()->of($this->userRepository->getAllUsersForRole())
                 ->addColumn('detail', function ($data) {
 
                     $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
@@ -60,10 +54,12 @@ class AdminController extends Controller
                 ->make(true);
         }
 
-        return view('users.administrador.administrador.index');
-
+        return view('users.administrador.infocenter.index', [
+                    'nodos' => $this->userRepository->getAllNodos(),
+                ]);
     }
 
+    
     /**
      * Display the specified resource.
      *
@@ -72,30 +68,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userRepository->findById($id);
-
-        // dd($user);
-
-        // if (request()->ajax()) {
-            $data = [
-                'user'              => $user,
-                'role'              => $user->getRoleNames()->implode(', '),
-                // 'tipodocumento'     => $user->tipoDocumento->nombre,
-                // 'eps'               => $user->eps->nombre,
-                // 'departamento'      => $user->ciudad->departamento->nombre,
-                // 'ciudad'            => $user->ciudad->nombre,
-                // 'gruposanguineo'    => $user->grupoSanguineo->nombre,
-                // 'gradosescolaridad' => $user->gradoEscolaridad->nombre,
-
-            ];
-
-            return response()->json([
-                'data' => $data,
-            ]);
-
-        // }
-        // abort('404');
-
+        //
     }
 
 }

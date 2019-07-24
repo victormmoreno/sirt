@@ -58,7 +58,7 @@ function detalleAdministrador(id){
     url:"/usuario/administrador/"+id
   }).done(function(respuesta){
     $("#titulo_administrador").empty();
-    $("#detalle_administrador").empty();
+ 
     console.log(respuesta.data);
     if (respuesta == null) {
       swal('Ups!!!', 'Ha ocurrido un error', 'warning');
@@ -67,45 +67,7 @@ function detalleAdministrador(id){
         let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
         let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
         let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
-      // $("#titulo_administrador").append("<span class='cyan-text text-darken-3'>Usuario </span>"+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos)
-      //       $("#detalle_administrador").append('<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Nombre Completo: </span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //       +'<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Tipo Documento: </span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.tipodocumento+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //       +'<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Documento</span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.user.documento+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //       +'<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.role+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //     );
-      //     
+
       
       $("#titulo_administrador").append(`<div class="row">
                     <div class="col s12 m12 l12">
@@ -154,7 +116,7 @@ function detalleAdministrador(id){
                                                                     Tipo Documento
                                                                 </span>
                                                                 <p>
-                                                                    `+respuesta.data.tipodocumento+`   
+                                                                    `+respuesta.data.user.tipodocumento.nombre+`   
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -178,7 +140,7 @@ function detalleAdministrador(id){
                                                                         Eps
                                                                     </span>
                                                                     <p>
-                                                                       `+respuesta.data.eps+`   
+                                                                       `+respuesta.data.user.eps.nombre+`   
                                                                     </p> 
                                                                 </div>
                                                                
@@ -248,7 +210,7 @@ function detalleAdministrador(id){
                                                                     Grupo Sanguineo
                                                                 </span>
                                                                 <p>
-                                                                   `+respuesta.data.gruposanguineo+`   
+                                                                   `+respuesta.data.user.gruposanguineo.nombre+`   
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -271,7 +233,7 @@ function detalleAdministrador(id){
                                                                     Lugar de Residencia
                                                                 </span>
                                                                 <p>
-                                                                    `+respuesta.data.ciudad+` - `+respuesta.data.departamento+`
+                                                                    `+respuesta.data.user.ciudad.nombre+` - `+respuesta.data.user.ciudad.departamento.nombre+`
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -299,7 +261,71 @@ function detalleAdministrador(id){
                                                                     </p>
                                                                 </div>
                                                             </li>
+
                                                         </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="right">
+                                                    <small>
+                                                        Información Último Estudio
+                                                    </small>
+                                                </div>
+                                                <div class="divider mailbox-divider">
+                                                </div>
+                                                <div class="mailbox-text">
+                                                    <div class="row">
+                                                        <div class="col s12 m6 l6">
+                                                            <ul class="collection">
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Institución
+                                                                    </span>
+                                                                    <p>
+                                                                        `+respuesta.data.user.institucion+`
+                                                                    </p>
+                                                                </li>
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Titulo obtenido
+                                                                    </span>
+                                                                    <p>
+                                                                         `+respuesta.data.user.titulo_obtenido+`
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col s12 m6 l6">
+                                                            <ul class="collection">
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Grado de escolaridad
+                                                                    </span>
+                                                                    <p>
+                                                                         `+respuesta.data.user.gradoescolaridad.nombre+`
+                                                                    </p>
+                                                                </li>
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle teal darken-2">
+                                                                        assignment_ind
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Fecha de terminación
+                                                                    </span>
+                                                                    <p>
+                                                                         `+moment(respuesta.data.user.fecha_terminacion).format('LL')+`
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="divider mailbox-divider">

@@ -188,4 +188,22 @@ class User extends Authenticatable implements JWTSubject
             ->where('nodos.id', '=', $nodo);
     }
 
+
+    /*==============================================================================
+    =            scope para mostrar informacion relevante en datatables            =
+    ==============================================================================*/
+    
+    public function scopeInfoUserDatatable($query)
+    {
+        return $query->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
+            ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
+            ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
+    }
+    
+    /*=====  End of scope para mostrar informacion relevante en datatables  ======*/
+
+   
+    
+    
+
 }

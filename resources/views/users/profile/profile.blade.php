@@ -199,7 +199,7 @@
                                                                     Tipo Documento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->tipodocumento->nombre ? $user->tipodocumento->nombre : 'No se encontraron resultados' }}
+                                                                    {{$user->tipodocumento->nombre ? : 'No se encontraron resultados' }}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
