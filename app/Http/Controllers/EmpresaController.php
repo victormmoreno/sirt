@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
 use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion, ContactoEntidad};
-use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository};
+use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository, EntidadRepository};
 use Illuminate\Support\Facades\{DB, Validator};
 use App\Helpers\ArrayHelper;
 Use App\User;
@@ -15,16 +15,30 @@ class EmpresaController extends Controller
   private $empresaRepository;
   private $userRepository;
   private $contactoEntidadRepository;
+  private $entidadRepository;
 
-  public function __construct(EmpresaRepository $empresaRepository, UserRepository $userRepository, ContactoEntidadRepository $contactoEntidadRepository)
+  public function __construct(EmpresaRepository $empresaRepository, UserRepository $userRepository, ContactoEntidadRepository $contactoEntidadRepository, EntidadRepository $entidadRepository)
   {
     $this->empresaRepository = $empresaRepository;
     $this->userRepository = $userRepository;
     $this->contactoEntidadRepository = $contactoEntidadRepository;
+    $this->entidadRepository = $entidadRepository;
     $this->middleware([
         'auth',
     ]);
 
+  }
+
+  /**
+   * consulta los datos de un empresa según el ID DE ENTIDAD (ENTIDAD_ID)
+   * @param int id Id de la entidad, por el cual se consultará la empresa
+   * @return Response
+   */
+  public function consultarEmpresaPorIdEntidad($id)
+  {
+    return response()->json([
+      'detalles' => $this->entidadRepository->consultarEmpresaEntidadRepository($id),
+    ]);
   }
 
   public function updateContactosEmpresa(Request $request, $id)
@@ -89,7 +103,6 @@ class EmpresaController extends Controller
         break;
     }
   }
-
   // Datatable que muestra las empresas de tecnoparque por parte del dinamizador
   public function datatableEmpresasDeTecnoparque()
   {
@@ -110,11 +123,6 @@ class EmpresaController extends Controller
           <i class="material-icons">local_phone</i>
           </a>
           ';
-          // $contact = '
-          // <a class="btn orange lighten-3 m-b-xs modal-trigger" href="#modal1" onclick="consultarContactosDeUnaEntidad('. $data->id_entidad .')">
-          // <i class="material-icons">local_phone</i>
-          // </a>
-          // ';
           return $contact;
         })->addColumn('edit', function ($data) {
           $edit = '<a href="'. route("empresa.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
@@ -122,7 +130,9 @@ class EmpresaController extends Controller
         })->addColumn('add_articulacion', function ($data) {
           $add = '<a onclick="addEmpresaArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add;
-        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts'])->make(true);
+        })->addColumn('add_empresa_a_edt', function ($data) {
+          return '<a class="btn blue m-b-xs" onclick="addEmpresaAEdt('.$data->id_entidad.')"><i class="material-icons">done_all</i></a>';
+        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_empresa_a_edt'])->make(true);
       } else {
         $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
         return datatables()->of($empresas)
@@ -133,18 +143,12 @@ class EmpresaController extends Controller
           </a>
           ';
           return $button;
-          // data-href="{{url('laravel-crud-search-sort-ajax-modal-form/update/'.$customer->id)}}"
         })->addColumn('contacts', function ($data) {
           $contact = '
           <a class="btn orange lighten-3 m-b-xs modal-trigger" href="#modal1" data-href='. route('empresa.contactos.nodo', $data->id_entidad) .'>
           <i class="material-icons">local_phone</i>
           </a>
           ';
-          // $contact = '
-          // <a class="btn orange lighten-3 m-b-xs modal-trigger" href="#modal1" onclick="consultarContactosDeUnaEntidad('. $data->id_entidad .')">
-          // <i class="material-icons">local_phone</i>
-          // </a>
-          // ';
           return $contact;
         })->addColumn('soft_delete', function ($data) {
           $edit = '<a class="btn m-b-xs"><i class="material-icons">sweep_delete</i></a>';

@@ -39,7 +39,7 @@ class ProyectoRepository
   *
   * @param int id - Id del proyecto que se va a modificar
   * @param request request Request con los datos del formulario
-  * @return return boolean
+  * @return boolean 
   */
   public function update($request, $id)
   {

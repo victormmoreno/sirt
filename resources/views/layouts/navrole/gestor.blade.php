@@ -9,9 +9,9 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
   </a>
 </li>
-<li>
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">record_voice_over</i>EDT's
+<li class="{!! setActiveRoute('edt') !!}">
+  <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}">
+  <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">record_voice_over</i>EDT's
   </a>
 </li>
 {{-- <li class="no-padding">

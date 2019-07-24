@@ -171,29 +171,28 @@ Route::group([
 ],
     function () {
         Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
-        // Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
         Route::get('/consultarEntrenamientosPorNodo/{id}', 'EntrenamientoController@datatableEntrenamientosPorNodo');
         Route::get('/consultarEntrenamientosPorNodo', 'EntrenamientoController@datatableEntrenamientosPorNodo_Dinamizador');
-        Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create');
+        Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create')->middleware('role_session:Infocenter');
         Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
-        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar');
+        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar')->middleware('role_session:Infocenter');
         Route::get('/{id}/evidencias', 'EntrenamientoController@evidencias')->name('entrenamientos.evidencias');
-        Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento');
-        Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm');
-        Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas');
-        Route::get('/getAssistF/{id}/{estado}', 'EntrenamientoController@getAssistF');
-        Route::get('/getAssistS/{id}/{estado}', 'EntrenamientoController@getAssistS');
-        Route::get('/getConvocado/{id}/{estado}', 'EntrenamientoController@getConvocado');
-        Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea');
+        Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento')->middleware('role_session:Infocenter');
+        Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm')->middleware('role_session:Infocenter');
+        Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas')->middleware('role_session:Infocenter');
+        Route::get('/getAssistF/{id}/{estado}', 'EntrenamientoController@getAssistF')->middleware('role_session:Infocenter');
+        Route::get('/getAssistS/{id}/{estado}', 'EntrenamientoController@getAssistS')->middleware('role_session:Infocenter');
+        Route::get('/getConvocado/{id}/{estado}', 'EntrenamientoController@getConvocado')->middleware('role_session:Infocenter');
+        Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea')->middleware('role_session:Infocenter');
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
         Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
         Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
-        Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias');
-        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('entrenamientos.files.store');
-        Route::post('/addidea', 'EntrenamientoController@add_idea');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('entrenamientos.files.destroy');
+        Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Infocenter');
+        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Infocenter');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('entrenamientos.files.store')->middleware('role_session:Infocenter');
+        Route::post('/addidea', 'EntrenamientoController@add_idea')->middleware('role_session:Infocenter');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('entrenamientos.files.destroy')->middleware('role_session:Infocenter');
     }
 );
 
@@ -232,6 +231,7 @@ Route::group([
         Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit');
         Route::get('/ajaxDetallesDeUnaEmpresa/{id}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
         Route::get('/ajaxContactosDeUnaEntidad/{identidad}', 'EmpresaController@contactosDeLaEmpresaPorNodo')->name('empresa.contactos.nodo');
+        Route::get('/ajaxConsultarEmpresaPorIdEntidad/{identidad}', 'EmpresaController@consultarEmpresaPorIdEntidad')->name('empresa.detalle.entidad');
         Route::put('/updateContactoDeUnaEmpresa/{id}', 'EmpresaController@updateContactosEmpresa')->name('empresa.update.contactos');
         Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
         Route::post('/', 'EmpresaController@store')->name('empresa.store');
@@ -317,6 +317,24 @@ Route::group(
     Route::post('/', 'ProyectoController@store')->name('proyecto.store');
     Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload');
     Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy');
+  }
+);
+
+/**
+* Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
+*/
+Route::group([
+  'prefix' => 'edt',
+  'middleware' => 'role_session:Gestor|Dinamizador|Administrador'
+],
+  function () {
+    Route::get('/', 'EdtController@index')->name('edt');
+    Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
+    Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor');
+    Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
+    Route::get('/consultarEdtsDeUnGestor/{id}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
+    Route::get('/consultarEntidadesDeUnaEdt/{id}', 'EdtController@consultarEntidadesDeUnaEdt')->name('edt.entidades');
+    Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
   }
 );
 

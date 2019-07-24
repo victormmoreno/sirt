@@ -92,6 +92,7 @@ class DatabaseSeeder extends Seeder
                 'contactosentidades',
                 'areasconocimiento',
                 'ideas',
+                'tiposedt',
             ]);
         }else{
             echo "NO PUESDES TRUNCAR TABLAS";
