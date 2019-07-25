@@ -71,22 +71,30 @@ class GestorController extends Controller
 
                     return $button;
                 })
-                ->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
+                // ->addColumn('edit', function ($data) {
+                //     if ($data->id != auth()->user()->id && session()->get('login_role') != User::IsAdministrador()) {
+                //         $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                //     } else {
+                //         if ($data->id == auth()->user()->id) {
+
+                //             $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                //         } else {
+                //             $button = '';
+                //         }
+                //     }
+                //     return $button;
+                // })
                 ->editColumn('estado', function ($data) {
                     if ($data->estado == User::IsActive()) {
+                        if ($data->id == auth()->user()->id) {
+                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
+                        }
                         return $data->estado = 'Habilitado';
                     } else {
                         return $data->estado = 'Inhabilitado ';
                     }
                 })
-                ->rawColumns(['detail', 'edit'])
+                ->rawColumns(['detail', 'estado'])
                 ->make(true);
         }
     }

@@ -49,10 +49,66 @@ class TalentoController extends Controller
      */
     public function index()
     {
+        if (request()->ajax()) {
+            return datatables()->of($this->talentoRepository->getAllTalentos())
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="UserAdministradorInfocenter.detalleInfocenter(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })
+                
+                ->editColumn('estado', function ($data) {
+                    if ($data->estado == User::IsActive()) {
+                        if ($data->id == auth()->user()->id) {
+                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
+                        }
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })
+                ->rawColumns(['detail', 'estado'])
+                ->make(true);
+        }
+
+      
         return view('users.administrador.talento.index', [
             'nodos' => $this->userRepository->getAllNodos(),
         ]);
     }
+
+    /*============================================================================
+    =            metodo para mostrar todos los usuarios en datatables            =
+    ============================================================================*/
+    
+    public function getUsersTalentosForDatatables()
+    {
+        return datatables()->of($this->talentoRepository->getAllTalentos())
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="UserAdministradorInfocenter.detalleInfocenter(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })
+                
+                ->editColumn('estado', function ($data) {
+                    if ($data->estado == User::IsActive()) {
+                        if ($data->id == auth()->user()->id) {
+                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
+                        }
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })
+                ->rawColumns(['detail', 'estado'])
+                ->make(true);
+    
+    }
+    
+    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
+    
 
     /**
      * Display the specified resource.

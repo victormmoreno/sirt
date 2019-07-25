@@ -18,7 +18,7 @@ class Talento extends Model
         'user_id',
         'perfil_id',
         'entidad_id',
-        'ciudad_id',
+        'universidad',
         'programa_formacion',
         'carrera_universitaria',
         'empresa',

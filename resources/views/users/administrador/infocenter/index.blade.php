@@ -54,7 +54,7 @@
                                         <div class="file-field input-field">
 
                                             <div class="file-path-wrapper">
-                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorGestor.selectGestoresPorNodo()">
+                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorInfocenter.selectInfocentersForNodo()">
                                                     <option value="">Seleccione nodo</option>
                                                     @foreach($nodos as $id => $nodo)
                                                       <option value="{{$id}}">{{$nodo}}</option>
@@ -69,16 +69,16 @@
                                 </div>
                             
                                 <br>
-                                <table class="display responsive-table" id="gestor_table">
+                                <table class="display responsive-table" id="infocenter_table">
                                     <thead>
                                         <th>Tipo Documento</th>
                                         <th>Docuemento</th>
-                                        <th>Gestor</th>
+                                        <th>Usuario</th>
                                         <th>Correo</th>
                                         <th>Telefono</th>
                                         <th>Estado Sistema</th>
                                         <th>Detalles</th>
-                                        <th>Editar</th>
+                                        
                                     </thead>
                     
                                 </table>
@@ -89,9 +89,9 @@
         </div>
     </div>
 </main>
-<div id="detallegestor" class="modal">
+<div id="detalleinfocenter" class="modal">
   <div class="modal-content">
-    <center><h4 id="titulo_gestor" class="center-aling"></h4></center>
+    <center><h4 id="titulo_infocenter" class="center-aling"></h4></center>
   </div>
   <div class="modal-footer">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>

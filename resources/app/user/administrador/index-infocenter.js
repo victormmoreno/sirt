@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#gestor_table').DataTable({
+    $('#infocenter_table').DataTable({
         language: {
              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
          },
@@ -8,11 +8,11 @@ $(document).ready(function() {
 });
 
 
- var UserAdministradorGestor = {
-     selectGestoresPorNodo: function() {
+ var UserAdministradorInfocenter = {
+     selectInfocentersForNodo: function() {
          let nodo = $('#selectnodo').val();
-         $('#gestor_table').dataTable().fnDestroy();
-         $('#gestor_table').DataTable({
+         $('#infocenter_table').dataTable().fnDestroy();
+         $('#infocenter_table').DataTable({
              language: {
                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
              },
@@ -20,7 +20,7 @@ $(document).ready(function() {
              serverSide: true,
              order: false,
              ajax: {
-                 url: "/usuario/gestor/getGestor/" + nodo,
+                 url: "/usuario/infocenter/getinfocenter/" + nodo,
                  type: "get",
              },
              columns: [
@@ -50,13 +50,13 @@ $(document).ready(function() {
              ],
          });
     },
-    detalleGestor(id){
+    detalleInfocenter(id){
         $.ajax({
 	        dataType:'json',
 	        type:'get',
-	        url:"/usuario/gestor/"+id
+	        url:"/usuario/infocenter/"+id
 	      }).done(function(respuesta){
-	        $("#titulo_gestor").empty();
+	        $("#titulo_infocenter").empty();
 	        if (respuesta == null) {
 	          swal('Ups!!!', 'Ha ocurrido un error', 'warning');
 	        } else {
@@ -65,7 +65,7 @@ $(document).ready(function() {
 	            let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
 	            let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
 	          
-	          $("#titulo_gestor").append(`<div class="row">
+	          $("#titulo_infocenter").append(`<div class="row">
 	                         <div class="col s12 m12 l12">
 		                        <div class="card mailbox-content">
 		                            <div class="card-content">
@@ -334,7 +334,7 @@ $(document).ready(function() {
 		                        </div>
 		                    </div>
 	                    </div>`);
-	          $('#detallegestor').openModal();
+	          $('#detalleinfocenter').openModal();
 	        }
 	        })
 	    }

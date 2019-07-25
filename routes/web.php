@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Nodo;
-
+use App\User;
 
 
 
@@ -21,6 +20,11 @@ Route::get('/', function () {
     // $nodo = Nodo::findByName('Medellin',1);
 
     // dd($nodo);
+    // 
+    // $user = Perfil::latest()
+    //  ->take(20)
+    //  ->get();    
+    //  dd($user);
     
     return view('spa');
 })->name('/');
@@ -52,7 +56,7 @@ Auth::routes(['register' => false]);
 =            ruta principal apenas se hace login            =
 ===========================================================*/
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
 /*=====  End of ruta principal apenas se hace login  ======*/
 
@@ -82,6 +86,12 @@ Route::group([
 ],
     function () {
 
+        Route::get('/', [
+            'uses' => 'UserController@index',
+            'as'   => 'usuario.index',
+        ]);
+
+
         Route::get('/talento/getTalentosDeTecnoparque', [
             'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
@@ -100,10 +110,10 @@ Route::group([
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
 
-        Route::get('/', [
-            'uses' => 'UserController@index',
-            'as'   => 'usuario.index',
-        ]);
+        
+        Route::get('infocenter/getinfocenter/{id}', 'InfocenterController@getInfocenterForNodo')->name('usuario.infoncenter.getinfocenter');
+
+        Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
 
         Route::resource('talento', 'TalentoController', ['as' => 'usuario', 'only' => ['index', 'show']]);
         Route::resource('gestor', 'GestorController', ['as' => 'usuario', 'only' => ['index', 'show']]);

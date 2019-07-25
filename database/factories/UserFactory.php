@@ -1,8 +1,14 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-use App\Models\{Ciudad,Eps,GradoEscolaridad,GrupoSanguineo,TipoDocumento};
+
+use App\Models\Ciudad;
+use App\Models\Eps;
+use App\Models\GradoEscolaridad;
+use App\Models\GrupoSanguineo;
+use App\Models\TipoDocumento;
 use App\User;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -43,6 +49,12 @@ $factory->define(User::class, function (Faker $faker) {
         'fecha_terminacion'   => $faker->date($format = 'Y-m-d', $max = 'now'),
         'password'            => Hash::make('123456789'),
         'remember_token'      => Str::random(10),
+        'estrato'             => rand(1, 6),
+        'institucion'         => 'Universidad de Antiquia',
+        'titulo_obtenido'     => 'Ingeniero Quimico',
+        'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
+        'remember_token'      => Str::random(60),
+        'password'            => '123456789',
         'estrato'             => rand(1, 6),
 
     ];
