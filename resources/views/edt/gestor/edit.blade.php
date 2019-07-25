@@ -11,10 +11,11 @@
           <div class="card">
             <div class="card-content">
               <div class="row">
-                <center><span class="card-title center-align">Nueva Edt</span> <i class="small material-icons prefix">record_voice_over</i></center>
-                <form method="post" id="formEdtCreate" action="{{route('edt.store')}}">
+                <center><span class="card-title center-align">Modificar Edt - {{ $edt->codigo_edt }}</span></center>
+                <form method="post" id="formEdtEdit" action="{{route('edt.update', $edt->id)}}">
+                  {!! method_field('PUT')!!}
                   @include('edt.gestor.form', [
-                    'btnText' => 'Registrar'
+                    'btnText' => 'Modificar'
                   ])
                 </form>
               </div>
@@ -27,7 +28,7 @@
 @endsection
 @push('script')
   <script>
-  function ajaxCreateEdt(form, data, url) {
+  function ajaxEditEdt(form, data, url) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     $.ajax({
       type: form.attr('method'),
@@ -41,7 +42,7 @@
         $('.error').hide();
         if (data.fail) {
           Swal.fire({
-            title: 'Registro Erróneo',
+            title: 'Modificación Errónea',
             text: "Estas ingresando mal los datos!",
             type: 'error',
             showCancelButton: false,
@@ -55,8 +56,8 @@
         }
         if ( data.fail == false && data.redirect_url == "false" ) {
           Swal.fire({
-            title: 'Registro Erróneo',
-            text: "La Edt no se ha registrado!",
+            title: 'Modificación Errónea',
+            text: "La Edt no se ha modificado!",
             type: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
@@ -65,8 +66,8 @@
         }
         if ( data.fail == false && data.redirect_url != "false" ) {
           Swal.fire({
-            title: 'Registro Exitoso',
-            text: "La Edt se ha registrado satisfactoriamente!",
+            title: 'Modificación Exitosa!',
+            text: "La Edt se ha modificado satisfactoriamente!",
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
@@ -84,13 +85,13 @@
   }
 
   //Enviar formulario
-  $(document).on('submit', 'form#formEdtCreate', function (event) {
+  $(document).on('submit', 'form#formEdtEdit', function (event) {
     // $('button[type="submit"]').prop("disabled", true);
     event.preventDefault();
     var form = $(this);
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
-    ajaxCreateEdt(form, data, url);
+    ajaxEditEdt(form, data, url);
   });
 </script>
 @endpush

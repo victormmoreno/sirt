@@ -82,7 +82,7 @@ class EntrenamientoRepository
   }
 
   /**
-  * undocumented function summary
+  * consulta los archivos de un entrenamiento
   * @param int id Id del entrenamiento por el cual se consultaran sus archivos
   * @return return Collection
   */

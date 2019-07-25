@@ -28,7 +28,11 @@
     <select class="js-states" id="txtareaconocimiento_id" name="txtareaconocimiento_id" style="width: 100%">
       <option value="">Seleccione el Área de Conocmiento</option>
       @forelse ($areasconocimiento as $id => $value)
-        <option value="{{$id}}">{{$value}}</option>
+        @if (isset($edt))
+          <option value="{{ $id }}" {{ $edt->areaconocimiento_id == $id ? 'selected': '' }}>{{$value}}</option>
+        @else
+          <option value="{{$id}}">{{$value}}</option>
+        @endif
       @empty
         <option value="">No hay información disponible</option>
       @endforelse
@@ -41,7 +45,11 @@
     <select class="js-states" id="txttipo_edt" name="txttipo_edt" style="width: 100%">
       <option value="">Seleccione el tipo de EDT</option>
       @foreach ($tiposedt as $key => $value)
-        <option value="{{$value->id}}">{{$value->nombre}}</option>
+        @if (isset($edt))
+          <option value="{{$value->id}}" {{ $edt->tipoedt_id == $value->id ? 'selected' : '' }}>{{$value->nombre}}</option>
+        @else
+          <option value="{{$value->id}}">{{$value->nombre}}</option>
+        @endif
       @endforeach
     </select>
     <label for="txttipo_edt">Seleccione el tipo de EDT <span class="red-text">*</span></label>
@@ -59,6 +67,7 @@
   </div>
   <div class="col s12 m5 l5">
     <div class="card-panel orange lighten-5">
+      <h5>Empresas Registradas en la Red Tecnoparque</h5>
       <table style="width: 100%" id="empresasDeTecnoparque_modEdt_table" class="display responsive-table datatable-example dataTable">
         <thead>
           <tr>
@@ -72,6 +81,7 @@
   </div>
   <div class="col s12 m5 l5">
     <div class="card-panel green accent-1">
+      <h5>{!! isset($edt) ? 'Empresas registradas en la Edt' : 'Empresas que se registrarán en la edt' !!}</h5>
       <table style="width: 100%" id="detalleEntidadesAsociadasAEdt" class="display responsive-table datatable-example dataTable">
         <thead>
           <tr>
@@ -81,9 +91,13 @@
           </tr>
         </thead>
         <tbody>
-          @if (isset($entidadesAsociadasALaEdt))
-            @foreach ($entidadesAsociadasALaEdt as $key => $value)
-
+          @if (isset($entidades))
+            @foreach ($entidades as $key => $value)
+              <tr class="selected" id="entidadAsociadaAEdt{{$value->id}}">
+                <td><input type="hidden" name="entidades[]" value="{{$value->id}}">{{$value->nit}}</td>
+                <td>{{$value->nombre}}</td>
+                <td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+              </tr>
             @endforeach
           @endif
         </tbody>
@@ -105,25 +119,25 @@
 <div class="divider"></div>
 <br>
 <div class="row">
-  <div class="input-field col s12 m3 l3 ">
+  <div class="input-field col s12 m3 l3">
     <i class="material-icons prefix">supervisor_account</i>
     <input id="txtempleados" type="number" class="validate" name="txtempleados" value="{{ isset($edt) ? $edt->empleados : '0' }}">
     <label for="txtempleados">Empleados <span class="red-text">*</span></label>
     <small id="txtempleados-error" class="error red-text"></small>
   </div>
-  <div class="input-field col s12 m3 l3 ">
+  <div class="input-field col s12 m3 l3">
     <i class="material-icons prefix">portrait</i>
     <input id="txtinstructores" type="number" class="validate" name="txtinstructores" value="{{ isset($edt) ? $edt->instructores : '0' }}">
     <label for="txtinstructores">Instructores <span class="red-text">*</span></label>
     <small id="txtinstructores-error" class="error red-text"></small>
   </div>
-  <div class="input-field col s12 m3 l3 ">
+  <div class="input-field col s12 m3 l3">
     <i class="material-icons prefix">school</i>
     <input id="txtaprendices" type="number" class="validate" name="txtaprendices" value="{{ isset($edt) ? $edt->aprendices : '0' }}">
     <label for="txtaprendices">Aprendices <span class="red-text">*</span></label>
     <small id="txtaprendices-error" class="error red-text"></small>
   </div>
-  <div class="input-field col s12 m3 l3 ">
+  <div class="input-field col s12 m3 l3">
     <i class="material-icons prefix">person</i>
     <input id="txtpublico" type="number" class="validate" name="txtpublico" value="{{ isset($edt) ? $edt->publico : '0' }}">
     <label for="txtpublico">Público <span class="red-text">*</span></label>
@@ -132,6 +146,6 @@
 </div>
 <br>
 <center>
-  <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? 'done' : 'done_all'}}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
+  <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
   <a href="{{route('edt')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
 </center>

@@ -11,19 +11,24 @@
               <div class="row">
                 <div class="col s12 m10 l10">
                   <div class="center-align">
-                    <span class="card-title center-align"> Edts de {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</span>
+                    <span class="card-title center-align"> Edts de Red Tecnoparque</span>
                   </div>
                 </div>
-                <div class="col s12 m2 l2">
-                  <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                    <a href="{{route('edt.create')}}" class="btn tooltipped btn-floating btn-large green" data-position="bottom" data-delay="50" data-tooltip="Nueva Edt">
-                      <i class="material-icons">record_voice_over</i>
-                    </a>
+                <div class="row">
+                  <div class="input-fiel col s12 m12 l12">
+                    <i class="material-icons">domain</i>
+                    <label for="txtnodo">Nodo</label>
+                    <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1" onchange="datatableEdtsPorNodo(this.value)">
+                      <option value="">Seleccione Nodo * </option>
+                      @foreach($nodos as $nodo)
+                        <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                      @endforeach
+                    </select>
                   </div>
                 </div>
               </div>
               <div class="divider"></div>
-              <table class="display responsive-table datatable-example" id="edtPorGestor_table" >
+              <table class="display responsive-table datatable-example" id="edtPorNodo_table" >
                 <thead>
                   <th>Código de la Edt</th>
                   <th>Nombre</th>
@@ -32,7 +37,6 @@
                   <th>Tipo de Edt</th>
                   <th>Empresas</th>
                   <th>Detalles</th>
-                  <th>Editar</th>
                   <th>Entregables</th>
                 </thead>
 
@@ -40,11 +44,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href="{{route('edt.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nueva Edt">
-          <i class="material-icons">record_voice_over</i>
-        </a>
       </div>
     </div>
   </main>

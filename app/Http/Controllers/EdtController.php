@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, Validator};
 use App\Http\Requests\{EdtFormRequest};
 use App\Repositories\Repository\{EntidadRepository, EdtRepository};
-use App\Models\{Edt, TipoEdt, AreaConocimiento};
+use App\Models\{Edt, TipoEdt, AreaConocimiento, Nodo};
 use App\User;
+use App\Helpers\ArrayHelper;
+use Alert;
 
 class EdtController extends Controller
 {
@@ -30,18 +32,27 @@ class EdtController extends Controller
   }
 
   /**
-   * función para consultar las entidades (empresas) de una edt
-   * @param init id Id de la edt
-   * @return Response
-   */
-  public function consultarEntidadesDeUnaEdt($id)
+  * función para consultar las entidades (empresas) de una edt
+  * @param int id Id de la edt
+  * @param boolean tipo Tipo de petición que se hace (si es 1, se consultará para mostrar la entidades, si es 0 se consultará para mostrar información de la edt)
+  * @return Response
+  */
+  public function consultarDetallesDeUnaEdt($id, $tipo)
   {
     if (request()->ajax()) {
-      $entidades = $this->edtRepository->entidadesDeUnaEdt($id);
-      dd($entidades);
-      return response()->json([
-        'entidades' => $entidades,
-      ]);
+      $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id)->toArray();
+      $edt = ArrayHelper::validarDatoNullDeUnArray($edt);
+      if ($tipo = 1) {
+        $entidades = $this->edtRepository->entidadesDeUnaEdt($id);
+        return response()->json([
+          'entidades' => $entidades,
+          'edt' => $edt
+        ]);
+      } else {
+        return response()->json([
+          'edt' => $edt,
+        ]);
+      }
     }
   }
 
@@ -52,7 +63,21 @@ class EdtController extends Controller
    */
   public function entregables($id)
   {
-
+    $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
+    // $edt = ArrayHelper::validarDatoNullDeUnArray($edt);
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('edt.gestor.evidencias', [
+        'edt' => $edt,
+      ]);
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('edt.dinamizador.evidencias', [
+        'edt' => $edt
+      ]);
+    } else {
+      return view('edt.dinamizador.evidencias', [
+        'edt' => $edt
+      ]);
+    }
   }
 
   /**
@@ -95,6 +120,23 @@ class EdtController extends Controller
   }
 
   /**
+   * datatable para mostrar las edts de un nodo
+   * @param int idnodo Id del nodo
+   * @return Collection
+   */
+  public function consultarEdtsDeUnNodo($idnodo)
+  {
+    $id = "";
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $id = auth()->user()->dinamizador->nodo_id;
+    } else {
+      $id = $idnodo;
+    }
+    $edts = $this->edtRepository->consultarEdtsDeUnNodo($id);
+    return $this->datatableEdts($edts);
+  }
+
+  /**
    * Muestra las edts de un gestor
    * @param int id Id de un gestor
    * @return Response
@@ -116,9 +158,14 @@ class EdtController extends Controller
   */
   public function index()
   {
-    dd($this->edtRepository->entidadesDeUnaEdt(2));
     if ( Session::get('login_role') == User::IsGestor() ) {
       return view('edt.gestor.index');
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('edt.dinamizador.index');
+    } else {
+      return view('edt.administrador.index', [
+        'nodos' => Nodo::SelectNodo()->get()
+      ]);
     }
   }
 
@@ -173,7 +220,12 @@ class EdtController extends Controller
   */
   public function edit($id)
   {
-    //
+    return view('edt.gestor.edit', [
+      'edt' => $this->edtRepository->consultarDetalleDeUnaEdt($id),
+      'areasconocimiento' => AreaConocimiento::all()->pluck('nombre', 'id'),
+      'tiposedt' => TipoEdt::all(),
+      'entidades' => $this->edtRepository->entidadesDeUnaEdt($id)
+    ]);
   }
 
   /**
@@ -185,7 +237,43 @@ class EdtController extends Controller
   */
   public function update(Request $request, $id)
   {
-    //
+    $req = new EdtFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'fail' => true,
+        'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->edtRepository->updateEdtRepository($request, $id);
+    if ($result == false) {
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => "false"
+      ]);
+    } else {
+      return response()->json([
+        'fail' => false,
+        'redirect_url' => url(route('edt'))
+      ]);
+    }
+
   }
 
+  /**
+  * Modifica los entregables de una edt
+  * @param  \Illuminate\Http\Request  $request
+  * @param  int  $id
+  * @return \Illuminate\Http\Response
+  */
+  public function updateEntregables(Request $request, $id)
+  {
+    $result = $this->edtRepository->updateEntregableRepository($request, $id);
+    if ($result) {
+      Alert::success('Los entregables de la EDT se han modificado exitosamente!', 'Modificación Existosa!')->showConfirmButton('Ok', '#3085d6');
+      return redirect('edt');
+    } else {
+      Alert::error('Los entregables de la EDT no se han modificado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+    }
+  }
 }

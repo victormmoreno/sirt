@@ -13,103 +13,83 @@ class TiposVisitanteTableSeeder extends Seeder
     public function run()
     {
         Tipovisitante::create([
-            'idtipovisitante' => 1,
-            'nombre'          => 'Aprendiz SENA',
+            'nombre'          => 'Aprendiz SENA'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 2,
-            'nombre'          => 'Gestor T1',
+            'nombre'          => 'Gestor T1'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 3,
-            'nombre'          => 'Infocenter',
+            'nombre'          => 'Infocenter'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 4,
-            'nombre'          => 'Instructor SENA',
+            'nombre'          => 'Instructor SENA'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 5,
-            'nombre'          => 'Media Técnica',
+            'nombre'          => 'Media Técnica'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 6,
-            'nombre'          => 'Talento',
+            'nombre'          => 'Talento'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 7,
-            'nombre'          => 'Universitario',
+            'nombre'          => 'Universitario'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 8,
-            'nombre'          => 'Visitante/Otro',
+            'nombre'          => 'Visitante/Otro'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 9,
-            'nombre'          => 'Gestor T2',
+            'nombre'          => 'Gestor T2'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 10,
-            'nombre'          => 'Empresario',
+            'nombre'          => 'Empresario'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 11,
-            'nombre'          => 'Soporte Sistemas- Enlace',
+            'nombre'          => 'Soporte Sistemas- Enlace'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 12,
-            'nombre'          => 'SIN CARGO',
+            'nombre'          => 'SIN CARGO'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 13,
-            'nombre'          => 'Semillero Investigador',
+            'nombre'          => 'Semillero Investigador'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 14,
-            'nombre'          => 'Empleado',
+            'nombre'          => 'Empleado'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 15,
-            'nombre'          => 'Instructor/Otra',
+            'nombre'          => 'Instructor/Otra'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 16,
-            'nombre'          => 'SENNOVA',
+            'nombre'          => 'SENNOVA'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 17,
-            'nombre'          => 'Dinamizador',
+            'nombre'          => 'Dinamizador'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 18,
-            'nombre'          => 'Facilitador TecnoA',
+            'nombre'          => 'Facilitador TecnoA'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 19,
-            'nombre'          => 'Gestor Emp. SBDC',
+            'nombre'          => 'Gestor Emp. SBDC'
         ]);
 
         Tipovisitante::create([
-            'idtipovisitante' => 20,
-            'nombre'          => 'Estudiantes MediaT',
+            'nombre'          => 'Estudiantes MediaT'
         ]);
     }
 }

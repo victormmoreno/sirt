@@ -333,8 +333,15 @@ Route::group([
     Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor');
     Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
     Route::get('/consultarEdtsDeUnGestor/{id}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
-    Route::get('/consultarEntidadesDeUnaEdt/{id}', 'EdtController@consultarEntidadesDeUnaEdt')->name('edt.entidades');
+    Route::get('/consultarEdtsDeUnNodo/{id}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
+    Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
+    Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
+    Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Gestor');
+    Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Gestor');
     Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
+    Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Gestor');
+    Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Gestor');
   }
 );
 

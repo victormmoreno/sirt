@@ -24,10 +24,12 @@ class ArrayHelper {
   // Método para validar en caso de que un elemento de un array sea null
   public static function validarDatoNullDeUnArray($datos) {
     foreach ($datos as $key => $value) {
-      if ($value == null) {
+      if ($value === null) {
         $datos[$key] = 'No hay información disponible.';
+        // echo $value . '</br>';
       }
     }
+    // exit();
     return $datos;
   }
 
