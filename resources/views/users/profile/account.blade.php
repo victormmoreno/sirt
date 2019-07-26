@@ -23,57 +23,14 @@
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m12 l12">
-                                        <div class="mailbox-options">
-                                            <ul>
-                                                <li>
-                                                    <a href="{{{route('perfil.index')}}}">
-                                                        Información Personal
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.roles')}}}">
-                                                        Roles
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.permisos')}}}">
-                                                        Permisos Adicionales
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{{route('perfil.cuenta')}}}">
-                                                        Cambiar Contraseña
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        @include('users.profile.nav.navbar')
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
-                                                <div class="left">
-                                                    <div class="left">
-                                                        <img alt="" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}">
-                                                        </img>
-                                                    </div>
-                                                    <div class="left">
-                                                        <span class="mailbox-title">
-                                                            {{auth()->check() ? auth()->user()->nombres.' '.auth()->user()->apellidos : ''}}
-                                                        </span>
-                                                        <span class="mailbox-author">
-                                                            {{$user->getRoleNames()->implode(', ')}}
-                                                            <br>
-                                                                Miembro desde {{$user->created_at->isoFormat('LL')}}
-                                                                <br>
-                                                                    {{$user->fechanacimiento->age}} años
-                                                                </br>
-                                                            </br>
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                @include('users.profile.nav.header')
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                         <p class="center">
-                                                            Editar la contraseña
-                                                            
+                                                            Cambia o recupera su contraseña
                                                         </p>
                                                     </span>
                                                 </div>
@@ -105,6 +62,24 @@
                                                             </div>
                                                             <div class="divider mailbox-divider">
                                                             </div>
+                                                            @if(session()->has('status') || session()->has('error'))
+                                                                <div class="center">
+                                                                    <div class="card  {{session('status') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
+                                                                        <div class="row">
+                                                                            <div class="col s12 m10">
+                                                                                <div class="card-content white-text">
+                                                                                    <p>
+                                                                                        <i class="material-icons left">info_outline</i>
+                                                                                        {{session('status') ? : session('error')}}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            @endif
+                                                            
                                                             <div class="row">
                                                                 <div class="input-field col s12 m6 l6 offset-l3 m3">
                                                                     <i class="material-icons prefix">
@@ -115,6 +90,9 @@
                                                                     @error('txtpassword')
                                                                         <label id="txtpassword-error" class="error" for="txtpassword">{{ $message }}</label>
                                                                     @enderror
+                                                                    <div class="center-align">
+                                                                        <small class="black-text">Debe proporcionar su contraseña actual para poder cambiarla.</small>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -122,7 +100,7 @@
                                                                     <i class="material-icons prefix">
                                                                         account_circle
                                                                     </i>
-                                                                    <input class="validate" id="txtnewpassword" name="txtnewpassword" type="text"  required>
+                                                                    <input class="validate" id="txtnewpassword" name="txtnewpassword" type="password">
                                                                     <label for="txtnewpassword">Nueva contraseña <span class="red-text">*</span></label>
                                                                     @error('txtnewpassword')
                                                                         <label id="txtnewpassword-error" class="error" for="txtnewpassword">{{ $message }}</label>
@@ -134,7 +112,7 @@
                                                                     <i class="material-icons prefix">
                                                                         account_circle
                                                                     </i>
-                                                                    <input class="validate" id="txtnewpassword-confirm" name="txtnewpassword_confirmation" type="text" >
+                                                                    <input class="validate" id="txtnewpassword-confirm" name="txtnewpassword_confirmation" type="password" >
                                                                     <label for="txtnewpassword-confirm">Confirmar contraseña <span class="red-text">*</span></label>
                                                                     
                                                                 </div>
@@ -146,7 +124,7 @@
                                                                 <button type="submit" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
                                                                     Guardar la contraseña
                                                                 </button>
-                                                                <a class="waves-effect waves-red btn-flat m-t-xs">
+                                                                <a href="{{route('perfil.password.reset')}}" class="waves-effect waves-red btn-flat m-t-xs">
                                                                     He olvidado mi contraseña
                                                                 </a>
                                                         

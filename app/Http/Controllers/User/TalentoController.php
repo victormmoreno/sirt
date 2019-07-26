@@ -49,20 +49,76 @@ class TalentoController extends Controller
      */
     public function index()
     {
-        return view('users.administrador.talento.index', [
-            'nodos' => $this->userRepository->getAllNodos(),
-        ]);
+        if (request()->ajax()) {
+
+            return datatables()->of($this->talentoRepository->getAllTalentos())
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })
+
+                ->editColumn('estado', function ($data) {
+                    if ($data->estado == User::IsActive()) {
+                        if ($data->id == auth()->user()->id) {
+                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
+                        }
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })
+                ->rawColumns(['detail', 'estado'])
+                ->make(true);
+        }
+
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.talento.index', [
+                    'nodos' => $this->userRepository->getAllNodos(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                return view('users.dinamizador.talento.index');
+                break;
+
+            default:
+                abort('404');
+                break;
+        }
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    /*============================================================================
+    =            metodo para mostrar todos los usuarios en datatables            =
+    ============================================================================*/
+
+    public function getUsersTalentosForDatatables()
     {
-        //
+        return datatables()->of($this->talentoRepository->getAllTalentos())
+            ->addColumn('detail', function ($data) {
+
+                $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                return $button;
+            })
+
+            ->editColumn('estado', function ($data) {
+                if ($data->estado == User::IsActive()) {
+                    if ($data->id == auth()->user()->id) {
+                        return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
+                    }
+                    return $data->estado = 'Habilitado';
+                } else {
+                    return $data->estado = 'Inhabilitado ';
+                }
+            })
+            ->rawColumns(['detail', 'estado'])
+            ->make(true);
+
     }
+
+    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
 
 }

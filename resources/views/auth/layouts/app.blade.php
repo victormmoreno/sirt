@@ -18,7 +18,7 @@
         {{-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> --}}
         <script src="{{ asset('js/app.js') }}" defer></script>
         <script src="{{ asset('js/libs.js') }}" defer></script>
-</head>
+    </head>
     <body class="signin-page">
         @if(session()->has('info'))
             <div class="card teal lighten-4">

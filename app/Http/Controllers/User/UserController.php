@@ -44,10 +44,28 @@ class UserController extends Controller
      */
     public function index()
     {
-        // dd(session()->get('login_role'));
-        return view('users.administrador.index', [
-            'roles' => $this->userRepository->getAllRoles(),
-        ]);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getAllRoles(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getRoleWhereInRole($role),
+                ]);
+                break;
+
+            case User::IsGestor():
+                $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
+                return view('users.gestor.talento.index');
+                break;
+            default:
+
+                break;
+        }
+
     }
 
     /**
@@ -57,7 +75,6 @@ class UserController extends Controller
      */
     public function create()
     {
-
 
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
@@ -81,8 +98,8 @@ class UserController extends Controller
 
                 // dd(auth()->user()->dinamizador->nodo->entidad->nombre);
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
-               
-                $role = ['Gestor','Infocenter','Ingreso'];
+
+                $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
                 return view('users.dinamizador.create', [
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
@@ -99,10 +116,9 @@ class UserController extends Controller
                 break;
 
             default:
-                
+
                 break;
         }
-        
 
     }
 
@@ -143,7 +159,20 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = $this->userRepository->findById($id);
+
+        if (request()->ajax()) {
+            $data = [
+                'user' => $user,
+                'role' => $user->getRoleNames()->implode(', '),
+            ];
+
+            return response()->json([
+                'data' => $data,
+            ]);
+
+        }
+        abort('404');
     }
 
     /**
@@ -174,7 +203,7 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = ['Gestor','Infocenter','Ingreso'];
+                $role = ['Gestor', 'Infocenter', 'Ingreso'];
 
                 return view('users.administrador.edit', [
                     'user'              => $this->userRepository->findById($id),
@@ -190,13 +219,12 @@ class UserController extends Controller
                     'regionales'        => $this->userRepository->getAllRegionales(),
                 ]);
                 break;
-            
+
             default:
                 # code...
                 break;
         }
 
-        
     }
 
     /**

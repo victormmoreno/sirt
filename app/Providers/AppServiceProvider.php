@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(InfocenterInterface::class, InfocenterRepository::class);
         //
     }
 
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
 
         // $this->registerPolices();
         // \Gate::guesPolicyNameUsing(function ($model) {

@@ -79,6 +79,25 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+        ],[
+            'email.required'     => 'El correo electrónico es obligatorio',
+            'password.required'  => 'La contraseña es obligatoria.',
+        ]);
+    }
+
 
     /**
      * Get the needed authorization credentials from the request.
@@ -88,35 +107,19 @@ class LoginController extends Controller
      */
     protected function credentials(Request $request)
     {
-
         $request['estado'] = true;
         return $request->only($this->username(), 'password', 'estado');
-        // dd($request->only($this->username(), 'password', 'estado'));
-        // // $credentials           = $request->only($this->username(), 'password');
-        // // $credentials['estado'] = 1;
-
-        // // return $credentials;
-        // //
-
-        // return ['email' => $request->{$this->username()}, 'password' => $request->password, 'estado' => true];
     }
 
     public function logout(Request $request)
     {
         $this->guard()->logout();
-
         $request->session()->invalidate();
-
-        // Session::flush();
-
-        // return redirect()->route('/');
-
         return $this->loggedOut($request) ?: redirect('/');
     }
 
     protected function loggedOut(Request $request)
     {
-        // $request->session()->flush();
         Session::flush();
         Cache::flush();
     }

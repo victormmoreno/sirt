@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Http\Traits\UserTrait\UsersTrait;
-
 use App\Models\ActivationToken;
 use App\Models\Ciudad;
 use App\Models\Dinamizador;
@@ -45,6 +44,7 @@ class User extends Authenticatable implements JWTSubject
     protected $dates = [
         'ultimo_login',
         'fechanacimiento',
+        'fecha_terminacion',
     ];
 
     public $items = null;
@@ -187,5 +187,23 @@ class User extends Authenticatable implements JWTSubject
             ->role($role)
             ->where('nodos.id', '=', $nodo);
     }
+
+
+    /*==============================================================================
+    =            scope para mostrar informacion relevante en datatables            =
+    ==============================================================================*/
+    
+    public function scopeInfoUserDatatable($query)
+    {
+        return $query->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
+            ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
+            ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
+    }
+    
+    /*=====  End of scope para mostrar informacion relevante en datatables  ======*/
+
+   
+    
+    
 
 }
