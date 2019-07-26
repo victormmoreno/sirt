@@ -1,12 +1,5 @@
-<ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-  <li class="no-padding {{setActiveRoute('home')}}">
-    <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}">
-      <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">
-        home
-      </i>
-      Inicio
-    </a>
-  </li>
+
+  
   <li class="no-padding">
     <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}} {{ setActiveRoutePadding('idea') }} {{ setActiveRoutePadding('entrenamientos') }} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}">
       <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('csibt/create') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
@@ -42,4 +35,4 @@
       <i class="material-icons">description</i>Reportes
     </a>
   </li>
-</ul>
+

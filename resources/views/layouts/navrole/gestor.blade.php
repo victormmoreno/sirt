@@ -1,3 +1,9 @@
+<li class="no-padding {{setActiveRoute('usuario')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
+  </a>
+</li>
+
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}">
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica
@@ -14,11 +20,7 @@
     <i class="material-icons">record_voice_over</i>EDT's
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a href="" class="waves-effect waves-grey">
-    <i class="material-icons">supervisor_account</i>Talentos
-  </a>
-</li> --}}
+
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">domain</i>Uso de Infraestructura

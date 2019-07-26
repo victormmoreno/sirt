@@ -1,14 +1,12 @@
-// import {modalUser} from '../modaluser.js';
-// require('../modaluser.js');
 $(document).ready(function() {
-    $('#talento_history_table').DataTable({
+    $('#ingresos_dinamizador_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/usuario/talento",
+            url: "/usuario/ingreso/getingreso",
             type: "get",
         },
         columns: [{
@@ -32,6 +30,10 @@ $(document).ready(function() {
         }, {
             data: 'detail',
             name: 'detail',
+            orderable: false,
+        }, {
+            data: 'edit',
+            name: 'edit',
             orderable: false,
         }, ],
     });

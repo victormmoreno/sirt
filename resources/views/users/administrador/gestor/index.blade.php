@@ -89,13 +89,12 @@
         </div>
     </div>
 </main>
-<div id="detallegestor" class="modal">
+<div  class="modal detalleUsers">
   <div class="modal-content">
-    <center><h4 id="titulo_gestor" class="center-aling"></h4></center>
+    <div class="titulo_users"></div>
   </div>
   <div class="modal-footer">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
-
 @endsection

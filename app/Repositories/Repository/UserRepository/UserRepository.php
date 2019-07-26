@@ -183,6 +183,7 @@ class UserRepository
                 'talento',
                 'talento.perfil',
                 'talento.entidad',
+                'ingreso.nodo.entidad',
             ]
         )->findOrFail($id);
         // return User::with(['ocupaciones', 'roles', 'ciudad', 'ciudad.departamento'])->findOrFail($id);

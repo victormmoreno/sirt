@@ -37,7 +37,7 @@ class AdminController extends Controller
             return datatables()->of($this->adminRepository->getAllAdministradores())
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="detalleAdministrador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
@@ -61,40 +61,6 @@ class AdminController extends Controller
         }
 
         return view('users.administrador.administrador.index');
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = $this->userRepository->findById($id);
-
-        // dd($user);
-
-        // if (request()->ajax()) {
-            $data = [
-                'user'              => $user,
-                'role'              => $user->getRoleNames()->implode(', '),
-                // 'tipodocumento'     => $user->tipoDocumento->nombre,
-                // 'eps'               => $user->eps->nombre,
-                // 'departamento'      => $user->ciudad->departamento->nombre,
-                // 'ciudad'            => $user->ciudad->nombre,
-                // 'gruposanguineo'    => $user->grupoSanguineo->nombre,
-                // 'gradosescolaridad' => $user->gradoEscolaridad->nombre,
-
-            ];
-
-            return response()->json([
-                'data' => $data,
-            ]);
-
-        // }
-        // abort('404');
 
     }
 

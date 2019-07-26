@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\InfocenterRepository;
+use App\Repositories\Repository\UserRepository\IngresoRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
-use Illuminate\Http\Request;
 
-class InfocenterController extends Controller
+class IngresoController extends Controller
 {
 
+    protected $ingresoRepository;
     protected $userRepository;
-    protected $infocenterRepository;
 
-    public function __construct(UserRepository $userRepository, InfocenterRepository $infocenterRepository)
+    public function __construct(IngresoRepository $ingresoRepository, UserRepository $userRepository)
     {
-        $this->middleware('auth');
-        $this->userRepository       = $userRepository;
-        $this->infocenterRepository = $infocenterRepository;
+
+        $this->ingresoRepository = $ingresoRepository;
+        $this->userRepository    = $userRepository;
     }
     /**
      * Display a listing of the resource.
@@ -27,38 +26,34 @@ class InfocenterController extends Controller
      */
     public function index()
     {
-
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                return view('users.administrador.infocenter.index', [
-                    'nodos' => $this->userRepository->getAllNodos(),
+                return view('users.administrador.ingreso.index', [
+                    'nodos' => $this->userRepository->getAllNodo(),
                 ]);
                 break;
             case User::IsDinamizador():
-                return view('users.dinamizador.infocenter.index', [
-                    'nodos' => $this->userRepository->getAllNodos(),
-                ]);
+                return view('users.dinamizador.ingreso.index');
                 break;
 
             default:
 
                 break;
         }
-
     }
 
-    /*======================================================================
-    =            metodo para consultar los infocenters por nodo            =
-    ======================================================================*/
+    /*=================================================================================
+    =            metodo para mostrar los usuarios ingreso en el datatables            =
+    =================================================================================*/
 
-    public function getInfocenterForNodo($nodo)
+    public function getIngresoForNodo($nodo)
     {
 
         if (request()->ajax()) {
-            return datatables()->of($this->infocenterRepository->getAllInfocentersForNodo($nodo))
+            return datatables()->of($this->ingresoRepository->getAllUsersIngresoForNodo($nodo))
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class=" btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
@@ -76,19 +71,22 @@ class InfocenterController extends Controller
                 ->rawColumns(['detail', 'estado'])
                 ->make(true);
         }
+        abort('404');
     }
 
-    /*=====  End of metodo para consultar los infocenters por nodo  ======*/
+    /*=====  End of metodo para mostrar los usuarios ingreso en el datatables  ======*/
+
+
     /*=======================================================================================
-    =            metodo para mostrar todos los infocenter de un determinado nodo            =
+    =            metodo para mostrar todos los usuarios ingreso de determinado nodo            =
     =======================================================================================*/
-
-    public function getAllInfocentersOfNodo()
-    {
-
+    
+    public function getAllIngresoOfNodo()
+    {      
+         
         if (request()->ajax()) {
 
-            return datatables()->of($this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->dinamizador->nodo_id))
+            return datatables()->of($this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id))
                 ->addColumn('detail', function ($data) {
 
                     $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
@@ -110,13 +108,13 @@ class InfocenterController extends Controller
                         return $data->estado = 'Inhabilitado ';
                     }
                 })
-                ->rawColumns(['detail', 'estado', 'edit'])
+                ->rawColumns(['detail','estado', 'edit'])
                 ->make(true);
         }
         abort('404');
-
+       
     }
-
-    /*=====  End of metodo para mostrar todos los infocenter de un determinado nodo  ======*/
+    
+    /*=====  End of metodo para mostrar todos los usuarios ingreso de determinado nodo  ======*/
 
 }

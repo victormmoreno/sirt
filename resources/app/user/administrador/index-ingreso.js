@@ -1,16 +1,16 @@
 $(document).ready(function() {
-    $('#infocenter_table').DataTable({
+    $('#ingreso_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
     });
     // $('.dataTables_length select').addClass('browser-default');
 });
-var UserAdministradorInfocenter = {
-    selectInfocentersForNodo: function() {
+var UserAdministradorIngreso = {
+    selectIngresoForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#infocenter_table').dataTable().fnDestroy();
-        $('#infocenter_table').DataTable({
+        $('#ingreso_table').dataTable().fnDestroy();
+        $('#ingreso_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -18,7 +18,7 @@ var UserAdministradorInfocenter = {
             serverSide: true,
             order: false,
             ajax: {
-                url: "/usuario/infocenter/getinfocenter/" + nodo,
+                url: "/usuario/ingreso/getingreso/" + nodo,
                 type: "get",
             },
             columns: [{

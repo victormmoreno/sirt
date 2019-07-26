@@ -2,10 +2,9 @@
 
 namespace App\Repositories\Repository\UserRepository;
 
-use App\Repositories\Interfaces\UserInterface\InfocenterInterface;
 use App\User;
 
-class InfocenterRepository implements InfocenterInterface
+class InfocenterRepository
 {
 
     /*===============================================================================

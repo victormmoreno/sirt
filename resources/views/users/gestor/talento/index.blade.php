@@ -46,7 +46,7 @@
                             </div>
                             <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                               <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
-                              <li class="tab col s3"><a href="#TalentoProyectoNodo" >Talentos con proyectos realizados en {{config('app.name')}}</a></li>
+                              <li class="tab col s3"><a href="#TalentoProyectoNodo" >Talentos con proyectos realizados en Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} </a></li>
                               <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                             </ul>
                             <div class="divider">
@@ -71,17 +71,7 @@
                             <div id="TalentoProyectoNodo">
                             <div class="row">
                                 <div class="col s12 m12 l12">
-                                    <div class="file-field input-field">
-                                        <div class="file-path-wrapper">
-                                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorGestor.selectGestoresPorNodo()">
-                                                <option value="">Seleccione nodo</option>
-                                                @foreach($nodos as $id => $nodo)
-                                                  <option value="{{$id}}">{{$nodo}}</option>
-                                                @endforeach
-                                            </select>
-                                            <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <table class="display responsive-table" id="talento_proyecto_table">
@@ -114,5 +104,7 @@
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
+
+
 
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Gestores')
+@section('meta-title', 'Infocenter')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -15,7 +15,7 @@
                                     arrow_back
                                 </i>
                             </a>
-                            Usuarios | Gestores
+                            Usuarios | Infocenter
                             <i class="material-icons">
                                 supervised_user_circle
                             </i>
@@ -29,7 +29,7 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Gestores Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            Infocenter Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
                                             <i class="material-icons">
                                                 supervised_user_circle
                                             </i>
@@ -49,7 +49,7 @@
                             <div class="divider">
                             </div>
                             <br>
-                                <table class="display responsive-table" id="gestores_dinamizador_table">
+                                <table class="display responsive-table" id="infocenters_dinamizador_table">
                                     <thead>
                                         <th>Tipo Documento</th>
                                         <th>Docuemento</th>

@@ -14,7 +14,7 @@ var roleUserSession = {
         	if (response.role != null) {
         		location.href= response.url;
         	}else{
-        		console.log(response.role );
+        		
         	}
         	
       }); 

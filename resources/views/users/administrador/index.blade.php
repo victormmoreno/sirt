@@ -69,8 +69,12 @@
                                                     @case(config('laravelpermission.roles.roleTalento'))
                                                         <p class="center"><a href="{{route('usuario.talento.index')}}">ir a {{$role}}</a></p>
                                                     @break
+                                                    @case(config('laravelpermission.roles.roleIngreso'))
+                                                        <p class="center"><a href="{{route('usuario.ingreso.index')}}">ir a {{$role}}</a></p>
+                                                    @break
                                                 @default
                                                     <p class="center"><a href="">ir a {{$role}}</a></p>
+                                                    @break
                                                 @endswitch
 
                                             </div>

@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
-@section('meta-title', 'Gestores')
-
+@section('meta-title', 'Ingreso')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -15,7 +13,7 @@
                                     arrow_back
                                 </i>
                             </a>
-                            Usuarios | Gestores
+                            Usuarios | Ingreso
                             <i class="material-icons">
                                 supervised_user_circle
                             </i>
@@ -29,11 +27,11 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Gestores Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
-                                            <i class="material-icons">
-                                                supervised_user_circle
-                                            </i>
+                                            Ingreso {{config('app.name')}}
                                         </span>
+                                        <i class="material-icons">
+                                            supervised_user_circle
+                                        </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
@@ -48,17 +46,39 @@
                             </div>
                             <div class="divider">
                             </div>
-                            <br>
-                                <table class="display responsive-table" id="gestores_dinamizador_table">
+                            
+
+                            <div class="row">
+
+                                    <div class="col s12 m12 l12">
+                                        <div class="file-field input-field">
+
+                                            <div class="file-path-wrapper">
+                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorIngreso.selectIngresoForNodo()">
+                                                    <option value="">Seleccione nodo</option>
+                                                    @foreach($nodos as $id => $nodo)
+                                                      <option value="{{$id}}">{{$nodo}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            
+                                <br>
+                                <table class="display responsive-table" id="ingreso_table">
                                     <thead>
                                         <th>Tipo Documento</th>
                                         <th>Docuemento</th>
-                                        <th>Administrador</th>
+                                        <th>Usuario</th>
                                         <th>Correo</th>
                                         <th>Telefono</th>
                                         <th>Estado Sistema</th>
                                         <th>Detalles</th>
-                                        <th>Editar</th>
+                                        
                                     </thead>
                     
                                 </table>
@@ -71,6 +91,8 @@
 </main>
 <div  class="modal detalleUsers">
   <div class="modal-content">
+    <center><h4 class="center-aling"></h4></center>
+    <div class="divider"></div>
     <div class="titulo_users"></div>
   </div>
   <div class="modal-footer">

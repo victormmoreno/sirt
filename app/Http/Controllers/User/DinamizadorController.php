@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\{DinamizadorRepository, UserRepository};
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -32,31 +33,23 @@ class DinamizadorController extends Controller
                 return view('users.administrador.dinamizador.index', [
                     'nodos' => $this->userRepository->getAllNodos(),
                 ]);
-            break;
-            case User::IsDinamizador():
-                return view('users.dinamizador.gestor.index', [
-                    'nodos' => $this->userRepository->getAllNodos(),
-                ]);
-             break;
+                break;
 
             default:
-                
-            break;
+                abort('404');
+                break;
         }
-        
+
     }
 
     public function getDinanizador($nodo)
     {
 
-        // $dinamizador = $this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo);
-        // dd($dinamizador);
-
         if (request()->ajax()) {
             return datatables()->of($this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo))
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#modal1" onclick="UserAdministradorDinamizador.detalleDinamizador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
@@ -79,25 +72,6 @@ class DinamizadorController extends Controller
                 ->make(true);
         }
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = $this->userRepository->findById($id);
-        $data = [
-            'user'              => $user,
-            'role'              => $user->getRoleNames()->implode(', '),
-        ];
-
-        return response()->json([
-            'data' => $data,
-        ]);
     }
 
 }

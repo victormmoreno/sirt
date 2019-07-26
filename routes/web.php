@@ -86,10 +86,23 @@ Route::group([
 ],
     function () {
 
-        Route::get('/', [
-            'uses' => 'UserController@index',
-            'as'   => 'usuario.index',
-        ]);
+        Route::get('administrador', 'AdminController@index')->name('usuario.administrador.index');
+
+        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
+        Route::get('dinamizador', 'DinamizadorController@index')->name('usuario.dinamizador.index');
+
+        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
+        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
+        Route::get('gestor/getgestor', 'GestorController@getAllGestoresOfNodo')->name('usuario.gestor.getGestorofnodo');
+        Route::get('gestor', 'GestorController@index')->name('usuario.gestor.index');
+
+        Route::get('infocenter/getinfocenter/{id}', 'InfocenterController@getInfocenterForNodo')->name('usuario.infoncenter.getinfocenter');
+        Route::get('infocenter/getinfocenter', 'InfocenterController@getAllInfocentersOfNodo')->name('usuario.infocenter.getinfocenternodo');
+        Route::get('infocenter', 'InfocenterController@index')->name('usuario.infocenter.index');
+
+        Route::get('ingreso/getingreso/{id}', 'IngresoController@getIngresoForNodo')->name('usuario.ingreso.getingreso');
+        Route::get('ingreso/getingreso', 'IngresoController@getAllIngresoOfNodo')->name('usuario.ingreso.getingresonodo');
+        Route::get('ingreso', 'IngresoController@index')->name('usuario.ingreso.index');
 
 
         Route::get('/talento/getTalentosDeTecnoparque', [
@@ -101,27 +114,15 @@ Route::group([
             'uses' => 'TalentoController@consultarUnTalentoPorId',
             'as'   => 'talento.tecnoparque.byid',
         ]);
+        Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
+        Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
 
-        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
-
-        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
-
-        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
+        Route::get('/', [
+            'uses' => 'UserController@index',
+            'as'   => 'usuario.index',
+        ]);
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
-
-        
-        Route::get('infocenter/getinfocenter/{id}', 'InfocenterController@getInfocenterForNodo')->name('usuario.infoncenter.getinfocenter');
-
-        Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
-
-        Route::resource('talento', 'TalentoController', ['as' => 'usuario', 'only' => ['index', 'show']]);
-        Route::resource('gestor', 'GestorController', ['as' => 'usuario', 'only' => ['index', 'show']]);
-        Route::resource('infocenter', 'InfocenterController', ['as' => 'usuario', 'only' => ['index', 'show']]);
-
-        Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario', 'only' => ['index', 'show']]);
-
-        Route::resource('administrador', 'AdminController', ['as' => 'usuario', 'only' => ['index', 'show']]);
 
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
             'create'  => 'usuario.usuarios.create',
