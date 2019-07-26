@@ -48,7 +48,7 @@ class EntidadRepository
    */
   public function consultarEmpresaEntidadRepository($id)
   {
-    return Empresa::select('entidades.nombre', 'empresas.nit')
+    return Empresa::select('entidades.nombre', 'empresas.nit', 'empresas.entidad_id')
     ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
     ->where('entidades.id', $id)
     ->get()

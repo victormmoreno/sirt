@@ -26,15 +26,19 @@ class TipoDocumento extends Model
     /*==========================================================================
     =            scope para consultar todos los tipos de documentos            =
     ==========================================================================*/
-    
+
     public function scopeAllTipoDocumento($query)
     {
 
         return $query->select('tiposdocumentos.id','tiposdocumentos.nombre');
 
     }
-    
+
     /*=====  End of scope para consultar todos los tipos de documentos  ======*/
-    
-    
+
+    public function visitantes()
+    {
+        return $this->hasMany(Visitante::class, 'tipodocumento_id', 'id');
+    }
+
 }

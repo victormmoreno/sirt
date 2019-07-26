@@ -39,6 +39,7 @@
                       <th>Ideas</th>
                       <th>Editar</th>
                       <th>Inhabilitar</th>
+                      <th>Evidencias</th>
                     </tr>
                   </thead>
                   <tbody>

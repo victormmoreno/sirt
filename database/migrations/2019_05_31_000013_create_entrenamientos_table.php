@@ -25,10 +25,14 @@ class CreateEntrenamientosTable extends Migration
             $table->increments('id');
             $table->date('fecha_sesion1');
             $table->date('fecha_sesion2');
+            $table->string('codigo_entrenamiento', 20);
             $table->tinyInteger('correos')->nullable()->default('0');
             $table->tinyInteger('fotos')->nullable()->default('0');
             $table->tinyInteger('listado_asistencia')->nullable()->default('0');
             $table->timestamps();
+
+            $table->unique(["codigo_entrenamiento"], 'codigo_entrenamiento_UNIQUE');
+
         });
     }
 

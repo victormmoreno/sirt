@@ -1,17 +1,17 @@
 <?php
 
 function setActiveRoutePadding($name){
-    return request()->is($name) ? 'active':'';
+    return request()->is($name.'*') ? 'active':'';
 }
 
 function setActiveRoute($name){
-    return request()->is($name) ? 'active':'';
+    return request()->is($name.'*') ? 'active':'';
 }
 
 function setActiveRouteActivePage($name){
-    return request()->is($name) ? 'active-page':'';
+    return request()->is($name.'*') ? 'active-page':'';
 }
 
 function setActiveRouteActiveIcon($name){
-    return request()->is($name) ? 'teal-text lighten-2':'';
+    return request()->is($name.'*') ? 'teal-text lighten-2':'';
 }

@@ -135,15 +135,15 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
-      url: "idea",
+      url: "/idea",
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -203,7 +203,88 @@ $(document).ready(function() {
     }
   });
 
+  $('#tblideasempresas').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/idea/consultarIdeasEmpresasGIPorNodo/"+0,
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_idea',
+        name: 'codigo_idea',
+      },
+      {
+        data: 'fecha_registro',
+        name: 'fecha_registro',
+      },
+      {
+        data: 'nit',
+        name: 'nit',
+      },
+      {
+        data: 'razon_social',
+        name: 'razon_social',
+      },
+      {
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+    ],
+    initComplete: function () {
+      this.api().columns().every(function () {
+        var column = this;
+        var input = document.createElement("input");
+        $(input).appendTo($(column.footer()).empty())
+        .on('change', function () {
+          column.search($(this).val(), false, false, true).draw();
+        });
+      });
+    }
+  });
+
 });
+
+function cambiarEstadoIdeaDeProyecto(id, estado) {
+  Swal.fire({
+    title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí'
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/idea/updateEstadoIdea/'+id+'/'+estado,
+        success: function (data) {
+          Swal.fire({
+            title: 'El estado de la idea se ha cambiado exitosamente!',
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Sí'
+          }).then((result) => {
+            window.location.replace(data.route);
+          })
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      })
+    }
+  })
+
+}
 
 $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
 
@@ -220,63 +301,64 @@ function detallesIdeaPorId(id){
       swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
       $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.detalles.nombre_proyecto+"");
-      $("#detalle_idea").append('<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Objetivo: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
-      +'</div>'
-      +'</div>'
-      +'<div class="divider"></div>'
-      +'<div class="row">'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="cyan-text text-darken-3">Alcance: </span>'
-      +'</div>'
-      +'<div class="col s12 m6 l6">'
-      +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
-      +'</div>'
-      +'</div>'
-    );
-    $('#modal1').openModal();
-  }
-})
+      $("#detalle_idea").append(
+        '<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Descripcion: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Objetivo: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Alcance: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
+        +'</div>'
+        +'</div>'
+      );
+      $('#modal1').openModal();
+    }
+  })
 }
 
 function consultarIdeasPorNodo() {
@@ -293,15 +375,15 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
       url: "/idea/consultarIdeasEmprendedoresPorNodo/"+idNodo,
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -336,7 +418,7 @@ function consultarIdeasEmprendedoresPorNodo(idNodo) {
     ],
   });
 }
-//--- Server side de la datatable que muestra las
+
 function consultarIdeasEmpresasGIPorNodo(idNodo) {
   $('#ideasEmpresasGIPorNodo_table').dataTable().fnDestroy();
   $('#ideasEmpresasGIPorNodo_table').DataTable({
@@ -345,15 +427,15 @@ function consultarIdeasEmpresasGIPorNodo(idNodo) {
     },
     processing: true,
     serverSide: true,
-    order: false,
+    // order: false,
     ajax:{
       url: "/idea/consultarIdeasEmpresasGIPorNodo/"+idNodo,
       type: "get",
     },
     columns: [
       {
-        data: 'consecutivo',
-        name: 'consecutivo',
+        data: 'codigo_idea',
+        name: 'codigo_idea',
       },
       {
         data: 'fecha_registro',
@@ -379,8 +461,38 @@ $(document).ready(function() {
 
   consultarIdeasEmprendedoresPorNodo(0);
   consultarIdeasEmpresasGIPorNodo(0);
+  consultaIdeasEmprendedoresTodosPorNodo(0);
 
 });
+
+function consultaIdeasEmprendedoresTodosPorNodo(idNodo) {
+  $('#tbl_TodasLasIdeasDeProyecto').dataTable().fnDestroy();
+  $('#tbl_TodasLasIdeasDeProyecto').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    // order: false,
+    ajax:{
+      url: "/idea/consultarIdeasTodosPorNodo/"+idNodo,
+      type: "get",
+    },
+    columns: [
+      { data: 'codigo_idea', name: 'codigo_idea' },
+      { data: 'fecha_registro', name: 'fecha_registro' },
+      { data: 'persona', name: 'persona' },
+      { data: 'correo', name: 'correo' },
+      { data: 'contacto', name: 'contacto' },
+      { data: 'nombre_idea', name: 'nombre_idea' },
+      { data: 'fecha_sesion1', name: 'fecha_sesion1' },
+      { data: 'fecha_sesion2', name: 'fecha_sesion2' },
+      { data: 'fecha_comite', name: 'fecha_comite' },
+      { data: 'hora', name: 'hora' },
+      { data: 'admitido', name: 'admitido' },
+    ],
+  });
+}
 
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
@@ -397,7 +509,7 @@ function detallesIdeasDelEntrenamiento(id){
       $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
       $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
       $.each(respuesta, function(i, item) {
-        $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
+        $("#ideasEntrenamiento").append("<tr><td>"+item.codigo_idea+" - "+item.nombre_proyecto+
           "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
       });
       $('#modalIdeasEntrenamiento').openModal();
@@ -418,8 +530,9 @@ $(document).ready(function() {
     },
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -434,14 +547,17 @@ $(document).ready(function() {
         name: 'correos',
       },
       {
+        width: '8%',
         data: 'fotos',
         name: 'fotos',
       },
       {
+        width: '8%',
         data: 'listado_asistencia',
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
@@ -464,8 +580,9 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
     },
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -488,6 +605,7 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
@@ -515,14 +633,17 @@ $(document).ready(function() {
     },
     processing: true,
     serverSide: true,
+    paging: false,
     ajax:{
-      url: "entrenamientos",
+      url: "/entrenamientos",
       type: "get",
     },
+
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -545,47 +666,45 @@ $(document).ready(function() {
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
+        width: '8%',
         data: 'edit',
         name: 'edit',
         orderable: false
       },
       {
+        width: '8%',
         data: 'update_state',
         name: 'update_state',
         orderable: false
       },
+      {
+        width: '8%',
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
     ],
   });
-});
+  $('a.toggle-vis').on( 'click', function (e) {
+    e.preventDefault();
 
-// function inhabilitarEntrenamientoPorId(id) {
-//   $.ajax({
-//      dataType:'json',
-//      type:'get',
-//      url:"entrenamientos/inhabilitarEntrenamiento/"+id,
-//   }).done(function(respuesta){
-//     // $("#ideasEntrenamiento").empty();
-//     // if (respuesta != null ) {
-//     //   $("#fechasEntrenamiento").empty();
-//     //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-//     //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
-//     //   $.each(respuesta, function(i, item) {
-//     //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
-//     //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
-//     //   });
-//     //   $('#modalIdeasEntrenamiento').openModal();
-//     // }
-//   });
-// }
+    // Get the column API object
+    var column = table.column( $(this).attr('data-column') );
+
+    // Toggle the visibility
+    column.visible( ! column.visible() );
+  } );
+});
 
 function inhabilitarEntrenamientoPorId(id, e) {
   Swal.fire({
-    title: '¿Desea inhabilitar elentrenamiento?',
+    title: '¿Desea inhabilitar el entrenamiento?',
     // text: "You won't be able to revert this!",
     type: 'warning',
     showCancelButton: true,
@@ -600,35 +719,50 @@ function inhabilitarEntrenamientoPorId(id, e) {
         text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
         type: 'warning',
         footer: '<a onclick="Swal.close()" href="#">Cancelar</a>',
-        confirmButtonText: '<a class="white-text" onclick="meth('+id+',6); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
+        confirmButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inhabilitado\'); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
         cancelButtonColor: '#d33',
         showCancelButton: true,
-        cancelButtonText: '<a class="white-text" onclick="meth('+id+',1); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
+        cancelButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inicio\'); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
         focusConfirm: false,
       })
     }
   })
 }
 
-function meth(idea, estado) {
-  // console.log(idea+', '+estado);
-    $.ajax({
-       dataType:'json',
-       type:'get',
-       url:"entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
-    }).done(function(respuesta){
-      // $("#ideasEntrenamiento").empty();
-      // if (respuesta != null ) {
-      //   $("#fechasEntrenamiento").empty();
-      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-      //   $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
-      //   $.each(respuesta, function(i, item) {
-      //     $("#ideasEntrenamiento").append("<tr><td>"+item.nombre_proyecto+
-      //       "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
-      //   });
-      //   $('#modalIdeasEntrenamiento').openModal();
-      // }
-    });
+function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
+    success: function (data) {
+      console.log(data);
+      if (data.update == "true") {
+        Swal.fire({
+          title: 'El entrenamiento se ha inhabilitado!',
+          html: 'Las ideas de proyecto del entrenamiento han cambiado su estado a: ' + data.estado ,
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        })
+      }
+      if (data.update == "1") {
+        // console.log('No se cambió');
+        Swal.fire({
+          title: 'No se puede inhabilitar el entrenamiento!',
+          html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +
+          'Si deseas hacer esto, las ideas de proyecto asociadas al entrenamiento no pueden estar en proyecto ó CSIBT' ,
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Entiendo!'
+        })
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
 }
 
 $(document).ready(function() {
@@ -699,7 +833,7 @@ entrenamiento = {
         let assists = elemento.AssistS == 1 ? "checked" : "";
         let convocado = elemento.Convocado == 1 ? "checked" : "";
         $('#tblIdeasEntrenamientoCreate').append('<tr>'
-        +'<td>'+elemento.nombre_proyecto+'</td>'
+        +'<td>'+elemento.codigo_idea+' - '+elemento.nombre_proyecto+'</td>'
         +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
         +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
         +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'
@@ -768,112 +902,6 @@ entrenamiento = {
   }
 }
 
-$(document).ready(function() {
-  entrenamientoEdit.cargarIdeasEdit();
-});
-entrenamientoEdit = {
-  cargarIdeasEdit:function(){
-    let entrenamiento = $("#xxx").val();
-    let token = $("#formEntrenamientosEdit input[name=_token]").val();
-
-    $.ajax({
-      dataType:'json',
-      type:'post',
-      url:'/entrenamientos/cargarIdeas',
-      data: {
-        'entrenamiento':entrenamiento,
-        '_token':token
-      }
-    }).done(function(response){
-      if (response.data == 3) {
-        swal("Error!", "La idea de proyecto ya está asociada al entrenamiento!", "warning");
-      } else {
-        entrenamientoEdit.getIdeasEdit();
-      }
-    })
-  },
-  getIdeasEdit:function(){
-    $.ajax({
-      dataType:'json',
-      type:'get',
-      url:'/entrenamientos/getideasEntrenamientoEdit'
-    }).done(function(respuesta){
-      $('#tblIdeasEntrenamientoCreateEdit').empty();
-      $.each(respuesta, function (i,elemento){
-        let confirm = elemento.Confirm == 1 ? "checked" : "";
-        let canvas = elemento.Canvas == 1 ? "checked" : "";
-        let assistf = elemento.AssistF == 1 ? "checked" : "";
-        let assists = elemento.AssistS == 1 ? "checked" : "";
-        let convocado = elemento.Convocado == 1 ? "checked" : "";
-        $('#tblIdeasEntrenamientoCreate').append('<tr>'
-        +'<td>'+elemento.nombre_proyecto+'</td>'
-        +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+assistf+' onclick="entrenamiento.getAssistF('+elemento.id+', '+(elemento.AssistF == 1 ? 1 : 0)+')" name="asistencia_primera_sesion" id="asistencia_primera_sesion'+elemento.id+'" value="1"/><label for="asistencia_primera_sesion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+assists+' onclick="entrenamiento.getAssistS('+elemento.id+', '+(elemento.AssistS == 1 ? 1 : 0)+')" name="asistencia_segunda_sesion" id="asistencia_segunda_sesion'+elemento.id+'" value="1"/><label for="asistencia_segunda_sesion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+convocado+' onclick="entrenamiento.getConvocado('+elemento.id+', '+(elemento.Convocado == 1 ? 1 : 0)+')" name="csibt_convocado" id="csibt_convocado'+elemento.id+'" value="1"/><label for="csibt_convocado'+elemento.id+'"></label></p></td>'
-        +'<td><a class="waves-effect red lighten-3 btn" onclick="entrenamiento.getEliminar('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
-        +'</tr>');
-      })
-    })
-  },
-  // <p class="p-v-xs"><input type="checkbox" id="txtfotos" name="txtfotos" value="1"/><label for="txtfotos">Evidencias Fotográficas</label></p>
-  // getEliminar:function (idIdea) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/eliminar/'+idIdea,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   })
-  // },
-  // getConfirm:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getConfirm/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getCanvas:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getCanvas/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getAssistF:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getAssistF/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getAssistS:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getAssistS/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // },
-  // getConvocado:function (idIdea, estado) {
-  //   $.ajax({
-  //     type:'get',
-  //     dataType:'json',
-  //     url:'/entrenamientos/getConvocado/'+idIdea+'/'+estado,
-  //   }).done(function(respuesta){
-  //     entrenamiento.getIdeas();
-  //   });
-  // }
-}
 
 $(document).ready(function() {
 $('.dataTables_length select').addClass('browser-default');
@@ -1292,7 +1320,11 @@ function consultarCsibtPorNodo() {
 }
 
 $(document).ready(function() {
-  $('#empresasDeTecnoparque_table').DataTable({
+  // $('#empresasDeTecnoparque_table tfoot th').each( function () {
+  //   var title = $(this).text();
+  //   $(this).html( '<input type="text" placeholder="Buscar por: '+title+'" />' );
+  // } );
+  var datatableEmpresas = $('#empresasDeTecnoparque_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
@@ -1302,6 +1334,7 @@ $(document).ready(function() {
       url: "/empresa/datatableEmpresasDeTecnoparque",
       type: "get",
     },
+    deferRender: true,
     columns: [
       {
         data: 'nit',
@@ -1339,7 +1372,39 @@ $(document).ready(function() {
         orderable: false
       },
     ],
+    initComplete: function () {
+      this.api().columns().every( function () {
+        var column = this;
+        var select = $('<select><option value=""></option></select>')
+        .appendTo( $(column.footer()).empty() )
+        .on( 'change', function () {
+          var val = $.fn.dataTable.util.escapeRegex(
+            $(this).val()
+          );
+
+          column
+          .search( val ? '^'+val+'$' : '', true, false )
+          .draw();
+        } );
+
+        column.data().unique().sort().each( function ( d, j ) {
+          select.append( '<option value="'+d+'">'+d+'</option>' )
+        } );
+      } );
+    },
   });
+
+  // datatableEmpresas.columns().every( function () {
+  //   var that = this;
+  //
+  //   $( 'input', this.footer() ).on( 'keyup change', function () {
+  //     if ( that.search() !== this.value ) {
+  //       that
+  //       .search( this.value )
+  //       .draw();
+  //     }
+  //   } );
+  // } );
 
   $('#empresasDeTecnoparque_tableNoGestor').DataTable({
     language: {
@@ -3675,6 +3740,485 @@ function consultarProyectosDelNodoPorAnho() {
         data: 'entregables',
         name: 'entregables',
         orderable: false
+      },
+    ],
+  });
+}
+
+$(document).ready(function() {
+  $('#empresasDeTecnoparque_modEdt_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    lengthMenu: [[5, 25, 50, -1], [5, 25, 50, "All"]],
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/empresa/datatableEmpresasDeTecnoparque",
+      type: "get",
+    },
+    deferRender: true,
+    columns: [
+      { data: 'nit', name: 'nit' },
+      { data: 'nombre_empresa', name: 'nombre_empresa' },
+      { data: 'add_empresa_a_edt', name: 'add_empresa_a_edt' }
+    ],
+  });
+});
+
+function noRepeat(id) {
+  let idEntidad = id;
+  let retorno = true;
+  let a = document.getElementsByName("entidades[]");
+  for (x=0;x<a.length;x++){
+    if (a[x].value == idEntidad) {
+      retorno = false;
+      break;
+    }
+  }
+  return retorno;
+}
+
+function addEmpresaAEdt(id) {
+  if (noRepeat(id) == false) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      type: 'warning',
+      title: 'La empresa ya se encuentra asociada a la edt!'
+    });
+  } else {
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:'/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
+    }).done(function(ajax){
+      let idEntidad = ajax.detalles.entidad_id;
+      let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'
+      +'<td><input type="hidden" name="entidades[]" value="'+idEntidad+'">'+ajax.detalles.nit+'</td>'
+      +'<td>'+ajax.detalles.nombre+'</td>'
+      +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
+      +'</tr>';
+      $('#detalleEntidadesAsociadasAEdt').append(fila);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        type: 'success',
+        title: 'La empresa se ha asociado a la edt!'
+      });
+    });
+  }
+}
+
+function eliminarEntidadAsociadaAEdt(index){
+  $('#entidadAsociadaAEdt'+index).remove();
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500,
+    type: 'success',
+    title: 'Se ha removido la empresa de la edt!'
+  });
+}
+
+$(document).ready(function() {
+  consultarEdtsDeUnGestor(0);
+})
+
+
+// Ajax que muestra los proyectos de un gestor por año
+function consultarEdtsDeUnGestor(id) {
+  // console.log('event');
+  // let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+  // let gestor = $('#txtgestor_id').val();
+  $('#edtPorGestor_table').dataTable().fnDestroy();
+  $('#edtPorGestor_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/edt/consultarEdtsDeUnGestor/"+id,
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_edt',
+        name: 'codigo_edt',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'gestor',
+        name: 'gestor',
+      },
+      {
+        data: 'area_conocimiento',
+        name: 'area_conocimiento',
+      },
+      {
+        data: 'tipo_edt',
+        name: 'tipo_edt',
+      },
+      {
+        width: '8%',
+        data: 'business',
+        name: 'business',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'entregables',
+        name: 'entregables',
+        orderable: false
+      },
+    ],
+  });
+}
+
+$(document).ready(function() {
+  datatableEdtsPorNodo(0);
+});
+
+function datatableEdtsPorNodo(id) {
+  $('#edtPorNodo_table').dataTable().fnDestroy();
+  $('#edtPorNodo_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/edt/consultarEdtsDeUnNodo/"+id,
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_edt',
+        name: 'codigo_edt',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'gestor',
+        name: 'gestor',
+      },
+      {
+        data: 'area_conocimiento',
+        name: 'area_conocimiento',
+      },
+      {
+        data: 'tipo_edt',
+        name: 'tipo_edt',
+      },
+      {
+        width: '8%',
+        data: 'business',
+        name: 'business',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'entregables',
+        name: 'entregables',
+        orderable: false
+      },
+    ],
+  });
+}
+/**
+* Mostrar la entidades registradas en una por el id de la edt
+*/
+function verEntidadesDeUnaEdt(id) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
+    success: function (response) {
+      $("#entidadesEdt_table").empty();
+      if (response.entidades.length != 0 ) {
+        $("#entidadesEdt_titulo").empty();
+        $("#entidadesEdt_titulo").append("<span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
+        $.each(response.entidades, function(i, item) {
+          $("#entidadesEdt_table").append(
+            '<tr>'
+            +'<td>'+item.nit+'</td>'
+            +'<td>'+item.nombre+'</td>'
+            +'</tr>'
+          );
+        });
+        $('#entidadesEdt_modal').openModal();
+      } else {
+        Swal.fire({
+          title: 'Ups!!',
+          text: "No se encontraron empresas asociadas a esta Edt!",
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+        })
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
+}
+
+/**
+* Muestra el detalle de una edt
+*/
+function detallesDeUnaEdt(id) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:'/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
+    success: function (response) {
+      /**
+      * Limpiando el modal
+      */
+      $('#detalleEdt_titulo').empty();
+      $('#detalleEdt_detalle').empty();
+      /**
+      * Pintando datos en el modal
+      */
+      $("#detalleEdt_titulo").append("<span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
+      $("#detalleEdt_detalle").append('<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Código de la Edt: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.codigo_edt+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Nombre de la Edt: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.nombre+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Área de Conocimiento: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.areaconocimiento+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Tipo de Edt: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.tipoedt+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Fecha de Inicio: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.fecha_inicio+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m12 l12">'
+      +'<h6 class="cyan-text text-darken-3 center">Asistentes</h6>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Empleados: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.empleados+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Instructores: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.instructores+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Aprendices: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.aprendices+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Público: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.publico+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Observaciones: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+response.edt.observaciones+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>');
+      /**
+      * Abriendo modal
+      */
+      $('#detalleEdt_modal').openModal();
+    },
+    error: function (xhr, txtStatus, errorThrown){
+      alert("Error: " + errorThrown);
+    }
+  })
+}
+
+function datatableVisitantesPorNodo_Ingreso() {
+  $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();
+  $('#visitantesRedTecnoparque_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/visitante/consultarVisitantesRedTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'documento',
+        name: 'documento',
+      },
+      {
+        data: 'tipo_documento',
+        name: 'tipo_documento',
+      },
+      {
+        data: 'tipo_visitante',
+        name: 'tipo_visitante',
+      },
+      {
+        data: 'visitante',
+        name: 'visitante',
+      },
+      {
+        data: 'email',
+        name: 'email',
+      },
+      {
+        data: 'contacto',
+        name: 'contacto'
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+    ],
+  });
+}
+
+function datatableVisitantesPorNodo_DinamizadorAdministrador() {
+  $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();
+  $('#visitantesRedTecnoparque_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/visitante/consultarVisitantesRedTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'documento',
+        name: 'documento',
+      },
+      {
+        data: 'tipo_documento',
+        name: 'tipo_documento',
+      },
+      {
+        data: 'tipo_visitante',
+        name: 'tipo_visitante',
+      },
+      {
+        data: 'visitante',
+        name: 'visitante',
+      },
+      {
+        data: 'email',
+        name: 'email',
+      },
+      {
+        data: 'contacto',
+        name: 'contacto'
       },
     ],
   });
