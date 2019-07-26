@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Alert;
 use App\Helpers\ArrayHelper;
-Use App\User;
-Use App;
+use App\User;
+use App;
 
 class ProyectoController extends Controller
 {

@@ -345,6 +345,40 @@ Route::group([
   }
 );
 
+/**
+* Route group para el módulo visitantes
+*/
+Route::group([
+  'prefix' => 'visitante',
+  'middleware' => 'role_session:Ingreso|Dinamizador|Administrador'
+],
+  function () {
+    Route::get('/', 'VisitanteController@index')->name('visitante');
+    Route::get('/create', 'VisitanteController@create')->name('visitante.create')->middleware('role_session:Ingreso');
+    Route::get('/consultarVisitantesRedTecnoparque', 'VisitanteController@consultarVisitantesRedTecnoparque')->name('visitante.tecnoparque');
+    Route::get('/{id}/edit', 'VisitanteController@edit')->name('visitante.edit')->middleware('role_session:Ingreso');
+    Route::put('/{id}', 'VisitanteController@update')->name('visitante.update')->middleware('role_session:Ingreso');
+    Route::post('/', 'VisitanteController@store')->name('visitante.store')->middleware('role_session:Ingreso');
+  }
+);
+
+/**
+* Route group para el módulo de ingresos de visitantes
+*/
+Route::group([
+  'prefix' => 'ingreso',
+  'middleware' => 'role_session:Ingreso|Dinamizador|Administrador'
+],
+  function () {
+    Route::get('/', 'IngresoVisitanteController@index')->name('ingreso');
+    Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
+    // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
+    // Route::get('/{id}/edit', 'IngresoController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
+    // Route::put('/{id}', 'IngresoController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
+    // Route::post('/', 'IngresoController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+  }
+);
+
 //-------------------Route group para todos los pdfs de la aplicacion
 Route::group([
     	'prefix' => 'pdf',

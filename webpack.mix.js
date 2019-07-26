@@ -71,6 +71,7 @@ mix.scripts([
 		'resources/app/edt/gestor/form.js',
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
+		'resources/app/visitante/index.js',
 	],'public/js/app2.js');
 
 mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');

@@ -211,7 +211,7 @@
     @break
 
     @case(App\User::IsIngreso())
-      @include('layouts.navrole.ingreso')
+    @include('layouts.navrole.ingreso')
     @break
 
     @case('Dinamizador')
