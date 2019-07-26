@@ -9,64 +9,65 @@ use Illuminate\Support\Facades\DB;
 
 class Idea extends Model
 {
-    // use Notifiable;
+  // use Notifiable;
 
-    /*=================================================================
-    =            constantes para conocer los tipos de idea            =
-    =================================================================*/
+  /*=================================================================
+  =            constantes para conocer los tipos de idea            =
+  =================================================================*/
 
-    const IS_EMPRENDEDOR = 1;
-    const IS_EMPRESA = 2;
-    const IS_GRUPOINVESTIGACION = 3;
+  const IS_EMPRENDEDOR = 1;
+  const IS_EMPRESA = 2;
+  const IS_GRUPOINVESTIGACION = 3;
 
-    /*=====  End of constantes para conocer los tipos de idea  ======*/
+  /*=====  End of constantes para conocer los tipos de idea  ======*/
 
 
-    protected $table = 'ideas';
+  protected $table = 'ideas';
 
-    protected $appends = ['nombre_completo'];
+  protected $appends = ['nombre_completo'];
 
-    protected $dates = [
-        'fecha',
-    ];
+  protected $dates = [
+    'fecha',
+  ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'nodo_id',
-        'nombres_contacto',
-        'apellidos_contacto',
-        'correo_contacto',
-        'telefono_contacto',
-        'nombre_proyecto',
-        'aprendiz_sena',
-        'pregunta1',
-        'pregunta2',
-        'pregunta3',
-        'descripcion',
-        'objetivo',
-        'alcance',
-        'tipo_idea',
-        'estadoidea_id',
+  /**
+  * The attributes that are mass assignable.
+  *
+  * @var array
+  */
+  protected $fillable = [
+    'nodo_id',
+    'nombres_contacto',
+    'apellidos_contacto',
+    'correo_contacto',
+    'telefono_contacto',
+    'nombre_proyecto',
+    'codigo_idea',
+    'aprendiz_sena',
+    'pregunta1',
+    'pregunta2',
+    'pregunta3',
+    'descripcion',
+    'objetivo',
+    'alcance',
+    'tipo_idea',
+    'estadoidea_id',
 
     ];
 
     public function estadoIdea()
     {
-        return $this->belongsTo(EstadoIdea::class, 'estadoidea_id', 'id');
+      return $this->belongsTo(EstadoIdea::class, 'estadoidea_id', 'id');
     }
 
     public function nodo()
     {
-        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+      return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
     public function getNombreCompletoAttribute()
     {
-        return ucfirst($this->nombrec) . ' ' . ucfirst($this->apellidoc);
+      return ucfirst($this->nombrec) . ' ' . ucfirst($this->apellidoc);
     }
 
     /*===============================================================
@@ -74,17 +75,44 @@ class Idea extends Model
     ===============================================================*/
     public static function IsEmprendedor()
     {
-        return self::IS_EMPRENDEDOR;
+      return self::IS_EMPRENDEDOR;
     }
 
     public static function IsEmpresa()
     {
-        return self::IS_EMPRESA;
+      return self::IS_EMPRESA;
     }
 
     public static function IsGrupoInvestigacion()
     {
-        return self::IS_GRUPOINVESTIGACION;
+      return self::IS_GRUPOINVESTIGACION;
+    }
+
+    /**
+    * Consulta todas las ideas de proyecto de un nodo, independientemente si han pasado por los respectivos procesos
+    * @param collection query Propia de los scopes de laravel
+    * @param int id Id del nodo porque el que se buscarán las ideas de proyectos
+    * @return Collection
+    */
+    public function scopeConsultarTodasLasIdeasDeUnNodo($query, $id)
+    {
+      return $query->select('codigo_idea',
+      'correo_contacto AS correo',
+      'nombre_proyecto AS nombre_idea',
+      'telefono_contacto AS contacto',
+      'fecha_sesion1',
+      'fecha_sesion2',
+      'hora',
+      'admitido',
+      'fechacomite AS fecha_comite',
+      'ideas.created_at AS fecha_registro')
+      ->selectRaw('CONCAT(nombres_contacto, " ", apellidos_contacto) AS persona')
+      ->leftJoin('entrenamiento_idea', 'entrenamiento_idea.idea_id', '=', 'ideas.id')
+      ->leftJoin('entrenamientos', 'entrenamiento_idea.entrenamiento_id', '=', 'entrenamientos.id')
+      ->leftJoin('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
+      ->leftJoin('comites', 'comite_idea.comite_id', '=', 'comites.id')
+      ->where('nodo_id', $id)
+      ->where('tipo_idea', $this->IsEmprendedor());
     }
 
 
@@ -93,49 +121,51 @@ class Idea extends Model
     public function scopeConsultarIdeasConEmpresasGrupos($query, $idnodo)
     {
       return $query->select(
-        'ideas.id AS consecutivo',
-        // 'nombres_contacto',
-        'nombre_proyecto',
-        'tipo_idea'
-        )
-        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
-        ->join('estadosidea', 'estadosidea.id', 'ideas.estadoidea_id')
-        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
-        ->where([
-          ['nodos.id', '=',$idnodo],
-          ['tipo_idea', '=', $this->IsEmpresa()],
-          ['estadosidea.nombre', '=', 'Inicio'],
-        ])
-        ->orWhere('tipo_idea', '=', $this->IsGrupoInvestigacion());
+      'ideas.id AS consecutivo',
+      'ideas.codigo_idea',
+      // 'nombres_contacto',
+      'nombre_proyecto',
+      'tipo_idea'
+      )
+      ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+      ->join('estadosidea', 'estadosidea.id', 'ideas.estadoidea_id')
+      ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+      ->where([
+      ['nodos.id', '=',$idnodo],
+      ['tipo_idea', '=', $this->IsEmpresa()],
+      ['estadosidea.nombre', '=', 'Inicio'],
+      ])
+      ->orWhere('tipo_idea', '=', $this->IsGrupoInvestigacion());
     }
 
     public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo)
     {
       return $query->select(
-        'ideas.id AS consecutivo',
-        // 'nombres_contacto',
-        'nombre_proyecto',
-        'tipo_idea'
-        )
-        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
-        ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
-        ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
-        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
-        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-        ->where('nodos.id', $idnodo)
-        ->where('comite_idea.admitido', 1)
-        ->where('estadosidea.nombre', 'Admitido')
-        ->where('tipo_idea', $this->IsEmprendedor());
+      'ideas.id AS consecutivo',
+      'ideas.codigo_idea',
+      // 'nombres_contacto',
+      'nombre_proyecto',
+      'tipo_idea'
+      )
+      ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+      ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
+      ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
+      ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+      ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+      ->where('nodos.id', $idnodo)
+      ->where('comite_idea.admitido', 1)
+      ->where('estadosidea.nombre', 'Admitido')
+      ->where('tipo_idea', $this->IsEmprendedor());
     }
 
     public static function getAllIdeas()
     {
-        return self::all();
+      return self::all();
     }
 
     public function scopeConsultarIdeasConvocadasAComite($query, $id)
     {
-      return $query->select('ideas.id', 'ideas.created_at AS fecha_registro',
+      return $query->select('ideas.id', 'ideas.created_at AS fecha_registro', 'ideas.codigo_idea',
       'correo_contacto AS correo', 'telefono_contacto AS contacto', 'nombre_proyecto AS nombre_idea', 'estadosidea.nombre AS estado')
       ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
@@ -150,30 +180,32 @@ class Idea extends Model
 
     public function scopeConsultarIdeasDelNodo($query, $id)
     {
-      return $query->select('ideas.id AS consecutivo', 'created_at AS fecha_registro',
+      return $query->select('ideas.id AS consecutivo', 'created_at AS fecha_registro', 'ideas.codigo_idea',
       'correo_contacto AS correo', 'telefono_contacto AS contacto', 'nombre_proyecto AS nombre_idea', 'estadosidea.nombre AS estado')
       ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
       ->where('tipo_idea', $this->IsEmprendedor())
+      ->where('estadosidea.nombre', '!=', 'En Proyecto')
       ->orderBy('ideas.id', 'desc')
       ->groupBy('ideas.id');
     }
 
     public function scopeConsultarIdeasEmpGIDelNodo($query, $id)
     {
-      return $query->select(DB::raw("nombres_contacto AS 'nit', apellidos_contacto AS 'razon_social', ideas.id AS consecutivo, created_at AS fecha_registro,
+      return $query->select(DB::raw("nombres_contacto AS 'nit', apellidos_contacto AS 'razon_social', ideas.id AS consecutivo, created_at AS fecha_registro, ideas.codigo_idea,
       correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('nodo_id', $id)
       ->where('tipo_idea', '!=', $this->IsEmprendedor())
+      ->where('estadosidea.nombre', '!=', 'En Proyecto')
       ->orderBy('ideas.id', 'desc');
     }
 
     // -------------------------------- Método para consulta el detalle de una idea de proyecto
     public function scopeConsultarIdeaId($query, $id)
     {
-      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id',
+      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id', 'ideas.codigo_idea',
       'telefono_contacto', 'ideas.id', 'estadosidea.nombre AS estado_idea')
       ->selectRaw('IF(aprendiz_sena = 1, "Si", "No") AS aprendiz_sena')
       ->selectRaw('IF(pregunta1=1, "Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo",
@@ -205,11 +237,11 @@ class Idea extends Model
     // -------------------------------- Método para consulta el detalle de una idea de proyecto
     public function scopeConsultarIdeasEnInicio($query)
     {
-      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id',
+      return $query->select('nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'nombre_proyecto', 'descripcion', 'objetivo', 'alcance', 'nodo_id', 'estadoidea_id', 'ideas.codigo_idea',
       'telefono_contacto', 'ideas.id', 'estadosidea.nombre AS estado_idea')
       ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
       ->where('estadosidea.nombre', 'Inicio')
       ->where('tipo_idea', $this->IsEmprendedor());
     }
 
-}
+  }

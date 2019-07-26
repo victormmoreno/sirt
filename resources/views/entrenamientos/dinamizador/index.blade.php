@@ -13,7 +13,7 @@
                 <div class="row">
                   <div class="col s12 m10 l10">
                     <div class="center-align">
-                      <span class="card-title center-align">Entrenamientos de Tecnoparque nodo {{ \NodoHelper::returnNodoUsuario() }}</span>
+                      <span class="card-title center-align">Entrenamientos de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                     </div>
                   </div>
                 </div>

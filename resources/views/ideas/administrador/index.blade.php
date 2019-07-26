@@ -37,7 +37,7 @@
                     <table id="ideasEmprendedoresPorNodo_table" class="dataTable js-state browser-default" style="width: 100%">
                     <thead>
                       <tr>
-                        <th width="10%">Consecutivo de la Idea</th>
+                        <th width="10%">Código de la Idea</th>
                         <th width="15%">Fecha de Registro</th>
                         <th width="20%">Persona</th>
                         <th>Correo</th>
@@ -56,7 +56,7 @@
                   <table id="ideasEmpresasGIPorNodo_table" class="dataTable js-state browser-default" style="width: 100%">
                     <thead>
                       <tr>
-                        <th>Consecutivo de la Idea</th>
+                        <th>Código de la Idea</th>
                         <th>Fecha de Registro</th>
                         <th>Nit</th>
                         <th>Razón Social</th>

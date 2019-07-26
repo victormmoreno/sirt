@@ -7,6 +7,47 @@ use Illuminate\Database\Migrations\Migration;
 class CreateIngresosVisitantes extends Migration
 {
 
+    /**
+    * Cambiar los ingresos con los siguientes id de visitantes
+    */
+    // 33037 a 33038
+    // 33044 a 33045
+    // 33072 a 33073
+    // 33236 a 33237
+    // 33392 a 33393
+    // 33505 a 33506
+    // 33582 a 33583
+    // 33617 a 33618
+    // 33638 a 33639
+    // 33670 a 33671
+    // 33788 a 33789
+    // 33858 a 33859
+    // 33322 a 33323
+    // 33397 a 33398
+    // 33478 a 33479
+    // 33771 a 33772
+    // 33751 a 33752
+
+    //--------------------------------------------------------------------------------------------------------------------------------------//
+    //33037 a  33038
+    //33044 a  33045
+    //33072 a  33073
+    //33236 a  33237
+    //33322 a  33323
+    //33392 a  33393
+    //33397 a  33398
+    //33478 a  33479
+    //33505 a  33506
+    //33582 a  33583
+    //33670 a  33671
+    //33788 a  33789
+    //33858 a  33859
+    //33617 a  33618
+    //33638 a  33639
+    //33751 a  33752
+    //33771 a  33772
+
+
     public $tableName = 'ingresos_visitantes';
     /**
      * Run the migrations.
@@ -39,7 +80,7 @@ class CreateIngresosVisitantes extends Migration
                 ->references('id')->on('nodos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
-        
+
 
             $table->foreign('servicio_id', 'fk_ingresos_visitantes_servicios1_idx')
                 ->references('id')->on('servicios')
@@ -47,7 +88,7 @@ class CreateIngresosVisitantes extends Migration
                 ->onUpdate('no action');
 
         });
-            
+
     }
 
     /**

@@ -12,8 +12,9 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
     },
     columns: [
       {
-        data: 'id',
-        name: 'id',
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
       },
       {
         data: 'fecha_sesion1',
@@ -36,6 +37,7 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
         name: 'listado_asistencia',
       },
       {
+        width: '8%',
         data: 'details',
         name: 'details',
         orderable: false

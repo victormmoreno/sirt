@@ -53,7 +53,17 @@ class Entidad extends Model
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-    
+
+
+    /**
+    * Relación muchos a muchos con la tabla de edts
+    * @return Eloquent
+    */
+    public function edts()
+    {
+      return $this->belongsToMany(Edt::class, 'edt_entidad')->withTimestamps();
+    }
+
     public function centro()
     {
         return $this->hasOne(Centro::class, 'entidad_id', 'id');
@@ -95,9 +105,9 @@ class Entidad extends Model
     {
         return $this->hasMany(Talento::class, 'entidad_id', 'id');
     }
-    
+
     /*=====  End of relaciones eloquent  ======*/
-    
+
 
     /*========================================================================
     =            scope para consultar los grupos de investigacion            =

@@ -179,51 +179,51 @@
                     {{-- <div class="divider"></div> --}}
                     <div id="divEntidadEmpresaProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnitEmpresa" id="txtnitEmpresa" value="{{ $entidad->nit }}" disabled>
+                        <input type="text" name="txtnitEmpresa" id="txtnitEmpresa" value="{{ $entidad != "" ? $entidad->nit : "" }}" disabled>
                         <label for="txtnitEmpresa" class="active">Nit de la Empresa</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreEmpresa" id="txtnombreEmpresa" value="{{ $entidad->nombre }}" disabled>
+                        <input type="text" name="txtnombreEmpresa" id="txtnombreEmpresa" value="{{ $entidad != "" ? $entidad->nombre : "" }}" disabled>
                         <label for="txtnombreEmpresa" class="active">Nombre de la Empresa</label>
                       </div>
                     </div>
                     <div id="divEntidadGrupoInvestigacionProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtcodigoGrupo" id="txtcodigoGrupo" value="{{ $entidad->codigo_grupo }}" disabled>
+                        <input type="text" name="txtcodigoGrupo" id="txtcodigoGrupo" value="{{ $entidad != "" ? $entidad->codigo_grupo : "" }}" disabled>
                         <label for="txtcodigoGrupo" class="active">Código del Grupo de Investigación</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreGrupo" id="txtnombreGrupo" value="{{ $entidad->nombre }}" disabled>
+                        <input type="text" name="txtnombreGrupo" id="txtnombreGrupo" value="{{ $entidad != "" ? $entidad->nombre : "" }}" disabled>
                         <label for="txtnombreGrupo" class="active">Nombre del Grupo de Investigación</label>
                       </div>
                     </div>
                     <div id="divEntidadTecnoacademiaProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtcentroFormacion" id="txtcentroFormacion" value="{{ $entidad->centro_formacion }}" disabled>
+                        <input type="text" name="txtcentroFormacion" id="txtcentroFormacion" value="{{ $entidad != "" ? $entidad->centro_formacion : "" }}" disabled>
                         <label for="txtcentroFormacion" class="active">Centro de Formación de la Tecnoacademia</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtnombreTecnoacademia" id="txtnombreTecnoacademia"  value="{{ $entidad->nombre }}" disabled>
+                        <input type="text" name="txtnombreTecnoacademia" id="txtnombreTecnoacademia"  value="{{ $entidad != "" ? $entidad->nombre : "" }}" disabled>
                         <label for="txtnombreTecnoacademia" class="active">Nombre de la Tecnoacademia</label>
                       </div>
                     </div>
                     <div id="divEntidadNodoProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtCentroFormacionNodo" id="txtCentroFormacionNodo" value="{{ $entidad->centro }}" disabled>
+                        <input type="text" name="txtCentroFormacionNodo" id="txtCentroFormacionNodo" value="{{ $entidad != "" ?  $entidad->centro : "" }}" disabled>
                         <label for="txtCentroFormacionNodo" class="active">Centro de Formación del Nodo</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtNombreNodo" id="txtNombreNodo"  value="{{ $entidad->nombre }}" disabled>
+                        <input type="text" name="txtNombreNodo" id="txtNombreNodo"  value="{{ $entidad != "" ?  $entidad->nombre : "" }}" disabled>
                         <label for="txtNombreNodo" class="active">Nombre del Nodo</label>
                       </div>
                     </div>
                     <div id="divCentroFormacionProyecto" class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtCodigoCentroFormacion" id="txtCodigoCentroFormacion" value="{{ $entidad->codigo_centro }}" disabled>
+                        <input type="text" name="txtCodigoCentroFormacion" id="txtCodigoCentroFormacion" value="{{ $entidad != "" ?  $entidad->codigo_centro : "" }}" disabled>
                         <label for="txtCodigoCentroFormacion" class="active">Código del Centro de Formación</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" name="txtNombreCentroFormacion" id="txtNombreCentroFormacion"  value="{{ $entidad->nombre }}" disabled>
+                        <input type="text" name="txtNombreCentroFormacion" id="txtNombreCentroFormacion"  value="{{ $entidad != "" ?  $entidad->nombre : "" }}" disabled>
                         <label for="txtNombreCentroFormacion" class="active">Nombre del Centro del Formación</label>
                       </div>
                     </div>

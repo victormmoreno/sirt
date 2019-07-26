@@ -66,7 +66,7 @@ entrenamiento = {
         let assists = elemento.AssistS == 1 ? "checked" : "";
         let convocado = elemento.Convocado == 1 ? "checked" : "";
         $('#tblIdeasEntrenamientoCreate').append('<tr>'
-        +'<td>'+elemento.nombre_proyecto+'</td>'
+        +'<td>'+elemento.codigo_idea+' - '+elemento.nombre_proyecto+'</td>'
         +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
         +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
         +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'

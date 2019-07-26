@@ -11,7 +11,7 @@
             <div class="row">
               <div class="col s12 m12 l12">
                 <center>
-                  <span class="card-title center-align">CSIBT de Tecnoparque nodo {{ \NodoHelper::returnNodoUsuario() }}</span>
+                  <span class="card-title center-align">CSIBT de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                 </center>
                 <div class="divider"></div>
                 <table class="display responsive-table datatable-example dataTable" id="comitesDelNodoGestor_table" style="width: 100%">

@@ -30,6 +30,7 @@ class CreateIdeasTable extends Migration
             $table->string('correo_contacto',100)->nullable();
             $table->string('telefono_contacto',11)->nullable();
             $table->string('nombre_proyecto', 200);
+            $table->string('codigo_idea', 20);
             $table->tinyInteger('aprendiz_sena')->default(1);
             $table->tinyInteger('pregunta1')->default(1);
             $table->tinyInteger('pregunta2')->default(1);
@@ -41,6 +42,8 @@ class CreateIdeasTable extends Migration
              //1- emprendedor - 2- empresa - 3- grupo de investigacion
             $table->timestamps();
 
+            $table->unique(["codigo_idea"], 'codigo_idea_UNIQUE');
+
             $table->index(["nodo_id"], 'fk_ideas_nodo1_idx');
             $table->index(["estadoidea_id"], 'fk_ideas_estadosidea1_idx');
 
@@ -50,8 +53,8 @@ class CreateIdeasTable extends Migration
 
             $table->foreign('estadoidea_id', 'fk_ideas_estadosidea1_idx')
                 ->references('id')->on('estadosidea');
-    
-    
+
+
         });
     }
 
