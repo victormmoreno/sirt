@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NodoFormRequest;
-use Illuminate\Http\Request;
 use App\Repositories\Repository\DepartamentoRepository;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller
@@ -27,22 +29,32 @@ class NodoController extends Controller
      */
     public function index()
     {
-        if (request()->ajax()) {
-            return datatables()->of($this->nodoRepository->getAlltNodo())
-                ->addColumn('detail', function ($data) {
-                    $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" onclick="" data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
+        switch (session()->get('login_role') && auth()->user()->hasAnyRole([User::IsAdministrador()])) {
+            case User::IsAdministrador():
+                if (request()->ajax()) {
+                    return datatables()->of($this->nodoRepository->getAlltNodo())
+                        ->addColumn('detail', function ($data) {
+                            $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" onclick="" data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
 
-                    return $button;
-                })
-                ->addColumn('edit', function ($data) {
-                    $button = '<a href="' . route("nodo.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                            return $button;
+                        })
+                        ->addColumn('edit', function ($data) {
+                            $button = '<a href="' . route("nodo.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
-                    return $button;
-                })
-                ->rawColumns(['detail', 'edit'])
-                ->make(true);
+                            return $button;
+                        })
+                        ->rawColumns(['detail', 'edit'])
+                        ->make(true);
+                }
+                return view('nodos.administrador.index');
+
+
+                break;
+            default:
+                abort('404');
+                break;
         }
-        return view('nodos.administrador.index');
+
     }
 
     /**
@@ -102,8 +114,8 @@ class NodoController extends Controller
         // $nodo = $this->nodoRepository->findByid($id);
         return view('nodos.administrador.edit', [
             'entidad'       => $this->nodoRepository->findByid($id),
-            'lineas'     => $this->nodoRepository->getAllLineas(),
-            'regionales' => $this->nodoRepository->getAllRegionales(),
+            'lineas'        => $this->nodoRepository->getAllLineas(),
+            'regionales'    => $this->nodoRepository->getAllRegionales(),
             'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
         ]);
     }

@@ -82,7 +82,6 @@ mix.scripts([
 		'resources/app/visitante/index.js',
 	],'public/js/app2.js');
 
-mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
 
 mix.browserSync({
 
@@ -94,3 +93,5 @@ mix.browserSync({
             'routes/**/*'
         ]
  });
+
+// mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');

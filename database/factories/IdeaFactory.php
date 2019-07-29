@@ -15,6 +15,7 @@ $factory->define(Idea::class, function (Faker $faker) {
         'correo_contacto'=> $faker->unique()->safeEmail,
         'telefono_contacto'=> $faker->numerify('######'),
         'nombre_proyecto'=> $faker->text($maxNbChars = 45),
+        'codigo_idea'=> $faker->numerify('I########'),
         'aprendiz_sena'=> $faker->randomElement([1, 0]),
         'pregunta1'=> $faker->randomElement([1, 2,3,4,5,6,7,8,9]),
         'pregunta2'=> $faker->randomElement([1, 2,3,4]),
