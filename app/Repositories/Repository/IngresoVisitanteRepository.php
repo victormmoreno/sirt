@@ -9,6 +9,56 @@ use Carbon\Carbon;
 class IngresoVisitanteRepository
 {
 
+  public $visitanteRepository;
+
+  public function __construct(VisitanteRepository $visitanteRepository)
+  {
+    $this->visitanteRepository = $visitanteRepository;
+  }
+
+  /**
+  * Registra un nuevo ingreso de visitante
+  * @param Request $request Datos del formulario
+  * @return array
+  */
+  public function storeIngresoVisitanteRepository($request)
+  {
+    DB::beginTransaction();
+    try {
+
+      $visitante = Visitante::where('documento', $request->txtdocumento)->first();
+      if ($visitante == null) {
+        $storeVisitante = $this->visitanteRepository->storeVisitanteRepository($request);
+        // dd($storeVisitante['visitante']->id);
+        $ingreso = IngresoVisitante::create([
+          'visitante_id' => $storeVisitante['visitante']->id,
+          'nodo_id' => auth()->user()->ingreso->nodo_id,
+          'servicio_id' => $request->txtservicio_id,
+          'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
+          'hora_salida' => $request->txthora_salida,
+          'descripcion' => $request->txtdescripcion
+        ]);
+      } else {
+        $ingreso = IngresoVisitante::create([
+          'visitante_id' => $visitante->id,
+          'nodo_id' => auth()->user()->ingreso->nodo_id,
+          'servicio_id' => $request->txtservicio_id,
+          'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
+          'hora_salida' => $request->txthora_salida,
+          'descripcion' => $request->txtdescripcion
+        ]);
+
+      }
+      // return array('store' => true, 'ingreso' => $ingreso);
+      DB::commit();
+      return array('store' => true, 'ingreso' => $ingreso);
+    } catch (\Exception $e) {
+      DB::rollback();
+      return array('store' => false, 'ingreso' => "");
+    }
+
+  }
+
   /**
   * Consulta los ingreso de un nodo por el año actual
   * @param int $id Id del nodo

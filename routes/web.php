@@ -16,16 +16,16 @@ Route::get('/', function () {
     //         'ocupaciones',
     //     ]
     // )->get();
-    // 
+    //
     // $nodo = Nodo::findByName('Medellin',1);
 
     // dd($nodo);
-    // 
+    //
     // $user = Perfil::latest()
     //  ->take(20)
-    //  ->get();    
+    //  ->get();
     //  dd($user);
-    
+
     return view('spa');
 })->name('/');
 
@@ -387,6 +387,7 @@ Route::group([
     Route::get('/create', 'VisitanteController@create')->name('visitante.create')->middleware('role_session:Ingreso');
     Route::get('/consultarVisitantesRedTecnoparque', 'VisitanteController@consultarVisitantesRedTecnoparque')->name('visitante.tecnoparque');
     Route::get('/{id}/edit', 'VisitanteController@edit')->name('visitante.edit')->middleware('role_session:Ingreso');
+    Route::get('/consultarVisitantePorDocumento/{doc}', 'VisitanteController@consultarVisitantePorDocumento')->name('visitante.documento');
     Route::put('/{id}', 'VisitanteController@update')->name('visitante.update')->middleware('role_session:Ingreso');
     Route::post('/', 'VisitanteController@store')->name('visitante.store')->middleware('role_session:Ingreso');
   }
@@ -406,7 +407,7 @@ Route::group([
     // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
     // Route::get('/{id}/edit', 'IngresoController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
     // Route::put('/{id}', 'IngresoController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
-    // Route::post('/', 'IngresoController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+    Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
   }
 );
 

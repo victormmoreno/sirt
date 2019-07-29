@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// use App\Http\Requests\VisitanteFormRequest;
-use Illuminate\Support\Facades\{Session};
+use App\Http\Requests\IngresoVisitanteFormRequest;
+use Illuminate\Support\Facades\{Session, Validator};
 use App\Repositories\Repository\{IngresoVisitanteRepository};
-use App\{User, Models\Ingreso, Models\TipoVisitante};
+use App\{User, Models\Ingreso, Models\TipoVisitante, Models\TipoDocumento, Models\Servicio, Models\Visitante};
 use Alert;
 use Carbon\Carbon;
 
@@ -81,7 +81,11 @@ class IngresoVisitanteController extends Controller
   */
   public function create()
   {
-    //
+    return view('ingreso.ingreso.create', [
+      'tiposdocumento' => TipoDocumento::all()->pluck('nombre', 'id'),
+      'tiposvisitante' => TipoVisitante::all()->pluck('nombre', 'id'),
+      'servicios' => Servicio::all()->pluck('nombre', 'id')
+    ]);
   }
 
   /**
@@ -92,7 +96,27 @@ class IngresoVisitanteController extends Controller
   */
   public function store(Request $request)
   {
-    //
+    $req = new IngresoVisitanteFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+      'fail' => true,
+      'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->ingresoVisitanteRepository->storeIngresoVisitanteRepository($request);
+    // dd($result['store']);
+    if ($result['store'] == false) {
+      return response()->json([
+      'fail' => false,
+      'redirect_url' => false
+      ]);
+    } else {
+      return response()->json([
+      'fail' => false,
+      'redirect_url' => url(route('ingreso.create'))
+      ]);
+    }
   }
 
   /**

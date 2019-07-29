@@ -18,7 +18,7 @@
                     </div>
                     <div class="col s12  l2">
                       <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                        <a href="{{route('ingreso')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Ingreso">
+                        <a href="{{route('ingreso.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Ingreso">
                           <i class="material-icons">transit_enterexit</i>
                         </a>
                       </div>
@@ -32,7 +32,7 @@
           </div>
         </div>
         <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-          <a href="{{route('ingreso')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Ingreso">
+          <a href="{{route('ingreso.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Ingreso">
             <i class="material-icons">transit_enterexit</i>
           </a>
         </div>
