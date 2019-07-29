@@ -72,9 +72,10 @@ mix.scripts([
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
 		'resources/app/visitante/index.js',
+		'resources/app/ingreso/index.js',
 	],'public/js/app2.js');
 
-mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
+// mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
 
 mix.browserSync({
 

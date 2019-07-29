@@ -1,5 +1,5 @@
 <li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('visitante'), setActiveRouteActivePage('ingreso') }} {{ setActiveRoutePadding('visitante'), setActiveRoutePadding('ingreso') }}">
+  <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('visitante') }} {{ setActiveRouteActivePage('ingreso') }} {{ setActiveRoutePadding('ingreso') }} {{ setActiveRoutePadding('visitante') }}">
     <i class="material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">directions_walk</i>Ingresos
     <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">keyboard_arrow_right</i>
   </a>
