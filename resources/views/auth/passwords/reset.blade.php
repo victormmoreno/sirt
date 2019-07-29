@@ -30,7 +30,7 @@
                                     <input type="hidden" name="token" value="{{ $token }}">
                                     <div class="input-field col s12">
                                       <i class="material-icons prefix">mail</i>
-                                      <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
+                                      <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}"autocomplete="email" autofocus>
                                       
                                       <label for="email" >{{ __('E-Mail Address') }}</label>
                                       @error('email')
@@ -39,7 +39,7 @@
                                     </div>
                                     <div class="input-field col s12">
                                       <i class="material-icons prefix">lock_outline</i>
-                                      <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                      <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
                                      
                                       <label for="password" >{{ __('Password') }}</label>
                                       @error('password')
@@ -50,24 +50,27 @@
                                     <div class="input-field col s12">
                                       <i class="material-icons prefix">lock_outline</i>
                                       
-                                      <input id="password-confirm" type="password" class="validate" name="password_confirmation" required autocomplete="new-password">
+                                      <input id="password-confirm" type="password" class="validate" name="password_confirmation"  autocomplete="new-password">
                                      
                                       <label for="password-confirm">{{ __('Confirm Password') }}</label>
                                       
                                     </div>
-
-                        
-
                                     <div class="col s12 center-align m-t-sm">
-
-                                            <button type="submit" class="btn btn-primary">
-                                                        <i class="material-icons left">fingerprint</i>
-                                                {{ __('Reset Password') }}
-                                            </button>
-                                            <br><br>
-                                            <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('/') }}">
-                                                Inicio
-                                            </a>
+                                        <button type="submit" class="btn btn-primary">
+                                                    <i class="material-icons left">fingerprint</i>
+                                            {{ __('Reset Password') }}
+                                        </button>
+                                        <br><br>
+                                        <small>¿No recibió un correo electrónico de confirmación? <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('password.request') }}">solicita uno nuevo</a>,
+                                          <b>¿Ya estas registrado?</b> 
+                                          <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('login') }}">
+                                            {{{__('Login')}}}
+                                          </a>
+                                        </small>
+                                        <div class="divider" style="background:#008981;"></div>
+                                        <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('/') }}">
+                                            Inicio
+                                        </a>
                                     </div>
                                   </form>
                                 </div>

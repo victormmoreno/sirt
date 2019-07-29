@@ -1697,146 +1697,627 @@ var grupoInvestigacionIndex = {
 }
 
 $(document).ready(function() {
-    
     $('#administrador_table').DataTable({
         language: {
-           
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         processing: true,
         serverSide: true,
-        ajax:{
-        	url: "/usuario/administrador",
+        ajax: {
+            url: "/usuario/administrador",
             type: "get",
         },
-        columns: [
-        	{
-        		data: 'tipodocumento',
-        		name: 'tipodocumento',
-        	},
-        	{
-        		data: 'documento',
-        		name: 'documento',
-        	},
-        	{
-        		data: 'nombre',
-        		name: 'nombre',
-        	},
-            {
-                data: 'email',
-                name: 'email',
-            },
-        	{
-        		data: 'telefono',
-        		name: 'telefono',
-        	},
-            {
-                data: 'estado',
-                name: 'estado',
-            },
-            {
-                data: 'detail',
-                name: 'detail',
-                orderable: false,
-            },
-            {
-                data: 'edit',
-                name: 'edit',
-                orderable: false,
-            },
-
-        ],
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'telefono',
+            name: 'telefono',
+        }, {
+            data: 'estado',
+            name: 'estado',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+        }, ],
     });
 });
 
-function detalleAdministrador(id){
-  $.ajax({
-    dataType:'json',
-    type:'get',
-    url:"/usuario/administrador/"+id
-  }).done(function(respuesta){
-    $("#titulo_administrador").empty();
-    $("#detalle_administrador").empty();
-    console.log(respuesta.data);
-    if (respuesta == null) {
-      swal('Ups!!!', 'Ha ocurrido un error', 'warning');
-    } else {
-        let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
-        let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
-        let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
-        let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
-      // $("#titulo_administrador").append("<span class='cyan-text text-darken-3'>Usuario </span>"+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos)
-      //       $("#detalle_administrador").append('<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Nombre Completo: </span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //       +'<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Tipo Documento: </span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.tipodocumento+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //       +'<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Documento</span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.user.documento+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //       +'<div class="row">'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-      //       +'</div>'
-      //       +'<div class="col s12 m6 l6">'
-      //       +'<span class="black-text">'+respuesta.data.role+'</span>'
-      //       +'</div>'
-      //       +'</div>'
-      //       +'<div class="divider"></div>'
-      //     );
-      //     
-      
-      $("#titulo_administrador").append(`<div class="row">
-                    <div class="col s12 m12 l12">
-                        <div class="card mailbox-content">
-                            <div class="card-content">
-                                <div class="row no-m-t no-m-b">
-                        
-                                    <div class="col s12 m12 l12">
-                                        
-                                        <div class="mailbox-view">
-                                            <div class="mailbox-view-header">
-                                                <div class="left">
-                                                    
-                                                    <div class="left">
-                                                        <span class="mailbox-title ">
-                                                            `+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos+`
-                                                        </span>
+$(document).ready(function() {
+    $('#dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+    });
+    $('.dataTables_length select').addClass('browser-default');
+});
+var UserAdministradorDinamizador = {
+    selectDinamizadoresPorNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#dinamizador_table').dataTable().fnDestroy();
+        $('#dinamizador_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax: {
+                url: "/usuario/dinamizador/getDinamizador/" + nodo,
+                type: "get",
+            },
+            columns: [{
+                data: 'tipodocumento',
+                name: 'tipodocumento',
+            }, {
+                data: 'documento',
+                name: 'documento',
+            }, {
+                data: 'nombre',
+                name: 'nombre',
+            }, {
+                data: 'email',
+                name: 'email',
+            }, {
+                data: 'telefono',
+                name: 'telefono',
+            }, {
+                data: 'estado',
+                name: 'estado',
+            }, {
+                data: 'detail',
+                name: 'detail',
+                orderable: false,
+            }, {
+                data: 'edit',
+                name: 'edit',
+                orderable: false,
+            }, ],
+        });
+    },
+    
+}
+$(document).ready(function() {
+    $('#gestor_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+    });
+    // $('.dataTables_length select').addClass('browser-default');
+});
+var UserAdministradorGestor = {
+    selectGestoresPorNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#gestor_table').dataTable().fnDestroy();
+        $('#gestor_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax: {
+                url: "/usuario/gestor/getGestor/" + nodo,
+                type: "get",
+            },
+            columns: [{
+                data: 'tipodocumento',
+                name: 'tipodocumento',
+            }, {
+                data: 'documento',
+                name: 'documento',
+            }, {
+                data: 'nombre',
+                name: 'nombre',
+            }, {
+                data: 'email',
+                name: 'email',
+            }, {
+                data: 'telefono',
+                name: 'telefono',
+            }, {
+                data: 'estado',
+                name: 'estado',
+            }, {
+                data: 'detail',
+                name: 'detail',
+                orderable: false,
+            }, ],
+        });
+    },
+    
+}
+$(document).ready(function() {
+    $('#infocenter_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+    });
+    // $('.dataTables_length select').addClass('browser-default');
+});
+var UserAdministradorInfocenter = {
+    selectInfocentersForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#infocenter_table').dataTable().fnDestroy();
+        $('#infocenter_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax: {
+                url: "/usuario/infocenter/getinfocenter/" + nodo,
+                type: "get",
+            },
+            columns: [{
+                data: 'tipodocumento',
+                name: 'tipodocumento',
+            }, {
+                data: 'documento',
+                name: 'documento',
+            }, {
+                data: 'nombre',
+                name: 'nombre',
+            }, {
+                data: 'email',
+                name: 'email',
+            }, {
+                data: 'telefono',
+                name: 'telefono',
+            }, {
+                data: 'estado',
+                name: 'estado',
+            }, {
+                data: 'detail',
+                name: 'detail',
+                orderable: false,
+            }, ],
+        });
+    },
+    
+}
+// import {modalUser} from '../modaluser.js';
+// require('../modaluser.js');
+$(document).ready(function() {
+    $('#talento_history_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/usuario/talento",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'telefono',
+            name: 'telefono',
+        }, {
+            data: 'estado',
+            name: 'estado',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, ],
+    });
+});
 
-                                                        <span class="mailbox-author black-text text-darken-2">
-                                                            
-                                                            `+respuesta.data.role+`<br>
-                                                            Miembro desde `+moment(respuesta.data.user.created_at).format('LL')+` <br>
-                                                        </span>
-                                                    </div>
-                                                </div>
+$(document).ready(function() {
+    $('#ingreso_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+    });
+    // $('.dataTables_length select').addClass('browser-default');
+});
+var UserAdministradorIngreso = {
+    selectIngresoForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#ingreso_table').dataTable().fnDestroy();
+        $('#ingreso_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax: {
+                url: "/usuario/ingreso/getingreso/" + nodo,
+                type: "get",
+            },
+            columns: [{
+                data: 'tipodocumento',
+                name: 'tipodocumento',
+            }, {
+                data: 'documento',
+                name: 'documento',
+            }, {
+                data: 'nombre',
+                name: 'nombre',
+            }, {
+                data: 'email',
+                name: 'email',
+            }, {
+                data: 'telefono',
+                name: 'telefono',
+            }, {
+                data: 'estado',
+                name: 'estado',
+            }, {
+                data: 'detail',
+                name: 'detail',
+                orderable: false,
+            }, ],
+        });
+    },
+    
+}
+$(document).ready(function() {
+    $('#gestores_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/usuario/gestor/getgestor",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'telefono',
+            name: 'telefono',
+        }, {
+            data: 'estado',
+            name: 'estado',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#infocenters_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/usuario/infocenter/getinfocenter",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'telefono',
+            name: 'telefono',
+        }, {
+            data: 'estado',
+            name: 'estado',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#ingresos_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/usuario/ingreso/getingreso",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'telefono',
+            name: 'telefono',
+        }, {
+            data: 'estado',
+            name: 'estado',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+        }, ],
+    });
+});
+var UserIndex = {
+	detailUser(id) {
+        $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: "/usuario/usuarios/" + id
+        }).done(function(respuesta) {
+            modalUser(respuesta);
+        });
+    }
+}
+function modalUser(respuesta) {
+    $(".titulo_users").empty();
+    let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
+    let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
+    let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
+    let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
+    console.log(respuesta.data.user);
+    $(".titulo_users").append(`<div class="row">
+                 <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                    
+                                <div class="col s12 m12 l12">
+                                    
+                                    <div class="mailbox-view">
+                                        <div class="mailbox-view-header">
+                                            <div class="left">
                                                 
+                                                <div class="left">
+                                                    <span class="mailbox-title ">
+                                                        ` + respuesta.data.user.nombres + " " + respuesta.data.user.apellidos + `
+                                                    </span>
 
-                                                <div class="right mailbox-buttons">
-                                                    
+                                                    <span class="mailbox-author black-text text-darken-2">
+                                                        
+                                                        ` + respuesta.data.role + `<br>
+                                                        Miembro desde ` + moment(respuesta.data.user.created_at).format('LL') + ` <br>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="right mailbox-buttons">
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="right">
+                                            <small>` + genero + `</small>
+                                        </div>
+                                        <div class="divider mailbox-divider">
+                                        </div>
+                                        <div class="mailbox-text">
+                                            <div class="row">
+                                                <div class="col s12 m6 l6">
+                                                    <ul class="collection">
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                credit_card
+                                                            </i>
+                                                            <span class="title">
+                                                                Tipo Documento
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.tipodocumento.nombre + `   
+                                                            </p>
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                perm_contact_calendar
+                                                            </i>
+                                                            <span class="title">
+                                                                Fecha de Nacimiento
+                                                            </span>
+                                                            <p>
+                                                                ` + moment(respuesta.data.user.fechanacimiento).format('LL') + `
+                                                            </p>
+                                                            
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                local_hospital
+                                                            </i>
+                                                            <div class="left">
+                                                               <span class="title">
+                                                                    Eps
+                                                                </span>
+                                                                <p>
+                                                                   ` + respuesta.data.user.eps.nombre + `   
+                                                                </p> 
+                                                            </div>
+                                                           
+                                                            <div class="right">
+                                                               <span class="title">
+                                                                    Otra Eps
+                                                                </span>
+                                                                <p>
+                                                                   ` + otra_eps + ` 
+                                                                </p> 
+                                                            </div>
+                                                            
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                map
+                                                            </i>
+                                                            <div class="left">
+                                                                <span class="title">
+                                                                   Dirección
+                                                                </span>
+                                                                <p>
+                                                                    ` + respuesta.data.user.direccion + `
+                                                                </p>
+                                                            </div>
+                                                            <div class="right">
+                                                                <span class="title">
+                                                                   Barrio
+                                                                </span>
+                                                                <p>
+                                                                    ` + respuesta.data.user.barrio + ` 
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                email
+                                                            </i>
+                                                            <span class="title">
+                                                               Correo Electrónico
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.email + `
+                                                            </p>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col s12 m6 l6">
+                                                    <ul class="collection">
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                assignment_ind
+                                                            </i>
+                                                            <span class="title">
+                                                                Documento
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.documento + ` 
+                                                            </p>
+                                                            
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                details
+                                                            </i>
+                                                            <span class="title">
+                                                                Grupo Sanguineo
+                                                            </span>
+                                                            <p>
+                                                               ` + respuesta.data.user.gruposanguineo.nombre + `   
+                                                            </p>
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                filter_6
+                                                            </i>
+                                                            <span class="title">
+                                                                Estrato Social
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.estrato + `                                                                    
+                                                            </p>
+                                                            
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                map
+                                                            </i>
+                                                            <span class="title">
+                                                                Lugar de Residencia
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.ciudad.nombre + ` - ` + respuesta.data.user.ciudad.departamento.nombre + `
+                                                            </p>
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            
+                                                            <div class="center">
+                                                                <span class="title">
+                                                                   Datos contacto
+                                                                </span>
+                                                            </div>
+                                                            <div class="left">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                phone
+                                                            </i>
+                                                                <p>
+                                                                    Telefono <br>
+                                                                    ` + telefono + ` 
+                                                                </p>
+                                                            </div>
+                                                            <div class="right">
+                                                                <span class="title">
+                                                                   Celular
+                                                                </span>
+                                                                <p>
+                                                                    ` + celular + ` 
+                                                                </p>
+                                                            </div>
+                                                        </li>
+
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <div class="right">
-                                                <small>`+ genero+`</small>
+                                                <small>
+                                                    Información Último Estudio
+                                                </small>
                                             </div>
                                             <div class="divider mailbox-divider">
                                             </div>
@@ -1846,80 +2327,24 @@ function detalleAdministrador(id){
                                                         <ul class="collection">
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    credit_card
+                                                                    assignment_ind
                                                                 </i>
                                                                 <span class="title">
-                                                                    Tipo Documento
+                                                                    Institución
                                                                 </span>
                                                                 <p>
-                                                                    `+respuesta.data.tipodocumento+`   
+                                                                    ` + respuesta.data.user.institucion + `
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    perm_contact_calendar
+                                                                    assignment_ind
                                                                 </i>
                                                                 <span class="title">
-                                                                    Fecha de Nacimiento
+                                                                    Titulo obtenido
                                                                 </span>
                                                                 <p>
-                                                                    `+moment(respuesta.data.user.fechanacimiento).format('LL')+`
-                                                                </p>
-                                                                
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    local_hospital
-                                                                </i>
-                                                                <div class="left">
-                                                                   <span class="title">
-                                                                        Eps
-                                                                    </span>
-                                                                    <p>
-                                                                       `+respuesta.data.eps+`   
-                                                                    </p> 
-                                                                </div>
-                                                               
-                                                                <div class="right">
-                                                                   <span class="title">
-                                                                        Otra Eps
-                                                                    </span>
-                                                                    <p>
-                                                                       `+otra_eps+` 
-                                                                    </p> 
-                                                                </div>
-                                                                
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    map
-                                                                </i>
-                                                                <div class="left">
-                                                                    <span class="title">
-                                                                       Dirección
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.user.direccion+`
-                                                                    </p>
-                                                                </div>
-                                                                <div class="right">
-                                                                    <span class="title">
-                                                                       Barrio
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.user.barrio+` 
-                                                                    </p>
-                                                                </div>
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    email
-                                                                </i>
-                                                                <span class="title">
-                                                                   Correo Electrónico
-                                                                </span>
-                                                                <p>
-                                                                    `+respuesta.data.user.email+`
+                                                                     ` + respuesta.data.user.titulo_obtenido + `
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -1931,76 +2356,82 @@ function detalleAdministrador(id){
                                                                     assignment_ind
                                                                 </i>
                                                                 <span class="title">
-                                                                    Documento
+                                                                    Grado de escolaridad
                                                                 </span>
                                                                 <p>
-                                                                    `+respuesta.data.user.documento+` 
-                                                                </p>
-                                                                
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    details
-                                                                </i>
-                                                                <span class="title">
-                                                                    Grupo Sanguineo
-                                                                </span>
-                                                                <p>
-                                                                   `+respuesta.data.gruposanguineo+`   
+                                                                     ` + respuesta.data.user.gradoescolaridad.nombre + `
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    filter_6
+                                                                    assignment_ind
                                                                 </i>
                                                                 <span class="title">
-                                                                    Estrato Social
+                                                                    Fecha de terminación
                                                                 </span>
                                                                 <p>
-                                                                    `+respuesta.data.user.estrato+`                                                                    
+                                                                     ` + moment(respuesta.data.user.fecha_terminacion).format('LL') + `
                                                                 </p>
-                                                                
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    map
-                                                                </i>
-                                                                <span class="title">
-                                                                    Lugar de Residencia
-                                                                </span>
-                                                                <p>
-                                                                    `+respuesta.data.ciudad+` - `+respuesta.data.departamento+`
-                                                                </p>
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                
-                                                                <div class="center">
-                                                                    <span class="title">
-                                                                       Datos contacto
-                                                                    </span>
-                                                                </div>
-                                                                <div class="left">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                    phone
-                                                                </i>
-                                                                    <p>
-                                                                        Telefono <br>
-                                                                        `+telefono+` 
-                                                                    </p>
-                                                                </div>
-                                                                <div class="right">
-                                                                    <span class="title">
-                                                                       Celular
-                                                                    </span>
-                                                                    <p>
-                                                                        `+celular+` 
-                                                                    </p>
-                                                                </div>
                                                             </li>
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+    if (respuesta.data.user.dinamizador != null) {
+        $(".titulo_users").append(`<div class="row">
+                 <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                    
+                                <div class="col s12 m12 l12">
+                                    
+                                    <div class="mailbox-view">
+                                        
+                                        <div class="mailbox-text">
+                                            
+                                            <div class="right">
+                                                <small>
+                                                    Información Dinamizador
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="mailbox-text">
+                                                <div class="row">
+                                                    <div class="col s12 m6 l6 offset-l3 m-3">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    assignment_ind
+                                                                </i>
+                                                                <span class="title">
+                                                                    Nodo
+                                                                </span>
+                                                                <p>
+                                                                    Tecnoparque nodo ` + respuesta.data.user.dinamizador.nodo.entidad.nombre + `
+                                                                    <br>
+                                                                        <small>
+                                                                            <b>Dirección:</b>
+                                                                            ` + respuesta.data.user.dinamizador.nodo.direccion + `
+                                                                        </small> 
+                                                                    <br>
+                                                                </p>    
+                                                            </li>
+                                                           
+                                                        </ul>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -2009,281 +2440,59 @@ function detalleAdministrador(id){
                             </div>
                         </div>
                     </div>
-                </div>`);
-      $('#modal1').openModal();
+                </div>
+                 </div>`);
     }
-    })
-}
-
-
-$(document).ready(function() {
-    $('#dinamizador_table').DataTable({
-        language: {
-             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-         },
-    });
-    // $('.dataTables_length select').addClass('browser-default');
-});
-
-
- var UserAdministradorDinamizador = {
-     selectDinamizadoresPorNodo: function() {
-         let nodo = $('#selectnodo').val();
-         $('#dinamizador_table').dataTable().fnDestroy();
-         $('#dinamizador_table').DataTable({
-             language: {
-                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-             },
-             processing: true,
-             serverSide: true,
-             order: false,
-             ajax: {
-                 url: "/usuario/dinamizador/getDinamizador/" + nodo,
-                 type: "get",
-             },
-             columns: [
-             {
-                 data: 'tipodocumento',
-                 name: 'tipodocumento',
-             }, {
-                 data: 'documento',
-                 name: 'documento',
-             }, {
-                 data: 'nombre',
-                 name: 'nombre',
-             }, {
-                 data: 'email',
-                 name: 'email',
-             }, {
-                 data: 'telefono',
-                 name: 'telefono',
-             }, {
-                 data: 'estado',
-                 name: 'estado',
-             }, {
-                 data: 'detail',
-                 name: 'detail',
-                 orderable: false,
-             }, {
-                 data: 'edit',
-                 name: 'edit',
-                 orderable: false,
-             },
-             ],
-         });
-     },
-     detalleDinamizador(id){
-            $.ajax({
-        dataType:'json',
-        type:'get',
-        url:"/usuario/dinamizador/"+id
-      }).done(function(respuesta){
-        $("#titulo_dinamizador").empty();
-        if (respuesta == null) {
-          swal('Ups!!!', 'Ha ocurrido un error', 'warning');
-        } else {
-            let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
-            let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
-            let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
-            let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
-          
-          $("#titulo_dinamizador").append(`<div class="row">
-                        <div class="col s12 m12 l12">
-                            <div class="card mailbox-content">
-                                <div class="card-content">
-                                    <div class="row no-m-t no-m-b">
-                            
-                                        <div class="col s12 m12 l12">
+    if (respuesta.data.user.gestor) {
+        $(".titulo_users").append(`<div class="row">
+                 <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                    
+                                <div class="col s12 m12 l12">
+                                    
+                                    <div class="mailbox-view">
+                                        
+                                        <div class="mailbox-text">
                                             
-                                            <div class="mailbox-view">
-                                                <div class="mailbox-view-header">
-                                                    <div class="left">
-                                                        
-                                                        <div class="left">
-                                                            <span class="mailbox-title ">
-                                                                `+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos+`
-                                                            </span>
-
-                                                            <span class="mailbox-author black-text text-darken-2">
-                                                                
-                                                                `+respuesta.data.role+`<br>
-                                                                Miembro desde `+moment(respuesta.data.user.created_at).format('LL')+` <br>
-                                                            </span>
-                                                        </div>
+                                            <div class="right">
+                                                <small>
+                                                    Información Gestor
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="mailbox-text">
+                                                <div class="row">
+                                                    <div class="col s12 m8 l8 offset-l2 m-2">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    assignment_ind
+                                                                </i>
+                                                                <span class="title">
+                                                                    <b class="teal-text darken-2">
+                                                                        Nodo del Gestor:
+                                                                    </b>
+                                                                    Tecnoparque Nodo ` + respuesta.data.user.gestor.nodo.entidad.nombre + `
+                                                                    <br> 
+                                                                    <b class="teal-text darken-2">
+                                                                        Linea del Gestor:
+                                                                    </b>
+                                                                     ` + respuesta.data.user.gestor.lineatecnologica.nombre + `
+                                                                    <br> 
+                                                                    <b class="teal-text darken-2">
+                                                                        Honorario del Gestor:
+                                                                    </b>
+                                                                    $ ` + respuesta.data.user.gestor.honorarios + `
+                                                                </span>
+                                                                                                                                               
+                                                            </li>
+                                                           
+                                                        </ul>
                                                     </div>
                                                     
-
-                                                    <div class="right mailbox-buttons">
-                                                        
-                                                    </div>
-                                                </div>
-                                                <div class="right">
-                                                    <small>`+ genero+`</small>
-                                                </div>
-                                                <div class="divider mailbox-divider">
-                                                </div>
-                                                <div class="mailbox-text">
-                                                    <div class="row">
-                                                        <div class="col s12 m6 l6">
-                                                            <ul class="collection">
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        credit_card
-                                                                    </i>
-                                                                    <span class="title">
-                                                                        Tipo Documento
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.tipodocumento+`   
-                                                                    </p>
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        perm_contact_calendar
-                                                                    </i>
-                                                                    <span class="title">
-                                                                        Fecha de Nacimiento
-                                                                    </span>
-                                                                    <p>
-                                                                        `+moment(respuesta.data.user.fechanacimiento).format('LL')+`
-                                                                    </p>
-                                                                    
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        local_hospital
-                                                                    </i>
-                                                                    <div class="left">
-                                                                       <span class="title">
-                                                                            Eps
-                                                                        </span>
-                                                                        <p>
-                                                                           `+respuesta.data.eps+`   
-                                                                        </p> 
-                                                                    </div>
-                                                                   
-                                                                    <div class="right">
-                                                                       <span class="title">
-                                                                            Otra Eps
-                                                                        </span>
-                                                                        <p>
-                                                                           `+otra_eps+` 
-                                                                        </p> 
-                                                                    </div>
-                                                                    
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        map
-                                                                    </i>
-                                                                    <div class="left">
-                                                                        <span class="title">
-                                                                           Dirección
-                                                                        </span>
-                                                                        <p>
-                                                                            `+respuesta.data.user.direccion+`
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="right">
-                                                                        <span class="title">
-                                                                           Barrio
-                                                                        </span>
-                                                                        <p>
-                                                                            `+respuesta.data.user.barrio+` 
-                                                                        </p>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        email
-                                                                    </i>
-                                                                    <span class="title">
-                                                                       Correo Electrónico
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.user.email+`
-                                                                    </p>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="col s12 m6 l6">
-                                                            <ul class="collection">
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        assignment_ind
-                                                                    </i>
-                                                                    <span class="title">
-                                                                        Documento
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.user.documento+` 
-                                                                    </p>
-                                                                    
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        details
-                                                                    </i>
-                                                                    <span class="title">
-                                                                        Grupo Sanguineo
-                                                                    </span>
-                                                                    <p>
-                                                                       `+respuesta.data.gruposanguineo+`   
-                                                                    </p>
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        filter_6
-                                                                    </i>
-                                                                    <span class="title">
-                                                                        Estrato Social
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.user.estrato+`                                                                    
-                                                                    </p>
-                                                                    
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        map
-                                                                    </i>
-                                                                    <span class="title">
-                                                                        Lugar de Residencia
-                                                                    </span>
-                                                                    <p>
-                                                                        `+respuesta.data.ciudad+` - `+respuesta.data.departamento+`
-                                                                    </p>
-                                                                </li>
-                                                                <li class="collection-item avatar">
-                                                                    
-                                                                    <div class="center">
-                                                                        <span class="title">
-                                                                           Datos contacto
-                                                                        </span>
-                                                                    </div>
-                                                                    <div class="left">
-                                                                        <i class="material-icons circle teal darken-2">
-                                                                        phone
-                                                                    </i>
-                                                                        <p>
-                                                                            Telefono <br>
-                                                                            `+telefono+` 
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="right">
-                                                                        <span class="title">
-                                                                           Celular
-                                                                        </span>
-                                                                        <p>
-                                                                            `+celular+` 
-                                                                        </p>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="divider mailbox-divider">
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -2291,295 +2500,196 @@ $(document).ready(function() {
                                 </div>
                             </div>
                         </div>
-                    </div>`);
-          $('#detalledinamizador').openModal();
-        }
-        })
+                    </div>
+                </div>
+                 </div>`);
     }
- }
-
-$(document).ready(function() {
-    $('#gestor_table').DataTable({
-        language: {
-             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-         },
-    });
-    // $('.dataTables_length select').addClass('browser-default');
-});
-
-
- var UserAdministradorGestor = {
-     selectGestoresPorNodo: function() {
-         let nodo = $('#selectnodo').val();
-         $('#gestor_table').dataTable().fnDestroy();
-         $('#gestor_table').DataTable({
-             language: {
-                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-             },
-             processing: true,
-             serverSide: true,
-             order: false,
-             ajax: {
-                 url: "/usuario/gestor/getGestor/" + nodo,
-                 type: "get",
-             },
-             columns: [
-             {
-                 data: 'tipodocumento',
-                 name: 'tipodocumento',
-             }, {
-                 data: 'documento',
-                 name: 'documento',
-             }, {
-                 data: 'nombre',
-                 name: 'nombre',
-             }, {
-                 data: 'email',
-                 name: 'email',
-             }, {
-                 data: 'telefono',
-                 name: 'telefono',
-             }, {
-                 data: 'estado',
-                 name: 'estado',
-             }, {
-                 data: 'detail',
-                 name: 'detail',
-                 orderable: false,
-             }, {
-                 data: 'edit',
-                 name: 'edit',
-                 orderable: false,
-             },
-             ],
-         });
-    },
-    detalleGestor(id){
-        $.ajax({
-	        dataType:'json',
-	        type:'get',
-	        url:"/usuario/gestor/"+id
-	      }).done(function(respuesta){
-	        $("#titulo_gestor").empty();
-	        if (respuesta == null) {
-	          swal('Ups!!!', 'Ha ocurrido un error', 'warning');
-	        } else {
-	            let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
-	            let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
-	            let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
-	            let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
-	          
-	          $("#titulo_gestor").append(`<div class="row">
-	                        <div class="col s12 m12 l12">
-	                            <div class="card mailbox-content">
-	                                <div class="card-content">
-	                                    <div class="row no-m-t no-m-b">
-	                            
-	                                        <div class="col s12 m12 l12">
-	                                            
-	                                            <div class="mailbox-view">
-	                                                <div class="mailbox-view-header">
-	                                                    <div class="left">
-	                                                        
-	                                                        <div class="left">
-	                                                            <span class="mailbox-title ">
-	                                                                `+respuesta.data.user.nombres+" "+respuesta.data.user.apellidos+`
-	                                                            </span>
-
-	                                                            <span class="mailbox-author black-text text-darken-2">
-	                                                                
-	                                                                `+respuesta.data.role+`<br>
-	                                                                Miembro desde `+moment(respuesta.data.user.created_at).format('LL')+` <br>
-	                                                            </span>
-	                                                        </div>
-	                                                    </div>
-	                                                    
-
-	                                                    <div class="right mailbox-buttons">
-	                                                        
-	                                                    </div>
-	                                                </div>
-	                                                <div class="right">
-	                                                    <small>`+ genero+`</small>
-	                                                </div>
-	                                                <div class="divider mailbox-divider">
-	                                                </div>
-	                                                <div class="mailbox-text">
-	                                                    <div class="row">
-	                                                        <div class="col s12 m6 l6">
-	                                                            <ul class="collection">
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        credit_card
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                        Tipo Documento
-	                                                                    </span>
-	                                                                    <p>
-	                                                                        `+respuesta.data.tipodocumento+`   
-	                                                                    </p>
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        perm_contact_calendar
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                        Fecha de Nacimiento
-	                                                                    </span>
-	                                                                    <p>
-	                                                                        `+moment(respuesta.data.user.fechanacimiento).format('LL')+`
-	                                                                    </p>
-	                                                                    
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        local_hospital
-	                                                                    </i>
-	                                                                    <div class="left">
-	                                                                       <span class="title">
-	                                                                            Eps
-	                                                                        </span>
-	                                                                        <p>
-	                                                                           `+respuesta.data.eps+`   
-	                                                                        </p> 
-	                                                                    </div>
-	                                                                   
-	                                                                    <div class="right">
-	                                                                       <span class="title">
-	                                                                            Otra Eps
-	                                                                        </span>
-	                                                                        <p>
-	                                                                           `+otra_eps+` 
-	                                                                        </p> 
-	                                                                    </div>
-	                                                                    
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        map
-	                                                                    </i>
-	                                                                    <div class="left">
-	                                                                        <span class="title">
-	                                                                           Dirección
-	                                                                        </span>
-	                                                                        <p>
-	                                                                            `+respuesta.data.user.direccion+`
-	                                                                        </p>
-	                                                                    </div>
-	                                                                    <div class="right">
-	                                                                        <span class="title">
-	                                                                           Barrio
-	                                                                        </span>
-	                                                                        <p>
-	                                                                            `+respuesta.data.user.barrio+` 
-	                                                                        </p>
-	                                                                    </div>
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        email
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                       Correo Electrónico
-	                                                                    </span>
-	                                                                    <p>
-	                                                                        `+respuesta.data.user.email+`
-	                                                                    </p>
-	                                                                </li>
-	                                                            </ul>
-	                                                        </div>
-	                                                        <div class="col s12 m6 l6">
-	                                                            <ul class="collection">
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        assignment_ind
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                        Documento
-	                                                                    </span>
-	                                                                    <p>
-	                                                                        `+respuesta.data.user.documento+` 
-	                                                                    </p>
-	                                                                    
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        details
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                        Grupo Sanguineo
-	                                                                    </span>
-	                                                                    <p>
-	                                                                       `+respuesta.data.gruposanguineo+`   
-	                                                                    </p>
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        filter_6
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                        Estrato Social
-	                                                                    </span>
-	                                                                    <p>
-	                                                                        `+respuesta.data.user.estrato+`                                                                    
-	                                                                    </p>
-	                                                                    
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    <i class="material-icons circle teal darken-2">
-	                                                                        map
-	                                                                    </i>
-	                                                                    <span class="title">
-	                                                                        Lugar de Residencia
-	                                                                    </span>
-	                                                                    <p>
-	                                                                        `+respuesta.data.ciudad+` - `+respuesta.data.departamento+`
-	                                                                    </p>
-	                                                                </li>
-	                                                                <li class="collection-item avatar">
-	                                                                    
-	                                                                    <div class="center">
-	                                                                        <span class="title">
-	                                                                           Datos contacto
-	                                                                        </span>
-	                                                                    </div>
-	                                                                    <div class="left">
-	                                                                        <i class="material-icons circle teal darken-2">
-	                                                                        phone
-	                                                                    </i>
-	                                                                        <p>
-	                                                                            Telefono <br>
-	                                                                            `+telefono+` 
-	                                                                        </p>
-	                                                                    </div>
-	                                                                    <div class="right">
-	                                                                        <span class="title">
-	                                                                           Celular
-	                                                                        </span>
-	                                                                        <p>
-	                                                                            `+celular+` 
-	                                                                        </p>
-	                                                                    </div>
-	                                                                </li>
-	                                                            </ul>
-	                                                        </div>
-	                                                    </div>
-	                                                    <div class="divider mailbox-divider">
-	                                                    </div>
-	                                                </div>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>`);
-	          $('#detallegestor').openModal();
-	        }
-	        })
-	    }
- }
-
+    if (respuesta.data.user.infocenter) {
+        $(".titulo_users").append(`<div class="row">
+                 <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                    
+                                <div class="col s12 m12 l12">
+                                    
+                                    <div class="mailbox-view">
+                                        
+                                        <div class="mailbox-text">
+                                            
+                                            <div class="right">
+                                                <small>
+                                                    Información Infocenter
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="mailbox-text">
+                                                <div class="row">
+                                                    <div class="col s12 m8 l8 offset-l2 m-2">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    assignment_ind
+                                                                </i>
+                                                                <span class="title">
+                                                                    <b class="teal-text darken-2">
+                                                                        Nodo del Infocenter:
+                                                                    </b>
+                                                                    Tecnoparque Nodo ` + respuesta.data.user.infocenter.nodo.entidad.nombre + `
+                                                                    <br> 
+                                                                    <b class="teal-text darken-2">
+                                                                        Extensión del Infocenter:
+                                                                    </b>
+                                                                     ` + respuesta.data.user.infocenter.extension + `
+                                                                    
+                                                                </span>
+                                                                                                                                               
+                                                            </li>
+                                                           
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 </div>`);
+    }
+    if (respuesta.data.user.talento) {
+        let entidadTalento = respuesta.data.user.talento.entidad.nombre ? respuesta.data.user.talento.entidad.nombre : 'NO REGISTRA';
+        let universidadTalento = respuesta.data.user.talento.universidad ? respuesta.data.user.talento.universidad : 'NO REGISTRA';
+        let perfil = respuesta.data.user.talento.perfil.nombre == 'Aprendiz SENA sin apoyo de sostenimiento' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Aprendiz SENA con apoyo de sostenimiento' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Egresado SENA' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Funcionario empresa púbilca' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Estudiante Universitario de Pregrado' ? respuesta.data.user.talento.universidad ? respuesta.data.user.talento.universidad : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Estudiante Universitario de Postgrado' ? respuesta.data.user.talento.universidad ? respuesta.data.user.talento.universidad : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Funcionario microempresa' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Funcionario mediana empresa' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Funcionario grande empresa' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Emprendedor independiente' ? 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Investigador' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Otro' ? respuesta.data.user.talento.otro_tipo_talento ? respuesta.data.user.talento.otro_tipo_talento : 'NO REGISTRA' : 'NO REGISTRA'
+        $(".titulo_users").append(`<div class="row">
+                 <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                    
+                                <div class="col s12 m12 l12">
+                                    
+                                    <div class="mailbox-view">
+                                        
+                                        <div class="mailbox-text">
+                                            
+                                            <div class="right">
+                                                <small>
+                                                    Información Talento
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="mailbox-text">
+                                                <div class="row">
+                                                    <div class="col s12 m12 l12">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    assignment_ind
+                                                                </i>
+                                                                <div class="row">
+                                                                    <div class="col s12 m6 l6">
+                                                                        <span class="title">
+                                                                            <b class="teal-text darken-2">
+                                                                                Perfil
+                                                                            </b>
+                                                                            <br>                                                                                        
+                                                                        </span>
+                                                                        <p>
+                                                                        ` + respuesta.data.user.talento.perfil.nombre + `
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col s12 m6 l6">
+                                                                        <span class="title">
+                                                                            <b class="teal-text darken-2">
+                                                                                Entidad asociada
+                                                                            </b>
+                                                                        </span>
+                                                                        <p>
+                                                                         ` + perfil + `
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                                                                                            
+                                                            </li>  
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 </div>`);
+    }
+    if (respuesta.data.user.ingreso) {
+        $(".titulo_users").append(`<div class="row">
+                 <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                    
+                                <div class="col s12 m12 l12">
+                                    
+                                    <div class="mailbox-view">
+                                        
+                                        <div class="mailbox-text">
+                                            
+                                            <div class="right">
+                                                <small>
+                                                    Información Ingreso
+                                                </small>
+                                            </div>
+                                            <div class="divider mailbox-divider">
+                                            </div>
+                                            <div class="mailbox-text">
+                                                <div class="row">
+                                                    <div class="col s12 m6 l6 offset-l3 m-3">
+                                                        <ul class="collection">
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    assignment_ind
+                                                                </i>
+                                                                <span class="title">
+                                                                    Nodo
+                                                                </span>
+                                                                <p>
+                                                                    Tecnoparque nodo ` + respuesta.data.user.ingreso.nodo.entidad.nombre + `
+                                                                    <br>
+                                                                        <small>
+                                                                            <b>Dirección:</b>
+                                                                            ` + respuesta.data.user.ingreso.nodo.direccion + `
+                                                                        </small> 
+                                                                    <br>
+                                                                </p>    
+                                                            </li>
+                                                           
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 </div>`);
+    }
+    $('.detalleUsers').openModal();
+}
 var roleUserSession = {
     setRoleSession:function (role) {
         let nameRole = $(role).val();
@@ -2596,7 +2706,7 @@ var roleUserSession = {
         	if (response.role != null) {
         		location.href= response.url;
         	}else{
-        		console.log(response.role );
+        		
         	}
         	
       }); 

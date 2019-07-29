@@ -26,7 +26,7 @@ class CreateTalentosTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('perfil_id');
             $table->unsignedInteger('entidad_id');
-            $table->string('univesidad', 200)->nullable();
+            $table->string('universidad', 200)->nullable();
             $table->string('programa_formacion', 100)->default('No Aplica');
             $table->string('carrera_universitaria', 100)->default('No Aplica');
             $table->string('empresa', 200)->nullable();

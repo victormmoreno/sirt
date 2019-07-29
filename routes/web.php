@@ -1,7 +1,31 @@
 <?php
 
+use App\User;
+
+
 
 Route::get('/', function () {
+    // $users = App\User::with(
+    //     [
+    //         'tipodocumento' => function ($query) {
+    //             $query->where('nombre', '=', 'Cédula de Ciudadanía');
+    //         },
+    //         'roles'=> function ($query) {
+    //             $query->where('name', '=', 'Gestor');
+    //         },
+    //         'ocupaciones',
+    //     ]
+    // )->get();
+    // 
+    // $nodo = Nodo::findByName('Medellin',1);
+
+    // dd($nodo);
+    // 
+    // $user = Perfil::latest()
+    //  ->take(20)
+    //  ->get();    
+    //  dd($user);
+    
     return view('spa');
 })->name('/');
 
@@ -14,12 +38,11 @@ DB::listen(function ($query) {
 =            ruta para revisar estilos de los ema           =
 ===========================================================*/
 
-Route::get('email',function(){
-    return new App\Mail\User\SendNotificationPassoword(App\User::first(),'2342342');
+Route::get('email', function () {
+    return new App\Mail\User\SendNotificationPassoword(App\User::first(), '2342342');
 });
 
 /*=====  End of ruta para revisar estilos d los ema  ======*/
-
 
 /*===================================================================================
 =            rutas modulos de login registro, recuperacion de contraseña            =
@@ -29,12 +52,11 @@ Auth::routes(['register' => false]);
 
 /*=====  End of rutas modulos de login registro, recuperacion de contraseña  ======*/
 
-
 /*===========================================================
 =            ruta principal apenas se hace login            =
 ===========================================================*/
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
 /*=====  End of ruta principal apenas se hace login  ======*/
 
@@ -64,45 +86,53 @@ Route::group([
 ],
     function () {
 
+        Route::get('administrador', 'AdminController@index')->name('usuario.administrador.index');
+
+        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
+        Route::get('dinamizador', 'DinamizadorController@index')->name('usuario.dinamizador.index');
+
+        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
+        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
+        Route::get('gestor/getgestor', 'GestorController@getAllGestoresOfNodo')->name('usuario.gestor.getGestorofnodo');
+        Route::get('gestor', 'GestorController@index')->name('usuario.gestor.index');
+
+        Route::get('infocenter/getinfocenter/{id}', 'InfocenterController@getInfocenterForNodo')->name('usuario.infoncenter.getinfocenter');
+        Route::get('infocenter/getinfocenter', 'InfocenterController@getAllInfocentersOfNodo')->name('usuario.infocenter.getinfocenternodo');
+        Route::get('infocenter', 'InfocenterController@index')->name('usuario.infocenter.index');
+
+        Route::get('ingreso/getingreso/{id}', 'IngresoController@getIngresoForNodo')->name('usuario.ingreso.getingreso');
+        Route::get('ingreso/getingreso', 'IngresoController@getAllIngresoOfNodo')->name('usuario.ingreso.getingresonodo');
+        Route::get('ingreso', 'IngresoController@index')->name('usuario.ingreso.index');
+
+
         Route::get('/talento/getTalentosDeTecnoparque', [
-          'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
-          'as' => 'talento.tecnoparque',
+            'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
+            'as'   => 'talento.tecnoparque',
         ]);
 
         Route::get('/talento/consultarTalentoPorId/{id}', [
-          'uses' => 'TalentoController@consultarUnTalentoPorId',
-          'as' => 'talento.tecnoparque.byid',
+            'uses' => 'TalentoController@consultarUnTalentoPorId',
+            'as'   => 'talento.tecnoparque.byid',
         ]);
+        Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
+        Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
 
-        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
-
-        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
-
-        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
+        Route::get('/', [
+            'uses' => 'UserController@index',
+            'as'   => 'usuario.index',
+        ]);
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
 
-        Route::get('/', [
-          'uses' => 'UserController@index',
-          'as' => 'usuario.index',
-        ]);
-
-        Route::resource('talento', 'TalentoController', ['as' => 'usuario', 'only'=> ['index','show']]);
-        Route::resource('gestor', 'GestorController', ['as' => 'usuario', 'only'=> ['index','show']]);
-
-        Route::resource('dinamizador', 'DinamizadorController', ['as' => 'usuario', 'only'=> ['index','show']]);
-
-        Route::resource('administrador', 'AdminController', ['as' => 'usuario', 'only'=> ['index','show']]);
-
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
-            'create' => 'usuario.usuarios.create',
-            'update' => 'usuario.usuarios.update',
-            'edit' => 'usuario.usuarios.edit',
+            'create'  => 'usuario.usuarios.create',
+            'update'  => 'usuario.usuarios.update',
+            'edit'    => 'usuario.usuarios.edit',
             'destroy' => 'usuario.usuarios.destroy',
-            'show' => 'usuario.usuarios.show',
+            'show'    => 'usuario.usuarios.show',
 
         ])->parameters([
-            'usuarios' => 'id'
+            'usuarios' => 'id',
         ]);
 
     }
@@ -118,7 +148,6 @@ Route::resource('centro-formacion', 'CentroController');
 
 /*=====  End of seccion para las rutas del perfil  ======*/
 
-
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/
@@ -128,7 +157,10 @@ Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
 Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles');
 Route::get('perfil/permisos', 'User\ProfileController@permisos')->name('perfil.permisos');
 Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña');
-Route::resource('perfil', 'User\ProfileController', ['only' => ['edit','update','destroy']]);
+Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset');
+Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit');
+// Route::put('perfil/update', 'User\ProfileController@updateAccount')->name('perfil.update');
+Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']]);
 
 /*=====  End of seccion para las rutas del perfil  ======*/
 
@@ -140,8 +172,6 @@ Route::get('help/getciudades/{departamento?}', 'Help\HelpController@getCiudad')-
 Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentrosRegional')->name('help.getcentrosformacion');
 
 /*=====  End of sesccion para las rutas de ayuda  ======*/
-
-
 
 //-------------------Route group para el módulo de ideas
 Route::group([
@@ -221,7 +251,7 @@ Route::group([
 
 //-------------------Route group para el módulo de Comité
 Route::group([
-    'prefix' => 'empresa',
+    'prefix'     => 'empresa',
     'middleware' => 'auth',
 ],
     function () {
@@ -240,7 +270,7 @@ Route::group([
 
 //-------------------Route group para el módulo de Comité
 Route::group([
-    'prefix' => 'grupo',
+    'prefix'     => 'grupo',
     'middleware' => 'auth',
 ],
     function () {
@@ -260,7 +290,7 @@ Route::group([
 
 //-------------------Route group para el módulo de Comité
 Route::group([
-    'prefix' => 'articulacion',
+    'prefix'     => 'articulacion',
     'middleware' => 'auth',
 ],
     function () {
@@ -288,36 +318,36 @@ Route::group([
 
 //Route group para el módulo de proyectos
 Route::group(
-  [
-    'prefix' => 'proyecto',
-    'middleware' => 'auth'
-  ],
-  function () {
-    Route::get('/', 'ProyectoController@index')->name('proyecto');
-    Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
-    Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
-    Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
-    Route::get('/datatableGruposInvestigacionTecnoparque/{tipo}', 'ProyectoController@datatableGruposInvestigacionTecnoparque')->name('proyecto.datatable.empresas');
-    Route::get('/datatableTecnoacademiasTecnoparque', 'ProyectoController@datatableTecnoacademiasTecnoparque')->name('proyecto.datatable.tecnoacademias');
-    Route::get('/datatableNodosTecnoparque', 'ProyectoController@datatableNodosTecnoparque')->name('proyecto.datatable.nodos');
-    Route::get('/datatableCentroFormacionTecnoparque', 'ProyectoController@datatableCentroFormacionTecnoparque')->name('proyecto.datatable.centros');
-    Route::get('/datatableIdeasConEmprendedores', 'ProyectoController@datatableIdeasConEmprendedores')->name('proyecto.datatable.ideas.emprendedores');
-    Route::get('/datatableIdeasConEmpresasGrupo', 'ProyectoController@datatableIdeasConEmpresasGrupo')->name('proyecto.datatable.ideas.empresasgrupos');
-    Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho');
-    Route::get('/datatableProyectosDelNodoPorAnho/{idnodo}/{anho}', 'ProyectoController@datatableProyectosDelNodoPorAnho')->name('proyecto.datatable.proyectos.nodo.anho');
-    Route::get('/{id}/edit', 'ProyectoController@edit')->name('proyecto.edit');
-    Route::get('/{id}/entregables', 'ProyectoController@entregables')->name('proyecto.entregables');
-    Route::get('/ajaxConsultarTalentosDeUnProyecto/{id}', 'ProyectoController@consultarTalentosDeUnProyecto')->name('proyecto.talentos');
-    Route::get('/ajaxVerDetallesDeUnProyecto/{id}', 'ProyectoController@consultarDetallesDeUnProyecto')->name('proyecto.detalles');
-    Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
-    Route::get('/archivosDeUnProyecto/{id}', 'ArchivoController@datatableArchivosDeUnProyecto')->name('proyecto.files');
-    Route::get('/ajaxDetallesDeLosEntregablesDeUnProyecto/{id}', 'ProyectoController@detallesDeLosEntregablesDeUnProyecto')->name('proyecto.detalle.entregables');
-    Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update');
-    Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables');
-    Route::post('/', 'ProyectoController@store')->name('proyecto.store');
-    Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload');
-    Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy');
-  }
+    [
+        'prefix'     => 'proyecto',
+        'middleware' => 'auth',
+    ],
+    function () {
+        Route::get('/', 'ProyectoController@index')->name('proyecto');
+        Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
+        Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
+        Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
+        Route::get('/datatableGruposInvestigacionTecnoparque/{tipo}', 'ProyectoController@datatableGruposInvestigacionTecnoparque')->name('proyecto.datatable.empresas');
+        Route::get('/datatableTecnoacademiasTecnoparque', 'ProyectoController@datatableTecnoacademiasTecnoparque')->name('proyecto.datatable.tecnoacademias');
+        Route::get('/datatableNodosTecnoparque', 'ProyectoController@datatableNodosTecnoparque')->name('proyecto.datatable.nodos');
+        Route::get('/datatableCentroFormacionTecnoparque', 'ProyectoController@datatableCentroFormacionTecnoparque')->name('proyecto.datatable.centros');
+        Route::get('/datatableIdeasConEmprendedores', 'ProyectoController@datatableIdeasConEmprendedores')->name('proyecto.datatable.ideas.emprendedores');
+        Route::get('/datatableIdeasConEmpresasGrupo', 'ProyectoController@datatableIdeasConEmpresasGrupo')->name('proyecto.datatable.ideas.empresasgrupos');
+        Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho');
+        Route::get('/datatableProyectosDelNodoPorAnho/{idnodo}/{anho}', 'ProyectoController@datatableProyectosDelNodoPorAnho')->name('proyecto.datatable.proyectos.nodo.anho');
+        Route::get('/{id}/edit', 'ProyectoController@edit')->name('proyecto.edit');
+        Route::get('/{id}/entregables', 'ProyectoController@entregables')->name('proyecto.entregables');
+        Route::get('/ajaxConsultarTalentosDeUnProyecto/{id}', 'ProyectoController@consultarTalentosDeUnProyecto')->name('proyecto.talentos');
+        Route::get('/ajaxVerDetallesDeUnProyecto/{id}', 'ProyectoController@consultarDetallesDeUnProyecto')->name('proyecto.detalles');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
+        Route::get('/archivosDeUnProyecto/{id}', 'ArchivoController@datatableArchivosDeUnProyecto')->name('proyecto.files');
+        Route::get('/ajaxDetallesDeLosEntregablesDeUnProyecto/{id}', 'ProyectoController@detallesDeLosEntregablesDeUnProyecto')->name('proyecto.detalle.entregables');
+        Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update');
+        Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables');
+        Route::post('/', 'ProyectoController@store')->name('proyecto.store');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy');
+    }
 );
 
 /**
@@ -382,15 +412,13 @@ Route::group([
 
 //-------------------Route group para todos los pdfs de la aplicacion
 Route::group([
-    	'prefix' => 'pdf',
-      'namespace' => 'PDF',
-	],
+    'prefix'    => 'pdf',
+    'namespace' => 'PDF',
+],
     function () {
         Route::get('/', 'PdfComiteController@printPDF')->name('print');
     }
 );
-
-
 
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
@@ -406,14 +434,12 @@ Route::get('/notificaciones', 'NotificationsController@index')->name('notificati
 Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
 Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
 
-
-
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
 Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-Route::resource('lineas', 'LineaController',['except' => ['show', 'destroy']]);
+Route::resource('lineas', 'LineaController', ['except' => ['show', 'destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
 

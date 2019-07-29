@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\Nodo\NodoDoesNotExist;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -137,6 +138,27 @@ class Nodo extends Model
    }
    
    /*=====  End of scope para retornar el nodo del usuario autenticada  ======*/
-   
 
+   /**
+     * buscar un nodo por el nombre.
+     *
+     * @param string $name
+     * @param int $id
+     * 
+     */
+    public static function findByName(string $name, int $id)
+    {
+        
+        $nodo = static::with([
+            'entidad'=> function ($query) use($name){
+                $query->where('nombre', $name);
+            }
+        ])->where('id',$id)->get();
+
+        if (!$nodo) {
+            throw NodoDoesNotExist::named($name);
+        }
+        return $nodo;
+    }
+   
 }

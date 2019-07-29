@@ -63,11 +63,18 @@
                                                     @case(config('laravelpermission.roles.roleGestor'))
                                                         <p class="center"><a href="{{route('usuario.gestor.index')}}">ir a {{$role}}</a></p>
                                                     @break
+                                                    @case(config('laravelpermission.roles.roleInfocenter'))
+                                                        <p class="center"><a href="{{route('usuario.infocenter.index')}}">ir a {{$role}}</a></p>
+                                                    @break
                                                     @case(config('laravelpermission.roles.roleTalento'))
                                                         <p class="center"><a href="{{route('usuario.talento.index')}}">ir a {{$role}}</a></p>
                                                     @break
+                                                    @case(config('laravelpermission.roles.roleIngreso'))
+                                                        <p class="center"><a href="{{route('usuario.ingreso.index')}}">ir a {{$role}}</a></p>
+                                                    @break
                                                 @default
                                                     <p class="center"><a href="">ir a {{$role}}</a></p>
+                                                    @break
                                                 @endswitch
 
                                             </div>
@@ -78,9 +85,14 @@
                                                     <p>Rol {{config('laravelpermission.roles.roleAdministrador')}}</p>
                                                     
                                                 @break
+                                                @case(config('laravelpermission.roles.roleInfocenter'))
+                                                    <p>Rol {{config('laravelpermission.roles.roleInfocenter')}}</p>
+                                                    
+                                                @break
                                               
                                             @default
                                                 <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                                                @break
                                             @endswitch
                                             </div>
                                           </div> 

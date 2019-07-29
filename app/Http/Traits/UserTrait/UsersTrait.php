@@ -4,12 +4,13 @@ namespace App\Http\Traits\UserTrait;
 
 use App\Notifications\ResetPasswordNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-trait UsersTrait {
-    
-	
+trait UsersTrait
+{
+
     public function getRouteKeyName()
     {
         return 'documento'; // db column name
@@ -71,7 +72,7 @@ trait UsersTrait {
     /*==========================================
     =            mutadores eloquent            =
     ==========================================*/
-    
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
@@ -79,19 +80,18 @@ trait UsersTrait {
 
     public function setNombresAttribute($nombres)
     {
-        $this->attributes['nombres'] = ucwords(mb_strtolower(trim($nombres),'UTF-8'));
+        $this->attributes['nombres'] = ucwords(mb_strtolower(trim($nombres), 'UTF-8'));
     }
-
 
     public function setApellidosAttribute($apellidos)
     {
-        $this->attributes['apellidos'] = ucwords(mb_strtolower(trim($apellidos),'UTF-8'));
-    
+        $this->attributes['apellidos'] = ucwords(mb_strtolower(trim($apellidos), 'UTF-8'));
+
     }
 
     public function getNombreCompletoAttribute()
     {
-        return ucwords(strtolower($this->nombres)) . ' ' . ucwords(mb_strtolower($this->apellidos),'UTF-8');
+        return ucwords(strtolower($this->nombres)) . ' ' . ucwords(mb_strtolower($this->apellidos), 'UTF-8');
     }
 
     public function setDocumentoAttribute($documento)
@@ -101,25 +101,23 @@ trait UsersTrait {
 
     public function setEmailAttribute($email)
     {
-        $this->attributes['email'] = mb_strtolower(trim($email),'UTF-8');
+        $this->attributes['email'] = mb_strtolower(trim($email), 'UTF-8');
     }
 
     public function setBarrioAttribute($barrio)
     {
-        $this->attributes['barrio'] = ucwords(mb_strtolower(trim($barrio),'UTF-8'));
+        $this->attributes['barrio'] = ucwords(mb_strtolower(trim($barrio), 'UTF-8'));
     }
 
     public function setDireccionAttribute($direccion)
     {
-        $this->attributes['direccion'] = ucwords(mb_strtolower(trim($direccion),'UTF-8'));
+        $this->attributes['direccion'] = ucwords(mb_strtolower(trim($direccion), 'UTF-8'));
     }
-
 
     public function setCelularAttribute($celular)
     {
         $this->attributes['celular'] = trim($celular);
     }
-
 
     public function setTelefonoAttribute($telefono)
     {
@@ -133,17 +131,17 @@ trait UsersTrait {
 
     public function setOtraEpsAttribute($otra_eps)
     {
-        $this->attributes['otra_eps'] = ucwords(mb_strtolower(trim($otra_eps),'UTF-8'));
+        $this->attributes['otra_eps'] = ucwords(mb_strtolower(trim($otra_eps), 'UTF-8'));
     }
 
     public function setInstitucionAttribute($institucion)
     {
-        $this->attributes['institucion'] = ucwords(mb_strtolower(trim($institucion),'UTF-8'));
+        $this->attributes['institucion'] = ucwords(mb_strtolower(trim($institucion), 'UTF-8'));
     }
 
     public function setTituloObtenidoAttribute($titulo_obtenido)
     {
-        $this->attributes['titulo_obtenido'] = ucwords(mb_strtolower(trim($titulo_obtenido),'UTF-8'));
+        $this->attributes['titulo_obtenido'] = ucwords(mb_strtolower(trim($titulo_obtenido), 'UTF-8'));
     }
 
     public function setFechaTerminacionAttribute($fecha_terminacion)
@@ -153,11 +151,11 @@ trait UsersTrait {
 
     public function setOtraOcupacionAttribute($otra_ocupacion)
     {
-        $this->attributes['otra_ocupacion'] = ucwords(mb_strtolower(trim($otra_ocupacion),'UTF-8'));
+        $this->attributes['otra_ocupacion'] = ucwords(mb_strtolower(trim($otra_ocupacion), 'UTF-8'));
     }
 
     /*=====  End of mutadores eloquent  ======*/
-    
+
     /*================================================================
     =            metodo para generar contraseña aleatoria            =
     ================================================================*/
@@ -171,7 +169,7 @@ trait UsersTrait {
     /*==================================================================
     =            metodo para generar token activacion users            =
     ==================================================================*/
-    
+
     public function generateToken()
     {
         $this->token()->create([
@@ -181,7 +179,7 @@ trait UsersTrait {
         return $this;
 
     }
-    
+
     /*=====  End of metodo para generar token activacion users  ======*/
     /*=================================================================
     =            ejemplo para preguntar por fechas futuras            =
@@ -216,7 +214,7 @@ trait UsersTrait {
     /*=================================================================
     =            metodo para activar la cuenta del usuario            =
     =================================================================*/
-    
+
     public function activate()
     {
         $this->update(['estado' => true]);
@@ -225,13 +223,23 @@ trait UsersTrait {
 
         $this->token->delete();
     }
-    
+
     /*=====  End of metodo para activar la cuenta del usuario  ======*/
-    
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
     }
-    
+
+    /*===============================================================================
+    =            metodo para retornar el nombre de todas las ocupaciones            =
+    ===============================================================================*/
+
+    public function getOcupacionesNames(): Collection
+    {
+        return $this->ocupaciones->pluck('nombre');
+    }
+
+    /*=====  End of metodo para retornar el nombre de todas las ocupaciones  ======*/
 
 }

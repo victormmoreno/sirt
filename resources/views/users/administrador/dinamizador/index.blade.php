@@ -8,10 +8,15 @@
                 <div class="row">
                     <div class="col s10 m10 l10">
                         <h5 class="left-align">
-                            <i class="material-icons left">
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
+                            Usuarios | Dinamizadores
+                            <i class="material-icons">
                                 supervised_user_circle
                             </i>
-                            Usuarios | Dinamizadores
                         </h5>
                     </div>
                 </div>
@@ -24,6 +29,9 @@
                                         <span class="card-title center-align">
                                             Dinamizadores {{config('app.name')}}
                                         </span>
+                                        <i class="material-icons">
+                                            supervised_user_circle
+                                        </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
@@ -48,8 +56,8 @@
                                             <div class="file-path-wrapper">
                                                 <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorDinamizador.selectDinamizadoresPorNodo()">
                                                     <option value="">Seleccione nodo</option>
-                                                    @foreach($nodos as $nodo)
-                                                      <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                                    @foreach($nodos as $id => $nodo)
+                                                      <option value="{{$id}}">{{$nodo}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -81,9 +89,9 @@
         </div>
     </div>
 </main>
-<div id="detalledinamizador" class="modal">
+<div  class="modal detalleUsers">
   <div class="modal-content">
-    <center><h4 id="titulo_dinamizador" class="center-aling"></h4></center>
+    <div class="titulo_users"></div>
   </div>
   <div class="modal-footer">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>

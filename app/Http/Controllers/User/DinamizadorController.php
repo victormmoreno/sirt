@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\{DinamizadorRepository, UserRepository};
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -27,9 +28,18 @@ class DinamizadorController extends Controller
     public function index()
     {
 
-        return view('users.administrador.dinamizador.index', [
-            'nodos' => $this->dinamizadorRepository->getAllNodos(),
-        ]);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.dinamizador.index', [
+                    'nodos' => $this->userRepository->getAllNodos(),
+                ]);
+                break;
+
+            default:
+                abort('404');
+                break;
+        }
+
     }
 
     public function getDinanizador($nodo)
@@ -39,7 +49,7 @@ class DinamizadorController extends Controller
             return datatables()->of($this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo))
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#modal1" onclick="UserAdministradorDinamizador.detalleDinamizador(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
@@ -47,7 +57,7 @@ class DinamizadorController extends Controller
                     if ($data->id != auth()->user()->id) {
                         $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     } else {
-                        $button = '';
+                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
                     }
                     return $button;
                 })
@@ -62,31 +72,6 @@ class DinamizadorController extends Controller
                 ->make(true);
         }
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $user = $this->userRepository->findById($id);
-        $data = [
-            'user'              => $user,
-            'role'              => $user->getRoleNames()->implode(', '),
-            'tipodocumento'     => $user->tipoDocumento->nombre,
-            'eps'               => $user->eps->nombre,
-            'departamento'      => $user->ciudad->departamento->nombre,
-            'ciudad'            => $user->ciudad->nombre,
-            'gruposanguineo'    => $user->grupoSanguineo->nombre,
-            'gradosescolaridad' => $user->gradoEscolaridad->nombre,
-        ];
-
-        return response()->json([
-            'data' => $data,
-        ]);
     }
 
 }

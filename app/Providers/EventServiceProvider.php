@@ -21,6 +21,10 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],
+        'Illuminate\Auth\Events\PasswordReset' => [
+            // 'App\Listeners\User\Auth\ResetPassword\LogPasswordReset',
+            'App\Listeners\User\Auth\ResetPassword\LogSuccessfulPasswordReset',
+        ],
         'App\Events\Idea\IdeaHasReceived' => [
             'App\Listeners\Idea\IdeaHasBeenReceived'
         ],

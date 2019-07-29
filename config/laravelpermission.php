@@ -12,25 +12,70 @@ return [
     ],
 
     'permissions' => [
-        'user' => [
-        	'roleAdministrador' => [
-        		'index' => 'Administrador',
-        	],
+        [
+            'method' => 'user.roleAdministrador.index',
+            'name' => 'ver administrador',
+            'callable' => true,
         ],
-        'idea' => [
-        	'index' => 'consultar idea',
-        	'create' => 'registrar idea',
-        	'edit' => 'editar idea',
-        	'delete' => 'eliminar idea',
+        [
+            'method' => 'idea.index',
+            'name' => 'ver ideas',
+            'callable' => true,
+        ],
+        [
+            'method' => 'idea.create',
+            'name' => 'registrar idea',
+            'callable' => true,
+        ],
+        [
+            'method' => 'idea.edit',
+            'name' => 'editar idea',
+            'callable' => true,
+        ],
+        [
+            'method' => 'idea.delete',
+            'name' => 'eliminar idea',
+            'callable' => true,
+        ],
+        [
+            'method' => 'linea.index',
+            'name' => 'ver lineas',
+            'callable' => true,
+        ],
+        [
+            'method' => 'linea.create',
+            'name' => 'registrar linea',
+            'callable' => true,
+        ],
+        [
+            'method' => 'linea.edit',
+            'name' => 'editar linea',
+            'callable' => true,
+        ],
+        [
+            'method' => 'linea.delete',
+            'name' => 'eliminar linea',
+            'callable' => true,
+        ],
+        // 'user' => [
+        // 	'roleAdministrador' => [
+        // 		'index' => 'Administrador',
+        // 	],
+        // ],
+        // 'idea' => [
+        // 	'index' => 'consultar idea',
+        // 	'create' => 'registrar idea',
+        // 	'edit' => 'editar idea',
+        // 	'delete' => 'eliminar idea',
 
-        ],
-        'linea' => [
-        	'index' => 'consultar linea',
-        	'create' => 'registrar linea',
-        	'edit' => 'editar linea',
-        	'delete' => 'eliminar linea',
+        // ],
+        // 'linea' => [
+        // 	'index' => 'consultar linea',
+        // 	'create' => 'registrar linea',
+        // 	'edit' => 'editar linea',
+        // 	'delete' => 'eliminar linea',
 
-        ],
+        // ],
 
 
     ],

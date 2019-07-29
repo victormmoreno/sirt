@@ -3,16 +3,17 @@
 namespace App\Repositories\Repository\ProfileRepository;
 
 use App\Models\Eps;
+use App\Models\Ocupacion;
 
 class ProfileRepository
 {
-	/*=====================================================================
-	=            metodo para actualizar el perfil del ususario            =
-	=====================================================================*/
-	
-	public function Update($request, $user)
+    /*=====================================================================
+    =            metodo para actualizar el perfil del ususario            =
+    =====================================================================*/
+
+    public function Update($request, $user)
     {
-    	$user->update([
+        $user->update([
             "tipodocumento_id"    => $request->input('txttipo_documento'),
             "gradoescolaridad_id" => $request->input('txtgrado_escolaridad'),
             "gruposanguineo_id"   => $request->input('txtgruposanguineo'),
@@ -29,13 +30,18 @@ class ProfileRepository
             "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
             "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "estrato"             => $request->input('txtestrato'),
-    	]);
+            "institucion"         => $request->input('txtinstitucion'),
+            "titulo_obtenido"     => $request->get('txttitulo'),
+            "fecha_terminacion"   => $request->get('txtfechaterminacion'),
+            "otra_ocupacion"      => collect($request->input('txtocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('txtotra_ocupacion') : null,
+        ]);
 
-    	return $user;
+        $user->ocupaciones()->sync($request->get('txtocupaciones'));
+
+        return $user;
     }
-	
-	/*=====  End of metodo para actualizar el perfil del ususario  ======*/
 
+    /*=====  End of metodo para actualizar el perfil del ususario  ======*/
 
     /*=====================================================================
     =            metodo para actualizar la constraseña del usuario            =
@@ -44,13 +50,11 @@ class ProfileRepository
     {
 
         $user->update([
-            "password"           => $request->input('txtnewpassword'),
+            "password" => $request->input('txtnewpassword'),
         ]);
 
         return $user;
     }
     /*=====  End of metodo para actualizar la constraseña del usuario  ======*/
 
-
-	
 }

@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedInteger('rol_id');
             $table->integer('tipodocumento_id')->unsigned();
             $table->unsignedInteger('gradoescolaridad_id');
             $table->unsignedInteger('gruposanguineo_id');
@@ -52,9 +51,6 @@ class CreateUsersTable extends Migration
 
             $table->nullableTimestamps();
 
-
-            $table->index(["rol_id"], 'fk_users_rols1_idx');
-
             $table->index(["gradoescolaridad_id"], 'fk_users_gradoescolaridad1_idx');
 
             $table->index(["gruposanguineo_id"], 'fk_users_gruposanquineo1_idx');
@@ -64,11 +60,6 @@ class CreateUsersTable extends Migration
 
 
             $table->unique(["email"], 'email_UNIQUE');
-
-            $table->foreign('rol_id', 'fk_users_rols1_idx')
-                ->references('id')->on('rols')
-                ->onDelete('no action')
-                ->onUpdate('no action');
 
             $table->foreign('gradoescolaridad_id', 'fk_users_gradoescolaridad1_idx')
                 ->references('id')->on('gradosescolaridad')

@@ -21,8 +21,10 @@ use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use App\User;
+use Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Session;
 use Spatie\Permission\Models\Role;
 
 class UserRepository
@@ -44,11 +46,10 @@ class UserRepository
 
     public function getAllNodos()
     {
-        return Nodo::selectNodo()->pluck('nodos','id');
+        return Nodo::selectNodo()->pluck('nodos', 'id');
     }
 
     /*=====  End of metodo para consultar todos los nodos  ======*/
-    
 
     /*=====================================================================
     =            metodo para consultar todos los departamentos            =
@@ -151,7 +152,41 @@ class UserRepository
 
     public function findById($id)
     {
-        return User::with('ocupaciones')->findOrFail($id);
+
+        return User::with(
+            [
+                'tipodocumento'=> function ($query) {
+                    $query->select('id','nombre');
+                },
+                'roles'=> function ($query) {
+                    $query->select('id','name');
+                },
+                'ocupaciones',
+                'eps',
+                'gradoescolaridad',
+                'gruposanguineo',
+                'ciudad',
+                'ciudad.departamento',
+                'dinamizador',
+                'dinamizador.nodo',
+                'dinamizador.nodo.entidad',
+                'gestor',
+                'gestor.nodo',
+                'gestor.nodo.entidad',
+                'gestor.nodo.centro',
+                'gestor.nodo.centro.regional',
+                'gestor.nodo.centro.entidad',
+                'gestor.lineatecnologica',
+                'infocenter',
+                'infocenter.nodo',
+                'infocenter.nodo.entidad',
+                'talento',
+                'talento.perfil',
+                'talento.entidad',
+                'ingreso.nodo.entidad',
+            ]
+        )->findOrFail($id);
+        // return User::with(['ocupaciones', 'roles', 'ciudad', 'ciudad.departamento'])->findOrFail($id);
     }
 
     /*=====  End of metodo para consultar el usuario por id  ======*/
@@ -160,9 +195,9 @@ class UserRepository
     =            metodo para consultar la informacion del usuario            =
     ========================================================================*/
 
-    public function account($documento)
+    public function account($id)
     {
-        return User::where('documento', $documento)->firstOrFail();
+        return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->where('id', $id)->firstOrFail();
     }
 
     /*=====  End of metodo para consultar la informacion del usuario  ======*/
@@ -419,11 +454,9 @@ class UserRepository
 
             $userUpdated = $this->updateUser($request, $user);
 
-            $newRole    = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
+            $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
 
             $removeRole = array_diff(collect($userUpdated->getRoleNames())->toArray(), $request->input('role'));
-
-
 
             if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsDinamizador()) && isset($userUpdated->dinamizador)) {
                 Dinamizador::find($userUpdated->dinamizador->id)->delete();
@@ -483,7 +516,6 @@ class UserRepository
                 Dinamizador::find($userUpdated->dinamizador->id)->update([
                     "nodo_id" => $request->input('txtnododinamizador'),
                 ]);
-
 
             }
 
@@ -604,7 +636,6 @@ class UserRepository
             "fechanacimiento"     => $request->input('txtfecha_nacimiento'),
             "genero"              => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
             "otra_eps"            => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
-            "estado"              => User::IsInactive(),
             "institucion"         => $request->input('txtinstitucion'),
             "titulo_obtenido"     => $request->get('txttitulo'),
             "fecha_terminacion"   => $request->get('txtfechaterminacion'),
@@ -645,5 +676,34 @@ class UserRepository
     }
 
     /*=====  End of metodo para actualizar un usuario talento  ======*/
+
+    /*===========================================================================
+    =            metodo para destruir la session y cache del usuario            =
+    ===========================================================================*/
+
+    public function destroySessionUser()
+    {
+        Session::flush();
+        Cache::flush();
+    }
+
+    /*=====  End of metodo para destruir la session y cache del usuario  ======*/
+
+    /*===========================================================
+    =            metodo para buscar usuarios por rol            =
+    ===========================================================*/
+
+
+    public function getAllUsersForRole(string $role)
+    {
+        return User::InfoUserDatatable()
+            ->role($role)
+            ->orderby('users.created_at', 'desc')
+            ->get();
+    }
+
+    
+    
+    /*=====  End of metodo para buscar usuarios por rol  ======*/
 
 }

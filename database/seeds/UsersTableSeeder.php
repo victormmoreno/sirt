@@ -1,17 +1,25 @@
 <?php
 
+use App\Models\AreaConocimiento;
 use App\Models\Ciudad;
 use App\Models\Entidad;
 use App\Models\Eps;
+use App\Models\EstadoPrototipo;
+use App\Models\EstadoProyecto;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
+use App\Models\Idea;
 use App\Models\Infocenter;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Perfil;
-use App\Models\Rols;
+use App\Models\Proyecto;
+use App\Models\Sector;
+use App\Models\Sublinea;
+use App\Models\Talento;
+use App\Models\TipoArticulacion;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
@@ -31,29 +39,13 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
 
-        $roleAdministrador = Role::create(['name' => config('laravelpermission.roles.roleAdministrador')]);
-        $roleDinamizador   = Role::create(['name' => config('laravelpermission.roles.roleDinamizador')]);
-        $roleGestor        = Role::create(['name' => config('laravelpermission.roles.roleGestor')]);
-        $roleInfocenter    = Role::create(['name' => config('laravelpermission.roles.roleInfocenter')]);
-        $roleTalento       = Role::create(['name' => config('laravelpermission.roles.roleTalento')]);
-        $roleIngreso       = Role::create(['name' => config('laravelpermission.roles.roleIngreso')]);
-        $roleProveedor     = Role::create(['name' => config('laravelpermission.roles.roleProveedor')]);
-
-        $consultarIdeaPermission = Permission::create(['name' => config('laravelpermission.permissions.idea.index')]);
-        $registrarIdeaPermission = Permission::create(['name' => config('laravelpermission.permissions.idea.create')]);
-        $editarIdeaPermission    = Permission::create(['name' => config('laravelpermission.permissions.idea.edit')]);
-        $eliminarIdeaPermission  = Permission::create(['name' => config('laravelpermission.permissions.idea.delete')]);
-
-        $consultarLineaPermission = Permission::create(['name' => config('laravelpermission.permissions.linea.index')]);
-        $registrarLineaPermission = Permission::create(['name' => config('laravelpermission.permissions.linea.create')]);
-        $editarLineaPermission    = Permission::create(['name' => config('laravelpermission.permissions.linea.edit')]);
-        $eliminarLineaPermission  = Permission::create(['name' => config('laravelpermission.permissions.linea.delete')]);
-
-        $roleAdministrador->givePermissionTo($consultarIdeaPermission);
-        $roleAdministrador->givePermissionTo($consultarLineaPermission);
+        $role = Role::findByName(Role::findByName(config('laravelpermission.roles.roleAdministrador'))->first()->name);
+        $role->givePermissionTo([
+            Permission::findByName('ver administrador'),
+            Permission::findByName('registrar idea'),
+        ]);
 
         $userAdmin = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Administrador')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -81,24 +73,24 @@ class UsersTableSeeder extends Seeder
 
         $userAdmin->dinamizador()->create([
             'user_id' => $userAdmin->id,
-            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
         ]);
 
         $userAdmin->gestor()->create([
             'user_id'             => $userAdmin->id,
-            'nodo_id'             => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'             => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
             'honorarios'          => 4000000,
         ]);
 
         $userAdmin->infocenter()->create([
-            'nodo_id'   => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'   => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'user_id'   => $userAdmin->id,
             'extension' => 413342,
         ]);
 
         $userAdmin->ingreso()->create([
-            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'user_id' => $userAdmin->id,
         ]);
 
@@ -109,15 +101,21 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-        $userAdmin->assignRole([$roleAdministrador,$roleDinamizador,$roleGestor,$roleInfocenter,$roleIngreso,$roleTalento]);
-        $userAdmin->givePermissionTo($registrarIdeaPermission);
+        $userAdmin->assignRole([
+            Role::findByName(config('laravelpermission.roles.roleAdministrador')),
+            Role::findByName(config('laravelpermission.roles.roleDinamizador')),
+            Role::findByName(config('laravelpermission.roles.roleGestor')),
+            Role::findByName(config('laravelpermission.roles.roleInfocenter')),
+            Role::findByName(config('laravelpermission.roles.roleIngreso')),
+            Role::findByName(config('laravelpermission.roles.roleTalento')),
+        ]);
+        // $userAdmin->givePermissionTo($registrarIdeaPermission);
 
         $ocupacion = Ocupacion::all()->random()->id;
 
         $userAdmin->ocupaciones()->attach($ocupacion);
 
         $userDinamizador = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Dinamizador')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -145,14 +143,13 @@ class UsersTableSeeder extends Seeder
 
         $userDinamizador->dinamizador()->create([
             'user_id' => $userDinamizador->id,
-            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
         ]);
 
-        $userDinamizador->assignRole($roleDinamizador);
-        $userDinamizador->givePermissionTo($consultarLineaPermission);
+        $userDinamizador->assignRole([Role::findByName(config('laravelpermission.roles.roleDinamizador'))]);
+        $userDinamizador->givePermissionTo(Permission::findByName('registrar idea'));
 
         $userGestorRamiro = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Profesional')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -179,14 +176,13 @@ class UsersTableSeeder extends Seeder
 
         $userGestorRamiro->gestor()->create([
             'user_id'             => $userGestorRamiro->id,
-            'nodo_id'             => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'             => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
             'honorarios'          => 4000000,
         ]);
-        $userGestorRamiro->assignRole($roleGestor);
+        $userGestorRamiro->assignRole(Role::findByName(config('laravelpermission.roles.roleGestor')));
 
         $userGestorJulian = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Gestor')->first()->id,
             'gradoescolaridad_id' => 4,
             'tipodocumento_id'    => 1,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -212,15 +208,14 @@ class UsersTableSeeder extends Seeder
 
         $userGestorJulian->gestor()->create([
             'user_id'             => $userGestorJulian->id,
-            'nodo_id'             => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'             => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'ETC')->first()->id,
             'honorarios'          => 4000000,
         ]);
 
-        $userGestorJulian->assignRole($roleGestor);
+        $userGestorJulian->assignRole(Role::findByName(config('laravelpermission.roles.roleGestor')));
 
         $userInfocenter = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Infocenter')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnologo')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -247,15 +242,14 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userInfocenter->infocenter()->create([
-            'nodo_id'   => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'   => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'user_id'   => $userInfocenter->id,
             'extension' => 413342,
         ]);
 
-        $userInfocenter->assignRole($roleInfocenter);
+        $userInfocenter->assignRole(Role::findByName(config('laravelpermission.roles.roleInfocenter')));
 
         $userIngreso = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Ingreso')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnico')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -282,14 +276,13 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userIngreso->ingreso()->create([
-            'nodo_id' => Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
             'user_id' => $userIngreso->id,
         ]);
 
-        $userIngreso->assignRole($roleIngreso);
+        $userIngreso->assignRole(Role::findByName(config('laravelpermission.roles.roleIngreso')));
 
         $userTalento = User::create([
-            'rol_id'              => Rols::where('nombre', '=', 'Talento')->first()->id,
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnico')->first()->id,
             'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -322,10 +315,57 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-        $userTalento->assignRole($roleTalento);
+        $userTalento->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
 
         // //
-        // factory(User::class, 20)->create();
+        factory(User::class, 2)->create();
+
+        // $user = User::whereBetween('id', [8, 27])->get();
+    
+        $user = User::latest()->take(2)->get()->each(function ($item) {
+
+            $item->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
+
+            $talento = Talento::create([
+                "user_id"               => $item->id,
+                "perfil_id"             => Perfil::all()->random()->id,
+                "entidad_id"            => Entidad::all()->random()->id,
+                "universidad"           => null,
+                "programa_formacion"    => 'Administración de empresas',
+                "carrera_universitaria" => 'No Aplica',
+                "empresa"               => null,
+                "otro_tipo_talento"     => null,
+            ]);
+            $proyecto = Proyecto::create([
+                'idea_id'                     => Idea::all()->random()->id,
+                'sector_id'                   => Sector::all()->random()->id,
+                'sublinea_id'                 => Sublinea::all()->random()->id,
+                'areaconocimiento_id'         => AreaConocimiento::all()->random()->id,
+                'estadoproyecto_id'           => EstadoProyecto::all()->random()->id,
+                'gestor_id'                   => Gestor::all()->random()->id,
+                'entidad_id'                  => Entidad::all()->random()->id,
+                'nodo_id'                     => Nodo::all()->random()->id,
+                'tipoarticulacionproyecto_id' => TipoArticulacion::all()->random()->id,
+                'estadoprototipo_id'          => EstadoPrototipo::all()->random()->id,
+                'tipo_ideaproyecto'           => 1,
+                'otro_tipoarticulacion'       => 1,
+                'universidad_proyecto'        => 'Universidad de antiquia',
+                'codigo_proyecto'             => Str::random(10),
+                'nombre'                      => 'Andres Lopez',
+                'observaciones_proyecto'      => 'asdasdas',
+                'impacto_proyecto'            => 'asdsadasd',
+                'economia_naranja'            => 1,
+                'fecha_inicio'                => '2019-07-12',
+                'art_cti'                     => 1,
+                'nom_act_cti'                 => 1,
+                'diri_ar_emp'                 => 1,
+                'reci_ar_emp'                 => 1,
+                'dine_reg'                    => 1,
+            ]);
+
+            $talento->proyectos()->attach($proyecto->id, ['talento_lider' => 0]);
+        });
+
         // factory(Gestor::class, 5)->create();
         // factory(Infocenter::class, 2)->create();
 
