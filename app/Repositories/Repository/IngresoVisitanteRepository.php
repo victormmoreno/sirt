@@ -17,6 +17,57 @@ class IngresoVisitanteRepository
   }
 
   /**
+   * Consulta los datos de un ingreso por id
+   * @param int $id Id del ingresos_visitantes
+   * @return Collection
+   */
+  public function consultarIngresoVisitantePorId($id)
+  {
+    return IngresoVisitante::findOrFail($id);
+  }
+
+  /**
+   * Modifica los datos de un ingreso
+   * @param Request $request
+   * @param int $id Id del ingreso
+   * @return array
+   */
+  public function updateIngresoVisitanteRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $ingreso = IngresoVisitante::findOrFail($id);
+      $visitante = Visitante::where('documento', $request->txtdocumento)->first();
+      if ($visitante == null) {
+        $storeVisitante = $this->visitanteRepository->storeVisitanteRepository($request);
+        // dd($storeVisitante['visitante']->id);
+        $ingreso->update([
+          'visitante_id' => $storeVisitante['visitante']->id,
+          'servicio_id' => $request->txtservicio_id,
+          'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
+          'hora_salida' => $request->txthora_salida,
+          'descripcion' => $request->txtdescripcion
+        ]);
+      } else {
+        $ingreso->update([
+          'visitante_id' => $visitante->id,
+          'servicio_id' => $request->txtservicio_id,
+          'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
+          'hora_salida' => $request->txthora_salida,
+          'descripcion' => $request->txtdescripcion
+        ]);
+
+      }
+      DB::commit();
+      return array('update' => true, 'ingreso' => $ingreso);
+    } catch (\Exception $e) {
+      DB::rollback();
+      return array('update' => false, 'ingreso' => "");
+    }
+
+  }
+
+  /**
   * Registra un nuevo ingreso de visitante
   * @param Request $request Datos del formulario
   * @return array

@@ -88,12 +88,12 @@ function consultarIngresosDeUnNodo(id) {
         data: 'descripcion',
         name: 'descripcion'
       },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
+      // {
+      //   width: '8%',
+      //   data: 'details',
+      //   name: 'details',
+      //   orderable: false
+      // },
       {
         width: '8%',
         data: 'edit',

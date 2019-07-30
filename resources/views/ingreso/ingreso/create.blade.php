@@ -8,7 +8,7 @@
           <h5>
             <a class="footer-text left-align" href="{{route('ingreso')}}">
               <i class="material-icons arrow-l">arrow_back</i>
-            </a> Ingresos
+            </a> Ingresos 
           </h5>
           <div class="card">
             <div class="card-content">
@@ -20,7 +20,9 @@
                 <br/>
                 <form id="formIngresoVisitanteCreate" action="{{route('ingreso.store')}}" method="POST" onsubmit="return checkSubmit()">
                   {!! csrf_field() !!}
-                  @include('ingreso.ingreso.form')
+                  @include('ingreso.ingreso.form', [
+                  'btnText' => 'Registrar'
+                  ])
                 </form>
               </div>
             </div>
@@ -37,42 +39,6 @@
     divVisitanteRegistrado = $('#divVisitanteRegistrado');
     divRegistrarVisitante.hide();
     divVisitanteRegistrado.hide();
-
-    function consultarVisitanteTecnoparque() {
-      let doc = $('#txtdocumento').val();
-      if (doc == "") {
-        Swal.fire({
-          title: 'Advertencia!',
-          text: "Digite un número de documento!",
-          type: 'warning',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-        })
-      } else {
-        $.ajax({
-          dataType: 'json',
-          type: 'get',
-          url : '/visitante/consultarVisitantePorDocumento/'+doc,
-          success: function (response) {
-            if (response.visitante == null) {
-              divVisitanteRegistrado.hide();
-              divRegistrarVisitante.show();
-            } else {
-              $('#nombrePersona').val(response.visitante.visitante);
-              $('#tipoPersona').val(response.visitante.tipovisitante);
-              $('#contactoReg').val(response.visitante.contacto);
-              $('#correoReg').val(response.visitante.email);
-              divRegistrarVisitante.hide();
-              divVisitanteRegistrado.show();
-            }
-          },
-          error: function (xhr, textStatus, errorThrown) {
-            alert("Error: " + errorThrown);
-          }
-        })
-      }
-    }
 
     //Enviar formulario
     $(document).on('submit', 'form#formIngresoVisitanteCreate', function (event) {

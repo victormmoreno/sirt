@@ -6,7 +6,7 @@
       <th>Visitante</th>
       <th>Servicio</th>
       <th>Descripcion</th>
-      <th>Detalles</th>
+      {{-- <th>Detalles</th> --}}
       <th>Editar</th>
     </tr>
   </thead>

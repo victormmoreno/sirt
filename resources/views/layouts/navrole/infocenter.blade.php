@@ -23,9 +23,9 @@
     </ul>
   </div>
 </li>
-<li class="no-padding">
-  <a href="">
-    <i class="material-icons">record_voice_over</i>Charlas Informativas
+<li class="no-padding {{setActiveRoute('charla')}}">
+  <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
 <li class="no-padding">

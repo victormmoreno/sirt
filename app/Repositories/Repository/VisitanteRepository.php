@@ -44,6 +44,7 @@ class VisitanteRepository
     'tipodocumento_id',
     'contacto',
     'email',
+    'tiposvisitante.nombre AS tipovisitante',
     'visitantes.id',
     'apellidos')
     ->join('tiposvisitante', 'tiposvisitante.id', '=', 'visitantes.tipovisitante_id')

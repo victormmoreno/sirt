@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\IngresoVisitanteFormRequest;
 use Illuminate\Support\Facades\{Session, Validator};
-use App\Repositories\Repository\{IngresoVisitanteRepository};
+use App\Repositories\Repository\{IngresoVisitanteRepository, VisitanteRepository};
 use App\{User, Models\Ingreso, Models\TipoVisitante, Models\TipoDocumento, Models\Servicio, Models\Visitante};
 use Alert;
 use Carbon\Carbon;
@@ -19,9 +19,16 @@ class IngresoVisitanteController extends Controller
    */
   public $ingresoVisitanteRepository;
 
-  public function __construct(IngresoVisitanteRepository $ingresoVisitanteRepository)
+  /**
+   * Objeto de la clase VisitanteRepository
+   * @var object
+   */
+  public $visitanteRepository;
+
+  public function __construct(IngresoVisitanteRepository $ingresoVisitanteRepository, VisitanteRepository $visitanteRepository)
   {
     $this->ingresoVisitanteRepository = $ingresoVisitanteRepository;
+    $this->visitanteRepository = $visitanteRepository;
   }
 
   /**
@@ -33,7 +40,7 @@ class IngresoVisitanteController extends Controller
   {
     return datatables()->of($ingresos)
     ->addColumn('edit', function ($data) {
-      $edit = '<a class="btn m-b-xs" href='.route('visitante.edit', $data->id).'><i class="material-icons">edit</i></a>';
+      $edit = '<a class="btn m-b-xs" href='.route('ingreso.edit', $data->id).'><i class="material-icons">edit</i></a>';
       return $edit;
     })->addColumn('details', function ($data) {
       $edit = '<a class="btn blue-grey m-b-xs" onclick="consultarDetalleDeUnIngreso('.$data->id.')"><i class="material-icons">info</i></a>';
@@ -120,17 +127,6 @@ class IngresoVisitanteController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -138,7 +134,14 @@ class IngresoVisitanteController extends Controller
   */
   public function edit($id)
   {
-    //
+    $ingreso = $this->ingresoVisitanteRepository->consultarIngresoVisitantePorId($id);
+    return view('ingreso.ingreso.edit', [
+      'tiposdocumento' => TipoDocumento::all()->pluck('nombre', 'id'),
+      'tiposvisitante' => TipoVisitante::all()->pluck('nombre', 'id'),
+      'servicios' => Servicio::all()->pluck('nombre', 'id'),
+      'ingreso' => $ingreso,
+      'visitanteIng' => $this->visitanteRepository->consultarVisitante($ingreso->visitante_id)
+    ]);
   }
 
   /**
@@ -150,17 +153,29 @@ class IngresoVisitanteController extends Controller
   */
   public function update(Request $request, $id)
   {
-    //
+    $req = new IngresoVisitanteFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+      'fail' => true,
+      'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->ingresoVisitanteRepository->updateIngresoVisitanteRepository($request, $id);
+    if ($result['update'] == false) {
+      return response()->json([
+      'fail' => false,
+      'redirect_url' => false
+      ]);
+    } else {
+      return response()->json([
+      'fail' => false,
+      'redirect_url' => url(route('ingreso'))
+      ]);
+    }
   }
 
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
+  
+
+  
 }

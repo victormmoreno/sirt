@@ -405,9 +405,26 @@ Route::group([
     Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
     Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
     // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
-    // Route::get('/{id}/edit', 'IngresoController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
-    // Route::put('/{id}', 'IngresoController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
+    Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
+    Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
     Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+  }
+);
+/**
+* Route group para el módulo de ingresos de charlas informativas
+*/
+Route::group([
+  'prefix' => 'charla',
+  'middleware' => 'role_session:Infocenter|Dinamizador|Administrador'
+],
+  function () {
+    Route::get('/', 'CharlaInformativaController@index')->name('charla');
+    Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
+    // Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'CharlaInformativaController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
+    // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
+    // Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
+    // Route::put('/{id}', 'CharlaInformativaController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
+    Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
   }
 );
 
