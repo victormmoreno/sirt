@@ -33,31 +33,7 @@
             </ul>
         </blockquote>
 
-        <div class="col s12 m12 l12">
-            <ul class="collection with-header">
-                <li class="collection-header center"><h6><b>Roles</b></h6></li>
-                
-                @forelse($roles as  $name)
-                    <li class="collection-item">
-                        <p class="p-v-xs">
-                            @if(isset($user))
-                                <input type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
-                            @else
-                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">  
-                            @endif
-                            <label for="test-{{$name}}">{{$name}}</label>
-                        </p>
-                    </li>
-                @empty
-                <p>No tienes roles asignados</p>
-                @endforelse
-            </ul>
-            @error('role')
-                <div class="center">
-                    <label class="red-text error">{{ $message }}</label>
-                </div> 
-            @enderror
-        </div>
+        @include('users.role.role')
         
         <div id="dinamizador">
             <div class="input-field col s12 m12 l12">
@@ -591,7 +567,7 @@
             <select class="" id="txtregional" name="txtregional" style="width: 100%" tabindex="-1" onchange="regional.getCentroFormacion()">
                 <option value="">Seleccione regional</option>
                 @foreach($regionales as $id => $nombre)
-                    @if(isset($user->talento->entidad->centro->regional))
+                    @if(isset($user->talento->entidad->centro->regional->id))
                     <option value="{{$id}}" {{old('txtregional',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
                     @else
                         <option value="{{$id}}" {{old('txtregional') ==$id ? 'selected':''}}>{{$nombre}}</option>
@@ -626,11 +602,12 @@
                 <label id="txtprogramaformacion-error" class="error" for="txtprogramaformacion">{{ $message }}</label>
             @enderror 
         </div>
+        
         <div class="input-field col s12 m8 l8 estudianteUniversitario">
             <i class="material-icons prefix">
             settings_cell
             </i>
-            <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ?  : old('txtuniversidad')}}">
+            <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad  : old('txtuniversidad')}}">
             <label for="txtuniversidad">Universidad</label>
             @error('txtuniversidad')
                 <label id="txtuniversidad-error" class="error" for="txtuniversidad">{{ $message }}</label>
@@ -687,7 +664,7 @@
 <br>
 <center>
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
-    <a class="waves-effect red lighten-2 btn center-aling" href="">
+    <a class="waves-effect red lighten-2 btn center-aling" href="{{route('usuario.index')}}">
         <i class="material-icons right">
             backspace
         </i>
@@ -706,12 +683,24 @@
 
   <div id="modal1" class="modal">
     <div class="modal-content">
-      <h4 class="center">Grupos de Invesitgacion</h4>
+        <div class="row">
+            @if(auth()->user()->hasAnyRole(App\User::IsGestor()) && session()->get('login_role') == App\User::IsGestor())
+                <div class="col s12 m10 l10">
+                    <h4 class="center teal-text lighten-2">Grupos de Invesitgacion</h4>
+                </div>
+                <div class="col s12 m2 l2">
+                    
+                    <a href="{{{route('grupo.create')}}}" target="_blank" class="waves-effect waves-light btn tooltipped" data-tooltip="Nuevo grupo de investigación"><i class="material-icons left">group_work</i>Nuevo grupo</a>
+                </div>
+            @else
+                    <div class="col s12 m12 l12">
+                    <h4 class="center teal-text lighten-2">Grupos de Invesitgacion</h4>
+                </div>
+            @endif
+        </div>
+      <div class="divider"></div>
       <div class="contenido"></div>
     </div>
-    {{-- <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
-    </div> --}}
   </div> 
 
                                     

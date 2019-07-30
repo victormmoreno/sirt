@@ -8,8 +8,7 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', function () {
     // $user = auth()->user()->hasAllRoles(Role::all());;
-    $user = Auth::user();
-    dd($user);
+    
     // $users = App\User::with(
     //     [
     //         'tipodocumento' => function ($query) {

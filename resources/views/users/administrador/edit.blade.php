@@ -8,7 +8,7 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <h5>
-                    <a class="footer-text left-align" href="">
+                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
                         <i class="material-icons arrow-l">
                             arrow_back
                         </i>
@@ -50,9 +50,11 @@
                                         'btnText' => 'Modificar',
                                     ])
                                 </form>
-                                
+                              
                                     </div>
+                                 
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -78,6 +80,10 @@ $(document).ready(function() {
     @if($errors->any())
     @endif
 });
+
+function falseCheckbox() {
+  return false;
+}
     
 
 
@@ -128,7 +134,7 @@ var TipoTalento = {
              
           @else
               $("#txtregional").val();
-              $("#txtcentroformacion").val();
+              $("#txtcentroformacion").val('');
               $("#txtprogramaformacion").val();
           @endif
           $("#txtregional").material_select();  
@@ -155,13 +161,19 @@ var TipoTalento = {
               @endif 
         }
         
-        if($('.investigador').css('display') === 'block')
+        if($('.investigador').css('display') == 'block')
         {
               @if($errors->any())
-                $('#txtgrupoinvestigacion').val({{old('txtgrupoinvestigacion')}});
+                $('#txtgrupoinvestigacion').val('{{old('txtgrupoinvestigacion')}}');
               @else
-                  $('#txtgrupoinvestigacion').val();
+                  @if(isset($user->talento->entidad->nombre))
+                    $('#txtgrupoinvestigacion').val("{{$user->talento->entidad->nombre}}");
+                  @endif
               @endif 
+        }else{
+          @if(isset($user->talento->entidad->nombre))
+              $('#txtgrupoinvestigacion').val("{{$user->talento->entidad->nombre}}");
+          @endif
         }
         if ($("#otroTipoTalento").css('display') === 'block') {
               
@@ -334,12 +346,12 @@ var regional = {
         $.each(response.centros, function(id, nombre) {
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
           @if($errors->any())
-        $('#txtcentroformacion').val("{{old('txtcentroformacion')}}");
-        @else
-          @if(isset($user->talento->entidad->centro->id))
-          $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+            $('#txtcentroformacion').val("{{old('txtcentroformacion')}}");
+          @else
+            @if(isset($user->talento->entidad->centro->id))
+              $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+            @endif
           @endif
-        @endif
         $('#txtcentroformacion').material_select();
         
         });

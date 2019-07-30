@@ -97,18 +97,17 @@ class UserController extends Controller
 
             case User::IsDinamizador():
 
-                // dd(auth()->user()->dinamizador->nodo->entidad->nombre);
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
 
               
-                return view('users.dinamizador.create', [
+                return view('users.administrador.create', [
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
                     'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereNotInRole(['Administrador']),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -118,15 +117,14 @@ class UserController extends Controller
             case User::IsGestor():
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
 
-                $role = ['Talento'];
-                return view('users.dinamizador.create', [
+                return view('users.administrador.create', [
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
                     'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -134,7 +132,7 @@ class UserController extends Controller
 
                 break;
             default:
-
+                abort('404');
                 break;
         }
 
@@ -148,7 +146,6 @@ class UserController extends Controller
      */
     public function store(UserFormRequest $request)
     {
-
         //generar una contraseña
         $password = User::generatePasswordRamdom();
         //creamos el usuario
@@ -214,7 +211,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereNotInRole(['Administrador']),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -222,7 +219,7 @@ class UserController extends Controller
                 break;
             case User::IsDinamizador():
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
-                $role = ['Gestor', 'Infocenter', 'Ingreso'];
+               
 
                 return view('users.administrador.edit', [
                     'user'              => $this->userRepository->findById($id),
@@ -232,7 +229,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -241,7 +238,7 @@ class UserController extends Controller
             case User::IsGestor():
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
 
-                $role = ['Talento'];
+                
                 return view('users.administrador.edit', [
                     'user'              => $this->userRepository->findById($id),
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
@@ -250,7 +247,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),

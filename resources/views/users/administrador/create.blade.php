@@ -8,7 +8,7 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <h5>
-                    <a class="footer-text left-align" href="">
+                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
                         <i class="material-icons arrow-l">
                             arrow_back
                         </i>
@@ -69,11 +69,13 @@ $(document).ready(function() {
     eps.getOtraEsp();
     ocupacion.getOtraOcupacion();
     roles.getRoleSeleted();
+    regional.getCentroFormacion();
     grupoInvestigacion.getGrupoInvestigacion();
         TipoTalento.getSelectTipoTalento();
     @if($errors->any())
         linea.getSelectLineaForNodo();
         UserCreate.getCiudad();
+        regional.getCentroFormacion();
     @endif
 
 });
@@ -101,18 +103,20 @@ var ocupacion = {
         let resultado = nombre.match(/[A-Z][a-z]+/g);
         @if($errors->any())
             $('#otraocupacion').hide();
-            if (idocupacion == {{App\Models\Ocupacion::where('nombre', App\Models\Ocupacion::IsOtraOcupacion())->first()->id}} && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+            @error('txtotra_ocupacion')
                 $('#otraocupacion').show();
-            }
+            @enderror
         @endif
+        $('#otraocupacion').hide();
+        if (resultado != null) {
+            ;
 
-        if (idocupacion != null) {
-          if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+            if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
 
             $('#otraocupacion').show();
           }
         }
-    }
+      }
 };
 
 var TipoTalento = {
@@ -121,9 +125,9 @@ var TipoTalento = {
         if($('.aprendizSena').css('display') === 'block')
         {
           @if($errors->any())
-              $("#txtregional").val({{old('txtregional')}});
-              $("#txtcentroformacion").val({{old('txtcentroformacion')}});
-              $("#txtprogramaformacion").val({{old('txtprogramaformacion')}});
+              $("#txtregional").val("{{old('txtregional')}}");
+              $("#txtcentroformacion").val("{{old('txtcentroformacion')}}");
+              $("#txtprogramaformacion").val("{{old('txtprogramaformacion')}}");
           @else
               $("#txtregional").val();
               $("#txtcentroformacion").val();
@@ -136,7 +140,7 @@ var TipoTalento = {
         if($('.estudianteUniversitario').css('display') === 'block')
         {
               @if($errors->any())
-                $('#txtuniversidad').val({{old('txtuniversidad')}});
+                $('#txtuniversidad').val("{{old('txtuniversidad')}}");
               @else
                   $('#txtuniversidad').val();
               @endif
@@ -145,7 +149,7 @@ var TipoTalento = {
         if($('#funcionarioEmpresa').css('display') === 'block')
         {
               @if($errors->any())
-                $('#txtempresa').val({{old('txtempresa')}});
+                $('#txtempresa').val("{{old('txtempresa')}}");
               @else
                   $('#txtempresa').val();
               @endif 
@@ -154,7 +158,7 @@ var TipoTalento = {
         if($('.investigador').css('display') === 'block')
         {
               @if($errors->any())
-                $('#txtgrupoinvestigacion').val({{old('txtgrupoinvestigacion')}});
+                $('#txtgrupoinvestigacion').val("{{old('txtgrupoinvestigacion')}}");
               @else
                   $('#txtgrupoinvestigacion').val();
               @endif 
@@ -162,7 +166,7 @@ var TipoTalento = {
         if ($("#otroTipoTalento").css('display') === 'block') {
               
               @if($errors->any())
-                $('#txtotrotipotalento').val({{old('txtotrotipotalento')}});
+                $('#txtotrotipotalento').val("{{old('txtotrotipotalento')}}");
               @else
                   $('#txtotrotipotalento').val();
               @endif 
@@ -332,6 +336,12 @@ var regional = {
         $('#txtcentroformacion').append('<option value="">Seleccione el centro de formación</option>')
         $.each(response.centros, function(id, nombre) {
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
+          @if($errors->any())
+                  $("#txtcentroformacion").val("{{old('txtcentroformacion')}}");
+              @else
+              
+                $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
+              @endif
         });
         $('#txtcentroformacion').material_select();
        
@@ -386,7 +396,7 @@ var roles = {
         if($('#ingreso').css('display') === 'block')
         {
               @if($errors->any())
-                  $("#txtnodoingreso").val({{old('txtnodoingreso')}});
+                  $("#txtnodoingreso").val("{{old('txtnodoingreso')}}");
               @else
                 $("#txtnodoingreso").val();
               @endif
@@ -459,6 +469,9 @@ var linea = {
             $.each(response.lineasForNodo.lineas, function(i, e) {
                 $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             });
+            @if($errors->any())
+              $('#txtlinea').val("{{old('txtlinea')}}");
+            @endif
         }
         
         
@@ -486,7 +499,7 @@ var UserCreate = {
           $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())
-        $('#txtciudad').val({{old('txtciudad')}});
+        $('#txtciudad').val("{{old('txtciudad')}}");
         @endif
         $('#txtciudad').material_select();
       });
@@ -505,7 +518,7 @@ var UserCreate = {
           $('#txtciudadgrupo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())
-        $('#txtciudadgrupo').val({{old('txtciudadgrupo')}});
+        $('#txtciudadgrupo').val("{{old('txtciudadgrupo')}}");
         @endif
         $('#txtciudadgrupo').material_select();
       });
