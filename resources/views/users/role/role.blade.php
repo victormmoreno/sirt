@@ -15,9 +15,16 @@
                         @break
                         @case(App\User::IsDinamizador())
                             @if(isset($user))
-                                <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked; style=color: red' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked; style=color: red' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
+                                <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
                             @else
-                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">  
+                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">  
+                            @endif
+                        @break
+                        @case(App\User::IsGestor())
+                            @if(isset($user))
+                                <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name !== App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
+                            @else
+                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name !== App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} onchange="roles.getRoleSeleted(this)">  
                             @endif
                         @break
                         @default

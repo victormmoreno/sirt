@@ -32,35 +32,42 @@ class AdminController extends Controller
      */
     public function index()
     {
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
 
-        if (request()->ajax()) {
-            return datatables()->of($this->adminRepository->getAllAdministradores())
-                ->addColumn('detail', function ($data) {
+                if (request()->ajax()) {
+                    return datatables()->of($this->adminRepository->getAllAdministradores())
+                        ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                            $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
-                    return $button;
-                })
-                ->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })
-                ->rawColumns(['detail', 'edit'])
-                ->make(true);
+                            return $button;
+                        })
+                        ->addColumn('edit', function ($data) {
+                            if ($data->id != auth()->user()->id) {
+                                $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                            } else {
+                                $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                            }
+                            return $button;
+                        })
+                        ->editColumn('estado', function ($data) {
+                            if ($data->estado == User::IsActive()) {
+                                return $data->estado = 'Habilitado';
+                            } else {
+                                return $data->estado = 'Inhabilitado ';
+                            }
+                        })
+                        ->rawColumns(['detail', 'edit'])
+                        ->make(true);
+                }
+
+                return view('users.administrador.administrador.index');
+                break;
+            default:
+                abort('404');
+                break;
         }
-
-        return view('users.administrador.administrador.index');
 
     }
 

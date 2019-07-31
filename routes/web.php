@@ -121,6 +121,9 @@ Route::group([
         Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
         Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
 
+
+        Route::get('usuarios/allusuarios', 'UserController@getAllUsersInDatatable')->name('usuario.allusers');
+
         Route::get('/', [
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',

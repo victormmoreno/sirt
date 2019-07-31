@@ -43,6 +43,11 @@ var UserAdministradorGestor = {
                 data: 'detail',
                 name: 'detail',
                 orderable: false,
+            }, 
+            {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
             }, ],
         });
     },

@@ -44,6 +44,8 @@ class UserController extends Controller
      */
     public function index()
     {
+
+        // dd($this->userRepository->getAllUsersForDatatables());
         // $this->authorize('view',auth()->user());
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
@@ -77,6 +79,7 @@ class UserController extends Controller
     public function create()
     {
 
+
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 
@@ -107,7 +110,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getAllRoles(),
+                    'roles'             => $this->userRepository->getRoleWhereNotInRole(['Administrador','Dinamizador']),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -115,6 +118,7 @@ class UserController extends Controller
 
                 break;
             case User::IsGestor():
+                
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
 
                 return view('users.administrador.create', [
@@ -124,7 +128,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getAllRoles(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole(['Talento']),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -137,6 +141,47 @@ class UserController extends Controller
         }
 
     }
+
+    /*============================================================================
+    =            metodo para mostrar todos los usuarios en datatables            =
+    ============================================================================*/
+    
+    public function getAllUsersInDatatable()
+    {
+        if (request()->ajax()) {
+
+            return datatables()->of($this->userRepository->getAllUsersForDatatables())
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })->editColumn('estado', function ($data) {
+                    if ($data->estado == User::IsActive()) {
+                        
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })
+                ->editColumn('role', function ($data) {
+                    return $data->roles->implode('name', ', ');
+                })
+                ->addColumn('edit', function ($data) {
+                            if ($data->id != auth()->user()->id) {
+                                $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                            } else {
+                                $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                            }
+                            return $button;
+                        })
+                ->rawColumns(['detail','edit', 'estado','role'])
+                ->make(true);
+        }
+    }
+    
+    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
+    
 
     /**
      * Store a newly created resource in storage.
@@ -230,7 +275,7 @@ class UserController extends Controller
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
                     'roles'             => $this->userRepository->getAllRoles(),
-                    'nodos'             => $nodo,
+                    'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                 ]);
@@ -248,7 +293,7 @@ class UserController extends Controller
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
                     'roles'             => $this->userRepository->getAllRoles(),
-                    'nodos'             => $nodo,
+                    'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                 ]);

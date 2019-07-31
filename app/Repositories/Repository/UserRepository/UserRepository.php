@@ -741,4 +741,23 @@ class UserRepository
 
     /*=====  End of metodo para buscar usuarios por rol  ======*/
 
+    /*============================================================================
+    =            metodo para mostrar todos los usuarios en datatables            =
+    ============================================================================*/
+    
+    public function getAllUsersForDatatables()
+    {
+        return User::InfoUserDatatable()->with(['roles' =>function ($query) {
+                    $query->select('name');
+                }])
+                ->orderby('users.created_at', 'desc')
+                ->get();
+        
+
+    }
+    
+    
+    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
+    
+
 }

@@ -466,10 +466,21 @@ var linea = {
             $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
         }else{
             
-            $('#txtlinea').append('<option value="">Seleccione la linea</option>');
+            $('#txtlinea').append('<option disabled value="">Seleccione la linea</option>');
 
-            $.each(response.lineasForNodo.lineas, function(i, e) {               
-                $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+            $.each(response.lineasForNodo.lineas, function(i, e) {
+
+                @if(session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor())
+                  @if(isset($user->gestor->lineatecnologica_id))
+                      let idlinea = {!! $user->gestor->lineatecnologica_id !!};
+                      let alter = idlinea != e.id ? "disabled" : ""  
+                $('#txtlinea').append('<option '+ alter +' value="'+e.id+'">'+e.nombre+'</option>');
+                  @endif
+                  
+                @else
+                  $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                @endif               
+                
             });
 
             @if($errors->any())

@@ -64,6 +64,7 @@
                                     <th>Telefono</th>
                                     <th>Estado Sistema</th>
                                     <th>Detalles</th>
+                                    <th>Editar</th>
                                 </thead>
                 
                             </table>

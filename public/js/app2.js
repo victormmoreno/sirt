@@ -1836,6 +1836,11 @@ var UserAdministradorGestor = {
                 data: 'detail',
                 name: 'detail',
                 orderable: false,
+            }, 
+            {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
             }, ],
         });
     },
@@ -1886,6 +1891,11 @@ var UserAdministradorInfocenter = {
                 data: 'detail',
                 name: 'detail',
                 orderable: false,
+            }, 
+            {
+                data: 'edit',
+                name: 'edit',
+                orderable: false,
             }, ],
         });
     },
@@ -1925,6 +1935,11 @@ $(document).ready(function() {
         }, {
             data: 'detail',
             name: 'detail',
+            orderable: false,
+        },
+        {
+            data: 'edit',
+            name: 'edit',
             orderable: false,
         }, ],
     });
@@ -1974,6 +1989,11 @@ var UserAdministradorIngreso = {
             }, {
                 data: 'detail',
                 name: 'detail',
+                orderable: false,
+            }, 
+            {
+                data: 'edit',
+                name: 'edit',
                 orderable: false,
             }, ],
         });
@@ -2111,6 +2131,47 @@ var UserIndex = {
         });
     }
 }
+
+$(document).ready(function() {
+    $('#all_users_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/usuario/usuarios/allusuarios",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'telefono',
+            name: 'telefono',
+        }, {
+            data: 'role',
+            name: 'role',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+        }, ],
+    });
+});
 function modalUser(respuesta) {
     $(".titulo_users").empty();
     let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
