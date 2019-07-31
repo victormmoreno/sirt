@@ -26,7 +26,7 @@ class CharlaInformativaFormRequest extends FormRequest
   {
     return [
       'txtfecha' => 'required|date_format:"Y-m-d"',
-      'txtnro_asistentes' => 'required|numeric|min:0',
+      'txtnro_asistentes' => 'required|numeric|min:1',
       'txtencargado' => 'required|string|max:75',
       'txtobservacion' => 'max:1000'
     ];
@@ -45,7 +45,7 @@ class CharlaInformativaFormRequest extends FormRequest
       // Mensajes para el campo txtnro_asistentes
       'txtnro_asistentes.required' => 'El Número de Asistentes es obligatorio.',
       'txtnro_asistentes.numeric' => 'El Número de Asistentes debe ser numérico.',
-      'txtnro_asistentes.min' => 'El Número de Asistentes debe ser mayor o igual a 0.',
+      'txtnro_asistentes.min' => 'El Número de Asistentes debe ser mayor o igual a 1.',
       // Mensajes para campo txtencargado
       'txtencargado.required' => 'El nombre del encargado es obligatorio.',
       'txtencargado.string' => 'El nombre del encargado debe ser caracter.',
