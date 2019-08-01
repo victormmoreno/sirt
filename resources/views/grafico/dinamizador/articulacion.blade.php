@@ -42,45 +42,47 @@
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarArticulacionesPorNodo/'+id
-    })
-    Highcharts.chart('container', {
-      chart: {
-        type: 'bar'
+      url: '/grafico/consultarArticulacionesPorNodo/'+id,
+      success: function (data) {
+        Highcharts.chart('container', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Articulaciones'
+          },
+          xAxis: {
+            categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
+            title: {
+              text: 'Gestores'
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Número de Articulaciones'
+            }
+          },
+          legend: {
+            reversed: true
+          },
+          plotOptions: {
+            series: {
+              stacking: 'normal'
+            }
+          },
+          series: [{
+            name: 'John',
+            data: [5, 3, 4, 7, 2]
+          }, {
+            name: 'Jane',
+            data: [2, 2, 3, 2, 1]
+          }, {
+            name: 'Joe',
+            data: [3, 4, 4, 2, 5]
+          }]
+        });
       },
-      title: {
-        text: 'Articulaciones'
-      },
-      xAxis: {
-        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
-        title: {
-          text: 'Gestores'
-        }
-      },
-      yAxis: {
-        min: 0,
-        title: {
-          text: 'Número de Articulaciones'
-        }
-      },
-      legend: {
-        reversed: true
-      },
-      plotOptions: {
-        series: {
-          stacking: 'normal'
-        }
-      },
-      series: [{
-        name: 'John',
-        data: [5, 3, 4, 7, 2]
-      }, {
-        name: 'Jane',
-        data: [2, 2, 3, 2, 1]
-      }, {
-        name: 'Joe',
-        data: [3, 4, 4, 2, 5]
-      }]
     });
   }
 
