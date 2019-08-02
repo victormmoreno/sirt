@@ -4,6 +4,7 @@ namespace App\Listeners\User\Auth;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LogSuccessfulLogin
 {
@@ -25,7 +26,21 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event)
     {
-        $event->user->ultimo_login = date('Y-m-d H:i:s');
-        $event->user->save();
+
+        DB::beginTransaction();
+
+        try {
+            $event->user->ultimo_login = date('Y-m-d H:i:s');
+            $event->user->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+
     }
 }

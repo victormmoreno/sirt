@@ -90,7 +90,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getAllRoles(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole(['Administrador','Dinamizador']),
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
