@@ -40,7 +40,7 @@
                                                     <ul class="collection">
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
-                                                                play_arrow
+                                                                assignment_ind
                                                             </i>
                                                             <span class="title">
                                                                 Nodo del Dinamizador
@@ -62,7 +62,7 @@
                                             </div>
                                             @endif
 
-            @if(isset($user->gestor) && collect($user->getRoleNames())->contains(App\User::IsGestor()))
+                                            @if(isset($user->gestor) && collect($user->getRoleNames())->contains(App\User::IsGestor()))
                                             <div class="right">
                                                 <small>
                                                     Información {{App\User::IsGestor()}}
@@ -75,7 +75,7 @@
                                                     <ul class="collection">
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
-                                                                play_arrow
+                                                                assignment_ind
                                                             </i>
                                                             <span class="title">
                                                                 <b class="teal-text darken-2">
@@ -114,7 +114,7 @@
                                                     <ul class="collection">
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
-                                                                play_arrow
+                                                                assignment_ind
                                                             </i>
                                                             <span class="title">
                                                                 <b class="teal-text darken-2">
@@ -149,7 +149,7 @@
                                                             <div class="right">
                                                                 <a class="waves-effect waves-light btn m-t-xs dropdown-button " data-activates="actifiad" href="#">
                                                                     <i class="material-icons right">
-                                                                        cloud
+                                                                        more_vert
                                                                     </i>
                                                                     Más Información
                                                                 </a>
@@ -167,13 +167,15 @@
                                                                         </a>
                                                                     </li>
                                                                     --}}
+                                                                    @if(collect($user->getRoleNames())->contains(App\User::IsTalento()))
                                                                     <li class="divider">
                                                                     </li>
                                                                     <li>
-                                                                        <a href="#!">
+                                                                        <a href="{{route('certificado')}}" target="_blank">
                                                                             Obtener certificado de registro en el sistema
                                                                         </a>
                                                                     </li>
+                                                                    @endif
                                                                 </ul>
                                                             </div>
                                                         </p>
@@ -204,7 +206,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    folder
+                                                                    calendar_today
                                                                 </i>
                                                                 <span class="title">
                                                                     Fecha de Nacimiento
@@ -215,7 +217,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    insert_chart
+                                                                    account_balance_wallet
                                                                 </i>
                                                                 <div class="left">
                                                                     <span class="title">
@@ -238,7 +240,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
+                                                                    my_location
                                                                 </i>
                                                                 <div class="left">
                                                                     <span class="title">
@@ -259,7 +261,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
+                                                                    mail_outline
                                                                 </i>
                                                                 <span class="title">
                                                                     Correo Electrónico
@@ -274,7 +276,7 @@
                                                         <ul class="collection">
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
+                                                                    contacts
                                                                 </i>
                                                                 <span class="title">
                                                                     Documento
@@ -285,7 +287,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    folder
+                                                                    details
                                                                 </i>
                                                                 <span class="title">
                                                                     Grupo Sanguineo
@@ -307,7 +309,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
+                                                                    map
                                                                 </i>
                                                                 <span class="title">
                                                                     Lugar de Residencia
@@ -324,7 +326,7 @@
                                                                 </div>
                                                                 <div class="left">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                        play_arrow
+                                                                        contact_phone
                                                                     </i>
                                                                     <p>
                                                                         Telefono
@@ -350,7 +352,7 @@
                                                         <ul class="collection">
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
+                                                                    format_list_bulleted
                                                                 </i>
                                                                 <span class="title">
                                                                     Ocupaciones
@@ -375,7 +377,7 @@
                                                             <ul class="collection">
                                                                 <li class="collection-item avatar">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                        assignment_ind
+                                                                        cast_for_education
                                                                     </i>
                                                                     <span class="title">
                                                                         Institución
@@ -386,7 +388,7 @@
                                                                 </li>
                                                                 <li class="collection-item avatar">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                        assignment_ind
+                                                                        card_membership
                                                                     </i>
                                                                     <span class="title">
                                                                         Titulo obtenido
@@ -401,7 +403,7 @@
                                                             <ul class="collection">
                                                                 <li class="collection-item avatar">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                        assignment_ind
+                                                                        filter_list
                                                                     </i>
                                                                     <span class="title">
                                                                         Grado de escolaridad
@@ -412,7 +414,7 @@
                                                                 </li>
                                                                 <li class="collection-item avatar">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                        assignment_ind
+                                                                        date_range
                                                                     </i>
                                                                     <span class="title">
                                                                         Fecha de terminación
@@ -437,30 +439,52 @@
                                                     <div class="col s12 m12 l12 ">
                                                         <ul class="collection">
                                                             <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    play_arrow
-                                                                </i>
-                                                                {{-- <span class="title">
-                                                                    <b class="teal-text darken-2">
-                                                                        Tipo {{App\User::IsTalento()}}:
-                                                                    </b>
-                                                                    {{$user->talento->perfil->nombre ? : 'Información no disponible'}}
-                                                                    <br>
-                                                                        <b class="teal-text darken-2">
-                                                                            {{App\User::IsGestor()}}:
-                                                                        </b>
-                                                                        {{$user->talento->perfil->nombre == App\Models\Perfil::IS_APRENDIZ_SENA_CON_APOYO ? $user->talento->entidad->centro->regional->nombre: ''}}
-                                                                        {{$user->talento->perfil->nombre == App\Models\Perfil::IS_EGRESADO_SENA ? $user->talento->entidad->nombre: ''}} -
-                                                                        {{$user->talento->perfil->nombre == App\Models\Perfil::IS_EGRESADO_SENA ? $user->talento->entidad->centro->regional->nombre: ''}}
-                                                                        <br>
-                                                                        {{var_dump($user->talento->entidad->centro->regional->nombre)}}
+                                                                <div class="row">
+                                                                    <div class="col s12 m6 l6">
+                                                                        <i class="material-icons circle teal darken-2">
+                                                                            assignment_ind
+                                                                        </i>
+                                                                        <span>
                                                                             <b class="teal-text darken-2">
-                                                                                Honorario del {{App\User::IsGestor()}}:
+                                                                                Tipo {{App\User::IsTalento()}}:
                                                                             </b>
-                                                                            ${{ number_format($user->gestor->honorarios,0)}}
-                                                                        </br>
-                                                                    </br>
-                                                                </span> --}}
+                                                                        </span>
+                                                                        <p>{{$user->talento->perfil->nombre ? : 'Información no disponible'}}</p>
+                                                                        
+                                                                    </div>
+                                                                    <div class="col s12 m6 l6">
+                                                                        
+                                                                        <span>
+                                                                            <b class="teal-text darken-2">
+                                                                                Entidad Asociada
+                                                                            </b>
+                                                                        </span>
+                                                                        @if($user->talento->perfil->nombre == App\Models\Perfil::IsEgresadoSena() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaConApoyo() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaSinApoyo())                     
+                                                                         <p>{{$user->talento->perfil->nombre == App\Models\Perfil::IsEgresadoSena() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaConApoyo() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaSinApoyo() ? 'Regional: '. $user->talento->entidad->centro->regional->nombre . ', Centro de formación: ' .$user->talento->entidad->nombre . ', Programa de formación: ' . $user->talento->programa_formacion : 'No registra' }}</p>
+                                                                        @endif
+                                                                        @if($user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioEmpresaPublica() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMicroempresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa())
+                                                                                <p>
+                                                                            {{$user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioEmpresaPublica() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMicroempresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa() ? $user->talento->empresa : 'No registra'}}</p>
+
+                                                                        @endif
+                                                                        @if($user->talento->perfil->nombre == App\Models\Perfil::IsEmprendedorIndependiente())
+                                                                            <p>No registra</p>
+
+                                                                        @endif
+                                                                        @if($user->talento->perfil->nombre == App\Models\Perfil::IsEstudianteUniversitarioPregrado() || $user->talento->perfil->nombre == App\Models\Perfil::IsEstudianteUniversitarioPostgrado())
+                                                                            <p>{{$user->talento->perfil->nombre == App\Models\Perfil::IsEstudianteUniversitarioPregrado() || $user->talento->perfil->nombre == App\Models\Perfil::IsEstudianteUniversitarioPostgrado() ? 'Universidad: '. $user->talento->universidad. ', Carrera universitaria: '. $user->talento->carrera_universitaria : 'No registra'}}</p>
+
+                                                                        @endif
+                                                                        @if($user->talento->perfil->nombre == App\Models\Perfil::IsInvestigador())
+                                                                            <p>{{$user->talento->perfil->nombre == App\Models\Perfil::IsInvestigador() ? 'Grupo de investigación: ' . $user->talento->entidad->nombre : 'No registra'}}</p>
+
+                                                                        @endif
+                                                                        @if($user->talento->perfil->nombre == App\Models\Perfil::IsOtro())
+                                                                            <p>{{$user->talento->perfil->nombre == App\Models\Perfil::IsOtro() ?  $user->talento->otro_tipo_talento : 'No registra'}}</p>
+
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
                                                             </li>
                                                         </ul>
                                                     </div>

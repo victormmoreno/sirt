@@ -47,7 +47,7 @@
                                                             @forelse($user->roles as $role)
                                                                 <li class="collection-item avatar">
                                                                     <i class="material-icons circle teal darken-2">
-                                                                        credit_card
+                                                                        beenhere
                                                                     </i>
                                                                     <span class="title">
                                                                         {{$role->name}}
@@ -60,7 +60,12 @@
                                                                     </p>
                                                                 </li>
                                                             @empty
-                                                            <p>No tienes roles asignados</p>
+                                                            <div class="center">
+                                                               <i class="large material-icons center">
+                                                                    pan_tool
+                                                                </i>
+                                                                <p class="center-align">No tienes roles asignados</p> 
+                                                            </div>
                                                             @endforelse
                                                             
     

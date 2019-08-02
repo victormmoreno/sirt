@@ -8,6 +8,7 @@ use App\Http\Requests\ProfileRequest\ProfileFormRequest;
 use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
 use App\Repositories\Repository\ProfileRepository\ProfileRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,7 @@ class ProfileController extends Controller
 
     public function __construct(UserRepository $userRepository, ProfileRepository $profileRepostory)
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','check_profile']);
         $this->userRepository   = $userRepository;
         $this->profileRepostory = $profileRepostory;
     }
@@ -128,5 +129,25 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
     }
+
+    /*================================================================================
+    =            metodo para descargar certificado registro en plataforma            =
+    ================================================================================*/
+    
+    public function downloadCertificatedPlataform()
+    {
+        //buscar usuario por su id
+        $user = $this->userRepository->findById(auth()->user()->id);
+        $this->authorize('update',$user);
+
+        $pdf = \PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('users.profile.pdf.certificate-plataform', compact('user'));
+        // return $pdf->download("certificado {$user->nombres} {$user->apellidos} - ". config('app.name').".pdf");
+        return $pdf->stream("certificado {$user->nombres} {$user->apellidos} - ". config('app.name').".pdf");
+    }
+    
+    /*=====  End of metodo para descargar certificado registro en plataforma  ======*/
+
+
+    
 
 }

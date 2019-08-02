@@ -38,7 +38,7 @@ class ProfileUserPolicy
      */
     public function view(User $authUser, User $user)
     {
-        return $authUser->id === $user->id || $user->hasPermissionTo('ver usuarios');
+        return $authUser->id === $user->id;
     }
 
     /**

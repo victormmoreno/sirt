@@ -57,7 +57,13 @@
                                                             </ul>
                                                         </div>
                                                     @empty
-                                                        <p>No tienes roles asignados</p>
+                                                        <div class="center">
+                                                           <i class="large material-icons center">
+                                                                pan_tool
+                                                            </i>
+                                                            <p class="center-align">No tienes permisos asignados</p> 
+                                                        </div>
+                                                        
                                                     @endforelse
                                                 </div>
                                                 <div class="divider mailbox-divider">

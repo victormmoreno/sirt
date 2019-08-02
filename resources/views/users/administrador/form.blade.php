@@ -108,7 +108,7 @@
                 <i class="material-icons prefix">
                     attach_money
                 </i>
-                <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsAdministrador() ||  (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) &&  $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsAdministrador() ||  (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
                 <label for="txthonorario">Honorario <span class="red-text">*</span></label>
                 @error('txthonorario')
                     <label id="txthonorario-error" class="error" for="txthonorario">{{ $message }}</label>
@@ -143,7 +143,7 @@
             </div>
             <div class="input-field col s12 m12 l12">
             
-                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) ? $user->infocenter->extension : old('txtextension')}}" {{isset($user->infocenter->extension) && session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsAdministrador() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) &&  $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) ? $user->infocenter->extension : old('txtextension')}}" {{isset($user->infocenter->extension) && session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsAdministrador() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->gestor->nodo->id ) &&   $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
                 <label for="txtextension">Extensión <span class="red-text">*</span></label>
                 @error('txtextension')
                     <label id="txtextension-error" class="error" for="txtextension">{{ $message }}</label>
