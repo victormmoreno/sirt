@@ -122,55 +122,13 @@
           }
         }
 
-        console.log(datos.articulaciones);
-
         var dataGraphic = [];
 
         for (var i = 0; i < tamanho; i++) {
           let array = '{"name": "'+datos.gestores[i]+'", "data": ['+datos.articulaciones[i]+', '+datos.articulacionesb[i]+', '+datos.articulacionesc[i]+']}';
-          // var part2 = '{"name": "datos", "data": [5, 5, 5]}';
           array = JSON.parse(array);
           dataGraphic.push(array);
         }
-        // part2 = JSON.parse(part2);
-        // console.log();
-        // dataGraphic.push(part2);
-        // var part1 = true ? dataGraphic.push(JSON.parse("{name: 'datos.gestores', data: ['50', '10', '10']},")) : '';
-        // var part1 = true ? dataGraphic += "{name: 'datos.gestores'}}, {data: [ '50', '10', '10']}," : '';
-        // var parte2 = true ? dataGraphic.push(JSON.parse("{name: 'datos', data: ['1', '1', '1']},")) : '';
-
-        var resulta =  [{
-          name: 'John',
-          data: [5, 3, 4, 7, 2]
-        }, {
-          name: 'Jane',
-          data: [2, 2, 3, 2, 1]
-        }, {
-          name: 'Joe',
-          data: [3, 4, 4, 2, 5]
-        }]
-
-        // dataGraphic = Object.assign({}, dataGraphic);
-        // console.log();
-
-        // dataGraphic = [
-        //   dataGraphic
-        //   // {data: [
-        //   //   '50', '10', '10'
-        //   // ]},
-        // ]
-
-        // dataGraphic += [
-        //   {name: 'datos'},
-        //   {data: [
-        //     '50', '10', '10'
-        //   ]},
-        // ]
-
-        console.log(dataGraphic);
-        // console.log(resulta);
-
-        // console.log(datos.articulaciones);
         Highcharts.chart('container', {
           chart: {
             type: 'column'
