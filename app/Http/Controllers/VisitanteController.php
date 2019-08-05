@@ -21,7 +21,21 @@ class VisitanteController extends Controller
   {
     $this->visitanteRepository = $visitanteRepository;
     $this->middleware('auth');
+  }
 
+  /**
+   * Se consultan los datos del visitante por el número de documento
+   * @param string doc Documento de identidad del visitante
+   * @return Response
+   */
+  public function consultarVisitantePorDocumento($doc)
+  {
+    if (request()->ajax()) {
+      $visitante = $this->visitanteRepository->consultarVisitantePorDocumentoRepository($doc);
+      return response()->json([
+        'visitante' => $visitante
+      ]);
+    }
   }
 
   /**
@@ -87,17 +101,6 @@ class VisitanteController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -131,14 +134,4 @@ class VisitanteController extends Controller
     }
   }
 
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
 }

@@ -45,7 +45,7 @@ class TiposArticulacionesTableSeeder extends Seeder
 
         TipoArticulacion::create([
             'id'     => 6,
-            'nombre' => 'Formular proyectos I+D+i.',
+            'nombre' => 'Formular proyectos I+D+i para convocatorias.',
             'articulado_con' => TipoArticulacion::IsEmpresaEmprendedor(),
         ]);
 

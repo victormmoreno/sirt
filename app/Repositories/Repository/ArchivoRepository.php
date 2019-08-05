@@ -3,11 +3,35 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{ArchivoArticulacion, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt};
+use App\Models\{ArchivoArticulacion, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
 
 class ArchivoRepository
 {
 
+
+  /**
+  * Consulta la ruta de un archivo de una charla informativa
+  * @param int id Id del archivo
+  * @return Collection
+  */
+  public function consultarRutaDeArchivoDeUnaCharlaInformativaPorId($id)
+  {
+    return ArchivoCharlaInformativa::select('id', 'ruta')->where('id', $id)->get()->last();
+  }
+
+  /**
+  * Guarda la ruta del archivo de la charla informativa en la base de datos
+  * @param int id Id del entrenamiento
+  * @param string fileUrl Ruta con la que se guardará el arcivo en el servidor
+  * @return void
+  */
+  public function storeFileCharlaInformativaRepository($id, $fileUrl)
+  {
+    return ArchivoCharlaInformativa::create([
+      'charlainformativa_id' => $id,
+      'ruta' => $fileUrl
+    ]);
+  }
 
   /**
   * Guarda la ruta del archivo de una edt en la base de datos

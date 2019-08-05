@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
-
+const JavaScriptObfuscator = require('webpack-obfuscator');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -38,6 +38,9 @@ mix.scripts([
 		'resources/assets/plugins/dropzone/dropzone.js',
 		'resources/assets/plugins/bootstrap-datapicker/js/bootstrap-material-datetimepicker.js',
 		'resources/assets/plugins/materialize-clockpicker-master/dist/js/materialize.clockpicker.js',
+		'resources/assets/plugins/highcharts/highcharts.js',
+		'resources/assets/plugins/highcharts/modules/exporting.js',
+		'resources/assets/plugins/highcharts/modules/export-data.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
@@ -80,7 +83,13 @@ mix.scripts([
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
 		'resources/app/visitante/index.js',
+		'resources/app/ingreso/index.js',
+		'resources/app/ingreso/ingreso/create.js',
+		'resources/app/charla/index.js',
 	],'public/js/app2.js');
+
+
+// mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
 
 
 mix.browserSync({
@@ -94,4 +103,14 @@ mix.browserSync({
         ]
  });
 
-// mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
+
+ mix.webpackConfig({
+	 plugins: [
+		 new JavaScriptObfuscator ({
+			 rotateUnicodeArray: true,
+			 compact: true,
+			 identifierNamesGenerator: 'hexadecimal',
+		 }, ['app.js'])
+	 ],
+ });
+

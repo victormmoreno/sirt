@@ -8,7 +8,8 @@ use App\Http\Requests\ArticulacionFormRequest;
 use Carbon\Carbon;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository};
 use App\Helpers\ArrayHelper;
-Use App\User;
+use Illuminate\Support\Str;
+use App\User;
 
 class ArticulacionController extends Controller
 {
@@ -127,7 +128,7 @@ class ArticulacionController extends Controller
   }
 
   // Datatable para mostrar las articulaciones POR NODO
-  public function datatableArticulacionesPorNodo($id)
+  public function datatableArticulacionesPorNodo(Request $request, $id)
   {
     if (request()->ajax()) {
       if (\Session::get('login_role') == User::IsDinamizador()) {
@@ -136,6 +137,50 @@ class ArticulacionController extends Controller
         $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
       }
       return datatables()->of($articulaciones)
+      ->filter(function ($instance) use ($request) {
+        if (!empty($request->get('codigo_articulacion'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            return Str::contains($row['codigo_articulacion'], $request->get('codigo_articulacion')) ? true : false;
+          });
+        }
+        if (!empty($request->get('nombre'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            return Str::contains($row['nombre'], $request->get('nombre')) ? true : false;
+          });
+        }
+        if (!empty($request->get('tipo_articulacion'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            return Str::contains($row['tipo_articulacion'], $request->get('tipo_articulacion')) ? true : false;
+          });
+        }
+        if (!empty($request->get('nombre_completo_gestor'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            return Str::contains($row['nombre_completo_gestor'], $request->get('nombre_completo_gestor')) ? true : false;
+          });
+        }
+        if (!empty($request->get('estado'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            return Str::contains($row['estado'], $request->get('estado')) ? true : false;
+          });
+        }
+        if (!empty($request->get('search'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            if (Str::contains(Str::lower($row['codigo_articulacion']), Str::lower($request->get('search')))){
+              return true;
+            }else if (Str::contains(Str::lower($row['nombre']), Str::lower($request->get('search')))) {
+              return true;
+            }else if (Str::contains(Str::lower($row['tipo_articulacion']), Str::lower($request->get('search')))) {
+              return true;
+            }else if (Str::contains(Str::lower($row['nombre_completo_gestor']), Str::lower($request->get('search')))) {
+              return true;
+            }else if (Str::contains(Str::lower($row['estado']), Str::lower($request->get('search')))) {
+              return true;
+            }
+
+            return false;
+          });
+        }
+      })
       ->addColumn('details', function ($data) {
         $button = '
         <a class="btn light-blue m-b-xs" onclick="detallesDeUnaArticulacion(' . $data->id . ')">

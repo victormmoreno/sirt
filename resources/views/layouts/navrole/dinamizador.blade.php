@@ -23,6 +23,16 @@
     <i class="material-icons">settings_input_svideo</i>Costos Administrativos
   </a>
 </li> --}}
+<li class="no-padding {{setActiveRoute('charla')}}">
+  <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
+  </a>
+</li>
+<li class="no-padding {{setActiveRoute('grafico')}}">
+  <a href="{{route('grafico')}}" class="{{setActiveRouteActivePage('grafico')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
+  </a>
+</li>
 <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">filter_center_focus</i>Sublineas
