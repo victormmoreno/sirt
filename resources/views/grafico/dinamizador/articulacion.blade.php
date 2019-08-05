@@ -1,166 +1,98 @@
 @extends('layouts.app')
 @section('meta-title', 'Gráficos')
 @section('content')
-  <main class="mn-inner inner-active-sidebar">
-    <div class="content">
-      <div class="row no-m-t no-m-b">
-        <div class="col s12 m12 l12">
-          <h5>
-            <a class="footer-text left-align" href="{{route('grafico')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
-            </a> Gráficos
-          </h5>
-          <div class="card">
-            <div class="card-content">
-              <div class="row">
-                <div class="col s12 m12 l12">
-                  <div class="row">
-                    <div class="col s12 m12 l12">
-                      <div class="center-align">
-                        <span class="card-title center-align">Gráficos de Articulaciones</span>
-                      </div>
+{!! $yearNow = Carbon\Carbon::now()->isoFormat('YYYY') !!}
+<main class="mn-inner inner-active-sidebar">
+  <div class="content">
+    <div class="row no-m-t no-m-b">
+      <div class="col s12 m12 l12">
+        <h5>
+          <a class="footer-text left-align" href="{{route('grafico')}}">
+            <i class="material-icons arrow-l">arrow_back</i>
+          </a> Gráficos
+        </h5>
+        <div class="card">
+          <div class="card-content">
+            <div class="row">
+              <div class="col s12 m12 l12">
+                <div class="row">
+                  <div class="col s12 m12 l12">
+                    <div class="center-align">
+                      <span class="card-title center-align">Gráficos de Articulaciones</span>
                     </div>
                   </div>
-                  <div class="divider"></div>
-                  {{-- <a class="btn" onclick="exampleArticulaciones({{auth()->user()->dinamizador->nodo_id}})">Click me!</a> --}}
-                  <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
                 </div>
+                <div class="divider"></div>
+                <ul class="collapsible">
+                  <li>
+                    <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por año</div>
+                    <div class="collapsible-body">
+                      <div class="row">
+                        <div class="input-field col s12 m4 l4">
+                          <div class="input-field col s12 m6 l6">
+                            <input type="text" id="txtfecha_inicio_Grafico1" name="txtfecha_inicio_Grafico1" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                            <label for="txtfecha_inicio_Grafico1">Fecha Inicio</label>
+                          </div>
+                          <div class="input-field col s12 m6 l6">
+                            <input type="text" id="txtfecha_fin_Grafico1" name="txtfecha_fin_Grafico1" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                            <label for="txtfecha_fin_Grafico1">Fecha Fin</label>
+                          </div>
+                          <div class="center col s12 m12 l12">
+                            <button onclick="consultaArticulacionesDelGestorPorNodoYFecha_stacked({{auth()->user()->dinamizador->nodo_id}});" class="btn">Consultar</button>
+                          </div>
+                        </div>
+                        <div class="col s12 m8 l8">
+                          <div id="graficoArticulacionesPorGestorYNodoPorFecha_stacked" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por gestor</div>
+                    <div class="collapsible-body">
+                      <div class="row">
+                        <div class="col s12 m4 l4">
+                          <div class="input-field col s12 m12 l12">
+                            <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
+                              <option value="">Seleccione el Gestor</option>
+                              @foreach($gestores as $id => $nombres_gestor)
+                              <option value="{{$id}}">{{$nombres_gestor}}</option>
+                              @endforeach
+                            </select>
+                            <label for="txtgestor_id">Gestor</label>
+                          </div>
+                        </div>
+                        <div id="graficoArticulacionesPorGestorYFecha_stacked" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                        
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por línea</div>
+                    <div class="collapsible-body">
+                      <div id="graficoArticulacionesPorLineaYFecha_stacked" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones totales</div>
+                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </main>
-  @include('charlas.modals')
+  </div>
+</main>
+@include('charlas.modals')
 @endsection
 @push('script')
-  <script>
+<script>
   $(document).ready(function(){
-    exampleArticulaciones({{auth()->user()->dinamizador->nodo_id}})
-    // Highcharts.chart('container', {
-    //   chart: {
-    //     type: 'column'
-    //   },
-    //   title: {
-    //     text: 'Articulaciones'
-    //   },
-    //   xAxis: {
-    //     categories: ['Grupos de Investigación', 'Empresas', 'Emprendedores'],
-    //     title: {
-    //       text: 'Tipos de Articulaciones'
-    //     }
-    //   },
-    //   yAxis: {
-    //     min: 0,
-    //     title: {
-    //       text: 'Número de Articulaciones'
-    //     }
-    //   },
-    //   legend: {
-    //     reversed: true
-    //   },
-    //   plotOptions: {
-    //     series: {
-    //       stacking: 'normal'
-    //     }
-    //   },
-    //   series:[
-    //     // {name: datos.gestores[1], data: [1, 2, 2]},
-    //     // {name: 'Empresas', data: [0, 0, 0]},
-    //     // {name: 'Emprendedores', data: [0, 0, 0]}
-    //   ],
-    // });
+    var explorador = 'Hello there';
+    consultaArticulacionesDelGestorPorNodoYFecha_stacked({{auth()->user()->dinamizador->nodo_id}})
   });
-
-  function ciclo(array) {
-    $.each(array, function( index, value ) {
-      value;
-    });
-    // array.forEach(item => item)
-    // console.log(array);
-  }
-
-  function exampleArticulaciones(id) {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: '/grafico/consultarArticulacionesPorNodo/'+id,
-      success: function (data) {
-        var tamanho = data.tipos.gestores.length;
-        var datos = {
-          gestores: [],
-          articulaciones: [],
-          articulacionesb: [],
-          articulacionesc: []
-        };
-        // console.log(data.tipos);
-        for (var i = 0; i < tamanho; i++) {
-          if (data.tipos.gestores[i] != null) {
-            datos.gestores.push(data.tipos.gestores[i].gestor);
-            // console.log(data.tipos.gestores[i].gestor);
-          }
-        }
-
-        for (var i = 0; i < tamanho; i++) {
-          if (data.tipos.gestores[i].grupos != null) {
-            datos.articulaciones.push(data.tipos.gestores[i].grupos);
-            // console.log(data.tipos.gestores[i].a);
-          }
-        }
-
-        for (var i = 0; i < tamanho; i++) {
-          // if (data.tipos.gestores[i].empresas != null) {
-            datos.articulacionesb.push(data.tipos.gestores[i].empresas);
-            // console.log(data.tipos.gestores[i].a);
-          // }
-        }
-        for (var i = 0; i < tamanho; i++) {
-          if (data.tipos.gestores[i] != null) {
-            datos.articulacionesc.push(data.tipos.gestores[i].emprendedores);
-            // console.log(data.tipos.gestores[i].a);
-          }
-        }
-
-        var dataGraphic = [];
-
-        for (var i = 0; i < tamanho; i++) {
-          let array = '{"name": "'+datos.gestores[i]+'", "data": ['+datos.articulaciones[i]+', '+datos.articulacionesb[i]+', '+datos.articulacionesc[i]+']}';
-          array = JSON.parse(array);
-          dataGraphic.push(array);
-        }
-        Highcharts.chart('container', {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: 'Articulaciones'
-          },
-          xAxis: {
-            categories: ['Grupos de Investigación', 'Empresas', 'Emprendedores'],
-            title: {
-              text: 'Tipos de Articulaciones'
-            }
-          },
-          yAxis: {
-            min: 0,
-            title: {
-              text: 'Número de Articulaciones'
-            }
-          },
-          legend: {
-            reversed: true
-          },
-          plotOptions: {
-            series: {
-              stacking: 'normal'
-            }
-          },
-          series: dataGraphic
-        });
-      },
-    });
-  }
-
 </script>
 @endpush

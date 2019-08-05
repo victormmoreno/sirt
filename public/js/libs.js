@@ -21476,6 +21476,23 @@ $(document)
 .ajaxStop(function () {
   $loading.closeModal();
 });
+
+Highcharts.setOptions({
+    lang: {
+      downloadJPEG: 'Descargar como imagen JPEG',
+      downloadCSV: 'Descargar como CSV',
+      downloadPNG: 'Descargar como imagen PNG',
+      downloadPDF: 'Descargar como PDF',
+      downloadSVG: 'Descargar como SVG',
+      downloadXLS: 'Descargar como XLS',
+      loading: 'Cargando...',
+      printChart: 'Imprimir',
+      openInCloud: 'Abrir en la nube de Highcharts',
+      viewData: 'Ver datos en tabla',
+      viewFullscreen: 'Ver en pantalla completa'
+  },
+});
+
 $(document).ready(function() {
     $('.dataTables_length select').addClass('browser-default');
     $('.select2').select2({

@@ -23,7 +23,9 @@ class GraficoController extends Controller
   public function index()
   {
     if ( Session::get('login_role') == User::IsDinamizador() ) {
-      return view('grafico.dinamizador.index');
+      return view('grafico.dinamizador.index', [
+        'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+      ]);
     }
   }
 
@@ -40,51 +42,57 @@ class GraficoController extends Controller
 
 
   /**
+  * Retorna el array con los datos para mostrar en la vista
   * @param array $datos
   * @return array
   */
-  private function agruparGestoresArray($datos) {
-    $gestor = array();
-    // $gestor = array_column($datos->toArray(), 'gestor');
-    foreach ($gestor as $key => $value) {
-      $res2[$value] = true;
+  private function devolverArrayConDatosDeArticulaciones($gestoresDelNodo, $fecha_inicio, $fecha_fin) {
+    $datosCompletos = array();
+    foreach ($gestoresDelNodo as $key => $value) {
+      $gestor = $value->nombres;
+      $array = array('gestor' => $gestor);
+      array_push($datosCompletos, $array);
+      $articulaciones = array();
+      for ($i=0; $i < 3 ; $i++) {
+        $articulacionesArr = $this->articulacionRepository->consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($value->id, $i, $fecha_inicio, $fecha_fin);
+        if ($i == 0) {
+          if ($articulacionesArr != null) {
+            $datosCompletos[$key]['grupos'] = $articulacionesArr->cantidad;
+          } else {
+            $datosCompletos[$key]['grupos'] = 0;
+          }
+        } else if ($i == 1) {
+          if ($articulacionesArr != null) {
+            $datosCompletos[$key]['empresas'] = $articulacionesArr->cantidad;
+          } else {
+            $datosCompletos[$key]['empresas'] = 0;
+          }
+        } else {
+          if ($articulacionesArr != null) {
+            $datosCompletos[$key]['emprendedores'] = $articulacionesArr->cantidad;
+          } else {
+            $datosCompletos[$key]['emprendedores'] = 0;
+          }
+        }
+      }
     }
-    $res2 = array_keys($res2);
-    return $res2;
+    return $datosCompletos;
   }
 
   /**
-  *
+  * 
   * @param int $id Id del nodo
   * @return Response
   */
-  public function articulacionesNodoGrafico($id)
+  public function articulacionesNodoGrafico($id, $fecha_inicio, $fecha_fin)
   {
 
     if ( request()->ajax() ) {
       $gestoresDelNodo = Gestor::ConsultarGestoresPorNodo($id)->get();
-      // dd($gestoresDelNodo);
-      $tipos_articulacion = array('gestores' => [0 => ['gestor' => 'Ramiro', 'grupos' => 5, 'empresas' => 8, 'emprendedores' => 5], 1 => ['gestor' => 'Julian', 'grupos' => 7, 'empresas' => 2, 'emprendedores' => 3]]);
-      $datosCompletos = array();
-      // $tipos_articulacion = array('gestores' => [0 => ['gestor' => 'Ramiro', 'grupos' => 5, 'empresas' => 8, 'emprendedores' => 5], 1 => ['gestor' => 'Julian', 'grupos' => 7, 'empresas' => 2, 'emprendedores' => 3]]);
-      $tipos2 = array('Grupos de Investigación', 'Empresas', 'Emprendedores');
-      $gestor = array();
-
-      foreach ($gestoresDelNodo as $key => $value) {
-        $array = array('gestor' => $value->nombres_gestor);
-        array_push($datosCompletos, $array);
-        for ($i=0; $i < 3 ; $i++) {
-          $articulaciones = $this->articulacionRepository->consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($value->id, $i);
-          if ($articulaciones != null) {
-            array_merge($datosCompletos, $articulaciones->toArray());
-
-          }
-        }
-      }
-      $grupos = 0;
-      $empresas = 0;
-      $emprendedores = 0;
+      $datosCompletos = $this->devolverArrayConDatosDeArticulaciones($gestoresDelNodo, $fecha_inicio, $fecha_fin);
+      return response()->json([
+        'consulta' => $datosCompletos
+      ]);
     }
   }
-
 }

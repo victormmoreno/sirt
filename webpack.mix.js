@@ -86,6 +86,7 @@ mix.scripts([
 		'resources/app/ingreso/index.js',
 		'resources/app/ingreso/ingreso/create.js',
 		'resources/app/charla/index.js',
+		'resources/app/graficos/index.js',
 	],'public/js/app2.js');
 
 

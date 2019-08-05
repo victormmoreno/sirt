@@ -14,7 +14,7 @@ class ArticulacionRepository
    * @param int $idgestor Id del gestor
    * @return Collection
    */
-  public function consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($idgestor, $tipo_articulacion)
+  public function consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($idgestor, $tipo_articulacion, $fecha_inicio, $fecha_fin)
   {
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
@@ -24,6 +24,7 @@ class ArticulacionRepository
     ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
     ->where('gestores.id', $idgestor)
     ->where('tipo_articulacion', $tipo_articulacion)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->groupBy('gestores.id', 'articulaciones.tipo_articulacion')
     ->get()
     ->last();
