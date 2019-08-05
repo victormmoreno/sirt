@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -7,29 +8,6 @@ use Spatie\Permission\Models\Role;
 
 
 Route::get('/', function () {
-    // $user = auth()->user()->hasAllRoles(Role::all());;
-    
-    // $users = App\User::with(
-    //     [
-    //         'tipodocumento' => function ($query) {
-    //             $query->where('nombre', '=', 'Cédula de Ciudadanía');
-    //         },
-    //         'roles'=> function ($query) {
-    //             $query->where('name', '=', 'Gestor');
-    //         },
-    //         'ocupaciones',
-    //     ]
-    // )->get();
-    //
-    // $nodo = Nodo::findByName('Medellin',1);
-
-    // dd($nodo);
-    //
-    // $user = Perfil::latest()
-    //  ->take(20)
-    //  ->get();
-    //  dd($user);
-
     return view('spa');
 })->name('/');
 
@@ -74,7 +52,12 @@ Route::get('activate/{token}', 'ActivationTokenController@activate')->name('acti
 =            rutas para las funcionalidades de los nodos            =
 ===================================================================*/
 
-Route::resource('nodo', 'NodoController');
+Route::resource('nodo', 'Nodo\NodoController');
+
+Route::get('nodos', function(NodoDataTable $dataTable) {
+
+    return $dataTable->render('users.index');
+});
 
 /*=====  End of rutas para las funcionalidades de los nodos  ======*/
 

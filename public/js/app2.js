@@ -60,7 +60,6 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    
     $('#nodos_table').DataTable({
         language: {
             // "sProcessing": "Procesando...",
@@ -89,43 +88,78 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
-        ajax:{
-        	url: "/nodo",
+        "lengthChange": true,
+        "responsive": true,
+        dom: 'Bfrtip',
+        buttons: [
+        {
+            extend: 'copy',
+            text: 'copiar',
+            exportOptions: {
+                columns: ':visible'
+            }
         },
-        columns: [
-        	{
-        		data: 'centro',
-        		name: 'centro',
-        	},
-        	{
-        		data: 'nodos',
-        		name: 'nodos',
-        	},
-        	{
-        		data: 'direccion',
-        		name: 'direccion',
-        	},
-            {
-                data: 'ubicacion',
-                name: 'ubicacion',
-            },
-        	{
-        		data: 'detail',
-        		name: 'detail',
-        		orderable: false
-        	},
-            {
-                data: 'edit',
-                name: 'edit',
-                orderable: false
-            },
-
-        ],
+        {
+            extend: 'csv',
+        
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'excel',
+        
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'pdf',
+        
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'print',
+        
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+        {
+            extend: 'colvis',
+        
+            exportOptions: {
+                columns: ':visible'
+            }
+        },
+    ],
+        ajax: {
+            url: "/nodo",
+        },
+        columns: [{
+            data: 'centro',
+            name: 'centro',
+        }, {
+            data: 'nodos',
+            name: 'nodos',
+        }, {
+            data: 'direccion',
+            name: 'direccion',
+        }, {
+            data: 'ubicacion',
+            name: 'ubicacion',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false
+        }, ],
     });
-
-
-            
-
 });
 $(document).ready(function() {
 
