@@ -52,7 +52,7 @@
             @include('layouts.footer')
         </div>
         <div class="left-sidebar-hover"></div>
-
+        {{-- <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script> --}}
         <script src="{{ asset('js/app.js') }}" ></script>
         <script src="{{ asset('js/libs.js') }}" ></script>
         <script src="{{ asset('js/app2.js') }}"></script>

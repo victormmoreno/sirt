@@ -39,7 +39,7 @@
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
       <li>
-        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables del Entrenamiento</div>
+        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la Edt</div>
         <div class="collapsible-body">
           <div class="row">
             <div class="center col s12 m12 l12">

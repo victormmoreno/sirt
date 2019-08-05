@@ -14,4 +14,16 @@
       @endif
     </tr>
   </thead>
+  <tfoot>
+    <tr>
+      <th><input type="text" name="email" class="codigo_articulacion" placeholder="Buscar por código de articulación"></th>
+      <th><input type="text" name="nombre" class="nombre" placeholder="Buscar por nombre"></th>
+      <th><input type="text" name="tipo_articulacion" class="tipo_articulacion" placeholder="Buscar por Tipo de Articulación"></th>
+      <th><input type="text" name="nombre_completo_gestor" class="nombre_completo_gestor" placeholder="Buscar por Gestor"></th>
+      <th><input type="text" name="estado" class="estado" placeholder="Buscar por Estado"></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </tfoot>
 </table>

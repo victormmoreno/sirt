@@ -10,7 +10,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
   @stack('style')
 </head>
-<body class="error-page page-403">
+<body class="error-page page-404">
   <div class="mn-content">
     <main class="mn-inner">
       <div class="valign-wrapper center">

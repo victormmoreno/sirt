@@ -9,6 +9,44 @@ use Carbon\Carbon;
 class ArticulacionRepository
 {
 
+  /**
+   * Consulta las cantidad de tipos de articulación por gestor
+   * @param int $idgestor Id del gestor
+   * @return Collection
+   */
+  public function consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($idgestor, $tipo_articulacion)
+  {
+    return Articulacion::select('articulaciones.tipo_articulacion')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->where('gestores.id', $idgestor)
+    ->where('tipo_articulacion', $tipo_articulacion)
+    ->groupBy('gestores.id', 'articulaciones.tipo_articulacion')
+    ->get()
+    ->last();
+  }
+
+  /**
+   * Consulta los tipos de articulacion que tienen los gestores de un nodo
+   * @param int $id Id del nodo
+   * @return Collection
+   */
+  public function tiposArticulacionesPorGestorNodo($id)
+  {
+    return Articulacion::select('articulaciones.tipo_articulacion')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->where('gestores.id', $id)
+    ->groupBy('gestores.id', 'articulaciones.tipo_articulacion')
+    ->get();
+  }
+
   // Cambia el revisado final de una articulación
   public function updateRevisadoFinalArticulacion($request, $id)
   {

@@ -24,19 +24,20 @@ class CreateCharlasinformativasTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('nodo_id');
+            $table->string('codigo_charla', 20);
             $table->date('fecha');
             $table->string('encargado', 75);
             $table->integer('nro_asistentes');
             $table->string('observacion',1000)->nullable();
             $table->tinyInteger('listado_asistentes')->nullable()->default('0');
-            $table->string('dir_listado_asistentes',1000)->nullable();
             $table->tinyInteger('evidencia_fotografica')->nullable()->default('0');
-            $table->string('dir_evidencia_fotografica',1000)->nullable();
+            $table->tinyInteger('programacion')->nullable()->default('0');
             $table->tinyInteger('estado')->nullable()->default('1');
             $table->timestamps();
 
             $table->index(["nodo_id"], 'fk_charlasinvformativas_nodos1_idx');
 
+            $table->unique(["codigo_charla"], 'codigo_charla_UNIQUE');
 
             $table->foreign('nodo_id', 'fk_charlasinvformativas_nodos1_idx')
                 ->references('id')->on('nodos')

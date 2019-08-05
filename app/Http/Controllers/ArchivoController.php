@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{ArchivoArticulacion, Fase, Proyecto, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt};
-use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository};
+use App\Models\{ArchivoArticulacion, Fase, Proyecto, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
+use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\Storage;
 use App\User;
 use Carbon\Carbon;
@@ -17,21 +17,118 @@ class ArchivoController extends Controller
   private $proyectoRepository;
   private $entrenamientoRepository;
   private $edtRepository;
+  private $charlaInformativaRepository;
 
-  public function __construct(ArticulacionRepository $articulacionRepository, ArchivoRepository $archivoRepository, ProyectoRepository $proyectoRepository, EntrenamientoRepository $entrenamientoRepository, EdtRepository $edtRepository)
+  public function __construct(ArticulacionRepository $articulacionRepository, ArchivoRepository $archivoRepository, ProyectoRepository $proyectoRepository, EntrenamientoRepository $entrenamientoRepository, EdtRepository $edtRepository, CharlaInformativaRepository $charlaInformativaRepository)
   {
     $this->articulacionRepository = $articulacionRepository;
     $this->archivoRepository = $archivoRepository;
     $this->proyectoRepository = $proyectoRepository;
     $this->entrenamientoRepository = $entrenamientoRepository;
     $this->edtRepository = $edtRepository;
+    $this->charlaInformativaRepository = $charlaInformativaRepository;
     $this->middleware([
       'auth',
     ]);
   }
 
   /**
-  * Sube un archivo de los entrenamientos al servidor, además de que lo registra en la base de datos
+  * Método que elimina un archivo del servidor y su registro de la base de datos (archivoscharlasinformativas)
+  * @param int id Id del archivo de la charla informativa que se usará para eliminarlo del almacenamiento y de la base de datos
+  * @return Response
+  */
+  public function destroyFileCharlaInformartiva($id)
+  {
+    $file = ArchivoCharlaInformativa::find($id);
+    $file->delete();
+    $filePath = str_replace('storage', 'public', $file->ruta);
+    Storage::delete($filePath);
+    toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+    return back();
+  }
+
+  /**
+  * Método para descargar un archivo de una charla informativa
+  * @param int idFile id del archivo que se va a descargar
+  * @return Storage
+  */
+  public function downloadFileCharlaInformativa($idFile)
+  {
+    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaCharlaInformativaPorId($idFile);
+    $path = str_replace('storage', 'public', $ruta->ruta);
+    return Storage::download($path);
+  }
+
+  /**
+  * Sube un archivo de las charlas informativas al servidor, además de que lo registra en la base de datos
+  * @param Request
+  * @param int $id Id de la edt con el que se le subirá el archivo
+  * @return void
+  */
+  public function uploadFileCharlaInformartiva(Request $request, $id)
+  {
+    if (request()->ajax()) {
+      $this->validate(request(), [
+        'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,zip',
+      ],
+      [
+        'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
+        'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
+      ]);
+      $file = request()->file('nombreArchivo');
+      $route = "";
+      // La ruta con la se guardan los archivos de una es la siguiente:
+      // id_nodo/anho_de_la_fecha_de_incio/Edts/id_gestor/edt_id/max_id_archivo_proyecto_nombre_del_archivo.extension
+      $idArchivoCharlaInformativa = ArchivoCharlaInformativa::selectRaw('MAX(id+1) AS max')->get()->last();
+      $fileName = $idArchivoCharlaInformativa->max . '_' . $file->getClientOriginalName();
+      // Creando la ruta
+      $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
+      $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+      $anho = Carbon::parse($charla->fecha)->isoFormat('YYYY');
+      // $anho = $edt->fecha_inicio->isoFormat('YYYY');
+      $route = 'public/' . $nodo . '/' . $anho . '/Charlas' . '/' . $id;
+      $fileUrl = $file->storeAs($route, $fileName);
+      $this->archivoRepository->storeFileCharlaInformativaRepository($id, Storage::url($fileUrl));
+    }
+  }
+
+  /**
+  * Consulta los archivos de una charla informativa
+  * @param int $id Id de la charla informativa al cual se le consultarán lo archivos
+  * @return Response
+  */
+  public function datatableArchivosDeUnaCharlaInformatva($id)
+  {
+    if (request()->ajax()) {
+      $files = $this->charlaInformativaRepository->consultarArchivosDeUnaCharlaInformativaRepository($id);
+      // dd($files);
+      return datatables()->of($files)
+      ->addColumn('download', function ($data) {
+        $download = '
+        <a target="_blank" href="' . route('charla.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+        <i class="material-icons">file_download</i>
+        </a>
+        ';
+        return $download;
+      })->addColumn('delete', function ($data) {
+        $delete = '<form method="POST" action="' . route('charla.files.destroy', $data->id) . '">
+        ' . method_field('DELETE') . '' .  csrf_field() . '
+        <button class="btn red darken-4 m-b-xs">
+        <i class="material-icons">delete_forever</i>
+        </button>
+        </form>';
+        return $delete;
+      })->addColumn('file', function ($data) {
+        $file = '
+        <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
+        ';
+        return $file;
+      })->rawColumns(['download', 'delete', 'file'])->make(true);
+    }
+  }
+
+  /**
+  * Sube un archivo de las edts al servidor, además de que lo registra en la base de datos
   * @param Request
   * @param int $id Id de la edt con el que se le subirá el archivo
   * @return void
@@ -65,8 +162,8 @@ class ArchivoController extends Controller
   }
 
   /**
-  * Método para descargar un archivo de un entrenamiento
-  * @param int idFile id del archivo que se va a eliminar
+  * Método para descargar un archivo de una edt
+  * @param int idFile id del archivo que se va a descargar
   */
   public function downloadFileEdt($idFile)
   {

@@ -9,12 +9,32 @@ class VisitanteRepository
 {
 
   /**
-   * undocumented function summary
-   *
-   * Undocumented function long description
-   *
-   * @param type var Description
-   * @return return type
+   * Consulta un visitante por el número de documento
+   * @param string doc Documento del visitante
+   * @return Collection
+   */
+  public function consultarVisitantePorDocumentoRepository($doc)
+  {
+    return Visitante::select('nombres',
+    'documento',
+    'tipovisitante_id',
+    'tipodocumento_id',
+    'contacto',
+    'email',
+    'tiposvisitante.nombre AS tipovisitante',
+    'visitantes.id',
+    'apellidos')
+    ->selectRaw('concat(nombres, " ", apellidos) AS visitante')
+    ->join('tiposvisitante', 'tiposvisitante.id', '=', 'visitantes.tipovisitante_id')
+    ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'visitantes.tipodocumento_id')
+    ->where('visitantes.documento', $doc)
+    ->first();
+  }
+
+  /**
+   * Consulta un visitante por su id
+   * @param int $id id del visitante
+   * @return Collection
    */
   public function consultarVisitante($id)
   {
@@ -24,6 +44,7 @@ class VisitanteRepository
     'tipodocumento_id',
     'contacto',
     'email',
+    'tiposvisitante.nombre AS tipovisitante',
     'visitantes.id',
     'apellidos')
     ->join('tiposvisitante', 'tiposvisitante.id', '=', 'visitantes.tipovisitante_id')

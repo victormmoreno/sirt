@@ -38,6 +38,7 @@
               </div>
             </div>
             <div class="divider"></div>
+
             @include('articulaciones.table')
           </div>
         </div>
@@ -59,9 +60,18 @@
       processing: true,
       serverSide: true,
       order: [ 0, 'desc' ],
+      // searching: false,
       ajax:{
         url: "/articulacion/datatableArticulacionesDelNodo/"+0,
-        type: "get",
+        // type: "get",
+        data: function (d) {
+          d.codigo_articulacion = $('.codigo_articulacion').val(),
+          d.nombre = $('.nombre').val(),
+          d.tipo_articulacion = $('.tipo_articulacion').val(),
+          d.nombre_completo_gestor = $('.nombre_completo_gestor').val(),
+          d.estado = $('.estado').val(),
+          d.search = $('input[type="search"]').val()
+        }
       },
       columns: [
         {
@@ -102,6 +112,27 @@
         ],
       });
     }
+
+    $(".codigo_articulacion").keyup(function(){
+      $('#articulacionesNodo_table').DataTable().draw();
+    });
+
+    $(".nombre").keyup(function(){
+      $('#articulacionesNodo_table').DataTable().draw();
+    });
+
+    $(".tipo_articulacion").keyup(function(){
+      $('#articulacionesNodo_table').DataTable().draw();
+    });
+
+    $(".nombre_completo_gestor").keyup(function(){
+      $('#articulacionesNodo_table').DataTable().draw();
+    });
+
+    $(".estado").keyup(function(){
+      $('#articulacionesNodo_table').DataTable().draw();
+    });
+
   function consultarArticulacionesGestor(id) {
     $('#articulacionesNodo_table').dataTable().fnDestroy();
     $('#articulacionesNodo_table').DataTable({

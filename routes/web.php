@@ -16,16 +16,16 @@ Route::get('/', function () {
     //         'ocupaciones',
     //     ]
     // )->get();
-    // 
+    //
     // $nodo = Nodo::findByName('Medellin',1);
 
     // dd($nodo);
-    // 
+    //
     // $user = Perfil::latest()
     //  ->take(20)
-    //  ->get();    
+    //  ->get();
     //  dd($user);
-    
+
     return view('spa');
 })->name('/');
 
@@ -387,6 +387,7 @@ Route::group([
     Route::get('/create', 'VisitanteController@create')->name('visitante.create')->middleware('role_session:Ingreso');
     Route::get('/consultarVisitantesRedTecnoparque', 'VisitanteController@consultarVisitantesRedTecnoparque')->name('visitante.tecnoparque');
     Route::get('/{id}/edit', 'VisitanteController@edit')->name('visitante.edit')->middleware('role_session:Ingreso');
+    Route::get('/consultarVisitantePorDocumento/{doc}', 'VisitanteController@consultarVisitantePorDocumento')->name('visitante.documento');
     Route::put('/{id}', 'VisitanteController@update')->name('visitante.update')->middleware('role_session:Ingreso');
     Route::post('/', 'VisitanteController@store')->name('visitante.store')->middleware('role_session:Ingreso');
   }
@@ -402,10 +403,63 @@ Route::group([
   function () {
     Route::get('/', 'IngresoVisitanteController@index')->name('ingreso');
     Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
+    Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
     // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
-    // Route::get('/{id}/edit', 'IngresoController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
-    // Route::put('/{id}', 'IngresoController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
-    // Route::post('/', 'IngresoController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+    Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
+    Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
+    Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+  }
+);
+/**
+* Route group para el módulo de charlas informativas
+*/
+Route::group([
+  'prefix' => 'charla',
+  'middleware' => 'role_session:Infocenter|Dinamizador|Administrador'
+],
+  function () {
+    Route::get('/', 'CharlaInformativaController@index')->name('charla');
+    Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
+    Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
+    Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');
+    Route::get('/consultarDetallesDeUnaCharlaInformativa/{id}', 'CharlaInformativaController@detallesDeUnaCharlaInformativa')->name('charla.detalle');
+    Route::get('/archivosDeUnaCharlaInformartiva/{id}', 'ArchivoController@datatableArchivosDeUnaCharlaInformatva')->name('charla.files');
+    Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileCharlaInformativa')->name('charla.files.download');
+    // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
+    Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter');
+    Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter');
+    Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter');
+    Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
+    Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter');
+    Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
+
+  }
+);
+/**
+* Route group para el módulo de gráficos
+*/
+Route::group([
+  'prefix' => 'grafico',
+  'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso']
+],
+  function () {
+    Route::get('/', 'GraficoController@index')->name('grafico');
+    Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
+    Route::get('/consultarArticulacionesPorNodo/{id}', 'GraficoController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion');
+    // Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
+    // Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
+    // Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');
+    // Route::get('/consultarDetallesDeUnaCharlaInformativa/{id}', 'CharlaInformativaController@detallesDeUnaCharlaInformativa')->name('charla.detalle');
+    // Route::get('/archivosDeUnaCharlaInformartiva/{id}', 'ArchivoController@datatableArchivosDeUnaCharlaInformatva')->name('charla.files');
+    // Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileCharlaInformativa')->name('charla.files.download');
+    // // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
+    // Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter');
+    // Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter');
+    // Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter');
+    // Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
+    // Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter');
+    // Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
+
   }
 );
 

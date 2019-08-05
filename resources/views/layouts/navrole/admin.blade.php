@@ -29,6 +29,26 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('sublineas') }}">linear_scale</i>Sublineas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('proyecto')}}">
+  <a href="{{ route('proyecto') }}" class="{{setActiveRouteActivePage('proyecto')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos de Base Tecnológica
+  </a>
+</li>
+<li class="no-padding {{setActiveRoute('articulacion')}}">
+  <a href="{{ route('articulacion') }}" class="{{setActiveRouteActivePage('articulacion')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones
+  </a>
+</li>
+<li class="{{ setActiveRoute('edt') }}">
+  <a class="waves-effect waves-grey {{ setActiveRouteActivePage('edt') }}" href="{{route('edt')}}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('edt') }}">record_voice_over</i>EDT's
+  </a>
+</li>
+<li class="no-padding {{setActiveRoute('charla')}}">
+  <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
+  </a>
+</li>
 <li class="no-padding">
   <a href="">
     <i class="material-icons">settings_input_svideo</i>Costos Administrativos
@@ -58,21 +78,6 @@
       </li>
     </ul>
   </div>
-</li>
-<li class="no-padding {{setActiveRoute('proyecto')}}">
-  <a href="{{ route('proyecto') }}" class="{{setActiveRouteActivePage('proyecto')}}">
-    <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos de Base Tecnológica
-  </a>
-</li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
-  <a href="{{ route('articulacion') }}" class="{{setActiveRouteActivePage('articulacion')}}">
-    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones
-  </a>
-</li>
-<li class="{{ setActiveRoute('edt') }}">
-  <a class="waves-effect waves-grey {{ setActiveRouteActivePage('edt') }}" href="{{route('edt')}}">
-  <i class="material-icons {{ setActiveRouteActiveIcon('edt') }}">record_voice_over</i>EDT's
-  </a>
 </li>
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
