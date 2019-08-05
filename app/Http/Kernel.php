@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'role_session'       => \App\Http\Middleware\Ourmiddleware\Role\RoleMiddleware::class,
         'disablepreventback' => \App\Http\Middleware\Auth\Logout\DisablePreventBack::class,
+        'check_profile'      => \App\Http\Middleware\User\Profile\CheckForProfile::class,
     ];
 
     /**

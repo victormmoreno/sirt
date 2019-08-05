@@ -8,7 +8,7 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <h5>
-                    <a class="footer-text left-align" href="">
+                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
                         <i class="material-icons arrow-l">
                             arrow_back
                         </i>
@@ -50,9 +50,11 @@
                                         'btnText' => 'Modificar',
                                     ])
                                 </form>
-                                
+                              
                                     </div>
+                                 
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -78,6 +80,10 @@ $(document).ready(function() {
     @if($errors->any())
     @endif
 });
+
+function falseCheckbox() {
+  return false;
+}
     
 
 
@@ -128,7 +134,7 @@ var TipoTalento = {
              
           @else
               $("#txtregional").val();
-              $("#txtcentroformacion").val();
+              $("#txtcentroformacion").val('');
               $("#txtprogramaformacion").val();
           @endif
           $("#txtregional").material_select();  
@@ -155,13 +161,19 @@ var TipoTalento = {
               @endif 
         }
         
-        if($('.investigador').css('display') === 'block')
+        if($('.investigador').css('display') == 'block')
         {
               @if($errors->any())
-                $('#txtgrupoinvestigacion').val({{old('txtgrupoinvestigacion')}});
+                $('#txtgrupoinvestigacion').val('{{old('txtgrupoinvestigacion')}}');
               @else
-                  $('#txtgrupoinvestigacion').val();
+                  @if(isset($user->talento->entidad->nombre))
+                    $('#txtgrupoinvestigacion').val("{{$user->talento->entidad->nombre}}");
+                  @endif
               @endif 
+        }else{
+          @if(isset($user->talento->entidad->nombre))
+              $('#txtgrupoinvestigacion').val("{{$user->talento->entidad->nombre}}");
+          @endif
         }
         if ($("#otroTipoTalento").css('display') === 'block') {
               
@@ -328,21 +340,29 @@ var regional = {
         type:'get',
         url:'/centro-formacion/getcentrosregional/'+regional
       }).done(function(response){
+        
 
         $('#txtcentroformacion').empty();
+
+        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+          @if(isset($user->talento->entidad->centro->id))
+      
+          $('#txtcentroformacion').append('<option value="{{$user->talento->entidad->centro->id}}">{{$user->talento->entidad->nombre}}</option>');
+          @endif
+        @else
         $('#txtcentroformacion').append('<option value="">Seleccione el centro de formación</option>')
         $.each(response.centros, function(id, nombre) {
           $('#txtcentroformacion').append('<option  value="'+id+'">'+nombre+'</option>');
           @if($errors->any())
-        $('#txtcentroformacion').val("{{old('txtcentroformacion')}}");
-        @else
-          @if(isset($user->talento->entidad->centro->id))
-          $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+            $('#txtcentroformacion').val("{{old('txtcentroformacion')}}");
+          @else
+            @if(isset($user->talento->entidad->centro->id))
+              $('#txtcentroformacion').val({{$user->talento->entidad->centro->id}});
+            @endif
           @endif
+        });
         @endif
         $('#txtcentroformacion').material_select();
-        
-        });
          
       });    
       
@@ -453,12 +473,22 @@ var linea = {
         if (response.lineasForNodo.lineas == '') {
             $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
         }else{
-            
-            $('#txtlinea').append('<option value="">Seleccione la linea</option>');
 
-            $.each(response.lineasForNodo.lineas, function(i, e) {               
-                $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+           @if(session()->get('login_role') == App\User::IsAdministrador() ||  session()->get('login_role') == App\User::IsGestor() || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) &&  $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id))
+              @if(isset($user->gestor->lineatecnologica_id))
+                            $('#txtlinea').append('<option value="{{$user->gestor->lineatecnologica_id}}">{{$user->gestor->lineatecnologica->nombre}}</option>');
+              @endif
+             
+             
+            @else
+
+            $('#txtlinea').append('<option disabled value="">Seleccione la linea</option>');
+
+            $.each(response.lineasForNodo.lineas, function(i, e) {  
+                  $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                       
             });
+            @endif
 
             @if($errors->any())
                 $('#txtlinea').val('{{old('txtlinea')}}');

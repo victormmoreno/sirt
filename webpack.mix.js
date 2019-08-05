@@ -88,7 +88,9 @@ mix.scripts([
 		'resources/app/charla/index.js',
 	],'public/js/app2.js');
 
+
 // mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
+
 
 mix.browserSync({
 
@@ -101,6 +103,7 @@ mix.browserSync({
         ]
  });
 
+
  mix.webpackConfig({
 	 plugins: [
 		 new JavaScriptObfuscator ({
@@ -110,3 +113,4 @@ mix.browserSync({
 		 }, ['app.js'])
 	 ],
  });
+

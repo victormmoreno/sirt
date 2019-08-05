@@ -8,6 +8,7 @@ use App\Models\LineaTecnologica;
 use App\Models\Rols;
 use App\Repositories\Repository\LineaRepository;
 use Illuminate\Http\Request;
+use DataTables;
 
 class LineaController extends Controller
 {
@@ -55,15 +56,20 @@ class LineaController extends Controller
      */
     public function index()
     {
+        // dd(LineaTecnologica::select(['id','nombre', 'abreviatura','descripcion']);
                 
         if (request()->ajax()) {
-            return datatables()->of(LineaTecnologica::all())
+            return DataTables::eloquent(LineaTecnologica::select(['id','nombre', 'abreviatura','descripcion']))
                 ->addColumn('action', function ($data) {
                     $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
                     return $button;
-                })->rawColumns(['action'])
-                ->make(true);
+                })
+                ->filterColumn('abreviatura', function($query, $keyword) {
+                    $sql = "abreviatura like ?";
+                    $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+                ->toJson();
         }
 
         return view('lineas.administrador.index');

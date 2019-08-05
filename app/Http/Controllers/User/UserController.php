@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function __construct(UserRepository $userRepository)
     {
-        $this->middleware('role_session:Administrador|Dinamizador');
+        $this->middleware('role_session:Administrador|Dinamizador|Gestor');
 
         $this->userRepository = $userRepository;
     }
@@ -44,6 +44,9 @@ class UserController extends Controller
      */
     public function index()
     {
+
+        // dd($this->userRepository->getAllUsersForDatatables());
+        // $this->authorize('view',auth()->user());
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.index', [
@@ -58,11 +61,11 @@ class UserController extends Controller
                 break;
 
             case User::IsGestor():
-                $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
+
                 return view('users.gestor.talento.index');
                 break;
             default:
-
+                abort('404');
                 break;
         }
 
@@ -76,9 +79,10 @@ class UserController extends Controller
     public function create()
     {
 
+
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                $role = ['Administrador', 'Dinamizador'];
+                
                 return view('users.administrador.create', [
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
@@ -86,7 +90,7 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getRoleWhereInRole(['Administrador','Dinamizador']),
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
@@ -96,31 +100,88 @@ class UserController extends Controller
 
             case User::IsDinamizador():
 
-                // dd(auth()->user()->dinamizador->nodo->entidad->nombre);
                 $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
 
-                $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
-                return view('users.dinamizador.create', [
+              
+                return view('users.administrador.create', [
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
                     'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getRoleWhereNotInRole(['Administrador','Dinamizador']),
                     'nodos'             => $nodo,
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                 ]);
 
                 break;
+            case User::IsGestor():
+                
+                $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
 
+                return view('users.administrador.create', [
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $this->userRepository->getRoleWhereInRole(['Talento']),
+                    'nodos'             => $nodo,
+                    'perfiles'          => $this->userRepository->getAllPerfiles(),
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                ]);
+
+                break;
             default:
-
+                abort('404');
                 break;
         }
 
     }
+
+    /*============================================================================
+    =            metodo para mostrar todos los usuarios en datatables            =
+    ============================================================================*/
+    
+    public function getAllUsersInDatatable()
+    {
+        if (request()->ajax()) {
+
+            return datatables()->of($this->userRepository->getAllUsersForDatatables())
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })->editColumn('estado', function ($data) {
+                    if ($data->estado == User::IsActive()) {
+                        
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })
+                ->editColumn('role', function ($data) {
+                    return $data->roles->implode('name', ', ');
+                })
+                ->addColumn('edit', function ($data) {
+                            if ($data->id != auth()->user()->id) {
+                                $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                            } else {
+                                $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                            }
+                            return $button;
+                        })
+                ->rawColumns(['detail','edit', 'estado','role'])
+                ->make(true);
+        }
+    }
+    
+    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
+    
 
     /**
      * Store a newly created resource in storage.
@@ -130,7 +191,6 @@ class UserController extends Controller
      */
     public function store(UserFormRequest $request)
     {
-
         //generar una contraseña
         $password = User::generatePasswordRamdom();
         //creamos el usuario
@@ -183,11 +243,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-
+        $user = $this->userRepository->findById($id);
+        // $this->authorize('view', $user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                $role = ['Administrador', 'Dinamizador'];
-
+                
                 return view('users.administrador.edit', [
                     'user'              => $this->userRepository->findById($id),
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
@@ -196,14 +256,15 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = ['Gestor', 'Infocenter', 'Ingreso'];
+                $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
+               
 
                 return view('users.administrador.edit', [
                     'user'              => $this->userRepository->findById($id),
@@ -213,11 +274,30 @@ class UserController extends Controller
                     'eps'               => $this->userRepository->getAllEpsActivas(),
                     'departamentos'     => $this->userRepository->getAllDepartamentos(),
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getRoleWhereInRole($role),
+                    'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                 ]);
+                break;
+            case User::IsGestor():
+                $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
+
+                
+                return view('users.administrador.edit', [
+                    'user'              => $this->userRepository->findById($id),
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $this->userRepository->getAllRoles(),
+                    'nodos'             => $this->userRepository->getAllNodo(),
+                    'perfiles'          => $this->userRepository->getAllPerfiles(),
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                ]);
+
                 break;
 
             default:

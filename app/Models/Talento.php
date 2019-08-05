@@ -25,7 +25,6 @@ class Talento extends Model
         'otro_tipo_talento',
     ];
 
-
     // Relacion muchos a muchos con articulaciones
     public function articulaciones()
     {
@@ -37,9 +36,9 @@ class Talento extends Model
     // Relacion muchos a muchos con articulaciones
     public function proyectos()
     {
-      return $this->belongsToMany(Proyecto::class, 'proyecto_talento')
-      ->withTimestamps()
-      ->withPivot('talento_lider');
+        return $this->belongsToMany(Proyecto::class, 'proyecto_talento')
+            ->withTimestamps()
+            ->withPivot('talento_lider');
     }
 
     public function user()
@@ -61,17 +60,49 @@ class Talento extends Model
     // Consulta los talentos de tecnoparque
     public function scopeConsultarTalentosDeTecnoparque($query)
     {
-      return $query->select('users.documento', 'talentos.id')
-      ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
-      ->join('users', 'users.id', '=', 'talentos.user_id');
+        return $query->select('users.documento', 'talentos.id')
+            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
+            ->join('users', 'users.id', '=', 'talentos.user_id');
     }
 
     // Consulta los talentos de tecnoparque
     public function scopeConsultarTalentoPorId($query, $id)
     {
-      return $query->select('users.documento', 'talentos.id')
-      ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
-      ->join('users', 'users.id', '=', 'talentos.user_id')
-      ->where('talentos.id' ,$id);
+        return $query->select('users.documento', 'talentos.id')
+            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
+            ->join('users', 'users.id', '=', 'talentos.user_id')
+            ->where('talentos.id', $id);
     }
+
+    /*==========================================
+    =            mutadores eloquent            =
+    ==========================================*/
+
+    public function setUniversidadAttribute($universidad)
+    {
+        $this->attributes['universidad'] = ucwords(mb_strtolower(trim($universidad), 'UTF-8'));
+    }
+
+    public function setProgramaFormacionAttribute($programa_formacion)
+    {
+        $this->attributes['programa_formacion'] = ucwords(mb_strtolower(trim($programa_formacion), 'UTF-8'));
+    }
+
+    public function setCarreraUniversitariaAttribute($carrera_universitaria)
+    {
+        $this->attributes['carrera_universitaria'] = ucwords(mb_strtolower(trim($carrera_universitaria), 'UTF-8'));
+    }
+
+    public function setEmpresaAttribute($empresa)
+    {
+        $this->attributes['empresa'] = ucwords(mb_strtolower(trim($empresa), 'UTF-8'));
+    }
+
+    public function setOtroTipoTalentoAttribute($otro_tipo_talento)
+    {
+        $this->attributes['otro_tipo_talento'] = ucwords(mb_strtolower(trim($otro_tipo_talento), 'UTF-8'));
+    }
+
+    /*=====  End of mutadores eloquent  ======*/
+
 }

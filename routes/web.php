@@ -1,10 +1,14 @@
 <?php
 
 use App\User;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 
 
 Route::get('/', function () {
+    // $user = auth()->user()->hasAllRoles(Role::all());;
+    
     // $users = App\User::with(
     //     [
     //         'tipodocumento' => function ($query) {
@@ -117,6 +121,9 @@ Route::group([
         Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
         Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
 
+
+        Route::get('usuarios/allusuarios', 'UserController@getAllUsersInDatatable')->name('usuario.allusers');
+
         Route::get('/', [
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',
@@ -141,17 +148,17 @@ Route::group([
 Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')->name('user.changerole');
 
 /*=========================================================
-=            seccion para las rutas del perfil            =
+=            seccion para las rutas del centro de formacion            =
 =========================================================*/
 Route::get('centro-formacion/getcentrosregional/{regional}', 'CentroController@getAllCentrosForRegional')->name('centro.getcentrosregional');
 Route::resource('centro-formacion', 'CentroController');
 
-/*=====  End of seccion para las rutas del perfil  ======*/
+/*=====  End of seccion para las rutas del centro de formacion  ======*/
 
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/
-
+Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
 Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta');
 Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
 Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles');
@@ -159,7 +166,6 @@ Route::get('perfil/permisos', 'User\ProfileController@permisos')->name('perfil.p
 Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña');
 Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset');
 Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit');
-// Route::put('perfil/update', 'User\ProfileController@updateAccount')->name('perfil.update');
 Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']]);
 
 /*=====  End of seccion para las rutas del perfil  ======*/

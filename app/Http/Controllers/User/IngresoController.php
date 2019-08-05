@@ -60,15 +60,20 @@ class IngresoController extends Controller
 
                 ->editColumn('estado', function ($data) {
                     if ($data->estado == User::IsActive()) {
-                        if ($data->id == auth()->user()->id) {
-                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
-                        }
+                        
                         return $data->estado = 'Habilitado';
                     } else {
                         return $data->estado = 'Inhabilitado ';
                     }
+                })->addColumn('edit', function ($data) {
+                    if ($data->id != auth()->user()->id) {
+                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    } else {
+                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                    }
+                    return $button;
                 })
-                ->rawColumns(['detail', 'estado'])
+                ->rawColumns(['detail', 'estado','edit'])
                 ->make(true);
         }
         abort('404');

@@ -1,23 +1,14 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Nodo;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ProfileUserPolicy
+class UserRolSesionHasNodoPolicy
 {
     use HandlesAuthorization;
 
-
-    // public function before($user)
-    // {
-    //     if($user->hasRole('Administrador')){
-    //         return true;
-    //     }
-    
-    // }
-    
     /**
      * Determine whether the user can view any models.
      *
@@ -26,7 +17,14 @@ class ProfileUserPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if (
+            $user->hasAnyRole([
+                User::IsAdministrador(),
+            ])
+        ) {
+
+            return true;
+        }
     }
 
     /**
@@ -36,9 +34,16 @@ class ProfileUserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $authUser, User $user)
+    public function view(User $user, User $model)
     {
-        return $authUser->id === $user->id;
+        if (
+            $user->hasAnyRole([
+                User::IsAdministrador(),
+            ])
+        ) {
+
+            return true;
+        }
     }
 
     /**
@@ -49,7 +54,7 @@ class ProfileUserPolicy
      */
     public function create(User $user)
     {
-        $user->hasPermissionTo('crear usuarios');
+        //
     }
 
     /**
@@ -59,10 +64,9 @@ class ProfileUserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function update(User $authUser, User $user)
+    public function update(User $user, User $model)
     {
-        // return $authUser->id === $user->id || $user->hasPermissionTo('actualizar usuarios');
-        return $authUser->id === $user->id;
+        //
     }
 
     /**

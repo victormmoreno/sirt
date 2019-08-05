@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEdtsTable extends Migration
 {
@@ -30,7 +30,7 @@ class CreateEdtsTable extends Migration
             $table->string('nombre', 100);
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
-            $table->string('observaciones',1000)->nullable();
+            $table->string('observaciones', 1000)->nullable();
             $table->integer('empleados')->nullable()->default('0');
             $table->integer('instructores')->nullable()->default('0');
             $table->integer('aprendices')->nullable()->default('0');
@@ -64,6 +64,7 @@ class CreateEdtsTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
+        });
     }
 
     /**
@@ -71,8 +72,8 @@ class CreateEdtsTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

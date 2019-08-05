@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
@@ -8,6 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(ContactoEntidad::class, function (Faker $faker) {
     $rand = array(Empresa::all()->random()->entidad_id, GrupoInvestigacion::all()->random()->entidad_id);
     $k = array_rand($rand);
+
     return [
         'nodo_id'         => Nodo::all()->random()->id,
         'entidad_id'        => $rand[$k],

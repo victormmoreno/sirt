@@ -703,15 +703,26 @@
 
 
 <!-- modal  -->
-
-  <div id="modal1" class="modal">
+ <div id="modal1" class="modal">
     <div class="modal-content">
-      <h4 class="center">Grupos de Invesitgacion</h4>
+        <div class="row">
+            @if(auth()->user()->hasAnyRole(App\User::IsGestor()) && session()->get('login_role') == App\User::IsGestor())
+                <div class="col s12 m10 l10">
+                    <h4 class="center teal-text lighten-2">Grupos de Invesitgacion</h4>
+                </div>
+                <div class="col s12 m2 l2">
+                    
+                    <a href="{{{route('grupo.create')}}}" target="_blank" class="waves-effect waves-light btn tooltipped" data-tooltip="Nuevo grupo de investigación"><i class="material-icons left">group_work</i>Nuevo grupo</a>
+                </div>
+            @else
+                    <div class="col s12 m12 l12">
+                    <h4 class="center teal-text lighten-2">Grupos de Invesitgacion</h4>
+                </div>
+            @endif
+        </div>
+      <div class="divider"></div>
       <div class="contenido"></div>
     </div>
-    {{-- <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
-    </div> --}}
   </div> 
 
                                     

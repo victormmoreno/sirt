@@ -45,11 +45,29 @@
                                 </div>
                             </div>
                             <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                                <li class="tab col s3"><a href="#usuarios" >Usuarios {{config('app.name')}}</a></li>
                               <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
                               <li class="tab col s3"><a href="#TalentoProyectoNodo" >Talentos con proyectos realizados en Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} </a></li>
                               <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                             </ul>
                             <div class="divider">
+                            </div>
+                            <div id="usuarios">
+                                <h5 class="center-align">Usuarios {{config('app.name')}}</h5>
+                                <div class="divider"></div>
+                                <table class="display responsive-table" id="all_users_table" style="width: 100%">
+                                    <thead>
+                                        <th>Tipo Documento</th>
+                                        <th>Docuemento</th>
+                                        <th>Usuario</th>
+                                        <th>Correo</th>
+                                        <th>Telefono</th>
+                                        <th>Roles</th>
+                                        <th>Detalles</th>
+                                        <th>Editar</th>
+                                    </thead>
+                
+                                </table>
                             </div>
                             <div id="historialTalento">
                                 <h5 class="center-align">Talentos {{config('app.name')}}</h5>
@@ -64,6 +82,7 @@
                                     <th>Telefono</th>
                                     <th>Estado Sistema</th>
                                     <th>Detalles</th>
+                                    <th>Editar</th>
                                 </thead>
                 
                             </table>

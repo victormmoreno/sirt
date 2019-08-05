@@ -83,7 +83,7 @@
                                                             <div class="row">
                                                                 <div class="input-field col s12 m6 l6 offset-l3 m3">
                                                                     <i class="material-icons prefix">
-                                                                        account_circle
+                                                                        lock_open
                                                                     </i>
                                                                     <input class="validate" id="txtpassword" name="txtpassword" type="password"  value="{{ old('txtpassword')}}">
                                                                     <label for="txtpassword">Contraseña actual <span class="red-text">*</span></label>
@@ -98,7 +98,7 @@
                                                             <div class="row">
                                                                 <div class="input-field col s12 m6 l6 offset-l3 m3">
                                                                     <i class="material-icons prefix">
-                                                                        account_circle
+                                                                        lock
                                                                     </i>
                                                                     <input class="validate" id="txtnewpassword" name="txtnewpassword" type="password">
                                                                     <label for="txtnewpassword">Nueva contraseña <span class="red-text">*</span></label>
@@ -110,7 +110,7 @@
                                                             <div class="row">
                                                                 <div class="input-field col s12 m6 l6 offset-l3 m3">
                                                                     <i class="material-icons prefix">
-                                                                        account_circle
+                                                                        lock
                                                                     </i>
                                                                     <input class="validate" id="txtnewpassword-confirm" name="txtnewpassword_confirmation" type="password" >
                                                                     <label for="txtnewpassword-confirm">Confirmar contraseña <span class="red-text">*</span></label>
