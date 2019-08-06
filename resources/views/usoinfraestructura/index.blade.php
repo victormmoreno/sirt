@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('meta-title', 'Uso Infraestructura ' )
+
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -11,7 +13,7 @@
                             <i class="material-icons left">
                                 supervised_user_circle
                             </i>
-                            Usuarios
+                            Uso Infraestructura
                         </h5>
                     </div>
                 </div>
@@ -22,14 +24,26 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Usuarios {{ config('app.name')}}
+                                            Usos de Infraestructura {{ config('app.name')}}
                                         </span>
                                     </div>
                                 </div>
-                                {!! $dataTable->table() !!}
-
+                                <div class="col s12 l2">
+                                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Uso de Infraestructura" href="{{route('usoinfraestructura.create')}}">
+                                            <i class="material-icons">
+                                                domain
+                                            </i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            
+                                <div class="divider"></div>
+                                <br>
+                                <div class="row">
+                                    
+                                </div>
+                                
                         </div>
                     </div>
                 </div>
@@ -39,9 +53,3 @@
 </main>
 
 @endsection
-
-@push('script')
-<!-- DataTables Button -->
-        <script src="//cdn.datatables.net/buttons/1.1.0/js/buttons.print.min.js"></script>
-{!! $dataTable->scripts() !!}
-@endpush
