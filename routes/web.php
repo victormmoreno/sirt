@@ -452,6 +452,7 @@ Route::group([
     Route::get('/', 'GraficoController@index')->name('grafico');
     Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
     Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion');
+    Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion');
     // Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
     // Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
     // Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');

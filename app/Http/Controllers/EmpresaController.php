@@ -33,6 +33,7 @@ class EmpresaController extends Controller
    * consulta los datos de un empresa según el ID DE ENTIDAD (ENTIDAD_ID)
    * @param int id Id de la entidad, por el cual se consultará la empresa
    * @return Response
+   * @author Victor Manuel Moreno Vega
    */
   public function consultarEmpresaPorIdEntidad($id)
   {
@@ -85,6 +86,7 @@ class EmpresaController extends Controller
   * Display a listing of the resource.
   *
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function index()
   {
@@ -104,6 +106,7 @@ class EmpresaController extends Controller
     }
   }
   // Datatable que muestra las empresas de tecnoparque por parte del dinamizador
+
   public function datatableEmpresasDeTecnoparque()
   {
     if (request()->ajax()) {
@@ -175,6 +178,7 @@ class EmpresaController extends Controller
   * Show the form for creating a new resource.
   *
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function create()
   {
@@ -191,6 +195,7 @@ class EmpresaController extends Controller
   *
   * @param  \Illuminate\Http\Request  $request
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function store(EmpresaFormRequest $request)
   {
@@ -202,21 +207,11 @@ class EmpresaController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function edit($id)
   {
@@ -236,14 +231,13 @@ class EmpresaController extends Controller
   * @param  \Illuminate\Http\Request  $request
   * @param  int  $id
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function update(EmpresaFormRequest $request, $id)
   {
     $empresa = Empresa::find($id);
     $empresaUpdate = $this->empresaRepository->update($request, $empresa);
-    alert()->success("La empresa ha sido modificada.",'Modificación Exitosa',"success")->showConfirmButton('Ok', '#3085d6');;
-
-
+    alert()->success("La empresa ha sido modificada.",'Modificación Exitosa',"success")->showConfirmButton('Ok', '#3085d6');
     return redirect()->route('empresa');
 
   }

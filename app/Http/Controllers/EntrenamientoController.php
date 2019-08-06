@@ -31,6 +31,7 @@ class EntrenamientoController extends Controller
   * @param Request request Datos del formulario de las evidencias de un entrenamiento
   * @param int id Id del entrenamiento al que se le van a modificar los entregables
   * @return Response
+  * @author Victor Manuel Moreno Vega
   */
   public function updateEvidencias(Request $request, $id)
   {
@@ -48,6 +49,7 @@ class EntrenamientoController extends Controller
   * Retorna la vista donde el infocenter podrá subir las evidencias de lo entrenamientos (Por el id)
   * @param int id Id del entrenamientos del que se registrarán y subiran las evidencias
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function evidencias($id)
   {
@@ -64,6 +66,7 @@ class EntrenamientoController extends Controller
   * Display a listing of the resource.
   *
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function index()
   {
@@ -147,6 +150,7 @@ class EntrenamientoController extends Controller
   * Show the form for creating a new resource.
   *
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function create()
   {
@@ -163,6 +167,7 @@ class EntrenamientoController extends Controller
   * @param int id Id del entrenamiento que se va a inhabilitar
   * @param string estado El estado a que se le cambiarán el estado a las ideas de proyecto
   * @return Response\Ajax
+  * @author Victor Manuel Moreno Vega
   */
   public function inhabilitarEntrenamiento($id, $estado)
   {
@@ -223,6 +228,7 @@ class EntrenamientoController extends Controller
   *
   * @param  \Illuminate\Http\Request  $request
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function store(EntrenamientoFormRequest $request)
   {
@@ -267,6 +273,7 @@ class EntrenamientoController extends Controller
   *
   * @param  int  $id
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function edit($id)
   {
