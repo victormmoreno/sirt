@@ -2,16 +2,68 @@
 
 namespace App\Repositories\Repository;
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB};
 use App\Models\{ArchivoArticulacion, Articulacion, Entidad, Talento};
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
 
+/**
+ * Consulta la cantidad de articulacion de un nodo, según el tipo de articulacion y el año
+ * @param int $id Id del nodo
+ * @param string $anho Año por el que se consultaran la cantidad de articulaciones
+ * @param int $i Tipo de articulacion
+ * @return Collection
+ * @author Victor Manuel Moreno Vega
+ */
+public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $i)
+{
+  return Articulacion::select('articulaciones.tipo_articulacion')
+  ->selectRaw('count(articulaciones.id) AS cantidad')
+  ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+  ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+  ->where('nodos.id', $id)
+  ->where('tipo_articulacion', $i)
+  ->whereYear('fecha_cierre', $anho)
+  ->groupBy('nodos.id', 'articulaciones.tipo_articulacion')
+  ->get()
+  ->last();
+}
+
+  /**
+   * Consulta la cantidad de tipos de articulacion por la línea tecnológica de un nodo
+   * @param int $idnodo Id del nodo
+   * @param int $idlinea Id de la línea tecnolóigica
+   * @param int $tipo_articulacion Tipo de articulación
+   * @param string $fecha_inicio
+   * @param string $fecha_fin
+   * @return Collection
+   * @author Victor Manuel Moreno Vega
+   */
+  public function consultarCantidadDeArticulacionesPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipo_articulacion, $fecha_inicio, $fecha_fin)
+  {
+    return Articulacion::select('articulaciones.tipo_articulacion')
+    ->selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+    ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
+    ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
+    ->where('lineastecnologicas.id', $idlinea)
+    ->where('nodos.id', $idnodo)
+    ->where('tipo_articulacion', $tipo_articulacion)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->groupBy('lineastecnologicas.id', 'articulaciones.tipo_articulacion')
+    ->get()
+    ->last();
+  }
+
   /**
    * Consulta las cantidad de tipos de articulación por gestor
    * @param int $idgestor Id del gestor
+   * @param int $tipo_articulacion Tipo de Articulacion (grupos, empresas, emprendedores)
+   * @param string $fecha_inicio
+   * @param string $fecha_fin
    * @return Collection
    */
   public function consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($idgestor, $tipo_articulacion, $fecha_inicio, $fecha_fin)

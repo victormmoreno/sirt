@@ -41,6 +41,7 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/highcharts.js',
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
+		'resources/assets/plugins/highcharts/modules/variable-pie.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
@@ -111,7 +112,6 @@ mix.browserSync({
 			 rotateUnicodeArray: true,
 			 compact: true,
 			 identifierNamesGenerator: 'hexadecimal',
-		 }, ['app.js'])
+		 }, ['public/js/app2.js'])
 	 ],
  });
-

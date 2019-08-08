@@ -42,7 +42,7 @@
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
-                            <div id="graficoArticulacionesPorGestorYNodoPorFecha_stacked" class="articulaciones_Grafico" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                            <div id="graficoArticulacionesPorGestorYNodoPorFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
                           </div>
                         </div>
                       </div>
@@ -73,20 +73,71 @@
                               <button onclick="consultarArticulacionesDeUnGestorPorFecha_stacked();" class="btn">Consultar</button>
                             </div>
                           </div>
-                          <div id="graficoArticulacionesPorGestorYFecha_stacked" class="articulaciones_Grafico" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
-
+                          <div class="col s12 m8 l8">
+                            <div id="graficoArticulacionesPorGestorYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                              <div class="row card-panel">
+                                <h5 class="center">Para consultar las articulaciones por gestor, se debe seleccionar un gestor y fechas válidas, luego presionar el botón consultar</h5>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </li>
                     <li>
                       <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por línea</div>
                       <div class="collapsible-body">
-                        <div id="graficoArticulacionesPorLineaYFecha_stacked" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                        <div class="row">
+                          <div class="col s12 m4 l4">
+                            <div class="input-field col s12 m12 l12">
+                              <select id="txtlinea_tecnologica" name="txtlinea_tecnologica" style="width: 100%">
+                                <option value="">Seleccione la Línea Tecnológica</option>
+                                @foreach($lineas as $id => $nombre)
+                                  <option value="{{$id}}">{{$nombre}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                            <div class="input-field col s12 m6 l6">
+                              <input type="text" id="txtfecha_inicio_Grafico3" name="txtfecha_inicio_Grafico3" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                              <label for="txtfecha_inicio_Grafico3">Fecha Inicio</label>
+                            </div>
+                            <div class="input-field col s12 m6 l6">
+                              <input type="text" id="txtfecha_fin_Grafico3" name="txtfecha_fin_Grafico3" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                              <label for="txtfecha_fin_Grafico3">Fecha Fin</label>
+                            </div>
+                            <div class="center">
+                              <button onclick="consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(0);" class="btn">Consultar</button>
+                            </div>
+                          </div>
+                          <div class="col s12 m8 l8">
+                            <div id="graficoArticulacionesPorLineaYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                              <div class="row card-panel">
+                                <h5 class="center">Para consultar las cantidad de articulaciones por línea, se debe seleccionar una línea tecnológica y fechas válidas, luego presionar el botón CONSULTAR</h5>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </li>
                     <li>
                       <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones totales</div>
-                      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                      <div class="collapsible-body">
+                        <div class="row valign-wrapper">
+                          <div class="input-field col s12 m4 l4">
+                            <select style="width: 100%" name="txtanho_Grafico4" id="txtanho_Grafico4" onchage="consultarTiposDeArticulacionesDelAnho_variablepie({{auth()->user()->dinamizador->nodo_id}})">
+                              {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
+                              @for ($i=2016; $i <= $year; $i++)
+                                <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
+                              @endfor
+                            </select>
+                            <label for="txtanho_Grafico4">Seleccione el Año</label>
+                          </div>
+                          <div class="col s12 m8 l8">
+                            <div id="graficoArticulacionesPorNodoYAnho_variablepie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </li>
                   </ul>
                 </div>
@@ -103,7 +154,8 @@
   <script>
     $(document).ready(function(){
       consultaArticulacionesDelGestorPorNodoYFecha_stacked({{auth()->user()->dinamizador->nodo_id}});
-      initGraficosArticulaciones()
+      consultarTiposDeArticulacionesDelAnho_variablepie({{auth()->user()->dinamizador->nodo_id}});
+      // initGraficosArticulaciones()
     });
   </script>
 @endpush
