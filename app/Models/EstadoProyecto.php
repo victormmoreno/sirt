@@ -30,4 +30,17 @@ class EstadoProyecto extends Model
       return $query->select('id', 'nombre')
       ->whereIn('nombre', ['Inicio', 'Planeación', 'En ejecución', 'Cierre PF', 'Cierre PMV']);
     }
+
+    /*===============================================
+    =            relaciones polimorficas            =
+    ===============================================*/
+    
+    /* relacion con la tabla proyecto */
+    
+    public function proyectos()
+    {
+      return $this->hasMany(Proyecto::class, 'estadoproyecto_id', 'id');
+    }
+    /*=====  End of relaciones polimorficas  ======*/
+    
 }

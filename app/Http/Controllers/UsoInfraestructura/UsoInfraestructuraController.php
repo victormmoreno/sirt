@@ -12,7 +12,7 @@ class UsoInfraestructuraController extends Controller
     public function __construct()
     {
  
-        $this->middleware('role_session:Administrador|Dinamizador|Talento');
+        $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
         
     }
     /**
@@ -22,6 +22,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function index()
     {
+     
         return view('usoinfraestructura.index');
     }
 
@@ -32,7 +33,9 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
-        return view('usoinfraestructura.create');
+        return view('usoinfraestructura.create', [
+            'authUser' => auth()->user(), 
+        ]);
     }
 
     /**

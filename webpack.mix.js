@@ -41,6 +41,8 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/highcharts.js',
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
+		'resources/assets/plugins/jquery-validation/jquery.validate.min.js',
+		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');

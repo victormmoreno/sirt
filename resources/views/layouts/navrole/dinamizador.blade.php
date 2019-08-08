@@ -63,6 +63,11 @@
     </ul>
   </div>
 </li>
+<li class="no-padding {{setActiveRoute('usoinfraestructura.index')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura.index')}}" href="{{route('usoinfraestructura.index')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura.index')}}">domain</i>Usos de infraestructura
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('grupo')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación

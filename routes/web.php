@@ -147,6 +147,7 @@ Route::group([
             'destroy' => 'usoinfraestructura.destroy',
             'show'    => 'usoinfraestructura.show',
             'index'    => 'usoinfraestructura.index',
+            'store'    => 'usoinfraestructura.store',
         ])->parameters([
             'usoinfraestructura' => 'id',
         ]);;
@@ -338,6 +339,10 @@ Route::group(
         'middleware' => 'auth',
     ],
     function () {
+
+    
+        /*=====  rutas para consultar los proyectos por gestor ======*/
+        Route::get('/gestor/{id}', 'ProyectoController@projectsForGestor')->name('proyecto');
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
         Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
