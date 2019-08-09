@@ -122,11 +122,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
     }
 
-    public function rol()
-    {
-        return $this->belongsTo(Rols::class, 'rol_id', 'id');
-    }
-
     public function gradoEscolaridad()
     {
         return $this->belongsTo(GradoEscolaridad::class, 'gradoescolaridad_id', 'id');
@@ -192,18 +187,18 @@ class User extends Authenticatable implements JWTSubject
     /*==============================================================================
     =            scope para mostrar informacion relevante en datatables            =
     ==============================================================================*/
-    
+
     public function scopeInfoUserDatatable($query)
     {
         return $query->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
             ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
     }
-    
+
     /*=====  End of scope para mostrar informacion relevante en datatables  ======*/
 
-   
-    
-    
+
+
+
 
 }
