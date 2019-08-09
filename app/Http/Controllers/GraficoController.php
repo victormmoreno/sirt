@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session};
-use App\Repositories\Repository\{ArticulacionRepository, UserRepository\GestorRepository, LineaRepository};
-use App\{User, Models\Gestor, Models\LineaTecnologica};
+use App\Repositories\Repository\{ArticulacionRepository, UserRepository\GestorRepository, LineaRepository, EdtRepository};
+use App\{User, Models\Gestor, Models\LineaTecnologica, Models\TipoEdt};
 
 class GraficoController extends Controller
 {
@@ -13,15 +13,17 @@ class GraficoController extends Controller
   private $articulacionRepository;
   private $gestorRepository;
   private $lineaRepository;
+  private $edtRepository;
 
-  public function __construct(ArticulacionRepository $articulacionRepository, GestorRepository $gestorRepository, LineaRepository $lineaRepository)
+  public function __construct(ArticulacionRepository $articulacionRepository, GestorRepository $gestorRepository, LineaRepository $lineaRepository, EdtRepository $edtRepository)
   {
     $this->articulacionRepository = $articulacionRepository;
     $this->gestorRepository = $gestorRepository;
     $this->lineaRepository = $lineaRepository;
+    $this->edtRepository = $edtRepository;
   }
   /**
-  * Página inicial de gráficos
+  * Página inicial de los gráficos
   * @return Response
   * @author Victor Manuel Moreno Vega
   */
@@ -33,12 +35,126 @@ class GraficoController extends Controller
   }
 
   /**
-   * undocumented function summary
-   *
-   * Undocumented function long description
-   *
-   * @param type var Description
-   * @return return type
+  * Retorna la cantidad de edts por tipo de un gestor
+  * @param int $id Id del gestor
+  * @param string $fecha_inicio Primera fecha de cierre
+  * @param string $fecha_fin Segunda fecha de cierre
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  **/
+  // public function edtsGestorGrafico($id, $fecha_inicio, $fecha_fin)
+  // {
+  //   $datosGestor = $this->gestorRepository->consultarGestorPorIdGestor($id);
+  //   $datosCompletos['gestor'] = $datosGestor->gestor;
+  //   for ($i=0; $i < 3 ; $i++) {
+  //     $articulacionesCantidad = $this->articulacionRepository->consultarCantidadDeEdtsPorTipoDeEdtsYGestor($id, $i, $fecha_inicio, $fecha_fin);
+  //     $datosCompletos = $this->condicionarConsultaDeEdts($i, $datosCompletos, $articulacionesCantidad);
+  //   }
+  //   return response()->json([
+  //     'consulta' => $datosCompletos
+  //   ]);
+  // }
+
+  /**
+   * Consulta las edts realizadas entre fechas
+   * @param int $idnodo Id del nodo
+   * @param string $fecha_inicio Primera fecha de la edt
+   * @param string $fecha_fin Segunda fecha de la edt
+   * @return Response
+   * @author Victor Manuel Moreno Vega
+   */
+  public function edtsNodoGrafico($idnodo, $fecha_inicio, $fecha_fin)
+  {
+    if ( request()->ajax() ) {
+      $id = "";
+      if ( Session::get('login_role') == User::IsDinamizador() ) {
+        $id = auth()->user()->dinamizador->nodo_id;
+      } else {
+        $id = $idnodo;
+      }
+      $datosCompletos = array();
+
+      $gestoresDelNodo = Gestor::ConsultarGestoresPorNodo($id)->get();
+      $datosCompletos = $this->devolverArrayConDatosDeEdts($gestoresDelNodo, $fecha_inicio, $fecha_fin);
+      // dd($gestoresDelNodo);
+      // echo json_encode(['2']);
+      return response()->json([
+      'consulta' => $datosCompletos
+      ]);
+    }
+  }
+
+  /**
+  * Retorna el array con los datos para mostrar en la vista (Gráfico de los Edt's por fechas)
+  * @param array $gestoresDelNodo Gestores del nodo asociado al dinamizador
+  * @param string $fecha_inicio Primera fecha (para consultar las edts)
+  * @param string $fecha_fin Segunda fecha (para consultar las edts)
+  * @return array
+  * @author Victor Manuel Moreno Vega
+  */
+  private function devolverArrayConDatosDeEdts($gestoresDelNodo, $fecha_inicio, $fecha_fin) {
+    $datosCompletos = array();
+    // dd($gestoresDelNodo);
+    $tiposEdt = TipoEdt::select('id', 'nombre')->get()->toArray();
+    foreach ($gestoresDelNodo as $key => $value) {
+      // dd($tiposEdt[$i]['nombre']);
+      // echo '... </br>';
+      $gestor = $value->nombres;
+      $array = array('gestor' => $gestor);
+      array_push($datosCompletos, $array);
+      for ($i=0; $i < 3 ; $i++) {
+        // echo $tiposEdt[$i]['nombre'] . '</br>';
+        // dd($value->id);
+        // exit();
+        $edtArr = $this->edtRepository->consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($value->id, $tiposEdt[$i]['nombre'], $fecha_inicio, $fecha_fin);
+        // dd($edtArr);
+        // dd($edtArr);
+        // dd($edtArr);
+        if ($i == 0) {
+          if ($edtArr != null) {
+            $datosCompletos[$key]['tipos1'] = $edtArr->cantidad;
+          } else {
+            $datosCompletos[$key]['tipos1'] = 0;
+          }
+        } else if ($i == 1) {
+          if ($edtArr != null) {
+            $datosCompletos[$key]['tipos2'] = $edtArr->cantidad;
+          } else {
+            $datosCompletos[$key]['tipos2'] = 0;
+          }
+        } else {
+          if ($edtArr != null) {
+            $datosCompletos[$key]['tipos3'] = $edtArr->cantidad;
+          } else {
+            $datosCompletos[$key]['tipos3'] = 0;
+          }
+        }
+      }
+    }
+    return $datosCompletos;
+  }
+
+  /**
+   * Vista para mostrar los gráficos de las edts
+   * @return Response
+   * @author Victor Manuel Moreno Vega
+   */
+  public function edtsGraficos()
+  {
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('grafico.dinamizador.edt', [
+        'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+        'lineas' => $this->lineaRepository->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
+      ]);
+    }
+  }
+
+  /**
+   * Consulta las acntidades de edts por nodo y año
+   * @param int $id Id del nodo
+   * @param string $anho Año por el que se consultarán las cantidades de edts
+   * @return Response
+   * @author Victor Manuel Moreno Vega
    */
   public function articulacionesPorNodoYAnho_Controller($id, $anho)
   {
@@ -130,25 +246,6 @@ class GraficoController extends Controller
     for ($i=0; $i < 3 ; $i++) {
       $articulacionesCantidad = $this->articulacionRepository->consultarCantidadDeArticulacionesPorTipoDeArticulacionYGestor($id, $i, $fecha_inicio, $fecha_fin);
       $datosCompletos = $this->condicionarConsultaDeArticulaciones($i, $datosCompletos, $articulacionesCantidad);
-      // if ( $i == 0 ) {
-      //   if ($articulacionesCantidad != null) {
-      //     $datosCompletos['grupos'] = $articulacionesCantidad->cantidad;
-      //   } else {
-      //     $datosCompletos['grupos'] = 0;
-      //   }
-      // } else if ( $i == 1 ) {
-      //   if ($articulacionesCantidad != null) {
-      //     $datosCompletos['empresas'] = $articulacionesCantidad->cantidad;
-      //   } else {
-      //     $datosCompletos['empresas'] = 0;
-      //   }
-      // } else {
-      //   if ($articulacionesCantidad != null) {
-      //     $datosCompletos['emprendedores'] = $articulacionesCantidad->cantidad;
-      //   } else {
-      //     $datosCompletos['emprendedores'] = 0;
-      //   }
-      // }
     }
     return response()->json([
       'consulta' => $datosCompletos
@@ -173,7 +270,9 @@ class GraficoController extends Controller
 
   /**
   * Retorna el array con los datos para mostrar en la vista
-  * @param array $datos
+  * @param array $gestorDelNodo Array con los gestores del nodo
+  * @param string $fecha_inicio Primera fecha de cierre de las articulaciones
+  * @param string $fecha_fin Segunda fecha de cierre de las articulaciones
   * @return array
   * @author Victor Manuel Moreno Vega
   */

@@ -29,11 +29,6 @@ $(document).ready(function() {
         name: 'details',
         orderable: false
       },
-      {
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
 
     ],
     initComplete: function () {

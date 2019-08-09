@@ -1255,11 +1255,6 @@ $(document).ready(function() {
         name: 'details',
         orderable: false
       },
-      {
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
 
     ],
     initComplete: function () {
@@ -3827,6 +3822,18 @@ $(document).ready(function() {
   });
 });
 
+divFechaCierreEdt = $('#divFechaCierreEdt');
+divFechaCierreEdt.hide();
+
+function actiarFechaFinDeLaEdt() {
+  console.log('hello');
+  if ( $('#txtestado').is(':checked') ) {
+    divFechaCierreEdt.show();
+  } else {
+    divFechaCierreEdt.hide();
+  }
+}
+
 function noRepeat(id) {
   let idEntidad = id;
   let retorno = true;
@@ -4540,6 +4547,159 @@ var graficosId = {
   grafico3: 'graficoArticulacionesPorLineaYFecha_stacked',
   grafico4: 'graficoArticulacionesPorNodoYAnho_variablepie'
 };
+
+var graficosEdtId = {
+  grafico1: 'graficosEdtsPorGestorNodoYFecha_stacked',
+  grafico2: 'graficosEdtsPorGestorYFecha_stacked'
+}
+
+function consultarEdtsPorGestorYFecha_stacked() {
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
+  let id = $('#txtgestor_id_edtGrafico2').val();
+  if (id == '') {
+    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+  } else {
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
+    } else {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        success: function (data) {
+          // console.log(data);
+          Highcharts.chart(graficosId.grafico2, {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Tipos de Edt\'s'
+            },
+            xAxis: {
+              categories: ['Tipo 1', 'Tipo 2', 'Tipo 3'],
+              title: {
+                text: 'Tipos de Edt\'s'
+              }
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                text: 'Número de Edt\'s'
+              }
+            },
+            legend: {
+              reversed: true
+            },
+            plotOptions: {
+              series: {
+                stacking: 'normal'
+              }
+            },
+            series: [{name: data.consulta.gestor, data: [data.consulta.tipos1, data.consulta.tipos2, data.consulta.tipos3]}]
+          });
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      });
+    }
+  }
+}
+
+function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico1').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico1').val();
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_edtGrafico1');
+  }
+  if (fecha_inicio > fecha_fin) {
+    Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
+  } else {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+      success: function (data) {
+        var tamanho = data.consulta.length;
+        // console.log(tamanho);
+        var datos = {
+          gestores: [],
+          tipo1Array: [],
+          tipo2Array: [],
+          tipo3Array: []
+        };
+        // console.log(data.tipos);
+        for (var i = 0; i < tamanho; i++) {
+          // console.log(data.consulta[i].gestor);
+          if (data.consulta[i].gestor != null) {
+            datos.gestores.push(data.consulta[i].gestor);
+          }
+        }
+
+        for (var i = 0; i < tamanho; i++) {
+          if (data.consulta[i].tipos1 != null) {
+            datos.tipo1Array.push(data.consulta[i].tipos1);
+          }
+        }
+
+        for (var i = 0; i < tamanho; i++) {
+          if (data.consulta[i].tipos2 != null) {
+            datos.tipo2Array.push(data.consulta[i].tipos2);
+          }
+        }
+        for (var i = 0; i < tamanho; i++) {
+          if (data.consulta[i].tipos3 != null) {
+            datos.tipo3Array.push(data.consulta[i].tipos3);
+          }
+        }
+
+        var dataGraphic = [];
+
+        for (var i = 0; i < tamanho; i++) {
+          let array = '{"name": "'+datos.gestores[i]+'", "data": ['+datos.tipo1Array[i]+', '+datos.tipo2Array[i]+', '+datos.tipo3Array[i]+']}';
+          array = JSON.parse(array);
+          dataGraphic.push(array);
+        }
+        Highcharts.chart(graficosEdtId.grafico1, {
+          chart: {
+            type: 'column'
+            // renderTo: ''
+          },
+          title: {
+            text: 'Edt\'s entre ' + fecha_inicio + ' y ' + fecha_fin
+          },
+          xAxis: {
+            categories: ['Tipo 1', 'Tipo 2', 'Tipo 3'],
+            title: {
+              text: 'Tipos de Edt\'s'
+            }
+          },
+          yAxis: {
+            min: 0,
+            title: {
+              text: 'Número de Edts\'s'
+            }
+          },
+          legend: {
+            reversed: true
+          },
+          plotOptions: {
+            series: {
+              stacking: 'normal'
+            }
+          },
+          series: dataGraphic
+        });
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    });
+  }
+}
+
 
 function consultarTiposDeArticulacionesDelAnho_variablepie(idnodo) {
   let anho = $('#txtanho_Grafico4').val();

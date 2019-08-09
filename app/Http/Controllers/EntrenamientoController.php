@@ -333,7 +333,9 @@ class EntrenamientoController extends Controller
   // Devuelve los elemento de la sesion de las ideas del entrenamiento
   public function get_ideasEntrenamiento()
   {
-      return json_encode(session("ideasEntrenamiento"));
+      if ( Session::get('login_role') == User::IsInfocenter() ) {
+        return json_encode(session("ideasEntrenamiento"));
+      }
   }
 
   // Elimina la idea de la tabla de las ideas en el formulario para registrar un neuvo entrenamiento

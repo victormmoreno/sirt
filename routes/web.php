@@ -455,6 +455,9 @@ Route::group([
     Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
     Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
     Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'GraficoController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
+    Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsNodoGrafico')->name('grafico.edt.articulacion')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/consultarEdtsPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
 
   }
 );

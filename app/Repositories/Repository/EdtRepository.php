@@ -3,12 +3,36 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{Edt};
+use App\Models\{Edt, TipoEdt};
 use Carbon\Carbon;
 
 class EdtRepository
 {
 
+  /**
+  * Consulta las cantidad de tipos de articulación por gestor
+  * @param int $idgestor Id del gestor
+  * @param int $tipo_edt Nombre del tipo de edt (Tipo 1, Tipo 2, Tipo 3)
+  * @param string $fecha_inicio
+  * @param string $fecha_fin
+  * @return Collection
+   */
+  public function consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($idgestor, $tipo_edt, $fecha_inicio, $fecha_fin)
+  {
+    return Edt::select('tiposedt.nombre')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('count(edts.id) AS cantidad')
+    ->join('gestores', 'gestores.id', '=', 'edts.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->where('gestores.id', $idgestor)
+    ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipo_edt)->get()->first()->id)
+    ->whereBetween('fecha_fin', [$fecha_inicio, $fecha_fin])
+    ->groupBy('gestores.id', 'tiposedt.nombre')
+    ->get()
+    ->last();
+  }
 
   /**
   * consulta los archivos de una edt
@@ -215,8 +239,17 @@ class EdtRepository
     try {
       $edt = Edt::find($id);
 
+      $fecha_fin = $edt->fecha_fin;
+      $estado = 1;
+      if ( isset($request->txtestado) ) {
+        $estado = 0;
+        $fecha_fin = $request->txtfecha_fin;
+      }
+
       $update = $edt->update([
         'fecha_inicio' => $request->txtfecha_inicio,
+        'fecha_fin' => $fecha_fin,
+        'estado' => $estado,
         'nombre' => $request->txtnombre,
         'areaconocimiento_id' => $request->txtareaconocimiento_id,
         'tipoedt_id' => $request->txttipo_edt,
