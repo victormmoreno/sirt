@@ -609,11 +609,12 @@ class ProyectoController extends Controller
 
     public function projectsForGestor($id)
     {
-        
-             
-        $projects = Proyecto::projectsForEstado(['Inicio','Planeacion','En ejecución'])->where('gestor_id', $id)->get();
+         
+        $projects = $this->proyectoRepository->getProjectsForGestor($id,['Inicio','Planeacion','En ejecución']);
       
-        return $projects;
+        return response()->json([
+          'projects' => $projects,
+        ]);
 
     }
 

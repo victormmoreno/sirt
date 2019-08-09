@@ -23,7 +23,7 @@
     grupo de emprendedores innovadores de nuestra Red y recibirán de parte nuestra la
     Asesoría Técnica especializada y los servicios tecnológicos para el desarrollo de su
     idea: <b>“{{ $nombre_proyecto }}”</b>
-
+  En los próximos días, el gestor asignado de Tecnoparque se pondrá en contacto con usted para generar una agenda de trabajo inicial.
   </p>
   <p>
     Recuerde que además de la Asesoría Técnica para el Desarrollo de Proyectos de Base Tecnológica, la Red Tecnoparque Colombia pone a su disposición los siguientes servicios:

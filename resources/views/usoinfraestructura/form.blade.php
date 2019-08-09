@@ -78,15 +78,15 @@
         </input>
     </div>
     <div class="input-field col s12 m6 l6" id="divProyecto">
-        <i class="material-icons prefix">
+        {{-- <i class="material-icons prefix">
             library_books
-        </i>
-        <select class="" id="txtproyecto" name="txtproyecto" style="width: 100%">
+        </i> --}}
+        <select class="browser-default select2" id="txtproyecto" name="txtproyecto" style="width: 100%" tabindex="-1">
             <option value="">
                 Seleccione Proyecto
             </option>
         </select>
-        <label for="txtproyecto">
+        <label for="txtproyecto" class="active">
             Proyecto
             <span class="red-text">
                 *
@@ -98,9 +98,70 @@
         </label>
         @enderror
     </div>
+    <div class="input-field col s12 m6 l6 divArticulacion">
+        <i class="material-icons prefix">
+            library_books
+        </i>
+        <select id="txttipoarticulacion" name="txttipoarticulacion" tabindex="-1" style="width: 100%;" class="initialized" onchange="usoInfraestructuraCreate.selectTipoArticulacion(this)">
+            <option value="">Seleccione tipo articulación</option> 
+            <option value="0">Grupo de Investigación</option> 
+            <option value="1">Empresa</option> 
+            <option value="2">Emprendedor</option> 
+            
+        </select>
+        <label for="txttipoarticulacion">
+            Tipo Articulación
+            <span class="red-text">
+                *
+            </span>
+        </label>
+        @error('txttipoarticulacion')
+        <label class="error" for="txttipoarticulacion" id="txttipoarticulacion-error">
+            {{ $message }}
+        </label>
+        @enderror
+    </div>
 </div>
+<div class="divArticulacion">
+    <div class="row divGrupoInvestigacion"></div>
+    <div class="row divEmpresa"> 
+        <div class="input-field col s12 m6 l6 ">
+            <table style="width: 100%" id="empresasDeTecnoparque_UsosInfraestructuraCreate_table" class="display responsive-table datatable-example DataTable">
+              <thead>
+                <tr>
+                  <th>Nit</th>
+                  <th>Nombre de la Empresa</th>
+                  <th>Seleccionar</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="col s12 m6 l6">
+            <h6>La articulación se realizará con la siguiente empresa</h6>
+            <div class="card horizontal teal lighten-4">
+              <div class="card-stacked">
+                <div class="card-content">
+                  <div class="input-field col s12 m12 l12">
+                    <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="">
+                    <input readonly type="text" name="empresa" id="empresa" value="">
+                    <label for="empresa">Empresa</label>
+                    <small id="txtempresa_id-error" class="error red-text"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+    </div>
+    <div class="row divEmprendedor"></div>
+</div>
+
 <div class="divider">
 </div>
+
 <div class="row">
     <div class="s12 m12 l12">
         <p>

@@ -98,4 +98,42 @@ class Articulacion extends Model
         return $this->hasMany(ArchivoArticulacion::class, 'articulacion_id', 'id');
     }
 
+    /*==========================================================================
+    =            scope para consultar las articulaciones por estado            =
+    ==========================================================================*/
+    
+    public function scopeArticulacionesForEstado($query, int $estado)
+    {
+        $query->with([
+            'tipoarticulacion' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'entidad'=> function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gestor'=> function ($query) {
+                $query->select('id', 'user_id','honorarios');
+            },
+            'gestor.user' => function ($query) {
+                $query->select('id', 'nombres', 'apellidos', 'documento');
+            },
+        ])->select('id', 'nombre', 'codigo_articulacion', 'tipoarticulacion_id','entidad_id','gestor_id')
+          ->where('estado',$estado);
+    }
+    
+    /*=====  End of scope para consultar las articulaciones por estado  ======*/
+
+    /*====================================================================================
+    =            scope para consultar articulaciones por tipo de articulacion            =
+    ====================================================================================*/
+    
+    public function scopeArticulacionesForTipoArticulacion($query, int $tipoArticulacion)
+    {
+        $query->where('tipo_articulacion',$tipoArticulacion);
+    }
+    
+    /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
+    
+    
+
 }

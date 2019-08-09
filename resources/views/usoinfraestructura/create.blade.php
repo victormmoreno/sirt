@@ -48,7 +48,11 @@
 <script>
     $(document).ready(function() {
         $divProyecto = $("#divProyecto");
+        $divArticulacion = $(".divArticulacion");
         $divProyecto.hide();
+        $divArticulacion.hide();
+        usoInfraestructuraCreate.selectTipoArticulacion();
+
 
 
         $(document).on('submit', 'form#formUsoInfraestructuraCreate', function (event) {
@@ -69,12 +73,31 @@
                 timer: 3000
             });
             $divProyecto.show();
+            $divArticulacion.hide();
+
+            usoInfraestructuraCreate.selectProyecto();
+             // $('input#txtfecha').parent().removeClass("s12 m4 l4");
+             // $('input#txtfecha').parent().addClass("s12 m6 l6");
               
-        } else if ( $("#IsEmpresa").is(":checked") ) {
-          
+        } else if ( $("#IsArticulacion").is(":checked") ) {
+            // $('input#txtfecha').parent().removeClass("s12 m6 l6");
+            // $('input#txtfecha').parent().addClass("s12 m4 l4");
+            Swal.fire({
+                toast: true,
+                position: 'bottom-end',
+                title: 'Articulación',
+                text: "por favor seleccione un tipo de articulación",
+                type: 'warning',
+                showConfirmButton: false,
+                timer: 3000
+            });
           $divProyecto.hide();
+          $divArticulacion.show();
+
         } else {
           $divProyecto.hide();
+          $divArticulacion.hide();
+
           
         }
        
@@ -87,17 +110,42 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/articulacion/consultarTiposArticulacion/'+value,
+                url:'/proyecto/gestor/'+{{{auth()->user()->gestor->id}}},
             }).done(function(response){
-                console.log(response);
                 $('#txtproyecto').append('<option value="">Seleccione el proyecto</option>');
-                // $.each(response.tiposarticulacion, function(i, e) {
-                //   // console
-                //   // .log(e.nombre);
-                //     $('#txtproyecto').append('<option value="'+e.id+'">'+e.nombre+'</option>');
-                // })
+                $.each(response.projects, function(i, e) {
+                    $('#txtproyecto').append('<option value="'+e.id+'">'+e.codigo_proyecto+' - '+e.nombre+'</option>');
+                })
                 $('#txtproyecto').material_select();
             })
+        },
+        selectTipoArticulacion:function (id) {
+            let tipoArticulacion_id = $(id).val();
+            let tipoArticulacion_nombre = $("#txttipoarticulacion option:selected").text();
+            console.log(tipoArticulacion_nombre);
+            let grupoInvestigacion = $(".divGrupoInvestigacion");
+            let empresa = $(".divEmpresa");
+            let emprendedor = $(".divEmprendedor");
+
+            if(tipoArticulacion_nombre == 'Grupo de Investigación'){
+                grupoInvestigacion.show();
+                empresa.hide();
+                emprendedor.hide();
+            }else if(tipoArticulacion_nombre == 'Empresa'){
+                grupoInvestigacion.hide();
+                emprendedor.hide();
+                empresa.show();
+            }else if(tipoArticulacion_nombre == 'Emprendedor'){
+                grupoInvestigacion.hide();
+                empresa.hide();
+                emprendedor.show();
+            }else{
+                grupoInvestigacion.hide();
+                empresa.hide();
+                emprendedor.hide();
+            }
+            
+           
         }
     }
 
