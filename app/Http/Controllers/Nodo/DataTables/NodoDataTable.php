@@ -4,21 +4,19 @@ namespace App\Http\Controllers\Nodo\DataTables;
 
 use App\Models\Nodo;
 use App\User;
-use Illuminate\Support\Facades\DB;
 use Repositories\Repository\NodoRepository;
 use Yajra\DataTables\Services\DataTable;
 
 class NodoDataTable extends DataTable
 {
 
-	public $nodoRepository;
-
+    public $nodoRepository;
 
     public function __construct(NodoRepository $nodoRepository)
     {
- 
-        $this->nodoRepository         = $nodoRepository;
-      
+
+        $this->nodoRepository = $nodoRepository;
+
     }
     /**
      * Build DataTable class.
@@ -31,6 +29,12 @@ class NodoDataTable extends DataTable
             ->eloquent($this->query())
             ->addColumn('action', 'ffas');
     }
+    // public function ajax()
+    // {
+    //     return $this->datatables
+    //         ->eloquent($this->query())
+    //         ->make(true);
+    // }
 
     /**
      * Get the query object to be processed by dataTables.
@@ -47,11 +51,11 @@ class NodoDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->columns($this->getColumns())
-                     ->parameters([
-					       'dom'          => 'Bfrtip',
-					       'buttons'      => ['csv, excel'],
-					 ]);
+            ->columns($this->getColumns())
+            ->parameters([
+                'dom'     => 'Bfrtip',
+                'buttons' => ['export', 'print', 'reset', 'reload'],
+            ]);
     }
 
     /**

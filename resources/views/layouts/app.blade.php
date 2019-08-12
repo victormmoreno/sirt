@@ -61,5 +61,6 @@
         {{-- @include('sweet::alert') --}}
         @stack('script')
         @include('sweetalert::alert')
+        
 </body>
 </html>
