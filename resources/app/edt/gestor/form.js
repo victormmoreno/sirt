@@ -19,6 +19,18 @@ $(document).ready(function() {
   });
 });
 
+divFechaCierreEdt = $('#divFechaCierreEdt');
+divFechaCierreEdt.hide();
+
+function actiarFechaFinDeLaEdt() {
+  console.log('hello');
+  if ( $('#txtestado').is(':checked') ) {
+    divFechaCierreEdt.show();
+  } else {
+    divFechaCierreEdt.hide();
+  }
+}
+
 function noRepeat(id) {
   let idEntidad = id;
   let retorno = true;

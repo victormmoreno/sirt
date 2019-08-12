@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 
 Route::get('/', function () {
     // $user = auth()->user()->hasAllRoles(Role::all());;
-    
+
     // $users = App\User::with(
     //     [
     //         'tipodocumento' => function ($query) {
@@ -451,20 +451,13 @@ Route::group([
   function () {
     Route::get('/', 'GraficoController@index')->name('grafico');
     Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
-    Route::get('/consultarArticulacionesPorNodo/{id}', 'GraficoController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion');
-    // Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
-    // Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
-    // Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');
-    // Route::get('/consultarDetallesDeUnaCharlaInformativa/{id}', 'CharlaInformativaController@detallesDeUnaCharlaInformativa')->name('charla.detalle');
-    // Route::get('/archivosDeUnaCharlaInformartiva/{id}', 'ArchivoController@datatableArchivosDeUnaCharlaInformatva')->name('charla.files');
-    // Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileCharlaInformativa')->name('charla.files.download');
-    // // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
-    // Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter');
-    // Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter');
-    // Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter');
-    // Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
-    // Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter');
-    // Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
+    Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
+    Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'GraficoController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
+    Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsNodoGrafico')->name('grafico.edt.articulacion')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/consultarEdtsPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
 
   }
 );

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class EdtFormRequest extends FormRequest
 {
@@ -33,7 +34,8 @@ class EdtFormRequest extends FormRequest
       'txtinstructores' => 'required|numeric|min:0',
       'txtaprendices' => 'required|numeric|min:0',
       'txtpublico' => 'required|numeric|min:0',
-      'entidades' => 'required'
+      'entidades' => 'required',
+      'txtfecha_fin' => Rule::requiredIf(request()->txtestado == 1) . '|date_format:"Y-m-d"'
       ];
     }
 
@@ -89,7 +91,12 @@ class EdtFormRequest extends FormRequest
         /**
         * Mensajes para el array de entidades
         */
-        'entidades.required' => 'Debe registrar al menos una empresa en la Edt.'
+        'entidades.required' => 'Debe registrar al menos una empresa en la Edt.',
+        /**
+        * Mensaje para el campo txtfecha_fin
+        */
+        'txtfecha_fin.required' => 'La Fecha de Cierre de la Edt es obligatoria.',
+        'txtfecha_fin.date_format' => 'El formato de la Fecha de Cierre es incorrecto'
       ];
     }
 

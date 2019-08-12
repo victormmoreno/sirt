@@ -15,10 +15,10 @@ use App;
 
 class ProyectoController extends Controller
 {
-  public $empresaRepository;
-  public $proyectoRepository;
-  public $gestorRepository;
-  public $entidadRepository;
+  private $empresaRepository;
+  private $proyectoRepository;
+  private $gestorRepository;
+  private $entidadRepository;
 
   public function __construct(EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository)
   {
@@ -221,12 +221,12 @@ class ProyectoController extends Controller
   public function datatableIdeasConEmprendedores()
   {
     if (request()->ajax()) {
-      $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id )->get();
+      $ideas = Idea::ConsultarIdeasAprobadasEnComite( auth()->user()->gestor->nodo_id )->get();
       // dd($ideas);
       return datatables()->of($ideas)
       ->addColumn('checkbox', function ($data) {
         $checkbox = '
-        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto('.$data->consecutivo.', \''.$data->nombre_proyecto.'\')">
+        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto('.$data->consecutivo.', \''.$data->nombre_proyecto.'\', \''.$data->codigo_idea.'\')">
           <i class="material-icons">done</i>
         </a>
         ';
@@ -246,7 +246,7 @@ class ProyectoController extends Controller
       return datatables()->of($ideas)
       ->addColumn('checkbox', function ($data) {
         $checkbox = '
-        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto('.$data->consecutivo.', \''.$data->nombre_proyecto.'\')">
+        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto('.$data->consecutivo.', \''.$data->nombre_proyecto.'\', \''.$data->codigo_idea.'\')">
           <i class="material-icons">done</i>
         </a>
         ';

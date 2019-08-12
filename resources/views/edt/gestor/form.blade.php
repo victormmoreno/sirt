@@ -56,6 +56,34 @@
     <small id="txttipo_edt-error" class="error red-text"></small>
   </div>
 </div>
+@if ($btnText == 'Modificar')
+  <div class="divider"></div>
+  <div class="row">
+    <center>
+      <div class="col s12 m12 l12">
+        <span>¿Cerrar Edt?</span>
+        <br>
+        <div class="switch">
+          <label>
+            No
+            <input type="checkbox" value="0" name="txtestado" id="txtestado" onchange="actiarFechaFinDeLaEdt()">
+            <span class="lever"></span>
+            Si
+          </label>
+        </div>
+      </div>
+    </center>
+  </div>
+  <div class="row" id="divFechaCierreEdt">
+    <div class="input-field col s12 m6 l6 offset-l3 offset-m3">
+      <i class="material-icons prefix">date_range</i>
+      <input id="txtfecha_fin" type="text" name="txtfecha_fin" class="datepicker" value="">
+      <label for="txtfecha_fin">Fecha de Cierre <span class="red-text">*</span></label>
+      <small id="txtfecha_fin-error" class="error red-text"></small>
+    </div>
+  </div>
+  <div class="divider"></div>
+@endif
 <div class="row">
   <div class="col s12 m2 l2">
     <blockquote>

@@ -41,6 +41,7 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/highcharts.js',
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
+		'resources/assets/plugins/highcharts/modules/variable-pie.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
@@ -86,6 +87,7 @@ mix.scripts([
 		'resources/app/ingreso/index.js',
 		'resources/app/ingreso/ingreso/create.js',
 		'resources/app/charla/index.js',
+		'resources/app/graficos/index.js',
 	],'public/js/app2.js');
 
 
@@ -110,7 +112,6 @@ mix.browserSync({
 			 rotateUnicodeArray: true,
 			 compact: true,
 			 identifierNamesGenerator: 'hexadecimal',
-		 }, ['app.js'])
+		 }, ['public/js/app2.js'])
 	 ],
  });
-

@@ -20,21 +20,24 @@
                   <div class="divider"></div>
                   <div class="row">
                     <div class="col s12 m6 l6">
-                      <div class="card-panel lime lighten-4">
-                        <div class="row">
-                        <center>
-                          <i class="medium material-icons"><a>autorenew</a></i>
-                        </center>
+                      <a class="red" href="{{route('grafico.articulacion')}}">
+                        <div class="card indigo lighten-4">
+                          <div class="card-content center">
+                            <i class="left material-icons black-text">autorenew</i>
+                            <span class="black-text">Articulaciones</span>
+                          </div>
                         </div>
-                        <div class="row">
-                          <h3 class="center"><a href="{{route('grafico.articulacion')}}">Articulaciones</a></h3>
-                        </div>
-                      </div>
+                      </a>
                     </div>
                     <div class="col s12 m6 l6">
-                      <div class="card-panel green">
-                        <a class="waves-effect waves-light btn-large">EDT's</a>
-                      </div>
+                      <a href="{{route('grafico.edt')}}">
+                        <div class="card indigo lighten-4">
+                          <div class="card-content center">
+                            <i class="left material-icons black-text">record_voice_over</i>
+                            <span class="black-text">Edt's</span>
+                          </div>
+                        </div>
+                      </a>
                     </div>
                   </div>
                   <div class="row">

@@ -3,6 +3,7 @@
 namespace App\Repositories\Repository\UserRepository;
 
 use App\User;
+use App\Models\Gestor;
 
 class GestorRepository
 {
@@ -30,5 +31,22 @@ class GestorRepository
             ->orderby('users.created_at', 'desc')
             ->get();
 
+    }
+
+
+    /**
+     * Consulta los datos de un gestor por el id de la tabla de gestores
+     * @param int $id Id del gestor por el que se consultaran los datos
+     * @return Collection
+     * @author Victor Manuel Moreno Vega
+     **/
+    public function consultarGestorPorIdGestor($id)
+    {
+        return Gestor::select('gestores.id')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+        ->join('users', 'users.id', '=', 'gestores.user_id')
+        ->where('gestores.id', $id)
+        ->get()
+        ->first();
     }
 }
