@@ -790,8 +790,8 @@
       select: true,
       columns: [
         {
-          data: 'consecutivo',
-          name: 'consecutivo',
+          data: 'codigo_idea',
+          name: 'codigo_idea',
         },
         {
           data: 'nombre_proyecto',
@@ -831,8 +831,8 @@
       select: true,
       columns: [
         {
-          data: 'consecutivo',
-          name: 'consecutivo',
+          data: 'codigo_idea',
+          name: 'codigo_idea',
         },
         // {
         //   data: 'nombre_proyecto',
@@ -855,7 +855,7 @@
     });
   }
 
-  function asociarIdeaDeProyectoAProyecto(id, nombre) {
+  function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
     $('#ideasDeProyectoConEmprendedores_modal').closeModal();
     $('#ideasDeProyectoConEmpresasGrupos_modal').closeModal();
@@ -865,9 +865,9 @@
       showConfirmButton: false,
       timer: 1500,
       type: 'success',
-      title: 'La siguiente idea se ha asociado al proyecto: ' + id + ' - ' + nombre
+      title: 'La siguiente idea se ha asociado al proyecto: ' + codigo + ' - ' + nombre
     });
-    $('#txtnombreIdeaProyecto_Proyecto').val(id +" - "+ nombre);
+    $('#txtnombreIdeaProyecto_Proyecto').val(codigo +" - "+ nombre);
     $('#txtnombre').val(nombre);
     $("label[for='txtnombreIdeaProyecto_Proyecto']").addClass('active');
     $("label[for='txtnombre']").addClass('active');

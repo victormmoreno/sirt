@@ -2,8 +2,9 @@
 
 namespace App\Repositories\Repository;
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB, Session};
 use App\Models\{Entidad, Nodo, ContactoEntidad};
+use App\User;
 use Carbon\Carbon;
 
 class ContactoEntidadRepository
@@ -15,12 +16,11 @@ class ContactoEntidadRepository
     DB::beginTransaction();
     try {
 
-      $idnodo = "";
-      if (auth()->user()->rol()->first()->nombre == 'Gestor') {
+      if ( Session::get('login_role') == User::IsGestor() ) {
         $idnodo = auth()->user()->gestor->nodo_id;
       }
 
-      if (auth()->user()->rol()->first()->nombre == 'Dinamizador') {
+      if ( Session::get('login_role') == User::IsDinamizador() ) {
         $idnodo = auth()->user()->dinamizador->nodo_id;
       }
 

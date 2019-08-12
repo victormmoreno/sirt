@@ -34,6 +34,7 @@ class Gestor extends Model
     {
         return $query->select('gestores.id')
             ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')
+            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS nombres')
             ->join('users', 'users.id', '=', 'gestores.user_id')
             ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
             ->where('nodos.id', $id);
