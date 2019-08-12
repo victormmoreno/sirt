@@ -23,6 +23,7 @@ class CreateArticulacionesTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->unsignedInteger('actividad_id');
             $table->unsignedInteger('entidad_id');
             $table->unsignedInteger('tipoarticulacion_id');
             $table->unsignedInteger('gestor_id');
@@ -44,10 +45,16 @@ class CreateArticulacionesTable extends Migration
             $table->tinyInteger('otros')->nullable();
             $table->timestamps();
 
+            $table->index(["actividad_id"], 'fk_artividades_articulaciones1_idx');
             $table->index(["entidad_id"], 'fk_articulaciones_entidad1_idx');
 
             $table->index(["tipoarticulacion_id"], 'fk_articulaciones_tiposarticulacion1_idx');
             $table->index(["gestor_id"], 'fk_articulaciones_gestores1_idx');
+
+            $table->foreign('actividad_id', 'fk_artividades_articulaciones1_idx')
+                ->references('id')->on('actividades')
+                ->onDelete('no action')
+                ->onUpdate('no action');
 
 
             $table->foreign('entidad_id', 'fk_articulaciones_entidad1_idx')

@@ -23,6 +23,7 @@ class CreateProyectosTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->unsignedInteger('actividad_id');
             $table->unsignedInteger('idea_id');
             $table->unsignedInteger('sector_id');
             $table->unsignedInteger('sublinea_id');
@@ -67,6 +68,8 @@ class CreateProyectosTable extends Migration
             $table->tinyInteger('encuesta')->nullable()->default('0');
             $table->timestamps();
 
+            $table->index(["actividad_id"], 'fk_actividades_proyectos1_idx');
+
             $table->index(["entidad_id"], 'fk_proyectos_entidades1_idx');
 
             $table->index(["sector_id"], 'fk_proyectos_sectores1_idx');
@@ -89,6 +92,10 @@ class CreateProyectosTable extends Migration
 
             $table->unique(["codigo_proyecto"], 'codigo_proyecto_UNIQUE');
 
+            $table->foreign('actividad_id', 'fk_actividades_proyectos1_idx')
+                ->references('id')->on('actividades')
+                ->onDelete('no action')
+                ->onUpdate('no action');
 
             $table->foreign('sublinea_id', 'fk_proyectos_sublineas1_idx')
                 ->references('id')->on('sublineas')
