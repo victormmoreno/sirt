@@ -317,54 +317,54 @@ class UsersTableSeeder extends Seeder
 
         $userTalento->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
 
-        // //
-        factory(User::class, 2)->create();
+        // // //
+        // factory(User::class, 2)->create();
 
-        // $user = User::whereBetween('id', [8, 27])->get();
+        // // $user = User::whereBetween('id', [8, 27])->get();
     
-        $user = User::latest()->take(2)->get()->each(function ($item) {
+        // $user = User::latest()->take(2)->get()->each(function ($item) {
 
-            $item->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
+        //     $item->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
 
-            $talento = Talento::create([
-                "user_id"               => $item->id,
-                "perfil_id"             => Perfil::all()->random()->id,
-                "entidad_id"            => Entidad::all()->random()->id,
-                "universidad"           => null,
-                "programa_formacion"    => 'Administración de empresas',
-                "carrera_universitaria" => 'No Aplica',
-                "empresa"               => null,
-                "otro_tipo_talento"     => null,
-            ]);
-            $proyecto = Proyecto::create([
-                'idea_id'                     => Idea::all()->random()->id,
-                'sector_id'                   => Sector::all()->random()->id,
-                'sublinea_id'                 => Sublinea::all()->random()->id,
-                'areaconocimiento_id'         => AreaConocimiento::all()->random()->id,
-                'estadoproyecto_id'           => EstadoProyecto::all()->random()->id,
-                'gestor_id'                   => Gestor::all()->random()->id,
-                'entidad_id'                  => Entidad::all()->random()->id,
-                'nodo_id'                     => Nodo::all()->random()->id,
-                'tipoarticulacionproyecto_id' => TipoArticulacion::all()->random()->id,
-                'estadoprototipo_id'          => EstadoPrototipo::all()->random()->id,
-                'tipo_ideaproyecto'           => 1,
-                'otro_tipoarticulacion'       => 1,
-                'universidad_proyecto'        => 'Universidad de antiquia',
-                'codigo_proyecto'             => Str::random(10),
-                'nombre'                      => 'Andres Lopez',
-                'observaciones_proyecto'      => 'asdasdas',
-                'impacto_proyecto'            => 'asdsadasd',
-                'economia_naranja'            => 1,
-                'fecha_inicio'                => '2019-07-12',
-                'art_cti'                     => 1,
-                'nom_act_cti'                 => 1,
-                'diri_ar_emp'                 => 1,
-                'reci_ar_emp'                 => 1,
-                'dine_reg'                    => 1,
-            ]);
+        //     $talento = Talento::create([
+        //         "user_id"               => $item->id,
+        //         "perfil_id"             => Perfil::all()->random()->id,
+        //         "entidad_id"            => Entidad::all()->random()->id,
+        //         "universidad"           => null,
+        //         "programa_formacion"    => 'Administración de empresas',
+        //         "carrera_universitaria" => 'No Aplica',
+        //         "empresa"               => null,
+        //         "otro_tipo_talento"     => null,
+        //     ]);
+        //     $proyecto = Proyecto::create([
+        //         'idea_id'                     => Idea::all()->random()->id,
+        //         'sector_id'                   => Sector::all()->random()->id,
+        //         'sublinea_id'                 => Sublinea::all()->random()->id,
+        //         'areaconocimiento_id'         => AreaConocimiento::all()->random()->id,
+        //         'estadoproyecto_id'           => EstadoProyecto::all()->random()->id,
+        //         'gestor_id'                   => Gestor::all()->random()->id,
+        //         'entidad_id'                  => Entidad::all()->random()->id,
+        //         'nodo_id'                     => Nodo::all()->random()->id,
+        //         'tipoarticulacionproyecto_id' => TipoArticulacion::all()->random()->id,
+        //         'estadoprototipo_id'          => EstadoPrototipo::all()->random()->id,
+        //         'tipo_ideaproyecto'           => 1,
+        //         'otro_tipoarticulacion'       => 1,
+        //         'universidad_proyecto'        => 'Universidad de antiquia',
+        //         'codigo_proyecto'             => Str::random(10),
+        //         'nombre'                      => 'Andres Lopez',
+        //         'observaciones_proyecto'      => 'asdasdas',
+        //         'impacto_proyecto'            => 'asdsadasd',
+        //         'economia_naranja'            => 1,
+        //         'fecha_inicio'                => '2019-07-12',
+        //         'art_cti'                     => 1,
+        //         'nom_act_cti'                 => 1,
+        //         'diri_ar_emp'                 => 1,
+        //         'reci_ar_emp'                 => 1,
+        //         'dine_reg'                    => 1,
+        //     ]);
 
-            $talento->proyectos()->attach($proyecto->id, ['talento_lider' => 0]);
-        });
+        //     $talento->proyectos()->attach($proyecto->id, ['talento_lider' => 0]);
+        // });
 
         // factory(Gestor::class, 5)->create();
         // factory(Infocenter::class, 2)->create();
