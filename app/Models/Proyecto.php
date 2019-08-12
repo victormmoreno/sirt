@@ -6,32 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proyecto extends Model
 {
-    //Constatens del campo revisado_final
-    const IS_POREVALUAR = 0;
-    const IS_APROBADO   = 1;
-    const IS_NOAPROBADO = 2;
 
-    // Retorno para las constantes del campo revisado_final
-    public static function IsPorEvaluar()
-    {
-        return self::IS_POREVALUAR;
-    }
-
-    public static function IsAprobado()
-    {
-        return self::IS_APROBADO;
-    }
-
-    public static function IsNoAprobado()
-    {
-        return self::IS_NOAPROBADO;
-    }
     protected $table = 'proyectos';
 
     protected $casts = [
-        'fecha_inicio'    => 'date:Y-m-d',
-        'fecha_fin'       => 'date:Y-m-d',
-        'fecha_ejecucion' => 'date:Y-m-d',
+        'fecha_ejecucion' => 'date:Y-m-d'
     ];
 
     /**
@@ -40,29 +19,22 @@ class Proyecto extends Model
      * @var array
      */
     protected $fillable = [
+        'articulacion_proyecto_id', // Llave foranea
         'idea_id', // Llave foranea
         'sector_id', // Llave foranea
         'sublinea_id', // Llave foranea
         'areaconocimiento_id', // Llave foranea
         'estadoproyecto_id', // Llave foranea
-        'gestor_id', // Llave foranea
-        'entidad_id', // Llave foranea
-        'nodo_id', // Llave foranea
         'tipoarticulacionproyecto_id', // Llave foranea
         'estadoprototipo_id', // Llave foranea
         'tipo_ideaproyecto',
         'otro_tipoarticulacion',
         'otro_estadoprototipo',
         'universidad_proyecto',
-        'codigo_proyecto', // Unique
-        'nombre',
         'observaciones_proyecto',
         'impacto_proyecto',
         'economia_naranja',
         'resultado_proyecto',
-        'revisado_final',
-        'fecha_inicio',
-        'fecha_fin',
         'fecha_ejecucion',
         'aporte_sena',
         'aporte_talento',
@@ -74,12 +46,10 @@ class Proyecto extends Model
         'acc',
         'manual_uso_inf',
         'aval_empresa_grupo',
-        'acta_inicio',
         'estado_arte',
-        'actas_seguimiento',
         'video_tutorial',
+        'url_videotutorial',
         'ficha_caracterizacion',
-        'acta_cierre',
         'lecciones_aprendidas',
         'encuesta',
     ];
@@ -87,19 +57,12 @@ class Proyecto extends Model
     /*===============================================
     =            relaciones polimorficas            =
     ===============================================*/
-    // Relacion muchos a muchos con talentos
-    public function talentos()
-    {
-        return $this->belongsToMany(Talento::class, 'proyecto_talento')
-            ->withTimestamps()
-            ->withPivot('talento_lider');
-    }
 
     // Relación a la tabla de archivosproyecto
-    public function archivosproyecto()
-    {
-        return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
-    }
+    // public function archivosproyecto()
+    // {
+    //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
+    // }
 
     /* relacion a la tabla estadosproyecto */
     public function estadoproyecto()
@@ -112,7 +75,7 @@ class Proyecto extends Model
     /*=====================================================================
     =            scope para consultar los proyectos por estado            =
     =====================================================================*/
-    
+
     public function scopeProjectsForEstado($query, array $estado = [])
     {
         return $query->with([
@@ -125,10 +88,10 @@ class Proyecto extends Model
                     $query->whereIn('nombre', $estado);
                 }
         );
-            
+
     }
-    
+
     /*=====  End of scope para consultar los proyectos por estado  ======*/
-    
+
 
 }
