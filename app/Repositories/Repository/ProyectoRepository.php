@@ -530,4 +530,17 @@ class ProyectoRepository
 
   }
 
+  /*========================================================================
+  =            metodo para consultar los proyectos de un gestor            =
+  ========================================================================*/
+  
+  public function getProjectsForGestor($id, array $estado = [])
+  {
+      return Proyecto::projectsForEstado($estado)->where('gestor_id', $id)->orderby('nombre')->get();
+  }
+  
+  
+  /*=====  End of metodo para consultar los proyectos de un gestor  ======*/
+  
+
 }

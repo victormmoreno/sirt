@@ -203,14 +203,9 @@
 
     @break
 
-    @case('Talento')
+    @case(App\User::IsTalento())
 
-      <li class="no-padding">
-        <a href="">
-          <i class="material-icons">domain</i>Uso de Infraestructura
-        </a>
-      </li>
-
+       @include('layouts.navrole.talento')
     @break
 
     @case(App\User::IsIngreso())

@@ -234,12 +234,12 @@ return [
         'URL'          => Illuminate\Support\Facades\URL::class,
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
-        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Debugbar'     => Barryvdh\Debugbar\Facade::class,
+        'DataTables'   => Yajra\DataTables\Facades\DataTables::class,
+        'Alert'        => RealRashid\SweetAlert\Facades\Alert::class,
+        'PDF'          => Barryvdh\DomPDF\Facade::class,
         // Aliases Personalizados
-        'NodoHelper' => App\Helpers\NodoHelper::class,
+        'NodoHelper'   => App\Helpers\NodoHelper::class,
 
     ],
 

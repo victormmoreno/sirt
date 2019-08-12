@@ -23,6 +23,7 @@ class CreateEdtsTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->unsignedInteger('actividad_id');
             $table->unsignedInteger('areaconocimiento_id');
             $table->unsignedInteger('gestor_id');
             $table->unsignedInteger('tipoedt_id');
@@ -41,6 +42,7 @@ class CreateEdtsTable extends Migration
             $table->tinyInteger('informe_final')->nullable()->default('0');
             $table->timestamps();
 
+            $table->index(["actividad_id"], 'fk_edts_actividades1_idx');
             $table->index(["areaconocimiento_id"], 'fk_edts_areasconocimiento1_idx');
 
             $table->index(["gestor_id"], 'fk_edts_gestores1_idx');
@@ -48,6 +50,11 @@ class CreateEdtsTable extends Migration
             $table->index(["tipoedt_id"], 'fk_edts_tiposedt1_idx');
 
             $table->unique(["codigo_edt"], 'codigo_edt_UNIQUE');
+
+            $table->foreign('actividad_id', 'fk_edts_actividades1_idx')
+                ->references('id')->on('actividades')
+                ->onDelete('no action')
+                ->onUpdate('no action');
 
             $table->foreign('areaconocimiento_id', 'fk_edts_areasconocimiento1_idx')
                 ->references('id')->on('areasconocimiento')

@@ -1,34 +1,10 @@
 <?php
 
+use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
-
-
 
 Route::get('/', function () {
-    // $user = auth()->user()->hasAllRoles(Role::all());;
-
-    // $users = App\User::with(
-    //     [
-    //         'tipodocumento' => function ($query) {
-    //             $query->where('nombre', '=', 'Cédula de Ciudadanía');
-    //         },
-    //         'roles'=> function ($query) {
-    //             $query->where('name', '=', 'Gestor');
-    //         },
-    //         'ocupaciones',
-    //     ]
-    // )->get();
-    //
-    // $nodo = Nodo::findByName('Medellin',1);
-
-    // dd($nodo);
-    //
-    // $user = Perfil::latest()
-    //  ->take(20)
-    //  ->get();
-    //  dd($user);
 
     return view('spa');
 })->name('/');
@@ -74,7 +50,12 @@ Route::get('activate/{token}', 'ActivationTokenController@activate')->name('acti
 =            rutas para las funcionalidades de los nodos            =
 ===================================================================*/
 
-Route::resource('nodo', 'NodoController');
+Route::resource('nodo', 'Nodo\NodoController');
+
+Route::get('nodos', function (NodoDataTable $dataTable) {
+
+    return $dataTable->render('users.index');
+});
 
 /*=====  End of rutas para las funcionalidades de los nodos  ======*/
 
@@ -108,7 +89,6 @@ Route::group([
         Route::get('ingreso/getingreso', 'IngresoController@getAllIngresoOfNodo')->name('usuario.ingreso.getingresonodo');
         Route::get('ingreso', 'IngresoController@index')->name('usuario.ingreso.index');
 
-
         Route::get('/talento/getTalentosDeTecnoparque', [
             'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
@@ -120,7 +100,6 @@ Route::group([
         ]);
         Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
         Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
-
 
         Route::get('usuarios/allusuarios', 'UserController@getAllUsersInDatatable')->name('usuario.allusers');
 
@@ -146,6 +125,30 @@ Route::group([
 );
 
 Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')->name('user.changerole');
+
+/*======================================================================
+=            seccion para las rutas de uso de infraestructa            =
+======================================================================*/
+
+Route::group([
+    'namespace'  => 'UsoInfraestructura',
+    'middleware' => 'auth',
+], function () {
+
+    Route::resource('usoinfraestructura', 'UsoInfraestructuraController', ['as' => 'usoinfraestructura'])->names([
+        'create'  => 'usoinfraestructura.create',
+        'update'  => 'usoinfraestructura.update',
+        'edit'    => 'usoinfraestructura.edit',
+        'destroy' => 'usoinfraestructura.destroy',
+        'show'    => 'usoinfraestructura.show',
+        'index'   => 'usoinfraestructura.index',
+        'store'   => 'usoinfraestructura.store',
+    ])->parameters([
+        'usoinfraestructura' => 'id',
+    ]);;
+});
+
+/*=====  End of seccion para las rutas de uso de infraestructa  ======*/
 
 /*=========================================================
 =            seccion para las rutas del centro de formacion            =
@@ -202,8 +205,8 @@ Route::group([
 
 //-------------------Route group para el módulo de Entrenamientos
 Route::group([
-    'prefix' => 'entrenamientos',
-    'middleware' => 'role_session:Infocenter|Administrador|Dinamizador'
+    'prefix'     => 'entrenamientos',
+    'middleware' => 'role_session:Infocenter|Administrador|Dinamizador',
 ],
     function () {
         Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
@@ -300,6 +303,8 @@ Route::group([
     'middleware' => 'auth',
 ],
     function () {
+        //rutas para consultar articualciones por gestor
+        Route::get('/gestor/{id}/{tipoarticulacion}', 'ArticulacionController@ArticulacionForGestor')->name('articulacion.gestor');
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create');
         Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulaciones')->name('articulacion.datatable');
@@ -329,6 +334,9 @@ Route::group(
         'middleware' => 'auth',
     ],
     function () {
+
+        /*=====  rutas para consultar los proyectos por gestor ======*/
+        Route::get('/gestor/{id}', 'ProyectoController@projectsForGestor')->name('proyecto');
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
         Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
@@ -357,109 +365,109 @@ Route::group(
 );
 
 /**
-* Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
-*/
+ * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
+ */
 Route::group([
-  'prefix' => 'edt',
-  'middleware' => 'role_session:Gestor|Dinamizador|Administrador'
+    'prefix'     => 'edt',
+    'middleware' => 'role_session:Gestor|Dinamizador|Administrador',
 ],
-  function () {
-    Route::get('/', 'EdtController@index')->name('edt');
-    Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
-    Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor');
-    Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
-    Route::get('/consultarEdtsDeUnGestor/{id}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
-    Route::get('/consultarEdtsDeUnNodo/{id}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
-    Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
-    Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
-    Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
-    Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Gestor');
-    Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Gestor');
-    Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
-    Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Gestor');
-    Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Gestor');
-  }
+    function () {
+        Route::get('/', 'EdtController@index')->name('edt');
+        Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
+        Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor');
+        Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
+        Route::get('/consultarEdtsDeUnGestor/{id}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
+        Route::get('/consultarEdtsDeUnNodo/{id}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
+        Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
+        Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Gestor');
+        Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Gestor');
+        Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Gestor');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Gestor');
+    }
 );
 
 /**
-* Route group para el módulo visitantes
-*/
+ * Route group para el módulo visitantes
+ */
 Route::group([
-  'prefix' => 'visitante',
-  'middleware' => 'role_session:Ingreso|Dinamizador|Administrador'
+    'prefix'     => 'visitante',
+    'middleware' => 'role_session:Ingreso|Dinamizador|Administrador',
 ],
-  function () {
-    Route::get('/', 'VisitanteController@index')->name('visitante');
-    Route::get('/create', 'VisitanteController@create')->name('visitante.create')->middleware('role_session:Ingreso');
-    Route::get('/consultarVisitantesRedTecnoparque', 'VisitanteController@consultarVisitantesRedTecnoparque')->name('visitante.tecnoparque');
-    Route::get('/{id}/edit', 'VisitanteController@edit')->name('visitante.edit')->middleware('role_session:Ingreso');
-    Route::get('/consultarVisitantePorDocumento/{doc}', 'VisitanteController@consultarVisitantePorDocumento')->name('visitante.documento');
-    Route::put('/{id}', 'VisitanteController@update')->name('visitante.update')->middleware('role_session:Ingreso');
-    Route::post('/', 'VisitanteController@store')->name('visitante.store')->middleware('role_session:Ingreso');
-  }
+    function () {
+        Route::get('/', 'VisitanteController@index')->name('visitante');
+        Route::get('/create', 'VisitanteController@create')->name('visitante.create')->middleware('role_session:Ingreso');
+        Route::get('/consultarVisitantesRedTecnoparque', 'VisitanteController@consultarVisitantesRedTecnoparque')->name('visitante.tecnoparque');
+        Route::get('/{id}/edit', 'VisitanteController@edit')->name('visitante.edit')->middleware('role_session:Ingreso');
+        Route::get('/consultarVisitantePorDocumento/{doc}', 'VisitanteController@consultarVisitantePorDocumento')->name('visitante.documento');
+        Route::put('/{id}', 'VisitanteController@update')->name('visitante.update')->middleware('role_session:Ingreso');
+        Route::post('/', 'VisitanteController@store')->name('visitante.store')->middleware('role_session:Ingreso');
+    }
 );
 
 /**
-* Route group para el módulo de ingresos de visitantes
-*/
+ * Route group para el módulo de ingresos de visitantes
+ */
 Route::group([
-  'prefix' => 'ingreso',
-  'middleware' => 'role_session:Ingreso|Dinamizador|Administrador'
+    'prefix'     => 'ingreso',
+    'middleware' => 'role_session:Ingreso|Dinamizador|Administrador',
 ],
-  function () {
-    Route::get('/', 'IngresoVisitanteController@index')->name('ingreso');
-    Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
-    Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
-    // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
-    Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
-    Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
-    Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
-  }
+    function () {
+        Route::get('/', 'IngresoVisitanteController@index')->name('ingreso');
+        Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
+        Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
+        // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
+        Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
+        Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
+        Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+    }
 );
 /**
-* Route group para el módulo de charlas informativas
-*/
+ * Route group para el módulo de charlas informativas
+ */
 Route::group([
-  'prefix' => 'charla',
-  'middleware' => 'role_session:Infocenter|Dinamizador|Administrador'
+    'prefix'     => 'charla',
+    'middleware' => 'role_session:Infocenter|Dinamizador|Administrador',
 ],
-  function () {
-    Route::get('/', 'CharlaInformativaController@index')->name('charla');
-    Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
-    Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
-    Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');
-    Route::get('/consultarDetallesDeUnaCharlaInformativa/{id}', 'CharlaInformativaController@detallesDeUnaCharlaInformativa')->name('charla.detalle');
-    Route::get('/archivosDeUnaCharlaInformartiva/{id}', 'ArchivoController@datatableArchivosDeUnaCharlaInformatva')->name('charla.files');
-    Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileCharlaInformativa')->name('charla.files.download');
-    // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
-    Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter');
-    Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter');
-    Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter');
-    Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
-    Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter');
-    Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
+    function () {
+        Route::get('/', 'CharlaInformativaController@index')->name('charla');
+        Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
+        Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
+        Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');
+        Route::get('/consultarDetallesDeUnaCharlaInformativa/{id}', 'CharlaInformativaController@detallesDeUnaCharlaInformativa')->name('charla.detalle');
+        Route::get('/archivosDeUnaCharlaInformartiva/{id}', 'ArchivoController@datatableArchivosDeUnaCharlaInformatva')->name('charla.files');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileCharlaInformativa')->name('charla.files.download');
+        // Route::get('/consultarVisitantesRedTecnoparque', 'IngresoController@consultarVisitantesRedTecnoparque')->name('ingreso.tecnoparque');
+        Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter');
+        Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter');
+        Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter');
+        Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
 
-  }
+    }
 );
 /**
-* Route group para el módulo de gráficos
-*/
+ * Route group para el módulo de gráficos
+ */
 Route::group([
-  'prefix' => 'grafico',
-  'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso']
+    'prefix'     => 'grafico',
+    'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso'],
 ],
-  function () {
-    Route::get('/', 'GraficoController@index')->name('grafico');
-    Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
-    Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion')->middleware('role_session:Dinamizador|Administrador');
-    Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
-    Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
-    Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'GraficoController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
-    Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
-    Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsNodoGrafico')->name('grafico.edt.articulacion')->middleware('role_session:Dinamizador|Administrador');
-    Route::get('/consultarEdtsPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
+    function () {
+        Route::get('/', 'GraficoController@index')->name('grafico');
+        Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
+        Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
+        Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'GraficoController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
+        Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsNodoGrafico')->name('grafico.edt.articulacion')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/consultarEdtsPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
 
-  }
+    }
 );
 
 //-------------------Route group para todos los pdfs de la aplicacion
