@@ -25,7 +25,7 @@ class CreateLineastecnologicasTable extends Migration
             $table->increments('id');
             $table->string('nombre', 45);
             $table->string('abreviatura', 5);
-            $table->string('descripcion')->nullable()->default(null);
+            $table->string('descripcion',1000)->nullable()->default(null);
 
             $table->unique(["abreviatura"], 'abreviatura_UNIQUE');
 

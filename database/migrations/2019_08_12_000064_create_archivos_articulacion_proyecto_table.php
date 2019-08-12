@@ -25,7 +25,7 @@ class CreateArchivosArticulacionProyectoTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('fase_id');
             $table->unsignedInteger('articulacion_proyecto_id');
-            $table->string('ruta');
+            $table->string('ruta',1000);
 
             $table->index(["articulacion_proyecto_id"], 'fk_archivosarticulaciones_articulacion_proyecto1_idx');
 

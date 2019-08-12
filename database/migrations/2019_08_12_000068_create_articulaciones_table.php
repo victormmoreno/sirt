@@ -27,7 +27,7 @@ class CreateArticulacionesTable extends Migration
             $table->unsignedInteger('tipoarticulacion_id');
             $table->tinyInteger('tipo_articulacion');
             $table->date('fecha_ejecucion')->nullable()->default(null);
-            $table->string('observaciones')->nullable()->default(null);
+            $table->string('observaciones',1000)->nullable()->default(null);
             $table->tinyInteger('estado')->default('0');
             $table->tinyInteger('acc')->nullable()->default(null);
             $table->tinyInteger('informe_final')->nullable()->default(null);

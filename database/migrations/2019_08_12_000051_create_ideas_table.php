@@ -35,11 +35,11 @@ class CreateIdeasTable extends Migration
             $table->tinyInteger('pregunta1')->default('1');
             $table->tinyInteger('pregunta2')->default('1');
             $table->tinyInteger('pregunta3')->default('1');
-            $table->string('descripcion')->nullable()->default(null);
-            $table->string('objetivo')->nullable()->default(null);
-            $table->string('alcance')->nullable()->default(null);
+            $table->string('descripcion',2000)->nullable()->default(null);
+            $table->string('objetivo',2000)->nullable()->default(null);
+            $table->string('alcance',2000)->nullable()->default(null);
             $table->tinyInteger('tipo_idea')->default('1');
-            $table->string('url_video');
+            $table->string('url_video',1000);
 
             $table->index(["nodo_id"], 'fk_ideas_nodo1_idx');
 
