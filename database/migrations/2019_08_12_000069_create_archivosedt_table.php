@@ -24,7 +24,7 @@ class CreateArchivosedtTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('edt_id');
-            $table->string('ruta');
+            $table->string('ruta',1000);
 
             $table->index(["edt_id"], 'fk_archivosedt_edts1_idx');
 

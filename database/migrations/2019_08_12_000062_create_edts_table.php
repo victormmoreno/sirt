@@ -26,7 +26,7 @@ class CreateEdtsTable extends Migration
             $table->unsignedInteger('actividad_id');
             $table->unsignedInteger('areaconocimiento_id');
             $table->unsignedInteger('tipoedt_id');
-            $table->string('observaciones')->nullable()->default(null);
+            $table->string('observaciones',1000)->nullable()->default(null);
             $table->integer('empleados')->nullable()->default('0');
             $table->integer('instructores')->nullable()->default('0');
             $table->integer('aprendices')->nullable()->default('0');

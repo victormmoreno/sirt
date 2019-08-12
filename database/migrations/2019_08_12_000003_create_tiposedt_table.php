@@ -24,7 +24,7 @@ class CreateTiposedtTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 100);
-            $table->string('observaciones');
+            $table->string('observaciones',500);
 
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();

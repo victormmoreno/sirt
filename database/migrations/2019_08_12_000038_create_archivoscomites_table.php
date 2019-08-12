@@ -24,7 +24,7 @@ class CreateArchivoscomitesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('comite_id');
-            $table->string('ruta');
+            $table->string('ruta',1000);
 
             $table->index(["comite_id"], 'fk_archivoscomites_comites1_idx');
 

@@ -25,7 +25,7 @@ class CreateComitesTable extends Migration
             $table->increments('id');
             $table->string('codigo', 20);
             $table->date('fechacomite');
-            $table->string('observaciones')->nullable()->default(null);
+            $table->string('observaciones',1000)->nullable()->default(null);
             $table->tinyInteger('correos')->nullable()->default('0');
             $table->tinyInteger('listado_asistencia')->nullable()->default('0');
             $table->tinyInteger('otros')->nullable()->default('0');

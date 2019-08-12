@@ -28,7 +28,7 @@ class CreateIngresosVisitantesTable extends Migration
             $table->unsignedInteger('servicio_id');
             $table->timestamp('fecha_ingreso');
             $table->time('hora_salida');
-            $table->string('descripcion')->nullable()->default(null);
+            $table->string('descripcion',2000)->nullable()->default(null);
 
             $table->index(["servicio_id"], 'fk_ingresos_visitantes_servicios1_idx');
 

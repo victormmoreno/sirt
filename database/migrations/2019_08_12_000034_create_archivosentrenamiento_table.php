@@ -24,7 +24,7 @@ class CreateArchivosentrenamientoTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('entrenamiento_id');
-            $table->string('ruta');
+            $table->string('ruta',1000);
 
             $table->index(["entrenamiento_id"], 'fk_archivosentrenamiento_entrenamientos1_idx');
 

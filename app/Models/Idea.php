@@ -52,6 +52,7 @@ class Idea extends Model
     'alcance',
     'tipo_idea',
     'estadoidea_id',
+    'url_video',
 
     ];
 

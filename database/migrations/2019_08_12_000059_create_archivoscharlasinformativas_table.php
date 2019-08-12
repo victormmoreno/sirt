@@ -24,7 +24,7 @@ class CreateArchivoscharlasinformativasTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('charlainformativa_id');
-            $table->string('ruta');
+            $table->string('ruta',1000);
 
             $table->index(["charlainformativa_id"], 'fk_archivoscharlasinformativas_charlasinformativas1_idx');
 

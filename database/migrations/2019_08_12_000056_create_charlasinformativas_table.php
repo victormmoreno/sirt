@@ -28,7 +28,7 @@ class CreateCharlasinformativasTable extends Migration
             $table->date('fecha');
             $table->string('encargado', 75);
             $table->integer('nro_asistentes');
-            $table->string('observacion')->nullable()->default(null);
+            $table->string('observacion',1000)->nullable()->default(null);
             $table->tinyInteger('listado_asistentes')->nullable()->default('0');
             $table->tinyInteger('evidencia_fotografica')->nullable()->default('0');
             $table->tinyInteger('programacion')->nullable()->default('0');
