@@ -33,6 +33,7 @@ class CreateArticulacionProyectoTable extends Migration
             $table->index(["actividad_id"], 'fk_articulacion_proyecto_actividades1_idx');
 
             $table->index(["entidad_id"], 'fk_articulacion_proyecto_entidades1_idx');
+            $table->nullableTimestamps();
 
 
             $table->foreign('entidad_id', 'fk_articulacion_proyecto_entidades1_idx')

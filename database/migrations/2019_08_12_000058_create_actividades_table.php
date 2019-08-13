@@ -28,7 +28,7 @@ class CreateActividadesTable extends Migration
             $table->string('codigo_actividad', 20);
             $table->string('nombre', 200);
             $table->date('fecha_inicio');
-            $table->date('fecha_ cierre')->nullable();
+            $table->date('fecha_cierre')->nullable();
 
             $table->index(["nodo_id"], 'fk_actividades_nodos1_idx');
 
