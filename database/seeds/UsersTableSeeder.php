@@ -71,6 +71,8 @@ class UsersTableSeeder extends Seeder
             'estrato'             => rand(1, 6),
         ]);
 
+    
+
         $userAdmin->dinamizador()->create([
             'user_id' => $userAdmin->id,
             'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,

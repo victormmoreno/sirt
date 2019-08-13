@@ -24,13 +24,9 @@ class Edt extends Model
   * @var array
   */
   protected $fillable = [
+    'actividad_id',
     'areaconocimiento_id',
-    'gestor_id',
     'tipoedt_id',
-    'codigo_edt',
-    'nombre',
-    'fecha_inicio',
-    'fecha_fin',
     'observaciones',
     'empleados',
     'instructores',
@@ -42,13 +38,9 @@ class Edt extends Model
     'informe_final'
   ];
 
-  /**
-   * Relación muchos a muchos con la tabla de entidades
-   * @return Eloquent
-   */
-  public function entidades()
+  public function actividad()
   {
-    return $this->belongsToMany(Entidad::class, 'edt_entidad')->withTimestamps();
+      return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
   }
 
 }

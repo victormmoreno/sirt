@@ -28,7 +28,7 @@ class Articulacion extends Model
     const IS_APROBADO   = 1;
     const IS_NOAPROBADO = 2;
 
-    
+
 
     protected $table = 'articulaciones';
 
@@ -44,23 +44,13 @@ class Articulacion extends Model
      * @var array
      */
     protected $fillable = [
-        'entidad_id',
+        'articulacion_proyecto_id',
         'tipoarticulacion_id',
-        'gestor_id',
-        // 'tipogrupo',
-        'codigo_articulacion',
-        'nombre',
-        'revisado_final',
         'tipo_articulacion',
-        'fecha_inicio',
         'fecha_ejecucion',
-        'fecha_cierre',
         'observaciones',
         'estado',
-        'acta_inicio',
         'acc',
-        'actas_seguimiento',
-        'acta_cierre',
         'informe_final',
         'pantallazo',
         'otros',
@@ -80,60 +70,76 @@ class Articulacion extends Model
         return $this->belongsTo(TipoArticulacion::class, 'tipoarticulacion_id', 'id');
     }
 
-    // Relación a la tabla de gestor
-    public function gestor()
+    public function articulacion_proyecto()
     {
-        return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
     }
 
-    // Relación a la tabla de entidad
-    public function entidad()
-    {
-        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
-    }
-
-    // Relación a la tabla de archivosarticulaciones
-    public function archivosarticulaciones()
-    {
-        return $this->hasMany(ArchivoArticulacion::class, 'articulacion_id', 'id');
-    }
+    // // Relación a la tabla de gestor
+    // public function gestor()
+    // {
+    //     return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+    // }
+    //
+    // // Relación a la tabla de entidad
+    // public function entidad()
+    // {
+    //     return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
+    // }
+    //
+    // // Relación a la tabla de archivosarticulaciones
+    // public function archivosarticulaciones()
+    // {
+    //     return $this->hasMany(ArchivoArticulacion::class, 'articulacion_id', 'id');
+    // }
 
     /*==========================================================================
     =            scope para consultar las articulaciones por estado            =
     ==========================================================================*/
-    
+
     public function scopeArticulacionesForEstado($query, int $estado)
     {
         $query->with([
+            'articulacion_proyecto' => function ($query) {
+                $query->select('id','actividad_id');
+            },
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id','codigo_actividad','nombre')->orderBy('nombre');
+            },
             'tipoarticulacion' => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'entidad'=> function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'gestor'=> function ($query) {
-                $query->select('id', 'user_id','honorarios');
-            },
-            'gestor.user' => function ($query) {
-                $query->select('id', 'nombres', 'apellidos', 'documento');
-            },
-        ])->select('id', 'nombre', 'codigo_articulacion', 'tipoarticulacion_id','entidad_id','gestor_id')
+             
+        ])->select('id', 'articulacion_proyecto_id','tipoarticulacion_id','estado')
           ->where('estado',$estado);
     }
-    
+
     /*=====  End of scope para consultar las articulaciones por estado  ======*/
 
     /*====================================================================================
     =            scope para consultar articulaciones por tipo de articulacion            =
     ====================================================================================*/
-    
+
     public function scopeArticulacionesForTipoArticulacion($query, int $tipoArticulacion)
     {
         $query->where('tipo_articulacion',$tipoArticulacion);
     }
-    
+
     /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
+
+
+    /*=========================================================================
+    =            scope para consultar por estado de articulaciones            =
+    =========================================================================*/
     
+    public function scopeEstadoOfArticulaciones($query, array $estado = [])
+    {
+        return $query->whereIn('estado',$estado);
+    }
     
+    /*=====  End of scope para consultar por estado de articulaciones  ======*/
+    
+
+
 
 }
