@@ -40,7 +40,7 @@
                   <div class="row">
                     <div class="input-field col s12 m12 l12">
                       <select class="js-states" id="txttipoarticulacionproyecto_id" name="txttipoarticulacionproyecto_id" onchange="consultarEntidadesSegunElCaso(this.value);">
-                        <option value="">Seleccione el Tipo de Articulación</option>
+                        <option value="">Seleccione el Tipo de Proyecto</option>
                         @forelse ($tipoarticulacion as $id => $value)
                           <option value="{{$id}}">{{$value}}</option>
                         @empty

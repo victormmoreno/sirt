@@ -219,12 +219,23 @@ function detallesDeUnProyecto(id){
       +'</div>'
       +'<div class="divider"></div>'
 
+
       +'<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Dinero de regalías: </span>'
       +'</div>'
       +'<div class="col s12 m6 l6">'
       +'<span class="black-text">'+respuesta.proyecto.dine_reg+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">¿El Proyecto pertenece a la economía naranja?: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.proyecto.economia_naranja+'</span>'
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>');

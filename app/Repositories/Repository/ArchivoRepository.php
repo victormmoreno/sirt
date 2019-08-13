@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{ArchivoArticulacion, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
+use App\Models\{ArchivoArticulacion, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa, ArchivoArticulacionProyecto};
 
 class ArchivoRepository
 {
@@ -81,25 +81,24 @@ class ArchivoRepository
     ]);
   }
 
-  // Consulta la ruta de un archivo de la articulación según su id (Principalmente para descargarlo)
-  public function consultarRutaDeArchivoDeLaArticulacionPorId($id)
+  /**
+  * Consulta la ruta de un archivo de la articulacion_proyecto según su id (Principalmente para descargarlo)
+  * @param int $id Id del archivo
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
+  public function consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($id)
   {
-    return ArchivoArticulacion::select('id', 'ruta')->where('id', $id)->get()->last();
-  }
-
-  // Consulta la ruta de un archivo de la articulación según su id (Principalmente para descargarlo)
-  public function consultarRutaDeArchivoDeUnProyectoPorId($id)
-  {
-    return ArchivoProyecto::select('id', 'ruta')->where('id', $id)->get()->last();
+    return ArchivoArticulacionProyecto::select('id', 'ruta')->where('id', $id)->get()->last();
   }
 
   // Consulta los archivos de un proyecto
   public function consultarRutasArchivosDeUnProyecto($id)
   {
-    return ArchivoProyecto::select('ruta', 'archivosproyecto.id', 'fases.nombre AS fase')
-    ->join('proyectos', 'proyectos.id', '=', 'archivosproyecto.proyecto_id')
-    ->join('fases', 'fases.id', '=', 'archivosproyecto.fase_id')
-    ->where('proyectos.id', $id)
+    return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
+    ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
+    ->where('articulacion_proyecto.id', $id)
     ->get();
   }
 
@@ -113,11 +112,17 @@ class ArchivoRepository
     ->get();
   }
 
-  // Guarda las rutas de los archivos que se registran de un proyecto
-  public function storeFileProyecto($id, $fase, $fileUrl)
+  /**
+  * @param int $id Id de la tabla articulacion_proyecto
+  * @param int $fase Id de la fase del archivo
+  * @param string $fileUrkl Url donde se guardó el archivo
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
+  public function storeFileArticulacionProyecto($id, $fase, $fileUrl)
   {
-    return ArchivoProyecto::create([
-      'proyecto_id' => $id,
+    return ArchivoArticulacionProyecto::create([
+      'articulacion_proyecto_id' => $id,
       'fase_id' => $fase,
       'ruta' => $fileUrl,
     ]);

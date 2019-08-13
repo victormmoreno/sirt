@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class ProyectoRepository
 {
 
-  public $ideaRepository;
+  private $ideaRepository;
 
   public function __construct(IdeaRepository $ideaRepository)
   {
@@ -43,8 +43,10 @@ class ProyectoRepository
   */
   public function update($request, $id)
   {
+
     DB::beginTransaction();
     try {
+
       $entidad_id = "";
       $otro_tipoarticulacion = "";
       $universidad_proyecto = "";
@@ -56,10 +58,10 @@ class ProyectoRepository
       $nom_act_cti = "";
 
       if (
-      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id ||
-      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Proyecto financiado por SENNOVA')->first()->id ||
-      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Emprendedor')->first()->id ||
-      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id
+        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id ||
+        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Proyecto financiado por SENNOVA')->first()->id ||
+        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Emprendedor')->first()->id ||
+        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id
       ) {
         $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
       } else {
@@ -98,48 +100,85 @@ class ProyectoRepository
         $nom_act_cti = request()->txtnom_act_cti;
       }
 
-      $proyecto = Proyecto::find($id);
 
       /**
       * Array con los datos que se van a modificar de un proyecto, aplica para todos los estado de proyecto
       */
-      $dataUpdate = array();
+      $dataUpdateProyecto = array();
+      $dataActividad2 = array();
+      $dataProyecto2 = array();
       $data2 = array();
-      $data = array( 'sector_id' => request()->txtsector_id,
+      /**
+      * Array con los datos que se modifican de la tabla de actividades
+      */
+      $dataActividad = array('nombre' => request()->txtnombre, 'fecha_inicio' => request()->txtfecha_inicio);
+
+      /**
+      * Array con los datos que se modifican de la tabla articulacion_proyecto
+      */
+      $dataUpdateArticulacionProyecto = array('entidad_id' => $entidad_id);
+
+      /**
+      * Array con los datos que se modifican de la tabla proyectos
+      */
+      $dataProyecto = array( 'sector_id' => request()->txtsector_id,
       'sublinea_id' => request()->txtsublinea_id,
       'areaconocimiento_id' => request()->txtareaconocimiento_id,
       'estadoproyecto_id' => request()->txtestadoproyecto_id,
-      'entidad_id' => $entidad_id,
       'tipoarticulacionproyecto_id' => request()->txttipoarticulacionproyecto_id,
       'otro_tipoarticulacion' => $otro_tipoarticulacion,
       'universidad_proyecto' => $universidad_proyecto,
-      'nombre' => request()->txtnombre,
       'observaciones_proyecto' => request()->txtobservaciones_proyecto,
       'impacto_proyecto' => request()->txtimpacto_proyecto,
       'economia_naranja' => $economia_naranja,
-      'fecha_inicio' => request()->txtfecha_inicio,
       'art_cti' => $art_cti,
       'nom_act_cti' => $nom_act_cti,
       'diri_ar_emp' => $diri_ar_emp,
       'reci_ar_emp' => $reci_ar_emp,
       'dine_reg' => $dine_reg );
+
       if ( $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id || $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Suspendido')->first()->id ) {
         /**
         * Se añaden al array los campos que se van a modificar si el proyecto se va a cerrar
         */
-        $data2 = array( 'fecha_fin' => request()->txtfecha_fin,
-        'estadoprototipo_id' => request()->txtestadoprototipo_id,
+        $dataActividad2 = array('fecha_cierre' => request()->txtfecha_fin);
+        $dataProyecto2 = array('estadoprototipo_id' => request()->txtestadoprototipo_id,
         'otro_estadoprototipo' => request()->txtotro_estadoprototipo,
-        'resultado_proyecto' => request()->txtresultado_proyecto );
-      }
-      $dataUpdate = array_merge($data, $data2);
+        'resultado_proyecto' => request()->txtresultado_proyecto);
 
-      $update = $proyecto->update($dataUpdate);
+      }
+
+      $dataUpdateActividad = array_merge($dataActividad, $dataActividad2);
+
+      $dataUpdateProyecto = array_merge($dataProyecto, $dataProyecto2);
+
+      $proyecto = Proyecto::find($id);
+      // $articulacion_proyecto = ArticulacionProyecto::find($proyecto->articulacion_proyecto_id);
+      // $actividad = Actividad::find($articulacion_proyecto->actividad_id);
+
+
+      // Proyecto::with('articulacion_proyecto.articulacion')->find($id)->update($arrayFinal);
+
+      /**
+      * Update para la tabla de actividades
+      */
+      // $actividad->update($dataUpdateActividad);
+      $proyecto->articulacion_proyecto->actividad()->update($dataUpdateActividad);
+
+      /**
+      * Update para la tabla de articulacion_proyecto
+      */
+      // $articulacion_proyecto->update($dataUpdateArticulacionProyecto);
+      $proyecto->articulacion_proyecto()->update(['entidad_id' => $entidad_id]);
+
+      /**
+      * Update para la tabla de proyectos
+      */
+      $proyecto->update($dataUpdateProyecto);
 
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
-      // dd($syncData);
-      $proyecto->talentos()->sync($syncData, true);
-      // dd($proyecto);
+
+      $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
       DB::commit();
       return true;
     } catch (\Exception $e) {
@@ -254,7 +293,8 @@ class ProyectoRepository
     'acta_cierre',
     'encuesta',
     'lecciones_aprendidas')
-    ->where('id', $id)
+    ->where('proyectos.id', $id)
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->get()
     ->last();
   }
@@ -330,6 +370,7 @@ class ProyectoRepository
     'proyectos.estadoproyecto_id',
     'articulacion_proyecto.entidad_id',
     'proyectos.tipoarticulacionproyecto_id',
+    'proyectos.articulacion_proyecto_id',
     'proyectos.otro_tipoarticulacion',
     'actividades.gestor_id',
     'proyectos.estadoprototipo_id',
@@ -525,13 +566,16 @@ class ProyectoRepository
 
       // dd($proyecto->nombre);
       $syncData = array();
-      foreach($request->get('talentos') as $id => $value){
-        if ($value == request()->get('radioTalentoLider')) {
-          $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
-        } else {
-          $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
-        }
-      }
+      // foreach($request->get('talentos') as $id => $value){
+      //   if ($value == request()->get('radioTalentoLider')) {
+      //     $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
+      //   } else {
+      //     $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
+      //   }
+      // }
+
+      $syncData = $this->arraySyncTalentosDeUnProyecto($request);
+
       $articulacion_proyecto->talentos()->sync($syncData, false);
 
       DB::commit();

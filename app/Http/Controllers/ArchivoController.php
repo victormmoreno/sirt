@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{ArchivoArticulacion, Fase, Proyecto, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\Storage;
 use App\User;
@@ -315,7 +315,12 @@ class ArchivoController extends Controller
     }
   }
 
-  // Sube los archivos de la articulación
+  /**
+  * @param Request $request
+  * @param int $id Id del proyecto
+  * @return void
+  * @author Victor Manuel Moreno Vega
+  */
   public function uploadFileProyecto(Request $request, $id)
   {
     if (request()->ajax()) {
@@ -329,13 +334,13 @@ class ArchivoController extends Controller
       $file = request()->file('nombreArchivo');
       // La ruta con la se guardan los archivos de un proyecto es la siguiente:
       // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
-      $idArchivoProyecto = ArchivoProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
-      $fileName = $idArchivoProyecto->max . '_' . $file->getClientOriginalName();
+      $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
+      $fileName = $idArchivoArtulacionProyecto->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
       $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
       $route = "";
       $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
-      $anho = $proyecto->fecha_inicio->isoFormat('YYYY');
+      $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
       $linea = $proyecto->lineatecnologica_id;
       $gestor = sprintf("%03d", $proyecto->gestor_id);
       $idproyecto = $proyecto->id;
@@ -344,7 +349,8 @@ class ArchivoController extends Controller
       $fase = $fase->nombre;
       $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
       $fileUrl = $file->storeAs($route, $fileName);
-      $this->archivoRepository->storeFileProyecto($id, $fase_id, Storage::url($fileUrl));
+      $id = $proyecto->articulacion_proyecto_id;
+      $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
       // exit($route);
     }
   }
@@ -360,10 +366,14 @@ class ArchivoController extends Controller
     return back();
   }
 
-  // Borra el archivo de un proyecto del servidor
+  /**
+  * @param int $idFile Id del archivo de la tabla archivos_articulacion_proyecto
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  */
   public function destroyFileProyecto($idFile)
   {
-    $file = ArchivoProyecto::find($idFile);
+    $file = ArchivoArticulacionProyecto::find($idFile);
     $file->delete();
     $filePath = str_replace('storage', 'public', $file->ruta);
     Storage::delete($filePath);
@@ -374,7 +384,7 @@ class ArchivoController extends Controller
   // Descarga el archivo de un proyecto
   public function downloadFileProyecto($idFile)
   {
-    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnProyectoPorId($idFile);
+    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
     return Storage::download($path);
   }
@@ -419,12 +429,18 @@ class ArchivoController extends Controller
     }
   }
 
-  // Datatable para mostar los archivos de un proyecto
+  /**
+  * Muestra la datatable de los arcivos de un proyecto
+  * @param int $id Id del proyecto
+  * @return Datatable
+  * @author Victor Manuel Moreno Vega
+  */
   public function datatableArchivosDeUnProyecto($id)
   {
     if (request()->ajax()) {
       if (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsDinamizador() || \Session::get('login_role') == User::IsAdministrador()) {
-        $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnProyecto($id);
+        $proyecto = Proyecto::findOrFail($id);
+        $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnProyecto($proyecto->articulacion_proyecto_id);
         return datatables()->of($archivosDeUnProyecto)
         ->addColumn('download', function ($data) {
           $download = '

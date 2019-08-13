@@ -31,8 +31,6 @@ class CreateArchivosArticulacionProyectoTable extends Migration
 
             $table->index(["fase_id"], 'fk_archivosarticulaciones_fases1_idx');
 
-            $table->unique(["articulacion_proyecto_id"], 'articulacion_proyecto_id_UNIQUE');
-
             $table->unique(["ruta"], 'ruta_UNIQUE');
             $table->nullableTimestamps();
 
