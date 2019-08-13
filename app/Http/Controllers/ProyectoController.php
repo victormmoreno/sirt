@@ -6,7 +6,7 @@ use Alert;
 use App;
 use App\Helpers\ArrayHelper;
 use App\Http\Requests\ProyectoFormRequest;
-use App\Models\{AreaConocimiento, Centro, Entidad, EstadoPrototipo, EstadoProyecto, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository};
 use App\User;
 use Illuminate\Http\Request;
@@ -460,6 +460,11 @@ class ProyectoController extends Controller
     public function edit($id)
     {
       $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+      // dd($this->auth->user());
+      // dd(Proyecto::find($id));
+      // dd(Proyecto::with('articulacion_proyecto.actividad')->find($id));
+      // dd(Proyecto::with(['articulacion_proyecto' => function ($query) { $query->select('id'); }])->select('id', 'articulacion_proyecto_id')->find($id)->articulacion_proyecto);
+      // dd(Proyecto::with(['articulacion_proyecto' => function ($query) { $query->select('id'); }])->select('id', 'articulacion_proyecto_id')->find($id)->articulacion_proyecto);
       if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
         Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
         return back();
@@ -497,7 +502,7 @@ class ProyectoController extends Controller
           'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
           'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
           'proyecto' => $proyecto,
-          'pivot' => $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository($articulacion_proyecto->id),
+          'pivot' => $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
           'entidad' => $entidad,
           'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
           ]);
