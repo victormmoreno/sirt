@@ -70,6 +70,11 @@ class Proyecto extends Model
         return $this->belongsTo(EstadoProyecto::class, 'estadoproyecto_id', 'id');
     }
 
+    public function articulacion_proyecto()
+    {
+        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
+    }
+
     /*=====  End of relaciones polimorficas  ======*/
 
     /*=====================================================================

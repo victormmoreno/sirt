@@ -54,4 +54,19 @@ class ArticulacionProyecto extends Model
     ->withPivot('talento_lider');
   }
 
+  public function actividad()
+  {
+      return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+  }
+
+  public function proyecto()
+  {
+      return $this->hasOne(Proyecto::class, 'articulacion_proyecto_id', 'id');
+  }
+
+  public function articulacion()
+  {
+      return $this->hasOne(Articulacion::class, 'articulacion_proyecto_id', 'id');
+  }
+
 }

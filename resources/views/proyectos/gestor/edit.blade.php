@@ -114,7 +114,7 @@
                   </div>
                   <div class="row">
                     <div class="input-field col s12 m6 l6 offset-l3 m3">
-                      <input type="text" name="txtfecha_inicio" id="txtfecha_inicio" value="{{ $proyecto->fecha_inicio->toDateString() }}" class="datepicker picker__input">
+                      <input type="text" name="txtfecha_inicio" id="txtfecha_inicio" value="{{ $proyecto->fecha_inicio }}" class="datepicker picker__input">
                       <label for="txtfecha_inicio">Fecha de Inicio <span class="red-text">*</span></label>
                       <small id="txtfecha_inicio-error" class="error red-text"></small>
                     </div>
@@ -414,7 +414,7 @@
                       <div class="switch m-b-md">
                         <label>
                           No
-                          <input type="checkbox" {{$proyecto->dine_rega == 'Si' ? 'checked' : ''}} name="txtdine_rega" id="txtdine_rega" value="1">
+                          <input type="checkbox" {{$proyecto->dine_reg == 'Si' ? 'checked' : ''}} name="txtdine_rega" id="txtdine_rega" value="1">
                           <span class="lever"></span>
                           Si
                         </label>
@@ -633,7 +633,7 @@
       @endif
 
       @if ($proyecto->nombre_tipoarticulacion == 'Universidades')
-      divUniversidadProyecto.hide();
+      divUniversidadProyecto.show();
       @endif
 
       @if ($proyecto->nombre_tipoarticulacion != 'Emprendedor' && $proyecto->nombre_tipoarticulacion != 'Proyecto financiado por SENNOVA' || $proyecto->nombre_tipoarticulacion != 'Otro')
@@ -925,6 +925,9 @@
         title: '¿Cuál es la universidad con la que se realizará el proyecto?',
         input: 'text',
         inputValue: value,
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        cancelButtonText: '<a class="white-text" onclick="volverSiElegirEntidad(); Swal.close()">Cancelar</a>',
         showCancelButton: true,
         inputValidator: (value) => {
           if (!value) {

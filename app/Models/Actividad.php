@@ -28,4 +28,14 @@ class Actividad extends Model
     'fecha_cierre'
   ];
 
+  public function articulacion_proyecto()
+  {
+      return $this->hasOne(ArticulacionProyecto::class, 'actividad_id', 'id');
+  }
+
+  public function edt()
+  {
+      return $this->hasOne(Edt::class, 'actividad_id', 'id');
+  }
+
 }
