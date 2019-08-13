@@ -18,49 +18,41 @@
         <meta name="csrf-token" content="{{ csrf_token()}}">
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')">
         @stack('style')
-
-
-
-
 </head>
 <body>
-        <div class="mn-content fixed-sidebar" id="app">
+    <div class="mn-content fixed-sidebar" id="app">
 
-            @include('layouts.nav')
+        @include('layouts.nav')
 
-            @yield('content')
-            <div class="modal valign-wrapper" id="loadingModal" style="width: 20%">
-              <div class="modal-content">
-                <center>
-                  {{-- <div class="card-panel"> --}}
-                    <div class="preloader-wrapper big active">
-                      <div class="spinner-layer spinner-blue-only">
-                        <div class="circle-clipper left">
-                          <div class="circle"></div>
-                        </div><div class="gap-patch">
-                          <div class="circle"></div>
-                        </div><div class="circle-clipper right">
-                          <div class="circle"></div>
-                        </div>
-                      </div>
+        @yield('content')
+        <div class="modal valign-wrapper" id="loadingModal" style="width: 20%">
+          <div class="modal-content">
+            <center>
+                <div class="preloader-wrapper big active">
+                  <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                      <div class="circle"></div>
+                    </div><div class="gap-patch">
+                      <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                      <div class="circle"></div>
                     </div>
-                  {{-- </div> --}}
-                </center>
-              </div>
-            </div>
-
-            @include('layouts.footer')
+                  </div>
+                </div>
+            </center>
+          </div>
         </div>
-        <div class="left-sidebar-hover"></div>
-        {{-- <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script> --}}
-        <script src="{{ asset('js/app.js') }}" ></script>
-        <script src="{{ asset('js/libs.js') }}" ></script>
-        <script src="{{ asset('js/app2.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-
-        {{-- @include('sweet::alert') --}}
-        @stack('script')
-        @include('sweetalert::alert')
-        
+        @include('layouts.footer')
+    </div>
+    <div class="left-sidebar-hover"></div>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script> --}}
+    @include('sweetalert::alert')
+    <script src="{{ asset('js/app.js') }}" ></script>
+    <script src="{{ asset('js/libs.js') }}" ></script>
+    <script src="{{ asset('js/app2.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script> --}}
+    {{-- @include('sweet::alert') --}}
+    @stack('script')
+    @include('sweetalert::alert')
 </body>
 </html>

@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto};
+use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto};
 use Carbon\Carbon;
 
 class ProyectoRepository
@@ -17,10 +17,10 @@ class ProyectoRepository
   }
 
   /**
-   * Método que retorna los talentos en un array, para usarlo junto a la funcion sync de laravel
-   * @param \Illuminate\Http\Request  $request
-   * @return return array
-   */
+  * Método que retorna los talentos en un array, para usarlo junto a la funcion sync de laravel
+  * @param \Illuminate\Http\Request  $request
+  * @return return array
+  */
   private function arraySyncTalentosDeUnProyecto($request)
   {
     $syncData = array();
@@ -39,7 +39,7 @@ class ProyectoRepository
   *
   * @param int id - Id del proyecto que se va a modificar
   * @param request request Request con los datos del formulario
-  * @return boolean 
+  * @return boolean
   */
   public function update($request, $id)
   {
@@ -56,10 +56,10 @@ class ProyectoRepository
       $nom_act_cti = "";
 
       if (
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id ||
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Proyecto financiado por SENNOVA')->first()->id ||
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Emprendedor')->first()->id ||
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id
+      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id ||
+      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Proyecto financiado por SENNOVA')->first()->id ||
+      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Emprendedor')->first()->id ||
+      request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id
       ) {
         $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
       } else {
@@ -304,29 +304,34 @@ class ProyectoRepository
     ->get();
   }
 
-  // COnsulta la información de un proyecto
+  /**
+  * Consulta los detalle de un proyecto por su id
+  * @param int $id Id del proyecto
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
   public function consultarDetallesDeUnProyectoRepository($id)
   {
     return Proyecto::select('sectores.nombre AS nombre_sector',
     'areasconocimiento.nombre AS nombre_areaconocimiento',
     'estadosproyecto.nombre AS nombre_estadoproyecto',
     'tiposarticulacionesproyectos.nombre AS nombre_tipoarticulacion',
-    'proyectos.nombre',
-    'proyectos.codigo_proyecto',
+    'actividades.nombre',
+    'actividades.codigo_actividad AS codigo_proyecto',
     'proyectos.observaciones_proyecto',
     'proyectos.id',
     'proyectos.impacto_proyecto',
     'proyectos.resultado_proyecto',
-    'proyectos.fecha_inicio',
+    'actividades.fecha_inicio',
     'entidades.id AS id_entidad',
     'proyectos.sector_id',
     'proyectos.sublinea_id',
     'proyectos.areaconocimiento_id',
     'proyectos.estadoproyecto_id',
-    'proyectos.entidad_id',
+    'articulacion_proyecto.entidad_id',
     'proyectos.tipoarticulacionproyecto_id',
     'proyectos.otro_tipoarticulacion',
-    'proyectos.gestor_id',
+    'actividades.gestor_id',
     'proyectos.estadoprototipo_id',
     'entidades.nombre AS nombreentidad_edit',
     'proyectos.universidad_proyecto AS universidad_proyecto_edit',
@@ -342,8 +347,8 @@ class ProyectoRepository
     IF(tiposarticulacionesproyectos.nombre NOT IN("Emprendedor", "Proyecto financiado por SENNOVA", "Otro"), entidades.nombre, "")) AS nombre_entidad')
     ->selectRaw('IF(estadosprototipos.nombre = "Otro.", otro_estadoprototipo, estadosprototipos.nombre) AS nombre_estadoprototipo')
     ->selectRaw('IF(economia_naranja = 1, "Si", "No") AS economia_naranja')
-    ->selectRaw('IF(revisado_final = '.Proyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Proyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
-    ->selectRaw('IF(estadosproyecto.nombre IN("Inicio", "Planeacion", "En ejecución"), "El Proyecto aún se está desarrollando", proyectos.fecha_fin) AS fecha_cierre')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('IF(estadosproyecto.nombre IN("Inicio", "Planeacion", "En ejecución"), "El Proyecto aún se está desarrollando", actividades.fecha_cierre) AS fecha_cierre')
     ->selectRaw('IF(art_cti = 1, "Si", "No") AS art_cti')
     ->selectRaw('IF(art_cti = 1, nom_act_cti, "") AS nom_act_cti')
     ->selectRaw('IF(diri_ar_emp = 1, "Si", "No") AS diri_ar_emp')
@@ -354,8 +359,10 @@ class ProyectoRepository
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
-    ->join('gestores', 'gestores.id', '=', 'proyectos.gestor_id')
-    ->join('entidades', 'entidades.id', '=', 'proyectos.entidad_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('entidades', 'entidades.id', '=', 'articulacion_proyecto.entidad_id')
     ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
     ->join('estadosprototipos', 'estadosprototipos.id', '=', 'proyectos.estadoprototipo_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
@@ -367,41 +374,34 @@ class ProyectoRepository
     ->last();
   }
 
-  // Consulta los talentos que estan asociados a un proyecto
-  public function consultarTalentosDeUnProyectoRepository($id)
-  {
-    return Proyecto::select('proyectos.codigo_proyecto',
-    'proyecto_talento.talento_lider',
-    'proyecto_talento.talento_id')
-    ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS talento')
-    ->selectRaw('IF(proyecto_talento.talento_lider = 1, "Talento Líder", "Autor") AS rol')
-    ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyectos.id')
-    ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
-    ->join('users', 'users.id', '=', 'talentos.user_id')
-    ->where('proyectos.id', $id)
-    ->get();
-  }
-
-  // Consulta lo proyectos de un gestor por año
+  /**
+  * Consulta los proyectos que tiene un gestor por año
+  * @param int $idgestor Id del gestor
+  * @param string $anho Año por el que se filtra la consulta
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
   public function ConsultarProyectosPorGestorYPorAnho($idgestor, $anho)
   {
-    return
-    Proyecto::select('proyectos.codigo_proyecto',
-    'proyectos.nombre',
+    return Proyecto::select('actividades.codigo_actividad AS codigo_proyecto',
+    'actividades.nombre',
     'sublineas.nombre AS sublinea_nombre',
     'estadosproyecto.nombre AS estado_nombre',
-    'proyectos.fecha_fin',
+    'articulacion_proyecto.id AS articulacion_proyecto_id',
+    'actividades.fecha_cierre AS fecha_fin',
     'proyectos.id')
-    ->selectRaw('IF(revisado_final = '.Proyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Proyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
-    ->join('gestores', 'gestores.id', '=', 'proyectos.gestor_id')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('gestores.id', $idgestor)
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
-        $query->whereYear('proyectos.fecha_fin', '=', $anho)
+        $query->whereYear('actividades.fecha_cierre', '=', $anho)
         ->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV', 'Suspendido']);
       })
       ->orWhere(function($query) {
@@ -411,7 +411,12 @@ class ProyectoRepository
     ->get();
   }
 
-  // Crea un articulación
+  /**
+  * Registra un nuevo proyecto en la base de datos
+  * @param Request $request Datos del formulario
+  * @return boolean
+  * @author Victor Manuel Moreno Vega
+  */
   public function store($request)
   {
     DB::beginTransaction();
@@ -483,26 +488,34 @@ class ProyectoRepository
       // dd($anho);
       $codigo = 'P'. $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idProyecto->max;
 
+      $actividad = Actividad::create([
+      'gestor_id' => auth()->user()->gestor->id,
+      'nodo_id' => auth()->user()->gestor->nodo_id,
+      'codigo_actividad' => $codigo,
+      'nombre' => request()->txtnombre,
+      'fecha_inicio' => request()->txtfecha_inicio
+      ]);
+
+      $articulacion_proyecto = ArticulacionProyecto::create([
+      'entidad_id' => $entidad_id,
+      'actividad_id' => $actividad->id
+      ]);
+
       $proyecto = Proyecto::create([
+      'articulacion_proyecto_id' => $articulacion_proyecto->id,
       'idea_id' => request()->txtidea_id,
       'sector_id' => request()->txtsector_id,
       'sublinea_id' => request()->txtsublinea_id,
       'areaconocimiento_id' => request()->txtareaconocimiento_id,
       'estadoproyecto_id' => request()->txtestadoproyecto_id,
-      'gestor_id' => auth()->user()->gestor->id,
-      'entidad_id' => $entidad_id,
-      'nodo_id' => auth()->user()->gestor->nodo_id,
       'tipoarticulacionproyecto_id' => request()->txttipoarticulacionproyecto_id,
       'estadoprototipo_id' => $estadoprototipo_id,
       'tipo_ideaproyecto' => $tipo_ideaproyecto,
       'otro_tipoarticulacion' => $otro_tipoarticulacion,
       'universidad_proyecto' => $universidad_proyecto,
-      'codigo_proyecto' => $codigo,
-      'nombre' => request()->txtnombre,
       'observaciones_proyecto' => request()->txtobservaciones_proyecto,
       'impacto_proyecto' => request()->txtimpacto_proyecto,
       'economia_naranja' => $economia_naranja,
-      'fecha_inicio' => request()->txtfecha_inicio,
       'art_cti' => $art_cti,
       'nom_act_cti' => request()->txtnom_act_cti,
       'diri_ar_emp' => $diri_ar_emp,
@@ -519,7 +532,7 @@ class ProyectoRepository
           $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
         }
       }
-      $proyecto->talentos()->sync($syncData, false);
+      $articulacion_proyecto->talentos()->sync($syncData, false);
 
       DB::commit();
       return true;
@@ -533,14 +546,13 @@ class ProyectoRepository
   /*========================================================================
   =            metodo para consultar los proyectos de un gestor            =
   ========================================================================*/
-  
+
   public function getProjectsForGestor($id, array $estado = [])
   {
-      return Proyecto::projectsForEstado($estado)->where('gestor_id', $id)->orderby('nombre')->get();
+    return Proyecto::projectsForEstado($estado)->where('gestor_id', $id)->orderby('nombre')->get();
   }
-  
-  
+
+
   /*=====  End of metodo para consultar los proyectos de un gestor  ======*/
-  
 
 }
