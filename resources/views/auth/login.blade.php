@@ -61,7 +61,7 @@
                                 <div class="input-field col s12">
                                   <i class="material-icons prefix">lock_outline</i>
                                   
-                                  <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="current-password" placeholder="Ingresa tu contraseña">
+                                  <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="current-password" value="{{ old('password') }}" placeholder="Ingresa tu contraseña">
                                   <label for="password" class="active">{{ __('Password') }}</label>
                                   @error('password')
                                        <label id="password-error" class="error" for="password">{{ $message }}</label>
