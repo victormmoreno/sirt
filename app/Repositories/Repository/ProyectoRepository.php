@@ -257,16 +257,25 @@ class ProyectoRepository
       }
 
       $proyectoFindById = Proyecto::find($id);
+      /**
+      * Modifica los datos de la tabla articulacion_proyecto
+      */
+      $proyectoFindById->articulacion_proyecto()->update([
+        'acta_inicio' => $acta_inicio,
+        'actas_seguimiento' => $actas_seguimiento,
+        'acta_cierre' => $acta_cierre
+      ]);
+
+      /**
+      * Modifica los datos de la tabla proyectos
+      */
       $proyectoFindById->update([
       'acc' => $acc,
       'manual_uso_inf' => $manual_uso_inf,
-      'acta_inicio' => $acta_inicio,
       'estado_arte' => $estado_arte,
-      'actas_seguimiento' => $actas_seguimiento,
       'video_tutorial' => $video_tutorial,
       'ficha_caracterizacion' => $ficha_caracterizacion,
-      'acta_cierre' => $acta_cierre,
-      'encuesta' => $encuesta,
+      'encuesta' => $encuesta
       ]);
 
       DB::commit();

@@ -10,6 +10,7 @@ use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, Esta
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository};
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\{Session, Validator};
 
 class ProyectoController extends Controller
@@ -157,6 +158,9 @@ class ProyectoController extends Controller
   public function updateEntregables(Request $request, $id)
   {
     if (Session::get('login_role') == User::IsGestor()) {
+      Validator::make($request->all(), [
+        'txturl_videotutorial' => Rule::requiredIf(isset($request->txtvideo_tutorial)) . '|url'
+      ], ['txturl_videotutorial.required' => 'La Url del Video es obligatoria.', 'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.'])->validate();
       $update = $this->proyectoRepository->updateEntregablesProyectoRepository($request, $id);
       if ($update) {
         Alert::success('Modificación Existosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -186,20 +190,23 @@ class ProyectoController extends Controller
   // Vista de la vista de los entregables de un proyecto
   public function entregables($id)
   {
+    $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+    $entregables = (object) $this->consultarEntregablesDeUnProyectoController($id);
+    $entregables->url_videotutorial = $proyecto->url_videotutorial;
     if (\Session::get('login_role') == User::IsGestor()) {
       return view('proyectos.gestor.entregables', [
-      'proyecto'    => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
-      'entregables' => (object) $this->consultarEntregablesDeUnProyectoController($id),
+      'proyecto' => $proyecto,
+      'entregables' => $entregables
       ]);
     } else if (\Session::get('login_role') == User::IsDinamizador()) {
       return view('proyectos.dinamizador.entregables', [
-      'proyecto'    => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
-      'entregables' => (object) $this->consultarEntregablesDeUnProyectoController($id),
+      'proyecto' => $proyecto,
+      'entregables' => $entregables
       ]);
     } else {
       return view('proyectos.administrador.entregables', [
-      'proyecto'    => $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id),
-      'entregables' => (object) $this->consultarEntregablesDeUnProyectoController($id),
+      'proyecto' => $proyecto,
+      'entregables' => $entregables
       ]);
     }
   }

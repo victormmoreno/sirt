@@ -41,13 +41,13 @@
                   <h5>Entregables Fase Inicio</h5>
                   <div class="col s6 m6 l6">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->acc == 'Si' ? 'checked' : '' }} id="txtacc" name="txtacc" value="1">
+                      <input type="checkbox" {{ old('txtacc', $entregables->acc == 'Si') ? 'checked' : '' }} id="txtacc" name="txtacc" value="1">
                       <label for="txtacc">Formato de confidencialidad y compromiso firmado.</label>
                     </p>
                   </div>
                   <div class="col s6 m6 l6">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->manual_uso_inf == 'Si' ? 'checked' : '' }} id="txtmanual_uso_inf" name="txtmanual_uso_inf" value="1">
+                      <input type="checkbox" {{ old('txtmanual_uso_inf', $entregables->manual_uso_inf == 'Si') ? 'checked' : '' }} id="txtmanual_uso_inf" name="txtmanual_uso_inf" value="1">
                       <label for="txtmanual_uso_inf">Manual de uso de Infraestructura.</label>
                     </p>
                   </div>
@@ -74,13 +74,13 @@
                   <h5>Entregables Fase Planeación</h5>
                   <div class="col s6 m6 l6">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->acta_inicio == 'Si' ? 'checked' : ''}} id="txtacta_inicio" name="txtacta_inicio" value="1">
+                      <input type="checkbox" {{ old('txtacta_inicio', $entregables->acta_inicio == 'Si') ? 'checked' : ''}} id="txtacta_inicio" name="txtacta_inicio" value="1">
                       <label for="txtacta_inicio">Acta de Inicio.</label>
                     </p>
                   </div>
                   <div class="col s6 m6 l6">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->estado_arte == 'Si' ? 'checked' : ''}} id="txtestado_arte" name="txtestado_arte" value="1">
+                      <input type="checkbox" {{ old('txtestado_arte', $entregables->estado_arte == 'Si') ? 'checked' : ''}} id="txtestado_arte" name="txtestado_arte" value="1">
                       <label for="txtestado_arte">Estado del Arte.</label>
                     </p>
                   </div>
@@ -107,15 +107,24 @@
                   <h5>Entregables Fase de Ejecución</h5>
                   <div class="col s6 m6 l6">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->actas_seguimiento == 'Si' ? 'checked' : '' }} id="txtactas_seguimiento" name="txtactas_seguimiento" value="1">
+                      <input type="checkbox" {{ old('txtactas_seguimiento', $entregables->actas_seguimiento == 'Si') ? 'checked' : '' }} id="txtactas_seguimiento" name="txtactas_seguimiento" value="1">
                       <label for="txtactas_seguimiento">Actas de Seguimiento.</label>
                     </p>
                   </div>
                   <div class="col s6 m6 l6">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->video_tutorial == 'Si' ? 'checked' : '' }} id="txtvideo_tutorial" name="txtvideo_tutorial" value="1">
+                      <input type="checkbox" {{ old('txtvideo_tutorial', $entregables->video_tutorial == 'Si') ? 'checked' : '' }} id="txtvideo_tutorial" name="txtvideo_tutorial" value="1" onclick="mostrarInputUrlVideo()">
                       <label for="txtvideo_tutorial">Video Tutorial.</label>
                     </p>
+                  </div>
+                </div>
+                <div class="row" id="divUrlVideoTutorial">
+                  <div class="input-field col s12 m12 l12">
+                    <input type="text" name="txturl_videotutorial" id="txturl_videotutorial" value="{{ old('txturl_videotutorial', $entregables->url_videotutorial) }}">
+                    <label for="txturl_videotutorial">Url del Video Turorial <span class="red-text">*</span></label>
+                    @error('txturl_videotutorial')
+                      <label id="txturl_videotutorial-error" class="error" for="txturl_videotutorial">{{ $message }}</label>
+                    @enderror
                   </div>
                 </div>
                 {{-- Inicio para subir entregables en la fase de ejecucion --}}
@@ -140,20 +149,20 @@
                   <h5>Entregables Fase de Cierre</h5>
                   <div class="col s12 m4 l4">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->ficha_caracterizacion == 'Si' ? 'checked' : '' }} id="txtficha_caracterizacion" name="txtficha_caracterizacion" value="1">
+                      <input type="checkbox" {{ old('txtficha_caracterizacion', $entregables->ficha_caracterizacion == 'Si') ? 'checked' : '' }} id="txtficha_caracterizacion" name="txtficha_caracterizacion" value="1">
                       <label for="txtficha_caracterizacion">Ficha de caracterización del prototipo.</label>
                     </p>
                   </div>
                   <div class="col s12 m4 l4">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->acta_cierre == 'Si' ? 'checked' : '' }} id="txtacta_cierre" name="txtacta_cierre" value="1">
+                      <input type="checkbox" {{ old('txtacta_cierre', $entregables->acta_cierre == 'Si') ? 'checked' : '' }} id="txtacta_cierre" name="txtacta_cierre" value="1">
                       <label for="txtacta_cierre">Acta de Cierre.</label>
                       <a class="btn btn-floating modal-trigger" href="#modalContenidoActaCierre_Proyecto"><i class="material-icons left">info_outline</i></a>
                     </p>
                   </div>
                   <div class="col s12 m4 l4">
                     <p class="p-v-xs">
-                      <input type="checkbox" {{ $entregables->encuesta == 'Si' ? 'checked' : '' }} id="txtencuesta" name="txtencuesta" value="1">
+                      <input type="checkbox" {{ old('txtencuesta', $entregables->encuesta == 'Si') ? 'checked' : '' }} id="txtencuesta" name="txtencuesta" value="1">
                       <label for="txtencuesta">Encuesta de Satisfacción del Servicio.</label>
                     </p>
                   </div>
@@ -227,6 +236,12 @@
 @push('script')
   <script>
   datatableArchivosDeUnProyecto();
+  var divUrlVideoTutorial = $('#divUrlVideoTutorial');
+  divUrlVideoTutorial.hide();
+
+  @if($errors->any())
+  divUrlVideoTutorial.show();
+  @endif
   function datatableArchivosDeUnProyecto() {
     $('#archivosDeUnProyecto').DataTable({
       language: {
@@ -272,6 +287,17 @@
         });
       }
     });
+  }
+
+  /**
+  * Oculta o muestra el campo de la url del video dependiendo del checkbox del Video Tutorial
+  */
+  function mostrarInputUrlVideo() {
+    if ( $('#txtvideo_tutorial').is(':checked') ) {
+      divUrlVideoTutorial.show();
+    } else {
+      divUrlVideoTutorial.hide();
+    }
   }
 
   var DropzoneProyectoCierre = new Dropzone('#fase_cierre_proyecto', {
