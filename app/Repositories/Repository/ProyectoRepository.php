@@ -193,7 +193,7 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyectoFindById = Proyecto::find($id);
-      $proyectoFindById->update([
+      $proyectoFindById->articulacion_proyecto()->update([
       'revisado_final' => $request->txtrevisado_final
       ]);
 
@@ -257,6 +257,7 @@ class ProyectoRepository
       }
 
       $proyectoFindById = Proyecto::find($id);
+
       /**
       * Modifica los datos de la tabla articulacion_proyecto
       */
@@ -314,7 +315,7 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyectoFindById = Proyecto::find($id);
-      $proyectoFindById->update([
+      $proyectoFindById->articulacion_proyecto->actividad()->update([
       'gestor_id' => request()->txtgestor_id,
       ]);
       DB::commit();
@@ -328,22 +329,26 @@ class ProyectoRepository
   // Consulta los proyectos de un nodo por año
   public function ConsultarProyectosPorNodoYPorAnho($idnodo, $anho)
   {
-    return Proyecto::select('proyectos.codigo_proyecto',
-    'proyectos.nombre',
+    return Proyecto::select('actividades.codigo_actividad AS codigo_proyecto',
+    'actividades.nombre',
     'sublineas.nombre AS sublinea_nombre',
     'estadosproyecto.nombre AS estado_nombre',
-    'proyectos.fecha_fin',
+    'actividades.fecha_cierre AS fecha_fin',
+    'articulacion_proyecto.id AS articulacion_proyecto_id',
     'proyectos.id')
-    ->selectRaw('IF(revisado_final = '.Proyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.Proyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
-    ->join('gestores', 'gestores.id', '=', 'proyectos.gestor_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
-    ->where('proyectos.nodo_id', $idnodo)
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->where('nodos.id', $idnodo)
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
-        $query->whereYear('proyectos.fecha_fin', '=', $anho)
+        $query->whereYear('actividades.fecha_cierre', '=', $anho)
         ->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV', 'Suspendido']);
       })
       ->orWhere(function($query) {

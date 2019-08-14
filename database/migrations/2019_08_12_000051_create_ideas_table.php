@@ -39,7 +39,6 @@ class CreateIdeasTable extends Migration
             $table->string('objetivo',2000)->nullable()->default(null);
             $table->string('alcance',2000)->nullable()->default(null);
             $table->tinyInteger('tipo_idea')->default('1');
-            $table->string('url_video',1000);
 
             $table->index(["nodo_id"], 'fk_ideas_nodo1_idx');
 

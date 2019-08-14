@@ -6,12 +6,12 @@ use Alert;
 use App;
 use App\Helpers\ArrayHelper;
 use App\Http\Requests\ProyectoFormRequest;
-use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto, ArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository};
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\{Session, Validator};
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 
 class ProyectoController extends Controller
 {
@@ -55,8 +55,13 @@ class ProyectoController extends Controller
     }
   }
 
-  // Muestra la datatable
-  private function datatableProyectos($proyectos)
+  /**
+  * @param Collection $proyecto Proyectos
+  * @param Request $request
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  */
+  private function datatableProyectos($request, $proyectos)
   {
     return datatables()->of($proyectos)
     ->addColumn('details', function ($data) {
@@ -96,11 +101,67 @@ class ProyectoController extends Controller
       </a>
       ';
       return $talentos;
+    })
+    ->filter(function ($instance) use ($request) {
+      if (!empty($request->get('codigo_proyecto'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['codigo_proyecto'], $request->get('codigo_proyecto')) ? true : false;
+        });
+      }
+      if (!empty($request->get('nombre'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['nombre'], $request->get('nombre')) ? true : false;
+        });
+      }
+      if (!empty($request->get('sublinea_nombre'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['sublinea_nombre'], $request->get('sublinea_nombre')) ? true : false;
+        });
+      }
+      if (!empty($request->get('estado_nombre'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['estado_nombre'], $request->get('estado_nombre')) ? true : false;
+        });
+      }
+      if (!empty($request->get('revisado_final'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['revisado_final'], $request->get('revisado_final')) ? true : false;
+        });
+      }
+      if (!empty($request->get('gestor'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['gestor'], $request->get('gestor')) ? true : false;
+        });
+      }
+      if (!empty($request->get('search'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          if (Str::contains(Str::lower($row['codigo_proyecto']), Str::lower($request->get('search')))){
+            return true;
+          }else if (Str::contains(Str::lower($row['nombre']), Str::lower($request->get('search')))) {
+            return true;
+          }else if (Str::contains(Str::lower($row['sublinea_nombre']), Str::lower($request->get('search')))) {
+            return true;
+          }else if (Str::contains(Str::lower($row['estado_nombre']), Str::lower($request->get('search')))) {
+            return true;
+          }else if (Str::contains(Str::lower($row['revisado_final']), Str::lower($request->get('search')))) {
+            return true;
+          }else if (Str::contains(Str::lower($row['gestor']), Str::lower($request->get('search')))) {
+            return true;
+          }
+          return false;
+        });
+      }
     })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final'])->make(true);
   }
 
-  // Muestra los proyectos de un nodo por año
-  public function datatableProyectosDelNodoPorAnho($idnodo, $anho)
+  /**
+   * Muestra los proyectos de un nodo por año (de la fecha de cierre)
+   * @param int $idnodo Id del nodo
+   * @param string $anho Año para filtrar
+   * @return Response
+   * @author Victor Manuel Moreno Vega
+   */
+  public function datatableProyectosDelNodoPorAnho(Request $request, $idnodo, $anho)
   {
     if (request()->ajax()) {
       $id = "";
@@ -110,8 +171,7 @@ class ProyectoController extends Controller
         $id = $idnodo;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorNodoYPorAnho($id, $anho);
-      // dd($proyectos);
-      return $this->datatableProyectos($proyectos);
+      return $this->datatableProyectos($request, $proyectos);
     }
   }
 
@@ -158,9 +218,17 @@ class ProyectoController extends Controller
   public function updateEntregables(Request $request, $id)
   {
     if (Session::get('login_role') == User::IsGestor()) {
-      Validator::make($request->all(), [
-        'txturl_videotutorial' => Rule::requiredIf(isset($request->txtvideo_tutorial)) . '|url'
-      ], ['txturl_videotutorial.required' => 'La Url del Video es obligatoria.', 'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.'])->validate();
+      $validator = Validator::make($request->all(), [
+        'txturl_videotutorial' => Rule::requiredIf(isset($request->txtvideo_tutorial)) . '|url|nullable'
+      ], ['txturl_videotutorial.required' => 'La Url del Video es obligatoria.', 'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.']);
+
+      if ($validator->fails()) {
+        return back()
+        ->withErrors($validator)
+        ->withInput();
+      }
+
+
       $update = $this->proyectoRepository->updateEntregablesProyectoRepository($request, $id);
       if ($update) {
         Alert::success('Modificación Existosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -170,12 +238,10 @@ class ProyectoController extends Controller
       }
     } else {
       $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
-      if ($proyecto->nombre_estadoproyecto != 'En ejecución' && $request->txtrevisado_final != Proyecto::IsPorEvaluar()) {
+      if ($proyecto->nombre_estadoproyecto != 'En ejecución' && $request->txtrevisado_final != ArticulacionProyecto::IsPorEvaluar()) {
         Alert::html('Advertencia!', 'Para realizar esta acción, el estado del proyecto debe ser "<b>En ejecución</b>"', 'warning')->showConfirmButton('Ok', '#3085d6');
-        // Alert::warning('Advertencia!', 'Para realizar esta acción, el estado del proyecto debe ser <b>En ejecución</b>')->showConfirmButton('Ok', '#3085d6');
         return back();
       } else {
-        // dd($request->txtrevisado_final);
         $update = $this->proyectoRepository->updateRevisadoFinalProyectoRepository($request, $id);
         if ($update) {
           Alert::success('Modificación Existosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -211,8 +277,15 @@ class ProyectoController extends Controller
     }
   }
 
-  // Consulta los proyectos de un gestor por año (De la fecha de cierre)
-  public function datatableProyectosDelGestorPorAnho($id, $anho)
+  /**
+  * Consulta los proyectos de un gestor por año (De la fecha de cierre)
+  * @param Request $request
+  * @param int $id Id del gestor
+  * @param string $anho Año por el que se filtran los proyectos
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  */
+  public function datatableProyectosDelGestorPorAnho(Request $request, $id, $anho)
   {
     if (request()->ajax()) {
       $idgestor = $id;
@@ -220,7 +293,7 @@ class ProyectoController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
-      return $this->datatableProyectos($proyectos);
+      return $this->datatableProyectos($request, $proyectos);
     }
   }
 
@@ -467,24 +540,7 @@ class ProyectoController extends Controller
   public function edit($id)
   {
     $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
-    // dd(Proyecto::with('articulacion_proyecto.actividad')->find($id)->update([
-    //   'resultado_proyecto' => 'Probando update',
-    //   'acta_cierre' => 1,
-    //   'nombre' => 'Updateando'
-    // ]));
-    $articulacion_proyecto = Proyecto::find($id)->articulacion_proyecto()->update([
-      'acta_cierre' => 1
-    ]);
 
-    $actividad = Proyecto::find($id)->articulacion_proyecto->actividad()->update([
-      'nombre' => 'Updateando'
-    ]);
-
-    // dd($this->auth->user());
-    // dd(Proyecto::find($id));
-    // dd(Proyecto::with('articulacion_proyecto.actividad')->find($id));
-    // dd(Proyecto::with(['articulacion_proyecto' => function ($query) { $query->select('id'); }])->select('id', 'articulacion_proyecto_id')->find($id)->articulacion_proyecto);
-    // dd(Proyecto::with(['articulacion_proyecto' => function ($query) { $query->select('id'); }])->select('id', 'articulacion_proyecto_id')->find($id)->articulacion_proyecto);
     if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
       Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
       return back();
@@ -574,6 +630,7 @@ class ProyectoController extends Controller
       } else {
         Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
       }
+      // return back();
     } else {
       $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
       $req = new ProyectoFormRequest;
@@ -620,9 +677,30 @@ class ProyectoController extends Controller
 
     $projects = $this->proyectoRepository->getProjectsForGestor($id, ['Inicio', 'Planeacion', 'En ejecución']);
 
-    return response()->json([
-    'projects' => $projects,
-    ]);
+      // $projects = $this->proyectoRepository->getProjectsForGestor(
+      //       $id,
+      //       [
+      //           'estadoproyecto'                  => function ($query) {
+      //               $query->select('id', 'nombre');
+      //           },
+      //           'articulacion_proyecto'           => function ($query) {
+      //               $query->select('id', 'actividad_id');
+      //           },
+      //           'articulacion_proyecto.actividad' => function ($query) {
+      //               $query->select('id', 'codigo_actividad', 'nombre');
+      //           },
+      //       ],
+      //       [
+      //           'Inicio',
+      //           'Planeacion',
+      //           'En ejecución',
+      //       ]
+      //   );
+
+
+      return response()->json([
+      'projects' => $projects,
+      ]);
 
   }
 

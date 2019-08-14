@@ -98,7 +98,7 @@
         </label>
         @enderror
     </div>
-    <div class="input-field col s12 m6 l6 divArticulacion">
+    <div class="input-field  divArticulacion col s12 m6 l6">
         <i class="material-icons prefix">
             library_books
         </i>
@@ -121,9 +121,59 @@
         </label>
         @enderror
     </div>
+    <div class="input-field  divArticulacion col s12 m6 l6">
+        <i class="material-icons prefix">
+            library_books
+        </i>
+        <select id="txtarticulacion" name="txtarticulacion" tabindex="-1" style="width: 100%;" class="">
+            
+            
+        </select>
+        <label for="txttipoarticulacion">
+            Articulación
+            <span class="red-text">
+                *
+            </span>
+        </label>
+        @error('txttipoarticulacion')
+        <label class="error" for="txttipoarticulacion" id="txttipoarticulacion-error">
+            {{ $message }}
+        </label>
+        @enderror
+    </div>
 </div>
 <div class="divArticulacion">
-    <div class="row divGrupoInvestigacion"></div>
+    <div class="row divGrupoInvestigacion">
+        <div class="input-field col s12 m6 l6 ">
+            <table style="width: 100%" id="articulacion_UsosInfraestructuraCreate_table" class="display responsive-table datatable-example DataTable">
+              <thead>
+                <tr>
+                  <th>Código Articulación</th>
+                  <th>Nombre</th>
+                  <th>Seleccionar</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="col s12 m6 l6">
+            <h6>La articulación se realizará con la siguiente empresa</h6>
+            <div class="card horizontal teal lighten-4">
+              <div class="card-stacked">
+                <div class="card-content">
+                  <div class="input-field col s12 m12 l12">
+                    <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="">
+                    <input readonly type="text" name="empresa" id="empresa" value="">
+                    <label for="empresa">Empresa</label>
+                    <small id="txtempresa_id-error" class="error red-text"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
     <div class="row divEmpresa"> 
         <div class="input-field col s12 m6 l6 ">
             <table style="width: 100%" id="empresasDeTecnoparque_UsosInfraestructuraCreate_table" class="display responsive-table datatable-example DataTable">

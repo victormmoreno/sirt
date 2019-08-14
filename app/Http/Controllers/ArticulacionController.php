@@ -462,11 +462,17 @@ class ArticulacionController extends Controller
   =            metodo para consultar las articulaciones por gestor            =
   ===========================================================================*/
 
-  public function ArticulacionForGestor($id, int $tipoArticulacion)
+  public function ArticulacionForGestor($id, int $tipoArticulacion = 0)
   {
-      $articulaciones = Articulacion::articulacionesForEstado(1)->articulacionesForTipoArticulacion($tipoArticulacion)->where('gestor_id', $id)->orderby('nombre')->get();
+      $articulaciones = Articulacion::articulacionesForEstado($tipoArticulacion)->EstadoOfArticulaciones([
+        Articulacion::IsInicio(),
+        Articulacion::IsEjecucion(),
+        Articulacion::IsCierre()
+      ])->get();
 
-      return $articulaciones;
+      return response()->json([
+      'articulaciones' => $articulaciones,
+      ]);
   }
 
   /*=====  End of metodo para consultar las articulaciones por gestor  ======*/

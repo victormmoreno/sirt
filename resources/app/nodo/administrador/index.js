@@ -7,18 +7,13 @@ $(document).ready(function() {
         serverSide: true,
         "lengthChange": true,
         "responsive": true,
+        "bSort": false,
         dom: 'Bfrtip',
         buttons: [
-        {
-            extend: 'copy',
-            text: 'copiar',
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
+        
         {
             extend: 'csv',
-        
+            text: 'exportar csv',
             exportOptions: {
                 columns: ':visible'
             }
@@ -37,20 +32,7 @@ $(document).ready(function() {
                 columns: ':visible'
             }
         },
-        {
-            extend: 'print',
         
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
-        {
-            extend: 'colvis',
-        
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
     ],
         ajax: {
             url: "/nodo",

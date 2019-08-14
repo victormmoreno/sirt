@@ -100,19 +100,17 @@ class Articulacion extends Model
     public function scopeArticulacionesForEstado($query, int $estado)
     {
         $query->with([
+            'articulacion_proyecto' => function ($query) {
+                $query->select('id','actividad_id');
+            },
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id','codigo_actividad','nombre')->orderBy('nombre');
+            },
             'tipoarticulacion' => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'entidad'=> function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'gestor'=> function ($query) {
-                $query->select('id', 'user_id','honorarios');
-            },
-            'gestor.user' => function ($query) {
-                $query->select('id', 'nombres', 'apellidos', 'documento');
-            },
-        ])->select('id', 'nombre', 'codigo_articulacion', 'tipoarticulacion_id','entidad_id','gestor_id')
+             
+        ])->select('id', 'articulacion_proyecto_id','tipoarticulacion_id','estado')
           ->where('estado',$estado);
     }
 
@@ -128,6 +126,19 @@ class Articulacion extends Model
     }
 
     /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
+
+
+    /*=========================================================================
+    =            scope para consultar por estado de articulaciones            =
+    =========================================================================*/
+    
+    public function scopeEstadoOfArticulaciones($query, array $estado = [])
+    {
+        return $query->whereIn('estado',$estado);
+    }
+    
+    /*=====  End of scope para consultar por estado de articulaciones  ======*/
+    
 
 
 

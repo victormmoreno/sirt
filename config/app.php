@@ -240,6 +240,8 @@ return [
         'PDF'          => Barryvdh\DomPDF\Facade::class,
         // Aliases Personalizados
         'NodoHelper'   => App\Helpers\NodoHelper::class,
+        'SnappyPDF'    => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage'  => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

@@ -68,18 +68,13 @@ $(document).ready(function() {
         serverSide: true,
         "lengthChange": true,
         "responsive": true,
+        "bSort": false,
         dom: 'Bfrtip',
         buttons: [
-        {
-            extend: 'copy',
-            text: 'copiar',
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
+        
         {
             extend: 'csv',
-        
+            text: 'exportar csv',
             exportOptions: {
                 columns: ':visible'
             }
@@ -98,20 +93,7 @@ $(document).ready(function() {
                 columns: ':visible'
             }
         },
-        {
-            extend: 'print',
         
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
-        {
-            extend: 'colvis',
-        
-            exportOptions: {
-                columns: ':visible'
-            }
-        },
     ],
         ajax: {
             url: "/nodo",
@@ -3649,8 +3631,10 @@ function verDetallesDeLosEntregablesDeUnProyecto(id) {
 }
 
 
-// Ajax para mostrar los talentos de del proyecto en un modal
-function verTalentosDeUnProyecto(id) {
+/**
+* Consulta los talentos que tiene un proyecto
+*/
+function verTalentosDeUnProyecto(id){
   $.ajax({
     dataType:'json',
     type:'get',
@@ -3703,7 +3687,15 @@ function consultarProyectosDelGestorPorAnho() {
     order: [ 0, 'desc' ],
     ajax:{
       url: "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
-      type: "get",
+      // type: "get",
+      data: function (d) {
+        d.codigo_proyecto = $('.codigo_proyecto').val(),
+        d.nombre = $('.nombre').val(),
+        d.sublinea_nombre = $('.sublinea_nombre').val(),
+        d.estado_nombre = $('.estado_nombre').val(),
+        d.revisado_final = $('.revisado_final').val(),
+        d.search = $('input[type="search"]').val()
+      }
     },
     columns: [
       {
@@ -3754,8 +3746,57 @@ function consultarProyectosDelGestorPorAnho() {
     ],
   });
 }
+$(".codigo_proyecto").keyup(function(){
+  $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
 
-// Ajax que muestra los proyectos de un NODO por año
+$(".nombre").keyup(function(){
+  $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
+
+$(".sublinea_nombre").keyup(function(){
+  $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
+
+$(".estado_nombre").keyup(function(){
+  $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
+
+$(".revisado_final").keyup(function(){
+  $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
+
+
+/**
+* Key ups para la tabla de tblproyectosDelNodoPorAnho
+*/
+$("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
+$("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
+$("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
+$("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
+$("#estado_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
+$("#revisado_final_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
+/**
+* Consulta los proyectos del nodo por año
+*/
 function consultarProyectosDelNodoPorAnho() {
   let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
   $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
@@ -3768,7 +3809,16 @@ function consultarProyectosDelNodoPorAnho() {
     order: [ 0, 'desc' ],
     ajax:{
       url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
-      type: "get",
+      data: function (d) {
+        d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
+        d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
+        d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
+        d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.estado_nombre = $('#estado_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.revisado_final = $('#revisado_final_tblProyectosDelNodoPorAnho').val(),
+        d.search = $('input[type="search"]').val()
+      }
+      // type: "get",
     },
     columns: [
       {
