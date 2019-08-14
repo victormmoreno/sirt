@@ -21,6 +21,27 @@ class Video extends Model
 
     public function videoble()
     {
-    	return $this->morphTo();
+        return $this->morphTo();
     }
+
+    /*=========================================
+    =            asesores eloquent            =
+    =========================================*/
+
+    public function getDominoAttribute($ruta)
+    {
+        return mb_strtolower(trim($ruta), 'UTF-8');
+    }   
+
+    /*=====  End of asesores eloquent  ======*/
+
+    /*========================================
+    =            mutador eloquent            =
+    ========================================*/
+    public function setDominoAttribute($ruta)
+    {
+        $this->attributes['ruta'] = mb_strtolower(trim($ruta), 'UTF-8');
+    }
+
+    /*=====  End of mutador eloquent  ======*/
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CreateValidationForDomainRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IdeaFormRequest extends FormRequest
@@ -36,6 +37,8 @@ class IdeaFormRequest extends FormRequest
             'txtdescripcion'     => 'required|min:1|max:2000',
             'txtobjetivo'        => 'required|min:1|max:2000',
             'txtalcance'         => 'required|min:1|max:2000',
+            'txtservidorvideo'   => 'required',
+            'txtlinkvideo'   => ['required','url',new CreateValidationForDomainRequest],
         ];
     }
 

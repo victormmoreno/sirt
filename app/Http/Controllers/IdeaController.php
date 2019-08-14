@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 
+use Alert;
 use App\Events\Idea\IdeaHasReceived;
+use App\Events\Idea\IdeaSend;
+use App\Helpers\ArrayHelper;
 use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest, IdeaEGIFormRequest};
 use App\Mail\IdeaEnviadaEmprendedor;
 use App\Models\{EstadoIdea, Idea, Nodo};
 use App\Notifications\IdeaRecibidaInfocenter;
+use App\Repositories\Repository\ConfiguracionRepository\ServidorVideoRepository;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Cache, Mail, Session};
-use App\Events\Idea\IdeaSend;
-use App\Helpers\ArrayHelper;
-use Alert;
 
 
 
@@ -89,10 +90,12 @@ class IdeaController extends Controller
   *
   * @return \Illuminate\Http\Response
   */
-  public function index()
+  public function index(ServidorVideoRepository $servidorVideoRepository)
   {
     $nodos = $this->ideaRepository->getSelectNodo();
-    return view('ideas.fanpage', compact('nodos'));
+    $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
+
+    return view('ideas.fanpage', compact('nodos','servidorVideo'));
   }
 
   // ------------------------------- Método registrar una idea de proyecto con empresas o grupos de investigación
@@ -194,6 +197,7 @@ class IdeaController extends Controller
   //IdeaFormRequest
   public function store(IdeaFormRequest $request)
   {
+    
     $idea = $this->ideaRepository->Store($request);
     if ($idea != null) {
       alert()->success('Registro Exitoso!','La idea ha sido creado satisfactoriamente.')->showConfirmButton('Ok', '#3085d6');

@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
-use App\User;
+use App\Models\ServidorVideo;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    $servidor = ServidorVideo::pluck('dominio');
 
+    // dd($servidor);
     return view('spa');
+
 })->name('/');
 
 DB::listen(function ($query) {
@@ -510,3 +513,19 @@ Route::resource('lineas', 'LineaController', ['except' => ['show', 'destroy']]);
 Route::resource('sublineas', 'SublineaController', ['except' => ['show']]);
 
 /*=====  End of rutas para las funcionalidades de las sublineas  ======*/
+
+/*==============================================================================
+=            rutas para las funcionalidades de la configuracion app            =
+==============================================================================*/
+
+Route::group([
+    'prefix'     => 'configuracion',
+    'middleware' => ['auth', 'role_session:Administrador'],
+], function () {
+    Route::get('/', function () {
+        return view('configuracion.index');
+    })->name('configuracion.index');
+}
+);
+
+/*=====  End of rutas para las funcionalidades de la configuracion app  ======*/

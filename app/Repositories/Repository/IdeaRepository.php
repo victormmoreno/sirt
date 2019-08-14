@@ -71,6 +71,11 @@ class IdeaRepository
       "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
     ]);
 
+    $idea->video()->create([
+      'servidor_video_id' => $request->input('txtservidorvideo'),
+      'ruta' => $request->input('txtlinkvideo'),
+    ]);
+
     return $idea;
   }
 

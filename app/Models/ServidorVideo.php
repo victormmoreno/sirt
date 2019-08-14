@@ -49,4 +49,16 @@ class ServidorVideo extends Model
     {
         return $this->hasMany(Video::class, 'servidor_video_id', 'id');
     }
+
+    /*=========================================================================
+    =            scope para mostrar todos los servidores de videos            =
+    =========================================================================*/
+    
+    public function scopeAllServidoresVideo($query)
+    {
+        return $query;
+    }
+    
+    /*=====  End of scope para mostrar todos los servidores de videos  ======*/
+    
 }
