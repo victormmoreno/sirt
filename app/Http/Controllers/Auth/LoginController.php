@@ -21,8 +21,7 @@ class LoginController extends Controller
      */
     use AuthenticatesUsers;
 
-
-    public $maxAttempts = 3;
+    public $maxAttempts  = 3;
     public $decayMinutes = 3;
     /**
      * Where to redirect users after login.
@@ -39,7 +38,6 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
 
     /**
      * Handle a login request to the application.
@@ -65,7 +63,7 @@ class LoginController extends Controller
 
         if ($this->attemptLogin($request)) {
             session()->put('login_role', collect(\Auth::user()->roles)->first()->name);
-            alert()->info('Señor(a), '.collect(auth()->user()->roles)->firstWhere('name', auth()->user()->roles->first()->name)->name.' '.auth()->user()->nombres. ' '. auth()->user()->apellidos. ' bienvenido a '. config('app.name'))->toToast();
+            alert()->info('Señor(a), ' . collect(auth()->user()->roles)->firstWhere('name', auth()->user()->roles->first()->name)->name . ' ' . auth()->user()->nombres . ' ' . auth()->user()->apellidos . ' bienvenido a ' . config('app.name'))->toToast();
 
             return $this->sendLoginResponse($request);
 
@@ -91,13 +89,12 @@ class LoginController extends Controller
     {
         $request->validate([
             $this->username() => 'required|string',
-            'password' => 'required|string',
-        ],[
-            'email.required'     => 'El correo electrónico es obligatorio',
-            'password.required'  => 'La contraseña es obligatoria.',
+            $this->password() => 'required|string',
+        ], [
+            'email.required'    => 'El correo electrónico es obligatorio',
+            'password.required' => 'La contraseña es obligatoria.',
         ]);
     }
-
 
     /**
      * Get the needed authorization credentials from the request.
@@ -108,7 +105,12 @@ class LoginController extends Controller
     protected function credentials(Request $request)
     {
         $request['estado'] = true;
-        return $request->only($this->username(), 'password', 'estado');
+        return $request->only($this->username(), $this->password(), 'estado');
+    }
+
+    private function password()
+    {
+        return 'password';
     }
 
     public function logout(Request $request)

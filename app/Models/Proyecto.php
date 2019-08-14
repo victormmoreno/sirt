@@ -10,7 +10,7 @@ class Proyecto extends Model
     protected $table = 'proyectos';
 
     protected $casts = [
-        'fecha_ejecucion' => 'date:Y-m-d'
+        'fecha_ejecucion' => 'date:Y-m-d',
     ];
 
     /**
@@ -81,22 +81,57 @@ class Proyecto extends Model
     =            scope para consultar los proyectos por estado            =
     =====================================================================*/
 
-    public function scopeProjectsForEstado($query, array $estado = [])
+    public function scopeInfoProjects($query, array $relations = [], array $estado = [])
     {
-        return $query->with([
-            'estadoproyecto' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-        ])->select('id', 'nombre', 'codigo_proyecto', 'estadoproyecto_id')
-            ->whereHas(
-                'estadoproyecto', function ($query) use($estado){
-                    $query->whereIn('nombre', $estado);
-                }
-        );
+        if(empty($relations)) {
+            return $query;
+        }
 
+        return $query->with($relations)->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
+            
     }
 
     /*=====  End of scope para consultar los proyectos por estado  ======*/
 
+/*======================================================================================
+=            scope para consultar el nombre y el id del proyecto por estado            =
+======================================================================================*/
+
+    public function scopePluckNameProjects($query, array $estado = [])
+    {
+        return $query->with([
+            'estadoproyecto'=> function ($query) {
+                $query->select('id','nombre');
+            },
+            'articulacion_proyecto' => function ($query) {
+                $query->select('id','actividad_id');
+            },
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id','codigo_actividad','nombre');
+            },
+        ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
+            
+    }
+
+/*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
+
+/*===================================================================
+=            scope para consultar por estado de proyecto            =
+===================================================================*/
+
+    public function scopeEstadoOfProjects($query, array $estado = [])
+    {
+
+        if ($this->estadoproyecto()->exists()) {
+            return $query->whereHas(
+                'estadoproyecto', function ($query) use ($estado) {
+                    $query->whereIn('nombre', $estado);
+                }
+            );
+        }
+        return $query;
+    }
+
+/*=====  End of scope para consultar por estado de proyecto  ======*/
 
 }

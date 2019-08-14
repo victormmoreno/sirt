@@ -52,8 +52,6 @@ class Idea extends Model
     'alcance',
     'tipo_idea',
     'estadoidea_id',
-    'url_video',
-
     ];
 
     public function estadoIdea()
@@ -64,6 +62,11 @@ class Idea extends Model
     public function nodo()
     {
       return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
+
+    public function video()
+    {
+      return $this->morphOne(Video::class, 'videoble');
     }
 
     public function getNombreCompletoAttribute()
@@ -88,6 +91,8 @@ class Idea extends Model
     {
       return self::IS_GRUPOINVESTIGACION;
     }
+
+
 
     /**
     * Consulta todas las ideas de proyecto de un nodo, independientemente si han pasado por los respectivos procesos
