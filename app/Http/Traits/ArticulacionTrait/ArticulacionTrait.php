@@ -11,22 +11,6 @@ trait ArticulacionTrait
         return self::IS_NOAPLICA;
     }
 
-    // Retorno para las constantes del campo revisado_final
-    public static function IsPorEvaluar()
-    {
-        return self::IS_POREVALUAR;
-    }
-
-    public static function IsAprobado()
-    {
-        return self::IS_APROBADO;
-    }
-
-    public static function IsNoAprobado()
-    {
-        return self::IS_NOAPROBADO;
-    }
-
     // Retorno para las constantes del campo estado
     public static function IsInicio()
     {

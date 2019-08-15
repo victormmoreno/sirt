@@ -65,7 +65,33 @@
 @endsection
 @push('script')
   <script>
-  // Ajax que muestra los proyectos de un NODO por año
+  $("#codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
+  });
+
+  $("#gestor_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
+  });
+
+  $("#nombre_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
+  });
+
+  $("#sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
+  });
+
+  $("#estado_nombre_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
+  });
+
+  $("#revisado_final_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
+  });
+  
+  /**
+   * Consulta los proyectos de un nodo por año (Este método es para el dinamizador)
+   */
   function consultarProyectosDelNodoPorAnho_Administrador() {
     let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
     let nodo = $('#nodo_proyectoPorNodoYAnho').val();
@@ -79,7 +105,16 @@
       order: [ 0, 'desc' ],
       ajax:{
         url: "/proyecto/datatableProyectosDelNodoPorAnho/"+nodo+"/"+anho_proyectos_nodo,
-        type: "get",
+        data: function (d) {
+          d.codigo_proyecto = $('#codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador').val(),
+          d.gestor = $('#gestor_tblproyectosDelNodoPorAnho_Administrador').val(),
+          d.nombre = $('#nombre_tblproyectosDelNodoPorAnho_Administrador').val(),
+          d.sublinea_nombre = $('#sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador').val(),
+          d.estado_nombre = $('#estado_nombre_tblproyectosDelNodoPorAnho_Administrador').val(),
+          d.revisado_final = $('#revisado_final_tblproyectosDelNodoPorAnho_Administrador').val(),
+          d.search = $('input[type="search"]').val()
+        }
+        // type: "get",
       },
       columns: [
         {

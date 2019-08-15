@@ -81,6 +81,29 @@
 @endsection
 @push('script')
   <script>
+  $("#codigo_proyecto_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
+  $("#gestor_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
+  $("#nombre_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
+  $("#sublinea_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
+  $("#estado_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
+  $("#revisado_final_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
   // Ajax que muestra los proyectos de un gestor por año
   function consulta() {
     let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
@@ -105,7 +128,16 @@
         order: [ 0, 'desc' ],
         ajax:{
           url: "/proyecto/datatableProyectosDelGestorPorAnho/"+gestor+"/"+anho,
-          type: "get",
+          data: function (d) {
+            d.codigo_proyecto = $('#codigo_proyecto_tblproyectosDelGestorPorAnho').val(),
+            d.gestor = $('#gestor_tblproyectosDelGestorPorAnho').val(),
+            d.nombre = $('#nombre_tblproyectosDelGestorPorAnho').val(),
+            d.sublinea_nombre = $('#sublinea_nombre_tblproyectosDelGestorPorAnho').val(),
+            d.estado_nombre = $('#estado_nombre_tblproyectosDelGestorPorAnho').val(),
+            d.revisado_final = $('#revisado_final_tblproyectosDelGestorPorAnho').val(),
+            d.search = $('input[type="search"]').val()
+          }
+          // type: "get",
         },
         columns: [
           {

@@ -6,116 +6,15 @@
       <div class="row no-m-t no-m-b">
         <h5>
           <a class="footer-text left-align" href="{{route('articulacion')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
-          </a> CSIBT
+            <i class="left material-icons arrow-l">arrow_back</i>
+          </a> Articulaciones
         </h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
               <div class="col s12 m12 l12">
                 <form onsubmit="return checkSubmit()" method="post" action="{{ route('articulacion.update.entregables', $articulacion->id) }}">
-                  {!! method_field('PUT')!!}
-                  {!! csrf_field() !!}
-                  <div class="row">
-                    <div class="col s12 m6 l6">
-                      <small>Código de la Articulación</small>
-                      <input required disabled value="{{$articulacion->codigo_articulacion}}">
-                    </div>
-                    <div class="col s12 m6 l6">
-                      <small>Fecha de Inicio de la Articulación</small>
-                      <input value="{{$articulacion->fecha_inicio->toDateString()}}" disabled>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col s12 m6 l6">
-                      <small>Estado de la Articulación</small>
-                      <input disabled value="{{$articulacion->estado}}">
-                    </div>
-                    <div class="col s12 m6 l6">
-                      <small>Actividad</small>
-                      <input value="{{$articulacion->tipoArticulacion}}" disabled>
-                    </div>
-                  </div>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <h5>Entregables Fase de Inicio</h5>
-                    <div class="col s4 m4 l4">
-                      <p class="p-v-xs">
-                        <input type="checkbox" disabled {{ $articulacion->acta_inicio == 0 ? '' : 'checked' }} id="entregable_acta_inicio" value="1">
-                        <label for="entregable_acta_inicio">Acta de Inicio<span class="red-text">*</span></label>
-                        {!! $articulacion->tipo_articulacion == 'Grupo de Investigación' ? '<a class="btn btn-floating modal-trigger" href="#modalContenidoActaInicio"><i class="material-icons left">info_outline</i></a>' : '' !!}
-                      </p>
-                    </div>
-                    @if ($articulacion->tipo_articulacion == 'Grupo de Investigación')
-                      <div class="col s4 m4 l4">
-                        <p class="p-v-xs">
-                          <input type="checkbox" disabled {{ $articulacion->acc == 0 ? '' : 'checked' }} id="entregable_acuerdo_confidencialidad_compromiso" value="1">
-                          <label for="entregable_acuerdo_confidencialidad_compromiso">Formato de confidencialidad y compromiso firmado <span class="red-text">*</span></label>
-                        </p>
-                      </div>
-                    @endif
-                  </div>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <h5>Entregables Fase de {{ $articulacion->tipo_articulacion == 'Grupo de Investigación' ? 'Co-Ejecución' : 'Ejecución' }}</h5>
-                    <div class="col s4 m4 l4">
-                      <p class="p-v-xs">
-                        <input type="checkbox" disabled {{ $articulacion->actas_seguimiento == 0 ? '' : 'checked' }} id="entregable_acta_seguimiento" value="1">
-                        <label for="entregable_acta_seguimiento">Actas de Seguimiento<span class="red-text">*</span></label>
-                      </p>
-                    </div>
-                  </div>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <h5>Entregables de la Fase de Cierre</h5>
-                    <div class="col s4 m4 l4">
-                      <p class="p-v-xs">
-                        <input type="checkbox" disabled {{ $articulacion->acta_cierre == 0 ? '' : 'checked' }} id="entregable_acta_cierre" value="1">
-                        <label for="entregable_acta_cierre">Acta de Cierre<span class="red-text">*</span></label>
-                      </p>
-                    </div>
-                    @if ($articulacion->tipo_articulacion == 'Empresa' || $articulacion->tipo_articulacion == 'Emrpendedor')
-                      <div class="col s4 m4 l4">
-                        <p class="p-v-xs">
-                          <input type="checkbox" disabled {{ $articulacion->informe_final == 0 ? '' : 'checked' }} id="entregable_informe_final" value="1">
-                          <label for="entregable_informe_final">Informe Final de la Asesoría<span class="red-text">*</span></label>
-                        </p>
-                      </div>
-                      <div class="col s4 m4 l4">
-                        <p class="p-v-xs">
-                          <input type="checkbox" disabled {{ $articulacion->pantallazo == 0 ? '' : 'checked' }} id="entregable_encuesta_satisfaccion" value="1">
-                          <label for="entregable_encuesta_satisfaccion">Encuesta de Satisfacción (Pantallazo)<span class="red-text">*</span></label>
-                        </p>
-                      </div>
-                    @endif
-                  </div>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <h5>Otros Entregables</h5>
-
-                  </div>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <h5>Revisado Final</h5>
-                    <div class="col s12 m4 l4">
-                      <p class="p-v-xs">
-                        <input name="txtrevisado" value="0" id="txtrevisadoa" {{ $articulacion->revisado_final == 'Por Evaluar' ? 'checked' : '' }} type="radio">
-                        <label for="txtrevisadoa">Por evaluar</label>
-                      </p>
-                    </div>
-                    <div class="col s12 m4 l4">
-                      <p class="p-v-xs">
-                        <input name="txtrevisado" value="1" id="txtrevisadob" {{ $articulacion->revisado_final == 'Aprobado' ? 'checked' : '' }} type="radio">
-                        <label for="txtrevisadob">Aprobado</label>
-                      </p>
-                    </div>
-                    <div class="col s12 m4 l4">
-                      <p class="p-v-xs">
-                        <input name="txtrevisado" value="2" id="txtrevisadoc" {{ $articulacion->revisado_final == 'No Aprobado' ? 'checked' : '' }} type="radio">
-                        <label for="txtrevisadoc">No aprobado</label>
-                      </p>
-                    </div>
-                  </div>
+                  @include('articulaciones.form_entregables')
                   <center>
                     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                     <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
@@ -135,7 +34,6 @@
                                     <th>Archivo</th>
                                     <th>Fase</th>
                                     <th style="width: 10%">Descargar</th>
-                                    {{-- <th style="width: 10%">Eliminar</th> --}}
                                   </tr>
                                 </thead>
                                 <tbody>

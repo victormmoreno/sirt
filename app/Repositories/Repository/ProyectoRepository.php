@@ -19,7 +19,8 @@ class ProyectoRepository
   /**
   * Método que retorna los talentos en un array, para usarlo junto a la funcion sync de laravel
   * @param \Illuminate\Http\Request  $request
-  * @return return array
+  * @return array
+  * @author Victor Manuel Moreno Vega
   */
   private function arraySyncTalentosDeUnProyecto($request)
   {
@@ -37,9 +38,10 @@ class ProyectoRepository
   /**
   * Método el cuál actualiza ALGUNOS campos de la tabla de proyecto
   *
+  * @param Request request Request con los datos del formulario
   * @param int id - Id del proyecto que se va a modificar
-  * @param request request Request con los datos del formulario
   * @return boolean
+  * @author Victor Manuel Moreno Vega
   */
   public function update($request, $id)
   {
@@ -153,22 +155,14 @@ class ProyectoRepository
       $dataUpdateProyecto = array_merge($dataProyecto, $dataProyecto2);
 
       $proyecto = Proyecto::find($id);
-      // $articulacion_proyecto = ArticulacionProyecto::find($proyecto->articulacion_proyecto_id);
-      // $actividad = Actividad::find($articulacion_proyecto->actividad_id);
-
-
-      // Proyecto::with('articulacion_proyecto.articulacion')->find($id)->update($arrayFinal);
-
       /**
       * Update para la tabla de actividades
       */
-      // $actividad->update($dataUpdateActividad);
       $proyecto->articulacion_proyecto->actividad()->update($dataUpdateActividad);
 
       /**
       * Update para la tabla de articulacion_proyecto
       */
-      // $articulacion_proyecto->update($dataUpdateArticulacionProyecto);
       $proyecto->articulacion_proyecto()->update(['entidad_id' => $entidad_id]);
 
       /**
@@ -188,6 +182,13 @@ class ProyectoRepository
 
   }
 
+  /**
+  * Modifica el revisado final de un proyecto (Lo hace el dinamizador)
+  * @param Request $request
+  * @param int $id Id del proyecto
+  * @return boolean
+  * @author Victor Manuel Moreno Vega
+  */
   public function updateRevisadoFinalProyectoRepository($request, $id)
   {
     DB::beginTransaction();
@@ -205,7 +206,13 @@ class ProyectoRepository
     }
   }
 
-  // Modifica los entregables de un proyecto
+  /**
+  * Modifica los entregables de un proyecto
+  * @param Request $request
+  * @param int $id Id del proyecto
+  * @return boolean
+  * @author Victor Manuel Moreno Vega
+  */
   public function updateEntregablesProyectoRepository($request, $id)
   {
     DB::beginTransaction();
@@ -287,7 +294,12 @@ class ProyectoRepository
     }
   }
 
-  // Consulta los entregables de un proyecto (Si/No)
+  /**
+  * Consulta los entregables de un proyecto
+  * @param int $id Id del proyecto
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
   public function consultarEntregablesDeUnProyectoRepository($id)
   {
     return Proyecto::select('acc',
@@ -309,7 +321,13 @@ class ProyectoRepository
     ->last();
   }
 
-  // Modifica el gestor a cargo del proyecto
+  /**
+  * Modifica el gestor a cargo de un proyecto (Lo hace el dinamizador)
+  * @param Request $request
+  * @param int $id Id del Proyectos
+  * @return boolean
+  * @author Victor Manuel Moreno Vega
+  */
   public function updateProyectoDinamizadorRepository($request, $id)
   {
     DB::beginTransaction();
@@ -326,7 +344,13 @@ class ProyectoRepository
     }
   }
 
-  // Consulta los proyectos de un nodo por año
+  /**
+  * Consulta los proyectos que tiene un nodo por años
+  * @param int $idnodo Id del nodo
+  * @param string $anho Año para fitrar la búsqueda
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
   public function ConsultarProyectosPorNodoYPorAnho($idnodo, $anho)
   {
     return Proyecto::select('actividades.codigo_actividad AS codigo_proyecto',
@@ -336,7 +360,7 @@ class ProyectoRepository
     'actividades.fecha_cierre AS fecha_fin',
     'articulacion_proyecto.id AS articulacion_proyecto_id',
     'proyectos.id')
-    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
@@ -396,7 +420,7 @@ class ProyectoRepository
     'sublineas.lineatecnologica_id',
     'nodoentidad.nombre AS nombre_nodo')
     ->selectRaw('CONCAT(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre_sublinea')
-    ->selectRaw('CONCAT(ideas.id, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS nombre_gestor')
     ->selectRaw('IF(tiposarticulacionesproyectos.nombre = "Universidades", proyectos.universidad_proyecto,
     IF(tiposarticulacionesproyectos.nombre NOT IN("Emprendedor", "Proyecto financiado por SENNOVA", "Otro"), entidades.nombre, "")) AS nombre_entidad')

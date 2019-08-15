@@ -5,7 +5,7 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>Comité de Selección de Ideas</h5>
+        <h5><i class="left material-icons left">gavel</i>Comité de Selección de Ideas</h5>
         <div class="card">
           <div class="card-content">
             <div class="row">

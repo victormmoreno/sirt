@@ -300,29 +300,28 @@ Route::group([
 //-------------------Route group para el módulo de Comité
 Route::group([
     'prefix'     => 'articulacion',
-    'middleware' => 'auth',
+    'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor'],
 ],
     function () {
         //rutas para consultar articualciones por gestor
         Route::get('/gestor/{id}/{tipoarticulacion}', 'ArticulacionController@ArticulacionForGestor')->name('articulacion.gestor');
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
-        Route::get('/create', 'ArticulacionController@create')->name('articulacion.create');
-        Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulaciones')->name('articulacion.datatable');
-        Route::get('/datatableArticulacionesDelNodo/{id}', 'ArticulacionController@datatableArticulacionesPorNodo')->name('articulacion.datatable.nodo');
-        Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit');
+        Route::get('/create', 'ArticulacionController@create')->name('articulacion.create')->middleware('role_session:Gestor');
+        Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulacionesPorGestor')->name('articulacion.datatable');
+        Route::get('/datatableArticulacionesDelNodo/{id}', 'ArticulacionController@datatableArticulacionesPorNodo')->name('articulacion.datatable.nodo')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit')->middleware('role_session:Gestor');
         Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
         Route::get('/ajaxDetallesDeLosEntregablesDeUnaArticulacion/{id}', 'ArticulacionController@detallesDeLosEntregablesDeUnaArticulacion')->name('articulacion.detalle.entregables');
         Route::get('/consultarTiposArticulacion/{id}', 'ArticulacionController@consultarTipoArticulacion')->name('articulacion.tiposarticulacion');
-        Route::get('/talentoCollectionCreate/{id}/{talentos}', 'ArticulacionController@addTalentoCollectionCreate')->name('articulacion.talento.collection');
         Route::get('/{id}/entregables', 'ArticulacionController@entregables')->name('articulacion.entregables');
         Route::get('/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
         Route::get('/consultarEntidadDeLaArticulacion/{id}', 'ArticulacionController@consultarEntidadDeLaArticulacion')->name('articulacion.detalle.entidad');
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
-        Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update');
-        Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables');
-        Route::post('/', 'ArticulacionController@store')->name('articulacion.store');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy');
+        Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update')->middleware('role_session:Gestor');
+        Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
+        Route::post('/', 'ArticulacionController@store')->name('articulacion.store')->middleware('role_session:Gestor');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload')->middleware('role_session:Gestor');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Gestor');
 
     }
 );
@@ -369,7 +368,7 @@ Route::group(
  */
 Route::group([
     'prefix'     => 'edt',
-    'middleware' => 'role_session:Gestor|Dinamizador|Administrador',
+    'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador'],
 ],
     function () {
         Route::get('/', 'EdtController@index')->name('edt');

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa, Articulacion};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\Storage;
 use App\User;
@@ -397,36 +397,49 @@ class ArchivoController extends Controller
     return Storage::download($path);
   }
 
-  // Datatable para mostar los archivos de una articulación
+  /**
+   * Muestra los archivos de una articulacion
+   */
   public function datatableArchivosDeUnaArticulacion($id)
   {
     if (request()->ajax()) {
-      if (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsDinamizador() || \Session::get('login_role') == User::IsAdministrador()) {
-        $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacion($id);
-        return datatables()->of($archivosDeLaArticulacion)
-        ->addColumn('download', function ($data) {
-          $download = '
-          <a target="_blank" href="' . route('articulacion.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-          <i class="material-icons">file_download</i>
-          </a>
-          ';
-          return $download;
-        })->addColumn('delete', function ($data) {
-          $delete = '<form method="POST" action="' . route('articulacion.files.destroy', $data) . '">
-          ' . method_field('DELETE') . '' .  csrf_field() . '
-          <button class="btn red darken-4 m-b-xs">
-          <i class="material-icons">delete_forever</i>
-          </button>
-          </form>';
-          return $delete;
-        })->addColumn('file', function ($data) {
-          $file = '
-          <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
-          ';
-          return $file;
-        })->rawColumns(['download', 'delete', 'file'])->make(true);
-      }
+      $articulacion = Articulacion::findOrFail($id);
+      $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($articulacion->articulacion_proyecto_id);
+      return $this->datatableArchivosArticulacionProyecto($archivosDeLaArticulacion);
     }
+  }
+
+
+  /**
+  * Tabla para mostrar los archivos de una articulacion_proyecto
+  * @param int $id Id de la articulacion_proyecto
+  * @return Reponse
+  * @author Victor Manuel Moreno Vega
+  */
+  public function datatableArchivosArticulacionProyecto($query)
+  {
+    return datatables()->of($query)
+    ->addColumn('download', function ($data) {
+      $download = '
+      <a target="_blank" href="' . route('proyecto.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+      <i class="material-icons">file_download</i>
+      </a>
+      ';
+      return $download;
+    })->addColumn('delete', function ($data) {
+      $delete = '<form method="POST" action="' . route('proyecto.files.destroy', $data) . '">
+      ' . method_field('DELETE') . '' .  csrf_field() . '
+      <button class="btn red darken-4 m-b-xs">
+      <i class="material-icons">delete_forever</i>
+      </button>
+      </form>';
+      return $delete;
+    })->addColumn('file', function ($data) {
+      $file = '
+      <i class="material-icons">insert_drive_file</i> ' . basename(url($data->ruta) ) . '
+      ';
+      return $file;
+    })->rawColumns(['download', 'delete', 'file'])->make(true);
   }
 
   /**
@@ -438,36 +451,19 @@ class ArchivoController extends Controller
   public function datatableArchivosDeUnProyecto($id)
   {
     if (request()->ajax()) {
-      if (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsDinamizador() || \Session::get('login_role') == User::IsAdministrador()) {
-        $proyecto = Proyecto::findOrFail($id);
-        $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnProyecto($proyecto->articulacion_proyecto_id);
-        return datatables()->of($archivosDeUnProyecto)
-        ->addColumn('download', function ($data) {
-          $download = '
-          <a target="_blank" href="' . route('proyecto.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-          <i class="material-icons">file_download</i>
-          </a>
-          ';
-          return $download;
-        })->addColumn('delete', function ($data) {
-          $delete = '<form method="POST" action="' . route('proyecto.files.destroy', $data) . '">
-          ' . method_field('DELETE') . '' .  csrf_field() . '
-          <button class="btn red darken-4 m-b-xs">
-          <i class="material-icons">delete_forever</i>
-          </button>
-          </form>';
-          return $delete;
-        })->addColumn('file', function ($data) {
-          $file = '
-          <i class="material-icons">insert_drive_file</i> ' . basename(url($data->ruta) ) . '
-          ';
-          return $file;
-        })->rawColumns(['download', 'delete', 'file'])->make(true);
-      }
+      $proyecto = Proyecto::findOrFail($id);
+      $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id);
+      return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto);
     }
   }
 
-  // Sube los archivos de la articulación
+  /**
+   * Subida de un arcivo al servidor
+   * @param Request
+   * @param int $id Id de la articulación
+   * @return void
+   * @author Victor Manuel Moreno Vega
+   */
   public function uploadFileArticulacion(Request $request, $id)
   {
     if (request()->ajax()) {
@@ -483,7 +479,7 @@ class ArchivoController extends Controller
       // id_nodo/anho_de_la_fecha_de_inicio_de_la_articulacion/Articulaciones/tipo_articulacion(AGI ó AEE)/id_de_la_articulacion/fase_del_archivo/max_id_archivo_articulacion_nombre_del_archivo.extension
 
       // Creando el nombre del archivo que se concatenerá con el max id de los archivos de la articulación
-      $idArchivoArticulacion = ArchivoArticulacion::selectRaw('MAX(id+1) AS max')->get()->last();
+      $idArchivoArticulacion = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
       $idArchivoArticulacion->max == null ? $idArchivoArticulacion->max = 1 : $idArchivoArticulacion->max = $idArchivoArticulacion->max;
       $fileName = $idArchivoArticulacion->max . '_' . $file->getClientOriginalName();
       // Fase donde se guardará el archivo de la articulación
@@ -499,8 +495,11 @@ class ArchivoController extends Controller
       $anhoFechaInicio = $anhoFechaInicio->format('Y');
       // Id del nodo
       $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
+      // Id de articulacion proyecto
+      $id = Articulacion::find($id);
+      $id = $id->articulacion_proyecto_id;
       $fileUrl = $file->storeAs("public/".$tecnoparque.'/'.$anhoFechaInicio.'/'.$articulacion.'/'.$folderTipoArticulacion.'/'.$id.'/'.$fase->nombre, $fileName);
-      $this->archivoRepository->storeFileArticulacion($id, $fase->id, Storage::url($fileUrl));
+      $this->archivoRepository->storeFileArticulacionProyecto($id, $fase->id, Storage::url($fileUrl));
     }
   }
 

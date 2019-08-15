@@ -83,9 +83,9 @@
                           <div class="card-stacked">
                             <div class="card-content">
                               <div class="input-field col s12 m12 l12">
-                                <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="{{ $articulacion->tipo_articulacion == 0 ? $articulacion->entidad->grupoinvestigacion->id : '' }}">
+                                <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="{{ $articulacion->tipo_articulacion == 0 ? $articulacion->articulacion_proyecto->entidad->grupoinvestigacion->id : '' }}">
                                 <input readonly type="text" name="grupoInvestigacion" id="grupoInvestigacion"
-                                value="{{ $articulacion->tipo_articulacion == 0 ? $articulacion->entidad->grupoinvestigacion->codigo_grupo . ' - ' . $articulacion->entidad->nombre : '' }}">
+                                value="{{ $articulacion->tipo_articulacion == 0 ? $articulacion->articulacion_proyecto->entidad->grupoinvestigacion->codigo_grupo . ' - ' . $articulacion->articulacion_proyecto->entidad->nombre : '' }}">
                                 <label for="grupoInvestigacion">Grupo de Investigación</label>
                                 <small id="txtgrupo_id-error" class="error red-text"></small>
                               </div>
@@ -203,7 +203,7 @@
                     <div class="row">
                       <div class="input-field col s12 m12 l12">
                         <label for="txtnombre">Nombre de la Articulación <span class="red-text">*</span></label>
-                        <input type="text" id="txtnombre" name="txtnombre" value="{{ $articulacion->nombre }}"/>
+                        <input type="text" id="txtnombre" name="txtnombre" value="{{ $articulacion->articulacion_proyecto->actividad->nombre }}"/>
                         <small id="txtnombre-error" class="error red-text"></small>
                       </div>
                     </div>
@@ -237,7 +237,7 @@
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_inicio" name="txtfecha_inicio" class="datepicker __pickerinput" value="{{$articulacion->fecha_inicio->toDateString()}}"/>
+                        <input type="text" id="txtfecha_inicio" name="txtfecha_inicio" class="datepicker __pickerinput" value="{{ $articulacion->articulacion_proyecto->actividad->fecha_inicio->toDateString() }}"/>
                         <label for="txtfecha_inicio">Fecha de Inicio de la Articulación<span class="red-text">*</span></label>
                         <small id="txtfecha_inicio-error" class="error red-text"></small>
                       </div>

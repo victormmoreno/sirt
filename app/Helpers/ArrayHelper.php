@@ -21,15 +21,18 @@ class ArrayHelper {
     return $datos;
   }
 
-  // Método para validar en caso de que un elemento de un array sea null
+  /**
+   * Valida los datos de un array para que no muestre null
+   * @param array $datos
+   * @return array
+   * @author Victor Manuel Moreno Vega
+   */
   public static function validarDatoNullDeUnArray($datos) {
     foreach ($datos as $key => $value) {
       if ($value === null) {
         $datos[$key] = 'No hay información disponible.';
-        // echo $value . '</br>';
       }
     }
-    // exit();
     return $datos;
   }
 

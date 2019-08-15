@@ -92,23 +92,18 @@ class ArchivoRepository
     return ArchivoArticulacionProyecto::select('id', 'ruta')->where('id', $id)->get()->last();
   }
 
-  // Consulta los archivos de un proyecto
-  public function consultarRutasArchivosDeUnProyecto($id)
+  /**
+   * Consuta los archivos de una articulacion_proyecto
+   * @param int $id Id de la articulacion_proyecto
+   * @return Collection
+   * @author Victor Manuel Moreno Vega
+   */
+  public function consultarRutasArchivosDeUnaArticulacionProyecto($id)
   {
     return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
     ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
     ->where('articulacion_proyecto.id', $id)
-    ->get();
-  }
-
-  // Consulta los archivos de una articulación
-  public function consultarRutasArchivosDeUnaArticulacion($id)
-  {
-    return ArchivoArticulacion::select('ruta', 'archivosarticulaciones.id', 'fases.nombre AS fase')
-    ->join('articulaciones', 'articulaciones.id', '=', 'archivosarticulaciones.articulacion_id')
-    ->join('fases', 'fases.id', '=', 'archivosarticulaciones.fase_id')
-    ->where('articulaciones.id', $id)
     ->get();
   }
 

@@ -48,47 +48,4 @@ $(document).ready(function() {
       },
     ],
   });
-
-  // $('#empresasDeTecnoparque_tableNoGestor').DataTable({
-  //   language: {
-  //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-  //   },
-  //   processing: true,
-  //   serverSide: true,
-  //   ajax:{
-  //     url: "/empresa/datatableEmpresasDeTecnoparque",
-  //     type: "get",
-  //   },
-  //   columns: [
-  //     {
-  //       data: 'nit',
-  //       name: 'nit',
-  //     },
-  //     {
-  //       data: 'nombre_empresa',
-  //       name: 'nombre_empresa',
-  //     },
-  //     {
-  //       data: 'sector_empresa',
-  //       name: 'sector_empresa',
-  //     },
-  //     {
-  //       data: 'ciudad',
-  //       name: 'ciudad',
-  //     },
-  //     {
-  //       data: 'direccion',
-  //       name: 'direccion',
-  //     },
-  //     {
-  //       data: 'details',
-  //       name: 'details',
-  //       orderable: false
-  //     },
-  //     // {
-  //     //   data: 'soft_delete',
-  //     //   name: 'soft_delete',
-  //     //   orderable: false
-  //     // },
-  //   ],
 });

@@ -165,7 +165,7 @@ class ProyectoController extends Controller
   {
     if (request()->ajax()) {
       $id = "";
-      if (\Session::get('login_role') == User::IsDinamizador()) {
+      if ( Session::get('login_role') == User::IsDinamizador() ) {
         $id = auth()->user()->dinamizador->nodo_id;
       } else {
         $id = $idnodo;
@@ -259,12 +259,12 @@ class ProyectoController extends Controller
     $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
     $entregables = (object) $this->consultarEntregablesDeUnProyectoController($id);
     $entregables->url_videotutorial = $proyecto->url_videotutorial;
-    if (\Session::get('login_role') == User::IsGestor()) {
+    if ( Session::get('login_role') == User::IsGestor() ) {
       return view('proyectos.gestor.entregables', [
       'proyecto' => $proyecto,
       'entregables' => $entregables
       ]);
-    } else if (\Session::get('login_role') == User::IsDinamizador()) {
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('proyectos.dinamizador.entregables', [
       'proyecto' => $proyecto,
       'entregables' => $entregables
@@ -289,10 +289,11 @@ class ProyectoController extends Controller
   {
     if (request()->ajax()) {
       $idgestor = $id;
-      if (\Session::get('login_role') == User::IsGestor()) {
+      if ( Session::get('login_role') == User::IsGestor() ) {
         $idgestor = auth()->user()->gestor->id;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
+      // dd($proyectos);
       return $this->datatableProyectos($request, $proyectos);
     }
   }
@@ -452,7 +453,7 @@ class ProyectoController extends Controller
   */
   public function index()
   {
-    switch (\Session::get('login_role')) {
+    switch ( Session::get('login_role') ) {
       case User::IsGestor():
       return view('proyectos.gestor.index');
       break;
@@ -481,7 +482,7 @@ class ProyectoController extends Controller
   */
   public function create()
   {
-    switch (\Session::get('login_role')) {
+    switch ( Session::get('login_role') ) {
       case User::IsGestor():
       // dd(AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'));
       // dd();
@@ -545,7 +546,7 @@ class ProyectoController extends Controller
       Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
       return back();
     } else {
-      switch (\Session::get('login_role')) {
+      switch ( Session::get('login_role') ) {
         case User::IsGestor():
         $entidad = "";
         $articulacion_repository = "";
@@ -608,7 +609,7 @@ class ProyectoController extends Controller
   */
   public function update(Request $request, $id)
   {
-    if (\Session::get('login_role') == User::IsDinamizador()) {
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
       $messages = [
       'txtgestor_id.required' => 'El Gestor es obligatorio.',
       ];

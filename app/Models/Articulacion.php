@@ -23,13 +23,6 @@ class Articulacion extends Model
     const IS_EJECUCION = 1; // EL ESTADO DE LA ARTICULACIÓN ES EJECUCICIÓM Ó CO-EJECUCICIÓM
     const IS_CIERRE    = 2; // EL ESTADO DE LA ARTICULACIÓN ES CIERRE
 
-    //Constatens del campo revisado_final
-    const IS_POREVALUAR = 0;
-    const IS_APROBADO   = 1;
-    const IS_NOAPROBADO = 2;
-
-
-
     protected $table = 'articulaciones';
 
     protected $casts = [
@@ -109,7 +102,7 @@ class Articulacion extends Model
             'tipoarticulacion' => function ($query) {
                 $query->select('id', 'nombre');
             },
-             
+
         ])->select('id', 'articulacion_proyecto_id','tipoarticulacion_id','estado')
           ->where('estado',$estado);
     }
@@ -131,14 +124,14 @@ class Articulacion extends Model
     /*=========================================================================
     =            scope para consultar por estado de articulaciones            =
     =========================================================================*/
-    
+
     public function scopeEstadoOfArticulaciones($query, array $estado = [])
     {
         return $query->whereIn('estado',$estado);
     }
-    
+
     /*=====  End of scope para consultar por estado de articulaciones  ======*/
-    
+
 
 
 
