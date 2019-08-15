@@ -7,8 +7,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
 
+
 class Idea extends Model
 {
+  
   // use Notifiable;
 
   /*=================================================================
@@ -71,7 +73,7 @@ class Idea extends Model
 
     public function getNombreCompletoAttribute()
     {
-      return ucfirst($this->nombrec) . ' ' . ucfirst($this->apellidoc);
+      return ucfirst($this->nombres_contacto) . ' ' . ucfirst($this->apellidos_contacto);
     }
 
     /*===============================================================
@@ -249,5 +251,7 @@ class Idea extends Model
       ->where('estadosidea.nombre', 'Inicio')
       ->where('tipo_idea', $this->IsEmprendedor());
     }
+
+    
 
   }

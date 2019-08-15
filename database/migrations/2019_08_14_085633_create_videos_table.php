@@ -17,18 +17,10 @@ class CreateVideosTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('servidor_video_id');
             $table->string('ruta', 1000);
             $table->integer('videoble_id')->unsigned();
             $table->string('videoble_type');
             $table->timestamps();
-
-            $table->index(["servidor_video_id"], 'fk_servidor_videos_video_idx');
-
-            $table->foreign('servidor_video_id', 'fk_servidor_videos_video_idx')
-                ->references('id')->on('servidor_videos')
-                ->onDelete('no action')
-                ->onUpdate('no action');
 
         });
     }

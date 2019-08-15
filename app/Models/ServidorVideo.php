@@ -20,7 +20,7 @@ class ServidorVideo extends Model
 
     public function getNombreAttribute($nombre)
     {
-        return ucwords(mb_strtolower(trim($nombre),'UTF-8'));
+        return mb_strtolower(trim($nombre),'UTF-8');
     }
 
     public function getDominoAttribute($dominio)
@@ -40,7 +40,7 @@ class ServidorVideo extends Model
 
     public function setNombreAttribute($nombre)
     {
-        $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre),'UTF-8'));
+        $this->attributes['nombre'] = mb_strtolower(trim($nombre),'UTF-8');
     }
 
     /*=====  End of mutador eloquent  ======*/

@@ -24,7 +24,7 @@ class IdeaFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules =  [
             'txtnodo'            => 'required',
             'txtnombres'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtapellidos'       => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
@@ -38,8 +38,16 @@ class IdeaFormRequest extends FormRequest
             'txtobjetivo'        => 'required|min:1|max:2000',
             'txtalcance'         => 'required|min:1|max:2000',
             'txtservidorvideo'   => 'required',
-            'txtlinkvideo'   => ['required','url',new CreateValidationForDomainRequest],
+            // 'txtlinkvideo'       => ['required', 'url', new CreateValidationForDomainRequest],
+            'txtlinkvideo'       => ['required', 'url'],
         ];
+
+        // $rules->sometimes('txtlinkvideo', 'required', function ($input) {
+        //     // return $input->games >= 100;
+        //     dd($input);
+        // });
+
+        return $rules;
     }
 
     public function messages()
