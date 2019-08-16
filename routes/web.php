@@ -21,9 +21,9 @@ DB::listen(function ($query) {
 =            ruta para revisar estilos de los ema           =
 ===========================================================*/
 
-// Route::get('email', function () {
-//     return new App\Mail\User\SendNotificationPassoword(App\User::first(), '2342342');
-// });
+Route::get('email', function () {
+    return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
+});
 
 /*=====  End of ruta para revisar estilos d los ema  ======*/
 

@@ -8,9 +8,9 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 @if (session()->has('success'))
-                <div class="col s12 m6 l6 offset-l3 m3">
+                <div class="valign-wrapper  col s12 m6 l6 offset-l3 m3">
                     <blockquote>
-                        <ul class="collection">
+                        <ul class="collection center-align">
                             <li class="collection-item">
                                 <h3 class="center-align">
                                     El SENA te da la bienvenida a su 
@@ -97,7 +97,7 @@
                                             <i class="material-icons prefix">
                                                 email
                                             </i>
-                                            <input class="validate" id="txtcorreo" name="txtcorreo" type="email" value="{{ old('txtcorreo') }}">
+                                            <input class="validate" id="txtcorreo" name="txtcorreo" type="text" value="{{ old('txtcorreo') }}">
                                             <label for="txtcorreo">Correo Electronico  <span class="red-text">*</span></label>
                                             @error('txtcorreo')
                                                 <label id="txtcorreo-error" class="error" for="txtcorreo">{{ $message }}</label>
@@ -127,21 +127,17 @@
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <i class="material-icons prefix">
-                                                domain
+                                                 domain
                                             </i>
-                                            <label class="active" for="txtnodo">
-                                                Tecnoparque más Cercano  <span class="red-text">*</span>
-                                            </label>
-                                            <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
-                                                <option value="">
-                                                    Seleccione Nodo *
-                                                </option>
-                                                @foreach($nodos as $nodo)
-                                                <option value="{{$nodo->id}}"  {{ old('txtnodo') == $nodo->id ? 'selected':'' }}>
-                                                    {{$nodo->nodos}}
-                                                </option>
-                                                @endforeach
+                                            <select class="" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
+                                                <option value="">Seleccione Nodo</option>
+                                                    @foreach($nodos as $nodo)
+                                                    <option value="{{$nodo->id}}"  {{ old('txtnodo') == $nodo->id ? 'selected':'' }}>
+                                                        {{$nodo->nodos}}
+                                                    </option>
+                                                    @endforeach
                                             </select>
+                                            <label for="txtnodo">Tecnoparque más Cercano <span class="red-text">*</span></label>
                                             @error('txtnodo')
                                                 <label id="txtnodo-error" class="error" for="txtnodo">{{ $message }}</label>
                                             @enderror
@@ -156,6 +152,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12 m12 l12 offset-l6 m6 s6">
@@ -286,7 +283,7 @@
                                         <br>
                                         <div class="input-field col s12 m12 l12">
                                             <label>
-                                                ¿Cómo está conformado su equipo de trabajo? *
+                                                ¿Cómo está conformado su equipo de trabajo? <span class="red-text">*</span>
                                             </label>
                                         </div>
                                         <div class="row">
@@ -331,7 +328,7 @@
                                         <br>
                                         <div class="input-field col s12 m12 l12">
                                             <label>
-                                                Marque en cuál de las siguientes categorías clasificaría su propuesta*
+                                                Marque en cuál de las siguientes categorías clasificaría su propuesta<span class="red-text">*</span>
                                             </label>
                                         </div>
                                         <div class="row">
@@ -396,10 +393,10 @@
                                                 <i class="material-icons prefix">
                                                     create
                                                 </i>
-                                                <textarea class="materialize-textarea" id="txtdescripcion" length="1000" name="txtdescripcion">{{ old('txtdescripcion') }}
+                                                <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">{{ old('txtdescripcion') }}
                                                 </textarea>
                                                 <label for="txtdescripcion">
-                                                    Descripción del Proyecto *
+                                                    Descripción del Proyecto <span class="red-text">*</span>
                                                 </label>
                                                 @error('txtdescripcion')
                                                     <label id="txtdescripcion-error" class="error" for="txtdescripcion">{{ $message }}</label>
@@ -409,10 +406,10 @@
                                                 <i class="material-icons prefix">
                                                     create
                                                 </i>
-                                                <textarea class="materialize-textarea" id="txtobjetivo" length="1000" name="txtobjetivo">{{ old('txtobjetivo') }}
+                                                <textarea class="materialize-textarea" id="txtobjetivo" length="2000" name="txtobjetivo">{{ old('txtobjetivo') }}
                                                 </textarea>
                                                 <label for="txtobjetivo">
-                                                    Objetivo general del Proyecto *
+                                                    Objetivo general del Proyecto <span class="red-text">*</span>
                                                 </label>
                                                 @error('txtobjetivo')
                                                         <label id="txtobjetivo-error" class="error" for="txtobjetivo">{{ $message }}</label>
@@ -424,11 +421,11 @@
                                                 <i class="material-icons prefix">
                                                     create
                                                 </i>
-                                                <textarea class="materialize-textarea" id="txtalcance" length="1000" name="txtalcance">
+                                                <textarea class="materialize-textarea" id="txtalcance" length="2000" name="txtalcance">
                                                     {{ old('txtalcance') }}
                                                 </textarea>
                                                 <label for="txtalcance">
-                                                    Alcance del Proyecto *
+                                                    Alcance del Proyecto <span class="red-text">*</span>
                                                 </label>
                                                 @error('txtalcance')
                                                     <label id="txtalcance-error" class="error" for="txtalcance">{{ $message }}</label>
@@ -459,7 +456,7 @@
                                                     @enderror
                                                 </div>
                                                 <label for="txtlinkvideo" class="active">
-                                                    link video *
+                                                    link video <span class="red-text">*</span>
                                                 </label>
                                                 
                                             </div>

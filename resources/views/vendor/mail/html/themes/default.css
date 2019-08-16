@@ -303,3 +303,18 @@ img {
     font-size: 15px;
     text-align: center;
 }
+
+.promotion table{
+    padding: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f79646 #ccc;
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+
+
+
+
