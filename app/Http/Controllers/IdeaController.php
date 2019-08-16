@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 
+use Alert;
 use App\Events\Idea\IdeaHasReceived;
+use App\Events\Idea\IdeaSend;
+use App\Helpers\ArrayHelper;
 use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest, IdeaEGIFormRequest};
 use App\Mail\IdeaEnviadaEmprendedor;
 use App\Models\{EstadoIdea, Idea, Nodo};
-use App\Notifications\IdeaRecibidaInfocenter;
+use App\Notifications\Idea\IdeaReceived;
+use App\Repositories\Repository\ConfiguracionRepository\ServidorVideoRepository;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\{Cache, Mail, Session};
-use App\Events\Idea\IdeaSend;
-use App\Helpers\ArrayHelper;
-use Alert;
 
 
 
@@ -89,10 +91,39 @@ class IdeaController extends Controller
   *
   * @return \Illuminate\Http\Response
   */
-  public function index()
+  public function index(ServidorVideoRepository $servidorVideoRepository)
   {
     $nodos = $this->ideaRepository->getSelectNodo();
-    return view('ideas.fanpage', compact('nodos'));
+    $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
+
+    $idea = Idea::with([
+      'nodo'=> function ($query) {
+                $query->select('id','direccion','entidad_id');
+            },
+      'nodo.entidad'=>function ($query) {
+                $query->select('id','nombre','ciudad_id');
+            },
+      'nodo.entidad.ciudad'=>function ($query) {
+                $query->select('id','nombre','departamento_id');
+            },
+      
+      'nodo.entidad.ciudad.departamento'=>function ($query) {
+                $query->select('id','nombre');
+            },
+   
+      'nodo.infocenter'
+    ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')
+    ->first();
+
+    // dd($idea->nodo->infocenter->last()->extension);  
+    // // 
+    // // $idea->nodo->infocenter->toArray();
+
+    // dd($idea);
+    
+    
+
+    return view('ideas.fanpage', compact('nodos','servidorVideo'));
   }
 
   // ------------------------------- Método registrar una idea de proyecto con empresas o grupos de investigación
@@ -194,12 +225,41 @@ class IdeaController extends Controller
   //IdeaFormRequest
   public function store(IdeaFormRequest $request)
   {
+    
     $idea = $this->ideaRepository->Store($request);
     if ($idea != null) {
-      alert()->success('Registro Exitoso!','La idea ha sido creado satisfactoriamente.')->showConfirmButton('Ok', '#3085d6');
-    }else{
-      alert()->error('Registro Erróneo!','La idea  no se ha creado.')->showConfirmButton('Ok', '#3085d6');
+      
+        $idea->with([
+      'nodo'=> function ($query) {
+                $query->select('id','direccion','entidad_id');
+            },
+      'nodo.entidad'=>function ($query) {
+                $query->select('id','nombre','ciudad_id');
+            },
+      'nodo.entidad.ciudad'=>function ($query) {
+                $query->select('id','nombre','departamento_id');
+            },
+      'nodo.entidad.ciudad.departamento'=>function ($query) {
+                $query->select('id','nombre');
+            },
+      'nodo.infocenter'
+    ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')->get();
+
+        $users = User::infoUserRoleNodo('Infocenter',$idea->nodo_id)->whereHas(
+                'infocenter.nodo', function ($query) use ($idea) {
+                    $query->where('id', $idea->nodo_id);
+            })->get();
+
+        event(new IdeaHasReceived($idea));
+        Notification::send($users,new IdeaReceived($idea));
+
+        return redirect()->back()->withSuccess('succes');
+       
+      // alert()->success('Registro Exitoso!','La idea ha sido creado satisfactoriamente.')->showConfirmButton('Ok', '#3085d6');
     }
+    // else{
+      // alert()->error('Registro Erróneo!','La idea  no se ha creado.')->showConfirmButton('Ok', '#3085d6');
+    // }
 
     return redirect('ideas');
   }
@@ -215,18 +275,7 @@ class IdeaController extends Controller
     return redirect('idea');
   }
 
-  /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    $idea = $this->ideaRepository->findByid($id);
-    return $idea;
-  }
-
+ 
   /**
   * Show the form for editing the specified resource.
   *

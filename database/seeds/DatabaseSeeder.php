@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
                 'nivelesacademicos',
                 'fases',
                 'ideas',
-                'videos',
+                'ruta_model',
                 'servidor_videos',
 
             ]);
@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
                 'ideas',
                 'tiposedt',
                 'tiposvisitante',
-                'videos',
+                'ruta_model',
                 'servidor_videos',
             ]);
         }else{

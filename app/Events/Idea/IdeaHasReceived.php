@@ -13,15 +13,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class IdeaHasReceived
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $idea;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($idea)
     {
-        //
+        $this->idea = $idea;
     }
 
     /**

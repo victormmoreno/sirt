@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Idea;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class IdeaRecibidaInfocenter extends Notification implements ShouldQueue
+class IdeaReceived extends Notification 
 {
     use Queueable;
     public $idea;
-    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($idea, $user)
+    public function __construct($idea)
     {
         $this->idea = $idea;
-        $this->user = $user;
+
     }
 
     /**
@@ -32,7 +31,7 @@ class IdeaRecibidaInfocenter extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -43,12 +42,12 @@ class IdeaRecibidaInfocenter extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-       return (new MailMessage)
-                    ->subject('Nueva Idea | '. $this->user->nombrenodo)
-                    // ->greeting('Hola, <br>' . $this->idea->nombre_completo. '<br> Cordial Saludo.')
-                    // ->line('Ha recibido este mensaje porque el señor(a) '.$this->idea->nombre_completo.' ha adjuntado una nueva idea.')
-                    // ->line('Gracias por usar nuestra aplicación!');
-                    ->markdown('emails.idea.Idea-enviada-infocenter',['user'=>$this->user,'idea'=> $this->idea]);
+        return (new MailMessage)
+            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->subject('Idea Recibida | Tecnorque Nodo ' . $this->idea->nodo->entidad->nombre)
+            ->greeting('Hola ' . $this->idea->nombres_contacto . ' ' . $this->idea->apellidos_contacto . ',')
+
+            ->markdown('emails.idea.Idea-enviada', ['idea' => $this->idea]);
     }
 
     /**
@@ -60,8 +59,10 @@ class IdeaRecibidaInfocenter extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'link' => route('ideas.show', $this->idea->id),
+            'link' => route('idea.ideas'),
             'text' => 'Haz recibido una nueva idea  '. $this->idea->nombreproyecto,
         ];
+        //
+        // return $this->idea->toArray();
     }
 }

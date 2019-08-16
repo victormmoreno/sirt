@@ -13,17 +13,16 @@ class IdeaEnviadaEmprendedor extends Mailable implements ShouldQueue
 
     public $subject = 'Idea Recibida';
     public $idea;
-    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($idea, $user)
+    public function __construct($idea)
     {
         $this->idea = $idea;
-        $this->user = $user;
+
     }
 
     /**

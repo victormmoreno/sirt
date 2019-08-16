@@ -26,6 +26,6 @@ $factory->define(Idea::class, function (Faker $faker) {
         'tipo_idea'=> $faker->randomElement([ Idea::IS_EMPRENDEDOR, Idea::IS_GRUPOINVESTIGACION]),
         'nodo_id'=> Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
         'estadoidea_id'=> 1,
-        'url_video'=> $faker->url,
+    
     ];
 });

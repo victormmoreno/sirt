@@ -7,8 +7,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 
 
+
 class Idea extends Model
 {
+  
   // use Notifiable;
 
   /*=================================================================
@@ -64,14 +66,14 @@ class Idea extends Model
       return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
-    public function video()
+    public function rutamodel()
     {
-      return $this->morphOne(Video::class, 'videoble');
+      return $this->morphOne(Video::class, 'model');
     }
 
     public function getNombreCompletoAttribute()
     {
-      return ucfirst($this->nombrec) . ' ' . ucfirst($this->apellidoc);
+      return ucfirst($this->nombres_contacto) . ' ' . ucfirst($this->apellidos_contacto);
     }
 
     /*===============================================================
@@ -249,5 +251,7 @@ class Idea extends Model
       ->where('estadosidea.nombre', 'Inicio')
       ->where('tipo_idea', $this->IsEmprendedor());
     }
+
+    
 
   }

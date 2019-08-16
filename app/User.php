@@ -174,13 +174,12 @@ class User extends Authenticatable implements JWTSubject
 
     /*=====  End of relaciones eloquent  ======*/
 
-    public function scopeInfoUserNodo($query, $role, $nodo)
+    public function scopeInfoUserRoleNodo($query, $role, $nodo)
     {
 
-        return $query->select(['users.id', 'users.documento', 'users.nombres', 'users.apellidos', 'users.email', 'users.direccion as user_direccion', 'users.telefono', 'users.celular', 'users.fechanacimiento', 'users.descripcion_ocupacion', 'users.estado', DB::raw("CONCAT('Tecnoparque Nodo ',nodos.nombre) as nombrenodo"), 'nodos.direccion as nodo_direccion'])
-            ->join('nodos', 'nodos.id', '=', 'users.nodo_id')
-            ->role($role)
-            ->where('nodos.id', '=', $nodo);
+        return $query->with(['infocenter','infocenter.nodo'])
+            ->role($role);
+            
     }
 
 
