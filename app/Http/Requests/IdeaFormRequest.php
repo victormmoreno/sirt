@@ -38,8 +38,8 @@ class IdeaFormRequest extends FormRequest
             'txtobjetivo'        => 'required|min:1|max:2000',
             'txtalcance'         => 'required|min:1|max:2000',
             'txtservidorvideo'   => 'required',
-            // 'txtlinkvideo'       => ['required', 'url', new CreateValidationForDomainRequest],
-            'txtlinkvideo'       => ['required', 'url'],
+            'txtlinkvideo'       => ['required', 'url', new CreateValidationForDomainRequest],
+            // 'txtlinkvideo'       => ['required', 'url'],
         ];
 
         // $rules->sometimes('txtlinkvideo', 'required', function ($input) {

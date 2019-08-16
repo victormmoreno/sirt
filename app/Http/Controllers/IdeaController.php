@@ -115,11 +115,11 @@ class IdeaController extends Controller
     ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')
     ->first();
 
-    dd($idea->nodo->infocenter->last()->extension);  
+    // dd($idea->nodo->infocenter->last()->extension);  
     // // 
     // // $idea->nodo->infocenter->toArray();
 
-    dd($idea);
+    // dd($idea);
     
     
 
@@ -253,11 +253,13 @@ class IdeaController extends Controller
         event(new IdeaHasReceived($idea));
         Notification::send($users,new IdeaReceived($idea));
 
+        return redirect()->back()->withSuccess('succes');
        
-      alert()->success('Registro Exitoso!','La idea ha sido creado satisfactoriamente.')->showConfirmButton('Ok', '#3085d6');
-    }else{
-      alert()->error('Registro Erróneo!','La idea  no se ha creado.')->showConfirmButton('Ok', '#3085d6');
+      // alert()->success('Registro Exitoso!','La idea ha sido creado satisfactoriamente.')->showConfirmButton('Ok', '#3085d6');
     }
+    // else{
+      // alert()->error('Registro Erróneo!','La idea  no se ha creado.')->showConfirmButton('Ok', '#3085d6');
+    // }
 
     return redirect('ideas');
   }

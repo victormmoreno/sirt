@@ -7,6 +7,24 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
+                @if (session()->has('success'))
+                <div class="col s12 m6 l6 offset-l3 m3">
+                    <blockquote>
+                        <ul class="collection">
+                            <li class="collection-item">
+                                <h3 class="center-align">
+                                    El SENA te da la bienvenida a su 
+                                    programa {{config('app.name')}},
+                                    ahora podrás acceder a los servicios 
+                                    que la red ofrece para tí.
+                                </h3>
+                                <h4>El Registro ha sido guardado​ exitosamente.</h4>
+                                Regresar al<a href="">Inicio</a>
+                            </li>
+                        </ul>
+                    </blockquote>
+                </div>
+                @else
                 <h5>
                     <a class="footer-text left-align" href="">
                         <i class="material-icons arrow-l">
@@ -18,7 +36,7 @@
                 <div class="card stats-card">
                     <div class="card-content">
                         <div class="row" method="post">
-                            <form class="col s12 m12 l12" method="post" action="{{ route('idea.store') }}">
+                            <form class="col s12 m12 l12" method="post" action="{{ route('idea.store') }}" onsubmit="return checkSubmit()">
                                 @csrf
                                 @if ($errors->any())
                                 <div class="card red lighten-3">
@@ -37,8 +55,6 @@
                                 </div>
                                 @endif
                                 <center>
-                                    
-
                                     <p align="center" class="description text-center">
                                         Ingresa tu idea de proyecto aquí debajo.
                                     </p>
@@ -60,7 +76,7 @@
                                                 account_circle
                                             </i>
                                             <input class="validate" id="txtnombres" name="txtnombres" type="text" value="{{ old('txtnombres') }}">
-                                            <label for="txtnombres">Nombres *</label>
+                                            <label for="txtnombres">Nombres  <span class="red-text">*</span></label>
                                             @error('txtnombres')
                                                 <label id="txtnombres-error" class="error" for="txtnombres">{{ $message }}</label>
                                             @enderror
@@ -70,7 +86,7 @@
                                                 account_circle
                                             </i>
                                             <input class="validate" id="txtapellidos" name="txtapellidos" type="text" value="{{ old('txtapellidos') }}">
-                                            <label for="txtapellidos">Apellidos *</label>
+                                            <label for="txtapellidos">Apellidos  <span class="red-text">*</span></label>
                                             @error('txtapellidos')
                                                  <label id="txtapellidos-error" class="error" for="txtapellidos">{{ $message }}</label>
                                             @enderror
@@ -82,7 +98,7 @@
                                                 email
                                             </i>
                                             <input class="validate" id="txtcorreo" name="txtcorreo" type="email" value="{{ old('txtcorreo') }}">
-                                            <label for="txtcorreo">Correo Electronico *</label>
+                                            <label for="txtcorreo">Correo Electronico  <span class="red-text">*</span></label>
                                             @error('txtcorreo')
                                                 <label id="txtcorreo-error" class="error" for="txtcorreo">{{ $message }}</label>
                                             @enderror
@@ -92,7 +108,7 @@
                                                 phone
                                             </i>
                                             <input class="validate" id="txttelefono" name="txttelefono" type="tel" value="{{ old('txttelefono') }}">
-                                            <label for="txttelefono">Telefono *</label>
+                                            <label for="txttelefono">Teléfono / Celular  <span class="red-text">*</span></label>
                                             @error('txttelefono')
                                                 <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
                                             @enderror
@@ -104,7 +120,7 @@
                                                 library_books
                                             </i>
                                             <input class="validate" id="txtnombrep_royecto" name="txtnombre_proyecto" type="text" value="{{ old('txtnombre_proyecto') }}">
-                                            <label for="txtnombre_proyecto">Nombre de Proyecto *</label>
+                                            <label for="txtnombre_proyecto">Nombre de Proyecto  <span class="red-text">*</span></label>
                                             @error('txtnombre_proyecto')
                                                 <label id="txtnombre_proyecto-error" class="error" for="txtnombre_proyecto">{{ $message }}</label>
                                             @enderror
@@ -114,7 +130,7 @@
                                                 domain
                                             </i>
                                             <label class="active" for="txtnodo">
-                                                Nodo *
+                                                Tecnoparque más Cercano  <span class="red-text">*</span>
                                             </label>
                                             <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
                                                 <option value="">
@@ -148,7 +164,7 @@
                                                     toggle_on
                                                 </i>
                                                 <label class="active">
-                                                    ¿Es aprendiz SENA?*
+                                                    ¿Es aprendiz SENA?  <span class="red-text">*</span>
                                                 </label>
                                                 <label>
                                                     No
@@ -178,7 +194,7 @@
                                         </div>
                                         <div class="input-field col s12 m12 l12">
                                             <label for="">
-                                                ¿En qué estado se encuentra su propuesta?*
+                                                ¿En qué estado se encuentra su propuesta?  <span class="red-text">*</span>
                                             </label>
                                         </div>
                                         <div class="row">
@@ -473,6 +489,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
