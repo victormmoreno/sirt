@@ -36,6 +36,7 @@ class EdtController extends Controller
   * @param int id Id de la edt
   * @param boolean tipo Tipo de petición que se hace (si es 1, se consultará para mostrar la entidades, si es 0 se consultará para mostrar información de la edt)
   * @return Response
+  * @author Victor Manuel Moreno Vega
   */
   public function consultarDetallesDeUnaEdt($id, $tipo)
   {
@@ -60,6 +61,7 @@ class EdtController extends Controller
    * Entregables de una edt
    * @param int id Id de la edt
    * @return Response
+   * @author Victor Manuel Moreno Vega
    */
   public function entregables($id)
   {
@@ -84,6 +86,7 @@ class EdtController extends Controller
   * Datatable que muestra las edts
   * @param object consulta Consulta la cual se generará la datatable
   * @return Response
+  * @author Victor Manuel Moreno Vega
   */
   private function datatableEdts($consulta)
   {

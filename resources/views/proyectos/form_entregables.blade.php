@@ -39,21 +39,23 @@
 </div>
 {{-- Inicio para subir entregables en la fase de inicio --}}
 @if (\Session::get('login_role') == App\User::IsGestor())
-  <div class="row">
-    <ul class="collapsible" data-collapsible="accordion">
-      <li>
-        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Inicio.</div>
-        <div class="collapsible-body">
-          <div class="row">
-            <div class="center col s12 m12 l12">
-              <h6>Pulse aquí para subir los entregables de la fase de Inicio.</h6>
-              <div class="dropzone" id="fase_inicio_proyecto"></div>
+  @if ( $proyecto->nombre_estadoproyecto != 'Cierre PF' && $proyecto->nombre_estadoproyecto != 'Cierre PMV' )
+    <div class="row">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Inicio.</div>
+          <div class="collapsible-body">
+            <div class="row">
+              <div class="center col s12 m12 l12">
+                <h6>Pulse aquí para subir los entregables de la fase de Inicio.</h6>
+                <div class="dropzone" id="fase_inicio_proyecto"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </li>
-    </ul>
-  </div>
+        </li>
+      </ul>
+    </div>
+  @endif
 @endif
 {{-- Fin para subir entregables en la fase de inicio --}}
 <div class="divider"></div>
@@ -74,21 +76,23 @@
 </div>
 {{-- Inicio para subir entregables en la fase de planeacion --}}
 @if (\Session::get('login_role') == App\User::IsGestor())
-  <div class="row">
-    <ul class="collapsible" data-collapsible="accordion">
-      <li>
-        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Planeación.</div>
-        <div class="collapsible-body">
-          <div class="row">
-            <div class="center col s12 m12 l12">
-              <h6>Pulse aquí para subir los entregables de la fase de Planeación.</h6>
-              <div class="dropzone" id="fase_planeacion_proyecto"></div>
+  @if ( $proyecto->nombre_estadoproyecto != 'Cierre PF' && $proyecto->nombre_estadoproyecto != 'Cierre PMV' )
+    <div class="row">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Planeación.</div>
+          <div class="collapsible-body">
+            <div class="row">
+              <div class="center col s12 m12 l12">
+                <h6>Pulse aquí para subir los entregables de la fase de Planeación.</h6>
+                <div class="dropzone" id="fase_planeacion_proyecto"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </li>
-    </ul>
-  </div>
+        </li>
+      </ul>
+    </div>
+  @endif
 @endif
 
 {{-- Fin para subir entregables en la fase de planeacion --}}
@@ -119,21 +123,23 @@
 </div>
 {{-- Inicio para subir entregables en la fase de ejecucion --}}
 @if (\Session::get('login_role') == App\User::IsGestor())
-  <div class="row">
-    <ul class="collapsible" data-collapsible="accordion">
-      <li>
-        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Ejecución.</div>
-        <div class="collapsible-body">
-          <div class="row">
-            <div class="center col s12 m12 l12">
-              <h6>Pulse aquí para subir los entregables de la fase de Ejecución.</h6>
-              <div class="dropzone" id="fase_ejecucion_proyecto"></div>
+  @if ( $proyecto->nombre_estadoproyecto != 'Cierre PF' && $proyecto->nombre_estadoproyecto != 'Cierre PMV' )
+    <div class="row">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Ejecución.</div>
+          <div class="collapsible-body">
+            <div class="row">
+              <div class="center col s12 m12 l12">
+                <h6>Pulse aquí para subir los entregables de la fase de Ejecución.</h6>
+                <div class="dropzone" id="fase_ejecucion_proyecto"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </li>
-    </ul>
-  </div>
+        </li>
+      </ul>
+    </div>
+  @endif
 @endif
 
 {{-- Fin para subir entregables en la fase de ejecucion --}}
@@ -162,21 +168,23 @@
 </div>
 {{-- Inicio para subir entregables en la fase de cierre --}}
 @if (\Session::get('login_role') == App\User::IsGestor())
-  <div class="row">
-    <ul class="collapsible" data-collapsible="accordion">
-      <li>
-        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Cierre.</div>
-        <div class="collapsible-body">
-          <div class="row">
-            <div class="center col s12 m12 l12">
-              <h6>Pulse aquí para subir los entregables de la fase de Cierre.</h6>
-              <div class="dropzone" id="fase_cierre_proyecto"></div>
+  @if ( $proyecto->nombre_estadoproyecto != 'Cierre PF' && $proyecto->nombre_estadoproyecto != 'Cierre PMV' )
+    <div class="row">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li>
+          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables de la fase de Cierre.</div>
+          <div class="collapsible-body">
+            <div class="row">
+              <div class="center col s12 m12 l12">
+                <h6>Pulse aquí para subir los entregables de la fase de Cierre.</h6>
+                <div class="dropzone" id="fase_cierre_proyecto"></div>
+              </div>
             </div>
           </div>
-        </div>
-      </li>
-    </ul>
-  </div>
+        </li>
+      </ul>
+    </div>
+  @endif
 @endif
 {{-- Fin para subir entregables en la fase de cierre --}}
 <div class="divider"></div>

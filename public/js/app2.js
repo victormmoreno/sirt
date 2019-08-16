@@ -2843,49 +2843,6 @@ $(document).ready(function() {
       },
     ],
   });
-
-  // $('#empresasDeTecnoparque_tableNoGestor').DataTable({
-  //   language: {
-  //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-  //   },
-  //   processing: true,
-  //   serverSide: true,
-  //   ajax:{
-  //     url: "/empresa/datatableEmpresasDeTecnoparque",
-  //     type: "get",
-  //   },
-  //   columns: [
-  //     {
-  //       data: 'nit',
-  //       name: 'nit',
-  //     },
-  //     {
-  //       data: 'nombre_empresa',
-  //       name: 'nombre_empresa',
-  //     },
-  //     {
-  //       data: 'sector_empresa',
-  //       name: 'sector_empresa',
-  //     },
-  //     {
-  //       data: 'ciudad',
-  //       name: 'ciudad',
-  //     },
-  //     {
-  //       data: 'direccion',
-  //       name: 'direccion',
-  //     },
-  //     {
-  //       data: 'details',
-  //       name: 'details',
-  //       orderable: false
-  //     },
-  //     // {
-  //     //   data: 'soft_delete',
-  //     //   name: 'soft_delete',
-  //     //   orderable: false
-  //     // },
-  //   ],
 });
 
 function detallesDeUnaArticulacion(id){
@@ -4155,6 +4112,8 @@ function detallesDeUnaEdt(id) {
       /**
       * Pintando datos en el modal
       */
+      let fecha_cierre = "";
+      response.edt.estado == 'Inactiva' ? fecha_cierre = response.edt.fecha_cierre : fecha_cierre = 'La Edt aún se encuentra activa!';
       $("#detalleEdt_titulo").append("<span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
       $("#detalleEdt_detalle").append('<div class="row">'
       +'<div class="col s12 m6 l6">'
@@ -4202,6 +4161,16 @@ function detallesDeUnaEdt(id) {
       +'</div>'
       +'<div class="col s12 m6 l6">'
       +'<span class="black-text">'+response.edt.fecha_inicio+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Fecha de Cierre: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+fecha_cierre+'</span>'
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'

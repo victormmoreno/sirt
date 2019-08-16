@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\{Edt, TipoEdt};
+use App\Models\{Edt, TipoEdt, Actividad};
 use Carbon\Carbon;
 
 class EdtRepository
@@ -88,8 +88,8 @@ class EdtRepository
    */
   public function consultarDetalleDeUnaEdt($id)
   {
-    return Edt::select('edts.codigo_edt',
-    'edts.fecha_inicio',
+    return Edt::select('codigo_actividad AS codigo_edt',
+    'fecha_inicio',
     'edts.observaciones',
     'edts.empleados',
     'edts.instructores',
@@ -100,15 +100,17 @@ class EdtRepository
     'edts.id',
     'edts.tipoedt_id',
     'edts.areaconocimiento_id',
-    'edts.nombre')
-    ->selectRaw('IF(edts.estado = '.Edt::IsActive().', "Activo", "Inactivo") AS estado')
+    'actividades.fecha_cierre',
+    'actividades.nombre')
+    ->selectRaw('IF(edts.estado = '.Edt::IsActive().', "Activa", "Inactiva") AS estado')
     ->selectRaw('IF(edts.fotografias = 0, "No", "Si") AS fotografias')
     ->selectRaw('IF(edts.listado_asistencia = 0, "No", "Si") AS listado_asistencia')
     ->selectRaw('IF(edts.informe_final = 0, "No", "Si") AS informe_final')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
-    ->join('gestores', 'gestores.id', '=', 'edts.gestor_id')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('edts.id', $id)
     ->get()
@@ -119,6 +121,7 @@ class EdtRepository
    * Consulta las entidades de una edts
    * @param int id Id de la edt
    * @return Collection
+   * @author Victor Manuel Moreno Vega
    */
   public function entidadesDeUnaEdt($id)
   {
@@ -137,21 +140,23 @@ class EdtRepository
    * Consulta las edts por nodo
    * @param int id Id del nodo
    * @return Collection
+   * @author Victor Manuel Moreno Vega
    */
   public function consultarEdtsDeUnNodo($id)
   {
-    return Edt::select('codigo_edt',
+    return Edt::select('codigo_actividad AS codigo_edt',
     'tiposedt.nombre AS tipo_edt',
     'areasconocimiento.nombre AS area_conocimiento',
     'edts.id',
-    'edts.nombre')
+    'actividades.nombre')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('IF(edts.estado = '. Edt::IsActive() .', "Activa", "Inactiva") AS estado')
     ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
-    ->join('gestores', 'gestores.id', '=', 'edts.gestor_id')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
-    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->where('nodos.id', $id)
     ->get();
   }
@@ -163,16 +168,17 @@ class EdtRepository
    */
   public function consultarEdtsDeUnGestor($id)
   {
-    return Edt::select('codigo_edt',
+    return Edt::select('codigo_actividad AS codigo_edt',
     'tiposedt.nombre AS tipo_edt',
     'areasconocimiento.nombre AS area_conocimiento',
     'edts.id',
-    'edts.nombre')
+    'actividades.nombre')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('IF(edts.estado = '.Edt::IsActive().', "Activa", "Inactiva") AS estado')
     ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
-    ->join('gestores', 'gestores.id', '=', 'edts.gestor_id')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('gestores.id', $id)
     ->get();
@@ -185,8 +191,6 @@ class EdtRepository
    */
   public function storeEdtRepository($request)
   {
-    // $anho = Carbon::parse($request->txtfecha_inicio);
-    // $anho = $anho->isoFormat('YYYY');
     DB::beginTransaction();
     try {
 
@@ -201,11 +205,17 @@ class EdtRepository
       $idEdt->max = sprintf("%04d", $idEdt->max);
 
       $codigo_edt = 'E'. $anho . '-' . $idnodo . $linea . $gestor . '-' . $idEdt->max;
-      $edt = Edt::create([
-        'fecha_inicio' => $request->txtfecha_inicio,
-        'nombre' => $request->txtnombre,
-        'codigo_edt' => $codigo_edt,
+
+      $actividad = Actividad::create([
         'gestor_id' => auth()->user()->gestor->id,
+        'nodo_id' => auth()->user()->gestor->nodo_id,
+        'codigo_actividad' => $codigo_edt,
+        'nombre' => $request->txtnombre,
+        'fecha_inicio' => $request->txtfecha_inicio
+      ]);
+
+      $edt = Edt::create([
+        'actividad_id' => $actividad->id,
         'areaconocimiento_id' => $request->txtareaconocimiento_id,
         'tipoedt_id' => $request->txttipo_edt,
         'observaciones' => $request->txtobservaciones,
@@ -232,6 +242,7 @@ class EdtRepository
    * @param Request request Datos del formulario de edt (create)
    * @param int id Id del edt que se va a editar
    * @return boolean
+   * @author Victor Manuel Moreno Vega
    */
   public function updateEdtRepository($request, $id)
   {
@@ -246,11 +257,13 @@ class EdtRepository
         $fecha_fin = $request->txtfecha_fin;
       }
 
-      $update = $edt->update([
-        'fecha_inicio' => $request->txtfecha_inicio,
-        'fecha_fin' => $fecha_fin,
-        'estado' => $estado,
+      $edt->actividad()->update([
         'nombre' => $request->txtnombre,
+        'fecha_inicio' => $request->txtfecha_inicio,
+        'fecha_cierre' => $fecha_fin
+      ]);
+
+      $edt->update([
         'areaconocimiento_id' => $request->txtareaconocimiento_id,
         'tipoedt_id' => $request->txttipo_edt,
         'observaciones' => $request->txtobservaciones,
@@ -258,6 +271,7 @@ class EdtRepository
         'instructores' => $request->txtinstructores,
         'aprendices' => $request->txtaprendices,
         'publico' => $request->txtpublico,
+        'estado' => $estado
       ]);
 
       $edt->entidades()->sync($request->get('entidades'), true);
