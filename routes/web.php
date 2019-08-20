@@ -5,7 +5,7 @@ use App\Models\ServidorVideo;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    
+
     return view('spa');
 
 })->name('/');
@@ -186,7 +186,6 @@ Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentr
 //-------------------Route group para el módulo de ideas
 Route::group([
   'prefix' => 'idea',
-  'middleware' => ['auth', 'role_session:Infocenter|Administrador|Dinamizador|Gestir'],
 ],
 function () {
   Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
@@ -195,12 +194,12 @@ function () {
   Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
   Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
   Route::get('/consultarIdeasTodosPorNodo/{id}', 'IdeaController@dataTableIdeasTodosPorNodo')->name('idea.todas');
-  Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit');
+  Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
   Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
-  Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado');
-  Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
+  Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
+  Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Infocenter']);
   Route::post('/', 'IdeaController@store')->name('idea.store');
-  Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi');
+  Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi')->middleware(['auth', 'role_session:Infocenter']);
   Route::post('/addIdeaDeProyectoAlComite', 'IdeaController@addIdeaDeProyectoCreate');
 }
 );
