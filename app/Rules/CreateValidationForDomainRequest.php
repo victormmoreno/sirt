@@ -24,6 +24,8 @@ class CreateValidationForDomainRequest implements Rule
 
         // dd($servidor);
 
+        // dd($servidor);
+
         if($this->checkServer(["youtube.com","youtu.be"], $value ) ) {
             $pattern = '#^(?:https?://)?'; # Optional URL scheme. Either http or https.
             $pattern .= '(?:www\.)?'; #  Optional www subdomain.

@@ -174,10 +174,10 @@ class User extends Authenticatable implements JWTSubject
 
     /*=====  End of relaciones eloquent  ======*/
 
-    public function scopeInfoUserRoleNodo($query, $role, $nodo)
+    public function scopeInfoUserRole($query,array $role = [] , array $relations = [])
     {
 
-        return $query->with(['infocenter','infocenter.nodo'])
+        return $query->with($relations)
             ->role($role);
             
     }

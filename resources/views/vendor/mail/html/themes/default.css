@@ -299,6 +299,10 @@ img {
     text-align: center;
 }
 
+.promotion h2 {
+    text-align: center;
+}
+
 .promotion p {
     font-size: 15px;
     text-align: center;
@@ -313,6 +317,8 @@ img {
     border-collapse: collapse;
 
 }
+
+
 
 
 

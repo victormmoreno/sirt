@@ -19,14 +19,14 @@
                                     que la red ofrece para tí.
                                 </h3>
                                 <h4>El Registro ha sido guardado​ exitosamente.</h4>
-                                Regresar al<a href="">Inicio</a>
+                                Regresar al <a href="{{route('/')}}">Inicio</a>
                             </li>
                         </ul>
                     </blockquote>
                 </div>
                 @else
                 <h5>
-                    <a class="footer-text left-align" href="">
+                    <a class="footer-text left-align" href="{{route('/')}}">
                         <i class="material-icons arrow-l">
                             arrow_back
                         </i>
@@ -141,7 +141,7 @@
                                             @error('txtnodo')
                                                 <label id="txtnodo-error" class="error" for="txtnodo">{{ $message }}</label>
                                             @enderror
-                                            <div class="row">
+                                            {{-- <div class="row">
                                                 <div class="input-field col s2 m6 l6 offset-l8 m8 s2">
                                                     <a class="waves-effect waves-light btn" href="" target="_blank">
                                                         <i class="material-icons left">
@@ -150,7 +150,7 @@
                                                         ver mapa
                                                     </a>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         
                                     </div>

@@ -68,7 +68,7 @@ class Idea extends Model
 
     public function rutamodel()
     {
-      return $this->morphOne(Video::class, 'model');
+      return $this->morphOne(RutaModel::class, 'model');
     }
 
     public function getNombreCompletoAttribute()

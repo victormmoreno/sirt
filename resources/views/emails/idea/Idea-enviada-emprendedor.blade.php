@@ -7,45 +7,24 @@ Cordial Saludo.
 
 Ha recibido este mensaje porque hemos recibido una idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}
 
-@component('mail::table')
-	| Código Idea | {{$idea->codigo_idea}} |
-	||------------|
-	| Nombre Idea de proyecto | {{$idea->nombre_proyecto}} |
-
-
-
-@endcomponent
 
 @component('mail::panel')
-	
-	asdasasfasdfasfsdf
+	información Idea
 @endcomponent
 
 @component('mail::promotion')
-	<h3 >Código Idea: </h3>{{$idea->codigo_idea}}
-<table class="table table-striped">
-  
-  <tbody>
-    <tr>
-      <td><b>Código Idea</b></td>
-      <td>{{$idea->codigo_idea}}</td>
-    
-    </tr>
-    <tr>
-      <td>Nombre Idea de proyecto </td>
-      <td>{{$idea->nombre_proyecto}}</td>
-    </tr>
-    <tr>
-      <td>Larry</td>
-      <td>the Bird</td>
-    </tr>
-  </tbody>
-</table>
+  <center>
+      <h2>Código Idea: <strong>{{$idea->codigo_idea}}</strong></h2>
+      <h3>Nombre Idea de proyecto: <strong>{{$idea->nombre_proyecto}}</strong></h3>
+      <h2>Descripción</h2>
+      <small align="justify"><strong>{{$idea->descripcion}}</strong></small>
+  </center>
+	
 @endcomponent
 
+Para más información puede contactarse al telefono <b>{{ $idea->nodo->infocenter->last()->extension}}</b>.
 
 
-{{ $idea->nodo->infocenter->last()->extension}}
 
 Gracias,<br>
 {{config('mail.from.name')}} <br>
