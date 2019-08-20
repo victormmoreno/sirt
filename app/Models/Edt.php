@@ -43,4 +43,9 @@ class Edt extends Model
       return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
   }
 
+  public function entidades()
+  {
+    return $this->belongsToMany(Entidad::class, 'edt_entidad')->withTimestamps();
+  }
+
 }

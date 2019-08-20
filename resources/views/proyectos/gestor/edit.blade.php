@@ -48,7 +48,7 @@
                           <option value="">No hay información disponible</option>
                         @endforelse
                       </select>
-                      <label for="txttipoarticulacionproyecto_id">Tipo de Articulación <span class="red-text">*</span></label>
+                      <label for="txttipoarticulacionproyecto_id">Tipo de Proyecto <span class="red-text">*</span></label>
                       <small id="txttipoarticulacionproyecto_id-error" class="error red-text"></small>
                     </div>
                   </div>
@@ -636,10 +636,10 @@
       divUniversidadProyecto.show();
       @endif
 
-      @if ($proyecto->nombre_tipoarticulacion != 'Emprendedor' && $proyecto->nombre_tipoarticulacion != 'Proyecto financiado por SENNOVA' || $proyecto->nombre_tipoarticulacion != 'Otro')
-      divEntidadesTecnoparque.show();
-      @else
+      @if ($proyecto->nombre_tipoarticulacion == 'Emprendedor' || $proyecto->nombre_tipoarticulacion == 'Proyecto financiado por SENNOVA' || $proyecto->nombre_tipoarticulacion == 'Otro')
       divEntidadesTecnoparque.hide();
+      @else
+      divEntidadesTecnoparque.show();
       @endif
     }
 

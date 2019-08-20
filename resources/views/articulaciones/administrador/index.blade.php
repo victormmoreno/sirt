@@ -5,7 +5,7 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5><i class="material-icons">autorenew</i>Articulaciones</h5>
+        <h5><i class="left material-icons">autorenew</i>Articulaciones</h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
@@ -50,7 +50,15 @@
       order: [ 0, 'desc' ],
       ajax:{
         url: "/articulacion/datatableArticulacionesDelNodo/"+id,
-        type: "get",
+        data: function (d) {
+          d.codigo_articulacion = $('.codigo_articulacion').val(),
+          d.nombre = $('.nombre').val(),
+          d.tipo_articulacion = $('.tipo_articulacion').val(),
+          d.nombre_completo_gestor = $('.nombre_completo_gestor').val(),
+          d.estado = $('.estado').val(),
+          d.search = $('input[type="search"]').val()
+        }
+        // type: "get",
       },
       columns: [
         {
@@ -90,5 +98,25 @@
       ],
     });
   }
+
+  $(".codigo_articulacion").keyup(function(){
+    $('#articulacionesNodo_table').DataTable().draw();
+  });
+
+  $(".nombre").keyup(function(){
+    $('#articulacionesNodo_table').DataTable().draw();
+  });
+
+  $(".tipo_articulacion").keyup(function(){
+    $('#articulacionesNodo_table').DataTable().draw();
+  });
+
+  $(".nombre_completo_gestor").keyup(function(){
+    $('#articulacionesNodo_table').DataTable().draw();
+  });
+
+  $(".estado").keyup(function(){
+    $('#articulacionesNodo_table').DataTable().draw();
+  });
 </script>
 @endpush

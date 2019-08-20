@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{ArchivoArticulacion, Fase, Proyecto, ArchivoProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa, Articulacion};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\Storage;
 use App\User;
@@ -315,7 +315,12 @@ class ArchivoController extends Controller
     }
   }
 
-  // Sube los archivos de la articulación
+  /**
+  * @param Request $request
+  * @param int $id Id del proyecto
+  * @return void
+  * @author Victor Manuel Moreno Vega
+  */
   public function uploadFileProyecto(Request $request, $id)
   {
     if (request()->ajax()) {
@@ -329,13 +334,13 @@ class ArchivoController extends Controller
       $file = request()->file('nombreArchivo');
       // La ruta con la se guardan los archivos de un proyecto es la siguiente:
       // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
-      $idArchivoProyecto = ArchivoProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
-      $fileName = $idArchivoProyecto->max . '_' . $file->getClientOriginalName();
+      $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
+      $fileName = $idArchivoArtulacionProyecto->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
       $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
       $route = "";
       $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
-      $anho = $proyecto->fecha_inicio->isoFormat('YYYY');
+      $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
       $linea = $proyecto->lineatecnologica_id;
       $gestor = sprintf("%03d", $proyecto->gestor_id);
       $idproyecto = $proyecto->id;
@@ -344,7 +349,8 @@ class ArchivoController extends Controller
       $fase = $fase->nombre;
       $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
       $fileUrl = $file->storeAs($route, $fileName);
-      $this->archivoRepository->storeFileProyecto($id, $fase_id, Storage::url($fileUrl));
+      $id = $proyecto->articulacion_proyecto_id;
+      $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
       // exit($route);
     }
   }
@@ -360,10 +366,14 @@ class ArchivoController extends Controller
     return back();
   }
 
-  // Borra el archivo de un proyecto del servidor
+  /**
+  * @param int $idFile Id del archivo de la tabla archivos_articulacion_proyecto
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  */
   public function destroyFileProyecto($idFile)
   {
-    $file = ArchivoProyecto::find($idFile);
+    $file = ArchivoArticulacionProyecto::find($idFile);
     $file->delete();
     $filePath = str_replace('storage', 'public', $file->ruta);
     Storage::delete($filePath);
@@ -374,7 +384,7 @@ class ArchivoController extends Controller
   // Descarga el archivo de un proyecto
   public function downloadFileProyecto($idFile)
   {
-    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnProyectoPorId($idFile);
+    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
     return Storage::download($path);
   }
@@ -387,71 +397,73 @@ class ArchivoController extends Controller
     return Storage::download($path);
   }
 
-  // Datatable para mostar los archivos de una articulación
+  /**
+   * Muestra los archivos de una articulacion
+   */
   public function datatableArchivosDeUnaArticulacion($id)
   {
     if (request()->ajax()) {
-      if (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsDinamizador() || \Session::get('login_role') == User::IsAdministrador()) {
-        $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacion($id);
-        return datatables()->of($archivosDeLaArticulacion)
-        ->addColumn('download', function ($data) {
-          $download = '
-          <a target="_blank" href="' . route('articulacion.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-          <i class="material-icons">file_download</i>
-          </a>
-          ';
-          return $download;
-        })->addColumn('delete', function ($data) {
-          $delete = '<form method="POST" action="' . route('articulacion.files.destroy', $data) . '">
-          ' . method_field('DELETE') . '' .  csrf_field() . '
-          <button class="btn red darken-4 m-b-xs">
-          <i class="material-icons">delete_forever</i>
-          </button>
-          </form>';
-          return $delete;
-        })->addColumn('file', function ($data) {
-          $file = '
-          <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
-          ';
-          return $file;
-        })->rawColumns(['download', 'delete', 'file'])->make(true);
-      }
+      $articulacion = Articulacion::findOrFail($id);
+      $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($articulacion->articulacion_proyecto_id);
+      return $this->datatableArchivosArticulacionProyecto($archivosDeLaArticulacion);
     }
   }
 
-  // Datatable para mostar los archivos de un proyecto
+
+  /**
+  * Tabla para mostrar los archivos de una articulacion_proyecto
+  * @param int $id Id de la articulacion_proyecto
+  * @return Reponse
+  * @author Victor Manuel Moreno Vega
+  */
+  public function datatableArchivosArticulacionProyecto($query)
+  {
+    return datatables()->of($query)
+    ->addColumn('download', function ($data) {
+      $download = '
+      <a target="_blank" href="' . route('proyecto.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+      <i class="material-icons">file_download</i>
+      </a>
+      ';
+      return $download;
+    })->addColumn('delete', function ($data) {
+      $delete = '<form method="POST" action="' . route('proyecto.files.destroy', $data) . '">
+      ' . method_field('DELETE') . '' .  csrf_field() . '
+      <button class="btn red darken-4 m-b-xs">
+      <i class="material-icons">delete_forever</i>
+      </button>
+      </form>';
+      return $delete;
+    })->addColumn('file', function ($data) {
+      $file = '
+      <i class="material-icons">insert_drive_file</i> ' . basename(url($data->ruta) ) . '
+      ';
+      return $file;
+    })->rawColumns(['download', 'delete', 'file'])->make(true);
+  }
+
+  /**
+  * Muestra la datatable de los arcivos de un proyecto
+  * @param int $id Id del proyecto
+  * @return Datatable
+  * @author Victor Manuel Moreno Vega
+  */
   public function datatableArchivosDeUnProyecto($id)
   {
     if (request()->ajax()) {
-      if (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsDinamizador() || \Session::get('login_role') == User::IsAdministrador()) {
-        $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnProyecto($id);
-        return datatables()->of($archivosDeUnProyecto)
-        ->addColumn('download', function ($data) {
-          $download = '
-          <a target="_blank" href="' . route('proyecto.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-          <i class="material-icons">file_download</i>
-          </a>
-          ';
-          return $download;
-        })->addColumn('delete', function ($data) {
-          $delete = '<form method="POST" action="' . route('proyecto.files.destroy', $data) . '">
-          ' . method_field('DELETE') . '' .  csrf_field() . '
-          <button class="btn red darken-4 m-b-xs">
-          <i class="material-icons">delete_forever</i>
-          </button>
-          </form>';
-          return $delete;
-        })->addColumn('file', function ($data) {
-          $file = '
-          <i class="material-icons">insert_drive_file</i> ' . basename(url($data->ruta) ) . '
-          ';
-          return $file;
-        })->rawColumns(['download', 'delete', 'file'])->make(true);
-      }
+      $proyecto = Proyecto::findOrFail($id);
+      $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id);
+      return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto);
     }
   }
 
-  // Sube los archivos de la articulación
+  /**
+   * Subida de un arcivo al servidor
+   * @param Request
+   * @param int $id Id de la articulación
+   * @return void
+   * @author Victor Manuel Moreno Vega
+   */
   public function uploadFileArticulacion(Request $request, $id)
   {
     if (request()->ajax()) {
@@ -467,7 +479,7 @@ class ArchivoController extends Controller
       // id_nodo/anho_de_la_fecha_de_inicio_de_la_articulacion/Articulaciones/tipo_articulacion(AGI ó AEE)/id_de_la_articulacion/fase_del_archivo/max_id_archivo_articulacion_nombre_del_archivo.extension
 
       // Creando el nombre del archivo que se concatenerá con el max id de los archivos de la articulación
-      $idArchivoArticulacion = ArchivoArticulacion::selectRaw('MAX(id+1) AS max')->get()->last();
+      $idArchivoArticulacion = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
       $idArchivoArticulacion->max == null ? $idArchivoArticulacion->max = 1 : $idArchivoArticulacion->max = $idArchivoArticulacion->max;
       $fileName = $idArchivoArticulacion->max . '_' . $file->getClientOriginalName();
       // Fase donde se guardará el archivo de la articulación
@@ -483,8 +495,11 @@ class ArchivoController extends Controller
       $anhoFechaInicio = $anhoFechaInicio->format('Y');
       // Id del nodo
       $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
+      // Id de articulacion proyecto
+      $id = Articulacion::find($id);
+      $id = $id->articulacion_proyecto_id;
       $fileUrl = $file->storeAs("public/".$tecnoparque.'/'.$anhoFechaInicio.'/'.$articulacion.'/'.$folderTipoArticulacion.'/'.$id.'/'.$fase->nombre, $fileName);
-      $this->archivoRepository->storeFileArticulacion($id, $fase->id, Storage::url($fileUrl));
+      $this->archivoRepository->storeFileArticulacionProyecto($id, $fase->id, Storage::url($fileUrl));
     }
   }
 

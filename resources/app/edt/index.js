@@ -114,6 +114,8 @@ function detallesDeUnaEdt(id) {
       /**
       * Pintando datos en el modal
       */
+      let fecha_cierre = "";
+      response.edt.estado == 'Inactiva' ? fecha_cierre = response.edt.fecha_cierre : fecha_cierre = 'La Edt aún se encuentra activa!';
       $("#detalleEdt_titulo").append("<span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
       $("#detalleEdt_detalle").append('<div class="row">'
       +'<div class="col s12 m6 l6">'
@@ -161,6 +163,16 @@ function detallesDeUnaEdt(id) {
       +'</div>'
       +'<div class="col s12 m6 l6">'
       +'<span class="black-text">'+response.edt.fecha_inicio+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Fecha de Cierre: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+fecha_cierre+'</span>'
       +'</div>'
       +'</div>'
       +'<div class="divider"></div>'

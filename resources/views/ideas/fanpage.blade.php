@@ -13,9 +13,9 @@
                         <ul class="collection center-align">
                             <li class="collection-item">
                                 <h3 class="center-align">
-                                    El SENA te da la bienvenida a su 
+                                    El SENA te da la bienvenida a su
                                     programa {{config('app.name')}},
-                                    ahora podrás acceder a los servicios 
+                                    ahora podrás acceder a los servicios
                                     que la red ofrece para tí.
                                 </h3>
                                 <h4>El Registro ha sido guardado​ exitosamente.</h4>
@@ -152,7 +152,7 @@
                                                 </div>
                                             </div> --}}
                                         </div>
-                                        
+
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12 m12 l12 offset-l6 m6 s6">
@@ -172,7 +172,7 @@
                                                     </input>
                                                 </label>
                                             </div>
-                                           
+
                                         </div>
                                     </div>
                                     <br>
@@ -431,17 +431,17 @@
                                                     <label id="txtalcance-error" class="error" for="txtalcance">{{ $message }}</label>
                                                 @enderror
                                             </div>
-                                            
+
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s12 m8 l8 offset-l4 m-4">
-                                                
+
                                                 <div class="input-field col s12 m3 l3">
                                                     <select class="" id="txtservidorvideo" name="txtservidorvideo"  style="width: 100%" tabindex="-1">
                                                     <option value="">Seleccione Servidor de video</option>
                                                         @foreach($servidorVideo as $id => $domain)
-                                                                <option value="{{$id}}" {{old('txtservidorvideo') ==  $id ? 'selected':''}}>{{$domain}}</option> 
-                                                                                   
+                                                                <option value="{{$id}}" {{old('txtservidorvideo') ==  $id ? 'selected':''}}>{{$domain}}</option>
+
                                                         @endforeach
                                                     </select>
                                                     @error('txtservidorvideo')
@@ -458,12 +458,12 @@
                                                 <label for="txtlinkvideo" class="active">
                                                     link video <span class="red-text">*</span>
                                                 </label>
-                                                
+
                                             </div>
                                             <div></div>
-                                            
+
                                         </div>
-                                
+
                                         <br>
                                             <center>
                                                 <button class="waves-effect cyan darken-1 btn center-aling" type="submit">

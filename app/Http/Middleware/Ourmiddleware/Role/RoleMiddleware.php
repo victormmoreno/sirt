@@ -3,8 +3,7 @@
 namespace App\Http\Middleware\Ourmiddleware\Role;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Arr;
+use Illuminate\Support\{Arr, Facades\Auth};
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class RoleMiddleware

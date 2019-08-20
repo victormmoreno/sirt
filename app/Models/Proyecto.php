@@ -48,7 +48,6 @@ class Proyecto extends Model
         'aval_empresa_grupo',
         'estado_arte',
         'video_tutorial',
-        'url_videotutorial',
         'ficha_caracterizacion',
         'lecciones_aprendidas',
         'encuesta',
@@ -88,7 +87,7 @@ class Proyecto extends Model
         }
 
         return $query->with($relations)->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
-            
+
     }
 
     /*=====  End of scope para consultar los proyectos por estado  ======*/
@@ -110,7 +109,7 @@ class Proyecto extends Model
                 $query->select('id','codigo_actividad','nombre');
             },
         ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
-            
+
     }
 
 /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/

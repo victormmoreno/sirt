@@ -13,6 +13,29 @@
       <th>Entregables</th>
     </tr>
   </thead>
+  <tfoot>
+    <tr>
+      <th>
+        <input type="text" name="codigo_proyecto" class="codigo_proyecto" placeholder="Buscar por Código de Proyecto">
+      </th>
+      <th>
+        <input type="text" name="nombre" class="nombre" placeholder="Buscar por Nombre">
+      </th>
+      <th>
+        <input type="text" name="sublinea_nombre" class="sublinea_nombre" placeholder="Buscar por Sublinea">
+      </th>
+      <th>
+        <input type="text" name="estado_nombre" class="estado_nombre" placeholder="Buscar por Estado">
+      </th>
+      <th>
+        <input type="text" name="revisado_final" class="revisado_final" placeholder="Buscar por Revisado Final">
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </tfoot>
   <tbody>
 
   </tbody>
@@ -35,6 +58,32 @@
       <th>Entregables</th>
     </tr>
   </thead>
+  <tfoot>
+    <tr>
+      <th>
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblProyectosDelNodoPorAnho" placeholder="Buscar por Código de Proyecto">
+      </th>
+      <th>
+        <input type="text" name="gestor" id="gestor_tblProyectosDelNodoPorAnho" placeholder="Buscar por Gestor">
+      </th>
+      <th>
+        <input type="text" name="nombre" id="nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Nombre">
+      </th>
+      <th>
+        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Sublinea">
+      </th>
+      <th>
+        <input type="text" name="estado_nombre" id="estado_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Estado">
+      </th>
+      <th>
+        <input type="text" name="revisado_final" id="revisado_final_tblProyectosDelNodoPorAnho" placeholder="Buscar por Revisado Final">
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </tfoot>
   <tbody>
 
   </tbody>
@@ -56,6 +105,31 @@
       <th>Entregables</th>
     </tr>
   </thead>
+  <tfoot>
+    <tr>
+      <th>
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Código de Proyecto">
+      </th>
+      <th>
+        <input type="text" name="gestor" id="gestor_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Gestor">
+      </th>
+      <th>
+        <input type="text" name="nombre" id="nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Nombre">
+      </th>
+      <th>
+        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Sublinea">
+      </th>
+      <th>
+        <input type="text" name="estado_nombre" id="estado_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Estado">
+      </th>
+      <th>
+        <input type="text" name="revisado_final" id="revisado_final_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Revisado Final">
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </tfoot>
   <tbody>
 
   </tbody>

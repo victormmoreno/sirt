@@ -26,7 +26,7 @@ class EdtFormRequest extends FormRequest
   {
     return [
       'txtfecha_inicio' => 'required|date_format:"Y-m-d"',
-      'txtnombre' => 'required|max:300',
+      'txtnombre' => 'required|max:200',
       'txtareaconocimiento_id' => 'required',
       'txttipo_edt' => 'required',
       'txtobservaciones' => 'max:1000',
@@ -35,7 +35,7 @@ class EdtFormRequest extends FormRequest
       'txtaprendices' => 'required|numeric|min:0',
       'txtpublico' => 'required|numeric|min:0',
       'entidades' => 'required',
-      'txtfecha_fin' => Rule::requiredIf(request()->txtestado == 1) . '|date_format:"Y-m-d"'
+      'txtfecha_fin' => Rule::requiredIf(request()->txtestado == 1) . '|date_format:"Y-m-d"|nullable'
       ];
     }
 
@@ -51,7 +51,7 @@ class EdtFormRequest extends FormRequest
         * Mensaje para el campo txtnombre
         */
         'txtnombre.required' => 'El nombre de la Edt es obligatorio.',
-        'txtnombre.max' => 'El nombre de la Edt debe ser máximo de 300 carácteres.',
+        'txtnombre.max' => 'El nombre de la Edt debe ser máximo de 200 carácteres.',
         /**
         * Mensajes para el campo txtareaconocimiento_id
         */
