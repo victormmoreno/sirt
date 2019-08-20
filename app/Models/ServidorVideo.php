@@ -20,7 +20,7 @@ class ServidorVideo extends Model
 
     public function getNombreAttribute($nombre)
     {
-        return ucwords(mb_strtolower(trim($nombre),'UTF-8'));
+        return mb_strtolower(trim($nombre),'UTF-8');
     }
 
     public function getDominoAttribute($dominio)
@@ -40,7 +40,7 @@ class ServidorVideo extends Model
 
     public function setNombreAttribute($nombre)
     {
-        $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre),'UTF-8'));
+        $this->attributes['nombre'] = mb_strtolower(trim($nombre),'UTF-8');
     }
 
     /*=====  End of mutador eloquent  ======*/
@@ -49,4 +49,16 @@ class ServidorVideo extends Model
     {
         return $this->hasMany(Video::class, 'servidor_video_id', 'id');
     }
+
+    /*=========================================================================
+    =            scope para mostrar todos los servidores de videos            =
+    =========================================================================*/
+    
+    public function scopeAllServidoresVideo($query)
+    {
+        return $query;
+    }
+    
+    /*=====  End of scope para mostrar todos los servidores de videos  ======*/
+    
 }

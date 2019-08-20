@@ -1,7 +1,5 @@
 @component('mail::message')
-# Su idea fue recibida {{$user->nombrenodo}}
 
-{{$user->nombre_completo}}
 
 Cordial Saludo.
 

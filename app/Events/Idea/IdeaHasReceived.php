@@ -13,24 +13,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class IdeaHasReceived
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $idea;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($idea)
     {
-        //
+        $this->idea = $idea;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }
 }

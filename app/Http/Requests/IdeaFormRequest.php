@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CreateValidationForDomainRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IdeaFormRequest extends FormRequest
@@ -29,13 +30,15 @@ class IdeaFormRequest extends FormRequest
             'txtapellidos'       => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtcorreo'          => 'required|email|min:1|max:100',
             'txttelefono'        => 'required|digits_between:6,11|numeric',
-            'txtnombre_proyecto' => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtnombre_proyecto' => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_!@#$&()-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_!@#$&()-]*)*)+$/',
             'pregunta1'          => 'required',
             'pregunta2'          => 'required',
             'pregunta3'          => 'required',
             'txtdescripcion'     => 'required|min:1|max:2000',
             'txtobjetivo'        => 'required|min:1|max:2000',
             'txtalcance'         => 'required|min:1|max:2000',
+            'txtservidorvideo'   => 'required',
+            'txtlinkvideo'       => ['required', 'url', new CreateValidationForDomainRequest, 'max:1000'],
         ];
     }
 
@@ -57,6 +60,7 @@ class IdeaFormRequest extends FormRequest
             'txtcorreo.required'              => 'El Correo Electrónico es obligatorio.',
             'txtcorreo.min'                   => 'El Correo Electrónico debe ser minimo 1 caracter',
             'txtcorreo.max'                   => 'El Correo Electrónico debe ser máximo 100 caracteres',
+            'txtcorreo.email'                 => 'El Correo Electrónico no es un correo válido',
 
             'txttelefono.required'            => 'El Telefono es obligatorio.',
             'txttelefono.numeric'             => 'El Telefono debe ser numérico',
@@ -80,6 +84,13 @@ class IdeaFormRequest extends FormRequest
             'txtalcance.required'             => 'El Alcance es obligatorio.',
             'txtalcance.min'                  => 'El Alcance debe ser minimo 1 caracter',
             'txtalcance.max'                  => 'El Alcance debe ser máximo 2000 caracteres',
+
+            'txtservidorvideo.required'       => 'El Sevidor de video es obligatorio.',
+
+            'txtlinkvideo.required'           => 'El link es obligatorio.',
+            'txtlinkvideo.url'                => 'El link es incorrecto',
+            'txtlinkvideo.max'                => 'El link debe ser máximo 1000 caracteres',
+            'txtlinkvideo.regex'              => 'El formato del campo link es incorrecto',
 
         ];
     }

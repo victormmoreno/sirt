@@ -7,14 +7,27 @@
           </span>
         </a>
       </section>
-      <div class="header-title col s2 m3 l3">
+      <div class="header-title col s2 m2 l2">
         <a href="">
           <img class="chapter-title responsive-img" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
         </a>
       </div>
-      <ul class="right col s6 m6 nav-right-menu">
-        <notifications></notifications>
-        <li >
+      <ul class="right col s10 m10 l10 nav-right-menu">
+        <li class="hide-on-small-and-down">
+          <a href="javascript:void(0)" data-activates="dropdown1" class="dropdown-button dropdown-right show-on-large">
+            <i class="material-icons">notifications_none</i>
+            @if($count = auth()->user()->unreadNotifications->count())
+              
+              <span class="badge">
+                
+                   {{$count}}
+              </span>
+              @endif
+
+
+          </a>
+        </li>
+        <li>             
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
             @else
@@ -26,6 +39,7 @@
           <clock>
           </clock>
         </li>
+
       </ul>
       <ul class="dropdown-content notifications-dropdown" id="dropdown2">
         <li class="notificatoins-dropdown-container">
@@ -88,6 +102,21 @@
       </ul>
     </li>
   </ul>
+  <ul id="dropdown1" class="dropdown-content notifications-dropdown">
+    <li class="notificatoins-dropdown-container">
+        <ul>
+            <li class="notification-drop-title">Today</li>
+            <li>
+                <a href="#!">
+                <div class="notification">
+                    <div class="notification-icon circle cyan"><i class="material-icons">done</i></div>
+                    <div class="notification-text"><p><b>Alan Grey</b> uploaded new theme</p><span>7 min ago</span></div>
+                </div>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
 
 </div>
 </nav>
@@ -164,7 +193,7 @@
     </div>
 
   <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-
+      
       <div class="row">
           <div class="input-field col s12 m12 offset-m0">
 
