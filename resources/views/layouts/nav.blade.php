@@ -17,12 +17,16 @@
           <a href="javascript:void(0)" data-activates="dropdown1" class="dropdown-button dropdown-right show-on-large">
             <i class="material-icons">notifications_none</i>
             @if($count = auth()->user()->unreadNotifications->count())
-              
-              <span class="badge">
-                
-                   {{$count}}
-              </span>
+              @if($count <= 9)
+                <span class="badge">
+                     {{$count}} 
+                </span>
+              @else
+                <span class="badge">
+                     9+
+                </span>
               @endif
+            @endif
 
 
           </a>
@@ -107,7 +111,7 @@
         <ul>
             <li class="notification-drop-title">Today</li>
             <li>
-                <a href="#!">
+                <a href="{{route('notifications.index')}}">
                 <div class="notification">
                     <div class="notification-icon circle cyan"><i class="material-icons">done</i></div>
                     <div class="notification-text"><p><b>Alan Grey</b> uploaded new theme</p><span>7 min ago</span></div>

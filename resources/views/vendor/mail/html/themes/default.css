@@ -23,6 +23,7 @@ body {
     word-break: break-word;
 }
 
+
 p,
 ul,
 ol,
@@ -279,6 +280,12 @@ img {
     margin-bottom: 0;
     padding-bottom: 0;
 }
+.tittle {
+    text-align: center;
+    color: #008981;
+
+}
+
 
 /* Promotions */
 
@@ -316,6 +323,14 @@ img {
     width: 100%;
     border-collapse: collapse;
 
+}
+.subtittle{
+    color:#008981;
+    text-align: center;
+}
+.subtittle-value{
+    color:black;
+    text-align: center;
 }
 
 

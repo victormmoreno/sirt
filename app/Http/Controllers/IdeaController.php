@@ -94,62 +94,6 @@ class IdeaController extends Controller
     $nodos = $this->ideaRepository->getSelectNodo();
     $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
 
-    $idea =Idea::first();
-
-    $idea->with([
-              'nodo'=> function ($query) {
-                        $query->select('id','direccion','entidad_id');
-                    },
-              'nodo.entidad'=>function ($query) {
-                        $query->select('id','nombre','ciudad_id');
-                    },
-              'nodo.entidad.ciudad'=>function ($query) {
-                        $query->select('id','nombre','departamento_id');
-                    },
-              'nodo.entidad.ciudad.departamento'=>function ($query) {
-                        $query->select('id','nombre');
-                    },
-              'nodo.infocenter'
-        ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')->first();
-
-    // $ideaa = $this->ideaRepository->getIdeaWithRelations($idea);
-
-    // dd($idea);
-
-    // $users = User::infoUserRole(['Infocenter'],['infocenter','infocenter.nodo'])->whereHas(
-    //             'infocenter.nodo', function ($query) use ($idea) {
-    //                 $query->where('id', $idea->nodo_id);
-    //         })->get();
-
-    // dd($users);
-
-    $idea = Idea::with([
-      'nodo'=> function ($query) {
-                $query->select('id','direccion','entidad_id');
-            },
-      'nodo.entidad'=>function ($query) {
-                $query->select('id','nombre','ciudad_id');
-            },
-      'nodo.entidad.ciudad'=>function ($query) {
-                $query->select('id','nombre','departamento_id');
-            },
-      
-      'nodo.entidad.ciudad.departamento'=>function ($query) {
-                $query->select('id','nombre');
-            },
-   
-      'nodo.infocenter'
-    ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')
-    ->first();
-
-    // dd($idea->nodo->infocenter->last()->extension);  
-    // // 
-    // // $idea->nodo->infocenter->toArray();
-
-    // dd($idea);
-    
-    
-
     return view('ideas.fanpage', compact('nodos','servidorVideo'));
   }
 
