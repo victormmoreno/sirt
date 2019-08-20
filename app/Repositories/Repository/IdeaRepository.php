@@ -83,14 +83,16 @@ class IdeaRepository
             'ruta' => $request->input('txtlinkvideo'),
         ]);
 
+        event(new IdeaHasReceived($idea));
+        
         $users = User::infoUserRole(['Infocenter'],['infocenter', 'infocenter.nodo'])->whereHas(
                 'infocenter.nodo', function ($query) use ($idea) {
                     $query->where('id', $idea->nodo_id);
-            })->get();
+            })->get();     
 
-        
-        event(new IdeaHasReceived($idea));
-        Notification::send($users,new IdeaReceived($idea));
+        if (!$users->isEmpty()) {
+            Notification::send($users,new IdeaReceived($idea));
+        }
 
         return $idea;
     }

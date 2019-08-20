@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class IdeaReceived extends Notification 
+class IdeaReceived extends Notification implements ShouldQueue
 {
     use Queueable;
     public $idea;
@@ -43,9 +43,12 @@ class IdeaReceived extends Notification
      */
     public function toArray($notifiable)
     {
+
+        
+
         return [
             'link' => route('idea.ideas'),
-            'text' => 'Haz recibido una nueva idea  '. $this->idea->nombreproyecto,
+            'text' => "Tienes una nueva idea ".$this->idea->nombre_proyecto,
         ];
         //
         // return $this->idea->toArray();

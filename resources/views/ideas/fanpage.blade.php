@@ -190,10 +190,14 @@
                                         <div class="divider">
                                         </div>
                                         <div class="input-field col s12 m12 l12">
-                                            <label for="">
-                                                ¿En qué estado se encuentra su propuesta?  <span class="red-text">*</span>
-                                            </label>
+                                            <b>
+                                                <label>
+                                                    ¿En qué estado se encuentra su propuesta? 
+                                                    <span class="red-text">*</span>
+                                                </label>
+                                            </b>
                                         </div>
+                                        <br><br>
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
@@ -282,14 +286,17 @@
                                         </div>
                                         <br>
                                         <div class="input-field col s12 m12 l12">
-                                            <label>
-                                                ¿Cómo está conformado su equipo de trabajo? <span class="red-text">*</span>
-                                            </label>
+                                            <b>
+                                                <label>
+                                                    ¿Cómo está conformado su equipo de trabajo? <span class="red-text">*</span>
+                                                </label> 
+                                            </b>
                                         </div>
+                                        <br><br>
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input checked="" class="preguta2" id="rad1" name="pregunta2" type="radio" value="1"/>
+                                                    <input  checked="" class="pregunta2" id="rad1" name="pregunta2" type="radio" value="1" {{ old('pregunta2') == 1 ? 'checked':'' }}/>
                                                     <label align="justify" for="rad1">
                                                         1. No tengo equipo de trabajo, yo solo me encargaré de desarrollar el producto..
                                                     </label>
@@ -297,8 +304,8 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="preguta2" id="rad2" name="pregunta2" type="radio" value="2"/>
-                                                    <label align="justify" for="rad2">
+                                                    <input class="pregunta2" id="rad2" name="pregunta2" type="radio" value="2" {{ old('pregunta2') == 2 ? 'checked':'' }}/>
+                                                    <label align="justify" for="rad2" {{ old('pregunta2') == 2 ? 'checked':'' }}>
                                                         2. Tengo un equipo de trabajo que cuenta con los conocimientos técnicos mínimos para el desarrollo del producto, pero no contamos con los conocimientos de mercadeo para la implementación de la idea de negocio.
                                                     </label>
                                                 </p>
@@ -307,7 +314,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="preguta2" id="rad3" name="pregunta2" type="radio" value="3"/>
+                                                    <input class="pregunta2" id="rad3" name="pregunta2" type="radio" value="3" {{ old('pregunta2') == 3 ? 'checked':'' }}/>
                                                     <label align="justify" for="rad3">
                                                         3. Tengo un equipo de trabajo que cuenta con los conocimientos de mercadeo mínimos para la implementación de la idea de negocio, pero no contamos con los conocimientos técnicos para desarrollar el producto.
                                                     </label>
@@ -315,7 +322,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="preguta2" id="rad4" name="pregunta2" type="radio" value="4"/>
+                                                    <input class="pregunta2" id="rad4" name="pregunta2" type="radio" value="4"{{ old('pregunta2') == 4 ? 'checked':'' }}/>
                                                     <label align="justify" for="rad4">
                                                         4. Tengo un equipo de trabajo multidisciplinar, que cuenta con los conocimientos técnicos, conocimientos de gestión y conocimientos de mercadeo necesarios para el desarrollo del producto y la implementación de la idea de negocio.
                                                     </label>
@@ -327,14 +334,18 @@
                                         </div>
                                         <br>
                                         <div class="input-field col s12 m12 l12">
-                                            <label>
-                                                Marque en cuál de las siguientes categorías clasificaría su propuesta<span class="red-text">*</span>
-                                            </label>
+                                            <b>
+                                                <label>
+                                                    Marque en cuál de las siguientes categorías clasificaría su propuesta
+                                                    <span class="red-text">*</span>
+                                                </label>
+                                            </b>
                                         </div>
+                                        <br><br>
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input checked="" class="pregunta3" id="r1" name="pregunta3" type="radio" value="1"/>
+                                                    <input checked="" class="pregunta3" id="r1" name="pregunta3" type="radio" value="1" {{ old('pregunta3') == 1 ? 'checked':'' }}/>
                                                     <label align="justify" for="r1">
                                                         1. Tecnologías Virtuales: desarrollo de software para diferentes dispositivos, animaciones 2D y 3D, creación de contenidos para aplicaciones, animaciones y videojuegos.
                                                     </label>
@@ -342,7 +353,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta3" id="r2" name="pregunta3" type="radio" value="2"/>
+                                                    <input class="pregunta3" id="r2" name="pregunta3" type="radio" value="2" {{ old('pregunta3') == 2 ? 'checked':'' }}/>
                                                     <label align="justify" for="r2">
                                                         2. Biotecnología: utilización de organismos vivos o sus derivados para el desarrollo de productos y/o procesos en las áreas de ambiente, alimentos y nanotecnología.
                                                     </label>
@@ -352,7 +363,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta3" id="r3" name="pregunta3" type="radio" value="3"/>
+                                                    <input class="pregunta3" id="r3" name="pregunta3" type="radio" value="3" {{ old('pregunta3') == 3 ? 'checked':'' }}/>
                                                     <label align="justify" for="r3">
                                                         3. Electrónica y Telecomunicaciones: Control de procesos, telecomunicaciones, automatización, robótica aplicada, sistemas embebidos, prototipado electrónico y televisión digital.
                                                     </label>
@@ -360,7 +371,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta3" id="r4" name="pregunta3" type="radio" value="4"/>
+                                                    <input class="pregunta3" id="r4" name="pregunta3" type="radio" value="4" {{ old('pregunta3') == 4 ? 'checked':'' }}/>
                                                     <label align="justify" for="r4">
                                                         4. Ingeniería y Diseño: diseño de productos en las áreas afines a la mecánica y el diseño industrial, como aprovechamiento de energías renovables, máquinas,mobiliario, consumo masivo y empaques.
                                                     </label>
@@ -370,7 +381,7 @@
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta3" id="r5" name="pregunta3" type="radio" value="5"/>
+                                                    <input class="pregunta3" id="r5" name="pregunta3" type="radio" value="5" {{ old('pregunta3') == 5 ? 'checked':'' }}/>
                                                     <label align="justify" for="r5">
                                                         5. Nanotecnología y nuevos materiales: Modificación de superficies a escala nanométrica, síntesis de nanopartículas, evaluación a escala nanométrica, desarrollo y evaluación de nuevos materiales como materiales compuestos, materiales biodegradables y biopolímeros obtenidos a través de biotecnología.
                                                     </label>
@@ -378,7 +389,7 @@
                                             </div>
                                             <div class="input-field col s12 m6 l6">
                                                 <p class="p-v-xs">
-                                                    <input class="pregunta3" id="r6" name="pregunta3" type="radio" value="6"/>
+                                                    <input class="pregunta3" id="r6" name="pregunta3" type="radio" value="6" {{ old('pregunta3') == 6 ? 'checked':'' }}/>
                                                     <label align="justify" for="r6">
                                                         6. Otros Productos: personalización de productos, productos de moda, alimentos no tradicionales o exóticos, productos artesanales, construcción de infraestructura.
                                                     </label>
@@ -472,7 +483,7 @@
                                                     </i>
                                                     Registrar Idea
                                                 </button>
-                                                <a class="waves-effect red lighten-2 btn center-aling" href="">
+                                                <a class="waves-effect red lighten-2 btn center-aling" href="{{route('/')}}">
                                                     <i class="material-icons right">
                                                         backspace
                                                     </i>

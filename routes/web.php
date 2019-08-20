@@ -5,9 +5,7 @@ use App\Models\ServidorVideo;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    $servidor = ServidorVideo::pluck('dominio');
-
-    // dd($servidor);
+    
     return view('spa');
 
 })->name('/');
