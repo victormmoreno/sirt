@@ -106,7 +106,11 @@ class EntrenamientoController extends Controller
       return view('entrenamientos.dinamizador.index');
     }
   }
-  // Datatable para los entrenamientos del nodo (Tabla del dinamizador)
+  /**
+  * Datatable que muestra los entrenamiento de un nodo a un dinamizador
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  */
   public function datatableEntrenamientosPorNodo_Dinamizador()
   {
     if (request()->ajax()) {

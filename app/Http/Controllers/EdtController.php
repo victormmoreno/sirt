@@ -65,6 +65,8 @@ class EdtController extends Controller
    */
   public function entregables($id)
   {
+    // $edts = Edt::find($id)->rutamodel->id;
+    // dd($edts);
     $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
     // $edt = ArrayHelper::validarDatoNullDeUnArray($edt);
     if ( Session::get('login_role') == User::IsGestor() ) {

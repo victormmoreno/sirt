@@ -6,7 +6,7 @@
       <div class="row no-m-t no-m-b">
         <h5>
           <a class="footer-text left-align" href="{{route('edt')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="left material-icons">arrow_back</i>
           </a> Edt
         </h5>
         <div class="card">
@@ -56,21 +56,21 @@
   </main>
 @endsection
 @push('script')
-<script>
-  datatableArchivosDeUnaEdt();
-  function datatableArchivosDeUnaEdt() {
-    $('#archivosDeUnaEdt').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: false,
-      ajax:{
-        url: "{{route('edt.files', $edt->id)}}",
-        type: "get",
-      },
-      columns: [
+  <script>
+    datatableArchivosDeUnaEdt();
+    function datatableArchivosDeUnaEdt() {
+      $('#archivosDeUnaEdt').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: false,
+        ajax:{
+          url: "{{route('edt.files', $edt->id)}}",
+          type: "get",
+        },
+        columns: [
         {
           data: 'file',
           name: 'file',
@@ -81,8 +81,8 @@
           name: 'download',
           orderable: false,
         },
-      ],
-    });
-  }
-</script>
+        ],
+      });
+    }
+  </script>
 @endpush

@@ -46,17 +46,18 @@ class CharlaInformativaController extends Controller
    * Consulta el detalle de una charla informativa
    * @param int $id Id de la charla informativa
    * @return Response
+   * @author Victor Manuel Moreno Vega
    */
-  public function detallesDeUnaCharlaInformativa($id)
-  {
-    if (request()->ajax()) {
-      $charlas = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
-      $charlas = ArrayHelper::validarDatoNullDeUnArray($charlas);
-      return response()->json([
-        'charla' => $charlas
-      ]);
-    }
-  }
+   public function detallesDeUnaCharlaInformativa($id)
+   {
+     if (request()->ajax()) {
+       $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)->toArray();
+       $charla = ArrayHelper::validarDatoNullDeUnArray($charla);
+       return response()->json([
+         'charla' => $charla
+       ]);
+     }
+   }
 
   /**
    * Vista para subir las evidencias de una charla informativa

@@ -48,4 +48,9 @@ class CharlaInformativa extends Model
     'evidencia_fotografica',
     'programacion'
   ];
+
+  public function rutamodel()
+  {
+    return $this->morphMany(RutaModel::class, 'model');
+  }
 }

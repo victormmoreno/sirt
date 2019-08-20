@@ -9,75 +9,80 @@ use Illuminate\Database\Eloquent\Model;
 class Comite extends Model
 {
 
-    protected $table = 'comites';
+  protected $table = 'comites';
 
-    protected $casts = [
-        'fechacomite' => 'date:Y-m-d',
-    ];
+  protected $casts = [
+    'fechacomite' => 'date:Y-m-d',
+  ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'codigo',
-        'fechacomite',
-        'observaciones',
-    ];
+  /**
+  * The attributes that are mass assignable.
+  *
+  * @var array
+  */
+  protected $fillable = [
+    'codigo',
+    'fechacomite',
+    'observaciones',
+  ];
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
+  /*=========================================
+  =            asesores eloquent            =
+  =========================================*/
 
-    public function getCodigoAttribute($codigo)
-    {
-        return trim($codigo);
-    }
+  public function getCodigoAttribute($codigo)
+  {
+    return trim($codigo);
+  }
 
-    // public function getFechaComiteAttribute($fechacomite)
-    // {
-    //     return Carbon::parse($fechacomite)->format('Y-m-d');
-    // }
+  // public function getFechaComiteAttribute($fechacomite)
+  // {
+  //     return Carbon::parse($fechacomite)->format('Y-m-d');
+  // }
 
-    public function getObservacionesAttribute($observaciones)
-    {
-        return ucfirst(strtolower(trim($observaciones)));
-    }
+  public function getObservacionesAttribute($observaciones)
+  {
+    return ucfirst(strtolower(trim($observaciones)));
+  }
 
-    /*=====  End of asesores eloquent  ======*/
+  /*=====  End of asesores eloquent  ======*/
 
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
+  /*========================================
+  =            mutador eloquent            =
+  ========================================*/
 
-    public function setCodigoAttribute($codigo)
-    {
-        $this->attributes['codigo'] = trim($codigo);
-    }
+  public function setCodigoAttribute($codigo)
+  {
+    $this->attributes['codigo'] = trim($codigo);
+  }
 
-    public function setFechaComiteAttribute($fechacomite)
-    {
-        $this->attributes['fechacomite'] = Carbon::parse($fechacomite)->format('Y-m-d');
-    }
+  public function setFechaComiteAttribute($fechacomite)
+  {
+    $this->attributes['fechacomite'] = Carbon::parse($fechacomite)->format('Y-m-d');
+  }
 
-    public function setObservacionesAttribute($observaciones)
-    {
-        $this->attributes['observaciones'] = ucfirst(strtolower(trim($observaciones)));
-    }
+  public function setObservacionesAttribute($observaciones)
+  {
+    $this->attributes['observaciones'] = ucfirst(strtolower(trim($observaciones)));
+  }
 
-    /*=====  End of mutador eloquent  ======*/
+  /*=====  End of mutador eloquent  ======*/
 
-    /*===========================================
-    =            relaciones eloquent            =
-    ===========================================*/
+  /*===========================================
+  =            relaciones eloquent            =
+  ===========================================*/
 
-    public function archivos()
-    {
-        return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
-    }
+  public function archivos()
+  {
+    return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
+  }
 
-    /*=====  End of relaciones eloquent  ======*/
+  public function rutamodel()
+  {
+    return $this->morphMany(RutaModel::class, 'model');
+  }
+
+  /*=====  End of relaciones eloquent  ======*/
 
 
 }

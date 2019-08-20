@@ -214,7 +214,9 @@ class ComiteController extends Controller
       } else {
         DB::transaction(function () use ($request) {
           $codigoComite = Carbon::parse($request['txtfechacomite_create']);
-          $codigoComite = 'CSIBT' . $codigoComite->isoFormat('YY') . $codigoComite->format('m') . $codigoComite->format('d') . '-' . auth()->user()->infocenter->nodo_id;
+          $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+          $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
+          $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY');
           $comite = $this->comiteRepository->store($request, $codigoComite);
           foreach (session('ideasComiteCreate') as $key => $value) {
             $this->comiteRepository->storeComiteIdea($value, $comite->id);

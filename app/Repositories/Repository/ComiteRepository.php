@@ -2,24 +2,21 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\EstadoIdea;
-// use App\Models\Idea;
-use App\Models\Comite;
-use App\Models\Idea;
-use App\Models\ComiteIdea;
-use App\Models\ArchivoComite;
+use App\Models\{Comite, Idea, EstadoIdea, ComiteIdea};
 use Illuminate\Support\Facades\DB;
 
 class ComiteRepository
 {
 
-  // Consulta los archivos que tiene ese comité
+  /**
+  * Consulta los archivos de un comité
+  * @param int $id Id del comité
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
   public function consultarRutasArchivosDeUnComite($id)
   {
-    return ArchivoComite::select('ruta', 'archivoscomites.id')
-    ->join('comites', 'comites.id', '=', 'archivoscomites.comite_id')
-    ->where('comites.id', $id)
-    ->get();
+    return Comite::find($id)->rutamodel;
   }
 
   // Consulta un comité por su id

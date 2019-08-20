@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, ArchivoEdt, ArchivoCharlaInformativa, Articulacion};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, Articulacion, RutaModel};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\Storage;
 use App\User;
@@ -36,10 +36,11 @@ class ArchivoController extends Controller
   * Método que elimina un archivo del servidor y su registro de la base de datos (archivoscharlasinformativas)
   * @param int id Id del archivo de la charla informativa que se usará para eliminarlo del almacenamiento y de la base de datos
   * @return Response
+  * @author Victor Manuel Moreno Vega
   */
   public function destroyFileCharlaInformartiva($id)
   {
-    $file = ArchivoCharlaInformativa::find($id);
+    $file = RutaModel::find($id);
     $file->delete();
     $filePath = str_replace('storage', 'public', $file->ruta);
     Storage::delete($filePath);
@@ -79,7 +80,7 @@ class ArchivoController extends Controller
       $route = "";
       // La ruta con la se guardan los archivos de una es la siguiente:
       // id_nodo/anho_de_la_fecha_de_incio/Edts/id_gestor/edt_id/max_id_archivo_proyecto_nombre_del_archivo.extension
-      $idArchivoCharlaInformativa = ArchivoCharlaInformativa::selectRaw('MAX(id+1) AS max')->get()->last();
+      $idArchivoCharlaInformativa = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
       $fileName = $idArchivoCharlaInformativa->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
       $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
@@ -147,7 +148,7 @@ class ArchivoController extends Controller
       $route = "";
       // La ruta con la se guardan los archivos de una es la siguiente:
       // id_nodo/anho_de_la_fecha_de_incio/Edts/id_gestor/edt_id/max_id_archivo_proyecto_nombre_del_archivo.extension
-      $idArchivoEdt = ArchivoEdt::selectRaw('MAX(id+1) AS max')->get()->last();
+      $idArchivoEdt = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
       $fileName = $idArchivoEdt->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
       $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
@@ -164,10 +165,12 @@ class ArchivoController extends Controller
   /**
   * Método para descargar un archivo de una edt
   * @param int idFile id del archivo que se va a descargar
+  * @return Response
+  * @author Victor Manuel Moreno Vega
   */
   public function downloadFileEdt($idFile)
   {
-    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaEdtPorId($idFile);
+    $ruta = RutaModel::find($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
     return Storage::download($path);
   }
@@ -176,10 +179,11 @@ class ArchivoController extends Controller
   * Método que elimina un archivo del servidor y su registro de la base de datos (archivosedt)
   * @param int id Id del archivo de la edt que se usará para eliminarlo del almacenamiento y de la base de datos
   * @return Response
+  * @author Victor Manuel Moreno Vega
   */
   public function destroyFileEdt($id)
   {
-    $file = ArchivoEdt::find($id);
+    $file = RutaModel::find($id);
     $file->delete();
     $filePath = str_replace('storage', 'public', $file->ruta);
     Storage::delete($filePath);
@@ -197,6 +201,7 @@ class ArchivoController extends Controller
     if (request()->ajax()) {
       $files = $this->edtRepository->consultarArchivosDeUnaEdt($id);
       // dd($files);
+
       return datatables()->of($files)
       ->addColumn('download', function ($data) {
         $download = '
@@ -228,7 +233,7 @@ class ArchivoController extends Controller
   */
   public function downloadFileEntrenamiento($idFile)
   {
-    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnEntrenamientoPorId($idFile);
+    $ruta = RutaModel::find($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
     return Storage::download($path);
   }
@@ -240,7 +245,7 @@ class ArchivoController extends Controller
   */
   public function destroyFileEntrenamiento($id)
   {
-    $file = ArchivoEntrenamiento::find($id);
+    $file = RutaModel::find($id);
     $file->delete();
     $filePath = str_replace('storage', 'public', $file->ruta);
     Storage::delete($filePath);
@@ -252,6 +257,7 @@ class ArchivoController extends Controller
   * Consulta los archivos de un entrenamiento
   * @param int $id Id del entrenamiento al cual se le consultarán lo archivos
   * @return return datatable
+  * @author Victor Manuel Moreno Vega
   */
   public function datatableArchivosDeUnEntrenamiento($id)
   {
@@ -287,7 +293,8 @@ class ArchivoController extends Controller
   * Sube un archivo de los entrenamientos al servidor, además de que lo registra en la base de datos
   * @param Request
   * @param int $id Id del entrenamiento con el que se le subirá el archivo
-  * @return return void
+  * @return void
+  * @author Victor Manuel Moreno Vega
   */
   public function uploadFileEntrenamiento(Request $request, $id)
   {
@@ -302,7 +309,7 @@ class ArchivoController extends Controller
       $file = request()->file('nombreArchivo');
       // La ruta con la se guardan los archivos de un entrenamiento es la siguiente:
       // id_nodo/anho_de_la_fecha_de_sesion_1/entrenamientos/max_id_archivo_proyecto_nombre_del_archivo.extension
-      $idArchivoEntrenamiento = ArchivoEntrenamiento::selectRaw('MAX(id+1) AS max')->get()->last();
+      $idArchivoEntrenamiento = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
       $fileName = $idArchivoEntrenamiento->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
       $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);

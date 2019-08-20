@@ -3,23 +3,32 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\ArchivoComite;
-use App\Models\Comite;
+use App\Models\{Comite, RutaModel};
 
 class ArchivoComiteRepository
 {
-  // Hace el registro de un comité
+  /**
+  * @param int $id Id del comité
+  * @param string $fileUrl Ruta del archivo
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
+  */
   public function store($id, $fileUrl)
   {
-    return ArchivoComite::create([
-      'comite_id' => $id,
+    $comite = Comite::find($id);
+    $comite->rutamodel()->create([
       'ruta' => $fileUrl,
     ]);
   }
 
-  // Consulta la ruta de un archivo según su id
+  /**
+  * Consulta los datos de un archivo del comité
+  * @param int $id Id del archivo
+  * @return Collecion
+  * @author Victor Manuel Moreno Vega
+  */
   public function consultarRutaDeArchivoPorId($id)
   {
-    return ArchivoComite::select('id', 'ruta')->where('id', $id)->get()->last();
+    return RutaModel::find($id);
   }
 }
