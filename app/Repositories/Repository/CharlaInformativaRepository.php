@@ -2,31 +2,28 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{CharlaInformativa, ArchivoCharlaInformativa};
+use App\Models\{CharlaInformativa};
 use Illuminate\Support\Facades\{DB};
 use Carbon\Carbon;
 
 class CharlaInformativaRepository
 {
-
-
   /**
   * consulta los archivos de una edt
   * @param int $id Id de la EDT por el cual se consultaran sus archivos
   * @return Collection
+  * @author Victor Manuel Moreno Vega
   */
   public function consultarArchivosDeUnaCharlaInformativaRepository($id)
   {
-    return CharlaInformativa::select('ruta', 'charlainformativa_id', 'archivoscharlasinformativas.id')
-    ->join('archivoscharlasinformativas', 'archivoscharlasinformativas.charlainformativa_id', '=', 'charlasinformativas.id')
-    ->where('charlasinformativas.id', $id)
-    ->get();
+    return CharlaInformativa::find($id)->rutamodel;
   }
 
   /**
    * Consulta la informacion de una charla informativa
    * @param int $id Id de la charla informativa
    * @return Collection
+   * @author Victor Manuel Moreno Vega
    */
   public function consultarInformacionDeUnaCharlaInformativaRepository($id)
   {

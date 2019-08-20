@@ -84,14 +84,12 @@ class EntrenamientoRepository
   /**
   * consulta los archivos de un entrenamiento
   * @param int id Id del entrenamiento por el cual se consultaran sus archivos
-  * @return return Collection
+  * @return Collection
+  * @author Victor Manuel Moreno Vega
   */
   public function consultarArchivosDeUnEntrenamiento($id)
   {
-    return Entrenamiento::select('ruta', 'entrenamiento_id', 'archivosentrenamiento.id')
-    ->join('archivosentrenamiento', 'archivosentrenamiento.entrenamiento_id', '=', 'entrenamientos.id')
-    ->where('entrenamientos.id', $id)
-    ->get();
+    return Entrenamiento::find($id)->rutamodel;
   }
 
   // Consulta todos los entrenamientos por nodo

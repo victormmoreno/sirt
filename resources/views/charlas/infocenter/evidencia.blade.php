@@ -6,7 +6,7 @@
       <div class="row no-m-t no-m-b">
         <h5>
           <a class="footer-text left-align" href="{{route('charla')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="left material-icons">arrow_back</i>
           </a> Charlas Informativas
         </h5>
         <div class="card">

@@ -38,13 +38,11 @@ class EdtRepository
   * consulta los archivos de una edt
   * @param int id Id de la EDT por el cual se consultaran sus archivos
   * @return Collection
+  * @author Victor Manuel Moreno Vega
   */
   public function consultarArchivosDeUnaEdt($id)
   {
-    return Edt::select('ruta', 'edt_id', 'archivosedt.id')
-    ->join('archivosedt', 'archivosedt.edt_id', '=', 'edts.id')
-    ->where('edts.id', $id)
-    ->get();
+    return Edt::find($id)->rutamodel;
   }
 
   /**
@@ -52,6 +50,7 @@ class EdtRepository
    * @param Request request
    * @param int id
    * @return boolean
+   * @author Victor Manuel Moreno Vega
    */
   public function updateEntregableRepository($request, $id)
   {
@@ -85,6 +84,7 @@ class EdtRepository
    * Consulta el detalle de una edt
    * @param int id Id de la edt
    * @return Collection
+   * @author Victor Manuel Moreno Vega
    */
   public function consultarDetalleDeUnaEdt($id)
   {

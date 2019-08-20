@@ -48,4 +48,9 @@ class Edt extends Model
     return $this->belongsToMany(Entidad::class, 'edt_entidad')->withTimestamps();
   }
 
+  public function rutamodel()
+  {
+    return $this->morphMany(RutaModel::class, 'model');
+  }
+
 }

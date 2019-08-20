@@ -109,6 +109,10 @@ var grupoInvestigacionIndex = {
       if (respuesta == null) {
         swal('Ups!!', 'Ha ocurrido un error', 'warning');
       } else {
+        let tipo_grupo = "Interno";
+        if (respuesta.detalles.tipogrupo == 0) {
+          tipo_grupo = 'Externo';
+        }
         $("#modalDetalleDeUnGrupoDeInvestigacion_titulo").append("<span class='cyan-text text-darken-3'>Datos del Grupo de Investigación </span><br>");
         $("#modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa").append("<div class='row'>"
         +'<div class="col s12 m6 l6">'
@@ -151,7 +155,7 @@ var grupoInvestigacionIndex = {
         +'<span class="cyan-text text-darken-3">Tipo de Grupo de Investigación: </span>'
         +'</div>'
         +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.tipogrupo+'</span>'
+        +'<span class="black-text">'+tipo_grupo+'</span>'
         +'</div>'
         +'</div>'
         +'<div class="divider"></div>'
