@@ -5,8 +5,14 @@ namespace App\Repositories\Repository;
 use App\Models\EstadoIdea;
 
 use App\Models\Idea;
-use App\Models\Nodo;use Carbon\Carbon;
+use App\Models\Nodo;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+use App\Events\Idea\IdeaHasReceived;
+use App\Events\Idea\IdeaSend;
+use App\User;
+use App\Notifications\Idea\IdeaReceived;
 
 class IdeaRepository
 {
@@ -73,12 +79,22 @@ class IdeaRepository
             "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
         ]);
 
-        $idea->video()->create([
+        $idea->rutamodel()->create([
             'ruta' => $request->input('txtlinkvideo'),
         ]);
 
+        $users = User::infoUserRole(['Infocenter'],['infocenter', 'infocenter.nodo'])->whereHas(
+                'infocenter.nodo', function ($query) use ($idea) {
+                    $query->where('id', $idea->nodo_id);
+            })->get();
+
+        
+        event(new IdeaHasReceived($idea));
+        Notification::send($users,new IdeaReceived($idea));
+
         return $idea;
     }
+
 
     public function StoreIdeaEmpGI($request)
     {
@@ -133,6 +149,27 @@ class IdeaRepository
     public function findByid($id)
     {
         return Idea::findOrFail($id);
+    }
+
+
+    public function getIdeaWithRelations($idea) 
+    {
+        return $idea->with([
+              'nodo'=> function ($query) {
+                        $query->select('id','direccion','entidad_id');
+                    },
+              'nodo.entidad'=>function ($query) {
+                        $query->select('id','nombre','ciudad_id');
+                    },
+              'nodo.entidad.ciudad'=>function ($query) {
+                        $query->select('id','nombre','departamento_id');
+                    },
+              'nodo.entidad.ciudad.departamento'=>function ($query) {
+                        $query->select('id','nombre');
+                    },
+              'nodo.infocenter'
+        ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')->get();
+    
     }
 
 }

@@ -14,12 +14,12 @@ class ServidorVideosTableSeeder extends Seeder
     {
         ServidorVideo::create([
             'nombre'      => 'You tube',
-            'dominio' => 'https://www.youtube.com/',
+            'dominio' => 'youtube.com',
         ]);
 
         ServidorVideo::create([
             'nombre'      => 'Vimeo',
-            'dominio' => 'https://vimeo.com/',
+            'dominio' => 'vimeo.com',
         ]);
     }
 }
