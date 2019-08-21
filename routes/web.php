@@ -3,9 +3,10 @@
 use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
 use App\Models\ServidorVideo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 Route::get('/', function () {
-    
+
     return view('spa');
 
 })->name('/');
@@ -186,7 +187,7 @@ Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentr
 //-------------------Route group para el módulo de ideas
 Route::group([
   'prefix' => 'idea',
-  'middleware' => ['auth', 'role_session:Infocenter|Administrador|Dinamizador|Gestir'],
+  // 'middleware' => ['auth', 'role_session:Infocenter|Administrador|Dinamizador|Gestor'],
 ],
 function () {
   Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
@@ -489,8 +490,9 @@ Route::get('ideas', 'IdeaController@index')->name('ideas.index');
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
 Route::get('/notificaciones', 'NotificationsController@index')->name('notifications.index');
-Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
-Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
+Route::patch('/notificaciones/{notification}', 'NotificationsController@read')->name('notifications.read');
+Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy')->name('notifications.destroy');
+
 
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =

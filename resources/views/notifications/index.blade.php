@@ -26,40 +26,43 @@
                                                 No Leídas
                                             </span>
                                         </div>
+                                        <div class="divider"></div>
                                         <div class="mailbox-list">
                                             <ul>
                                                 @forelse($unreadNotifications as $unreadNotification)
+                                                
                                                 <li>
                                                     <a href="{{$unreadNotification->data['link']}}">
-                                                        
-                                                        
-                                                        <h5 class="mail-author">{{$unreadNotification->data['text']}}</h5>
-                                                        <h4 class="mail-title"></h4>
-                                                        <p class="hide-on-small-and-down mail-text"></p>
-                                                        
-                                                        
-                                                    </a>
-                                                    <div class="position-top-right p f-12 mail-date">
-                                                        <form method="POST" action="{{route('notifications.read',$unreadNotification->id)}}">
+                                                        <div class="mail-checkbox">
+                                                            
+                                                            <i class="material-icons">{{ $unreadNotification->data["icon"] }}</i>
+                                                          
+                                                        </div>
+                                                        <h5 class="mail-author">Jonathan Smith</h5>
+                                                        <h4 class="mail-title">{{ $unreadNotification->data["text"] }}</h4>
+                                                        <p class="hide-on-small-and-down mail-text">{{$unreadNotification->created_at->diffForHumans()}}</p>
+                                                        <div class="position-top-right p f-12 mail-date"><form method="POST" action="{{route('notifications.read', $unreadNotification->id)}}">
                                                             {{method_field('PATCH')}}
                                                             {{csrf_field()}}
                                                             <div class="mail-checkbox">
-                                                            <h5 class="mail-author"><button class="position-top-right waves-effect waves-grey btn-flat m-t-xs">Marcar como leída</button></h5>
-                                                        </div>
-                                                    </form>
-                                                    </div>
-                                                    
-                                                </li>
-                                                @empty
-                                                    <li>
-                                                    <a href="#">
-                                                        
-                                                        <h5 class="mail-author"></h5>
-                                                        <h4 class="mail-title"></h4>
-                                                        <p class="hide-on-small-and-down mail-text">No tienes Notificaciones</p>
-                                                        <div class="position-top-right p f-12 mail-date"></div>
+                                                                <h5 class="mail-author">
+                                                                    <button class="position-top-right waves-effect waves-grey btn-flat m-t-xs" >X</button>
+                                                                    
+                                                                </h5>
+                                                            </div>
+                                                        </form></div>
+                                                        <div class="position-bottom-right p f-12 mail-date">{{$unreadNotification->created_at->format('h:i A')}}</div>
                                                     </a>
                                                 </li>
+                                                @empty
+                                                    <li class="notification-drop-title">
+                                                        <div class="center">
+                                                           <i class="large material-icons  teal-text lighten-2 center ">
+                                                                notifications_off
+                                                            </i>
+                                                            <p class="center-align">No tienes notificationes</p> 
+                                                        </div>
+                                                      </li>
                                                 @endforelse
                                             </ul>
                                         </div>
@@ -78,37 +81,42 @@
                                                 Leídas
                                             </span>
                                         </div>
+                                        <div class="divider"></div>
                                         <div class="mailbox-list">
                                             <ul>
                                                 @forelse($readNotifications as $readNotification)
+                                                
                                                 <li>
                                                     <a href="{{$readNotification->data['link']}}">
-                                                        
-                                                        <h5 class="mail-author">{{$readNotification->data['text']}}</h5>
-                                                        <h4 class="mail-title"></h4>
-                                                        <p class="hide-on-small-and-down mail-text"></p>
-                                                        
-                                                        <div class="position-top-right p f-12 mail-date">
-                                                        <form method="POST" action="{{route('notifications.destroy',$readNotification->id)}}">
-                                                            {{method_field('DELETE')}}
-                                                            {{csrf_field()}}
-                                                            <div class="mail-checkbox">
-                                                            <h5 class="mail-author"><button class="position-top-right waves-effect waves-grey btn-flat m-t-xs">Marcar como leída</button></h5>
+                                                        <div class="mail-checkbox">
+                                                            
+                                                            <i class="material-icons">{{ $readNotification->data["icon"] }}</i>
+                                                          
                                                         </div>
-                                                    </form>
-                                                    </div>
+                                                        <h5 class="mail-author">Jonathan Smith</h5>
+                                                        <h4 class="mail-title">{{ $readNotification->data["text"] }}</h4>
+                                                        <p class="hide-on-small-and-down mail-text">{{$readNotification->created_at->diffForHumans()}}</p>
+                                                        <div class="position-top-right p f-12 mail-date">
+                                                            <form method="POST" action="{{route('notifications.destroy',$readNotification->id)}}">
+                                                                    {{method_field('DELETE')}}
+                                                                    {{csrf_field()}}
+                                                                    <div class="mail-checkbox">
+                                                                    <h5 class="mail-author"><button class="position-top-right waves-effect waves-grey btn-flat m-t-xs">Borrar</button></h5>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="position-bottom-right p f-12 mail-date">{{$readNotification->created_at->format('h:i A')}}</div>
                                                     </a>
                                                 </li>
                                                 @empty
-                                                    <li>
-                                                    <a href="#">
-                                                        
-                                                        <h5 class="mail-author"></h5>
-                                                        <h4 class="mail-title"></h4>
-                                                        <p class="hide-on-small-and-down mail-text">No tienes Notificaciones</p>
-                                                        <div class="position-top-right p f-12 mail-date"></div>
-                                                    </a>
-                                                </li>
+                                                    <li class="notification-drop-title">
+                                                    <div class="center">
+                                                       <i class="large material-icons  teal-text lighten-2 center ">
+                                                            notifications_off
+                                                        </i>
+                                                        <p class="center-align">No tienes notificationes</p> 
+                                                    </div>
+                                                  </li>
                                                 @endforelse
                                             </ul>
                                         </div>

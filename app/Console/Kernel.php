@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\DeleteNotifications;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        DeleteNotifications::class,
     ];
 
     /**
@@ -24,8 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('task:deletenotifications')
+            ->environments(config('app.env'))
+            ->monthly()
+            ->between('22:00', '24:00');
     }
 
     /**
@@ -35,8 +38,13 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    protected function scheduleTimezone()
+    {
+        return config('app.timezone');
     }
 }

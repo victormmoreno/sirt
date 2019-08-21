@@ -4,7 +4,6 @@ namespace App\Notifications\Idea;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class IdeaReceived extends Notification implements ShouldQueue
@@ -34,7 +33,6 @@ class IdeaReceived extends Notification implements ShouldQueue
         return ['database'];
     }
 
-
     /**
      * Get the array representation of the notification.
      *
@@ -44,13 +42,13 @@ class IdeaReceived extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
 
-        
-
         return [
-            'link' => route('idea.ideas'),
-            'text' => "Tienes una nueva idea ".$this->idea->nombre_proyecto,
+            'link'  => route('idea.ideas'),
+            'icon'  => 'lightbulb',
+            'color' => 'cyan',
+            'autor' => "{$this->idea->nombres_contacto} {$this->idea->apellidos_contacto}",
+            'text'  => "ha inscrito una nueva idea | {$this->idea->nombre_proyecto}",
         ];
-        //
-        // return $this->idea->toArray();
+        
     }
 }

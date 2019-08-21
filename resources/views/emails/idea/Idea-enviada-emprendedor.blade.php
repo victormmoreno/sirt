@@ -9,8 +9,6 @@ Cordial Saludo.
 
 Ha recibido este mensaje porque hemos recibido una idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>
 
-
-
 @component('mail::panel')
 	
 	<h1 class="tittle">Información Idea</h1>
@@ -29,7 +27,12 @@ Ha recibido este mensaje porque hemos recibido una idea, la cual fue asocida a T
 	
 @endcomponent
 
+@if( $idea->nodo->infocenter->isEmpty())
+Para más información puede ocudir a las instalaciones de Tecnoparque nodo {{$idea->nodo->entidad->nombre}} ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
+@else
 Para más información puede contactarse al telefono <b>{{ $idea->nodo->infocenter->last()->extension}}</b>, o ocudir a las instalaciones de Tecnoparque nodo {{$idea->nodo->entidad->nombre}} ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
+@endif
+
 
 Gracias,<br>
 {{config('mail.from.name')}} <br>
