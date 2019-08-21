@@ -75,7 +75,7 @@ class GraficoController extends Controller
       $datosCompletos = array();
 
       $gestoresDelNodo = Gestor::ConsultarGestoresPorNodo($id)->get();
-      $datosCompletos = $this->devolverArrayConDatosDeEdts($gestoresDelNodo, $fecha_inicio, $fecha_fin);
+      $datosCompletos = $this->devolverArrayConDatosDeEdts($gestoresDelNodo, $id, $fecha_inicio, $fecha_fin);
       // dd($gestoresDelNodo);
       // echo json_encode(['2']);
       return response()->json([
@@ -87,29 +87,21 @@ class GraficoController extends Controller
   /**
   * Retorna el array con los datos para mostrar en la vista (Gráfico de los Edt's por fechas)
   * @param array $gestoresDelNodo Gestores del nodo asociado al dinamizador
+  * @param int $id Id del nodo
   * @param string $fecha_inicio Primera fecha (para consultar las edts)
   * @param string $fecha_fin Segunda fecha (para consultar las edts)
   * @return array
   * @author Victor Manuel Moreno Vega
   */
-  private function devolverArrayConDatosDeEdts($gestoresDelNodo, $fecha_inicio, $fecha_fin) {
+  private function devolverArrayConDatosDeEdts($gestoresDelNodo, $idnodo, $fecha_inicio, $fecha_fin) {
     $datosCompletos = array();
-    // dd($gestoresDelNodo);
     $tiposEdt = TipoEdt::select('id', 'nombre')->get()->toArray();
     foreach ($gestoresDelNodo as $key => $value) {
-      // dd($tiposEdt[$i]['nombre']);
-      // echo '... </br>';
       $gestor = $value->nombres;
       $array = array('gestor' => $gestor);
       array_push($datosCompletos, $array);
       for ($i=0; $i < 3 ; $i++) {
-        // echo $tiposEdt[$i]['nombre'] . '</br>';
-        // dd($value->id);
-        // exit();
-        $edtArr = $this->edtRepository->consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($value->id, $tiposEdt[$i]['nombre'], $fecha_inicio, $fecha_fin);
-        // dd($edtArr);
-        // dd($edtArr);
-        // dd($edtArr);
+        $edtArr = $this->edtRepository->consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($value->id, $tiposEdt[$i]['nombre'], $idnodo, $fecha_inicio, $fecha_fin);
         if ($i == 0) {
           if ($edtArr != null) {
             $datosCompletos[$key]['tipos1'] = $edtArr->cantidad;
@@ -159,7 +151,7 @@ class GraficoController extends Controller
   public function articulacionesPorNodoYAnho_Controller($id, $anho)
   {
     $datosCompletos = array();
-    for ($i=0; $i < 3 ; $i++) {
+    for ($i = 0; $i < 3 ; $i++) {
       $articulacionesCantidad =$this->articulacionRepository->consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $i);
       $datosCompletos = $this->condicionarConsultaDeArticulaciones($i, $datosCompletos, $articulacionesCantidad);
     }
@@ -259,6 +251,7 @@ class GraficoController extends Controller
   */
   public function articulacionesGraficos()
   {
+    // dd($this->lineaRepository->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id'));
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('grafico.dinamizador.articulacion', [
       'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
@@ -310,7 +303,7 @@ class GraficoController extends Controller
   }
 
   /**
-  *
+  * Consulta las articulacion de un nodo por tipo
   * @param int $id Id del nodo
   * @return Response
   * @author Victor Manuel Moreno Vega

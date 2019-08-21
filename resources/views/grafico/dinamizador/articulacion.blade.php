@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('meta-title', 'Gráficos de Articulaciones')
 @section('content')
-  {!! $yearNow = Carbon\Carbon::now()->isoFormat('YYYY') !!}
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('grafico')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
+              {{ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY') }}
+              <i class="left material-icons">arrow_back</i>
             </a> Gráficos
           </h5>
           <div class="card">

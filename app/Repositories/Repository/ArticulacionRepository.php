@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\{DB};
-use App\Models\{ArchivoArticulacion, Articulacion, Entidad, Talento, ArticulacionProyecto, Actividad};
+use App\Models\{Articulacion, Entidad, Talento, ArticulacionProyecto, Actividad};
 use Carbon\Carbon;
 
 class ArticulacionRepository
@@ -21,8 +21,10 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
 {
   return Articulacion::select('articulaciones.tipo_articulacion')
   ->selectRaw('count(articulaciones.id) AS cantidad')
-  ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
-  ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+  ->join('articulacion_proyecto', 'articulaciones.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+  ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+  ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+  ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
   ->where('nodos.id', $id)
   ->where('tipo_articulacion', $i)
   ->whereYear('fecha_cierre', $anho)
@@ -45,7 +47,9 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
   {
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('articulacion_proyecto', 'articulaciones.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
     ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
     ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
@@ -53,7 +57,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
     ->where('nodos.id', $idnodo)
     ->where('tipo_articulacion', $tipo_articulacion)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-    ->groupBy('lineastecnologicas.id', 'articulaciones.tipo_articulacion')
+    ->groupBy('lineastecnologicas.id', 'articulaciones.tipo_articulacion', 'nodos.id')
     ->get()
     ->last();
   }
@@ -71,9 +75,10 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
-    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
     ->where('gestores.id', $idgestor)
     ->where('tipo_articulacion', $tipo_articulacion)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
@@ -92,7 +97,9 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
     ->where('gestores.id', $id)
@@ -215,7 +222,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
 
       if ($articulacionConsultaId->tipo_articulacion == Articulacion::IsEmprendedor()) {
         // Método detach para eliminar los datos de la tabla articulacion_talento (pivot entre talentos y articulaciones)
-        $articulacionConsultaId->talentos()->detach();
+        $articulacionConsultaId->articulacion_proyecto->talentos()->detach();
       }
       $articulacionConsultaId->update([
         'tipoarticulacion_id' => request()->txttipoarticulacion_id,
@@ -244,7 +251,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
             $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
           }
         }
-        $articulacionConsultaId->articulacion_proyecto->talentos()->sync($syncData);
+        $articulacionConsultaId->articulacion_proyecto->talentos()->sync($syncData, true);
       }
       DB::commit();
       return true;

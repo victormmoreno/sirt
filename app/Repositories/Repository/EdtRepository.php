@@ -12,23 +12,27 @@ class EdtRepository
   /**
   * Consulta las cantidad de tipos de articulación por gestor
   * @param int $idgestor Id del gestor
-  * @param int $tipo_edt Nombre del tipo de edt (Tipo 1, Tipo 2, Tipo 3)
+  * @param string $tipo_edt Nombre del tipo de edt (Tipo 1, Tipo 2, Tipo 3)
+  * @param int $idnodo Id del nodo
   * @param string $fecha_inicio
   * @param string $fecha_fin
   * @return Collection
-   */
-  public function consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($idgestor, $tipo_edt, $fecha_inicio, $fecha_fin)
+  * @author Victor Manuel Moreno Vega
+  */
+  public function consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($idgestor, $tipo_edt, $idnodo, $fecha_inicio, $fecha_fin)
   {
     return Edt::select('tiposedt.nombre')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('count(edts.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'edts.gestor_id')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
-    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
     ->where('gestores.id', $idgestor)
+    ->where('nodos.id', $idnodo)
     ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipo_edt)->get()->first()->id)
-    ->whereBetween('fecha_fin', [$fecha_inicio, $fecha_fin])
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->groupBy('gestores.id', 'tiposedt.nombre')
     ->get()
     ->last();

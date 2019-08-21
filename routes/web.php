@@ -323,7 +323,6 @@ function () {
   Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
   Route::post('/', 'ArticulacionController@store')->name('articulacion.store')->middleware('role_session:Gestor');
   Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload')->middleware('role_session:Gestor');
-  Route::delete('/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Gestor');
 
 }
 );

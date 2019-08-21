@@ -1,7 +1,4 @@
-$(document).ready(function(){
-  // pie_chart();
-  // initGrafico3();
-});
+$(document).ready(function(){});
 var ano = (new Date).getFullYear();
 
 var graficosId = {

@@ -8,7 +8,7 @@
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('grafico')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
+              <i class="left material-icons">arrow_back</i>
             </a> Gráficos
           </h5>
           <div class="card">
@@ -150,7 +150,6 @@
 @endsection
 @push('script')
   <script>
-    $(document).ready(function(){
-    });
+    $(document).ready(function(){});
   </script>
 @endpush
