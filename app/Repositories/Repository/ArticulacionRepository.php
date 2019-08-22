@@ -3,11 +3,35 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\{DB};
-use App\Models\{Articulacion, Entidad, Talento, ArticulacionProyecto, Actividad};
+use App\Models\{Articulacion, Entidad, ArticulacionProyecto, Actividad};
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
+
+  /**
+   * Cambia el gestor que está asociado a una articulación
+   * @param Request $request
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author Victor Manuel Moreno vega
+   */
+  public function updateGestorArticulacion_Repository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::find($id);
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'gestor_id' => $request->txtgestor_id
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
 
 /**
  * Consulta la cantidad de articulacion de un nodo, según el tipo de articulacion y el año
@@ -53,8 +77,8 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
     ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
     ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
-    ->where('lineastecnologicas.id', $idlinea)
     ->where('nodos.id', $idnodo)
+    ->where('lineastecnologicas.id', $idlinea)
     ->where('tipo_articulacion', $tipo_articulacion)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->groupBy('lineastecnologicas.id', 'articulaciones.tipo_articulacion', 'nodos.id')

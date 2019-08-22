@@ -146,7 +146,6 @@
       </div>
     </div>
   </main>
-  @include('charlas.modals')
 @endsection
 @push('script')
   <script>

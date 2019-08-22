@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Sector, Departamento, TipoArticulacion, Talento, Articulacion, Nodo, Gestor};
+use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor};
 use App\Http\Requests\ArticulacionFormRequest;
 use Carbon\Carbon;
-use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository};
+use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
-use Illuminate\Support\{Str, Facades\Session};
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\User;
+use Alert;
 
 class ArticulacionController extends Controller
 {
@@ -18,16 +19,16 @@ class ArticulacionController extends Controller
   private $empresaRepository;
   private $grupoInvestigacionRepository;
   private $articulacionProyectoRepository;
+  private $gestorRepository;
 
-  public function __construct(ArticulacionRepository $articulacionRepository, EmpresaRepository $empresaRepository, GrupoInvestigacionRepository $grupoInvestigacionRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
+  public function __construct(GestorRepository $gestorRepository, ArticulacionRepository $articulacionRepository, EmpresaRepository $empresaRepository, GrupoInvestigacionRepository $grupoInvestigacionRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
   {
     $this->articulacionRepository = $articulacionRepository;
     $this->empresaRepository = $empresaRepository;
     $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
     $this->articulacionProyectoRepository = $articulacionProyectoRepository;
-    $this->middleware([
-      'auth',
-    ]);
+    $this->gestorRepository = $gestorRepository;
+    $this->middleware(['auth']);
   }
 
   /**
@@ -348,6 +349,7 @@ class ArticulacionController extends Controller
   *
   * @param  int  $id
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function edit($id)
   {
@@ -365,6 +367,13 @@ class ArticulacionController extends Controller
           'articulacion' => $articulacion,
           'pivot' => $pivot,
         ]);
+      } else {
+        // dd($articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->id);
+        $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+        return view('articulaciones.dinamizador.edit', [
+          'articulacion' => $articulacion,
+          'gestores' => $gestores
+        ]);
       }
 
     }
@@ -376,29 +385,47 @@ class ArticulacionController extends Controller
   * @param  \Illuminate\Http\Request  $request
   * @param  int  $id
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
   */
   public function update(Request $request, $id)
   {
-    $req = new ArticulacionFormRequest;
-    $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
-    if ($validator->fails()) {
-      return response()->json([
-        'fail' => true,
-        'errors' => $validator->errors(),
-      ]);
-    }
-    $result = $this->articulacionRepository->update($request, $id);
-    // exit;
-    if ($result == false) {
-      return response()->json([
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      $req = new ArticulacionFormRequest;
+      $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
+      if ($validator->fails()) {
+        return response()->json([
+          'fail' => true,
+          'errors' => $validator->errors(),
+        ]);
+      }
+      $result = $this->articulacionRepository->update($request, $id);
+      // exit;
+      if ($result == false) {
+        return response()->json([
           'fail' => false,
           'redirect_url' => false
-      ]);
-    } else {
-      return response()->json([
+        ]);
+      } else {
+        return response()->json([
           'fail' => false,
           'redirect_url' => url(route('articulacion'))
-      ]);
+        ]);
+      }
+    } else {
+      $validator = Validator::make($request->all(), [
+        'txtgestor_id' => 'required'
+      ], ['txtgestor_id.required' => 'El Gestor es obligatorio.']);
+      if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
+      }
+      $update = $this->articulacionRepository->updateGestorArticulacion_Repository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Existosa!', 'El gestor de la articulación se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('articulacion');
+      } else {
+        Alert::error('Modificación Errónea!', 'El gestor de la articulación no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
     }
   }
 

@@ -35,6 +35,69 @@ class GraficoController extends Controller
   }
 
   /**
+   * Consulta las edts realiazadas por nodo
+   * @param int $id Id de la línea tecnológica
+   * @param int $idnodo Id del nodo
+   * @param string $fecha_inicio Primera fecha para filtrar
+   * @param string $fecha_fin Segunda fecha para filtrar
+   * @return Response
+   * @author Victor Manuel Moreno Vega
+   */
+  public function edtsLineaGrafico($id, $idnodo, $fecha_inicio, $fecha_fin)
+  {
+    $idnodoMethod = "";
+
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $idnodoMethod = auth()->user()->dinamizador->nodo_id;
+    } else {
+      $idnodoMethod = $idnodo;
+    }
+
+    $datosLinea = LineaTecnologica::findOrFail($id);
+    $datosCompletos['lineatecnologica'] = $datosLinea->nombre;
+    $tiposEdt = TipoEdt::select('id', 'nombre')->get()->toArray();
+
+    for ($i=0; $i < 3; $i++) {
+      $edtsCantidad = $this->edtRepository->consultarCantidadDeEdtsPorLineaTecnologicaYFecha_Repository($idnodoMethod, $id, $tiposEdt[$i]['nombre'], $fecha_inicio, $fecha_fin);
+      $datosCompletos = $this->condicionarConsultaDeEdts($i, $datosCompletos, $edtsCantidad);
+    }
+    return response()->json([
+      'consulta' => $datosCompletos
+    ]);
+  }
+
+  /**
+  * Método que según el caso, agregar el valor de la consulta al array, o agrega 0 en caso de no encontrar nada
+  * @param int $id Tipo de la articulacion
+  * @param array $datosCompletos Array con los datos de la grafica
+  * @param object $edtsCantidad Consulta con la cantidad de edts por tipo
+  * @return array
+  * @author Victor Manuel Moreno Vega
+  */
+  private function condicionarConsultaDeEdts($i, $datosCompletos, $edtsCantidad) {
+    if ( $i == 0 ) {
+      if ($edtsCantidad != null) {
+        $datosCompletos['tipo1'] = $edtsCantidad->cantidad;
+      } else {
+        $datosCompletos['tipo1'] = 0;
+      }
+    } else if ( $i == 1 ) {
+      if ($edtsCantidad != null) {
+        $datosCompletos['tipo2'] = $edtsCantidad->cantidad;
+      } else {
+        $datosCompletos['tipo2'] = 0;
+      }
+    } else {
+      if ($edtsCantidad != null) {
+        $datosCompletos['tipo3'] = $edtsCantidad->cantidad;
+      } else {
+        $datosCompletos['tipo3'] = 0;
+      }
+    }
+    return $datosCompletos;
+  }
+
+  /**
   * Retorna la cantidad de edts por tipo de un gestor
   * @param int $id Id del gestor
   * @param string $fecha_inicio Primera fecha de cierre
@@ -42,18 +105,24 @@ class GraficoController extends Controller
   * @return Response
   * @author Victor Manuel Moreno Vega
   **/
-  // public function edtsGestorGrafico($id, $fecha_inicio, $fecha_fin)
-  // {
-  //   $datosGestor = $this->gestorRepository->consultarGestorPorIdGestor($id);
-  //   $datosCompletos['gestor'] = $datosGestor->gestor;
-  //   for ($i=0; $i < 3 ; $i++) {
-  //     $articulacionesCantidad = $this->articulacionRepository->consultarCantidadDeEdtsPorTipoDeEdtsYGestor($id, $i, $fecha_inicio, $fecha_fin);
-  //     $datosCompletos = $this->condicionarConsultaDeEdts($i, $datosCompletos, $articulacionesCantidad);
-  //   }
-  //   return response()->json([
-  //     'consulta' => $datosCompletos
-  //   ]);
-  // }
+  public function edtsGestorGrafico($id, $idnodo, $fecha_inicio, $fecha_fin)
+  {
+    $nodo = $idnodo;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $nodo = auth()->user()->dinamizador->nodo_id;
+    }
+    $datosGestor = $this->gestorRepository->consultarGestorPorIdGestor($id);
+    $datosCompletos['gestor'] = $datosGestor->gestor;
+    $tiposEdt = TipoEdt::select('id', 'nombre')->get()->toArray();
+    for ($i=0; $i < 3 ; $i++) {
+      $edtsCantidad = $this->edtRepository->consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($id, $tiposEdt[$i]['nombre'], $nodo, $fecha_inicio, $fecha_fin);
+      // var_dump($nodo);
+      $datosCompletos = $this->condicionarConsultaDeEdts($i, $datosCompletos, $edtsCantidad);
+    }
+    return response()->json([
+      'consulta' => $datosCompletos
+    ]);
+  }
 
   /**
    * Consulta las edts realizadas entre fechas

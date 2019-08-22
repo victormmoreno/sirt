@@ -10,6 +10,59 @@ class EdtRepository
 {
 
   /**
+   * Consulta la cantidad de edts que tiene una línea tecnológica
+   * @param int $idnodo Id del nodo
+   * @param int $idlinea Id de la línea tecnológica
+   * @param string $tipoEdt Tipo de edt por el que se buscarán las articulaciones
+   * @param string $fecha_inicio Primera fecha por la que se filtrará la consulta
+   * @param string $fecha_fin Segunda fecha por la que se filtrará la consulta
+   * @return Collection
+   * @author Victor Manuel Moreno Vega
+   */
+  public function consultarCantidadDeEdtsPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipoEdt, $fecha_inicio, $fecha_fin)
+  {
+    return Edt::select('edts.tipoedt_id')
+    ->selectRaw('count(edts.id) AS cantidad')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+    ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
+    ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->where('nodos.id', $idnodo)
+    ->where('lineastecnologicas.id', $idlinea)
+    ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipoEdt)->get()->first()->id)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->groupBy('lineastecnologicas.id', 'edts.tipoedt_id', 'nodos.id')
+    ->get()
+    ->last();
+  }
+
+  /**
+   * Cambia el gestor de una edt
+   * @param Request $request
+   * @param int $id Id de la edt
+   * @return boolean
+   * @author Victor Manuel Moreno Vega
+   */
+  public function updateGestorEdt_Repository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $edt = Edt::find($id);
+      $edt->actividad()->update([
+        'gestor_id' => $request->txtgestor_id
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
+
+  /**
   * Consulta las cantidad de tipos de articulación por gestor
   * @param int $idgestor Id del gestor
   * @param string $tipo_edt Nombre del tipo de edt (Tipo 1, Tipo 2, Tipo 3)
@@ -105,6 +158,9 @@ class EdtRepository
     'edts.tipoedt_id',
     'edts.areaconocimiento_id',
     'actividades.fecha_cierre',
+    'gestores.id AS gestor_id',
+    'lineastecnologicas.id AS linea_id',
+    'lineastecnologicas.nombre AS nombre_linea',
     'actividades.nombre')
     ->selectRaw('IF(edts.estado = '.Edt::IsActive().', "Activa", "Inactiva") AS estado')
     ->selectRaw('IF(edts.fotografias = 0, "No", "Si") AS fotografias')
@@ -115,6 +171,7 @@ class EdtRepository
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
     ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('edts.id', $id)
     ->get()

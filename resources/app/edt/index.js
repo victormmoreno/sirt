@@ -55,6 +55,12 @@ function datatableEdtsPorNodo(id) {
         name: 'entregables',
         orderable: false
       },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
     ],
   });
 }

@@ -38,4 +38,9 @@ class Actividad extends Model
       return $this->hasOne(Edt::class, 'actividad_id', 'id');
   }
 
+  public function gestor()
+  {
+      return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+  }
+
 }

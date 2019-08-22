@@ -16,7 +16,7 @@
                 </div>
               </div>
               <div class="divider"></div>
-              <table class="display responsive-table datatable-example" id="edtPorNodo_table" >
+              <table class="display responsive-table datatable-example" style="width: 100%" id="edtPorNodo_table" >
                 <thead>
                   <th>Código de la Edt</th>
                   <th>Nombre</th>
@@ -26,6 +26,7 @@
                   <th>Empresas</th>
                   <th>Detalles</th>
                   <th>Entregables</th>
+                  <th>Editar</th>
                 </thead>
               </table>
             </div>

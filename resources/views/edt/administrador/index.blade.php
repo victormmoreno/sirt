@@ -38,6 +38,7 @@
                   <th>Empresas</th>
                   <th>Detalles</th>
                   <th>Entregables</th>
+                  <th>Editar</th>
                 </thead>
 
               </table>

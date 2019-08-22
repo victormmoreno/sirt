@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, Validator};
 use App\Http\Requests\{EdtFormRequest};
-use App\Repositories\Repository\{EntidadRepository, EdtRepository};
+use App\Repositories\Repository\{EntidadRepository, EdtRepository, UserRepository\GestorRepository};
 use App\Models\{Edt, TipoEdt, AreaConocimiento, Nodo};
 use App\User;
 use App\Helpers\ArrayHelper;
@@ -18,16 +18,23 @@ class EdtController extends Controller
    * Un objeto la clase EntidadRepository
    * @var object
    */
-  public $entidadRepository;
+  private $entidadRepository;
   /**
    * Objeto de la clase EdtRepository
    * @var object
    */
   private $edtRepository;
-  public function __construct(EntidadRepository $entidadRepository, EdtRepository $edtRepository)
+  /**
+  * Objeto de la clase GestorRepository
+  *
+  * @var object
+  */
+  private $gestorRepository;
+  public function __construct(GestorRepository $gestorRepository, EntidadRepository $entidadRepository, EdtRepository $edtRepository)
   {
     $this->entidadRepository = $entidadRepository;
     $this->edtRepository = $edtRepository;
+    $this->gestorRepository = $gestorRepository;
     $this->middleware('auth');
   }
 
@@ -222,15 +229,26 @@ class EdtController extends Controller
   *
   * @param  int  $id
   * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
+  *
   */
   public function edit($id)
   {
-    return view('edt.gestor.edit', [
-      'edt' => $this->edtRepository->consultarDetalleDeUnaEdt($id),
-      'areasconocimiento' => AreaConocimiento::all()->pluck('nombre', 'id'),
-      'tiposedt' => TipoEdt::all(),
-      'entidades' => $this->edtRepository->entidadesDeUnaEdt($id)
-    ]);
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('edt.gestor.edit', [
+        'edt' => $this->edtRepository->consultarDetalleDeUnaEdt($id),
+        'areasconocimiento' => AreaConocimiento::all()->pluck('nombre', 'id'),
+        'tiposedt' => TipoEdt::all(),
+        'entidades' => $this->edtRepository->entidadesDeUnaEdt($id)
+      ]);
+    } else {
+      $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
+      $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($edt->linea_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+      return view('edt.dinamizador.edit', [
+        'edt' => $edt,
+        'gestores' => $gestores
+      ]);
+    }
   }
 
   /**
@@ -242,25 +260,42 @@ class EdtController extends Controller
   */
   public function update(Request $request, $id)
   {
-    $req = new EdtFormRequest;
-    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-    if ($validator->fails()) {
-      return response()->json([
-        'fail' => true,
-        'errors' => $validator->errors(),
-      ]);
-    }
-    $result = $this->edtRepository->updateEdtRepository($request, $id);
-    if ($result == false) {
-      return response()->json([
-        'fail' => false,
-        'redirect_url' => "false"
-      ]);
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      $req = new EdtFormRequest;
+      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+      if ($validator->fails()) {
+        return response()->json([
+          'fail' => true,
+          'errors' => $validator->errors(),
+        ]);
+      }
+      $result = $this->edtRepository->updateEdtRepository($request, $id);
+      if ($result == false) {
+        return response()->json([
+          'fail' => false,
+          'redirect_url' => "false"
+        ]);
+      } else {
+        return response()->json([
+          'fail' => false,
+          'redirect_url' => url(route('edt'))
+        ]);
+      }
     } else {
-      return response()->json([
-        'fail' => false,
-        'redirect_url' => url(route('edt'))
-      ]);
+      $validator = Validator::make($request->all(), [
+        'txtgestor_id' => 'required'
+      ], ['txtgestor_id.required' => 'El Gestor es obligatorio.']);
+      if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
+      }
+      $update = $this->edtRepository->updateGestorEdt_Repository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Existosa!', 'El gestor de la edt se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('edt');
+      } else {
+        Alert::error('Modificación Errónea!', 'El gestor de la edt no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
     }
 
   }

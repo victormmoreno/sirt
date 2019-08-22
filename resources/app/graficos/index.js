@@ -10,15 +10,21 @@ var graficosId = {
 
 var graficosEdtId = {
   grafico1: 'graficosEdtsPorGestorNodoYFecha_stacked',
-  grafico2: 'graficosEdtsPorGestorYFecha_stacked'
+  grafico2: 'graficosEdtsPorGestorYFecha_stacked',
+  grafico3: 'graficoEdtsPorLineaYFecha_stacked',
+  grafico4: 'graficoEdtsPorNodoYAnho_variablepie'
 }
 
-function consultarEdtsPorGestorYFecha_stacked() {
-  let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
-  let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
-  let id = $('#txtgestor_id_edtGrafico2').val();
+function consultarEdtsPorLineaYFecha_stacked(bandera) {
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_edtGrafico3');
+  }
+  let fecha_inicio = $('#txtfecha_inicio_GraficoEdt3').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoEdt3').val();
+  let id = $('#txtlinea_id_edtGrafico3').val();
   if (id == '') {
-    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+    Swal.fire('Advertencia!', 'Selecciona una Línea Tecnológica!', 'warning');
   } else {
     if (fecha_inicio > fecha_fin) {
       Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
@@ -26,10 +32,10 @@ function consultarEdtsPorGestorYFecha_stacked() {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
-          Highcharts.chart(graficosId.grafico2, {
+          Highcharts.chart(graficosEdtId.grafico3, {
             chart: {
               type: 'column'
             },
@@ -56,7 +62,65 @@ function consultarEdtsPorGestorYFecha_stacked() {
                 stacking: 'normal'
               }
             },
-            series: [{name: data.consulta.gestor, data: [data.consulta.tipos1, data.consulta.tipos2, data.consulta.tipos3]}]
+            series: [{name: data.consulta.lineatecnologica, data: [data.consulta.tipo1, data.consulta.tipo2, data.consulta.tipo3]}]
+          });
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      });
+    }
+  }
+}
+
+function consultarEdtsPorGestorYFecha_stacked(bandera) {
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_edtGrafico2');
+  }
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
+  let id = $('#txtgestor_id_edtGrafico2').val();
+  if (id == '') {
+    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+  } else {
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
+    } else {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        success: function (data) {
+          // console.log(data);
+          Highcharts.chart(graficosEdtId.grafico2, {
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Tipos de Edt\'s'
+            },
+            xAxis: {
+              categories: ['Tipo 1', 'Tipo 2', 'Tipo 3'],
+              title: {
+                text: 'Tipos de Edt\'s'
+              }
+            },
+            yAxis: {
+              min: 0,
+              title: {
+                text: 'Número de Edt\'s'
+              }
+            },
+            legend: {
+              reversed: true
+            },
+            plotOptions: {
+              series: {
+                stacking: 'normal'
+              }
+            },
+            series: [{name: data.consulta.gestor, data: [data.consulta.tipo1, data.consulta.tipo2, data.consulta.tipo3]}]
           });
         },
         error: function (xhr, textStatus, errorThrown) {
