@@ -3576,6 +3576,16 @@ function verDetallesDeLosEntregablesDeUnProyecto(id) {
         +'</div>'
         +'</div>'
         +'<div class="divider"></div>'
+
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Url del Video Tutorial: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<a href='+respuesta.proyecto.url_videotutorial+' target="_blank"><span>'+respuesta.proyecto.url_videotutorial+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
       );
 
       $("#detallesEntregablesDeUnProyecto_body").append(
@@ -4625,6 +4635,60 @@ var graficosEdtId = {
   grafico2: 'graficosEdtsPorGestorYFecha_stacked',
   grafico3: 'graficoEdtsPorLineaYFecha_stacked',
   grafico4: 'graficoEdtsPorNodoYAnho_variablepie'
+}
+
+function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
+  let anho = $('#txtanho_GraficoEdt4').val();
+  if (idnodo == '') {
+    Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+  } else {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
+      success: function (data) {
+        Highcharts.chart(graficosEdtId.grafico4, {
+          chart: {
+            type: 'variablepie'
+          },
+          title: {
+            text: 'Tipos de Edt\'s.'
+          },
+          plotOptions: {
+            variablepie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.0f}',
+                connectorColor: 'silver'
+              }
+            }
+          },
+          tooltip: {
+            headerFormat: '',
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+            'Cantidad: <b>{point.y}</b><br/>'
+          },
+          series: [{
+            minPointSize: 10,
+            innerSize: '20%',
+            zMin: 0,
+            name: '',
+            data: [
+              { name: 'Tipo 1', y: data.consulta.tipo1, z: 15 },
+              { name: 'Tipo 2', y: data.consulta.tipo2, z: 15 },
+              { name: 'Tipo 3', y: data.consulta.tipo3, z: 15 }
+            ]
+          }]
+        });
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+
+  }
 }
 
 function consultarEdtsPorLineaYFecha_stacked(bandera) {

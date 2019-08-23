@@ -42,7 +42,7 @@ class IdeaRepository
      * Función que genera el código de una idea de proyecto
      * @param int $tipo Indica que tipo de idea de proyecto es.
      * @param int $idnodo Indica a que nodo se va a registrar la idea.
-     * @return return string
+     * @return string
      */
     private function generarCodigoIdea($tipo, $idnodo)
     {
@@ -84,11 +84,11 @@ class IdeaRepository
         ]);
 
         event(new IdeaHasReceived($idea));
-        
+
         $users = User::infoUserRole(['Infocenter'],['infocenter', 'infocenter.nodo'])->whereHas(
                 'infocenter.nodo', function ($query) use ($idea) {
                     $query->where('id', $idea->nodo_id);
-            })->get();     
+            })->get();
 
         if (!$users->isEmpty()) {
             Notification::send($users,new IdeaReceived($idea));
@@ -154,7 +154,7 @@ class IdeaRepository
     }
 
 
-    public function getIdeaWithRelations($idea) 
+    public function getIdeaWithRelations($idea)
     {
         return $idea->with([
               'nodo'=> function ($query) {
@@ -171,7 +171,7 @@ class IdeaRepository
                     },
               'nodo.infocenter'
         ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')->get();
-    
+
     }
 
 }

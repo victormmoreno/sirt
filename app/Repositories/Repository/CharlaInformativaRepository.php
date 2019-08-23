@@ -12,7 +12,7 @@ class CharlaInformativaRepository
   * consulta los archivos de una edt
   * @param int $id Id de la EDT por el cual se consultaran sus archivos
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarArchivosDeUnaCharlaInformativaRepository($id)
   {
@@ -23,7 +23,7 @@ class CharlaInformativaRepository
    * Consulta la informacion de una charla informativa
    * @param int $id Id de la charla informativa
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarInformacionDeUnaCharlaInformativaRepository($id)
   {

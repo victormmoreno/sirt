@@ -1,6 +1,8 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
-{!! \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = '' !!}
+@php
+  \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
+@endphp
 <div class="row">
   <div class="input-field col s12 m6 l6">
     <input name="txtcodigo_proyecto" disabled value="{{ $proyecto->codigo_proyecto }}" id="txtcodigo_proyecto">
@@ -113,9 +115,26 @@
   </div>
 </div>
 <div class="row" id="divUrlVideoTutorial">
-  <div class="input-field col s12 m12 l12">
-    <input type="text" {{ $disabled }} name="txturl_videotutorial" id="txturl_videotutorial" value="{{ old('txturl_videotutorial', $entregables->url_videotutorial) }}" onchange="urlVideoTutorialChange(this.value);">
-    <label for="txturl_videotutorial">Url del Video Turorial <span class="red-text">*</span></label>
+  <div class="input-field col s12 m3 l3 offset-l3">
+    <select class="" id="txtservidorvideo" name="txtservidorvideo"  style="width: 100%" tabindex="-1">
+      <option value="">Seleccione Servidor de video</option>
+      @foreach($servidorVideo as $id => $domain)
+        <option value="{{$id}}" {{old('txtservidorvideo') ==  $id ? 'selected':''}}>{{$domain}}</option>
+      @endforeach
+    </select>
+    <label for="txtservidorvideo">
+      Servidor de videos <span class="red-text">*</span>
+    </label>
+    @error('txtservidorvideo')
+      <label id="txtservidorvideo-error" class="error" for="txtservidorvideo">{{ $message }}</label>
+    @enderror
+  </div>
+  <div class="input-field col s12 m4 l4">
+    <input placeholder="Ingresa el link del video" {{ $disabled }} value="{{ $proyecto->url_videotutorial }}" class="validate" id="txturl_videotutorial" name="txturl_videotutorial" type="text" value="{{ old('txturl_videotutorial') }}">
+    <small>La dirección de debe ser algo siminlar: <a target="_blank" href="https://www.youtube.com/watch?v=J9LSfkVF2K4"><b>https://www.youtube.com/watch?v=J9LSfkVF2K4</b></a></small><br>
+    <label for="txturl_videotutorial" class="active">
+      Link video <span class="red-text">*</span>
+    </label>
     @error('txturl_videotutorial')
       <label id="txturl_videotutorial-error" class="error" for="txturl_videotutorial">{{ $message }}</label>
     @enderror

@@ -38,7 +38,7 @@ class CreateProyectosTable extends Migration
             $table->string('observaciones_proyecto',1000)->nullable()->default(null);
             $table->string('impacto_proyecto',1000)->nullable()->default(null);
             $table->tinyInteger('economia_naranja')->nullable()->default('0');
-            $table->string('resultado_proyecto')->nullable()->default(null);
+            $table->string('resultado_proyecto', 1000)->nullable()->default(null);
             $table->date('fecha_ejecucion')->nullable()->default(null);
             $table->double('aporte_sena')->nullable()->default(null);
             $table->double('aporte_talento')->nullable()->default(null);

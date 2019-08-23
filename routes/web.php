@@ -305,6 +305,9 @@ Route::group([
   'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor'],
 ],
 function () {
+
+  // Ruta para la generación de excel del módulo de articulaciones
+  Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
   //rutas para consultar articualciones por gestor
   Route::get('/gestor/{id}/{tipoarticulacion}', 'ArticulacionController@ArticulacionForGestor')->name('articulacion.gestor');
   Route::get('/', 'ArticulacionController@index')->name('articulacion');
@@ -464,6 +467,7 @@ Route::group(
    Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsNodoGrafico')->name('grafico.edt.nodo')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/consultarEdtsPorGestorYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsGestorGrafico')->name('grafico.edt.gestor')->middleware('role_session:Dinamizador|Administrador|Gestor');
    Route::get('/consultarEdtsPorLineaYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'GraficoController@edtsLineaGrafico')->name('grafico.edt.linea')->middleware('role_session:Dinamizador|Administrador|Gestor');
+   Route::get('/consultarEdtsPorNodoYAnho/{id}/{anho}', 'GraficoController@edtsPorNodoAnhoGrafico_Controller')->name('grafico.edt.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/proyectos', 'GraficoController@proyectosGraficos')->name('grafico.proyectos')->middleware('role_session:Gestor|Dinamizador|Administrador');
  }
 );

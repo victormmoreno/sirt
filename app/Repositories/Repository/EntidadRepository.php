@@ -11,7 +11,7 @@ class EntidadRepository
    * Busca un grupos de investigación por el id de la entidad (tabla entidades)
    *
    * @param int $id, Id de la tabla entidad con el que se consultará la entidad
-   * @return return object
+   * @return Collection
    */
   public function consultarGrupoInvestigacionEntidadRepository($id)
   {

@@ -12,7 +12,7 @@ class ArchivoRepository
   * Consulta la ruta de un archivo de una charla informativa
   * @param int id Id del archivo
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarRutaDeArchivoDeUnaCharlaInformativaPorId($id)
   {
@@ -52,7 +52,7 @@ class ArchivoRepository
   * @param int id Id del entrenamiento
   * @param string fileUrl Ruta con la que se guardará el arcivo en el servidor
   * @return void
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function storeFileEntrenamiento($id, $fileUrl)
   {
@@ -66,7 +66,7 @@ class ArchivoRepository
   * Consulta la ruta de un archivo de la articulacion_proyecto según su id (Principalmente para descargarlo)
   * @param int $id Id del archivo
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($id)
   {
@@ -77,7 +77,7 @@ class ArchivoRepository
    * Consuta los archivos de una articulacion_proyecto
    * @param int $id Id de la articulacion_proyecto
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarRutasArchivosDeUnaArticulacionProyecto($id)
   {
@@ -93,7 +93,7 @@ class ArchivoRepository
   * @param int $fase Id de la fase del archivo
   * @param string $fileUrkl Url donde se guardó el archivo
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function storeFileArticulacionProyecto($id, $fase, $fileUrl)
   {

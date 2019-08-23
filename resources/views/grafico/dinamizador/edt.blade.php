@@ -121,11 +121,11 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Articulaciones totales por año</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's totales por año</div>
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
-                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="">
+                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }})">
                               @for ($i=2016; $i <= $yearNow; $i++)
                                 <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
                               @endfor
@@ -150,6 +150,9 @@
 @endsection
 @push('script')
   <script>
-    $(document).ready(function(){});
+    $(document).ready(function(){
+      consultarEdtsPorNodoGestorYFecha_stacked(0);
+      consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }});
+    });
   </script>
 @endpush

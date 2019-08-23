@@ -85,7 +85,7 @@ class EntrenamientoRepository
   * consulta los archivos de un entrenamiento
   * @param int id Id del entrenamiento por el cual se consultaran sus archivos
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarArchivosDeUnEntrenamiento($id)
   {

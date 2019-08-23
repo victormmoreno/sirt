@@ -14,7 +14,7 @@ class ArticulacionRepository
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno vega
+   * @author dum
    */
   public function updateGestorArticulacion_Repository($request, $id)
   {
@@ -39,7 +39,7 @@ class ArticulacionRepository
  * @param string $anho Año por el que se consultaran la cantidad de articulaciones
  * @param int $i Tipo de articulacion
  * @return Collection
- * @author Victor Manuel Moreno Vega
+ * @author dum
  */
 public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $i)
 {
@@ -65,7 +65,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param string $fecha_inicio
    * @param string $fecha_fin
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarCantidadDeArticulacionesPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipo_articulacion, $fecha_inicio, $fecha_fin)
   {
@@ -136,7 +136,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateRevisadoFinalArticulacion($request, $id)
   {
@@ -159,7 +159,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
   * Consulta las articulaciones de un nodo
   * @param int $id Id del nodo
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarArticulacionesDeUnNodo($id)
   {
@@ -181,7 +181,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Consulta los entregables de las articulaciones
    * @param int $id Id de la articulación
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultaEntregablesDeUnaArticulacion($id)
   {
@@ -204,7 +204,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function update($request,  $id)
   {
@@ -290,7 +290,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateEntregablesArticulacion($request, $id)
   {
@@ -325,7 +325,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Consulta información de una articulacio por id
    * @param int $id Id de la articulació
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarArticulacionPorId($id)
   {
@@ -366,7 +366,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Consulta las articulaciones de un gestor
    * @param int $id Id del gestor
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarArticulacionesDeUnGestor($id)
   {
@@ -387,7 +387,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Registra un nueva articulación en la base de datos
    * @param Request $request
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function create($request)
   {

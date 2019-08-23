@@ -9,6 +9,8 @@ $(document)
   $loading.closeModal();
 });
 
+$('.swal2-select').remove();
+
 Highcharts.setOptions({
     lang: {
       downloadJPEG: 'Descargar como imagen JPEG',

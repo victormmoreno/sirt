@@ -23,6 +23,11 @@
               </div>
             </div>
             <div class="divider"></div>
+            <div class="right material-icons">
+              <a href="{{route('articulacion.excel.gestor', auth()->user()->gestor->id)}}">
+                <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+              </a>
+            </div>
             <table id="articulacionesGestor_table" class="display responsive-table datatable-example dataTable">
               <thead>
                 <tr>

@@ -18,10 +18,10 @@ class ServidorVideo extends Model
     =            asesores eloquent            =
     =========================================*/
 
-    public function getNombreAttribute($nombre)
-    {
-        return mb_strtolower(trim($nombre),'UTF-8');
-    }
+    // public function getNombreAttribute($nombre)
+    // {
+    //     return mb_strtolower(trim($nombre),'UTF-8');
+    // }
 
     public function getDominoAttribute($dominio)
     {
@@ -38,10 +38,10 @@ class ServidorVideo extends Model
         $this->attributes['dominio'] = mb_strtolower(trim($dominio),'UTF-8');
     }
 
-    public function setNombreAttribute($nombre)
-    {
-        $this->attributes['nombre'] = mb_strtolower(trim($nombre),'UTF-8');
-    }
+    // public function setNombreAttribute($nombre)
+    // {
+    //     $this->attributes['nombre'] = mb_strtolower(trim($nombre),'UTF-8');
+    // }
 
     /*=====  End of mutador eloquent  ======*/
 
@@ -53,12 +53,12 @@ class ServidorVideo extends Model
     /*=========================================================================
     =            scope para mostrar todos los servidores de videos            =
     =========================================================================*/
-    
+
     public function scopeAllServidoresVideo($query)
     {
         return $query;
     }
-    
+
     /*=====  End of scope para mostrar todos los servidores de videos  ======*/
-    
+
 }

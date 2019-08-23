@@ -11,7 +11,7 @@ class ArchivoComiteRepository
   * @param int $id Id del comité
   * @param string $fileUrl Ruta del archivo
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function store($id, $fileUrl)
   {
@@ -25,7 +25,7 @@ class ArchivoComiteRepository
   * Consulta los datos de un archivo del comité
   * @param int $id Id del archivo
   * @return Collecion
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarRutaDeArchivoPorId($id)
   {

@@ -35,6 +35,26 @@ class GraficoController extends Controller
   }
 
   /**
+   * Datos para mostrar las edts por año y tipo de edt por nodo
+   * @param int $idnodo Id del nodo
+   * @param string $anho Año por el que se filtra la consulta
+   * @return Response
+   * @author Victor Manuel Moreno Vega
+   */
+  public function edtsPorNodoAnhoGrafico_Controller($idnodo, $anho)
+  {
+    $datosCompletos = array();
+    $tiposEdt = TipoEdt::select('id', 'nombre')->get()->toArray();
+    for ($i = 0; $i < 3 ; $i++) {
+      $edtsCantidad =$this->edtRepository->consultarCantidadDeEdtsPorTipoYNodoYAnho_Repository($idnodo, $anho, $tiposEdt[$i]['nombre']);
+      $datosCompletos = $this->condicionarConsultaDeEdts($i, $datosCompletos, $edtsCantidad);
+    }
+    return response()->json([
+      'consulta' => $datosCompletos
+    ]);
+  }
+
+  /**
    * Consulta las edts realiazadas por nodo
    * @param int $id Id de la línea tecnológica
    * @param int $idnodo Id del nodo

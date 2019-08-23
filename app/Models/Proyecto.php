@@ -48,6 +48,7 @@ class Proyecto extends Model
         'aval_empresa_grupo',
         'estado_arte',
         'video_tutorial',
+        'url_videotutorial',
         'ficha_caracterizacion',
         'lecciones_aprendidas',
         'encuesta',

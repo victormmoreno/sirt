@@ -40,7 +40,7 @@
                       </a>
                     </div>
                     <div class="col s12 m4 l4">
-                      <a href="{{route('grafico.proyectos')}}">
+                      <a href="">
                         <div class="card indigo lighten-4">
                           <div class="card-content center">
                             <i class="left material-icons black-text">library_books</i>
@@ -48,30 +48,6 @@
                           </div>
                         </div>
                       </a>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col s12 m6 l6">
-                      <div class="card-panel red">
-                        <a class="waves-effect waves-light btn-large">Articulaciones</a>
-                      </div>
-                    </div>
-                    <div class="col s12 m6 l6">
-                      <div class="card-panel green">
-                        <a class="waves-effect waves-light btn-large">EDT's</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col s12 m6 l6">
-                      <div class="card-panel red">
-                        <a class="waves-effect waves-light btn-large">Articulaciones</a>
-                      </div>
-                    </div>
-                    <div class="col s12 m6 l6">
-                      <div class="card-panel green">
-                        <a class="waves-effect waves-light btn-large">EDT's</a>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -82,5 +58,4 @@
       </div>
     </div>
   </main>
-  @include('charlas.modals')
 @endsection

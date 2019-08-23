@@ -12,7 +12,7 @@ class ArticulacionProyectoRepository
   /**
   * @param int $id Id de la actividad
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarTalentosDeUnaArticulacionProyectoRepository($id)
   {

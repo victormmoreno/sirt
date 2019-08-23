@@ -10,6 +10,30 @@ class EdtRepository
 {
 
   /**
+   * Consulta las edts por tipos de un nodo y por año (de la fecha de cierre)
+   * @param int $idnodo Id del nodo
+   * @param string $anho Año por el que se filtran las edts (Fecha de Cierre)
+   * @param string $tipoEdt Tipo de la edt
+   * @return Collection
+   * @author dum
+   */
+  public function consultarCantidadDeEdtsPorTipoYNodoYAnho_Repository($idnodo, $anho, $tipoEdt)
+  {
+    return Edt::select('edts.tipoedt_id')
+    ->selectRaw('count(edts.id) AS cantidad')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->where('nodos.id', $idnodo)
+    ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipoEdt)->get()->first()->id)
+    ->whereYear('fecha_cierre', $anho)
+    ->groupBy('nodos.id', 'edts.tipoedt_id')
+    ->get()
+    ->last();
+  }
+
+  /**
    * Consulta la cantidad de edts que tiene una línea tecnológica
    * @param int $idnodo Id del nodo
    * @param int $idlinea Id de la línea tecnológica
@@ -17,7 +41,8 @@ class EdtRepository
    * @param string $fecha_inicio Primera fecha por la que se filtrará la consulta
    * @param string $fecha_fin Segunda fecha por la que se filtrará la consulta
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
+   * @since
    */
   public function consultarCantidadDeEdtsPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipoEdt, $fecha_inicio, $fecha_fin)
   {
@@ -43,7 +68,7 @@ class EdtRepository
    * @param Request $request
    * @param int $id Id de la edt
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateGestorEdt_Repository($request, $id)
   {
@@ -70,7 +95,7 @@ class EdtRepository
   * @param string $fecha_inicio
   * @param string $fecha_fin
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($idgestor, $tipo_edt, $idnodo, $fecha_inicio, $fecha_fin)
   {
@@ -95,7 +120,7 @@ class EdtRepository
   * consulta los archivos de una edt
   * @param int id Id de la EDT por el cual se consultaran sus archivos
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarArchivosDeUnaEdt($id)
   {
@@ -107,7 +132,7 @@ class EdtRepository
    * @param Request request
    * @param int id
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateEntregableRepository($request, $id)
   {
@@ -141,7 +166,7 @@ class EdtRepository
    * Consulta el detalle de una edt
    * @param int id Id de la edt
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarDetalleDeUnaEdt($id)
   {
@@ -182,7 +207,7 @@ class EdtRepository
    * Consulta las entidades de una edts
    * @param int id Id de la edt
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function entidadesDeUnaEdt($id)
   {
@@ -201,7 +226,7 @@ class EdtRepository
    * Consulta las edts por nodo
    * @param int id Id del nodo
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarEdtsDeUnNodo($id)
   {
@@ -303,7 +328,7 @@ class EdtRepository
    * @param Request request Datos del formulario de edt (create)
    * @param int id Id del edt que se va a editar
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateEdtRepository($request, $id)
   {
