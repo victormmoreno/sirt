@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor};
 use App\Http\Requests\ArticulacionFormRequest;
-use Carbon\Carbon;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
@@ -231,9 +230,9 @@ class ArticulacionController extends Controller
   {
     if (request()->ajax()) {
       if (\Session::get('login_role') == User::IsDinamizador()) {
-        $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( auth()->user()->dinamizador->nodo_id );
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo( auth()->user()->dinamizador->nodo_id );
       } else {
-        $articulaciones =$this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
       }
       return $this->datatablesArticulaciones($request, $articulaciones);
     }

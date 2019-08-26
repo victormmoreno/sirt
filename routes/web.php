@@ -308,6 +308,7 @@ function () {
 
   // Ruta para la generación de excel del módulo de articulaciones
   Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
+  Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
   //rutas para consultar articualciones por gestor
   Route::get('/gestor/{id}/{tipoarticulacion}', 'ArticulacionController@ArticulacionForGestor')->name('articulacion.gestor');
   Route::get('/', 'ArticulacionController@index')->name('articulacion');

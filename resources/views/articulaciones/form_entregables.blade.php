@@ -93,7 +93,7 @@
       <label for="entregable_acta_cierre">Acta de Cierre<span class="red-text">*</span></label>
     </p>
   </div>
-  @if ($articulacion->tipo_articulacion == 'Empresa' || $articulacion->tipo_articulacion == 'Emrpendedor')
+  @if ($articulacion->tipo_articulacion == 'Empresa' || $articulacion->tipo_articulacion == 'Emprendedor')
     <div class="col s4 m4 l4">
       <p class="p-v-xs">
         <input type="checkbox" {{ $disabled }} name="entregable_informe_final" {{ $articulacion->informe_final == 0 ? '' : 'checked' }} id="entregable_informe_final" value="1">

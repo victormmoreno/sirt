@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use App\Exports\{ArticulacionesExport};
+use App\Exports\{ArticulacionesExport, ArticulacionesNodoExport};
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use Excel;
 
@@ -19,27 +19,26 @@ class ArticulacionController extends Controller
     $this->articulacionRepository = $articulacionRepository;
   }
 
-  // public function query($id)
-  // {
-  //   $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( $id );
-  // }
-
   /**
    * Genera el excel de las articulaciones que tiene un gestor
    * @param int $id Id del gestor
-   * @return Collection
+   * @return Response
+   * @author dum
    */
   public function articulacionesDeUnGestor($id)
   {
-    // $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( $id );
-    // return (new ArticulacionesExport)->download('invoices.xlsx');
-    return Excel::download(new ArticulacionesExport, 'Datos.xls');
-    // Excel::create('Articulaciones' . $id . ' ' . Carbon::now(), function ($excel) {
-    //   $excel->sheet('Datos', function ($excel) use ($articulaciones) {
-    //     $length = $articulaciones->count() + 1;
-    //     $sheet->fromArray($articulaciones);
-    //   });
-    // })->download('xls');
+    return Excel::download(new ArticulacionesExport($this->articulacionRepository, $id), 'Datos.xls');
+  }
+
+  /**
+   * General el excel de las articulaciones de un nodo
+   * @param int $id Id del nodo
+   * @return Response
+   * @author dum
+   */
+  public function articulacionesDeUnNodo($id)
+  {
+    return Excel::download(new ArticulacionesNodoExport($this->articulacionRepository, $id), 'Articulaciones.xls');
   }
 
 }
