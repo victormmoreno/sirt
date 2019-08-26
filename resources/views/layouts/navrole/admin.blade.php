@@ -84,6 +84,12 @@
     <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura.index')}}">domain</i>Usos de infraestructura
   </a>
 </li>
+
+<li class="no-padding {{setActiveRoute('laboratorio.index')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('laboratorio.index')}}" href="{{route('laboratorio.index')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('laboratorio.index')}}">local_drink</i>Laboratorios
+  </a>
+</li>
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">filter_center_focus</i>Focos

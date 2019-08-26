@@ -42,6 +42,11 @@ class LineaTecnologica extends Model
       return $this->hasMany(Gestor::class, 'lineatecnologica_id', 'id');
     }
 
+    public function laboratorios()
+    {
+        return $this->hasMany(Laboratorio::class, 'lineatecnologica_id', 'id');
+    }
+
     /*=====  End of relaciones elquent  ======*/
 
 

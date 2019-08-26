@@ -55,7 +55,6 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'rol_id',
         'tipodocumento_id',
         'gradoescolaridad_id',
         'gruposanguineo_id',
@@ -103,10 +102,6 @@ class User extends Authenticatable implements JWTSubject
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-    public function users()
-    {
-        return $this->hasMany(User::class, 'rol_id', 'id');
-    }
 
     //relaciones muchos a muchos
 

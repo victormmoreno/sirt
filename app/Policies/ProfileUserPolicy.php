@@ -22,7 +22,7 @@ class ProfileUserPolicy
      * Determine whether the user can view any models.
      *
      * @param  \App\User  $user
-     * @return mixed
+     * @return bool
      */
     public function viewAny(User $user)
     {
@@ -34,7 +34,7 @@ class ProfileUserPolicy
      *
      * @param  \App\User  $user
      * @param  \App\User  $model
-     * @return mixed
+     * @return bool
      */
     public function view(User $authUser, User $user)
     {
@@ -45,7 +45,7 @@ class ProfileUserPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\User  $user
-     * @return mixed
+     * @return bool
      */
     public function create(User $user)
     {
@@ -57,7 +57,7 @@ class ProfileUserPolicy
      *
      * @param  \App\User  $user
      * @param  \App\User  $model
-     * @return mixed
+     * @return bool
      */
     public function update(User $authUser, User $user)
     {
@@ -70,7 +70,7 @@ class ProfileUserPolicy
      *
      * @param  \App\User  $user
      * @param  \App\User  $model
-     * @return mixed
+     * @return bool
      */
     public function delete(User $user, User $model)
     {

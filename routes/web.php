@@ -147,7 +147,7 @@ Route::group([
         'store'   => 'usoinfraestructura.store',
     ])->parameters([
         'usoinfraestructura' => 'id',
-    ]);;
+    ]);
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/
@@ -511,6 +511,17 @@ Route::resource('sublineas', 'SublineaController', ['except' => ['show']]);
 
 /*=====  End of rutas para las funcionalidades de las sublineas  ======*/
 
+/*==========================================================================
+=            rutas para las funcionalidades de los laboratorios            =
+==========================================================================*/
+
+Route::resource('laboratorio', 'LaboratorioController')->parameters([
+        'laboratorio' => 'id',
+    ]);
+
+/*=====  End of rutas para las funcionalidades de los laboratorios  ======*/
+
+
 /*==============================================================================
 =            rutas para las funcionalidades de la configuracion app            =
 ==============================================================================*/
@@ -526,3 +537,21 @@ Route::group([
 );
 
 /*=====  End of rutas para las funcionalidades de la configuracion app  ======*/
+
+
+/*================================================================
+=            rutas para la documentación del proyecto            =
+================================================================*/
+
+Route::group([
+    'prefix'     => 'documentacion',
+    'namespace'  => 'Docs',
+    'middleware' => 'auth',
+],function(){
+    // Route::get('/', function () {
+    //     return view('configuracion.index');
+    // })->name('configuracion.index');
+});
+
+/*=====  End of rutas para la documentación del proyecto  ======*/
+

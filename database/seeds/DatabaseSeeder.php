@@ -46,6 +46,7 @@ class DatabaseSeeder extends Seeder
                 'ideas',
                 'ruta_model',
                 'servidor_videos',
+                'laboratorios',
 
             ]);
         }else if(app()->environment() == 'local'){
@@ -96,6 +97,7 @@ class DatabaseSeeder extends Seeder
                 'tiposvisitante',
                 'ruta_model',
                 'servidor_videos',
+                'laboratorios',
             ]);
         }else{
             echo "NO PUEDES TRUNCAR TABLAS";

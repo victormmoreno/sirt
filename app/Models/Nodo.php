@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Exceptions\Nodo\NodoDoesNotExist;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class Nodo extends Model
 {
@@ -59,6 +60,11 @@ class Nodo extends Model
     public function ingresos()
     {
         return $this->hasMany(Ingreso::class, 'nodo_id', 'id');
+    }
+
+    public function laboratorios()
+    {
+        return $this->hasMany(Laboratorio::class, 'nodo_id', 'id');
     }
 
     //relacion muchos a muchos con lineas
@@ -164,6 +170,17 @@ class Nodo extends Model
             throw NodoDoesNotExist::named($name);
         }
         return $nodo;
+    }
+
+    public function getLaboratorioIds(): Collection
+    {
+        // return $this->laboratorios->modelKeys();
+        return $this->laboratorios->pluck('id');
+    }
+
+    public function getLaboratorioNames(): Collection
+    {
+        return $this->laboratorios->pluck('nombres');
     }
    
 }
