@@ -32,6 +32,7 @@
                 <div class="card ">
                     
                     <div class="card-content">
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l10">
@@ -40,15 +41,15 @@
                                             Laboratorios {{config('app.name')}}
                                         </span>
                                         <i class="material-icons">
-                                            supervised_user_circle
+                                            local_drink
                                         </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Usuario" href="{{route('laboratorio.create')}}">
+                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Laboratorio" href="{{route('laboratorio.create')}}">
                                             <i class="material-icons">
-                                                how_to_reg
+                                                local_drink
                                             </i>
                                         </a>
                                     </div>
@@ -56,44 +57,79 @@
                             </div>
                             <div class="divider">
                             </div>
-                            
-
                             <div class="row">
 
-                                    {{-- <div class="col s12 m12 l12">
+                                    <div class="col s12 m12 l12">
                                         <div class="file-field input-field">
 
                                             <div class="file-path-wrapper">
-                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorIngreso.selectIngresoForNodo()">
+                                                <select class="js-states browser-default select2 " onchange="selectLaboratorioNodo.selectLaboraotrioForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
                                                     <option value="">Seleccione nodo</option>
-                                                    @foreach($nodos as $id => $nodo)
-                                                      <option value="{{$id}}">{{$nodo}}</option>
+                                                    @foreach($nodos as $nodo)
+                                                      <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
                                             </div>
                                         </div>
                                     </div>
- --}}
+
 
                                 </div>
                             
                                 <br>
-                                <table class="display responsive-table" id="ingreso_table">
+                                <table class="display responsive-table" id="laboratorio_administrador_table">
                                     <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
-                                        <th>Usuario</th>
-                                        <th>Correo</th>
-                                        <th>Telefono</th>
-                                        <th>Estado Sistema</th>
-                                        <th>Detalles</th>
-                                        <th>Editar</th>
-                                        
+                                        <th>Nombre</th>
+                                        <th>Linea</th>
+                                        <th>Costo Administrativo</th>
+                                        <th>Estado</th>
+                                        <th>Materiales de formación</th>
+                                        <th>Editar</th>                                        
                                     </thead>
                     
                                 </table>
                         </div>
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                        <div class="row">
+                            <div class="row">
+                                <div class="col s12 m12 l10">
+                                    <div class="center-align">
+                                        <span class="card-title center-align">
+                                            Laboratorios Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                                        </span>
+                                        <i class="material-icons">
+                                            local_drink
+                                        </i>
+                                    </div>
+                                </div>
+                                <div class="col s12 l2">
+                                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Laboratorio" href="{{route('laboratorio.create')}}">
+                                            <i class="material-icons">
+                                                local_drink
+                                            </i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divider">
+                            </div>
+                                                       
+                                <br>
+                                <table class="display responsive-table" id="laboratorio_dinamizador_table">
+                                    <thead>
+                                        <th>Nombre</th>
+                                        <th>Linea</th>
+                                        <th>Costo Administrativo</th>
+                                        <th>Estado</th>
+                                        <th>Materiales de formación</th>
+                                        <th>Editar</th>  
+                                    </thead>
+                    
+                                </table>
+                        </div>
+                    @endif
                     </div>
                 </div>
             </div>

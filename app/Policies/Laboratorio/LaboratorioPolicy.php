@@ -17,32 +17,23 @@ class LaboratorioPolicy
     //     }
     // }
 
-    /**
-     * Determine whether the user can view any laboratorios.
-     *
-     * @param  \App\User  $user
-     * @return bool
-     */
-    public function viewAny(User $user)
-    {
-        return false;
-    }
 
     /**
-     * Determine whether the user can view the laboratorio.
+     * Determine whether the user can view the laboratorios.
      *
      * @param  \App\User  $user
      * @param  \App\Models\Laboratorio  $laboratorio
      * @return bool
      */
-    public function view(User $user, Laboratorio $laboratorio)
+    public function index(User $user)
     {
-        return $user->id === 1;
-        // if (collect($user->getRoleNames())->contains(User::IsAdministrador())) {
-        //     return true;
-        // } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id)) {
-        //     return true;
-        // }
+        if (collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
+            return true;
+        } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador()) {
+            return true;
+        } else if ($user->hasPermissionTo('Ver Laboratorios')) {
+            return true;
+        }
 
     }
 
@@ -56,7 +47,7 @@ class LaboratorioPolicy
     {
 
         if (collect($authUser->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
-            return false;
+            return true;
         } else if (collect($authUser->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador()) {
             return true;
         } else if ($authUser->hasPermissionTo('Crear Laboratorio')) {
@@ -68,7 +59,7 @@ class LaboratorioPolicy
     {
         if (collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
             return true;
-        } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id) && session()->get('login_role') == User::IsDinamizador()) {
+        } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id) && session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id)) {
             return true;
         }
     }

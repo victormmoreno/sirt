@@ -514,7 +514,7 @@ Route::resource('sublineas', 'SublineaController', ['except' => ['show']]);
 /*==========================================================================
 =            rutas para las funcionalidades de los laboratorios            =
 ==========================================================================*/
-
+Route::get('/laboratorio/nodo/{nodo?}', 'LaboratorioController@getLaboratorioPorNodo')->name('laboratorio.nodo');
 Route::resource('laboratorio', 'LaboratorioController')->parameters([
         'laboratorio' => 'id',
     ]);

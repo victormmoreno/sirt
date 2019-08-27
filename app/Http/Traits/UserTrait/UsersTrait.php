@@ -91,7 +91,7 @@ trait UsersTrait
 
     public function getNombreCompletoAttribute()
     {
-        return ucwords(strtolower($this->nombres)) . ' ' . ucwords(mb_strtolower($this->apellidos), 'UTF-8');
+        return ucwords(mb_strtolower($this->nombres),'UTF-8') . ' ' . ucwords(mb_strtolower($this->apellidos), 'UTF-8');
     }
 
     public function setDocumentoAttribute($documento)

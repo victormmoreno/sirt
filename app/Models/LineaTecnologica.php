@@ -34,12 +34,12 @@ class LineaTecnologica extends Model
     public function nodos()
     {
         return $this->belongsToMany(Nodo::class, 'lineastecnologicas_nodos')
-           ->withTimestamps();
+            ->withTimestamps();
     }
 
     public function gestores()
     {
-      return $this->hasMany(Gestor::class, 'lineatecnologica_id', 'id');
+        return $this->hasMany(Gestor::class, 'lineatecnologica_id', 'id');
     }
 
     public function laboratorios()
@@ -48,7 +48,6 @@ class LineaTecnologica extends Model
     }
 
     /*=====  End of relaciones elquent  ======*/
-
 
     /*===========================================================================
     =            mutador para tranformar la abreviatura a mayusculas            =
@@ -72,7 +71,6 @@ class LineaTecnologica extends Model
     }
 
     /*=====  End of mutador para tranformar el nombre a minusculas y la primera letra mayusculas  ======*/
-
 
     /*====================================================================================================
     =            mutador para tranformar la descripcion a minusculas y la primera letra a myuscaulas            =
@@ -102,24 +100,24 @@ class LineaTecnologica extends Model
     /*================================================================
     =            scope para consultar las lineas por nodo            =
     ================================================================*/
-    
+
     public function scopeAllLineasForNodo($query, $nodo)
     {
         return $query->with(['nodos'])->find($nodo);
-    
     }
-    
-    
+
     /*=====  End of scope para consultar las lineas por nodo  ======*/
-    
 
-    
-    
-    
-    
-
-
-
-
+    /**
+     * consultar primera linea tecnologica en la base de datos.
+     *
+     *
+     * @return array
+     * @author julian londoño
+     */
+    public function scopeLineaTecnologicaFirst($query)
+    {
+        return $query->first();
+    }
 
 }

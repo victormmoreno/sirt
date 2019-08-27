@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 class Laboratorio extends Model
 {
@@ -71,6 +70,16 @@ class Laboratorio extends Model
         return $this->where('id', $id)->first();
     }
 
+    public function getNombreAttribute($nombre)
+    {
+        return ucwords($nombre);
+    }
+
+    public function setNombreAttribute($nombre)
+    {
+        $this->attributes['nombre'] = ucwords($nombre);
+    }
+
     /**
      * Devolver el valor de la constante isActive
      *
@@ -96,7 +105,7 @@ class Laboratorio extends Model
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-    
+
     public function nodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
@@ -107,7 +116,17 @@ class Laboratorio extends Model
         return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
     }
 
-    
     /*=====  End of relaciones eloquent  ======*/
-    
+
+    /**
+     * Devuelve el consulta con relaciones de la tabla laboratorios
+     *
+     * @author julian londoño
+     * @return int
+     */
+    public static function scopeLaboratorioWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
+
 }

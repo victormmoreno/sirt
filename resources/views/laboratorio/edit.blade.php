@@ -59,11 +59,11 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('laboratorio.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                                {{-- <form action="{{ route('laboratorio.store')}}" method="POST" onsubmit="return checkSubmit()">
                                                     @include('laboratorio.form', [
                                                         'btnText' => 'Guardar',
                                                     ])
-                                                </form>
+                                                </form> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
 </main>
 @endsection
 @push('script')
-<script>
+{{-- <script>
 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
         $(document).ready(function() {
             @if($errors->any())
@@ -114,5 +114,5 @@
 
       }
 @endif
-</script>
+</script> --}}
 @endpush

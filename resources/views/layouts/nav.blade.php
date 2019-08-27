@@ -89,7 +89,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+          <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
             <div class="notification">
               <div class="notification-icon circle teal lighten-2">
                 <i class="material-icons">
@@ -100,7 +100,7 @@
                 <b>
                   {{ __('Logout') }}
                 </b>
-                <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none;">
+                <form action="{{ route('logout') }}" id="logout-form-nav" method="POST" style="display: none;">
                   @csrf
                 </form>
               </div>
