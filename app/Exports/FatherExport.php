@@ -2,14 +2,20 @@
 
 namespace App\Exports;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithTitle, WithEvents, WithDrawings};
 use PhpOffice\PhpSpreadsheet\Style\{Border, Fill};
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Events\{AfterSheet};
+use Illuminate\Contracts\View\View;
 
-class FatherExport
+
+abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, WithDrawings
 {
 
   private $RangeHeadingCell;
   private $RangeBodyCell;
+  private $query;
   private $count;
 
   /**
@@ -118,5 +124,32 @@ class FatherExport
   protected function setCount($count) {
     $this->count = $count;
   }
+
+  /**
+   * Asigna un valor a $query
+   * @param object $query
+   * @return void
+   * @author dum
+   */
+  protected function setQuery($query){
+    $this->query = $query;
+  }
+
+  /**
+   * Retorna un valor a $query
+   * @return object
+   * @author dum
+   */
+  protected function getQuery(){
+    return $this->query;
+  }
+
+  abstract public function registerEvents(): array;
+
+  abstract public function title(): String;
+
+  abstract public function view(): View;
+
+  abstract public function drawings();
 
 }

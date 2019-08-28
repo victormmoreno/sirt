@@ -234,6 +234,13 @@ class EdtRepository
     'tiposedt.nombre AS tipo_edt',
     'areasconocimiento.nombre AS area_conocimiento',
     'edts.id',
+    'fecha_inicio',
+    'fecha_cierre',
+    'edts.observaciones',
+    'empleados',
+    'instructores',
+    'aprendices',
+    'publico',
     'actividades.nombre')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('IF(edts.estado = '. Edt::IsActive() .', "Activa", "Inactiva") AS estado')
@@ -258,6 +265,13 @@ class EdtRepository
     'tiposedt.nombre AS tipo_edt',
     'areasconocimiento.nombre AS area_conocimiento',
     'edts.id',
+    'fecha_inicio',
+    'fecha_cierre',
+    'edts.observaciones',
+    'empleados',
+    'instructores',
+    'aprendices',
+    'publico',
     'actividades.nombre')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('IF(edts.estado = '.Edt::IsActive().', "Activa", "Inactiva") AS estado')

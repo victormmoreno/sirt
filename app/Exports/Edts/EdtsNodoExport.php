@@ -6,11 +6,10 @@ use Illuminate\Contracts\View\View;
 use App\Models\Articulacion;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Exports\FatherExport;
-// use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithEvents, WithDrawings};
 use Maatwebsite\Excel\Events\{AfterSheet};
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class EdtsGestorExport extends FatherExport
+class EdtsNodoExport extends FatherExport
 {
 
   public function __construct($query)
@@ -19,6 +18,8 @@ class EdtsGestorExport extends FatherExport
     $this->setCount($this->getQuery()->count() + 7);
     $this->setRangeHeadingCell('A7:O7');
     $this->setRangeBodyCell('A8:O'.$this->getCount());
+    // dd($this->getQuery());
+    // dd($this->getCount());
   }
 
   /**
@@ -27,7 +28,7 @@ class EdtsGestorExport extends FatherExport
   public function view(): View
   {
     // dd($this->getQuery());
-    return view('exports.edt.gestor', [
+    return view('exports.edt.nodo', [
       'edts' => $this->getQuery()
     ]);
   }

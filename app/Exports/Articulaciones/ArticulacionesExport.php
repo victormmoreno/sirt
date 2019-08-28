@@ -16,7 +16,6 @@ class ArticulacionesExport extends FatherExport implements FromView, ShouldAutoS
 
   private $rticulacionRepository;
   private $id;
-  private $query;
 
   public function __construct(ArticulacionRepository $articulacionRepository, $id)
   {
@@ -34,10 +33,6 @@ class ArticulacionesExport extends FatherExport implements FromView, ShouldAutoS
     return view('exports.articulacion.gestor', [
       'articulacion' => $query
     ]);
-  }
-
-  private function getQuery(){
-    return $this->query;
   }
 
   /**

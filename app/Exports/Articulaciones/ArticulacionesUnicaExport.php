@@ -28,7 +28,7 @@ class ArticulacionesUnicaExport extends FatherExport implements FromView, Should
     $this->articulacionRepository = $articulacionRepository;
     $this->empresaRepository = $empresaRepository;
     $this->id = $id;
-    $this->query = $query;
+    $this->setQuery($query);
     $this->setCount(2);
     $this->setRangeHeadingCell('A7:P7');
     $this->setRangeBodyCell('A7:P8');
@@ -93,10 +93,6 @@ class ArticulacionesUnicaExport extends FatherExport implements FromView, Should
     return view('exports.articulacion.id', [
       'articulacion' => $query
     ]);
-  }
-
-  private function getQuery(){
-    return $this->query;
   }
 
   /**

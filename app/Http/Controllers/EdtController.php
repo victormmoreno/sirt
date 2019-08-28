@@ -202,6 +202,7 @@ class EdtController extends Controller
   */
   public function store(Request $request)
   {
+    
     $req = new EdtFormRequest;
     $validator = Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {

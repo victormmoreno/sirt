@@ -16,7 +16,6 @@ class ArticulacionesNodoExport extends FatherExport implements FromView, ShouldA
 
   private $rticulacionRepository;
   private $id;
-  private $query;
 
   public function __construct(ArticulacionRepository $articulacionRepository, $id)
   {
@@ -34,10 +33,6 @@ class ArticulacionesNodoExport extends FatherExport implements FromView, ShouldA
     return view('exports.articulacion.nodo', [
       'articulacion' => $query
     ]);
-  }
-
-  private function getQuery(){
-    return $this->query;
   }
 
   /**
