@@ -23,6 +23,11 @@
                 </div>
               </div>
               <div class="divider"></div>
+              <div class="right material-icons">
+                <a href="{{route('edt.excel.gestor', auth()->user()->gestor->id)}}">
+                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                </a>
+              </div>
               <table class="display responsive-table datatable-example" id="edtPorGestor_table" >
                 <thead>
                   <th>Código de la Edt</th>

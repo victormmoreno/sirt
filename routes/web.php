@@ -308,7 +308,9 @@ function () {
 
   // Ruta para la generación de excel del módulo de articulaciones
   Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
+  Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.gestor');
   Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
+  // Route::get('/excelArticulacionesDeTecnoparque', 'Excel\ArticulacionController@articulacionesDeTecnoparque')->name('articulacion.excel.tecnoparque')->middleware('role_session:Administrador');
   //rutas para consultar articualciones por gestor
   Route::get('/gestor/{id}/{tipoarticulacion}', 'ArticulacionController@ArticulacionForGestor')->name('articulacion.gestor');
   Route::get('/', 'ArticulacionController@index')->name('articulacion');
@@ -376,6 +378,9 @@ Route::group(
    'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador'],
  ],
  function () {
+   // Rutas para la generación de excel del módulo de edts
+   Route::get('/excelEdtsDeUnGestor/{id}', 'Excel\EdtController@edtsDeUnGestor')->name('edt.excel.gestor');
+   //
    Route::get('/', 'EdtController@index')->name('edt');
    Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
    Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor|Dinamizador');

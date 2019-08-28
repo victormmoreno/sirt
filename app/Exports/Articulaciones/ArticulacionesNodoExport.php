@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Articulaciones;
 
 use Illuminate\Contracts\View\View;
+use App\Exports\FatherExport;
 use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithTitle, WithEvents};
 use Maatwebsite\Excel\Events\{AfterSheet, BeforeSheet};
 use App\Repositories\Repository\ArticulacionRepository;

@@ -18,8 +18,10 @@ class ArticulacionProyectoRepository
   {
     return ArticulacionProyecto::select('actividades.codigo_actividad',
     'articulacion_proyecto_talento.talento_lider',
+    'users.documento',
     'articulacion_proyecto_talento.talento_id')
     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS talento')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
     ->selectRaw('IF(articulacion_proyecto_talento.talento_lider = 1, "Talento Líder", "Autor") AS rol')
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')

@@ -119,7 +119,12 @@ class ArticulacionController extends Controller
     })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
   }
 
-  // Consulta el detalle de la entidad asociada a la articulación
+  /**
+  * Consulta el detalle de la entidad asociada a la articulación
+  * @param int $id id de la articulación
+  * @return dum
+  * @author dum
+  */
   public function consultarEntidadDeLaArticulacion($id)
   {
     $articulacionObj = Articulacion::findOrFail($id);
@@ -152,7 +157,12 @@ class ArticulacionController extends Controller
     ]);
   }
 
-  // Consulta los datos de una articulación por su id
+  /**
+  * Consulta los datos de una articulación por su id
+  * @param int $id Id de la articulación
+  * @return Response
+  * @author dum
+  */
   public function detallesDeUnArticulacion($id)
   {
     $detalles = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();

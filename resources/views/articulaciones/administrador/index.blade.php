@@ -28,6 +28,7 @@
               </div>
             </div>
             <div class="divider"></div>
+            
             @include('articulaciones.table')
           </div>
         </div>
@@ -93,6 +94,11 @@
         {
           data: 'entregables',
           name: 'entregables',
+          orderable: false
+        },
+        {
+          data: 'edit',
+          name: 'edit',
           orderable: false
         },
       ],

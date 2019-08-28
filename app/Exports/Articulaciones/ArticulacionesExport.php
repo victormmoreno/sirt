@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Articulaciones;
 
 // use App\Models\{Articulacion, ArticulacionProyecto};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithTitle, WithDrawings, WithEvents};
 use Maatwebsite\Excel\Events\{AfterSheet, BeforeSheet};
+use App\Exports\FatherExport;
 use Illuminate\Contracts\View\View;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use App\Repositories\Repository\ArticulacionRepository;
-use PhpOffice\PhpSpreadsheet\Style\{Border, Fill};
 
 class ArticulacionesExport extends FatherExport implements FromView, ShouldAutoSize, WithTitle, WithEvents, WithDrawings
 {
