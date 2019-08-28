@@ -21,7 +21,7 @@
             
             <div class="center">
                 <span class="title">
-                    Nuevo Laboratorio
+                     <strong>{{ isset($laboratorio->nombre) ? 'Editar laboratorio '. $laboratorio->nombre : 'Nuevo laboratorio'}}</strong>
                 </span>
             </div>
             <div class="divider mailbox-divider">
@@ -51,7 +51,7 @@
                     <i class="material-icons prefix">
                         local_drink
                     </i>
-                    <input class="validate" id="txtnombre" name="txtnombre" type="text" value="{{ old('txtnombre')}}"/>
+                    <input class="validate" id="txtnombre" name="txtnombre" type="text" value="{{ isset($laboratorio->nombre) ? $laboratorio->nombre : old('txtnombre')}}"/>
                     <label for="txtnombre">
                         Nombre Laboratorio
                         <span class="red-text">
@@ -72,11 +72,21 @@
                     <i class="material-icons prefix">
                         location_city
                     </i>
-                    <select class="" id="txtnodo" name="txtnodo" onchange="lineaLaboratorio.getSelectLineaForNodo()"  style="width: 100%; display: none
+                    @if(isset($laboratorio->nodo->id))
+                        <select class="" id="txtnodo" name="txtnodo" onchange="LaboratorioLineaEdit.getSelectLineaForNodo()"  style="width: 100%; display: none
                         " tabindex="-1" >
+                    @else
+                        <select class="" id="txtnodo" name="txtnodo" onchange="lineaLaboratorio.getSelectLineaForNodo()"  style="width: 100%; display: none
+                        " tabindex="-1" >   
+                    @endif
                         <option value="">Seleccione Nodo</option>
                         @foreach($nodos as $nodo)
-                                <option value="{{$nodo->id}}" {{old('txtnodo') ==  $nodo->id ? 'selected':''}}>{{$nodo->nodos}}</option>                        
+                                @if(isset($laboratorio->nodo->id))
+                                    <option value="{{$nodo->id}}" {{old('txtnodo',$laboratorio->nodo->id) ==  $nodo->id ? 'selected':''}}>{{$nodo->nodos}}</option> 
+                                @else
+                                    <option value="{{$nodo->id}}" {{old('txtnodo') ==  $nodo->id ? 'selected':''}}>{{$nodo->nodos}}</option>
+                                @endif
+                                                        
                         @endforeach
                     </select>
                     <label for="txtnodo">
@@ -123,9 +133,15 @@
                         " tabindex="-1" >
                         <option value="">Seleccione Linea</option>
                         @foreach($lineas as $id => $nombre)
-                                <option value="{{$id}}" {{old('txtlinea') ==  $id ? 'selected':''}}>{{$nombre}}</option>                        
+                                @if(isset($laboratorio->lineatecnologica->id))
+                                    <option value="{{$id}}" {{old('txtlinea',$laboratorio->lineatecnologica->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                                @else
+                                    <option value="{{$id}}" {{old('txtlinea') ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                                @endif
+                                                       
                         @endforeach
                     </select>
+
                     <label for="txtlinea">
                         Linea
                         <span class="red-text">
@@ -161,6 +177,24 @@
                         <small class="black-text">
                             Debe proporcionar el porcentaje, ejemplo: <b>17.3</b>
                         </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m12 l12 offset-l5 m5 s5">
+                    <div class="switch m-b-md">
+                      <i class="material-icons prefix">toggle_off</i>
+                      <label class="active">Estado Laboratorio <span class="red-text">*</span></label>
+                        <label>
+                            Habilitado
+                            @if(isset($laboratorio->estado))
+                            <input type="checkbox" id="txtestado" name="txtestado" {{$laboratorio->estado != 1 ? 'checked' : old('txtestado')}}>
+                            @else
+                            <input type="checkbox" id="txtestado" name="txtestado" {{old('txtestado') == 'on' ? 'checked' : ''}}>
+                            @endif
+                            <span class="lever"></span>
+                            Inhabilitado
+                        </label>
                     </div>
                 </div>
             </div>

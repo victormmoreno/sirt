@@ -22,9 +22,7 @@
                     </div>
                     <div class="col s4 m4 l2 rigth-align">
                         <ol class="breadcrumbs">
-                        
-                            <li><a href="index.html">Inicio</a></li>
-                            {{-- <li><a href="#">Laboratorio</a></li> --}}
+                            <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Laboratorios</li>
                         </ol>
                       </div>

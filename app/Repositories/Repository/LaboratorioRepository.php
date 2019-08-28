@@ -25,7 +25,7 @@ class LaboratorioRepository
             return true;
         } catch (\Exception $e) {
             //delete laboratorio if there were any errors creating/assigning
-            $laboratorio->delete();
+            // $laboratorio->delete();
             return false;
         }
     }
@@ -40,12 +40,14 @@ class LaboratorioRepository
     protected function formatParams($params, $type = 'create')
     {
 
+        
+
         $formatted = [
             'nodo_id'              => isset($params['txtnodo']) ? $params['txtnodo'] : Nodo::NodoFirst()->id,
             'lineatecnologica_id'  => isset($params['txtlinea']) ? $params['txtlinea'] : LineaTecnologica::LineaTecnologicaFirst()->id,
             'nombre'               => $params['txtnombre'],
             'participacion_costos' => isset($params['txtcostos']) ? $params['txtcostos'] : 0,
-            'estado'               => isset($params['estado']) ? $params['estado'] : Laboratorio::IsActive(),
+            'estado'               => isset($params['txtestado']) &&  $params['txtestado'] == 'on' ? $params['txtestado'] = Laboratorio::IsInactive() : $params['txtestado'] = Laboratorio::IsActive(),
         ];
 
         return $formatted;
@@ -61,11 +63,36 @@ class LaboratorioRepository
     public function findLaboratorioForNodo($nodo)
     {
         return Laboratorio::LaboratorioWithRelations(['lineatecnologica' => function ($query) {
-            $query->select('id','abreviatura', 'nombre');
+            $query->select('id', 'abreviatura', 'nombre');
         }])->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre', 'participacion_costos', 'estado')
             ->whereHas('nodo', function ($query) use ($nodo) {
                 $query->where('id', $nodo);
             })->get();
+    }
+
+    /**
+     * devolver consulta laboratorios por id.
+     *
+     * @param int $id
+     * @return array
+     */
+    public function findLaboratorioById($id)
+    {
+        return Laboratorio::findOrFail($id);
+    }
+
+    /**
+     * Update laboraotior.
+     *
+     * @param User $user
+     * @param array $params
+     *
+     * @return Laboratorio
+     */
+    public function update(Laboratorio $Laboratorio, $params)
+    {
+        return $Laboratorio->forceFill($this->formatParams($params, 'update'))->save();
+
     }
 
 }

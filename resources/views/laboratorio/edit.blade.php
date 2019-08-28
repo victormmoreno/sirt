@@ -31,7 +31,7 @@
                                 </a>
                             </li>
                             <li class="active">
-                                Nuevo Laboratorio
+                                Laboratorio {{$laboratorio->nombre}}
                             </li>
                         </ol>
                     </div>
@@ -48,9 +48,9 @@
                                                     <span class="mailbox-title">
                                                         <p class="center">
                                                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
-                                                            Nuevo Laboratorio {{config('app.name')}}
+                                                            Editar Laboratorio {{config('app.name')}}
                                                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                                                Nuevo Laboratorio Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                                                                Editar Laboratorio Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
                                                             @endif
                                                         </p>
                                                     </span>
@@ -59,11 +59,14 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                {{-- <form action="{{ route('laboratorio.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                                
+                                                <form action="{{ route('laboratorio.update',$laboratorio->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                    {!! method_field('PUT')!!}
                                                     @include('laboratorio.form', [
-                                                        'btnText' => 'Guardar',
+                                                        'btnText' => 'Modificar',
                                                     ])
-                                                </form> --}}
+                                                </form>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -78,41 +81,47 @@
 </main>
 @endsection
 @push('script')
-{{-- <script>
-@if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
-        $(document).ready(function() {
-            @if($errors->any())
-                lineaLaboratorio.getSelectLineaForNodo();
-            @endif
-        });
-    var lineaLaboratorio = {
-        getSelectLineaForNodo:function(){
-          let nodo = $('#txtnodo').val();
-          $.ajax({
-            dataType:'json',
-            type:'get',
-            url:'/lineas/getlineasnodo/'+nodo
-          }).done(function(response){
-            $('#txtlinea').empty();
-            if (response.lineasForNodo.lineas == '') {
-                $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
-            }else{
-                
-                $('#txtlinea').append('<option value="">Seleccione la linea</option>');
+<script>
+    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+    $(document).ready(function() {
+        LaboratorioLineaEdit.getSelectLineaForNodo();
+    });
 
-                $.each(response.lineasForNodo.lineas, function(i, e) {
-                    $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-                });
-                @if($errors->any())
-                  $('#txtlinea').val("{{old('txtlinea')}}");
-                @endif
-            }
+    var LaboratorioLineaEdit = {
+    getSelectLineaForNodo:function(){
+      let nodo = $('#txtnodo').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/lineas/getlineasnodo/'+nodo
+      }).done(function(response){
+
+        $('#txtlinea').empty();
+        if (response.lineasForNodo.lineas == '') {
+            $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
+        }else{
+             
+            $('#txtlinea').append('<option  value="">Seleccione la linea</option>');
+
+            $.each(response.lineasForNodo.lineas, function(i, e) {  
+                  $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');    
+            });
             
-            $('#txtlinea').material_select();
-          });
-        },
+            @if($errors->any())
+                $('#txtlinea').val('{{old('txtlinea')}}');
+            @else
+                @if(isset($laboratorio->lineatecnologica_id))
+                $('#txtlinea').val('{{$laboratorio->lineatecnologica_id}}');
+                @endif
+            @endif
+        }
+        
+        $('#txtlinea').material_select();
+      });
+    },
 
-      }
+  }
+
 @endif
-</script> --}}
+</script>
 @endpush

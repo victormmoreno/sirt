@@ -67,17 +67,6 @@ class LaboratorioController extends Controller
 
         }
 
-        // $this->user->with($relations)->findOrFail($id);
-        // $user = $this->user->with($relations)->findOrFail($id);
-        $nodo         = 2;
-        $laboratorios = $this->laboratorioRepository->findLaboratorioForNodo($nodo);
-        // dd($laboratorios);
-
-        // if (request()->ajax()) {
-        //     if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
-
-        //     }
-        // }
         return view('laboratorio.index', [
             'nodos' => $this->nodoRepository->getSelectNodo(),
         ]);
@@ -181,37 +170,59 @@ class LaboratorioController extends Controller
  * @param  \App\Laboratorio  $laboratorio
  * @return \Illuminate\Http\Response
  */
-    public function edit(LineaRepository $lineaRepository, Laboratorio $id)
+    public function edit(LineaRepository $lineaRepository, $id)
     {
-        $this->authorize('edit', $id);
+        $laboratorio = $this->laboratorioRepository->findLaboratorioById($id);
+        $this->authorize('edit', $laboratorio);
 
         if (session()->get('login_role') == User::IsAdministrador()) {
 
             return view('laboratorio.edit', [
-                'nodos' => $this->nodoRepository->getSelectNodo(),
+                'nodos'       => $this->nodoRepository->getSelectNodo(),
+                'laboratorio' => $laboratorio,
             ]);
         } else if (session()->get('login_role') == User::IsDinamizador()) {
 
             $nodo = auth()->user()->dinamizador->nodo->id;
 
             return view('laboratorio.edit', [
-                'lineas' => $lineaRepository->findLineasByIdNameForNodo($nodo),
+                'lineas'      => $lineaRepository->findLineasByIdNameForNodo($nodo),
+                'laboratorio' => $laboratorio,
             ]);
         }
 
-        
     }
 
 /**
  * Update the specified resource in storage.
  *
  * @param  \Illuminate\Http\Request  $request
- * @param  \App\Laboratorio  $laboratorio
+ * @param  \App\Laboratorio  $id
  * @return \Illuminate\Http\Response
  */
-    public function update(Request $request, Laboratorio $id)
+    public function update(Request $request, $id)
     {
 
+        $laboratorio = $this->laboratorioRepository->findLaboratorioById($id);
+        $this->authorize('update', $laboratorio);
+        $this->validateLaboratorio($request);
+
+        if ((!$request->input('txtnodo')) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+
+            $request['txtnodo'] = auth()->user()->dinamizador->nodo->id;
+            dd($request->all());
+        }
+        
+        $laboratorio = $this->laboratorioRepository->update($laboratorio, $request->all());
+
+        if ($laboratorio == true) {
+            Alert::success('Modificación Exitosa',"El laboratorio ha sido  modificado exitosamente.","success");
+        }else{
+            Alert::error('Modificación Errónea',"El laboratorio no se ha modificado.", "error");
+        }
+        
+       return redirect()->route('laboratorio.index');
+        
     }
 
 /**
