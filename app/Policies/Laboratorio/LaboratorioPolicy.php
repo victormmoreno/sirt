@@ -17,7 +17,6 @@ class LaboratorioPolicy
     //     }
     // }
 
-
     /**
      * Determine whether the user can view the laboratorios.
      *
@@ -27,14 +26,7 @@ class LaboratorioPolicy
      */
     public function index(User $user)
     {
-        if (collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
-            return true;
-        } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador()) {
-            return true;
-        } else if ($user->hasPermissionTo('Ver Laboratorios')) {
-            return true;
-        }
-
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador();
     }
 
     /**
@@ -45,23 +37,13 @@ class LaboratorioPolicy
      */
     public function create(User $authUser)
     {
-
-        if (collect($authUser->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
-            return true;
-        } else if (collect($authUser->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador()) {
-            return true;
-        } else if ($authUser->hasPermissionTo('Crear Laboratorio')) {
-            return true;
-        }
+        return (bool) collect($authUser->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($authUser->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador();
     }
 
     public function edit(User $user, Laboratorio $laboratorio)
     {
-        if (collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador()) {
-            return true;
-        } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id) && session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id)) {
-            return true;
-        }
+
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id);
     }
 
     /**
@@ -73,46 +55,8 @@ class LaboratorioPolicy
      */
     public function update(User $user, Laboratorio $laboratorio)
     {
-        if (collect($user->getRoleNames())->contains(User::IsAdministrador())) {
-            return true;
-        } else if (collect($user->getRoleNames())->contains(User::IsDinamizador()) && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id)) {
-            return true;
-        }
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) || collect($user->getRoleNames())->contains(User::IsDinamizador()) && $user->dinamizador->nodo->getLaboratorioIds()->contains($laboratorio->id);
+
     }
 
-    /**
-     * Determine whether the user can delete the laboratorio.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Laboratorio  $laboratorio
-     * @return mixed
-     */
-    public function delete(User $user, Laboratorio $laboratorio)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the laboratorio.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Laboratorio  $laboratorio
-     * @return mixed
-     */
-    public function restore(User $user, Laboratorio $laboratorio)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the laboratorio.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Laboratorio  $laboratorio
-     * @return mixed
-     */
-    public function forceDelete(User $user, Laboratorio $laboratorio)
-    {
-        //
-    }
 }

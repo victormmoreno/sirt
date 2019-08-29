@@ -4,8 +4,9 @@ namespace App\Providers;
 
 use App\Models\Laboratorio;
 use App\Policies\Laboratorio\LaboratorioPolicy;
-use App\Policies\Nodo\UserRolSesionHasNodoPolicy;
-use App\Policies\User\UserRoleSesionPolicy;
+use App\Policies\User\Profile\UserProfilePolicy;
+use App\Policies\User\UserPolicy;
+use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -17,10 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\User'         => 'App\Policies\ProfileUserPolicy',
-        'App\User'         => UserRoleSesionPolicy::class,
-        'App\Models\Nodo'  => UserRolSesionHasNodoPolicy::class,
         Laboratorio::class => LaboratorioPolicy::class,
+        User::class        => UserPolicy::class,
     ];
 
     /**

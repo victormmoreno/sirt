@@ -164,14 +164,13 @@ Route::resource('centro-formacion', 'CentroController');
 =            seccion para las rutas del perfil            =
 =========================================================*/
 Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
-Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta');
-Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
-Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles');
-Route::get('perfil/permisos', 'User\ProfileController@permisos')->name('perfil.permisos');
-Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña');
-Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset');
-Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit');
-Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']]);
+Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
+Route::get('perfil', 'User\ProfileController@index')->name('perfil.index')->middleware('disablepreventback');
+Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles')->middleware('disablepreventback');
+Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña')->middleware('disablepreventback');
+Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset')->middleware('disablepreventback');
+Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit')->middleware('disablepreventback');
+Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']])->middleware('disablepreventback');
 
 /*=====  End of seccion para las rutas del perfil  ======*/
 
