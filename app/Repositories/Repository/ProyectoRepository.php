@@ -28,6 +28,66 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta los proyectos que se inscribieron
+   *
+   * @param int $id Id del nodo
+   * @param string $anho Año del nodo
+   * @return Collection
+   * @author dum
+   */
+  public function consultarProyectosInscritosPorAnhoYNodo_Repository($id, $anho) {
+    return Proyecto::select('fecha_inicio',
+    'sectores.nombre AS nombre_sector',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sublineas.nombre AS nombre_sublinea',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
+    'estadosproyecto.nombre AS nombre_estadoproyecto',
+    'tiposarticulacionesproyectos.nombre AS nombre_tipoproyecto',
+    'observaciones_proyecto',
+    'impacto_proyecto',
+    'economia_naranja',
+    'art_cti',
+    'diri_ar_emp',
+    'reci_ar_emp',
+    'dine_reg',
+    'acc',
+    'manual_uso_inf',
+    'acta_inicio',
+    // 'aval_empresa_grupo',
+    'estado_arte',
+    'actas_seguimiento',
+    'video_tutorial',
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta',
+    'lecciones_aprendidas',
+    'actividades.nombre')
+    ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
+    ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
+    ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
+    ->selectRaw('IF(revisado_final = '. ArticulacionProyecto::IsPorEvaluar() .', "Por Evaluar", IF(revisado_final = '. ArticulacionProyecto::IsAprobado() .', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('users', 'users.id', '=', 'talentos.user_id')
+    ->whereYear('fecha_inicio', $anho)
+    ->where('nodos.id', $id)
+    ->groupBy('proyectos.id')
+    ->orderBy('fecha_inicio')
+    ->get();
+  }
+
+  /**
    * Consulta la cantidad de proyectos que se inscriben por mes de un año y un nodo
    *
    * @param int $id Id del nodo

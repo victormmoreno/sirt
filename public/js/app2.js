@@ -4717,6 +4717,16 @@ var graficosProyectoId = {
   grafico1: 'graficosProyectoPorMesYNodo_combinate'
 };
 
+function generarExcelGrafico1Proyecto(bandera) {
+  let id = 0;
+  let anho = $('#txtanho_GraficoProyecto1').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_excelGrafico1Proyecto').val();
+  }
+  location.href = '/excel/excelProyectosInscritosPorAnho/'+id+'/'+anho
+
+}
+
 function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
   id = 0;
 
