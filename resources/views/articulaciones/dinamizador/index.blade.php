@@ -38,7 +38,11 @@
               </div>
             </div>
             <div class="divider"></div>
-
+            <div class="right material-icons">
+              <a href="{{route('articulacion.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
+                <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+              </a>
+            </div>
             @include('articulaciones.table')
           </div>
         </div>
@@ -107,6 +111,11 @@
         {
           data: 'entregables',
           name: 'entregables',
+          orderable: false
+        },
+        {
+          data: 'edit',
+          name: 'edit',
           orderable: false
         },
         ],

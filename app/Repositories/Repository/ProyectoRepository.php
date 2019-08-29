@@ -17,10 +17,44 @@ class ProyectoRepository
   }
 
   /**
+   * Método para traducir los meses que genera algunos querys
+   *
+   * @return void
+   * @author dum
+   */
+  private function traducirMeses()
+  {
+    DB::statement("SET lc_time_names = 'es_ES'");
+  }
+
+  /**
+   * Consulta la cantidad de proyectos que se inscriben por mes de un año y un nodo
+   *
+   * @param int $id Id del nodo
+   * @param string $anho Año para filtrar
+   * @return Collection
+   */
+  public function proyectosInscritosPorMesDeUnNodo_Repository($id, $anho)
+  {
+    $this->traducirMeses();
+    return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
+    ->selectRaw('MONTH(actividades.fecha_inicio) AS meses')
+    ->selectRaw('CONCAT(UPPER(LEFT(date_format(actividades.fecha_inicio, "%M"), 1)), LOWER(SUBSTRING(date_format(actividades.fecha_inicio, "%M"), 2))) AS mes')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereYear('fecha_inicio', $anho)
+    ->where('nodos.id', $id)
+    ->groupBy('meses', 'mes')
+    ->orderBy('meses')
+    ->get();
+  }
+
+  /**
   * Método que retorna los talentos en un array, para usarlo junto a la funcion sync de laravel
   * @param \Illuminate\Http\Request  $request
   * @return array
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   private function arraySyncTalentosDeUnProyecto($request)
   {
@@ -41,7 +75,7 @@ class ProyectoRepository
   * @param Request request Request con los datos del formulario
   * @param int id - Id del proyecto que se va a modificar
   * @return boolean
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function update($request, $id)
   {
@@ -187,7 +221,7 @@ class ProyectoRepository
   * @param Request $request
   * @param int $id Id del proyecto
   * @return boolean
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function updateRevisadoFinalProyectoRepository($request, $id)
   {
@@ -211,7 +245,7 @@ class ProyectoRepository
   * @param Request $request
   * @param int $id Id del proyecto
   * @return boolean
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function updateEntregablesProyectoRepository($request, $id)
   {
@@ -223,6 +257,7 @@ class ProyectoRepository
       $estado_arte = 1;
       $actas_seguimiento = 1;
       $video_tutorial = 1;
+      $url_videotutorial = "";
       $ficha_caracterizacion = 1;
       $acta_cierre = 1;
       $encuesta = 1;
@@ -263,6 +298,10 @@ class ProyectoRepository
         $encuesta = 0;
       }
 
+      if ( $video_tutorial == 1 ) {
+        $url_videotutorial = $request->txturl_videotutorial;
+      }
+
       $proyectoFindById = Proyecto::find($id);
 
       /**
@@ -282,6 +321,7 @@ class ProyectoRepository
       'manual_uso_inf' => $manual_uso_inf,
       'estado_arte' => $estado_arte,
       'video_tutorial' => $video_tutorial,
+      'url_videotutorial' => $url_videotutorial,
       'ficha_caracterizacion' => $ficha_caracterizacion,
       'encuesta' => $encuesta
       ]);
@@ -298,7 +338,7 @@ class ProyectoRepository
   * Consulta los entregables de un proyecto
   * @param int $id Id del proyecto
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarEntregablesDeUnProyectoRepository($id)
   {
@@ -326,7 +366,7 @@ class ProyectoRepository
   * @param Request $request
   * @param int $id Id del Proyectos
   * @return boolean
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function updateProyectoDinamizadorRepository($request, $id)
   {
@@ -349,7 +389,7 @@ class ProyectoRepository
   * @param int $idnodo Id del nodo
   * @param string $anho Año para fitrar la búsqueda
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function ConsultarProyectosPorNodoYPorAnho($idnodo, $anho)
   {
@@ -386,7 +426,7 @@ class ProyectoRepository
   * Consulta los detalle de un proyecto por su id
   * @param int $id Id del proyecto
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarDetallesDeUnProyectoRepository($id)
   {
@@ -417,6 +457,7 @@ class ProyectoRepository
     'proyectos.tipo_ideaproyecto',
     'lineastecnologicas.nombre AS nombre_linea',
     'proyectos.idea_id',
+    'proyectos.url_videotutorial',
     'sublineas.lineatecnologica_id',
     'nodoentidad.nombre AS nombre_nodo')
     ->selectRaw('CONCAT(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre_sublinea')
@@ -458,7 +499,7 @@ class ProyectoRepository
   * @param int $idgestor Id del gestor
   * @param string $anho Año por el que se filtra la consulta
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function ConsultarProyectosPorGestorYPorAnho($idgestor, $anho)
   {
@@ -494,7 +535,7 @@ class ProyectoRepository
   * Registra un nuevo proyecto en la base de datos
   * @param Request $request Datos del formulario
   * @return boolean
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function store($request)
   {

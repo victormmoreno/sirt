@@ -3,11 +3,35 @@
 namespace App\Repositories\Repository;
 
 use Illuminate\Support\Facades\{DB};
-use App\Models\{ArchivoArticulacion, Articulacion, Entidad, Talento, ArticulacionProyecto, Actividad};
+use App\Models\{Articulacion, Entidad, ArticulacionProyecto, Actividad};
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
+
+  /**
+   * Cambia el gestor que está asociado a una articulación
+   * @param Request $request
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   */
+  public function updateGestorArticulacion_Repository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::find($id);
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'gestor_id' => $request->txtgestor_id
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
 
 /**
  * Consulta la cantidad de articulacion de un nodo, según el tipo de articulacion y el año
@@ -15,14 +39,16 @@ class ArticulacionRepository
  * @param string $anho Año por el que se consultaran la cantidad de articulaciones
  * @param int $i Tipo de articulacion
  * @return Collection
- * @author Victor Manuel Moreno Vega
+ * @author dum
  */
 public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $i)
 {
   return Articulacion::select('articulaciones.tipo_articulacion')
   ->selectRaw('count(articulaciones.id) AS cantidad')
-  ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
-  ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+  ->join('articulacion_proyecto', 'articulaciones.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+  ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+  ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+  ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
   ->where('nodos.id', $id)
   ->where('tipo_articulacion', $i)
   ->whereYear('fecha_cierre', $anho)
@@ -39,21 +65,23 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param string $fecha_inicio
    * @param string $fecha_fin
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarCantidadDeArticulacionesPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipo_articulacion, $fecha_inicio, $fecha_fin)
   {
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('articulacion_proyecto', 'articulaciones.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
     ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
     ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
-    ->where('lineastecnologicas.id', $idlinea)
     ->where('nodos.id', $idnodo)
+    ->where('lineastecnologicas.id', $idlinea)
     ->where('tipo_articulacion', $tipo_articulacion)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-    ->groupBy('lineastecnologicas.id', 'articulaciones.tipo_articulacion')
+    ->groupBy('lineastecnologicas.id', 'articulaciones.tipo_articulacion', 'nodos.id')
     ->get()
     ->last();
   }
@@ -71,9 +99,10 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
-    ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
     ->where('gestores.id', $idgestor)
     ->where('tipo_articulacion', $tipo_articulacion)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
@@ -92,7 +121,9 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
     return Articulacion::select('articulaciones.tipo_articulacion')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('gestores', 'gestores.id', '=', 'articulaciones.gestor_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
     ->where('gestores.id', $id)
@@ -105,7 +136,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateRevisadoFinalArticulacion($request, $id)
   {
@@ -128,19 +159,33 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
   * Consulta las articulaciones de un nodo
   * @param int $id Id del nodo
   * @return Collection
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function consultarArticulacionesDeUnNodo($id)
   {
-    return Articulacion::select('codigo_actividad AS codigo_articulacion', 'actividades.nombre', 'articulaciones.id')
+    return Articulacion::select('codigo_actividad AS codigo_articulacion',
+    'actividades.nombre',
+    'articulaciones.id',
+    'observaciones',
+    'fecha_inicio',
+    'fecha_cierre',
+    'tiposarticulaciones.nombre AS tipoarticulacion')
     ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
     ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
     ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
+    // ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsCierre() . ', fecha_cierre, "La Articulación aún no se ha cerrado") AS fecha_cierre')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(tipo_articulacion = "Grupo de Investigación", IF(acc = 1, "Si", "No"), "No Aplica") AS acc')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(informe_final = 1, "Si", "No"), "No Aplica") AS informe_final')
+    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(pantallazo = 1, "Si", "No"), "No Aplica") AS pantallazo')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('nodos.id', $id)
     ->get();
@@ -150,7 +195,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Consulta los entregables de las articulaciones
    * @param int $id Id de la articulación
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultaEntregablesDeUnaArticulacion($id)
   {
@@ -173,7 +218,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function update($request,  $id)
   {
@@ -215,7 +260,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
 
       if ($articulacionConsultaId->tipo_articulacion == Articulacion::IsEmprendedor()) {
         // Método detach para eliminar los datos de la tabla articulacion_talento (pivot entre talentos y articulaciones)
-        $articulacionConsultaId->talentos()->detach();
+        $articulacionConsultaId->articulacion_proyecto->talentos()->detach();
       }
       $articulacionConsultaId->update([
         'tipoarticulacion_id' => request()->txttipoarticulacion_id,
@@ -244,7 +289,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
             $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
           }
         }
-        $articulacionConsultaId->articulacion_proyecto->talentos()->sync($syncData);
+        $articulacionConsultaId->articulacion_proyecto->talentos()->sync($syncData, true);
       }
       DB::commit();
       return true;
@@ -259,7 +304,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * @param Request $request
    * @param int $id Id de la articulación
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateEntregablesArticulacion($request, $id)
   {
@@ -294,7 +339,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Consulta información de una articulacio por id
    * @param int $id Id de la articulació
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarArticulacionPorId($id)
   {
@@ -335,18 +380,32 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Consulta las articulaciones de un gestor
    * @param int $id Id del gestor
    * @return Collection
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function consultarArticulacionesDeUnGestor($id)
   {
-    return Articulacion::select('codigo_actividad AS codigo_articulacion', 'nombre', 'articulaciones.id')
+    return Articulacion::select('codigo_actividad AS codigo_articulacion',
+    'actividades.nombre',
+    'articulaciones.id',
+    'observaciones',
+    'fecha_inicio',
+    'fecha_cierre',
+    'tiposarticulaciones.nombre AS tipoarticulacion')
     ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
     ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre") ) AS estado')
     ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
+    // ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsCierre() . ', fecha_cierre, "La Articulación aún no se ha cerrado") AS fecha_cierre')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(tipo_articulacion = "Grupo de Investigación", IF(acc = 1, "Si", "No"), "No Aplica") AS acc')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(informe_final = 1, "Si", "No"), "No Aplica") AS informe_final')
+    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(pantallazo = 1, "Si", "No"), "No Aplica") AS pantallazo')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
     ->get();
@@ -356,7 +415,7 @@ public function consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $
    * Registra un nueva articulación en la base de datos
    * @param Request $request
    * @return boolean
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function create($request)
   {

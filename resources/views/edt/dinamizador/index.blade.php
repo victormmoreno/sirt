@@ -16,7 +16,12 @@
                 </div>
               </div>
               <div class="divider"></div>
-              <table class="display responsive-table datatable-example" id="edtPorNodo_table" >
+              <div class="right material-icons">
+                <a href="{{route('edt.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
+                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                </a>
+              </div>
+              <table class="display responsive-table datatable-example" style="width: 100%" id="edtPorNodo_table" >
                 <thead>
                   <th>Código de la Edt</th>
                   <th>Nombre</th>
@@ -26,6 +31,7 @@
                   <th>Empresas</th>
                   <th>Detalles</th>
                   <th>Entregables</th>
+                  <th>Editar</th>
                 </thead>
               </table>
             </div>

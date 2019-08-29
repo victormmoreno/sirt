@@ -339,6 +339,16 @@ function verDetallesDeLosEntregablesDeUnProyecto(id) {
         +'</div>'
         +'</div>'
         +'<div class="divider"></div>'
+
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="teal-text text-darken-3">Url del Video Tutorial: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<a href='+respuesta.proyecto.url_videotutorial+' target="_blank"><span>'+respuesta.proyecto.url_videotutorial+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
       );
 
       $("#detallesEntregablesDeUnProyecto_body").append(

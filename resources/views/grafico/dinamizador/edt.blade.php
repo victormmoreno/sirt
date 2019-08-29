@@ -1,14 +1,16 @@
 @extends('layouts.app')
-@section('meta-title', 'Gráficos de Articulaciones')
+@section('meta-title', 'Gráficos de Edts')
 @section('content')
-  {!! $yearNow = Carbon\Carbon::now()->isoFormat('YYYY') !!}
+  @php
+    $yearNow = Carbon\Carbon::now()->isoFormat('YYYY')
+  @endphp
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('grafico')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
+              <i class="left material-icons">arrow_back</i>
             </a> Gráficos
           </h5>
           <div class="card">
@@ -70,7 +72,7 @@
                               <label for="txtfecha_fin_edtGrafico2">Fecha Fin</label>
                             </div>
                             <div class="center col s12 m12 l12">
-                              <button onclick="consultarEdtsPorGestorYFecha_stacked" class="btn">Consultar</button>
+                              <button onclick="consultarEdtsPorGestorYFecha_stacked(0)" class="btn">Consultar</button>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -84,12 +86,12 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Articulaciones por línea y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por línea y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
                             <div class="input-field col s12 m12 l12">
-                              <select id="txtlinea_tecnologica" name="txtlinea_tecnologica" style="width: 100%">
+                              <select id="txtlinea_id_edtGrafico3" name="txtlinea_id_edtGrafico3" style="width: 100%">
                                 <option value="">Seleccione la Línea Tecnológica</option>
                                 @foreach($lineas as $id => $nombre)
                                   <option value="{{$id}}">{{$nombre}}</option>
@@ -97,21 +99,21 @@
                               </select>
                             </div>
                             <div class="input-field col s12 m6 l6">
-                              <input type="text" id="txtfecha_inicio_Grafico3" name="txtfecha_inicio_Grafico3" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
-                              <label for="txtfecha_inicio_Grafico3">Fecha Inicio</label>
+                              <input type="text" id="txtfecha_inicio_GraficoEdt3" name="txtfecha_inicio_GraficoEdt3" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                              <label for="txtfecha_inicio_GraficoEdt3">Fecha Inicio</label>
                             </div>
                             <div class="input-field col s12 m6 l6">
-                              <input type="text" id="txtfecha_fin_Grafico3" name="txtfecha_fin_Grafico3" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                              <label for="txtfecha_fin_Grafico3">Fecha Fin</label>
+                              <input type="text" id="txtfecha_fin_GraficoEdt3" name="txtfecha_fin_GraficoEdt3" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                              <label for="txtfecha_fin_GraficoEdt3">Fecha Fin</label>
                             </div>
                             <div class="center">
-                              <button onclick="" class="btn">Consultar</button>
+                              <button onclick="consultarEdtsPorLineaYFecha_stacked()" class="btn">Consultar</button>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
-                            <div id="graficoArticulacionesPorLineaYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                            <div id="graficoEdtsPorLineaYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                               <div class="row card-panel">
-                                <h5 class="center">Para consultar las cantidad de articulaciones por línea, se debe seleccionar una línea tecnológica y fechas válidas, luego presionar el botón CONSULTAR</h5>
+                                <h5 class="center">Para consultar las cantidad de edts por línea, se debe seleccionar una línea tecnológica y fechas válidas, luego presionar el botón CONSULTAR</h5>
                               </div>
                             </div>
                           </div>
@@ -119,20 +121,19 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Articulaciones totales por año</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's totales por año</div>
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
-                            <select style="width: 100%" name="txtanho_Grafico4" id="txtanho_Grafico4" onchange="">
-                              {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
-                              @for ($i=2016; $i <= $year; $i++)
+                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }})">
+                              @for ($i=2016; $i <= $yearNow; $i++)
                                 <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
                               @endfor
                             </select>
-                            <label for="txtanho_Grafico4">Seleccione el Año</label>
+                            <label for="txtanho_GraficoEdt4">Seleccione el Año</label>
                           </div>
                           <div class="col s12 m8 l8">
-                            <div id="graficoArticulacionesPorNodoYAnho_variablepie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                            <div id="graficoEdtsPorNodoYAnho_variablepie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
                           </div>
                         </div>
                       </div>
@@ -146,11 +147,12 @@
       </div>
     </div>
   </main>
-  @include('charlas.modals')
 @endsection
 @push('script')
   <script>
     $(document).ready(function(){
+      consultarEdtsPorNodoGestorYFecha_stacked(0);
+      consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }});
     });
   </script>
 @endpush

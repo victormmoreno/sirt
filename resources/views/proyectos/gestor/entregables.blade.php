@@ -50,6 +50,11 @@
   @if($errors->any())
   divUrlVideoTutorial.show();
   @endif
+
+  @if ($entregables->video_tutorial == 'Si')
+  divUrlVideoTutorial.show();
+  @endif
+
   function datatableArchivosDeUnProyecto() {
     $('#archivosDeUnProyecto').DataTable({
       language: {
@@ -97,16 +102,6 @@
     });
   }
 
-  /**
-  * Metodo que activa o desactiva el botón submit del envío del formulario
-  */
-  function urlVideoTutorialChange(value) {
-    if (value == '') {
-      $('button[type="submit"]').attr('disabled', 'disabled');
-    } else {
-      $('button[type="submit"]').removeAttr('disabled');
-    }
-  }
 
   /**
   * Oculta o muestra el campo de la url del video dependiendo del checkbox del Video Tutorial
@@ -114,10 +109,10 @@
   function mostrarInputUrlVideo() {
     if ( $('#txtvideo_tutorial').is(':checked') ) {
       divUrlVideoTutorial.show();
-      $('button[type="submit"]').attr('disabled', 'disabled');
+      // $('button[type="submit"]').attr('disabled', 'disabled');
     } else {
       divUrlVideoTutorial.hide();
-      $('button[type="submit"]').removeAttr('disabled');
+      // $('button[type="submit"]').removeAttr('disabled');
     }
   }
 

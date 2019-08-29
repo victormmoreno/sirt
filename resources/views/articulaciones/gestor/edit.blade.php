@@ -115,9 +115,9 @@
                           <div class="card-stacked">
                             <div class="card-content">
                               <div class="input-field col s12 m12 l12">
-                                <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="{{ $articulacion->tipo_articulacion == 1 ? $articulacion->entidad->empresa->id : '' }}">
+                                <input type="hidden" name="txtempresa_id" id="txtempresa_id" value="{{ $articulacion->tipo_articulacion == 1 ? $articulacion->articulacion_proyecto->entidad->empresa->id : '' }}">
                                 <input readonly type="text" name="empresa" id="empresa"
-                                value="{{ $articulacion->tipo_articulacion == 1 ? $articulacion->entidad->empresa->nit . ' - ' . $articulacion->entidad->nombre : '' }}">
+                                value="{{ $articulacion->tipo_articulacion == 1 ? $articulacion->articulacion_proyecto->entidad->empresa->nit . ' - ' . $articulacion->articulacion_proyecto->entidad->nombre : '' }}">
                                 <label for="empresa">Empresa</label>
                                 <small id="txtempresa_id-error" class="error red-text"></small>
                               </div>
@@ -227,7 +227,7 @@
                           <option value="">Seleccione el Estado de la Articulación</option>
                           <option value="0">Inicio</option>
                           <option value="1">Ejecución</option>
-                          @if ($articulacion->revisado_final == 1)
+                          @if ($articulacion->articulacion_proyecto->revisado_final == 1)
                             <option value="2">Cierre</option>
                           @endif
                         </select>

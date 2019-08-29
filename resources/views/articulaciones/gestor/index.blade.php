@@ -23,6 +23,11 @@
               </div>
             </div>
             <div class="divider"></div>
+            <div class="right material-icons">
+              <a href="{{route('articulacion.excel.gestor', auth()->user()->gestor->id)}}">
+                <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+              </a>
+            </div>
             <table id="articulacionesGestor_table" class="display responsive-table datatable-example dataTable">
               <thead>
                 <tr>
@@ -36,6 +41,17 @@
                   <th>Editar</th>
                 </tr>
               </thead>
+              <tfoot>
+                <tr>
+                  <th><input type="text" name="codigo_articulacion_GestorTable" id="codigo_articulacion_GestorTable" placeholder="Buscar por código de articulación"></th>
+                  <th><input type="text" name="nombre_GestorTable" id="nombre_GestorTable" placeholder="Buscar por nombre"></th>
+                  <th><input type="text" name="tipo_articulacion_GestorTable" id="tipo_articulacion_GestorTable" placeholder="Buscar por Tipo de Articulación"></th>
+                  <th><input type="text" name="estado_GestorTable" id="estado_GestorTable" placeholder="Buscar por Estado"></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
               <tbody>
 
               </tbody>

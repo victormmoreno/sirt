@@ -9,9 +9,7 @@
       <th>Revisado Final</th>
       <th>Detalles</th>
       <th>Entregables</th>
-      @if ( \Session::get('login_role') == App\User::IsGestor() )
-        <th>Editar</th>
-      @endif
+      <th>Editar</th>
     </tr>
   </thead>
   <tfoot>
@@ -21,6 +19,7 @@
       <th><input type="text" name="tipo_articulacion" class="tipo_articulacion" placeholder="Buscar por Tipo de Articulación"></th>
       <th><input type="text" name="nombre_completo_gestor" class="nombre_completo_gestor" placeholder="Buscar por Gestor"></th>
       <th><input type="text" name="estado" class="estado" placeholder="Buscar por Estado"></th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>

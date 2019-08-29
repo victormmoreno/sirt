@@ -1,14 +1,16 @@
 @extends('layouts.app')
 @section('meta-title', 'Gráficos de Articulaciones')
 @section('content')
-  {!! $yearNow = Carbon\Carbon::now()->isoFormat('YYYY') !!}
+  @php
+  $yearNow = Carbon\Carbon::now()->isoFormat('YYYY')
+  @endphp
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('grafico')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
+              <i class="left material-icons">arrow_back</i>
             </a> Gráficos
           </h5>
           <div class="card">
@@ -124,8 +126,7 @@
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
                             <select style="width: 100%" name="txtanho_Grafico4" id="txtanho_Grafico4" onchange="consultarTiposDeArticulacionesDelAnho_variablepie({{auth()->user()->dinamizador->nodo_id}})">
-                              {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
-                              @for ($i=2016; $i <= $year; $i++)
+                              @for ($i=2016; $i <= $yearNow; $i++)
                                 <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
                               @endfor
                             </select>
@@ -146,7 +147,6 @@
       </div>
     </div>
   </main>
-  @include('charlas.modals')
 @endsection
 @push('script')
   <script>

@@ -8,7 +8,14 @@ $(document).ready(function() {
     order: [ 0, 'desc' ],
     ajax:{
       url: "/articulacion/datatableArticulacionesDelGestor/"+0,
-      type: "get",
+      // type: "get",
+      data: function (d) {
+        d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
+        d.nombre = $('#nombre_GestorTable').val(),
+        d.tipo_articulacion = $('#tipo_articulacion_GestorTable').val(),
+        d.estado = $('#estado_GestorTable').val(),
+        d.search = $('input[type="search"]').val()
+      }
     },
     columns: [
       {
@@ -48,4 +55,20 @@ $(document).ready(function() {
       },
     ],
   });
+});
+
+$("#codigo_articulacion_GestorTable").keyup(function(){
+  $('#articulacionesGestor_table').DataTable().draw();
+});
+
+$("#nombre_GestorTable").keyup(function(){
+  $('#articulacionesGestor_table').DataTable().draw();
+});
+
+$("#tipo_articulacion_GestorTable").keyup(function(){
+  $('#articulacionesGestor_table').DataTable().draw();
+});
+
+$("#estado_GestorTable").keyup(function(){
+  $('#articulacionesGestor_table').DataTable().draw();
 });

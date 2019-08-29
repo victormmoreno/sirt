@@ -1,6 +1,8 @@
 <div id="articulacionDetalle" class="modal">
   <div class="modal-content">
-    <center><h4 id="articulacionDetalle_titulo" class="center-aling"></h4></center>
+    <center>
+      <h4 id="articulacionDetalle_titulo" class="center-aling"></h4>
+    </center>
     <div class="divider"></div>
     <div id="detalleArticulacion"></div>
   </div>

@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Alert;
 use App;
+use App\Rules\CreateValidationForDomainRequest;
 use App\Helpers\ArrayHelper;
 use App\Http\Requests\ProyectoFormRequest;
 use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto, ArticulacionProyecto};
-use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository};
+use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository, ConfiguracionRepository\ServidorVideoRepository};
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -21,14 +22,16 @@ class ProyectoController extends Controller
   private $gestorRepository;
   private $entidadRepository;
   private $articulacionProyectoRepository;
+  private $servidorVideoRepository;
 
-  public function __construct(EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
+  public function __construct(ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
   {
     $this->empresaRepository = $empresaRepository;
     $this->proyectoRepository = $proyectoRepository;
     $this->gestorRepository = $gestorRepository;
     $this->entidadRepository = $entidadRepository;
     $this->articulacionProyectoRepository = $articulacionProyectoRepository;
+    $this->servidorVideoRepository = $servidorVideoRepository;
     $this->middleware(['auth']);
   }
 
@@ -214,20 +217,29 @@ class ProyectoController extends Controller
     }
   }
 
-  // modifica los entregables de un proyecto
+  /**
+   * modifica los entregables de un proyecto
+   *
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author Victor Manuel Moreno Vega
+   */
   public function updateEntregables(Request $request, $id)
   {
     if (Session::get('login_role') == User::IsGestor()) {
       $validator = Validator::make($request->all(), [
-        'txturl_videotutorial' => Rule::requiredIf(isset($request->txtvideo_tutorial)) . '|url|nullable'
-      ], ['txturl_videotutorial.required' => 'La Url del Video es obligatoria.', 'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.']);
-
+        'txtservidorvideo' => Rule::requiredIf(isset($request->txtvideo_tutorial)),
+        'txturl_videotutorial' => [Rule::requiredIf(isset($request->txtvideo_tutorial)), 'url', new CreateValidationForDomainRequest, 'max:1000'],
+      ], [
+        'txturl_videotutorial.required' => 'La Url del Video es obligatoria.',
+        'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.',
+        'txturl_videotutorial.max' => 'La Url del Video debe ser máximo de 1000 carácteres.',
+        'txtservidorvideo.required' => 'El Servidor de Videos de obligatorio.'
+      ]);
       if ($validator->fails()) {
-        return back()
-        ->withErrors($validator)
-        ->withInput();
+        return back()->withErrors($validator)->withInput();
       }
-
 
       $update = $this->proyectoRepository->updateEntregablesProyectoRepository($request, $id);
       if ($update) {
@@ -253,26 +265,36 @@ class ProyectoController extends Controller
     }
   }
 
-  // Vista de la vista de los entregables de un proyecto
+  /**
+   * Vista para el formulario de los entregables de un proyecto
+   *
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
   public function entregables($id)
   {
     $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
     $entregables = (object) $this->consultarEntregablesDeUnProyectoController($id);
     $entregables->url_videotutorial = $proyecto->url_videotutorial;
+    $servidorVideo = $this->servidorVideoRepository->getAllServidorVideo();
     if ( Session::get('login_role') == User::IsGestor() ) {
       return view('proyectos.gestor.entregables', [
       'proyecto' => $proyecto,
-      'entregables' => $entregables
+      'entregables' => $entregables,
+      'servidorVideo' => $servidorVideo
       ]);
     } else if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('proyectos.dinamizador.entregables', [
       'proyecto' => $proyecto,
-      'entregables' => $entregables
+      'entregables' => $entregables,
+      'servidorVideo' => $servidorVideo
       ]);
     } else {
       return view('proyectos.administrador.entregables', [
       'proyecto' => $proyecto,
-      'entregables' => $entregables
+      'entregables' => $entregables,
+      'servidorVideo' => $servidorVideo
       ]);
     }
   }

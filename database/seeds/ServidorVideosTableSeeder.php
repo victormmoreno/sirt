@@ -13,7 +13,7 @@ class ServidorVideosTableSeeder extends Seeder
     public function run()
     {
         ServidorVideo::create([
-            'nombre'      => 'You tube',
+            'nombre'      => 'YouTube',
             'dominio' => 'youtube.com',
         ]);
 

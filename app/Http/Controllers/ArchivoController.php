@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, ArchivoEntrenamiento, Articulacion, RutaModel};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\Storage;
 use App\User;
@@ -360,17 +360,6 @@ class ArchivoController extends Controller
       $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
       // exit($route);
     }
-  }
-
-  // Borra el archivo de la articulación del servidor
-  public function destroyFileArticulacion($idFile)
-  {
-    $file = ArchivoArticulacion::find($idFile);
-    $file->delete();
-    $filePath = str_replace('storage', 'public', $file->ruta);
-    Storage::delete($filePath);
-    toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
-    return back();
   }
 
   /**

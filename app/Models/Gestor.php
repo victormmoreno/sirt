@@ -62,6 +62,11 @@ class Gestor extends Model
         return $this->hasMany(Articulacion::class, 'gestor_id', 'id');
     }
 
+    public function actividades()
+    {
+      return $this->hasMany(Actividad::class, 'gestor_id', 'id');
+    }
+
     /*=========================================
     =            asesores eloquent            =
     =========================================*/

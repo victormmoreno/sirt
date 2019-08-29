@@ -68,24 +68,6 @@ class Articulacion extends Model
         return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
     }
 
-    // // Relación a la tabla de gestor
-    // public function gestor()
-    // {
-    //     return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
-    // }
-    //
-    // // Relación a la tabla de entidad
-    // public function entidad()
-    // {
-    //     return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
-    // }
-    //
-    // // Relación a la tabla de archivosarticulaciones
-    // public function archivosarticulaciones()
-    // {
-    //     return $this->hasMany(ArchivoArticulacion::class, 'articulacion_id', 'id');
-    // }
-
     /*==========================================================================
     =            scope para consultar las articulaciones por estado            =
     ==========================================================================*/
