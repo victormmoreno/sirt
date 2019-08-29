@@ -41,8 +41,8 @@ class UsersTableSeeder extends Seeder
 
         $role = Role::findByName(Role::findByName(config('laravelpermission.roles.roleAdministrador'))->first()->name);
         $role->givePermissionTo([
-            Permission::findByName('ver administrador'),
-            Permission::findByName('registrar idea'),
+            Permission::findByName('Ver Administrador'),
+            Permission::findByName('Registrar Idea'),
         ]);
 
         $userAdmin = User::create([
@@ -111,7 +111,6 @@ class UsersTableSeeder extends Seeder
             Role::findByName(config('laravelpermission.roles.roleIngreso')),
             Role::findByName(config('laravelpermission.roles.roleTalento')),
         ]);
-        // $userAdmin->givePermissionTo($registrarIdeaPermission);
 
         $ocupacion = Ocupacion::all()->random()->id;
 
@@ -149,7 +148,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userDinamizador->assignRole([Role::findByName(config('laravelpermission.roles.roleDinamizador'))]);
-        $userDinamizador->givePermissionTo(Permission::findByName('registrar idea'));
+        $userDinamizador->givePermissionTo(Permission::findByName('Registrar Idea'));
 
         $userGestorRamiro = User::create([
             'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Profesional')->first()->id,

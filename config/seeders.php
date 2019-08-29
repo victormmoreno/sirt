@@ -44,6 +44,7 @@ return [
         // ['name' => EmpresasTableSeeder::class, 'callable' => true],
         // ['name' => ContactosEntidadesTableSeeder::class, 'callable' => true],
         ['name' => ServidorVideosTableSeeder::class, 'callable' => true],
+        ['name' => LaboratoriosTableSeeder::class, 'callable' => true],
 
     ],
 ];

@@ -15,7 +15,11 @@
       <ul class="right col s10 m10 l10 nav-right-menu">
         <li class="hide-on-small-and-down">
           <a href="javascript:void(0)" data-activates="dropdown1" class="dropdown-button dropdown-right show-on-large">
-            <i class="material-icons">notifications_none</i>
+            @if(auth()->user()->unreadNotifications->count() > 0)
+              <i class="material-icons">notifications_active</i>
+            @else
+              <i class="material-icons">notifications_none</i>
+            @endif
             @if($count = auth()->user()->unreadNotifications->count())
               @if($count <= 9)
                 <span class="badge">
@@ -85,7 +89,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+          <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
             <div class="notification">
               <div class="notification-icon circle teal lighten-2">
                 <i class="material-icons">
@@ -96,7 +100,7 @@
                 <b>
                   {{ __('Logout') }}
                 </b>
-                <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none;">
+                <form action="{{ route('logout') }}" id="logout-form-nav" method="POST" style="display: none;">
                   @csrf
                 </form>
               </div>
@@ -109,17 +113,78 @@
   <ul id="dropdown1" class="dropdown-content notifications-dropdown">
     <li class="notificatoins-dropdown-container">
         <ul>
-            <li class="notification-drop-title">Today</li>
-            <li>
-                <a href="{{route('notifications.index')}}">
-                <div class="notification">
-                    <div class="notification-icon circle cyan"><i class="material-icons">done</i></div>
-                    <div class="notification-text"><p><b>Alan Grey</b> uploaded new theme</p><span>7 min ago</span></div>
-                </div>
-                </a>
+            <li class="notification-drop-title center">
+              <div class="center">
+                Notificaciones
+              </div>
             </li>
+            
+            <li class="divider" tabindex="-1"></li>
+            
+              @forelse (Auth::user()->unreadNotifications as $notification)
+                <li>
+                  <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle {{ $notification->data['color'] }}">
+                        <i class="material-icons">{{ $notification->data["icon"] }}</i>
+                      </div>
+                      <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
+                        <span>{{$notification->created_at->diffForHumans()}}</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              @empty
+                  <li class="notification-drop-title">
+                    <div class="center">
+                       <i class="large material-icons  teal-text lighten-2 center ">
+                            notifications_off
+                        </i>
+                        <p class="center-align">No tienes notificationes</p> 
+                    </div>
+                  </li>
+              @endforelse
+              <li class="divider" tabindex="-1"></li>
+              <li class="notification-drop-title">
+                <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle cyan">
+                        <i class="material-icons">domain</i>
+                      </div>
+                      <div class="notification-text"><p> Ver más notificationes</p>
+                        
+                      </div>
+                    </div>
+                  </a>
+              </li>
+              <li class="notification-drop-title">
+                <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle cyan">
+                        <i class="material-icons">domain</i>
+                      </div>
+                      <div class="notification-text"><p>Marcar todo como leído </p>
+                         
+                      </div>
+                    </div>
+                  </a>
+              </li>
+              <li class="notification-drop-title">
+                <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle cyan">
+                        <i class="material-icons">domain</i>
+                      </div>
+                      <div class="notification-text"><p>Borrar todas las notificaciones </p>
+                         
+                      </div>
+                    </div>
+                  </a>
+              </li>
         </ul>
     </li>
+    
+             
 </ul>
 
 </div>

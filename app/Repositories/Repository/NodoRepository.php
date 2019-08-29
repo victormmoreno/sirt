@@ -28,6 +28,11 @@ class NodoRepository
         return Entidad::findOrFail($id);
     }
 
+    public function getSelectNodo()
+    {
+        return Nodo::SelectNodo()->get();
+    }
+
     
 
     /*=================================================================================

@@ -22,16 +22,6 @@
                 </a>
             </li>
             <li>
-                <a href="{{{route('perfil.permisos')}}}">
-                    <h4 class="mail-title">
-                        Permisos Adicionales
-                    </h4>
-                    <p align="justify" class="hide-on-small-and-down mail-text">
-                        En este apartado podrás ver los permisos adicionales que se te han asignado.
-                    </p>
-                </a>
-            </li>
-            <li>
                 <a href="{{{route('perfil.cuenta')}}}">
                     <h4 class="mail-title">
                         Cambiar Contraseña

@@ -63,6 +63,11 @@
     </ul>
   </div>
 </li>
+<li class="no-padding {{setActiveRoute('laboratorio.index')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('laboratorio.index')}}" href="{{route('laboratorio.index')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('laboratorio.index')}}">local_drink</i>Laboratorios
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura.index')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura.index')}}" href="{{route('usoinfraestructura.index')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura.index')}}">domain</i>Usos de infraestructura

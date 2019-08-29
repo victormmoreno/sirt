@@ -143,7 +143,7 @@ class LineaController extends Controller
             $linea->descripcion = $request->input('txtdescripcion');
             $linea->update();
 
-            Alert::success("La Linea {$linea->nombre} ha sido actualizado modificado.",'Modificación Exitosa',"success");
+            Alert::success("La Linea {$linea->nombre} ha sido  modificado exitosamente.",'Modificación Exitosa',"success");
 
         }else{
             Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");
