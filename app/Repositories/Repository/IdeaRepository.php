@@ -91,7 +91,7 @@ class IdeaRepository
             })->get();
 
         if (!$users->isEmpty()) {
-            Notification::send($users,new IdeaReceived($idea));
+            Notification::send($users->random(),new IdeaReceived($idea));
         }
 
         return $idea;

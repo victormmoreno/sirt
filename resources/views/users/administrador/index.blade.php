@@ -8,7 +8,7 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s10 m10 l10">
+                    <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <i class="material-icons left">
                                 supervised_user_circle
@@ -16,6 +16,14 @@
                             Usuarios
                         </h5>
                     </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                        
+                            <li><a href="index.html">Inicio</a></li>
+                            {{-- <li><a href="#">Usuarios</a></li> --}}
+                            <li class="active">Usuarios</li>
+                        </ol>
+                      </div>
                 </div>
                 <div class="card ">
                     <div class="card-content">

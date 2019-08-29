@@ -3,6 +3,7 @@
 use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
 use App\Models\ServidorVideo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 Route::get('/', function () {
 
@@ -146,7 +147,7 @@ Route::group([
         'store'   => 'usoinfraestructura.store',
     ])->parameters([
         'usoinfraestructura' => 'id',
-    ]);;
+    ]);
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/
@@ -163,14 +164,13 @@ Route::resource('centro-formacion', 'CentroController');
 =            seccion para las rutas del perfil            =
 =========================================================*/
 Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
-Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta');
-Route::get('perfil', 'User\ProfileController@index')->name('perfil.index');
-Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles');
-Route::get('perfil/permisos', 'User\ProfileController@permisos')->name('perfil.permisos');
-Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña');
-Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset');
-Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit');
-Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']]);
+Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
+Route::get('perfil', 'User\ProfileController@index')->name('perfil.index')->middleware('disablepreventback');
+Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles')->middleware('disablepreventback');
+Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña')->middleware('disablepreventback');
+Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset')->middleware('disablepreventback');
+Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit')->middleware('disablepreventback');
+Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']])->middleware('disablepreventback');
 
 /*=====  End of seccion para las rutas del perfil  ======*/
 
@@ -516,8 +516,9 @@ Route::get('ideas', 'IdeaController@index')->name('ideas.index');
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
 Route::get('/notificaciones', 'NotificationsController@index')->name('notifications.index');
-Route::patch('/notificaciones/{id}', 'NotificationsController@read')->name('notifications.read');
-Route::delete('/notificaciones/{id}', 'NotificationsController@destroy')->name('notifications.destroy');
+Route::patch('/notificaciones/{notification}', 'NotificationsController@read')->name('notifications.read');
+Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy')->name('notifications.destroy');
+
 
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =
@@ -536,6 +537,17 @@ Route::resource('sublineas', 'SublineaController', ['except' => ['show']]);
 
 /*=====  End of rutas para las funcionalidades de las sublineas  ======*/
 
+/*==========================================================================
+=            rutas para las funcionalidades de los laboratorios            =
+==========================================================================*/
+Route::get('/laboratorio/nodo/{nodo?}', 'LaboratorioController@getLaboratorioPorNodo')->name('laboratorio.nodo');
+Route::resource('laboratorio', 'LaboratorioController')->parameters([
+        'laboratorio' => 'id',
+    ]);
+
+/*=====  End of rutas para las funcionalidades de los laboratorios  ======*/
+
+
 /*==============================================================================
 =            rutas para las funcionalidades de la configuracion app            =
 ==============================================================================*/
@@ -551,3 +563,20 @@ Route::group([
 );
 
 /*=====  End of rutas para las funcionalidades de la configuracion app  ======*/
+
+
+/*================================================================
+=            rutas para la documentación del proyecto            =
+================================================================*/
+
+Route::group([
+    'prefix'     => 'documentacion',
+    'namespace'  => 'Docs',
+    'middleware' => 'auth',
+],function(){
+    // Route::get('/', function () {
+    //     return view('configuracion.index');
+    // })->name('configuracion.index');
+});
+
+/*=====  End of rutas para la documentación del proyecto  ======*/

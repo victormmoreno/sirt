@@ -81,6 +81,8 @@ mix.scripts([
 		'resources/app/edt/gestor/form.js',
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
+		'resources/app/laboratorio/administrador/index.js',
+		'resources/app/laboratorio/dinamizador/index.js',
 		'resources/app/visitante/index.js',
 		'resources/app/ingreso/index.js',
 		'resources/app/ingreso/ingreso/create.js',

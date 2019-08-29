@@ -8,14 +8,11 @@ use App\Http\Requests\ProfileRequest\ProfileFormRequest;
 use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
 use App\Repositories\Repository\ProfileRepository\ProfileRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
-use Barryvdh\DomPDF\PDF;
-use Illuminate\Auth\Passwords\PasswordBroker;
+use App\User;
+use PDF;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Password;
 
-
-class ProfileController extends Controller 
+class ProfileController extends Controller
 {
 
     use SendsPasswordResetEmailsToUserAuthenticated;
@@ -25,10 +22,12 @@ class ProfileController extends Controller
 
     public function __construct(UserRepository $userRepository, ProfileRepository $profileRepostory)
     {
-        $this->middleware(['auth','check_profile']);
+        $this->middleware(['auth', 'check_profile']);
         $this->userRepository   = $userRepository;
         $this->profileRepostory = $profileRepostory;
+
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,32 +35,30 @@ class ProfileController extends Controller
      */
     public function index()
     {
-
+        $authUser = $this->getAuthUserAccount();
+        $this->authorize('viewProfile', $authUser);
         return view('users.profile.profile', [
-            'user' => $this->userRepository->account(auth()->user()->id),
+            'user' => $authUser,
         ]);
 
     }
 
     public function roles()
     {
+        $authUser = $this->getAuthUserAccount();
+        $this->authorize('viewProfileRole', $authUser);
         return view('users.profile.roles', [
-            'user'  => $this->userRepository->account(auth()->user()->id),
+            'user'  => $authUser,
             'roles' => $this->userRepository->getAllRoles(),
-        ]);
-    }
-
-    public function permisos()
-    {
-        return view('users.profile.permisos', [
-            'user' => $this->userRepository->account(auth()->user()->id),
         ]);
     }
 
     public function account()
     {
+        $authUser = $this->getAuthUserAccount();
+        $this->authorize('viewProfileAccountPassword', $authUser);
         return view('users.profile.account', [
-            'user' => $this->userRepository->account(auth()->user()->id),
+            'user' => $authUser,
         ]);
     }
 
@@ -73,12 +70,12 @@ class ProfileController extends Controller
      */
     public function editAccount()
     {
-        $user = $this->userRepository->account(auth()->user()->id);
+        $authUser = $this->getAuthUserAccount();
 
-        $this->authorize('update',$user);
+        $this->authorize('editAccount', $authUser);
 
         return view('users.profile.edit', [
-            'user'              => $user,
+            'user'              => $authUser,
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
@@ -95,14 +92,14 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProfileFormRequest $request,$id)
+    public function update(ProfileFormRequest $request, $id)
     {
 
         //buscar usuario por su id
-        $user = $this->userRepository->findById(auth()->user()->id);
-        $this->authorize('update',$user);
+        $authUser = $this->getAuthUserFindById();
+        $this->authorize('updateProfile', $authUser);
         //acutalizar usuario
-        $userUpdated = $this->profileRepostory->Update($request, $user);
+        $userUpdated = $this->profileRepostory->Update($request, $authUser);
 
         if ($userUpdated != null) {
             $this->userRepository->destroySessionUser();
@@ -111,15 +108,14 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
 
-        
-
     }
 
     public function updatePassword(ChangePasswordRequest $request)
     {
-        $user = $this->userRepository->findById(auth()->user()->id);
+        $authUser = $this->getAuthUserFindById();
+        $this->authorize('updatePassword', $authUser);
 
-        $userPasswordUpdated = $this->profileRepostory->updatePassword($request, $user);
+        $userPasswordUpdated = $this->profileRepostory->updatePassword($request, $authUser);
 
         if ($userPasswordUpdated != null) {
             $this->userRepository->destroySessionUser();
@@ -133,21 +129,23 @@ class ProfileController extends Controller
     /*================================================================================
     =            metodo para descargar certificado registro en plataforma            =
     ================================================================================*/
-    
-    public function downloadCertificatedPlataform()
+
+    public function downloadCertificatedPlataform($extennsion = '.pdf')
     {
-        //buscar usuario por su id
-        $user = $this->userRepository->findById(auth()->user()->id);
-        $this->authorize('update',$user);
+        $this->authorize('downloadCertificatedPlataform', User::class);
 
-        $pdf = \PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('users.profile.pdf.certificate-plataform', compact('user'));
+        $user = $this->getAuthUserFindById();
+
+        $pdf =  \PDF::loadHTML('<h1>Test</h1>'); 
+        
+        // $pdf = App::make('dompdf.wrapper');
+        // $pdf->loadHTML('<h1>Test</h1>');
+        // return $pdf->stream();
         // return $pdf->download("certificado {$user->nombres} {$user->apellidos} - ". config('app.name').".pdf");
-        return $pdf->stream("certificado {$user->nombres} {$user->apellidos} - ". config('app.name').".pdf");
+        return $pdf->download("certificado  - ". config('app.name').".pdf");
+        // return $pdf->stream("certificado  " . config('app.name') . $extennsion);
     }
-    
+
     /*=====  End of metodo para descargar certificado registro en plataforma  ======*/
-
-
-    
 
 }

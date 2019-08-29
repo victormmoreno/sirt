@@ -676,7 +676,6 @@ class ProyectoController extends Controller
       }
 
       $result = $this->proyectoRepository->update($request, $id);
-      // dd($result);
       if ($result) {
         return response()->json([
         'result' => true,
@@ -699,26 +698,6 @@ class ProyectoController extends Controller
   {
 
     $projects = $this->proyectoRepository->getProjectsForGestor($id, ['Inicio', 'Planeacion', 'En ejecución']);
-
-      // $projects = $this->proyectoRepository->getProjectsForGestor(
-      //       $id,
-      //       [
-      //           'estadoproyecto'                  => function ($query) {
-      //               $query->select('id', 'nombre');
-      //           },
-      //           'articulacion_proyecto'           => function ($query) {
-      //               $query->select('id', 'actividad_id');
-      //           },
-      //           'articulacion_proyecto.actividad' => function ($query) {
-      //               $query->select('id', 'codigo_actividad', 'nombre');
-      //           },
-      //       ],
-      //       [
-      //           'Inicio',
-      //           'Planeacion',
-      //           'En ejecución',
-      //       ]
-      //   );
 
 
       return response()->json([

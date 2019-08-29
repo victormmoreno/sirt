@@ -11,11 +11,6 @@
             </a>
         </li>
         <li>
-            <a href="{{{route('perfil.permisos')}}}">
-                Permisos Adicionales
-            </a>
-        </li>
-        <li>
             <a href="{{{route('perfil.cuenta')}}}">
                 Cambiar Contraseña
             </a>

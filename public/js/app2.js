@@ -1,64 +1,29 @@
 $(document).ready(function() {
-    
     $('#linea_table').DataTable({
         language: {
-            // "sProcessing": "Procesando...",
-            // "sLengthMenu": "Mostrar _MENU_ registros",
-            // "sZeroRecords": "No se encontraron resultados",
-            // "sEmptyTable": "Ningún dato disponible en esta tabla",
-            // "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            // "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            // "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            // "sInfoPostFix": "",
-            // "sSearch": "Buscar:",
-            // "sUrl": "",
-            // "sInfoThousands": ",",
-            // "sLoadingRecords": "Cargando...",
-            // "oPaginate": {
-            //     "sFirst": "Primero",
-            //     "sLast": "Último",
-            //     "sNext": "Siguiente",
-            //     "sPrevious": "Anterior"
-            // },
-            // "oAria": {
-            //     "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-            //     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            // }
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         processing: true,
         serverSide: true,
-        ajax:{
-        	url: "lineas",
+        ajax: {
+            url: "lineas",
         },
-        columns: [
-        	{
-        		data: 'abreviatura',
-        		name: 'abreviatura',
-        	},
-        	{
-        		data: 'nombre',
-        		name: 'nombre',
-        	},
-        	{
-        		data: 'descripcion',
-        		name: 'descripcion',
-        	},
-        	{
-        		data: 'action',
-        		name: 'action',
-        		orderable: false
-        	},
-
-        ],
+        columns: [{
+            data: 'abreviatura',
+            name: 'abreviatura',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'descripcion',
+            name: 'descripcion',
+        }, {
+            data: 'action',
+            name: 'action',
+            orderable: false
+        }, ],
     });
-
-
-            
-
 });
-
-
 $(document).ready(function() {
     $('#nodos_table').DataTable({
         language: {
@@ -4285,6 +4250,117 @@ function detallesDeUnaEdt(id) {
   })
 }
 
+
+$(document).ready(function() {
+    $('#laboratorio_administrador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+    });
+    // $('.dataTables_length select').addClass('browser-default');
+});
+var selectLaboratorioNodo = {
+    selectLaboraotrioForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#laboratorio_administrador_table').dataTable().fnDestroy();
+        if (nodo != '') {
+            
+            $('#laboratorio_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: "/laboratorio/nodo/" + nodo,
+                    type: "get",
+                    // success: function (response) {
+                    //     console.log(response);
+                    // },
+                    error: function(){
+                        alert('no se encontraron datos');
+                    }
+                },
+
+                columns: [{
+                    data: 'nombre',
+                    name: 'nombre',
+                    width: '30%'
+                }, {
+                    data: 'lineatecnologica',
+                    name: 'lineatecnologica',
+                    width: '30%'
+                }, {
+                    data: 'participacion_costos',
+                    name: 'participacion_costos',
+                    width: '15%'
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                    width: '10%'
+                },
+                 {
+                    data: 'materiales',
+                    name: 'materiales',
+                    orderable: false,
+                    width: '8%'
+                }, {
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false,
+                    width: '8%'
+                }, ],
+            });
+        }else{
+            // alert("por favor seleccione un valor");
+            $('#laboratorio_administrador_table').DataTable().clear().draw();
+        }
+        
+    },
+}
+$(document).ready(function() {
+    $('#laboratorio_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: false,
+        ajax: {
+            url: "/laboratorio",
+            type: "get",
+        },
+        columns: [{
+            data: 'nombre',
+            name: 'nombre',
+            width: '30%'
+        }, {
+            data: 'lineatecnologica',
+            name: 'lineatecnologica',
+            width: '30%'
+        }, {
+            data: 'participacion_costos',
+            name: 'participacion_costos',
+            width: '15%'
+        }, {
+            data: 'estado',
+            name: 'estado',
+            width: '10%'
+        }, {
+            data: 'materiales',
+            name: 'materiales',
+            orderable: false,
+            width: '8%'
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+            width: '8%'
+        }, ],
+    });
+});
 function datatableVisitantesPorNodo_Ingreso() {
   $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();
   $('#visitantesRedTecnoparque_table').DataTable({
