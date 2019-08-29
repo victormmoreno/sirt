@@ -40,7 +40,7 @@
                       </a>
                     </div>
                     <div class="col s12 m4 l4">
-                      <a href="">
+                      <a href="{{route('grafico.proyectos')}}">
                         <div class="card indigo lighten-4">
                           <div class="card-content center">
                             <i class="left material-icons black-text">library_books</i>

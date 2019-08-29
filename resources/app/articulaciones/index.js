@@ -13,7 +13,7 @@ function detallesDeUnaArticulacion(id){
         'error'
       );
     } else {
-      $("#articulacionDetalle_titulo").append("<div class='valign-wrapper left material-icons'><a href='/articulacion/excelDeUnaArticulacion/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='teal-text text-darken-3'>Código de la Articulación: </span><b>"+respuesta.detalles.codigo_articulacion+"</b>");
+      $("#articulacionDetalle_titulo").append("<div class='valign-wrapper left material-icons'><a href='/excel/excelDeUnaArticulacion/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='teal-text text-darken-3'>Código de la Articulación: </span><b>"+respuesta.detalles.codigo_articulacion+"</b>");
       $("#detalleArticulacion").append(
         '<div class="row">'
         +'<div class="col s12 m6 l6">'

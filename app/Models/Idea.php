@@ -94,12 +94,17 @@ class Idea extends Model
             ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
             ->join('estadosidea', 'estadosidea.id', 'ideas.estadoidea_id')
             ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
-            ->where([
-                ['nodos.id', '=', $idnodo],
-                ['tipo_idea', '=', $this->IsEmpresa()],
-                ['estadosidea.nombre', '=', 'Inicio'],
-            ])
-            ->orWhere('tipo_idea', '=', $this->IsGrupoInvestigacion());
+            ->where('nodos.id', $idnodo)
+            ->where('estadosidea.nombre', 'Inicio')
+            // ->where([
+            //     ['tipo_idea', '=', $this->IsEmpresa()],
+            //     ['tipo_idea', '=', $this->IsGrupoInvestigacion()],
+            // ]);
+            ->where(function($q) {
+              $q->where('tipo_idea', $this->IsEmpresa())
+              ->orWhere('tipo_idea', $this->IsGrupoInvestigacion());
+            });
+            // ->orWhere('tipo_idea', '=', $this->IsGrupoInvestigacion());
     }
 
     public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo)

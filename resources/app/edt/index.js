@@ -122,7 +122,7 @@ function detallesDeUnaEdt(id) {
       */
       let fecha_cierre = "";
       response.edt.estado == 'Inactiva' ? fecha_cierre = response.edt.fecha_cierre : fecha_cierre = 'La Edt aún se encuentra activa!';
-      $("#detalleEdt_titulo").append("<div class='valign-wrapper left material-icons'><a href='/edt/excelDeUnaEdt/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
+      $("#detalleEdt_titulo").append("<div class='valign-wrapper left material-icons'><a href='/excel/excelDeUnaEdt/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
       $("#detalleEdt_detalle").append('<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Código de la Edt: </span>'

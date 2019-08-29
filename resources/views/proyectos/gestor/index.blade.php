@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('meta-title', 'Proyectos de Base Tecnológica')
 @section('content')
+  @php
+  $year = Carbon\Carbon::now();
+  $year = $year->isoFormat('YYYY');
+  @endphp
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
@@ -29,35 +33,30 @@
                     <div class="col s12 m12 l12">
                       <div class="input-field col s12 m12 l12">
                         <select class="js-states"  tabindex="-1" style="width: 100%" id="anho_proyectoPorAnhoGestorNodo" name="anho_proyectoPorAnhoGestorNodo" onchange="consultarProyectosDelGestorPorAnho();">
-                          {!!
-                            $year = Carbon\Carbon::now();
-                            $year = $year->isoFormat('YYYY');
-                            !!}
-                            @for ($i=2016; $i <= $year; $i++)
-                              <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
-                            @endfor
-                          </select>
-                          <label for="anho_proyectoPorAnhoGestorNodo">Seleccione el Año</label>
-                        </div>
+                          @for ($i=2016; $i <= $year; $i++)
+                            <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                          @endfor
+                        </select>
+                        <label for="anho_proyectoPorAnhoGestorNodo">Seleccione el Año</label>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  @include('proyectos.table')
-                </div>
+              </div>
+              <div class="row">
+                @include('proyectos.table')
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!--boton de abajo -->
-      <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href="{{route('proyecto.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Proyecto">
-          <i class="material-icons">library_add</i>
-        </a>
-      </div>
     </div>
+    <!--boton de abajo -->
+    <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+      <a href="{{route('proyecto.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Proyecto">
+        <i class="material-icons">library_add</i>
+      </a>
+    </div>
+    @include('proyectos.modals')
   </main>
-  @include('proyectos.modals')
 @endsection

@@ -13,6 +13,77 @@ var graficosEdtId = {
   grafico2: 'graficosEdtsPorGestorYFecha_stacked',
   grafico3: 'graficoEdtsPorLineaYFecha_stacked',
   grafico4: 'graficoEdtsPorNodoYAnho_variablepie'
+};
+
+var graficosProyectoId = {
+  grafico1: 'graficosProyectoPorMesYNodo_combinate'
+};
+
+function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
+  id = 0;
+
+  if (bandera == 1) {
+    id = $('#txtnodo_proyectoGrafico1');
+  }
+
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    success: function (data) {
+
+      let tamanho = data.proyectos.cantidades.length;
+      let datos = {
+        cantidades: [],
+        meses: []
+      };
+
+      for (let i = 0; i < tamanho; i++) {
+        datos.cantidades.push(data.proyectos.cantidades[i]);
+      }
+
+      for (let i = 0; i < tamanho; i++) {
+        datos.meses.push(data.proyectos.meses[i]);
+      }
+
+      // console.log(datos.cantidades);
+
+      Highcharts.chart(graficosProyectoId.grafico1, {
+        title: {
+          text: 'Proyectos Inscritos'
+        },
+        yAxis: {
+          title: {
+            text: 'Cantidad'
+          }
+        },
+        xAxis: {
+          categories: datos.meses,
+          title: {
+            text: 'Meses'
+          }
+        },
+        series: [{
+          type: 'column',
+          name: 'Proyectos Inscritos',
+          data: datos.cantidades
+        }, {
+          type: 'spline',
+          name: 'Proyectos Inscritos',
+          data: datos.cantidades,
+          marker: {
+            lineWidth: 2,
+            lineColor: '#008981',
+            fillColor: '#008981'
+          }
+        }]
+      });
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+
 }
 
 function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {

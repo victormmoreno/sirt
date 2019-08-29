@@ -3,26 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Session};
-use App\Repositories\Repository\{ArticulacionRepository, UserRepository\GestorRepository, LineaRepository, EdtRepository};
-use App\{User, Models\Gestor, Models\LineaTecnologica, Models\TipoEdt};
+use Illuminate\Support\Facades\Session;
+use App\Repositories\Repository\LineaRepository;
+use App\{User, Models\Gestor};
 
 class GraficoController extends Controller
 {
 
-  private $articulacionRepository;
-  private $gestorRepository;
   private $lineaRepository;
 
-  public function __construct(ArticulacionRepository $articulacionRepository, GestorRepository $gestorRepository, LineaRepository $lineaRepository)
+  public function __construct(LineaRepository $lineaRepository)
   {
-    $this->gestorRepository = $gestorRepository;
-    $this->lineaRepository = $lineaRepository;
+    $this->setLineaRepository($lineaRepository);
   }
+
   /**
   * Página inicial de los gráficos
   * @return Response
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function index()
   {
@@ -32,16 +30,34 @@ class GraficoController extends Controller
   }
 
   /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   *
+   * @param type var Description
+   * @return return type
+   */
+  public function proyectosGraficos()
+  {
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('grafico.dinamizador.proyecto', [
+        'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+        'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
+      ]);
+    }
+  }
+
+  /**
    * Vista para mostrar los gráficos de las edts
    * @return Response
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function edtsGraficos()
   {
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('grafico.dinamizador.edt', [
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
-        'lineas' => $this->lineaRepository->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
+        'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
     }
   }
@@ -49,17 +65,39 @@ class GraficoController extends Controller
   /**
   * Vista de gráficos para las articulaciones
   * @return Response
-  * @author Victor Manuel Moreno Vega
+  * @author dum
   */
   public function articulacionesGraficos()
   {
-    // dd($this->lineaRepository->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id'));
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('grafico.dinamizador.articulacion', [
       'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
-      'lineas' => $this->lineaRepository->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
+      'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
     }
+  }
+
+  /**
+   * Asigna un valor a $lineaRepository
+   *
+   * @param object $lineaRepository
+   * @return void
+   * @author dum
+   */
+  private function setLineaRepository($lineaRepository)
+  {
+    $this->lineaRepository = $lineaRepository;
+  }
+
+  /**
+   * Retorna el valor de $lineaRepository
+   *
+   * @return object
+   * @author dum
+   */
+  private function getLineaRepository()
+  {
+    return $this->lineaRepository;
   }
 
 }

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Gráficos de Edts')
+@section('meta-title', 'Gráficos de Proyectos')
 @section('content')
   @php
     $yearNow = Carbon\Carbon::now()->isoFormat('YYYY')
@@ -20,37 +20,35 @@
                   <div class="row">
                     <div class="col s12 m12 l12">
                       <div class="center-align">
-                        <span class="card-title center-align">Gráficos de Edt's</span>
+                        <span class="card-title center-align">Gráficos de Proyectos</span>
                       </div>
                     </div>
                   </div>
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por fechas</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Inscripción de Proyecto por Fechas</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
-                            <div class="input-field col s12 m6 l6">
-                              <input type="text" id="txtfecha_inicio_edtGrafico1" name="txtfecha_inicio_edtGrafico1" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
-                              <label for="txtfecha_inicio_edtGrafico1">Fecha Inicio</label>
-                            </div>
-                            <div class="input-field col s12 m6 l6">
-                              <input type="text" id="txtfecha_fin_edtGrafico1" name="txtfecha_fin_edtGrafico1" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                              <label for="txtfecha_fin_edtGrafico1">Fecha Fin</label>
-                            </div>
-                            <div class="center col s12 m12 l12">
-                              <button onclick="consultarEdtsPorNodoGestorYFecha_stacked(0);" class="btn">Consultar</button>
-                            </div>
+                            <select style="width: 100%" name="txtanho_GraficoProyecto1" id="txtanho_GraficoProyecto1" onchange="consultarProyectosInscritosPorAnho_combinate(0, this.value)">
+                              @for ($i=2016; $i <= $yearNow; $i++)
+                                <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
+                              @endfor
+                            </select>
+                            <label for="txtanho_GraficoProyecto1">Seleccione el Año</label>
+                            {{-- <div class="center col s12 m12 l12">
+                              <button onclick="consultarProyectoInscritosPorAnho(0);" class="btn">Consultar</button>
+                            </div> --}}
                           </div>
                           <div class="col s12 m8 l8">
-                            <div id="graficosEdtsPorGestorNodoYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                            <div id="graficosProyectoPorMesYNodo_combinate" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
                           </div>
                         </div>
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Edt's por gestor y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -86,7 +84,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por línea y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Edt's por línea y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -121,7 +119,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's totales por año</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Edt's totales por año</div>
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
@@ -151,8 +149,7 @@
 @push('script')
   <script>
     $(document).ready(function(){
-      consultarEdtsPorNodoGestorYFecha_stacked(0);
-      consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }});
+      consultarProyectosInscritosPorAnho_combinate(0, '{{$yearNow}}');
     });
   </script>
 @endpush

@@ -2887,7 +2887,7 @@ function detallesDeUnaArticulacion(id){
         'error'
       );
     } else {
-      $("#articulacionDetalle_titulo").append("<div class='valign-wrapper left material-icons'><a href='/articulacion/excelDeUnaArticulacion/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='teal-text text-darken-3'>Código de la Articulación: </span><b>"+respuesta.detalles.codigo_articulacion+"</b>");
+      $("#articulacionDetalle_titulo").append("<div class='valign-wrapper left material-icons'><a href='/excel/excelDeUnaArticulacion/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='teal-text text-darken-3'>Código de la Articulación: </span><b>"+respuesta.detalles.codigo_articulacion+"</b>");
       $("#detalleArticulacion").append(
         '<div class="row">'
         +'<div class="col s12 m6 l6">'
@@ -4157,7 +4157,7 @@ function detallesDeUnaEdt(id) {
       */
       let fecha_cierre = "";
       response.edt.estado == 'Inactiva' ? fecha_cierre = response.edt.fecha_cierre : fecha_cierre = 'La Edt aún se encuentra activa!';
-      $("#detalleEdt_titulo").append("<div class='valign-wrapper left material-icons'><a href='/edt/excelDeUnaEdt/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
+      $("#detalleEdt_titulo").append("<div class='valign-wrapper left material-icons'><a href='/excel/excelDeUnaEdt/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='cyan-text text-darken-3'>Código de la Edt: </span>"+response.edt.codigo_edt+"");
       $("#detalleEdt_detalle").append('<div class="row">'
       +'<div class="col s12 m6 l6">'
       +'<span class="cyan-text text-darken-3">Código de la Edt: </span>'
@@ -4635,6 +4635,77 @@ var graficosEdtId = {
   grafico2: 'graficosEdtsPorGestorYFecha_stacked',
   grafico3: 'graficoEdtsPorLineaYFecha_stacked',
   grafico4: 'graficoEdtsPorNodoYAnho_variablepie'
+};
+
+var graficosProyectoId = {
+  grafico1: 'graficosProyectoPorMesYNodo_combinate'
+};
+
+function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
+  id = 0;
+
+  if (bandera == 1) {
+    id = $('#txtnodo_proyectoGrafico1');
+  }
+
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    success: function (data) {
+
+      let tamanho = data.proyectos.cantidades.length;
+      let datos = {
+        cantidades: [],
+        meses: []
+      };
+
+      for (let i = 0; i < tamanho; i++) {
+        datos.cantidades.push(data.proyectos.cantidades[i]);
+      }
+
+      for (let i = 0; i < tamanho; i++) {
+        datos.meses.push(data.proyectos.meses[i]);
+      }
+
+      // console.log(datos.cantidades);
+
+      Highcharts.chart(graficosProyectoId.grafico1, {
+        title: {
+          text: 'Proyectos Inscritos'
+        },
+        yAxis: {
+          title: {
+            text: 'Cantidad'
+          }
+        },
+        xAxis: {
+          categories: datos.meses,
+          title: {
+            text: 'Meses'
+          }
+        },
+        series: [{
+          type: 'column',
+          name: 'Proyectos Inscritos',
+          data: datos.cantidades
+        }, {
+          type: 'spline',
+          name: 'Proyectos Inscritos',
+          data: datos.cantidades,
+          marker: {
+            lineWidth: 2,
+            lineColor: '#008981',
+            fillColor: '#008981'
+          }
+        }]
+      });
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+
 }
 
 function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
