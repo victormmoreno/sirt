@@ -139,6 +139,8 @@ class UserFormRequest extends FormRequest
 
             'txthonorario.required'               => 'El honorario es obligatorio.',
             'txthonorario.regex'                  => 'El formato del campo honorario es incorrecto',
+            'txthonorario.digits_between'         => 'El honorario debe tener entre 6 y 7 digitos',
+
             'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
             'txtocupaciones.required'             => 'seleccione al menos una ocupación',
 
@@ -181,7 +183,7 @@ class UserFormRequest extends FormRequest
 
             'txtextension.required'               => 'La extensión es obligatoria.',
             'txtextension.numeric'                => 'La extensión debe ser numérica',
-            'txtextension.digits_between'         => 'La extensióndebe tener entre 6 y 7 digitos', 
+            'txtextension.digits_between'         => 'La extensión debe tener entre 6 y 7 digitos',
             'txtnodoinfocenter.required'          => 'El nodo del infocenter es obligatorio',
         ];
     }

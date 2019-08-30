@@ -45,6 +45,7 @@ trait RegistersUsers
 
         }
 
+  
         return view('users.administrador.create', [
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),

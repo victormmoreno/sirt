@@ -7,14 +7,26 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <h5>
-                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                        <i class="material-icons arrow-l">
-                            arrow_back
-                        </i>
-                    </a>
-                    Usuarios
-                </h5>
+                <div class="row">
+                    <div class="col s8 m8 l10">
+                        <h5 class="left-align">
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                              <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                  <i class="material-icons arrow-l">
+                                      arrow_back
+                                  </i>
+                                </a>
+                            Usuarios
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Editar Usuario</li>
+                        </ol>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
@@ -474,29 +486,32 @@ var linea = {
             $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
         }else{
 
-           @if(session()->get('login_role') == App\User::IsAdministrador() ||  session()->get('login_role') == App\User::IsGestor() || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) &&  $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id))
-              @if(isset($user->gestor->lineatecnologica_id))
-                            $('#txtlinea').append('<option value="{{$user->gestor->lineatecnologica_id}}">{{$user->gestor->lineatecnologica->nombre}}</option>');
-              @endif
-             
-             
+            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                $('#txtlinea').append('<option value="">Seleccione la linea</option>');
+
+                $.each(response.lineasForNodo.lineas, function(i, e) {  
+                      $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                           
+                });
+                
+                @if($errors->any())
+                    $('#txtlinea').val('{{old('txtlinea')}}');
+                @else
+                    @if(isset($user->gestor->lineatecnologica_id))
+                    $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+                    @endif
+                @endif
             @else
-
-            $('#txtlinea').append('<option disabled value="">Seleccione la linea</option>');
-
-            $.each(response.lineasForNodo.lineas, function(i, e) {  
-                  $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
-                       
-            });
-            @endif
-
-            @if($errors->any())
-                $('#txtlinea').val('{{old('txtlinea')}}');
-            @else
-                @if(isset($user->gestor->lineatecnologica_id))
-                $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+                @if($errors->any())
+                    $('#txtlinea').val('{{old('txtlinea')}}');
+                @else
+                    @if(isset($user->gestor->lineatecnologica_id))
+                    $('#txtlinea').append('<option value="{{$user->gestor->lineatecnologica->id}}">{{$user->gestor->lineatecnologica->nombre}}</option>');
+                    @endif
                 @endif
             @endif
+
+
         }
         
         $('#txtlinea').material_select();

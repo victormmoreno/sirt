@@ -4,6 +4,7 @@ namespace App\Policies\User;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 
 class UserPolicy
 {
@@ -102,7 +103,7 @@ class UserPolicy
     /*=============================================
     =            seccion para validar el modulo de usuarios         =
     =============================================*/
-    
+
     /**
      * Determine si un usuario puede ver ek index de los usuarios.
      * @author julian londono
@@ -110,8 +111,8 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) &&  session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) &&  session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
     }
 
     /**
@@ -121,10 +122,10 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) &&  session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) &&  session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
     }
-    
+
     /**
      * Determine si un usuario puede crear nuevos usuarios.
      * @author julian londono
@@ -132,8 +133,33 @@ class UserPolicy
      */
     public function store(User $user)
     {
-        
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) &&  session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) &&  session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+    }
+
+    public function edit(User $authuser, User $user)
+    {
+
+        if (session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all())) {
+            return true;
+        } elseif (session()->get('login_role') == User::IsDinamizador()) {
+            if (isset($authuser->dinamizador->nodo->id) && isset($user->gestor->nodo->id) && $authuser->dinamizador->nodo->id == $user->gestor->nodo->id && $user->hasAnyRole(Role::findByName('Gestor'))) {
+                return true;
+            } else if (isset($authuser->dinamizador->nodo->id) && isset($user->infocenter->nodo->id) && $authuser->dinamizador->nodo->id == $user->infocenter->nodo->id && $user->hasAnyRole(Role::findByName('Infocenter'))) {
+                return true;
+            } elseif (isset($authuser->dinamizador->nodo->id) && isset($user->ingreso->nodo->id) && $authuser->dinamizador->nodo->id == $user->ingreso->nodo->id && $user->hasAnyRole(Role::findByName('Ingreso'))) {
+                return true;
+            } elseif ($user->hasAnyRole(Role::findByName('Talento'))) {
+                return true;
+            }
+        } elseif (session()->get('login_role') == User::IsGestor()) {
+
+            if ($user->hasAnyRole(Role::all())) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
 }

@@ -26,6 +26,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $nodo = auth()->user()->dinamizador->nodo->id;
+        $user = User::whereHas('gestor.nodo', function ($query) use ($nodo) {
+                $query->where('id', $nodo);
+            })->orWhereHas('infocenter.nodo', function ($query) use ($nodo) {
+                $query->where('id', $nodo);
+            })->orWhereHas('ingreso.nodo', function ($query) use ($nodo) {
+                $query->where('id', $nodo);
+            })->pluck('id');
+        // dd($nododinamizador);
+
+
+        // $user = auth()->user()->dinamizador->nodo->infocenter->user;
+        // dd($user);
 
         return view('home.home');
         // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');

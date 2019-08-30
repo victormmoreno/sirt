@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\DatabaseNotification;
 
 Route::get('/', function () {
-
+    // $number = "1027890334";
+    // $format = number_format($number, 0,",",".");
+    // dd($format);
     return view('spa');
 
 })->name('/');

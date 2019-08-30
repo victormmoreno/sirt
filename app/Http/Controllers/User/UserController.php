@@ -61,10 +61,13 @@ class UserController extends Controller
 
     public function getCiudad($departamento = '1')
     {
-
-        return response()->json([
-            'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
-        ]);
+        if (request()->ajax()) {
+            return response()->json([
+                'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
+            ]);
+        } else {
+            abort('404');
+        }
     }
 
     /*=====  End of metodo API para consultar las ciudades por departamento  ======*/
@@ -144,7 +147,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = $this->userRepository->findById($id);
-        // $this->authorize('view', $user);
+        $this->authorize('edit', $user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
 
