@@ -8,9 +8,8 @@ use App\Exports\FatherExport;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class ProyectosInscritosAnhoExport extends FatherExport
+class ProyectosGestorAnhoExport extends FatherExport
 {
-
   public function __construct($query)
   {
     $this->setQuery($query);
@@ -18,13 +17,12 @@ class ProyectosInscritosAnhoExport extends FatherExport
     $this->setRangeHeadingCell('A7:AF7');
   }
 
-
   /**
   * @abstract
   */
   public function view(): View
   {
-    return view('exports.proyectos.anho.nodo', [
+    return view('exports.proyectos.anho.gestor', [
       'proyectos' => $this->getQuery()
     ]);
   }
@@ -102,5 +100,4 @@ class ProyectosInscritosAnhoExport extends FatherExport
     $drawing2->setCoordinates('F1');
     return [$drawing, $drawing2];
   }
-
 }

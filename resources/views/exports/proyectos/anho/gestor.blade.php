@@ -44,12 +44,12 @@
     <tbody>
       @foreach($proyectos as $value)
         <tr>
-          <td>{{ $value->codigo_actividad }}</td>
+          <td>{{ $value->codigo_proyecto }}</td>
           <td>{{ $value->nombre }}</td>
           <td>{{ $value->nombre_idea }}</td>
           <td>{{ $value->nombre_sector }}</td>
           <td>{{ $value->nombre_linea }}</td>
-          <td>{{ $value->nombre_sublinea }}</td>
+          <td>{{ $value->sublinea_nombre }}</td>
           <td>{{ $value->nombre_areaconocimiento }}</td>
           <td>{{ $value->nombre_estadoproyecto }}</td>
           <td>{{ $value->nombre_tipoproyecto }}</td>

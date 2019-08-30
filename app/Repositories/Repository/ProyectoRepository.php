@@ -28,10 +28,74 @@ class ProyectoRepository
   }
 
   /**
-   * Consulta los proyectos que se inscribieron
+   * Consulta los proyectos que se inscribieron con empresas por nodo y año
    *
    * @param int $id Id del nodo
-   * @param string $anho Año del nodo
+   * @param string $anho Año para filtrar la consulta
+   * @return Collection
+   * @author dum
+   */
+  public function consultarProyectosInscritosConEmpresasPorAnhoYAnho_Repository($id, $anho)
+  {
+    return Proyecto::select('fecha_inicio',
+    'sectores.nombre AS nombre_sector',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sublineas.nombre AS nombre_sublinea',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
+    'estadosproyecto.nombre AS nombre_estadoproyecto',
+    'tiposarticulacionesproyectos.nombre AS nombre_tipoproyecto',
+    'observaciones_proyecto',
+    'fecha_cierre',
+    'impacto_proyecto',
+    'economia_naranja',
+    'art_cti',
+    'diri_ar_emp',
+    'reci_ar_emp',
+    'dine_reg',
+    'acc',
+    'manual_uso_inf',
+    'acta_inicio',
+    // 'aval_empresa_grupo',
+    'estado_arte',
+    'actas_seguimiento',
+    'video_tutorial',
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta',
+    'lecciones_aprendidas',
+    'actividades.codigo_actividad',
+    'actividades.nombre')
+    ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
+    ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
+    ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
+    ->selectRaw('IF(revisado_final = '. ArticulacionProyecto::IsPorEvaluar() .', "Por Evaluar", IF(revisado_final = '. ArticulacionProyecto::IsAprobado() .', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('users', 'users.id', '=', 'talentos.user_id')
+    ->whereYear('fecha_inicio', $anho)
+    ->where('nodos.id', $id)
+    ->where('tiposarticulacionesproyectos.nombre', 'Empresas')
+    ->groupBy('proyectos.id')
+    ->orderBy('fecha_inicio')
+    ->get();
+  }
+
+  /**
+   * Consulta los proyectos que se inscribieron por nodo y año
+   *
+   * @param int $id Id del nodo
+   * @param string $anho Año
    * @return Collection
    * @author dum
    */
@@ -61,6 +125,7 @@ class ProyectoRepository
     'acta_cierre',
     'encuesta',
     'lecciones_aprendidas',
+    'actividades.codigo_actividad',
     'actividades.nombre')
     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
     ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
@@ -84,6 +149,31 @@ class ProyectoRepository
     ->where('nodos.id', $id)
     ->groupBy('proyectos.id')
     ->orderBy('fecha_inicio')
+    ->get();
+  }
+
+  /**
+   * Consulta la cantidad de proyectos con empresas que se inscriben por mes de un año y un nodo
+   *
+   * @param int $id Id del nodo
+   * @param string $anho Año para filtrar
+   * @return Collection
+   */
+  public function proyectosInscritosConEmpresasPorMesDeUnNodo_Repository($id, $anho)
+  {
+    $this->traducirMeses();
+    return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
+    ->selectRaw('MONTH(actividades.fecha_inicio) AS meses')
+    ->selectRaw('CONCAT(UPPER(LEFT(date_format(actividades.fecha_inicio, "%M"), 1)), LOWER(SUBSTRING(date_format(actividades.fecha_inicio, "%M"), 2))) AS mes')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->whereYear('fecha_inicio', $anho)
+    ->where('nodos.id', $id)
+    ->where('tiposarticulacionesproyectos.nombre', 'Empresas')
+    ->groupBy('meses', 'mes')
+    ->orderBy('meses')
     ->get();
   }
 
@@ -457,11 +547,38 @@ class ProyectoRepository
     'actividades.nombre',
     'sublineas.nombre AS sublinea_nombre',
     'estadosproyecto.nombre AS estado_nombre',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
+    'tiposarticulacionesproyectos.nombre AS nombre_tipoarticulacion',
     'actividades.fecha_cierre AS fecha_fin',
     'articulacion_proyecto.id AS articulacion_proyecto_id',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sectores.nombre AS nombre_sector',
+    'fecha_inicio',
+    'fecha_cierre',
+    'observaciones_proyecto',
+    'impacto_proyecto',
+    'resultado_proyecto',
+    'economia_naranja',
+    'art_cti',
+    'diri_ar_emp',
+    'reci_ar_emp',
+    'dine_reg',
+    'acc',
+    'manual_uso_inf',
+    'acta_inicio',
+    'estado_arte',
+    'actas_seguimiento',
+    'video_tutorial',
+    'url_videotutorial',
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta',
     'proyectos.id')
     ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('GROUP_CONCAT(user_talento.documento, " - ", user_talento.nombres, " ", user_talento.apellidos SEPARATOR "; ") AS talentos')
+    ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
@@ -469,6 +586,14 @@ class ProyectoRepository
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
     ->where('nodos.id', $idnodo)
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
@@ -479,6 +604,7 @@ class ProyectoRepository
         $query->whereIn('estadosproyecto.nombre', ['Inicio', 'Planeacion', 'En ejecución']);
       });
     })
+    ->groupBy('proyectos.id')
     ->get();
   }
 
@@ -565,19 +691,54 @@ class ProyectoRepository
   {
     return Proyecto::select('actividades.codigo_actividad AS codigo_proyecto',
     'actividades.nombre',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
     'sublineas.nombre AS sublinea_nombre',
+    'tiposarticulacionesproyectos.nombre AS nombre_tipoarticulacion',
     'estadosproyecto.nombre AS estado_nombre',
     'articulacion_proyecto.id AS articulacion_proyecto_id',
     'actividades.fecha_cierre AS fecha_fin',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sectores.nombre AS nombre_sector',
+    'fecha_inicio',
+    'fecha_cierre',
+    'observaciones_proyecto',
+    'impacto_proyecto',
+    'resultado_proyecto',
+    'economia_naranja',
+    'art_cti',
+    'diri_ar_emp',
+    'reci_ar_emp',
+    'dine_reg',
+    'acc',
+    'manual_uso_inf',
+    'acta_inicio',
+    'estado_arte',
+    'actas_seguimiento',
+    'video_tutorial',
+    'url_videotutorial',
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta',
     'proyectos.id')
     ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
+    ->selectRaw('GROUP_CONCAT(user_talento.documento, " - ", user_talento.nombres, " ", user_talento.apellidos SEPARATOR "; ") AS talentos')
+    ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
     ->where('gestores.id', $idgestor)
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
@@ -588,6 +749,7 @@ class ProyectoRepository
         $query->whereIn('estadosproyecto.nombre', ['Inicio', 'Planeacion', 'En ejecución']);
       });
     })
+    ->groupBy('proyectos.id')
     ->get();
   }
 

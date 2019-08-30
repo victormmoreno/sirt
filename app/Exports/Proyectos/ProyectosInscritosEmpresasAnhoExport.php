@@ -8,16 +8,14 @@ use App\Exports\FatherExport;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class ProyectosInscritosAnhoExport extends FatherExport
+class ProyectosInscritosEmpresasAnhoExport extends FatherExport
 {
-
   public function __construct($query)
   {
     $this->setQuery($query);
     $this->setCount($this->getQuery()->count() + 7);
     $this->setRangeHeadingCell('A7:AF7');
   }
-
 
   /**
   * @abstract

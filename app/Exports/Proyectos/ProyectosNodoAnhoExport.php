@@ -8,25 +8,14 @@ use App\Exports\FatherExport;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class ProyectosInscritosAnhoExport extends FatherExport
+class ProyectosNodoAnhoExport extends FatherExport
 {
 
   public function __construct($query)
   {
     $this->setQuery($query);
     $this->setCount($this->getQuery()->count() + 7);
-    $this->setRangeHeadingCell('A7:AF7');
-  }
-
-
-  /**
-  * @abstract
-  */
-  public function view(): View
-  {
-    return view('exports.proyectos.anho.nodo', [
-      'proyectos' => $this->getQuery()
-    ]);
+    $this->setRangeHeadingCell('A7:AG7');
   }
 
   /**
@@ -43,16 +32,16 @@ class ProyectosInscritosAnhoExport extends FatherExport
     return [
       AfterSheet::class => function(AfterSheet $event) use ($styles) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
-        $event->sheet->mergeCells('V6:AE6');
-        $event->sheet->mergeCells('A1:U6');
-        $event->sheet->mergeCells('V1:AE5');
-        $event->sheet->mergeCells('AF1:AF6');
-        $event->sheet->setCellValue('V6', 'Entregables')->getStyle('M6');
-        $event->sheet->getStyle('V6:AE6')->applyFromArray($this->styleArray());
-        $event->sheet->getStyle('V6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-        $event->sheet->getStyle('V6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $event->sheet->mergeCells('W6:AF6');
+        $event->sheet->mergeCells('A1:V6');
+        $event->sheet->mergeCells('W1:AF5');
+        $event->sheet->mergeCells('AG1:AG6');
+        $event->sheet->setCellValue('W6', 'Entregables')->getStyle('M6');
+        $event->sheet->getStyle('W6:AF6')->applyFromArray($this->styleArray());
+        $event->sheet->getStyle('W6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+        $event->sheet->getStyle('W6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $init = 'A';
-        for ($i=0; $i < 32 ; $i++) {
+        for ($i=0; $i < 33 ; $i++) {
           $temp = $init++;
           $coordenadas = $temp . '7:'. $temp . $this->getCount();
           $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
@@ -64,6 +53,16 @@ class ProyectosInscritosAnhoExport extends FatherExport
         }
       },
     ];
+  }
+
+  /**
+  * @abstract
+  */
+  public function view(): View
+  {
+    return view('exports.proyectos.anho.nodo2', [
+      'proyectos' => $this->getQuery()
+    ]);
   }
 
   /**

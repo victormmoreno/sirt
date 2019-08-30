@@ -44,6 +44,11 @@
                 </div>
               </div>
               <div class="row">
+                <div class="right material-icons">
+                  <a onclick="generarExcelDeProyectosDelGestorPorAnho()">
+                    <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                  </a>
+                </div>
                 @include('proyectos.table')
               </div>
             </div>
@@ -60,3 +65,11 @@
     @include('proyectos.modals')
   </main>
 @endsection
+@push('script')
+  <script>
+  function generarExcelDeProyectosDelGestorPorAnho() {
+    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+    location.href = '/excel/excelProyectosDelGestorPorAnho/'+{{ auth()->user()->gestor->id }}+'/'+anho
+  }
+  </script>
+@endpush

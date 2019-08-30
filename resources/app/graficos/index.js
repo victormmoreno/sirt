@@ -16,7 +16,8 @@ var graficosEdtId = {
 };
 
 var graficosProyectoId = {
-  grafico1: 'graficosProyectoPorMesYNodo_combinate'
+  grafico1: 'graficosProyectoPorMesYNodo_combinate',
+  grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate'
 };
 
 function generarExcelGrafico1Proyecto(bandera) {
@@ -26,74 +27,102 @@ function generarExcelGrafico1Proyecto(bandera) {
     id = $('#txtnodo_excelGrafico1Proyecto').val();
   }
   location.href = '/excel/excelProyectosInscritosPorAnho/'+id+'/'+anho
-
 }
 
-function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
-  id = 0;
+function generarExcelGrafico2Proyecto(bandera) {
+  let id = 0;
+  let anho = $('#txtanho_GraficoProyecto2').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_excelGrafico2Proyecto').val();
+  }
+  location.href = '/excel/excelProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho
+}
 
+function graficosProyectosPromedioCantidadesMeses(data, name) {
+  let tamanho = data.proyectos.cantidades.length;
+  let datos = {
+    cantidades: [],
+    meses: [],
+    promedios: []
+  };
+  for (let i = 0; i < tamanho; i++) {
+    datos.cantidades.push(data.proyectos.cantidades[i]);
+  }
+  for (let i = 0; i < tamanho; i++) {
+    datos.meses.push(data.proyectos.meses[i]);
+  }
+  for (let i = 0; i < tamanho; i++) {
+    datos.promedios.push(data.proyectos.promedios[i]);
+  }
+  Highcharts.chart(name, {
+    title: {
+      text: 'Proyectos Inscritos'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad/Promedio'
+      }
+    },
+    xAxis: {
+      categories: datos.meses,
+      title: {
+        text: 'Meses'
+      }
+    },
+    series: [{
+      type: 'column',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades
+    }, {
+      type: 'spline',
+      name: 'Promedio Proyectos Inscritos',
+      data: datos.promedios,
+      dataLabels: {
+        enabled: true
+      },
+      marker: {
+        lineWidth: 2,
+        lineColor: '#008981',
+        fillColor: '#008981'
+      }
+    }]
+  });
+}
+
+function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) {
+  id = 0;
   if (bandera == 1) {
     id = $('#txtnodo_proyectoGrafico1');
   }
-
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    url: '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
     success: function (data) {
-
-      let tamanho = data.proyectos.cantidades.length;
-      let datos = {
-        cantidades: [],
-        meses: []
-      };
-
-      for (let i = 0; i < tamanho; i++) {
-        datos.cantidades.push(data.proyectos.cantidades[i]);
-      }
-
-      for (let i = 0; i < tamanho; i++) {
-        datos.meses.push(data.proyectos.meses[i]);
-      }
-
-      // console.log(datos.cantidades);
-
-      Highcharts.chart(graficosProyectoId.grafico1, {
-        title: {
-          text: 'Proyectos Inscritos'
-        },
-        yAxis: {
-          title: {
-            text: 'Cantidad'
-          }
-        },
-        xAxis: {
-          categories: datos.meses,
-          title: {
-            text: 'Meses'
-          }
-        },
-        series: [{
-          type: 'column',
-          name: 'Proyectos Inscritos',
-          data: datos.cantidades
-        }, {
-          type: 'spline',
-          name: 'Proyectos Inscritos',
-          data: datos.cantidades,
-          marker: {
-            lineWidth: 2,
-            lineColor: '#008981',
-            fillColor: '#008981'
-          }
-        }]
-      });
+      graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico2);
     },
     error: function (xhr, textStatus, errorThrown) {
       alert("Error: " + errorThrown);
     },
   })
+}
 
+function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
+  id = 0;
+  if (bandera == 1) {
+    id = $('#txtnodo_proyectoGrafico1');
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    success: function (data) {
+      graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico1);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 }
 
 function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {

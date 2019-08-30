@@ -470,6 +470,7 @@ Route::group(
    Route::get('/consultarEdtsPorNodoYAnho/{id}/{anho}', 'Graficos\EdtController@edtsPorNodoAnhoGrafico_Controller')->name('grafico.edt.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/proyectos', 'GraficoController@proyectosGraficos')->name('grafico.proyectos')->middleware('role_session:Gestor|Dinamizador|Administrador');
    Route::get('/consultarProyectosInscritosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosPorFechaInicioNodoYAnhoGrafico_Controller')->name('grafico.proyecto.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosInscritosConEmpresasPorMesDeUnNodo_Controller')->name('grafico.proyecto.empresas.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
 
  }
 );
@@ -492,6 +493,9 @@ Route::group(
    Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
    // Rutas para la generacion de excel del módulo de proyectos
    Route::get('/excelProyectosInscritosPorAnho/{id}/{anho}', 'Excel\ProyectoController@proyectosInscritosPorAnhosDeUnNodo')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
  }
 );
 
