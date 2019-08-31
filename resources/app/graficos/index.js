@@ -444,9 +444,7 @@ function consultarTiposDeArticulacionesDelAnho_variablepie(idnodo) {
   }
 }
 
-function consultaArticulacionesDelGestorPorNodoYFecha_stacked(id) {
-  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
-  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
   $.ajax({
     dataType: 'json',
     type: 'get',
@@ -527,6 +525,23 @@ function consultaArticulacionesDelGestorPorNodoYFecha_stacked(id) {
       alert("Error: " + errorThrown);
     },
   });
+}
+
+function consultaArticulacionesDelGestorPorNodoYFecha_stacked(id) {
+  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+  articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin);
+}
+
+function consultaArticulacionesDelGestorPorNodoYFecha_stackedAdministrador() {
+  let id = $('#txtnodo_id').val();
+  if (id == '') {
+    Swal.fire('Advertencia!', 'Seleccione un Nodo!', 'warning');
+  } else {
+    let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+    let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+    articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin);
+  }
 }
 
 function consultarArticulacionesDeUnGestorPorFecha_stacked() {

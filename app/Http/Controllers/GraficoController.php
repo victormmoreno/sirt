@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Repository\LineaRepository;
-use App\{User, Models\Gestor};
+use App\{User, Models\Gestor, Models\Nodo};
 
 class GraficoController extends Controller
 {
@@ -26,6 +26,8 @@ class GraficoController extends Controller
   {
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('grafico.dinamizador.index');
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
+      return view('grafico.administrador.index');
     }
   }
 
@@ -74,7 +76,28 @@ class GraficoController extends Controller
       'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
       'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
+      return view('grafico.administrador.articulacion', [
+        'nodos' => Nodo::SelectNodo()->get()->pluck('nodos', 'id')
+      ]);
     }
+  }
+
+  /**
+   * Consulta los gestores y nodos de un proyecto
+   *
+   * @param int $id Id del nodo
+   * @return Response
+   * @author dum
+   */
+  public function gestoresYLineaDelNodo($id)
+  {
+    $gestores = Gestor::ConsultarGestoresPorNodo($id)->get();
+    $lineas = $this->getLineaRepository()->getAllLineaNodo($id)->lineas;
+    return response()->json([
+      'gestores' => $gestores,
+      'lineas' => $lineas
+    ]);
   }
 
   /**

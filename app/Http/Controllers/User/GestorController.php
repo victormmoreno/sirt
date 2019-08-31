@@ -20,6 +20,20 @@ class GestorController extends Controller
         $this->gestorRepository = $gestorRepository;
     }
 
+    /**
+     * Consulta los gestores de un nodo y los retorna (principalmente para pintarlos en un select)
+     *
+     * @param int $id Id del nodo
+     * @return array
+     * @author dum
+     */
+    public function getGestorPorNodoSelect($id)
+    {
+      return response()->json([
+        'gestores' => $this->gestorRepository->getAllGestoresPorNodo($nodo)
+      ]);
+    }
+
     /*=================================================================
     =            metodo para consultar las lineas por nodo            =
     =================================================================*/
@@ -97,10 +111,10 @@ class GestorController extends Controller
     /*==============================================================================
     =            metodo para mostrar los gestores de un determnado nodo            =
     ==============================================================================*/
-    
+
     public function getAllGestoresOfNodo()
     {
-        
+
         if (request()->ajax()) {
 
             return datatables()->of($this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id))
@@ -129,10 +143,10 @@ class GestorController extends Controller
                 ->make(true);
         }
         abort('404');
-       
+
     }
-    
+
     /*=====  End of metodo para mostrar los gestores de un determnado nodo  ======*/
-    
+
 
 }
