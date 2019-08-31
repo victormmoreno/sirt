@@ -26,14 +26,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $nodo = auth()->user()->dinamizador->nodo->id;
-        $user = User::whereHas('gestor.nodo', function ($query) use ($nodo) {
-                $query->where('id', $nodo);
-            })->orWhereHas('infocenter.nodo', function ($query) use ($nodo) {
-                $query->where('id', $nodo);
-            })->orWhereHas('ingreso.nodo', function ($query) use ($nodo) {
-                $query->where('id', $nodo);
-            })->pluck('id');
+        // $nodo = auth()->user()->dinamizador->nodo->id;
+        // $user = User::whereHas('gestor.nodo', function ($query) use ($nodo) {
+        //         $query->where('id', $nodo);
+        //     })->orWhereHas('infocenter.nodo', function ($query) use ($nodo) {
+        //         $query->where('id', $nodo);
+        //     })->orWhereHas('ingreso.nodo', function ($query) use ($nodo) {
+        //         $query->where('id', $nodo);
+        //     })->pluck('id');
         // dd($nododinamizador);
 
 

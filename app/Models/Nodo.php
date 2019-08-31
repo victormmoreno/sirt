@@ -66,6 +66,15 @@ class Nodo extends Model
         return $this->hasMany(Laboratorio::class, 'nodo_id', 'id');
     }
 
+    /**
+     * Devolver relacion entre actividades y nodo
+     * @author julian londoño
+     */
+    public function actividades()
+    {
+      return $this->hasMany(Actividad::class, 'nodo_id', 'id');
+    }
+
     //relacion muchos a muchos con lineas
 
     public function lineas()
