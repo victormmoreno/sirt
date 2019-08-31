@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Excel;
 
-use App\Exports\Proyectos\{ProyectosInscritosAnhoExport, ProyectosInscritosEmpresasAnhoExport, ProyectosGestorAnhoExport, ProyectosNodoAnhoExport};
+use App\Exports\Proyectos\{ProyectosGestorAnhoExport, ProyectosNodoAnhoExport};
 use App\Repositories\Repository\ProyectoRepository;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
@@ -45,7 +45,7 @@ class ProyectoController extends Controller
     $idnodo = $this->idNodo($id);
     $query = $this->getProyectoRepository()->ConsultarProyectosPorNodoYPorAnho($idnodo, $anho);
     $this->setQuery($query);
-    return Excel::download(new ProyectosNodoAnhoExport($this->getQuery()), 'Proyectos.xls');
+    return Excel::download(new ProyectosNodoAnhoExport($this->getQuery(), 1), 'Proyectos.xls');
   }
 
   /**
@@ -77,7 +77,7 @@ class ProyectoController extends Controller
     $idnodo = $this->idNodo($id);
     $query = $this->getProyectoRepository()->consultarProyectosInscritosConEmpresasPorAnhoYAnho_Repository($idnodo, $anho);
     $this->setQuery($query);
-    return Excel::download(new ProyectosInscritosEmpresasAnhoExport($this->getQuery()), 'Proyectos.xls');
+    return Excel::download(new ProyectosNodoAnhoExport($this->getQuery(), 0), 'Proyectos.xls');
   }
 
   /**
@@ -94,7 +94,7 @@ class ProyectoController extends Controller
 
     $query = $this->getProyectoRepository()->consultarProyectosInscritosPorAnhoYNodo_Repository($idnodo, $anho);
     $this->setQuery($query);
-    return Excel::download(new ProyectosInscritosAnhoExport($this->getQuery()), 'Proyectos.xls');
+    return Excel::download(new ProyectosNodoAnhoExport($this->getQuery(), 0), 'Proyectos.xls');
   }
 
 

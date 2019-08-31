@@ -75,8 +75,8 @@ function graficosProyectosPromedioCantidadesMeses(data, name) {
       data: datos.cantidades
     }, {
       type: 'spline',
-      name: 'Promedio Proyectos Inscritos',
-      data: datos.promedios,
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades,
       dataLabels: {
         enabled: true
       },

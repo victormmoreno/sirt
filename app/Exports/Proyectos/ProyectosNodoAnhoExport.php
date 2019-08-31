@@ -11,11 +11,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 class ProyectosNodoAnhoExport extends FatherExport
 {
 
-  public function __construct($query)
+  private $tpye;
+
+  public function __construct($query, $type)
   {
     $this->setQuery($query);
     $this->setCount($this->getQuery()->count() + 7);
     $this->setRangeHeadingCell('A7:AG7');
+    $this->type = $type;
   }
 
   /**
@@ -60,9 +63,15 @@ class ProyectosNodoAnhoExport extends FatherExport
   */
   public function view(): View
   {
-    return view('exports.proyectos.anho.nodo2', [
-      'proyectos' => $this->getQuery()
-    ]);
+    if ($this->type == 1) {
+      return view('exports.proyectos.anho.nodo2', [
+        'proyectos' => $this->getQuery()
+      ]);
+    } else {
+      return view('exports.proyectos.anho.nodo', [
+        'proyectos' => $this->getQuery()
+      ]);
+    }
   }
 
   /**
