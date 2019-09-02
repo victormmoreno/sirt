@@ -30,7 +30,166 @@ class ArticulacionRepository
       DB::rollback();
       return false;
     }
+  }
 
+  /**
+   * Consulta las articulaciones que se finalizaron en un año en un nodo
+   *
+   * @param int $id Id del nodo
+   * @param string $anho Año para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarArticulacionesFinalizadasPorNodoYAnho_Repository($id, $anho)
+  {
+    // dd($id);
+    return Articulacion::select('actividades.codigo_actividad',
+    'actividades.fecha_inicio',
+    'actividades.fecha_cierre',
+    'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'actividades.nombre')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
+    ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre")) AS estado')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->selectRaw('IF(acc = 1, "Si", "No") AS acc')
+    ->selectRaw('IF(informe_final = 1, "Si", "No") AS informe_final')
+    ->selectRaw('IF(pantallazo = 1, "Si", "No") AS pantallazo')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->where('nodos.id', $id)
+    ->whereYear('fecha_cierre', $anho)
+    ->get();
+  }
+
+  /**
+   * Consulta las articulaciones finalizadas entre fecha y linea tecnológica de un nodo
+   *
+   * @param int $id Id del nodo
+   * @param int $idlinea Id de la línea tecnológica
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_cierre Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarArticulacionesFinalizadasPorFechaNodoYLinea_Repository($id, $idlinea, $fecha_inicio, $fecha_cierre)
+  {
+    return Articulacion::select('actividades.codigo_actividad',
+    'actividades.fecha_inicio',
+    'actividades.fecha_cierre',
+    'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'actividades.nombre')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
+    ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre")) AS estado')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->selectRaw('IF(acc = 1, "Si", "No") AS acc')
+    ->selectRaw('IF(informe_final = 1, "Si", "No") AS informe_final')
+    ->selectRaw('IF(pantallazo = 1, "Si", "No") AS pantallazo')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.nodo_id', '=', 'nodos.id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'lineastecnologicas_nodos.linea_tecnologica_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre])
+    ->where('nodos.id', $id)
+    ->where('lineastecnologicas.id', $idlinea)
+    ->get();
+  }
+
+  /**
+   * Consulta las articulaciones con entre fechas de cierre y nodo
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para filtrar (con fecha de cierre)
+   * @param string $fecha_cierre Segunda fecha para filtrar (con fecha de cierre)
+   * @return Collection
+   * @author dum
+   */
+  public function consultarArticulacionesFinalizadasPorFechaYNodo_Repository($id, $fecha_inicio, $fecha_cierre)
+  {
+    return Articulacion::select('actividades.codigo_actividad',
+    'actividades.fecha_inicio',
+    'actividades.fecha_cierre',
+    'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'actividades.nombre')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
+    ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre")) AS estado')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->selectRaw('IF(acc = 1, "Si", "No") AS acc')
+    ->selectRaw('IF(informe_final = 1, "Si", "No") AS informe_final')
+    ->selectRaw('IF(pantallazo = 1, "Si", "No") AS pantallazo')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre])
+    ->where('nodos.id', $id)
+    ->get();
+  }
+
+  /**
+   * Consulta las articulaciones con entre fechas de cierre y gestor
+   *
+   * @param int $id Id del gestor()
+   * @param string $fecha_inicio Primera fecha para filtrar (con fecha de cierre)
+   * @param string $fecha_cierre Segunda fecha para filtrar (con fecha de cierre)
+   * @return Collection
+   * @author dum
+   */
+  public function consultarArticulacionesFinalizadasPorGestorFecha_Repository($id, $fecha_inicio, $fecha_cierre)
+  {
+    return Articulacion::select('actividades.codigo_actividad',
+    'actividades.fecha_inicio',
+    'actividades.fecha_cierre',
+    'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'actividades.nombre')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
+    ->selectRaw('IF(tipo_articulacion = '.Articulacion::IsGrupo().', "Grupo de Investigación", IF(tipo_articulacion = '.Articulacion::IsEmpresa().', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = '.Articulacion::IsInicio().', "Inicio", IF(articulaciones.estado = '.Articulacion::IsEjecucion().', "Ejecución", "Cierre")) AS estado')
+    ->selectRaw('IF(revisado_final = '.ArticulacionProyecto::IsPorEvaluar().', "Por Evaluar", IF(revisado_final = '.ArticulacionProyecto::IsAprobado().', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->selectRaw('IF(acc = 1, "Si", "No") AS acc')
+    ->selectRaw('IF(informe_final = 1, "Si", "No") AS informe_final')
+    ->selectRaw('IF(pantallazo = 1, "Si", "No") AS pantallazo')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre])
+    ->where('gestores.id', $id)
+    ->get();
   }
 
 /**

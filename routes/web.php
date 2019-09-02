@@ -494,6 +494,10 @@ Route::group(
    Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
    Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
    Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorFechaYNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorGestorFecha_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorFechaNodoYLinea/{id}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoFechaLinea_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorNodoYAnho/{id}/{anho}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
    // Rutas para la generacion de excel del módulo de proyectos
    Route::get('/excelProyectosInscritosPorAnho/{id}/{anho}', 'Excel\ProyectoController@proyectosInscritosPorAnhosDeUnNodo')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');

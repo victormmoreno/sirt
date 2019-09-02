@@ -20,6 +20,86 @@ var graficosProyectoId = {
   grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate'
 };
 
+function alertaNodoNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+}
+
+function alertaGestorNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un gestor(a)', 'warning');
+}
+
+function alertaLineaNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+}
+
+function generarExcelGrafico1Articulacion(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    location.href = '/excel/excelArticulacionFinalizadasPorFechaYNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
+function generarExcelGrafico3Articulacion(bandera) {
+  let id = 0;
+  let linea = $('#txtlinea_tecnologica').val();
+  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    if (linea === '') {
+      alertaLineaNoValido();
+    } else {
+      location.href = '/excel/excelArticulacionFinalizadasPorFechaNodoYLinea/'+id+'/'+linea+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+
+}
+
+function generarExcelGrafico2Articulacion() {
+  let id = $('#txtgestor_id').val();
+  let fecha_inicio = $('#txtfecha_inicio_Grafico2').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico2').val();
+
+  if (id === '') {
+    alertaGestorNoValido();
+  } else {
+    location.href = '/excel/excelArticulacionFinalizadasPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
+function generarExcelGrafico4Articulacion(bandera) {
+  let id = 0;
+  let anho = $('#txtanho_Grafico4').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    location.href = '/excel/excelArticulacionFinalizadasPorNodoYAnho/'+id+'/'+anho;
+  }
+
+}
+
 function generarExcelGrafico1Proyecto(bandera) {
   let id = 0;
   let anho = $('#txtanho_GraficoProyecto1').val();
@@ -389,9 +469,14 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
 }
 
 
-function consultarTiposDeArticulacionesDelAnho_variablepie(idnodo) {
+function consultarTiposDeArticulacionesDelAnho_variablepie(bandera) {
   let anho = $('#txtanho_Grafico4').val();
-  if (idnodo == '') {
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_id').val();
+  }
+
+  if (idnodo === '') {
     Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
   } else {
     $.ajax({

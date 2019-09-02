@@ -36,7 +36,7 @@
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por fechas</div>
+                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por fechas</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
@@ -59,7 +59,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por gestor y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -92,7 +92,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones por línea y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por línea y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -111,7 +111,7 @@
                               <label for="txtfecha_fin_Grafico3">Fecha Fin</label>
                             </div>
                             <div class="center">
-                              <button onclick="consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(0);" class="btn">Consultar</button>
+                              <button onclick="consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(1);" class="btn">Consultar</button>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -125,12 +125,14 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones totales por año</div>
+                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas totales por año</div>
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
-                            <select style="width: 100%" name="txtanho_Grafico4" id="txtanho_Grafico4" onchange="consultarTiposDeArticulacionesDelAnho_variablepie()">
-
+                            <select style="width: 100%" name="txtanho_Grafico4" id="txtanho_Grafico4" onchange="consultarTiposDeArticulacionesDelAnho_variablepie(1)">
+                              @for ($i=2016; $i <= $yearNow; $i++)
+                                <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
+                              @endfor
                             </select>
                             <label for="txtanho_Grafico4">Seleccione el Año</label>
                           </div>
@@ -168,7 +170,6 @@
               // console.log(e.nombres_gestor);
               $('#txtgestor_id').append('<option value="'+e.id+'">'+e.nombres_gestor+'</option>');
             })
-            $('#txtgestor_id').material_select();
 
             $('#txtlinea_tecnologica').empty();
             $('#txtlinea_tecnologica').append('<option value="">Seleccione la Línea Tecnológica</option>')
@@ -176,6 +177,7 @@
               // console.log(e.nombres_gestor);
               $('#txtlinea_tecnologica').append('<option value="'+e.id+'">'+e.nombre+'</option>');
             })
+            $('#txtgestor_id').material_select();
             $('#txtlinea_tecnologica').material_select();
           },
           error: function (xhr, textStatus, errorThrown) {
