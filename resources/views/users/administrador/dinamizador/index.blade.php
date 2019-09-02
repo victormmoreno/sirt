@@ -6,18 +6,22 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s10 m10 l10">
+                    <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
+                              <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                  <i class="material-icons arrow-l">
+                                      arrow_back
+                                  </i>
+                              </a>
                             Usuarios | Dinamizadores
-                            <i class="material-icons">
-                                supervised_user_circle
-                            </i>
                         </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Dinamizadores</li>
+                        </ol>
                     </div>
                 </div>
                 <div class="card ">

@@ -22,20 +22,20 @@ trait RegistersUsers
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
 
-                $roles = $this->userRepository->getRoleWhereInRole(['Administrador', 'Dinamizador']);
+                $roles = $this->userRepository->getRoleWhereInRole([User::IsAdministrador(), User::IsDinamizador()]);
                 $nodo  = $this->userRepository->getAllNodo();
 
                 break;
 
             case User::IsDinamizador():
 
-                $roles = $this->userRepository->getRoleWhereNotInRole(['Administrador', 'Dinamizador']);
+                $roles = $this->userRepository->getRoleWhereNotInRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento()]);
                 $nodo  = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
 
                 break;
             case User::IsGestor():
 
-                $roles = $this->userRepository->getRoleWhereInRole(['Talento']);
+                $roles = $this->userRepository->getRoleWhereInRole([User::IsTalento()]);
                 $nodo  = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
 
                 break;

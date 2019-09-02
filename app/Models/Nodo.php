@@ -20,6 +20,7 @@ class Nodo extends Model
         'centro_id',
         'entidad_id',
         'direccion',
+        'telefono',
         'anho_inicio',
     ];
 

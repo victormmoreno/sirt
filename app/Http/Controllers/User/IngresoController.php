@@ -26,6 +26,7 @@ class IngresoController extends Controller
      */
     public function index()
     {
+        $this->authorize('indexIngreso', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.ingreso.index', [
@@ -37,7 +38,7 @@ class IngresoController extends Controller
                 break;
 
             default:
-
+                abort('404');
                 break;
         }
     }
@@ -60,20 +61,20 @@ class IngresoController extends Controller
 
                 ->editColumn('estado', function ($data) {
                     if ($data->estado == User::IsActive()) {
-                        
+
                         return $data->estado = 'Habilitado';
                     } else {
                         return $data->estado = 'Inhabilitado ';
                     }
                 })->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
-                ->rawColumns(['detail', 'estado','edit'])
+                if ($data->id != auth()->user()->id) {
+                    $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                } else {
+                    $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                }
+                return $button;
+            })
+                ->rawColumns(['detail', 'estado', 'edit'])
                 ->make(true);
         }
         abort('404');
@@ -81,14 +82,13 @@ class IngresoController extends Controller
 
     /*=====  End of metodo para mostrar los usuarios ingreso en el datatables  ======*/
 
-
     /*=======================================================================================
     =            metodo para mostrar todos los usuarios ingreso de determinado nodo            =
     =======================================================================================*/
-    
+
     public function getAllIngresoOfNodo()
-    {      
-         
+    {
+
         if (request()->ajax()) {
 
             return datatables()->of($this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id))
@@ -113,13 +113,13 @@ class IngresoController extends Controller
                         return $data->estado = 'Inhabilitado ';
                     }
                 })
-                ->rawColumns(['detail','estado', 'edit'])
+                ->rawColumns(['detail', 'estado', 'edit'])
                 ->make(true);
         }
         abort('404');
-       
+
     }
-    
+
     /*=====  End of metodo para mostrar todos los usuarios ingreso de determinado nodo  ======*/
 
 }

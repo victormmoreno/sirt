@@ -287,7 +287,7 @@ class UserRepository
     ======================================================*/
     public function Store($request, $password)
     {
-        // dd($this->existRoleInArray($request,User::IsAdministrador()));
+
 
         DB::beginTransaction();
         try {

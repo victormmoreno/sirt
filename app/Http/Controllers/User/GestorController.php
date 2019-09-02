@@ -26,9 +26,12 @@ class GestorController extends Controller
 
     public function getLineaPorNodo($nodo)
     {
-        return response()->json([
-            'lineas' => $this->userRepository->getAllLineaNodo($nodo)->lineas->pluck('nombre', 'id'),
-        ]);
+        if (request()->ajax()) {
+            return response()->json([
+                'lineas' => $this->userRepository->getAllLineaNodo($nodo)->lineas->pluck('nombre', 'id'),
+            ]);
+        }
+
     }
 
     /*=====  End of metodo para consultar las lineas por nodo  ======*/
@@ -40,6 +43,7 @@ class GestorController extends Controller
      */
     public function index()
     {
+        $this->authorize('indexGestor', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.gestor.index', [
@@ -52,7 +56,7 @@ class GestorController extends Controller
 
             default:
                 abort('404');
-            break;
+                break;
         }
 
     }
@@ -80,13 +84,13 @@ class GestorController extends Controller
                         return $data->estado = 'Inhabilitado ';
                     }
                 })->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })->rawColumns(['detail', 'estado','edit'])
+                if ($data->id != auth()->user()->id) {
+                    $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                } else {
+                    $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                }
+                return $button;
+            })->rawColumns(['detail', 'estado', 'edit'])
                 ->make(true);
         }
         abort('404');
@@ -97,10 +101,10 @@ class GestorController extends Controller
     /*==============================================================================
     =            metodo para mostrar los gestores de un determnado nodo            =
     ==============================================================================*/
-    
+
     public function getAllGestoresOfNodo()
     {
-        
+
         if (request()->ajax()) {
 
             return datatables()->of($this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id))
@@ -125,14 +129,13 @@ class GestorController extends Controller
                         return $data->estado = 'Inhabilitado ';
                     }
                 })
-                ->rawColumns(['detail','estado', 'edit'])
+                ->rawColumns(['detail', 'estado', 'edit'])
                 ->make(true);
         }
         abort('404');
-       
+
     }
-    
+
     /*=====  End of metodo para mostrar los gestores de un determnado nodo  ======*/
-    
 
 }

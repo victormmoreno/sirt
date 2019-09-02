@@ -33,52 +33,52 @@ class UserController extends Controller
         $this->authorize('index', User::class);
         $nodo = 2;
         $user = User::with([
-        'tipodocumento' => function ($query) {
-            $query->select('id', 'nombre');
-        },
-        'gradoEscolaridad' => function ($query) {
-            $query->select('id', 'nombre');
-        },
-        'eps' => function ($query) {
-            $query->select('id', 'nombre');
-        },
-        'ciudad' => function ($query) {
-            $query->select('id', 'nombre', 'departamento_id');
-        },
-        'ciudad.departamento' => function ($query) {
-            $query->select('id', 'nombre');
-        },
-        'talento'=> function ($query) {
-            $query->select('id', 'user_id','perfil_id','entidad_id','universidad','programa_formacion','carrera_universitaria','empresa','otro_tipo_talento');
-        },
-        'talento.perfil' => function ($query) {
-            $query->select('id', 'nombre');
-        },
-        'talento.entidad'=> function ($query) {
-            $query->select('id', 'ciudad_id','nombre','email_entidad');
-        },
-        'talento.entidad.ciudad' => function ($query) {
-            $query->select('id', 'nombre','departamento_id');
-        },
-        'talento.entidad.ciudad.departamento' => function ($query) {
-            $query->select('id', 'nombre');
-        },
-        'talento.articulacionproyecto' =>function ($query) {
-            $query->select('articulacion_proyecto.id','entidad_id','actividad_id','revisado_final','acta_inicio','actas_seguimiento','acta_cierre');
-        },
-        'talento.articulacionproyecto.proyecto.sublinea.linea',
-        'talento.articulacionproyecto.articulacion.tipoarticulacion'])
-        ->select('id','tipodocumento_id','gradoescolaridad_id','eps_id','ciudad_id','nombres','apellidos','documento','email','barrio','direccion','celular','telefono','fechanacimiento','genero','otra_eps','institucion', 'titulo_obtenido','estrato','otra_ocupacion', 'created_at')
-            // ->whereHas('talento.articulacionproyecto.proyecto.sublinea.linea.nodos', function ($query) use ($nodo) {
-            //     $query->where('nodos.id', $nodo);
-            // })
-        ->whereHas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
+            'tipodocumento'                       => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gradoEscolaridad'                    => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'eps'                                 => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudad'                              => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudad.departamento'                 => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'talento'                             => function ($query) {
+                $query->select('id', 'user_id', 'perfil_id', 'entidad_id', 'universidad', 'programa_formacion', 'carrera_universitaria', 'empresa', 'otro_tipo_talento');
+            },
+            'talento.perfil'                      => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'talento.entidad'                     => function ($query) {
+                $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+            },
+            'talento.entidad.ciudad'              => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'talento.entidad.ciudad.departamento' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'talento.articulacionproyecto'        => function ($query) {
+                $query->select('articulacion_proyecto.id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
+            },
+            'talento.articulacionproyecto.proyecto.sublinea.linea',
+            'talento.articulacionproyecto.articulacion.tipoarticulacion'])
+            ->select('id', 'tipodocumento_id', 'gradoescolaridad_id', 'eps_id', 'ciudad_id', 'nombres', 'apellidos', 'documento', 'email', 'barrio', 'direccion', 'celular', 'telefono', 'fechanacimiento', 'genero', 'otra_eps', 'institucion', 'titulo_obtenido', 'estrato', 'otra_ocupacion', 'created_at')
+        // ->whereHas('talento.articulacionproyecto.proyecto.sublinea.linea.nodos', function ($query) use ($nodo) {
+        //     $query->where('nodos.id', $nodo);
+        // })
+            ->whereHas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
                 $query->where('nodos.id', $nodo);
             })
             ->get();
         $userdata = User::whereHas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
-                $query->where('nodos.id', $nodo);
-            })
+            $query->where('nodos.id', $nodo);
+        })
             ->get();
 
         // return $userdata;
@@ -256,7 +256,7 @@ class UserController extends Controller
                 break;
 
             default:
-                # code...
+                abort('404');
                 break;
         }
 
@@ -272,6 +272,7 @@ class UserController extends Controller
     public function update(UserFormRequest $request, $id)
     {
         $user = $this->userRepository->findById($id);
+        $this->authorize('update', $user);
 
         if ($user != null) {
             $userUpdate = $this->userRepository->Update($request, $user);
@@ -284,14 +285,4 @@ class UserController extends Controller
         return redirect()->route('usuario.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -1,33 +1,37 @@
 @component('mail::message')
-# Resultados del Comité de Selección de Ideas
+# Resultados del Comité de Selección de Ideas | Tecnoparque Nodo {{$datosIdea->nodo->entidad->nombre}}.
 
-Hola,
-<br>
- {{config('app.name')}}.
-
+Señor(a)<br>
+<b>_{{$datosIdea->nombres_contacto }} {{$datosIdea->apellidos_contacto }}_</b><br>
 Cordial Saludo.
+
+@component('mail::panel')
+	
+	<h1 class="tittle">📑 Resultados del Comité de Selección de Ideas</h1>
+	
+@endcomponent
 
 Hemos enviado este correo para informarte de la desición que se dió en el Comité de Selección de Ideas de Bases Tecnológicas.
 <br>
 Para conocer el resultado, debe abrir el archivo adjunto a este email.
 <br>
+
+@if( $datosIdea->nodo->infocenter->isEmpty())
+Para más información puede ocudir a las instalaciones de Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}} ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
+@else
+Para más información puede contactarse al telefono ☎️  <b>{{ $datosIdea->nodo->telefono}}</b> ext <b>{{ $datosIdea->nodo->infocenter->last()->extension}}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
+@endif
+
 Gracias,<br>
-{{config('mail.from.name')}} <br>
-Gestión {{ config('app.name') }}
+<strong>_{{config('mail.from.name')}}_</strong> <br>
+Gestión {{ config('app.name') }} 💯
 
 
 @slot('subcopy')
 <center>Este correo es solo informativo por favor no lo responda.</center>
 <br>
 
-@lang(
-    "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
-    'into your web browser: [:actionURL](:actionURL)',
-    [
-        'actionText' => 'Iniciar Sesión',
-        'actionURL' => route('login'),
-    ]
-)
+
 
 @endslot
 

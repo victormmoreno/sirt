@@ -11,19 +11,30 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                              <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                                  <i class="material-icons arrow-l">
-                                      arrow_back
-                                  </i>
+                                <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                    <i class="material-icons arrow-l">
+                                        arrow_back
+                                    </i>
                                 </a>
-                            Usuarios
+                                Usuarios
+                            </a>
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align">
                         <ol class="breadcrumbs">
-                            <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                            <li class="active">Editar Usuario</li>
+                            <li>
+                                <a href="{{route('home')}}">
+                                    Inicio
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('usuario.index')}}">
+                                    Usuarios
+                                </a>
+                            </li>
+                            <li class="active">
+                                Editar Usuario
+                            </li>
                         </ol>
                     </div>
                 </div>
@@ -31,10 +42,12 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-
                                 <center>
                                     <span class="card-title center-align">
-                                        Editar Usuario: <b>{{$user->nombres}} {{$user->apellidos}}</b>
+                                        Editar Usuario:
+                                        <b>
+                                            {{$user->nombres}} {{$user->apellidos}}
+                                        </b>
                                     </span>
                                     <i class="Small material-icons prefix">
                                         supervised_user_circle
@@ -42,42 +55,43 @@
                                 </center>
                                 <div class="divider">
                                 </div>
-                                <div class="col s12 m12 l12">                                
+                                <div class="col s12 m12 l12">
                                     <div class="mailbox-view">
                                         <div class="mailbox-view-header">
                                             <div class="center">
                                                 <div class="center">
                                                     <i class="Small material-icons prefix">
                                                         supervised_user_circle
-                                                    </i>               
+                                                    </i>
                                                 </div>
                                                 <div class="center">
-                                                    <span class="mailbox-title">Información Básica</span>
+                                                    <span class="mailbox-title">
+                                                        Información Básica
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.usuarios.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
-                                    {!! method_field('PUT')!!}
-                                    @include('users.administrador.form', [
-                                        'btnText' => 'Modificar',
-                                    ])
-                                </form>
-                              
+                                        <form action="{{ route('usuario.usuarios.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                            {!! method_field('PUT')!!}
+                                          @include('users.administrador.form', [
+                                              'btnText' => 'Modificar',
+                                          ])
+                                        </form>
                                     </div>
-                                 
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </div>
+</main>
 @endsection
 
 @push('script')
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
     $('.selectMultipe').select2({
       language: "es",
     });
@@ -565,7 +579,5 @@ var UserEdit = {
       });
     },
 }
-
-
 </script>
 @endpush

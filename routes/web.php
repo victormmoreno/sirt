@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
+use App\Http\Controllers\PDF\PdfComiteController;
 use App\Models\ServidorVideo;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     // $number = "1027890334";
@@ -23,7 +24,10 @@ DB::listen(function ($query) {
 ===========================================================*/
 
 Route::get('email', function () {
+    // return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
     return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
+    // return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
+    // return new App\Mail\User\SendNotificationPassoword(App\User::first(), 'asdafasafasdf');
 });
 
 /*=====  End of ruta para revisar estilos d los ema  ======*/
