@@ -302,6 +302,20 @@
                       </div>
                     </div>
                   </div>
+                  <div id="divDatosAcudiente" class="row">
+                    <div class="divider"></div>
+                    <h4 class="center">Datos del acudiente del Talento Líder</h4>
+                    <div class="input-field col s12 m6 l6">
+                      <input type="text" name="txtcedula_acudiente" id="txtcedula_acudiente" value="">
+                      <label for="txtcedula_acudiente">Cédula del acudiente</label>
+                      <small id="txtcedula_acudiente-error" class="error red-text"></small>
+                    </div>
+                    <div class="input-field col s12 m6 l6">
+                      <input type="text" name="txtnombre_acudiente" id="txtnombre_acudiente" value="">
+                      <label for="txtnombre_acudiente">Nombre del acudiente</label>
+                      <small id="txtnombre_acudiente-error" class="error red-text"></small>
+                    </div>
+                  </div>
                   <div class="divider"></div>
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
@@ -475,6 +489,7 @@
   divNombreActorCTi = $('#divNombreActorCTi');
   divOtroTipoArticulacion = $('#divOtroTipoArticulacion');
   divEntidadesTecnoparque = $('#divEntidadesTecnoparque');
+  divDatosAcudiente = $('#divDatosAcudiente');
 
 
   // Ocultar contenedores
@@ -488,6 +503,7 @@
   divNombreActorCTi.hide();
   divOtroTipoArticulacion.hide();
   divEntidadesTecnoparque.hide();
+  divDatosAcudiente.hide();
 
   $('#talentosDeTecnoparque_ProyectoCreate_table').DataTable({
     // "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
@@ -1053,6 +1069,23 @@
     }
   });
 
+  function edadTalentoLider(id) {
+    $.ajax({
+      type: 'get',
+      url: '/usuario/talento/getEdadTalento/'+id,
+      success: function (data) {
+        if (data < 18) {
+          divDatosAcudiente.show();
+        } else {
+          divDatosAcudiente.hide();
+        }
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      }
+    });
+  }
+
   function noRepeat(id) {
     let idTalento = id;
     let retorno = true;
@@ -1088,7 +1121,7 @@
         // El ajax.talento.id es el id del TALENTO, no del usuario
         let idTalento = ajax.talento.id;
         let fila = '<tr class="selected" id=talentoAsociadoAProyecto'+idTalento+'>'
-        +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'" /><label for ="radioButton'+idTalento+'"></label></td>'
+        +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'" onclick="edadTalentoLider('+idTalento+')" /><label for ="radioButton'+idTalento+'"></label></td>'
         +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.documento+' - '+ajax.talento.talento+'</td>'
         +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
         +'</tr>';

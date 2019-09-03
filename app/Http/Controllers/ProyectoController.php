@@ -7,7 +7,7 @@ use App;
 use App\Rules\CreateValidationForDomainRequest;
 use App\Helpers\ArrayHelper;
 use App\Http\Requests\ProyectoFormRequest;
-use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto, ArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Role, ArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository, ConfiguracionRepository\ServidorVideoRepository};
 use App\User;
 use Illuminate\Http\Request;
@@ -33,6 +33,37 @@ class ProyectoController extends Controller
     $this->articulacionProyectoRepository = $articulacionProyectoRepository;
     $this->servidorVideoRepository = $servidorVideoRepository;
     $this->middleware(['auth']);
+  }
+
+  /**
+   * Datatable que muestra los proyectos que están pendiente de aprobación de un usuario (dinamizador, talento, gestor)
+   *
+   * @return Response
+   * @author dum
+   */
+  public function datatableProyectosPendientes()
+  {
+    $id = "";
+
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $id = auth()->user()->dinamizador->user->id;
+    } else if ( Session::get('login_role') == User::IsGestor() ) {
+      $id = auth()->user()->gestor->user->id;
+    } else {
+      $id = auth()->user()->talento->user->id;
+    }
+
+    $proyectos = $this->proyectoRepository->proyectosPendientesDeAprobacion_Repository($id);
+    // dd($proyectos);
+    return datatables()->of($proyectos)
+    ->addColumn('aprobar', function ($data) {
+      $aprobar = '
+      <a class="btn light-blue m-b-xs" href="!#">
+      <i class="material-icons">remove_red_eye</i>
+      </a>
+      ';
+      return $aprobar;
+    })->rawColumns(['aprobar'])->make(true);
   }
 
   public function detallesDeLosEntregablesDeUnProyecto($id)
@@ -315,7 +346,6 @@ class ProyectoController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
       $proyectos = $this->proyectoRepository->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
-      // dd($proyectos);
       return $this->datatableProyectos($request, $proyectos);
     }
   }
@@ -475,6 +505,7 @@ class ProyectoController extends Controller
   */
   public function index()
   {
+    // dd();
     switch ( Session::get('login_role') ) {
       case User::IsGestor():
       return view('proyectos.gestor.index');
@@ -564,61 +595,67 @@ class ProyectoController extends Controller
   {
     $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
 
-    if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
-      Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
+    if ( $proyecto->estado_aprobacion != 1 ) {
+      Alert::error('Error!', 'El proyecto aún no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
       return back();
     } else {
-      switch ( Session::get('login_role') ) {
-        case User::IsGestor():
-        $entidad = "";
-        $articulacion_repository = "";
-        /**
-        * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
-        */
-        if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos') {
-          $entidad = $this->entidadRepository->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
+      if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
+        Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        switch ( Session::get('login_role') ) {
+          case User::IsGestor():
+          $entidad = "";
+          $articulacion_repository = "";
+          /**
+          * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
+          */
+          if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos') {
+            $entidad = $this->entidadRepository->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias') {
+            $entidad = $this->entidadRepository->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Empresas') {
+            $entidad = $this->entidadRepository->consultarEmpresaEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques') {
+            $entidad = $this->entidadRepository->consultarNodoEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación') {
+            $entidad = $this->entidadRepository->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
+          }
+          return view('proyectos.gestor.edit', [
+            'tipoarticulacion'  => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
+            'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+            'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
+            'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+            'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
+            'proyecto' => $proyecto,
+            'pivot' => $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
+            'entidad' => $entidad,
+            'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
+          ]);
+          break;
+
+          case User::IsDinamizador():
+          $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+          return view('proyectos.dinamizador.edit', [
+            'proyecto' => $proyecto,
+            'gestores' => $gestores,
+          ]);
+          break;
+
+          default:
+          // code...
+          break;
         }
-
-        if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias') {
-          $entidad = $this->entidadRepository->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
-        }
-
-        if ($proyecto->nombre_tipoarticulacion == 'Empresas') {
-          $entidad = $this->entidadRepository->consultarEmpresaEntidadRepository($proyecto->entidad_id);
-        }
-
-        if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques') {
-          $entidad = $this->entidadRepository->consultarNodoEntidadRepository($proyecto->entidad_id);
-        }
-
-        if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación') {
-          $entidad = $this->entidadRepository->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
-        }
-        return view('proyectos.gestor.edit', [
-        'tipoarticulacion'  => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
-        'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
-        'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
-        'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-        'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
-        'proyecto' => $proyecto,
-        'pivot' => $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
-        'entidad' => $entidad,
-        'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
-        ]);
-        break;
-
-        case User::IsDinamizador():
-        $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
-        return view('proyectos.dinamizador.edit', [
-        'proyecto' => $proyecto,
-        'gestores' => $gestores,
-        ]);
-        break;
-
-        default:
-        // code...
-        break;
       }
+
     }
   }
 

@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Repository;
 
-use Illuminate\Support\Facades\DB;
-use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto};
+use Illuminate\Support\Facades\{DB, Session};
+use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo};
 use Carbon\Carbon;
 
 class ProyectoRepository
@@ -25,6 +25,38 @@ class ProyectoRepository
   private function traducirMeses()
   {
     DB::statement("SET lc_time_names = 'es_ES'");
+  }
+
+  /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   *
+   * @param int $id Id del usuario
+   * @return Collection
+   * @author dum
+   */
+  public function proyectosPendientesDeAprobacion_Repository($id)
+  {
+    return Proyecto::select('proyectos.id')
+    ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
+    ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
+    ->selectRaw('IF(estado_aprobacion = '.Proyecto::IsPendiente().', "Pendiente", IF(estado_aprobacion = '.Proyecto::IsAceptado().', "Aprobado", "No Aprobado")) AS estado_aprobacion')
+    ->selectRaw('concat(gestor_user.nombres, " ", gestor_user.apellidos) AS nombre_gestor')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('users AS gestor_user', 'gestor_user.id', '=', 'gestores.user_id')
+    ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
+    ->join('users', 'users.id', '=', 'aprobaciones.user_id')
+    ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
+    ->where('users.id', $id)
+    ->where('roles.name', Session::get('login_role'))
+    ->where('estado_aprobacion', '!=', Proyecto::IsAceptado())
+    ->get();
   }
 
   /**
@@ -126,6 +158,7 @@ class ProyectoRepository
     'encuesta',
     'lecciones_aprendidas',
     'actividades.codigo_actividad',
+    'estado_aprobacion',
     'actividades.nombre')
     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
     ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
@@ -147,6 +180,7 @@ class ProyectoRepository
     ->join('users', 'users.id', '=', 'talentos.user_id')
     ->whereYear('fecha_inicio', $anho)
     ->where('nodos.id', $id)
+    ->where('estado_aprobacion', Proyecto::IsAceptado())
     ->groupBy('proyectos.id')
     ->orderBy('fecha_inicio')
     ->get();
@@ -195,6 +229,7 @@ class ProyectoRepository
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->whereYear('fecha_inicio', $anho)
     ->where('nodos.id', $id)
+    ->where('estado_aprobacion', Proyecto::IsAceptado())
     ->groupBy('meses', 'mes')
     ->orderBy('meses')
     ->get();
@@ -572,6 +607,7 @@ class ProyectoRepository
     'url_videotutorial',
     'ficha_caracterizacion',
     'acta_cierre',
+    'estado_aprobacion',
     'encuesta',
     'proyectos.id')
     ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
@@ -595,6 +631,7 @@ class ProyectoRepository
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
     ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
     ->where('nodos.id', $idnodo)
+    ->where('estado_aprobacion', Proyecto::IsAceptado())
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
         $query->whereYear('actividades.fecha_cierre', '=', $anho)
@@ -645,6 +682,7 @@ class ProyectoRepository
     'proyectos.idea_id',
     'proyectos.url_videotutorial',
     'sublineas.lineatecnologica_id',
+    'proyectos.estado_aprobacion',
     'nodoentidad.nombre AS nombre_nodo')
     ->selectRaw('CONCAT(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre_sublinea')
     ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
@@ -717,6 +755,7 @@ class ProyectoRepository
     'video_tutorial',
     'url_videotutorial',
     'ficha_caracterizacion',
+    'estado_aprobacion',
     'acta_cierre',
     'encuesta',
     'proyectos.id')
@@ -740,6 +779,7 @@ class ProyectoRepository
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
     ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
     ->where('gestores.id', $idgestor)
+    ->where('estado_aprobacion', Proyecto::IsAceptado())
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
         $query->whereYear('actividades.fecha_cierre', '=', $anho)
@@ -865,18 +905,30 @@ class ProyectoRepository
       'dine_reg' => $dine_reg
       ]);
 
-      // dd($proyecto->nombre);
       $syncData = array();
-      // foreach($request->get('talentos') as $id => $value){
-      //   if ($value == request()->get('radioTalentoLider')) {
-      //     $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
-      //   } else {
-      //     $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
-      //   }
-      // }
+      $dataAprobacion = array();
+
+      // Array con el gestor del proyecto
+      $dataAprobacion[0] = array('user_id' => auth()->user()->id,
+      'role_id' => Role::findByName('Gestor')->id,
+      'aprobacion' => 0);
+
+      // Array con el talento líder del proyecto
+      $dataAprobacion[1] = array('user_id' => Talento::find(request()->get('radioTalentoLider'))->user->id,
+      'role_id' => Role::findByName('Talento')->id,
+      'aprobacion' => 0);
+
+      // Array con el dinamizador del nodo
+      $dataAprobacion[2] = array('user_id' => Nodo::find( auth()->user()->gestor->nodo_id )->dinamizador->id,
+      'role_id' => Role::findByName('Dinamizador')->id,
+      'aprobacion' => 0);
+
+      // dd($dataAprobacion);
+      // exit();
 
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
 
+      $proyecto->users()->sync($dataAprobacion, false);
       $articulacion_proyecto->talentos()->sync($syncData, false);
 
       DB::commit();

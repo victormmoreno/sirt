@@ -113,6 +113,8 @@ Route::group([
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
 
+        Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
+
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
             'create'  => 'usuario.usuarios.create',
             'update'  => 'usuario.usuarios.update',
@@ -333,7 +335,7 @@ function () {
 Route::group(
   [
     'prefix'     => 'proyecto',
-    'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor'],
+    'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento'],
   ],
   function () {
 
@@ -341,6 +343,7 @@ Route::group(
     Route::get('/gestor/{id}', 'ProyectoController@projectsForGestor')->name('proyecto');
     Route::get('/', 'ProyectoController@index')->name('proyecto');
     Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
+    Route::get('/aprobacion/{id}', 'ProyectoController@create')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento|Gestor');
     Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
     Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
     Route::get('/datatableGruposInvestigacionTecnoparque/{tipo}', 'ProyectoController@datatableGruposInvestigacionTecnoparque')->name('proyecto.datatable.empresas');
@@ -351,6 +354,7 @@ Route::group(
     Route::get('/datatableIdeasConEmpresasGrupo', 'ProyectoController@datatableIdeasConEmpresasGrupo')->name('proyecto.datatable.ideas.empresasgrupos');
     Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho');
     Route::get('/datatableProyectosDelNodoPorAnho/{idnodo}/{anho}', 'ProyectoController@datatableProyectosDelNodoPorAnho')->name('proyecto.datatable.proyectos.nodo.anho');
+    Route::get('/datatableProyectosPendienteDeAprobacion', 'ProyectoController@datatableProyectosPendientes')->name('proyecto.datatable.proyectos.pendiente')->middleware('role_session:Dinamizador|Gestor|Talento');
     Route::get('/{id}/edit', 'ProyectoController@edit')->name('proyecto.edit')->middleware('role_session:Gestor|Dinamizador');
     Route::get('/{id}/entregables', 'ProyectoController@entregables')->name('proyecto.entregables');
     Route::get('/ajaxConsultarTalentosDeUnProyecto/{id}', 'ProyectoController@consultarTalentosDeUnProyecto')->name('proyecto.talentos');

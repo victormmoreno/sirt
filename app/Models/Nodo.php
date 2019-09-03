@@ -41,9 +41,9 @@ class Nodo extends Model
         return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
     }
 
-    public function dinamizadores()
+    public function dinamizador()
     {
-        return $this->hasMany(Dinamizador::class, 'nodo_id', 'id');
+        return $this->hasOne(Dinamizador::class, 'nodo_id', 'id');
     }
 
     public function gestores()
@@ -189,20 +189,20 @@ class Nodo extends Model
 
     public function scopeGetLineasForNodoIdsNames($query, $nodo): Collection
     {
-        
+
         return $query->find($nodo)->lineas->pluck('nombre', 'id');
     }
 
     /**
      * consultar primer nodo en la base de datos.
      *
-     * 
+     *
      * @return array
      * @author julian londoño
      */
     public function scopeNodoFirst($query)
     {
-        
+
         return $query->first();
     }
 }

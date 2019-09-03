@@ -33,6 +33,8 @@ class ProyectoFormRequest extends FormRequest
       'txtareaconocimiento_id' => 'required',
       'txtestadoproyecto_id' => 'required',
       'txtnombre' => 'required|min:10|max:200',
+      'txtcedula_acudiente' => 'numeric|digits_between:11,20|nullable',
+      'txtnombre_acudiente' => 'min:10|max:60|nullable',
       'txtentidad_proyecto_id' => Rule::requiredIf(
         request()->txttipoarticulacionproyecto_id != TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id &&
         request()->txttipoarticulacionproyecto_id != TipoArticulacionProyecto::where('nombre', 'Proyecto financiado por SENNOVA')->first()->id &&
@@ -75,6 +77,12 @@ class ProyectoFormRequest extends FormRequest
       'txtnombre.required' => 'El Nombre del Proyecto es obligatorio.',
       'txtnombre.min' => 'El Nombre del Proyecto debe ser mínimo 10 carácteres.',
       'txtnombre.max' => 'El Nombre del Proyecto debe ser máximo 200 carácteres.',
+      // Mensajes para el input txtcedula_acudiente
+      'txtcedula_acudiente.numeric' => 'La cédula del acudiente debe ser numérica.',
+      'txtcedula_acudiente.digits_between' => 'La cédula del acudiente debe tener entre 11 y 20 carácteres.',
+      // Mensajes para el campo txtnombre_acudiente
+      'txtnombre_acudiente.min' => 'El nombre del acudiente debe ser mínimo 10 carácteres.',
+      'txtnombre_acudiente.max' => 'El nombre del acudiente debe ser máximo de 60 carácteres.',
       // Mensajes para el input txtentidad_proyecto_id
       'txtentidad_proyecto_id.required' => 'Debe asociar una entidad al proyecto.',
       // Mensajes para el input txtuniversidad_proyecto

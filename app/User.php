@@ -13,9 +13,10 @@ use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
 use App\Models\Ocupacion;
-use App\Models\Rols;
+use App\Models\Role;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
+use App\Models\Proyecto;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +104,20 @@ class User extends Authenticatable implements JWTSubject
     =            relaciones eloquent            =
     ===========================================*/
 
+    public function roles_aprobacion()
+    {
+        return $this->belongsToMany(Role::class, 'aprobaciones')
+        ->withTimestamps()
+        ->withPivot('aprobacion');
+    }
+
+    public function proyectos()
+    {
+        return $this->belongsToMany(Proyecto::class, 'aprobaciones')
+        ->withTimestamps()
+        ->withPivot('aprobacion');
+    }
+
     //relaciones muchos a muchos
 
     public function ocupaciones()
@@ -174,7 +189,7 @@ class User extends Authenticatable implements JWTSubject
 
         return $query->with($relations)
             ->role($role);
-            
+
     }
 
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Perfil;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Talento extends Model
 {
