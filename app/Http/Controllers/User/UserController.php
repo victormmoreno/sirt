@@ -149,7 +149,12 @@ class UserController extends Controller
                 }
             })
                 ->editColumn('role', function ($data) {
-                    return $data->roles->implode('name', ', ');
+                    
+                    return $data->roles->whenEmpty(function($collection) {
+                        return $collection->push('No tiene roles asignados');
+                    })->implode('name', ', ');
+                                       
+                    
                 })
                 ->addColumn('edit', function ($data) {
                     if ($data->id != auth()->user()->id) {

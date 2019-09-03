@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Nodo;
 use App\User;
 use Illuminate\Support\Facades\Session;
+use Spatie\Permission\Models\Role;
 
 
 class HomeController extends Controller
@@ -35,6 +36,8 @@ class HomeController extends Controller
         //         $query->where('id', $nodo);
         //     })->pluck('id');
         // dd($nododinamizador);
+        // 
+
 
 
         // $user = auth()->user()->dinamizador->nodo->infocenter->user;

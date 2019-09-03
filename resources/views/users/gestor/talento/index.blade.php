@@ -67,6 +67,7 @@
                                         <th>Correo</th>
                                         <th>Telefono</th>
                                         <th>Roles</th>
+                                        <th>Estado Sistema</th>
                                         <th>Detalles</th>
                                         <th>Editar</th>
                                     </thead>

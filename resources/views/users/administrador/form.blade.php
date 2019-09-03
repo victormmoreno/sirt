@@ -30,6 +30,12 @@
                     <span class="title"><b>Configuración principal</b></span>
                     <p>Esta información aparecerá en el perfil del usuario</p>
                 </li>
+                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador() )
+                <li class="collection-item">
+                    <span class="title"><b>Dinamizadores</b></span>
+                    <p>Sólo se permite un dinamizador por nodo, tenga cuidado si desea asignar un dinamizador a un nodo que ya lo tiene, este último perderá ese rol</p>
+                </li>
+                @endif
                 <li class="collection-item">
                     <span class="title"><b>Roles</b></span>
                     <p>Puedes Asignar más roles al usuario</p>

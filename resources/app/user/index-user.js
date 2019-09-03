@@ -40,6 +40,9 @@ $(document).ready(function() {
             data: 'role',
             name: 'role',
         }, {
+            data: 'estado',
+            name: 'estado',
+        },{
             data: 'detail',
             name: 'detail',
             orderable: false,

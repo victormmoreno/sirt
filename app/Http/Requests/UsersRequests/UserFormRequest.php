@@ -12,6 +12,35 @@ use \App\Models\Eps;
 
 class UserFormRequest extends FormRequest
 {
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        // $validator->after(function ($validator) {
+        //     $userdinamizador = User::with('dinamizador.nodo')->whereHas('dinamizador.nodo', function ($query) {
+        //         $query->where('id', $this->txtnododinamizador);
+        //     })->whereHas('roles', function ($query) {
+        //         $query->where('name', 'dinamizador');
+        //     })->get();
+
+        //     // dd($userdinamizador);
+        //     $userdinamizador->filter(function ($value, $key) {
+        //         dd($value->id == $this->route('id'));
+        //     });
+
+
+        //     if ($userdinamizador->count() >= 1 ) {
+        //         $validator->errors()->add('txtnododinamizador', 'Ya hay un dimanizador registrado en el nodo. Si desea registrar otro dinamizador por favor elimine el rol dinamizador a todos los dinamizadores asociados al nodo' );
+        //     }
+
+        // });
+        
+    }
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,7 +58,6 @@ class UserFormRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->txtocupaciones);
 
         return [
             'txttipo_documento'       => 'required',
