@@ -4,6 +4,7 @@ namespace App\Http\Traits\IdeaTrait;
 
 use App\Models\EstadoIdea;
 use App\Models\Nodo;
+use App\Models\Proyecto;
 use App\Models\RutaModel;
 
 trait IdeaTrait
@@ -29,7 +30,7 @@ trait IdeaTrait
 
   public function proyecto()
   {
-    return $this->belongsTo(Proyecto::class, 'idea_id', 'id');
+    return $this->hasOne(Proyecto::class, 'idea_id', 'id');
   }
 
   public function estadoIdea()

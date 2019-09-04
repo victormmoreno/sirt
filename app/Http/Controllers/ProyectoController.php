@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Alert;
-use App;
-use App\Rules\CreateValidationForDomainRequest;
-use App\Helpers\ArrayHelper;
-use App\Http\Requests\ProyectoFormRequest;
 use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sector, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Role, ArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository, ConfiguracionRepository\ServidorVideoRepository};
-use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
+use App\Rules\CreateValidationForDomainRequest;
+use App\Http\Requests\ProyectoFormRequest;
+use Illuminate\Validation\Rule;
+use App\Helpers\ArrayHelper;
+use Illuminate\Http\Request;
+use App\User;
+use Alert;
+use App;
 
 class ProyectoController extends Controller
 {
@@ -36,6 +36,26 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Vista para la aprobación del proyecto
+   *
+   * @param int $id Id del proyecto
+   * @return Response*
+   * @author dum
+   */
+  public function aprobacion($id)
+  {
+    $proyecto = Proyecto::find( $id);
+    $pivot = $this->proyectoRepository->pivotAprobaciones($id);
+    // dd($pivot);
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('proyectos.gestor.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot
+      ]);
+    }
+  }
+
+  /**
    * Datatable que muestra los proyectos que están pendiente de aprobación de un usuario (dinamizador, talento, gestor)
    *
    * @return Response
@@ -54,11 +74,10 @@ class ProyectoController extends Controller
     }
 
     $proyectos = $this->proyectoRepository->proyectosPendientesDeAprobacion_Repository($id);
-    // dd($proyectos);
     return datatables()->of($proyectos)
     ->addColumn('aprobar', function ($data) {
       $aprobar = '
-      <a class="btn light-blue m-b-xs" href="!#">
+      <a class="btn light-blue m-b-xs" href="'. route('proyecto.aprobacion', $data->id) .'">
       <i class="material-icons">remove_red_eye</i>
       </a>
       ';

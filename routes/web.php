@@ -342,8 +342,8 @@ Route::group(
     /*=====  rutas para consultar los proyectos por gestor ======*/
     Route::get('/gestor/{id}', 'ProyectoController@projectsForGestor')->name('proyecto');
     Route::get('/', 'ProyectoController@index')->name('proyecto');
-    Route::get('/create', 'ProyectoController@create')->name('proyecto.create');
-    Route::get('/aprobacion/{id}', 'ProyectoController@create')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento|Gestor');
+    Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
+    Route::get('/aprobacion/{id}', 'ProyectoController@aprobacion')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento|Gestor');
     Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
     Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
     Route::get('/datatableGruposInvestigacionTecnoparque/{tipo}', 'ProyectoController@datatableGruposInvestigacionTecnoparque')->name('proyecto.datatable.empresas');
@@ -364,6 +364,7 @@ Route::group(
     Route::get('/ajaxDetallesDeLosEntregablesDeUnProyecto/{id}', 'ProyectoController@detallesDeLosEntregablesDeUnProyecto')->name('proyecto.detalle.entregables');
     Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update')->middleware('role_session:Gestor|Dinamizador');
     Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables')->middleware('role_session:Gestor|Dinamizador');
+    Route::put('/updateAprobacion/{id}', 'ProyectoController@updateAprobacion')->name('proyecto.update.aprobacion')->middleware('role_session:Gestor|Dinamizador|Talento');
     Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
     Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
     Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');

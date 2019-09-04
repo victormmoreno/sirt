@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Repository;
 
-use Illuminate\Support\Facades\{DB, Session};
 use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo};
+use Illuminate\Support\Facades\{DB, Session, Notification};
+use App\Notifications\Proyecto\ProyectoPendiente;
 use Carbon\Carbon;
+use App\User;
 
 class ProyectoRepository
 {
@@ -27,6 +29,24 @@ class ProyectoRepository
     DB::statement("SET lc_time_names = 'es_ES'");
   }
 
+  /**
+   * Consulta los datos de la tabla pivot (aprobaciones)
+   *
+   * @param int $id
+   * @return Collection
+   * @author dum
+   */
+  public function pivotAprobaciones($id)
+  {
+    return Proyecto::select('roles.name')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
+    ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
+    ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
+    ->join('users', 'users.id', '=', 'aprobaciones.user_id')
+    ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
+    ->where('proyectos.id', $id)
+    ->get();
+  }
   /**
    * undocumented function summary
    *
@@ -898,6 +918,8 @@ class ProyectoRepository
       'observaciones_proyecto' => request()->txtobservaciones_proyecto,
       'impacto_proyecto' => request()->txtimpacto_proyecto,
       'economia_naranja' => $economia_naranja,
+      'cedula_acudiente' => request()->txtcedula_acudiente,
+      'nombre_acudiente' => request()->txtnombre_acudiente,
       'art_cti' => $art_cti,
       'nom_act_cti' => request()->txtnom_act_cti,
       'diri_ar_emp' => $diri_ar_emp,
@@ -923,13 +945,21 @@ class ProyectoRepository
       'role_id' => Role::findByName('Dinamizador')->id,
       'aprobacion' => 0);
 
-      // dd($dataAprobacion);
-      // exit();
-
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
 
       $proyecto->users()->sync($dataAprobacion, false);
       $articulacion_proyecto->talentos()->sync($syncData, false);
+
+      $idUsers = array();
+      for ($i=0; $i < 2 ; $i++) {
+        $idUsers[$i] = $dataAprobacion[$i]['user_id'];
+      }
+
+      $idUsers = array_unique($idUsers);
+
+      for ($i=0; $i < count($idUsers) ; $i++) {
+        Notification::send(User::find($idUsers[$i]), new ProyectoPendiente($proyecto));
+      }
 
       DB::commit();
       return true;

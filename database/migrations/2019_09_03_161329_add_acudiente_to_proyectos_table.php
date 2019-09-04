@@ -15,8 +15,8 @@ class AddAcudienteToProyectosTable extends Migration
   public function up()
   {
     Schema::table($this->tableName, function (Blueprint $table) {
-      $table->string('cedula_acudiente', 20)->default('')->after('aporte_talento');
-      $table->string('nombre_acudiente', 60)->default('')->after('cedula_acudiente');
+      $table->string('cedula_acudiente', 20)->nullable()->default('')->after('aporte_talento');
+      $table->string('nombre_acudiente', 60)->nullable()->default('')->after('cedula_acudiente');
     });
   }
 

@@ -38,6 +38,8 @@ class Proyecto extends Model
     'economia_naranja',
     'resultado_proyecto',
     'fecha_ejecucion',
+    'cedula_acudiente',
+    'nombre_acudiente',
     'aporte_sena',
     'aporte_talento',
     'art_cti',
@@ -106,7 +108,7 @@ class Proyecto extends Model
 
   public function idea()
   {
-    return $this->hasOne(Idea::class, 'idea_id', 'id');
+    return $this->belongsTo(Idea::class, 'idea_id', 'id');
   }
 
   /**
