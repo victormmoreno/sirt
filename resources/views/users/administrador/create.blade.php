@@ -85,6 +85,7 @@ $(document).ready(function() {
     @if($errors->any())
         linea.getSelectLineaForNodo();
         UserCreate.getCiudad();
+        UserCreate.getCiudadExpedicion();
         regional.getCentroFormacion();
     @endif
 
@@ -512,6 +513,25 @@ var UserCreate = {
         $('#txtciudad').val("{{old('txtciudad')}}");
         @endif
         $('#txtciudad').material_select();
+      });
+    },
+    getCiudadExpedicion:function(){
+      let id;
+      id = $('#txtdepartamentoexpedicion').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        $('#txtciudadexpedicion').empty();
+        $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+          $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudadexpedicion').val("{{old('txtciudadexpedicion')}}");
+        @endif
+        $('#txtciudadexpedicion').material_select();
       });
     },
     getCiudadForModal:function(){

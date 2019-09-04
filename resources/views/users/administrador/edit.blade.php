@@ -102,9 +102,9 @@
     TipoTalento.getSelectTipoTalento();
     regional.getCentroFormacion();
     UserEdit.getCiudad();
-        linea.getSelectLineaForNodo();
-    @if($errors->any())
-    @endif
+    UserEdit.getCiudadExpedicion();
+    linea.getSelectLineaForNodo();
+    
 });
 
 function falseCheckbox() {
@@ -401,7 +401,7 @@ var roles = {
         if($('#dinamizador').css('display') === 'block')
         {
               @if($errors->any())
-                  $("#txtnododinamizador").val({{old('txtnododinamizador')}});
+                  $("#txtnododinamizador").val("{{old('txtnododinamizador')}}");
               @else
                 $("#txtnododinamizador").val();
               @endif
@@ -413,7 +413,7 @@ var roles = {
             @if($errors->any())
                 $('#txtnodogestor').val({{old('txtnodogestor')}});
                 $('#txtlinea').val({{old('txtlinea')}});
-                $("#txthonorario").val({{old('txthonorario')}});
+                $("#txthonorario").val('{{old('txthonorario')}}');
             @else
                 $("#txtnodogestor").val();
                 $("#txtlinea").val();
@@ -429,8 +429,8 @@ var roles = {
 
         if ($('#infocenter').css('display') === 'block') {
             @if($errors->any())
-                $('#txtnodoinfocenter').val({{old('txtnodoinfocenter')}});
-                $('#txtextension').val({{old('txtextension')}});
+                $('#txtnodoinfocenter').val("{{old('txtnodoinfocenter')}}");
+                $('#txtextension').val("{{old('txtextension')}}");
             @else 
                 $("#txtnodoinfocenter").val();
                 $("#txtextension").val();
@@ -557,6 +557,29 @@ var UserEdit = {
         $('#txtciudad').val({{$user->ciudad->id}});
         @endif
         $('#txtciudad').material_select();
+      });
+    },
+
+    getCiudadExpedicion:function(){
+      let id;
+      id = $('#txtdepartamentoexpedicion').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        $('#txtciudadexpedicion').empty();
+        $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+
+          $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudadexpedicion').val({{old('txtciudadexpedicion')}});
+        @else
+        $('#txtciudadexpedicion').val({{$user->ciudadexpedicion->id}});
+        @endif
+        $('#txtciudadexpedicion').material_select();
       });
     },
     getCiudadForModal:function(){

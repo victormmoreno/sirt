@@ -201,6 +201,62 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
+
+                    <i class="material-icons prefix">
+                        details
+                    </i>
+                    @if(isset($user->ciudadexpedicion->departamento->id))
+                    <select class="" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserEdit.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                        <option value="">Seleccione departamento</option>
+                        @foreach($departamentos as $value)
+                            @if(isset($user->ciudadexpedicion->departamento->id))
+                                <option value="{{$value->id}}" {{old('txtdepartamentoexpedicion',$user->ciudadexpedicion->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                            @else
+                                <option value="{{$value->id}}" {{old('txtdepartamentoexpedicion') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                            @endif
+                        @endforeach
+                    </select>
+                    @else
+                    <select class="" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                        <option value="">Seleccione departamento</option>
+                        @foreach($departamentos as $value)
+                            @if(isset($user->ciudadexpedicion->departamento->id))
+                                <option value="{{$value->id}}" {{old('txtdepartamentoexpedicion',$user->ciudadexpedicion->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                            @else
+                                <option value="{{$value->id}}" {{old('txtdepartamentoexpedicion') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                            @endif
+                        @endforeach
+                    </select>
+                    @endif
+                    <label for="txtdepartamentoexpedicion">Departamento de Expedición <span class="red-text">*</span></label>
+                    @error('txtdepartamentoexpedicion')
+                        <label id="txtdepartamentoexpedicion-error" class="error" for="txtdepartamentoexpedicion">{{ $message }}</label>
+                    @enderror 
+                </div>
+             
+                <div class="input-field col s12 m6 l6">
+                    <i class="material-icons prefix">
+                        details
+                    </i>
+                    @if(isset($user->ciudad_expedicion_id))
+                    <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
+                        <option value="">Seleccione Primero el Departamento</option>
+                        
+                    </select>
+                    @else
+                    <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
+                        <option value="">Seleccione Primero el Departamento</option> 
+                    </select>
+                    @endif
+                    
+                    <label for="txtciudadexpedicion">Ciudad de Expedición <span class="red-text">*</span></label>
+                    @error('txtciudadexpedicion')
+                        <label id="txtciudadexpedicion-error" class="error" for="txtciudadexpedicion">{{ $message }}</label>
+                    @enderror 
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m6 l6">
                     <i class="material-icons prefix">
                         account_circle
                     </i>

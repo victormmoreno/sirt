@@ -17,6 +17,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/usuarios/allusuarios",
             type: "get",

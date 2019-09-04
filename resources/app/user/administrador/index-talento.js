@@ -1,10 +1,9 @@
-// import {modalUser} from '../modaluser.js';
-// require('../modaluser.js');
 $(document).ready(function() {
     $('#talento_history_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false,
         processing: true,
         serverSide: true,
         ajax: {
@@ -33,8 +32,7 @@ $(document).ready(function() {
             data: 'detail',
             name: 'detail',
             orderable: false,
-        },
-        {
+        }, {
             data: 'edit',
             name: 'edit',
             orderable: false,

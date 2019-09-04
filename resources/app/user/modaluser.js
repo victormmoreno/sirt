@@ -69,6 +69,19 @@ function modalUser(respuesta) {
                                                         </li>
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
+                                                                credit_card
+                                                            </i>
+                                                            <span class="title">
+                                                                Ciudad Expedición documento de identidad
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.ciudadexpedicion.nombre + `   
+                                                            </p>
+                                                        </li>
+                                                        
+
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
                                                                 local_hospital
                                                             </i>
                                                             <div class="left">
@@ -148,6 +161,18 @@ function modalUser(respuesta) {
                                                             <p>
                                                                ` + respuesta.data.user.gruposanguineo.nombre + `   
                                                             </p>
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                credit_card
+                                                            </i>
+                                                            <span class="title">
+                                                                Deparamento Expedición documento de identidad
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.ciudadexpedicion.departamento.nombre + `
+                                                            </p>
+                                                            
                                                         </li>
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
