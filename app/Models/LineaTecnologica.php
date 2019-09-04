@@ -19,6 +19,18 @@ class LineaTecnologica extends Model
         'descripcion',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'abreviatura' => 'string',
+        'nombre'      => 'string',
+        'descripcion' => 'string',
+
+    ];
+
     /*===========================================================================
     =            relaciones elquent            =
     ===========================================================================*/
@@ -66,8 +78,7 @@ class LineaTecnologica extends Model
 
     public function setNombreAttribute($nombre)
     {
-        $this->attributes['nombre'] = strtolower($nombre);
-        $this->attributes['nombre'] = ucfirst($nombre);
+        $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre), 'UTF-8'));
     }
 
     /*=====  End of mutador para tranformar el nombre a minusculas y la primera letra mayusculas  ======*/
@@ -78,8 +89,7 @@ class LineaTecnologica extends Model
 
     public function setDescripcionAttribute($descripcion)
     {
-        $this->attributes['descripcion'] = strtolower($descripcion);
-        $this->attributes['descripcion'] = ucfirst($descripcion);
+        $this->attributes['descripcion'] = ucwords(mb_strtolower(trim($descripcion), 'UTF-8'));
     }
 
     /*=====  End of mutador para tranformar la descripcion a minusculas y la primera letra a myuscaulas  ======*/
@@ -91,8 +101,6 @@ class LineaTecnologica extends Model
     public function scopeAllLineas($query)
     {
         return $query->paginate(7);
-        // return $query->select(['lineastecnologicas.id','lineastecnologicas.abreviatura','lineastecnologicas.nombre','lineastecnologicas.descripcion','lineastecnologicas.created_at','lineastecnologicas.updated_at'])
-        //     ->orderby('lineastecnologicas.nombre');
     }
 
     /*=====  End of scope para seleccionar todas las lineas  ======*/

@@ -531,7 +531,7 @@ Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy
 ====================================================================*/
 
 Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-Route::resource('lineas', 'LineaController', ['except' => ['show', 'destroy']]);
+Route::resource('lineas', 'LineaController', ['except' => ['destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
 

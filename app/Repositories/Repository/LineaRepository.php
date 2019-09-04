@@ -20,8 +20,6 @@ class LineaRepository
     /*=====  End of metodo para consultar las lineas por nodo  ======*/
 
 
-
-    
     /**
      * metodo para consular el id y nombre de las linas
      *
@@ -32,6 +30,18 @@ class LineaRepository
     public function findLineasByIdNameForNodo($nodo)
     {
         return Nodo::getLineasForNodoIdsNames($nodo);
+    }
+
+    /**
+     * metodo para consular el id y nombre de las linas
+     *
+     * @param  int $nodo
+     * @author julian londoño
+     * @return collection
+     */
+    public function findLineaForShow($id)
+    {
+        return LineaTecnologica::with(['nodos','nodos.entidad','sublineas'])->findOrFail($id);
     }
 
    

@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Policies\LineaTecnologica;
+
+use App\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class LineaTecnologicaPolicy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Determine si un usuario puede ver el index de las lineas tecnologicas.
+     * @author julian londono
+     * @return boolean
+     */
+    public function index(User $user)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+    }
+
+    /**
+     * Determine si un usuario puede ver formulario para crear nuevas lineas teconologicas.
+     * @author julian londono
+     * @return boolean
+     */
+    public function create(User $user)
+    {
+
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+    }
+
+    /**
+     * Determine si un usuario puede  crear nuevas lineas teconologicas.
+     * @author julian londono
+     * @return boolean
+     */
+    public function store(User $user)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+    }
+}

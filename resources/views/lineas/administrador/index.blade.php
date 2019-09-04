@@ -6,13 +6,19 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s10 m10 l10">
+                    <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <i class="material-icons left">
                                 dns
                             </i>
                             Lineas
                         </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li class="active">Lineas</li>
+                        </ol>
                     </div>
                 </div>
                 <div class="card ">
@@ -33,18 +39,18 @@
                                                 dns
                                             </i>
                                         </a>
-                                        {{-- <a href="{{route('lineas.create')}}" class="waves-effect green btn"><i class="material-icons right">dns</i>Nueva Linea</a> --}}
                                     </div>
                                 </div>
                             </div>
                             <div class="divider">
-                            </div>
+                            </div>  
                             <br>
                                 <table class="display responsive-table" id="linea_table">
                                     <thead>
                                         <th width="15%">Abreviatura</th>
                                         <th width="30%">Linea</th>
                                         <th width="40%">Descripcion</th>
+                                        <th width="40%">Detalles</th>
                                         <th width="15%">Editar</th>
                                     </thead>
                     
