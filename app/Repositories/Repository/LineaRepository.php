@@ -35,14 +35,16 @@ class LineaRepository
     /**
      * metodo para consular el id y nombre de las linas
      *
-     * @param  int $nodo
      * @author julian londoño
      * @return collection
      */
-    public function findLineaForShow($id)
+    public function findLineaForShow($linea)
     {
-        return LineaTecnologica::with(['nodos','nodos.entidad','sublineas'])->findOrFail($id);
+        return LineaTecnologica::with(['nodos','nodos.entidad','nodos.entidad.centro','nodos.entidad.ciudad','nodos.entidad.ciudad.departamento','sublineas'])->select('id', 'abreviatura', 'nombre', 'descripcion', 'created_at')->findOrFailLinea($linea);
+        // return LineaTecnologica::findLinea($linea);
     }
+
+
 
    
     

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('meta-title', 'Editar Linea Tecnologica' . $linea->nombre)
+
 @section('content')
 
 <main class="mn-inner inner-active-sidebar">

@@ -2,6 +2,7 @@
 
 namespace App\Policies\LineaTecnologica;
 
+use App\Models\LineaTecnologica;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -36,6 +37,21 @@ class LineaTecnologicaPolicy
      * @return boolean
      */
     public function store(User $user)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+    }
+
+    public function show(User $user, LineaTecnologica $linea)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+    }
+
+    public function edit(User $user, LineaTecnologica $linea)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+    }
+
+    public function update(User $user, LineaTecnologica $linea)
     {
         return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
     }

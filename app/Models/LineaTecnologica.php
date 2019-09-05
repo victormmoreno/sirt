@@ -3,10 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LineaTecnologica extends Model
 {
     protected $table = 'lineastecnologicas';
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +27,7 @@ class LineaTecnologica extends Model
     protected $fillable = [
         'abreviatura',
         'nombre',
+        'slug',
         'descripcion',
     ];
 
@@ -27,6 +39,7 @@ class LineaTecnologica extends Model
     protected $casts = [
         'abreviatura' => 'string',
         'nombre'      => 'string',
+        'slug'        => 'string',
         'descripcion' => 'string',
 
     ];
@@ -60,6 +73,11 @@ class LineaTecnologica extends Model
     }
 
     /*=====  End of relaciones elquent  ======*/
+
+    public function setSlugAttribute($nombre)
+    {
+        $this->attributes['slug'] = str_slug($nombre, '-');
+    }
 
     /*===========================================================================
     =            mutador para tranformar la abreviatura a mayusculas            =
@@ -126,6 +144,43 @@ class LineaTecnologica extends Model
     public function scopeLineaTecnologicaFirst($query)
     {
         return $query->first();
+    }
+
+
+    /**
+     * Execute a query for a single record by ID.
+     *
+     * @param  string  $linea
+     * @param  array  $columns
+     * @return mixed|static
+     */
+    public function scopeFindLinea($query,$linea, $columns = ['*'])
+    {
+        return $query->where('slug', '=', $linea)->first($columns);
+    }
+
+
+    /**
+     * Find a model by its primary key or throw an exception.
+     *
+     * @param  mixed  $linea
+     * @param  array  $columns
+     */
+    public function scopeFindOrFailLinea($linea, $columns = ['*'])
+    {
+        $result = $this->scopeFindLinea($linea, $columns);
+
+        if (is_array($linea)) {
+            if (count($result) === count(array_unique($linea))) {
+                return $result;
+            }
+        } elseif (! is_null($result)) {
+            return $result;
+        }else{
+            abort('404');
+        }
+
+        
     }
 
 }

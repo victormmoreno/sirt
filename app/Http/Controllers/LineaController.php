@@ -50,24 +50,48 @@ class LineaController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            return DataTables::eloquent(LineaTecnologica::select(['id', 'nombre', 'abreviatura', 'descripcion']))
+            return DataTables::eloquent(LineaTecnologica::select(['id', 'nombre', 'slug', 'abreviatura', 'descripcion']))
                 ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route("lineas.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    $button = '<a href="' . route("lineas.edit", $data->slug) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
                     return $button;
                 })
                 ->addColumn('show', function ($data) {
-                    $button = '<a href="' . route("lineas.show", $data->id) . '" class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="ver más"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a href="' . route("lineas.show", $data->slug) . '" class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="ver más"><i class="material-icons">info_outline</i></a>';
                     return $button;
                 })
                 ->editColumn('descripcion', function ($data) {
-                return !empty($data->descripcion) ? $data->descripcion : 'No registra';
-            })
-            ->rawColumns(['action', 'show', 'descripcion'])
-            ->toJson();
+                    return !empty($data->descripcion) ? $data->descripcion : 'No registra';
+                })
+                ->rawColumns(['action', 'show', 'descripcion'])
+                ->toJson();
         }
         $this->authorize('index', User::class);
 
-        return view('lineas.administrador.index');
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('lineas.administrador.index');
+                break;
+            case User::IsDinamizador():
+
+                $nodo = auth()->user()->dinamizador->nodo->id;
+
+                $linea = LineaTecnologica::with(['sublineas', 'gestores', 'gestores.user', 'laboratorios'])->whereHas('nodos', function ($query) use ($nodo) {
+                    $query->where('nodos.id', $nodo);
+                })->get();
+                return $linea;
+
+                break;
+
+            case User::IsGestor():
+
+                $lineatecnologica = auth()->user()->gestor->lineatecnologica->id;
+                $linea            = LineaTecnologica::with(['sublineas', 'gestores', 'gestores.user', 'laboratorios'])->find($lineatecnologica);
+                return $linea;
+                break;
+            default:
+                abort('403');
+                break;
+        }
 
     }
 
@@ -95,6 +119,7 @@ class LineaController extends Controller
         $linea = LineaTecnologica::create([
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),
+            "slug"        => str_slug($request->input('txtnombre'), '-'),
             "descripcion" => $request->input('txtdescripcion'),
         ]);
 
@@ -106,17 +131,19 @@ class LineaController extends Controller
         return redirect('lineas');
     }
 
-
     /**
      * Show the form for show the specified resource.
      *
-     * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($linea)
     {
-        $linea = $this->lineaRepository->findLineaForShow($id);
-        dd($linea);
+        $linea = $this->lineaRepository->findLineaForShow($linea);
+
+        $this->authorize('show', $linea);
+        // return $linea;
+        return view('lineas.administrador.show', compact('linea'));
     }
 
     /**
@@ -125,9 +152,9 @@ class LineaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(LineaTecnologica $linea)
     {
-        $linea = LineaTecnologica::findOrFail($id);
+        $this->authorize('edit', $linea);
         return view('lineas.administrador.edit', compact('linea'));
     }
 
@@ -142,9 +169,12 @@ class LineaController extends Controller
     {
         $linea = LineaTecnologica::findOrFail($id);
 
+        $this->authorize('update', $linea);
+
         if ($linea != null) {
             $linea->abreviatura = $request->input('txtabreviatura');
             $linea->nombre      = $request->input('txtnombre');
+            $linea->slug        = str_slug($request->input('txtnombre'), '-');
             $linea->descripcion = $request->input('txtdescripcion');
             $linea->update();
 
@@ -155,7 +185,5 @@ class LineaController extends Controller
         }
         return redirect('lineas');
     }
-
-    
 
 }

@@ -50,27 +50,18 @@
                             </div>
                             <div class="divider">
                             </div>
-                            
-
                             <div class="row">
-
-                                    <div class="col s12 m12 l12">
-                                        <div class="file-field input-field">
-
-                                            <div class="file-path-wrapper">
-                                                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorIngreso.selectIngresoForNodo()">
-                                                    <option value="">Seleccione nodo</option>
-                                                    @foreach($nodos as $id => $nodo)
-                                                      <option value="{{$id}}">{{$nodo}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
+                                <div class="col s12 m12 l12">
+                                    <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
+                                    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorIngreso.selectIngresoForNodo()">
+                                        <option value="">Seleccione nodo</option>
+                                        @foreach($nodos as $id => $nodo)
+                                          <option value="{{$id}}">{{$nodo}}</option>
+                                        @endforeach
+                                    </select>
+                                    
                                 </div>
+                            </div>
                             
                                 <br>
                                 <table class="display responsive-table" id="ingreso_table">
@@ -82,10 +73,8 @@
                                         <th>Telefono</th>
                                         <th>Estado Sistema</th>
                                         <th>Detalles</th>
-                                        <th>Editar</th>
-                                        
+                                        <th>Editar</th> 
                                     </thead>
-                    
                                 </table>
                         </div>
                     </div>

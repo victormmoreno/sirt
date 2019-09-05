@@ -53,6 +53,7 @@
                             </div>
                             <div class="divider">
                             </div>
+                            <div class="right material-icons"><a href=""><img src="https://img.icons8.com/color/48/000000/ms-excel.png" class="btn btn-flat"></a></div>
                             <br>
                                 <table class="display responsive-table" id="administrador_table">
                                     <thead>
