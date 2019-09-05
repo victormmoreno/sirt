@@ -94,6 +94,16 @@ class Proyecto extends Model
   //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
   // }
 
+  public function tipoproyecto()
+  {
+      return $this->belongsTo(TipoArticulacionProyecto::class, 'tipoarticulacionproyecto_id', 'id');
+  }
+
+  public function areaconocimiento()
+  {
+      return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
+  }
+
   /**
    * Relación a la tabla users
    * @return Eloquent

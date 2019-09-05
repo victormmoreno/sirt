@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Dinamizador extends Model
 {
@@ -18,7 +19,7 @@ class Dinamizador extends Model
         'user_id',
     ];
 
-    
+
 
     /*===========================================
     =            relaciones eloquent            =

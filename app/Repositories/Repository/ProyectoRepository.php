@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo};
+use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea};
 use Illuminate\Support\Facades\{DB, Session, Notification};
 use App\Notifications\Proyecto\ProyectoPendiente;
 use Carbon\Carbon;
@@ -15,7 +15,7 @@ class ProyectoRepository
 
   public function __construct(IdeaRepository $ideaRepository)
   {
-    $this->ideaRepository = $ideaRepository;
+    $this->setIdeaRepository($ideaRepository);
   }
 
   /**
@@ -27,6 +27,113 @@ class ProyectoRepository
   private function traducirMeses()
   {
     DB::statement("SET lc_time_names = 'es_ES'");
+  }
+
+  /**
+   * Asgina un valor a $ideaRepository
+   * @param object $ideaRepository
+   * @return void
+   * @author dum
+   */
+  private function setIdeaRepository($ideaRepository)
+  {
+    $this->ideaRepository = $ideaRepository;
+  }
+
+  /**
+   * Retorna el valor de $ideaRepository
+   * @return object
+   * @author dum
+   */
+  private function getIdeaRepository()
+  {
+    return $this->ideaRepository;
+  }
+
+  /**
+  * Cambia el estado de la aprobacion de un proyecto de un usuario y rol
+  * @param Request
+  * @param int $id Id del proyecto
+  * @return boolean
+  * @author dum
+  */
+  public function updateAprobacionUsuario($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      if ( $request->txtaprobacion != Proyecto::IsAceptado() && $request->txtaprobacion != Proyecto::IsNoAceptado() ) {
+        DB::rollback();
+        return false;
+      }
+      $user = auth()->user()->id;
+      $role = Session::get('login_role');
+      $role = $this->pivotAprobacionesUnica($id, $user, $role)->role_id;
+      $update = DB::update("UPDATE aprobaciones SET aprobacion = $request->txtaprobacion WHERE proyecto_id = $id AND user_id = $user AND role_id = $role");
+      $some = $this->pivotAprobaciones($id)->where('aprobacion', 0)->get();
+      if ( count($some) == 0 ) {
+        $aprobados = $this->pivotAprobacion($id)->where('aprobacion', 1)->get();
+        $proyecto = Proyecto::find($id);
+        if ( count($aprobados) == 3 ) {
+          // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
+
+          // Espacio para generar el pdf del acuerdo de confidencialidad y compromiso
+          // code...
+
+          // Cambia el estado de aprobacion del proyecto a aceptado
+          $proyecto->update([
+            'estado_aprobacion' => Proyecto::IsAceptado(),
+            'acc' => 1
+          ]);
+        } else {
+          // En caso de que UNO SOLO no haya aprobado el proyecto
+          //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
+          $idea = $proyecto->idea;
+          if ( $idea->tipo_idea == Idea::IsEmpresa() || $idea->tipo_idea == Idea::IsGrupoInvestigacion() ) {
+            $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Inicio');
+          } else {
+            $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Admitido');
+          }
+          $padre = $proyecto->articulacion_proyecto->actividad;
+          // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
+          $proyecto->articulacion_proyecto->articulacion_proyecto_talento()->delete();
+          // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
+          $proyecto->users()->delete();
+          // Elimina el registro de la tabla de proyecto
+          $padre->articulacion_proyecto->proyecto()->delete();
+          // Elimina el registro de la tabla la tabla de articulacion_proyecto
+          $padre->articulacion_proyecto()->delete();
+          // Elimina la tabla de actividades
+          $padre->delete();
+        }
+      }
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
+
+  /**
+   * Consulta un único registro de la tabla pivot (aprobaciones)
+   *
+   * @param int $id Id del proyecto
+   * @param int $user Id del usuario
+   * @param string
+   */
+  public function pivotAprobacionesUnica($id, $user, $role)
+  {
+    return Proyecto::select('roles.name', 'role_id', 'aprobacion AS aprobacion_value')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
+    ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
+    ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
+    ->join('users', 'users.id', '=', 'aprobaciones.user_id')
+    ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
+    ->where('proyectos.id', $id)
+    ->where('roles.name', $role)
+    ->where('users.id', $user)
+    ->first();
   }
 
   /**
@@ -44,8 +151,7 @@ class ProyectoRepository
     ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
     ->join('users', 'users.id', '=', 'aprobaciones.user_id')
     ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
-    ->where('proyectos.id', $id)
-    ->get();
+    ->where('proyectos.id', $id);
   }
   /**
    * undocumented function summary
@@ -841,7 +947,7 @@ class ProyectoRepository
       $dine_reg = 1;
       $tipo_ideaproyecto = 1;
 
-      $this->ideaRepository->updateEstadoIdea(request()->txtidea_id, 'En Proyecto');
+      $this->getIdeaRepository()->updateEstadoIdea(request()->txtidea_id, 'En Proyecto');
 
       if (!isset(request()->txttipo_ideaproyecto)) {
         $tipo_ideaproyecto = 0;

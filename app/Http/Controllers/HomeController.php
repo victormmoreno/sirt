@@ -27,10 +27,24 @@ class HomeController extends Controller
     public function index()
     {
 
+      switch ( Session::get('login_role') ) {
+        case 'Dinamizador':
+          return view('home.dinamizador');
+          break;
+
+        case 'Gestor':
+          return view('home.gestor');
+          break;
+
+        default:
+          // code...
+          break;
+      }
+
         return view('home.home');
         // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');
          // session()->put('login_role', 'value');
-            
+
          //    $value = Session::all();
 
          //    dd($value);

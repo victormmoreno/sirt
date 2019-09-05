@@ -27,10 +27,6 @@
             <div class="col s12 m12 l12">
               <form action="{{route('proyecto.update.aprobacion', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
                 @include('proyectos.aprobacion_form')
-                <center>
-                  <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Guardar</button>
-                  <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                </center>
               </form>
             </div>
           </div>

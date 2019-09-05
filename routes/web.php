@@ -343,6 +343,7 @@ Route::group(
     Route::get('/gestor/{id}', 'ProyectoController@projectsForGestor')->name('proyecto');
     Route::get('/', 'ProyectoController@index')->name('proyecto');
     Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
+    Route::get('/pendientes', 'ProyectoController@aprobaciones')->name('proyecto.pendientes')->middleware('role_session:Talento|Gestor|Dinamizador');
     Route::get('/aprobacion/{id}', 'ProyectoController@aprobacion')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento|Gestor');
     Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
     Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
@@ -518,6 +519,7 @@ Route::group([
 ],
 function () {
   Route::get('/', 'PdfComiteController@printPDF')->name('print');
+  Route::get('/acc', 'PdfProyectoController@printPDF')->name('pdf.proyecto.acc');
 }
 );
 

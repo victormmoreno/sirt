@@ -3884,6 +3884,8 @@ function consultarProyectosDelNodoPorAnho() {
   });
 }
 
+
+
 $(document).ready(function() {
   $('#empresasDeTecnoparque_modEdt_table').DataTable({
     language: {

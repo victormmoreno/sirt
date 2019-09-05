@@ -47,7 +47,7 @@
                           <option value="">No hay información disponible</option>
                         @endforelse
                       </select>
-                      <label for="txttipoarticulacionproyecto_id">Tipo de Articulación <span class="red-text">*</span></label>
+                      <label for="txttipoarticulacionproyecto_id">Tipo de Proyecto <span class="red-text">*</span></label>
                       <small id="txttipoarticulacionproyecto_id-error" class="error red-text"></small>
                     </div>
                   </div>
