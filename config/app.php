@@ -178,7 +178,6 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
-        Barryvdh\Snappy\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
@@ -243,8 +242,6 @@ return [
         'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
         // Aliases Personalizados
         'NodoHelper'   => App\Helpers\NodoHelper::class,
-        'SnappyPDF'    => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        'SnappyImage'  => Barryvdh\Snappy\Facades\SnappyImage::class,
 
 
     ],
