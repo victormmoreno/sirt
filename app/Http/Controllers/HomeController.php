@@ -49,7 +49,7 @@ class HomeController extends Controller
           break;
 
         case 'Gestor':
-          return view('home.gestor');
+          return view('home.home');
           break;
 
         default:
@@ -57,7 +57,7 @@ class HomeController extends Controller
           break;
       }
 
-        return view('home.home');
+        
         // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');
          // session()->put('login_role', 'value');
 

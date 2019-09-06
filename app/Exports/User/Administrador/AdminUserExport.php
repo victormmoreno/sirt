@@ -10,12 +10,11 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 class AdminUserExport extends FatherExport implements Responsable, WithDrawings
 {
 
-    use Exportable;
+    use Exportable, createDrawingsExcel;
 
     private $fileName = 'administradores.xlsx';
     /**
@@ -31,20 +30,28 @@ class AdminUserExport extends FatherExport implements Responsable, WithDrawings
             $this->setCount($this->getQuery()->count() + 7);
         }
 
-        $this->setRangeHeadingCell('A7:O7');
+        $this->setRangeHeadingCell('A7:U7');
         $this->setRangeBodyCell('A8:O' . $this->getCount());
     }
 
     public function drawings()
     {
         $drawing = new Drawing();
-        $drawing->setName('Logo');
-        $drawing->setDescription('This is my logo');
+        $drawing->setName('Logo Tecnoparque');
         $drawing->setPath(public_path('/img/logonacional_Negro.png'));
+        $drawing->setResizeProportional(false);
         $drawing->setHeight(90);
-        $drawing->setCoordinates('A1');
+        $drawing->setWidth(300);
+        $drawing->setCoordinates('B2');
 
-        return $drawing;
+        $drawing2 = new Drawing();
+        $drawing2->setName('Logo Sennova');
+        $drawing2->setPath(public_path('/img/sennova.png'));
+        $drawing2->setResizeProportional(false);
+        $drawing2->setHeight(90);
+        $drawing2->setWidth(300);
+        $drawing2->setCoordinates('K2');
+        return [$drawing, $drawing2];
     }
 
     /**
@@ -60,45 +67,56 @@ class AdminUserExport extends FatherExport implements Responsable, WithDrawings
         $styles      = array('pares' => $columnPar, 'impares' => $columnImPar);
         return [
             AfterSheet::class => function (AfterSheet $event) use ($styles) {
-                $event->sheet->getStyle($this->getRangeHeadingCell())->applyFromArray($this->styleArray())->getFont()->setSize(14)->setBold(1);
-                $event->sheet->getStyle($this->getRangeBodyCell())->applyFromArray($this->styleArray());
+                $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
+                $event->sheet->mergeCells('A1:C5');
 
-                // $event->sheet->mergeCells('A1:B6');
-                // $event->sheet->mergeCells('I5:L5');
-                // $event->sheet->mergeCells('M5:O5');
+                $event->sheet->mergeCells('D1:H2');
 
-                $event->sheet->setCellValue('L6', 'Asistentes')->getStyle('L6');
-                $event->sheet->mergeCells('A6:L6');
-                $event->sheet->getStyle('A6:L6')->applyFromArray($this->styleArray())->getFont()->setBold(1);
-                // $event->sheet->getStyle('I6:O5')->applyFromArray($this->styleArray())->getFont()->setBold(1);
-                // $event->sheet->setCellValue('I5', 'Asistentes')->getStyle('I6');
+                $event->sheet->mergeCells('D3:H3');
+                $event->sheet->setCellValue('D3', "Administradores " . config('app.name'))->getStyle('H3');
+                $event->sheet->getStyle('D3:H3')->applyFromArray($this->styleArray());
+                $event->sheet->getStyle('D3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $event->sheet->getStyle('D3')->applyFromArray($styles['impares'])->getFont()->setSize(20)->setBold(1);
 
-                // $event->sheet->mergeCells('A1:H5');
-                // $event->sheet->mergeCells('I1:O5');
+                $event->sheet->mergeCells('D4:H5');
 
-                $event->sheet->getStyle('I6:O5')->applyFromArray($styles['pares'])->getFont()->setBold(1);
-                
+                $event->sheet->mergeCells('I1:U5');
 
-                $event->sheet->setCellValue('M5', 'Entregables')->getStyle('M6');
-                $event->sheet->getStyle('M5:O5')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-                $event->sheet->getStyle('I5:M5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $event->sheet->mergeCells('A6:M6');
+                $event->sheet->setCellValue('A6', 'Información Personal')->getStyle('M6');
+                $event->sheet->getStyle('A6:M6')->applyFromArray($this->styleArray());
+                $event->sheet->getStyle('A6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+                $event->sheet->getStyle('A6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-                // $event->sheet->getStyle('A7:A' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('B7:B' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('C7:C' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('D7:D' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('E7:E' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('F7:F' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('G7:G' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('H7:H' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('I7:I' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('J7:J' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('K7:K' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('L7:L' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('M7:M' . $this->getCount())->applyFromArray($styles['pares']);
-                // $event->sheet->getStyle('N7:N' . $this->getCount())->applyFromArray($styles['impares']);
-                // $event->sheet->getStyle('O7:O' . $this->getCount())->applyFromArray($styles['pares']);
+                $event->sheet->mergeCells('N6:O6');
+                $event->sheet->setCellValue('N6', 'EPS')->getStyle('O6');
+                $event->sheet->getStyle('N6:O6')->applyFromArray($this->styleArray());
+                $event->sheet->getStyle('N6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+                $event->sheet->getStyle('N6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
+                $event->sheet->mergeCells('P6:S6');
+                $event->sheet->setCellValue('P6', 'Último estudio')->getStyle('S6');
+                $event->sheet->getStyle('P6:S6')->applyFromArray($this->styleArray());
+                $event->sheet->getStyle('P6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+                $event->sheet->getStyle('P6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+                $event->sheet->mergeCells('T6:U6');
+                $event->sheet->setCellValue('T6', 'Ocupaciones')->getStyle('U6');
+                $event->sheet->getStyle('T6:U6')->applyFromArray($this->styleArray());
+                $event->sheet->getStyle('T6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+                $event->sheet->getStyle('T6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+                $init = 'A';
+                for ($i = 0; $i < 21; $i++) {
+                    $temp        = $init++;
+                    $coordenadas = $temp . '7:' . $temp . $this->getCount();
+                    $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
+                    if ($i % 2 == 0) {
+                        $event->sheet->getStyle($coordenadas)->applyFromArray($styles['pares']);
+                    } else {
+                        $event->sheet->getStyle($coordenadas)->applyFromArray($styles['impares']);
+                    }
+                }
             },
         ];
     }
@@ -122,7 +140,7 @@ class AdminUserExport extends FatherExport implements Responsable, WithDrawings
      */
     public function title(): String
     {
-        return 'Administrador';
+        return 'Administradores';
     }
 
 }

@@ -75,39 +75,43 @@ class AdminController extends Controller
 
     public function exportAdminUser($extension = 'xlsx')
     {
-        // return Excel::download(new AdminUserExport,);
-        $user = User::with(['tipodocumento'=> function($query){
-            $query->select('id','nombre');
-        },
-        'gradoescolaridad'=> function($query){
-            $query->select('id','nombre');
-        },
-        'gruposanguineo'=> function($query){
-            $query->select('id','nombre');
-        },
-        'eps'=> function($query){
-            $query->select('id','nombre');
-        },
-        'ciudad'=> function($query){
-            $query->select('id','nombre','departamento_id');
-        },
-        'ciudad.departamento'=> function($query){
-            $query->select('id','nombre');
-        },
-        'ciudadexpedicion'=> function($query){
-            $query->select('id','nombre','departamento_id');
-        },
-        'ciudadexpedicion.departamento'=> function($query){
-            $query->select('id','nombre');
-        },
-        
-        ])->role(User::IsAdministrador())->get();
-        // return $user;
+        $this->authorize('exportAdminUser', User::class);
+
+        $role = [User::IsAdministrador()];
+
+        $relations = [
+            'tipodocumento'                 => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gradoescolaridad'              => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gruposanguineo'                => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'eps'                           => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudad'                        => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudad.departamento'           => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudadexpedicion'              => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudadexpedicion.departamento' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ocupaciones',
+        ];
+
+        $user = $this->userRepository->userInfoWithRelations($role, $relations)->get();
+
         $this->setQuery($user);
         return (new AdminUserExport($this->getQuery()))->download("administradores.{$extension}");
     }
-
-
 
     private function setQuery($query)
     {
