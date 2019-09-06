@@ -56,23 +56,6 @@ class EdtsUnicaExport extends FatherExport
         $event->sheet->mergeCells('A1:H6');
         $event->sheet->mergeCells('I1:O5');
 
-
-        $event->sheet->mergeCells('C14:D14');
-        $event->sheet->setCellValue('C14', 'Empresas')->getStyle('C14')->getFont()->setBold(1);
-        $event->sheet->setCellValue('C15', 'Nit de Empresa')->getStyle('C15')->getFont()->setBold(1);
-        $event->sheet->setCellValue('D15', 'Nombre de Empresa')->getStyle('D15')->getFont()->setBold(1);
-        $event->sheet->getStyle('C14:D15')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $row = 0;
-        $inicio = 16;
-        foreach ($this->getEntidades() as $key => $value) {
-          $row = $inicio + $key;
-          $event->sheet->setCellValue('C'.$row, $value->nit);
-          $event->sheet->setCellValue('D'.$row, $value->nombre);
-        }
-        $event->sheet->getStyle('C14:D'.$row)->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('C14:D'.$row)->applyFromArray($this->styleArray());
-
-
         $event->sheet->getStyle('I6:O6')->applyFromArray($styles['pares'])->getFont()->setBold(1);
         $event->sheet->getStyle('I6:O6')->applyFromArray($this->styleArray())->getFont()->setBold(1);
         $event->sheet->setCellValue('I6', 'Asistentes')->getStyle('I6');
@@ -81,21 +64,21 @@ class EdtsUnicaExport extends FatherExport
         $event->sheet->getStyle('M6:O6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
         $event->sheet->getStyle('I6:M6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-        $event->sheet->getStyle('A7:A8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('B7:B8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('C7:C8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('D7:D8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('E7:E8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('F7:F8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('G7:G8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('H7:H8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('I7:I8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('J7:J8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('K7:K8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('L7:L8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('M7:M8')->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('N7:N8')->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('O7:O8')->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('A7:A'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('B7:B'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('C7:C'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('D7:D'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('E7:E'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('F7:F'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('G7:G'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('H7:H'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('I7:I'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('J7:J'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('K7:K'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('L7:L'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('M7:M'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('N7:N'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('O7:O'.$this->getCount())->applyFromArray($styles['pares']);
         // $event->sheet->getStyle('P7:P8')->applyFromArray($styles['impares']);
       },
     ];
