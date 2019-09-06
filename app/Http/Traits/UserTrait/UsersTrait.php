@@ -89,16 +89,6 @@ trait UsersTrait
 
     }
 
-    public function getNombreCompletoAttribute()
-    {
-        return ucwords(mb_strtolower($this->nombres),'UTF-8') . ' ' . ucwords(mb_strtolower($this->apellidos), 'UTF-8');
-    }
-
-    public function setDocumentoAttribute($documento)
-    {
-        $this->attributes['documento'] = trim($documento);
-    }
-
     public function setEmailAttribute($email)
     {
         $this->attributes['email'] = mb_strtolower(trim($email), 'UTF-8');
@@ -152,6 +142,21 @@ trait UsersTrait
     public function setOtraOcupacionAttribute($otra_ocupacion)
     {
         $this->attributes['otra_ocupacion'] = ucwords(mb_strtolower(trim($otra_ocupacion), 'UTF-8'));
+    }
+
+    public function getNombreCompletoAttribute()
+    {
+        return ucwords(mb_strtolower($this->nombres), 'UTF-8') . ' ' . ucwords(mb_strtolower($this->apellidos), 'UTF-8');
+    }
+
+    public function setDocumentoAttribute($documento)
+    {
+        $this->attributes['documento'] = trim($documento);
+    }
+
+    public function getDocumentoAttribute($documento)
+    {
+        return trim($documento);
     }
 
     /*=====  End of mutadores eloquent  ======*/

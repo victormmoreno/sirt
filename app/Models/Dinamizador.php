@@ -8,6 +8,9 @@ class Dinamizador extends Model
 {
     protected $table = 'dinamizador';
 
+    //constante para conocer el numero de dinamizadores permitidos por nodo
+    const CANT_DINAMIZADOR = 1;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,8 +20,6 @@ class Dinamizador extends Model
         'nodo_id',
         'user_id',
     ];
-
-    
 
     /*===========================================
     =            relaciones eloquent            =
@@ -34,5 +35,10 @@ class Dinamizador extends Model
     }
 
     /*=====  End of relaciones eloquent  ======*/
+
+    public static function cantidadDinamizadoresPermitidosPornodo()
+    {
+        return self::CANT_DINAMIZADOR;
+    }
 
 }

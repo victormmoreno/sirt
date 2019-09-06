@@ -10,9 +10,10 @@
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
-        {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}}
+        <link href="{{ asset('vendor/themify-icons/themify-icons.css') }}" rel="stylesheet">   
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://rawgit.com/lykmapipo/themify-icons/master/css/themify-icons.css">
+        {{-- <link rel="stylesheet" href="https://rawgit.com/lykmapipo/themify-icons/master/css/themify-icons.css"> --}}
+        <link rel="stylesheet" href="{{ asset('vendor/themify-icons/themify-icons.css') }}">
 
         <!-- Styles -->
         <style>

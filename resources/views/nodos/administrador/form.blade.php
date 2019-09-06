@@ -149,7 +149,7 @@
                 @forelse($lineas as $value)
                     <li class="collection-item">
                         <p class="p-v-xs">
-                            @if(isset($entidad))
+                            @if(isset($entidad->nodo->lineas))
                             <input {{collect(old('txtlineas',$entidad->nodo->lineas->pluck('id')))->contains($value->id) ? 'checked' : ''  }}  type="checkbox" id="txtlineas-{{$value->nombre}}" name="txtlineas[]"  value="{{$value->id}}">
                             @else
                             <input {{collect(old('txtlineas'))->contains($value->id) ? 'checked' : ''  }}  type="checkbox" id="txtlineas-{{$value->nombre}}" name="txtlineas[]"  value="{{$value->id}}">

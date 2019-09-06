@@ -32,6 +32,7 @@ class AdminController extends Controller
      */
     public function index()
     {
+        $this->authorize('indexAdministrador', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
 

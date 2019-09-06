@@ -27,7 +27,7 @@ class DinamizadorController extends Controller
      */
     public function index()
     {
-
+        $this->authorize('indexDinamizador', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.dinamizador.index', [
@@ -44,7 +44,7 @@ class DinamizadorController extends Controller
 
     public function getDinanizador($nodo)
     {
-
+        $this->authorize('indexDinamizador', User::class);
         if (request()->ajax()) {
             return datatables()->of($this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo))
                 ->addColumn('detail', function ($data) {
@@ -71,6 +71,8 @@ class DinamizadorController extends Controller
                 ->rawColumns(['detail', 'edit'])
                 ->make(true);
         }
+
+        abort('404');
 
     }
 

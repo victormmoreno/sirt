@@ -13,12 +13,10 @@ use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
 use App\Models\Ingreso;
 use App\Models\Ocupacion;
-use App\Models\Rols;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -60,6 +58,7 @@ class User extends Authenticatable implements JWTSubject
         'gruposanguineo_id',
         'eps_id',
         'ciudad_id',
+        'ciudad_expedicion_id',
         'nombres',
         'apellidos',
         'documento',
@@ -86,6 +85,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
+
         'password', 'remember_token',
     ];
 
@@ -95,8 +95,18 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'fechanacimiento'   => 'date:Y-m-d',
+        'tipodocumento_id'     => 'integer',
+        'gradoescolaridad_id'  => 'integer',
+        'gruposanguineo_id'    => 'integer',
+        'eps_id'               => 'integer',
+        'ciudad_id'            => 'integer',
+        'ciudad_expedicion_id' => 'integer',
+        'nombres'              => 'string',
+        'apellidos'            => 'string',
+        'documento'            => 'string',
+        'estado'               => 'boolean',
+        'email_verified_at'    => 'datetime',
+        'fechanacimiento'      => 'date:Y-m-d',
     ];
 
     /*===========================================
@@ -115,6 +125,11 @@ class User extends Authenticatable implements JWTSubject
     public function ciudad()
     {
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
+    }
+
+    public function ciudadexpedicion()
+    {
+        return $this->belongsTo(Ciudad::class, 'ciudad_expedicion_id', 'id');
     }
 
     public function gradoEscolaridad()
@@ -169,14 +184,13 @@ class User extends Authenticatable implements JWTSubject
 
     /*=====  End of relaciones eloquent  ======*/
 
-    public function scopeInfoUserRole($query,array $role = [] , array $relations = [])
+    public function scopeInfoUserRole($query, array $role = [], array $relations = [])
     {
 
         return $query->with($relations)
             ->role($role);
-            
-    }
 
+    }
 
     /*==============================================================================
     =            scope para mostrar informacion relevante en datatables            =
@@ -190,9 +204,5 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /*=====  End of scope para mostrar informacion relevante en datatables  ======*/
-
-
-
-
 
 }

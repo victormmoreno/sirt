@@ -25,7 +25,8 @@ class NodoRepository
 
     public function findByid($id)
     {
-        return Entidad::findOrFail($id);
+        return Entidad::whereHas('nodo')->findOrFail($id);
+
     }
 
     public function getSelectNodo()

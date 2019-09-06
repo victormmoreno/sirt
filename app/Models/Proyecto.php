@@ -58,6 +58,15 @@ class Proyecto extends Model
     =            relaciones polimorficas            =
     ===============================================*/
 
+    /**
+     * Devolver relacion entre sublinea y proyecto
+     * @author julian londoño
+     */
+    public function sublinea()
+    {
+        return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
+    }
+
     // Relación a la tabla de archivosproyecto
     // public function archivosproyecto()
     // {
@@ -83,7 +92,7 @@ class Proyecto extends Model
 
     public function scopeInfoProjects($query, array $relations = [], array $estado = [])
     {
-        if(empty($relations)) {
+        if (empty($relations)) {
             return $query;
         }
 
@@ -100,14 +109,14 @@ class Proyecto extends Model
     public function scopePluckNameProjects($query, array $estado = [])
     {
         return $query->with([
-            'estadoproyecto'=> function ($query) {
-                $query->select('id','nombre');
+            'estadoproyecto'                  => function ($query) {
+                $query->select('id', 'nombre');
             },
-            'articulacion_proyecto' => function ($query) {
-                $query->select('id','actividad_id');
+            'articulacion_proyecto'           => function ($query) {
+                $query->select('id', 'actividad_id');
             },
             'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id','codigo_actividad','nombre');
+                $query->select('id', 'codigo_actividad', 'nombre');
             },
         ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
 

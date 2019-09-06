@@ -18,12 +18,10 @@
                     </div>
                     <div class="col s4 m4 l2 rigth-align">
                         <ol class="breadcrumbs">
-                        
-                            <li><a href="index.html">Inicio</a></li>
-                            {{-- <li><a href="#">Usuarios</a></li> --}}
+                            <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Usuarios</li>
                         </ol>
-                      </div>
+                    </div>
                 </div>
                 <div class="card ">
                     <div class="card-content">
@@ -59,7 +57,7 @@
                                             </div>
 
                                             <div class="card-content">
-                                              <span class="card-title activator grey-text text-darken-4 center">{{$role}}<i class="material-icons right">more_vert</i></span>
+                                              <span class="card-title activator grey-text text-darken-4 center">{{$role}}</span>
                                               
                                               @switch($role)
                                                     @case(config('laravelpermission.roles.roleAdministrador'))
@@ -86,26 +84,16 @@
                                                 @endswitch
 
                                             </div>
-                                            <div class="card-reveal ">
-                                            <span class="card-title grey-text text-darken-4 center">{{$role}}<i class="material-icons right">close</i></span>
-                                            @switch($role)
-                                                @case(config('laravelpermission.roles.roleAdministrador'))
-                                                    <p>Rol {{config('laravelpermission.roles.roleAdministrador')}}</p>
-                                                    
-                                                @break
-                                                @case(config('laravelpermission.roles.roleInfocenter'))
-                                                    <p>Rol {{config('laravelpermission.roles.roleInfocenter')}}</p>
-                                                    
-                                                @break
-                                              
-                                            @default
-                                                <p>Here is some more information about this product that is only revealed once clicked on.</p>
-                                                @break
-                                            @endswitch
-                                            </div>
+                                            
                                           </div> 
                                     </div>
                                     @empty
+                                        <div class="center">
+                                            <i class="large material-icons  teal-text lighten-2 center">
+                                                notifications_off
+                                            </i>
+                                            <p class="center-align">No se encontraron resultados</p> 
+                                        </div>
                                     @endforelse
                                 </div>
                                 

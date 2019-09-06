@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
+use App\Http\Controllers\PDF\PdfComiteController;
 use App\Models\ServidorVideo;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-
+    // $number = "1027890334";
+    // $format = number_format($number, 0,",",".");
+    // dd($format);
     return view('spa');
 
 })->name('/');
@@ -21,7 +24,10 @@ DB::listen(function ($query) {
 ===========================================================*/
 
 Route::get('email', function () {
+    // return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
     return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
+    // return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
+    // return new App\Mail\User\SendNotificationPassoword(App\User::first(), 'asdafasafasdf');
 });
 
 /*=====  End of ruta para revisar estilos d los ema  ======*/
@@ -525,7 +531,7 @@ Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy
 ====================================================================*/
 
 Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-Route::resource('lineas', 'LineaController', ['except' => ['show', 'destroy']]);
+Route::resource('lineas', 'LineaController', ['except' => ['destroy']]);
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
 

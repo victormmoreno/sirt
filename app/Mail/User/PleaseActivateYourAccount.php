@@ -12,7 +12,7 @@ class PleaseActivateYourAccount extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
-    public $subject = 'Por favor activa tu cuenta';
+    public $subject = 'Por favor activa tu cuenta | Red Tecnoparque Colombia';
 
     /**
      * Create a new message instance.

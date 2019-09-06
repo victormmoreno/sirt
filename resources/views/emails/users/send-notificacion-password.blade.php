@@ -1,13 +1,16 @@
 @component('mail::message')
 # Contraseña de ingreso a {{config('app.name')}}
 
-Hola, 
-{{$user->nombres}} {{$user->apellidos}}<br>
+Señor(a)<br>
+_<strong>{{$user->nombres}} {{$user->apellidos}}</strong>_<br>
 {{$user->getRoleNames()->implode(', ')}} {{config('app.name')}}.
 
 Cordial Saludo.
 
-Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar al sistema {{config('app.name')}}
+Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar al sistema {{config('app.name')}} luego de activada tu cuenta.
+@component('mail::panel')
+     <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
+@endcomponent
 
 
 @component('mail::table')
@@ -18,12 +21,12 @@ Hemos enviado este correo para informarte tu contraseña asiginada, con la cual 
 Con las anteriores credenciales podrás iniciar sesión mediante el siguiente boton.
 <br>
 @component('mail::button', ['url' => route('login')])
-Iniciar Sesión
+🔗 Iniciar Sesión
 @endcomponent
 
 Gracias,<br>
-{{config('mail.from.name')}} <br>
-Gestión {{ config('app.name') }}
+<strong>_{{config('mail.from.name')}}_</strong> <br>
+Gestión {{ config('app.name') }} 💯
 
 
 @slot('subcopy')
