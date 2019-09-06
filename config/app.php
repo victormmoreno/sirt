@@ -179,6 +179,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         //Providers Personalizados
         App\Providers\NodoServiceProvider::class,
@@ -238,9 +239,10 @@ return [
         'DataTables'   => Yajra\DataTables\Facades\DataTables::class,
         'Alert'        => RealRashid\SweetAlert\Facades\Alert::class,
         'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
+        'PDF'          => Barryvdh\DomPDF\Facade::class,
+
         // Aliases Personalizados
         'NodoHelper'   => App\Helpers\NodoHelper::class,
-
 
     ],
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Exports\User\Administrador\AdminUserExport;
 use App\Http\Controllers\Controller;
 use App\Repositories\Repository\UserRepository\AdminRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
@@ -70,6 +71,57 @@ class AdminController extends Controller
                 break;
         }
 
+    }
+
+    public function exportAdminUser($extension = 'xlsx')
+    {
+        // return Excel::download(new AdminUserExport,);
+        $user = User::with(['tipodocumento'=> function($query){
+            $query->select('id','nombre');
+        },
+        'gradoescolaridad'=> function($query){
+            $query->select('id','nombre');
+        },
+        'gruposanguineo'=> function($query){
+            $query->select('id','nombre');
+        },
+        'eps'=> function($query){
+            $query->select('id','nombre');
+        },
+        'ciudad'=> function($query){
+            $query->select('id','nombre','departamento_id');
+        },
+        'ciudad.departamento'=> function($query){
+            $query->select('id','nombre');
+        },
+        'ciudadexpedicion'=> function($query){
+            $query->select('id','nombre','departamento_id');
+        },
+        'ciudadexpedicion.departamento'=> function($query){
+            $query->select('id','nombre');
+        },
+        
+        ])->role(User::IsAdministrador())->get();
+        // return $user;
+        $this->setQuery($user);
+        return (new AdminUserExport($this->getQuery()))->download("administradores.{$extension}");
+    }
+
+
+
+    private function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Retorna el valor de $query
+     * @return object
+     * @author dum
+     */
+    private function getQuery()
+    {
+        return $this->query;
     }
 
 }
