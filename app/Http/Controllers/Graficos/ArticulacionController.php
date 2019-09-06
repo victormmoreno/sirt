@@ -28,9 +28,13 @@ class ArticulacionController extends Controller
   */
   public function articulacionesPorNodoYAnho_Controller($id, $anho)
   {
+    $idnodo = $id;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
     $datosCompletos = array();
     for ($i = 0; $i < 3 ; $i++) {
-      $articulacionesCantidad =$this->getArticulacionRepository()->consultarCantidadDeArticulacionesPorTipoYNodoYAnho($id, $anho, $i);
+      $articulacionesCantidad =$this->getArticulacionRepository()->consultarCantidadDeArticulacionesPorTipoYNodoYAnho($idnodo, $anho, $i);
       $datosCompletos = $this->condicionarConsultaDeArticulaciones($i, $datosCompletos, $articulacionesCantidad);
     }
     return response()->json([
@@ -49,13 +53,13 @@ class ArticulacionController extends Controller
   */
   public function articulacionesLineaTecnologicaYFechaGrafico($idnodo, $id, $fecha_inicio, $fecha_fin)
   {
-    $idnodoMethod = "";
+    $idnodoMethod = $idnodo;
 
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       $idnodoMethod = auth()->user()->dinamizador->nodo_id;
-    } else {
-      $idnodoMethod = $idnodo;
     }
+
+    // dd($idnodoMethod);
 
     $datosLinea = LineaTecnologica::findOrFail($id);
     $datosCompletos['lineatecnologica'] = $datosLinea->nombre;

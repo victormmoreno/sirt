@@ -21,6 +21,20 @@ class TalentoController extends Controller
         $this->userRepository    = $userRepository;
     }
 
+    /**
+     * Consulta la edad de un talento
+     *
+     * @param int $id id del talento
+     * @return int
+     * @author dum
+     */
+    public function getEdad($id)
+    {
+      $talento = Talento::find($id);
+      $edad = $talento->user->fechanacimiento->age;
+      return $edad;
+    }
+
     public function datatableTalentosDeTecnoparque()
     {
         if (request()->ajax()) {
@@ -75,7 +89,7 @@ class TalentoController extends Controller
             })
                 ->rawColumns(['detail', 'edit', 'estado'])
                 ->make(true);
-        } 
+        }
 
         switch (session()->get('login_role')) {
             case User::IsAdministrador():

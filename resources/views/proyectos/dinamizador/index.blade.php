@@ -37,6 +37,11 @@
                   </div>
                 </div>
                 <div class="row">
+                  <div class="right material-icons">
+                    <a onclick="generarExcelDeProyectosDelNodoPorAnho()">
+                      <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                    </a>
+                  </div>
                   @include('proyectos.table')
                 </div>
               </div>
@@ -68,6 +73,11 @@
                   </div>
                 </div>
                 <div class="row">
+                  <div class="right material-icons">
+                    <a onclick="generarExcelDeProyectosDelGestorPorAnho()">
+                      <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                    </a>
+                  </div>
                   @include('proyectos.table2')
                 </div>
               </div>
@@ -81,6 +91,28 @@
 @endsection
 @push('script')
   <script>
+  function generarExcelDeProyectosDelGestorPorAnho() {
+    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+    let id = $('#txtgestor_id').val();
+    if (id == '') {
+      Swal.fire({
+        title: 'Error!',
+        text: "Debes seleccionar un gestor!",
+        type: 'warning',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      });
+    } else {
+      location.href = '/excel/excelProyectosDelGestorPorAnho/'+id+'/'+anho
+    }
+  }
+
+  function generarExcelDeProyectosDelNodoPorAnho() {
+    let anho = $('#anho_proyectoPorNodoYAnho').val();
+    location.href = '/excel/excelProyectosDelNodoPorAnho/'+{{ auth()->user()->dinamizador->nodo_id }}+'/'+anho
+  }
+
   $("#codigo_proyecto_tblproyectosDelGestorPorAnho").keyup(function(){
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
