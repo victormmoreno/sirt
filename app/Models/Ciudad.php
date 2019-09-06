@@ -36,6 +36,11 @@ class Ciudad extends Model
         return $this->hasMany(User::class, 'ciudad_id', 'id');
     }
 
+    public function usersdocumentoexpedicion()
+    {
+        return $this->hasMany(User::class, 'ciudad_expedicion_id', 'id');
+    }
+
     public function regionales()
     {
         return $this->hasMany(Regional::class, 'ciudad_id', 'id');

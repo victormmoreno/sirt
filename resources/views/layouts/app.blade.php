@@ -4,10 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{config('app.name')}} | @yield('meta-title',   config('app.name') )</title>
-        {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}}
+        {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}} 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://rawgit.com/lykmapipo/themify-icons/master/css/themify-icons.css">
-
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">

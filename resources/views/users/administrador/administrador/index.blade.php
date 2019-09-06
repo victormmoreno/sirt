@@ -8,18 +8,22 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s10 m10 l10">
+                    <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
-                            Usuarios
-                            <i class="material-icons ">
-                                supervised_user_circle
-                            </i>
+                              <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                  <i class="material-icons arrow-l">
+                                      arrow_back
+                                  </i>
+                              </a>
+                            Usuarios | Administradores
                         </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Administradores</li>
+                        </ol>
                     </div>
                 </div>
                 <div class="card ">
@@ -49,6 +53,7 @@
                             </div>
                             <div class="divider">
                             </div>
+                            <div class="right material-icons"><a href=""><img src="https://img.icons8.com/color/48/000000/ms-excel.png" class="btn btn-flat"></a></div>
                             <br>
                                 <table class="display responsive-table" id="administrador_table">
                                     <thead>

@@ -160,27 +160,28 @@ class Proyecto extends Model
 
   }
 
-  /*=====  End of scope para consultar los proyectos por estado  ======*/
 
-  /*======================================================================================
-  =            scope para consultar el nombre y el id del proyecto por estado            =
-  ======================================================================================*/
+    /*=====  End of scope para consultar los proyectos por estado  ======*/
 
-  public function scopePluckNameProjects($query, array $estado = [])
-  {
-    return $query->with([
-    'estadoproyecto'=> function ($query) {
-      $query->select('id','nombre');
-    },
-    'articulacion_proyecto' => function ($query) {
-      $query->select('id','actividad_id');
-    },
-    'articulacion_proyecto.actividad' => function ($query) {
-      $query->select('id','codigo_actividad','nombre');
-    },
-    ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
+/*======================================================================================
+=            scope para consultar el nombre y el id del proyecto por estado            =
+======================================================================================*/
 
-  }
+    public function scopePluckNameProjects($query, array $estado = [])
+    {
+        return $query->with([
+            'estadoproyecto'                  => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'articulacion_proyecto'           => function ($query) {
+                $query->select('id', 'actividad_id');
+            },
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id', 'codigo_actividad', 'nombre');
+            },
+        ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
+
+    }
 
   /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
 

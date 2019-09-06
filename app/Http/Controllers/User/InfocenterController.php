@@ -27,7 +27,7 @@ class InfocenterController extends Controller
      */
     public function index()
     {
-
+        $this->authorize('indexInfocenter', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.infocenter.index', [
@@ -41,7 +41,7 @@ class InfocenterController extends Controller
                 break;
 
             default:
-
+                abort('404');
                 break;
         }
 
@@ -80,6 +80,7 @@ class InfocenterController extends Controller
                 ->rawColumns(['detail', 'estado','edit'])
                 ->make(true);
         }
+        abort('404');
     }
 
     /*=====  End of metodo para consultar los infocenters por nodo  ======*/

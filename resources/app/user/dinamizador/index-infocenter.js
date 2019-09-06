@@ -5,6 +5,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/infocenter/getinfocenter",
             type: "get",

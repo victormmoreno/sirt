@@ -1,25 +1,17 @@
 <?php
 
-use App\Models\AreaConocimiento;
 use App\Models\Ciudad;
 use App\Models\Entidad;
 use App\Models\Eps;
-use App\Models\EstadoPrototipo;
-use App\Models\EstadoProyecto;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
-use App\Models\Idea;
 use App\Models\Infocenter;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Ocupacion;
 use App\Models\Perfil;
-use App\Models\Proyecto;
-use App\Models\Sector;
-use App\Models\Sublinea;
 use App\Models\Talento;
-use App\Models\TipoArticulacion;
 use App\Models\TipoDocumento;
 use App\User;
 use Carbon\Carbon;
@@ -46,32 +38,31 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $userAdmin = User::create([
-            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
-            'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'nombres'             => 'victor',
-            'apellidos'           => 'perez',
-            'documento'           => '523422321',
-            'email'               => 'victor543@misena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => '413324',
-            'celular'             => '342452323',
-            'fechanacimiento'     => '1996-09-12',
-            'genero'              => User::IsMasculino(),
-            'estado'              => User::IsActive(),
+            'gradoescolaridad_id'  => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
+            'tipodocumento_id'     => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
+            'gruposanguineo_id'    => GrupoSanguineo::all()->random()->id,
+            'eps_id'               => Eps::all()->random()->id,
+            'ciudad_id'            => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
+            'nombres'              => 'victor',
+            'apellidos'            => 'perez',
+            'documento'            => '523422321',
+            'email'                => 'victor543@misena.edu.co',
+            'barrio'               => 'El Poblado',
+            'direccion'            => 'calle 40 #45 65',
+            'telefono'             => '413324',
+            'celular'              => '342452323',
+            'fechanacimiento'      => '1996-09-12',
+            'genero'               => User::IsMasculino(),
+            'estado'               => User::IsActive(),
             //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'      => Str::random(60),
-            'password'            => '123456789',
-            'estrato'             => rand(1, 6),
+            'institucion'          => 'Universidad de Antiquia',
+            'titulo_obtenido'      => 'Ingeniero Quimico',
+            'fecha_terminacion'    => Carbon::now()->subYears(10)->subMonth(60),
+            'remember_token'       => Str::random(60),
+            'password'             => '123456789',
+            'estrato'              => rand(1, 6),
         ]);
-
-    
 
         $userAdmin->dinamizador()->create([
             'user_id' => $userAdmin->id,
@@ -122,6 +113,7 @@ class UsersTableSeeder extends Seeder
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
             'eps_id'              => Eps::all()->random()->id,
             'ciudad_id'           => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
             'nombres'             => 'juan',
             'apellidos'           => 'Benitez',
             'documento'           => '53244223',
@@ -156,6 +148,7 @@ class UsersTableSeeder extends Seeder
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
             'eps_id'              => Eps::all()->random()->id,
             'ciudad_id'           => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
             'nombres'             => 'Ramiro Antonio',
             'apellidos'           => 'Isaza Escobar',
             'documento'           => 3414298,
@@ -189,6 +182,7 @@ class UsersTableSeeder extends Seeder
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
             'eps_id'              => Eps::all()->random()->id,
             'ciudad_id'           => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
             'nombres'             => 'Julian Alberto',
             'apellidos'           => 'Patiño',
             'documento'           => 8102363,
@@ -222,6 +216,7 @@ class UsersTableSeeder extends Seeder
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
             'eps_id'              => Eps::all()->random()->id,
             'ciudad_id'           => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
             'nombres'             => 'Nathalia',
             'apellidos'           => 'Lopez',
             'documento'           => '435442232',
@@ -256,6 +251,7 @@ class UsersTableSeeder extends Seeder
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
             'eps_id'              => Eps::all()->random()->id,
             'ciudad_id'           => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
             'nombres'             => 'Ana',
             'apellidos'           => 'Fernandez',
             'documento'           => '54224442',
@@ -289,6 +285,7 @@ class UsersTableSeeder extends Seeder
             'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
             'eps_id'              => Eps::all()->random()->id,
             'ciudad_id'           => Ciudad::all()->random()->id,
+            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
             'nombres'             => 'Luisa',
             'apellidos'           => 'Restrepo',
             'documento'           => '75434533',
@@ -322,7 +319,7 @@ class UsersTableSeeder extends Seeder
         // factory(User::class, 2)->create();
 
         // // $user = User::whereBetween('id', [8, 27])->get();
-    
+
         // $user = User::latest()->take(2)->get()->each(function ($item) {
 
         //     $item->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));

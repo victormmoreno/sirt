@@ -12,7 +12,7 @@ class PasswordChanged extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
-    public $subject = 'Contraseña cambiada';
+    public $subject = "Contraseña cambiada";
 
     /**
      * Create a new message instance.

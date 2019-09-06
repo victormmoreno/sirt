@@ -13,30 +13,30 @@ class LineasTecnologicasTableSeeder extends Seeder
     public function run()
     {
         LineaTecnologica::create([
-            'id'          => 1,
             'abreviatura' => 'BIO',
             'nombre'      => 'Biotecnonlogía y Nanotecnología',
+            'slug'        => str_slug('Biotecnonlogía y Nanotecnología', '-'),
             'descripcion' => '',
         ]);
 
         LineaTecnologica::create([
-            'id'          => 2,
             'abreviatura' => 'ETC',
             'nombre'      => 'Electrónica y Telecomunicaciones',
+            'slug'        => str_slug('Electrónica y Telecomunicaciones', '-'),
             'descripcion' => '',
         ]);
 
         LineaTecnologica::create([
-            'id'          => 3,
             'abreviatura' => 'IND',
             'nombre'      => 'Ingenieria y Diseño',
+            'slug'        => str_slug('Ingenieria y Diseño', '-'),
             'descripcion' => '',
         ]);
 
         LineaTecnologica::create([
-            'id'          => 4,
             'abreviatura' => 'TV',
             'nombre'      => 'Tecnologías Virtuales',
+            'slug'        => str_slug('Tecnologías Virtuales', '-'),
             'descripcion' => '',
         ]);
 

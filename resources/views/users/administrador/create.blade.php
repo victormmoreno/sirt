@@ -7,14 +7,25 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <h5>
-                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                        <i class="material-icons arrow-l">
-                            arrow_back
-                        </i>
-                    </a>
-                    Usuarios
-                </h5>
+                <div class="row">
+                    <div class="col s8 m8 l10">
+                        <h5 class="left-align">
+                              <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                  <i class="material-icons arrow-l">
+                                      arrow_back
+                                  </i>
+                              </a>
+                            Usuarios
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Nuevo Usuario</li>
+                        </ol>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
@@ -44,12 +55,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.usuarios.store')}}" method="POST" onsubmit="return checkSubmit()">
-                                    @include('users.administrador.form', [
-                                        'btnText' => 'Guardar',
-                                    ])
-                                </form>
-                            
+                                        <form action="{{ route('usuario.usuarios.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                            @include('users.administrador.form', [
+                                                'btnText' => 'Guardar',
+                                            ])
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -75,6 +85,7 @@ $(document).ready(function() {
     @if($errors->any())
         linea.getSelectLineaForNodo();
         UserCreate.getCiudad();
+        UserCreate.getCiudadExpedicion();
         regional.getCentroFormacion();
     @endif
 
@@ -502,6 +513,25 @@ var UserCreate = {
         $('#txtciudad').val("{{old('txtciudad')}}");
         @endif
         $('#txtciudad').material_select();
+      });
+    },
+    getCiudadExpedicion:function(){
+      let id;
+      id = $('#txtdepartamentoexpedicion').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        $('#txtciudadexpedicion').empty();
+        $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+          $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudadexpedicion').val("{{old('txtciudadexpedicion')}}");
+        @endif
+        $('#txtciudadexpedicion').material_select();
       });
     },
     getCiudadForModal:function(){

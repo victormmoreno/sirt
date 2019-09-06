@@ -3,6 +3,7 @@ $(document).ready(function() {
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false,
         processing: true,
         serverSide: true,
         ajax: {
@@ -17,7 +18,12 @@ $(document).ready(function() {
         }, {
             data: 'descripcion',
             name: 'descripcion',
-        }, {
+        }, 
+        {
+            data: 'show',
+            name: 'show',
+            orderable: false
+        },{
             data: 'action',
             name: 'action',
             orderable: false
@@ -1661,6 +1667,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/administrador",
             type: "get",
@@ -1700,172 +1707,193 @@ $(document).ready(function() {
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false,
     });
-    $('.dataTables_length select').addClass('browser-default');
 });
 var UserAdministradorDinamizador = {
     selectDinamizadoresPorNodo: function() {
         let nodo = $('#selectnodo').val();
         $('#dinamizador_table').dataTable().fnDestroy();
-        $('#dinamizador_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax: {
-                url: "/usuario/dinamizador/getDinamizador/" + nodo,
-                type: "get",
-            },
-            columns: [{
-                data: 'tipodocumento',
-                name: 'tipodocumento',
-            }, {
-                data: 'documento',
-                name: 'documento',
-            }, {
-                data: 'nombre',
-                name: 'nombre',
-            }, {
-                data: 'email',
-                name: 'email',
-            }, {
-                data: 'telefono',
-                name: 'telefono',
-            }, {
-                data: 'estado',
-                name: 'estado',
-            }, {
-                data: 'detail',
-                name: 'detail',
-                orderable: false,
-            }, {
-                data: 'edit',
-                name: 'edit',
-                orderable: false,
-            }, ],
-        });
+        if (nodo != '') {
+            $('#dinamizador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usuario/dinamizador/getDinamizador/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'telefono',
+                    name: 'telefono',
+                }, {
+                    data: 'estado',
+                    name: 'estado',
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, {
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false,
+                }, ],
+            });
+        } else {
+            $('#dinamizador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
     },
-    
 }
 $(document).ready(function() {
     $('#gestor_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false,
     });
-    // $('.dataTables_length select').addClass('browser-default');
 });
 var UserAdministradorGestor = {
     selectGestoresPorNodo: function() {
         let nodo = $('#selectnodo').val();
         $('#gestor_table').dataTable().fnDestroy();
-        $('#gestor_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax: {
-                url: "/usuario/gestor/getGestor/" + nodo,
-                type: "get",
-            },
-            columns: [{
-                data: 'tipodocumento',
-                name: 'tipodocumento',
-            }, {
-                data: 'documento',
-                name: 'documento',
-            }, {
-                data: 'nombre',
-                name: 'nombre',
-            }, {
-                data: 'email',
-                name: 'email',
-            }, {
-                data: 'telefono',
-                name: 'telefono',
-            }, {
-                data: 'estado',
-                name: 'estado',
-            }, {
-                data: 'detail',
-                name: 'detail',
-                orderable: false,
-            }, 
-            {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            }, ],
-        });
+        if (nodo != '') {
+            $('#gestor_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usuario/gestor/getGestor/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'telefono',
+                    name: 'telefono',
+                }, {
+                    data: 'estado',
+                    name: 'estado',
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, {
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false,
+                }, ],
+            });
+        }else{
+            $('#gestor_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
     },
-    
 }
 $(document).ready(function() {
     $('#infocenter_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false,
     });
-    // $('.dataTables_length select').addClass('browser-default');
 });
 var UserAdministradorInfocenter = {
     selectInfocentersForNodo: function() {
         let nodo = $('#selectnodo').val();
         $('#infocenter_table').dataTable().fnDestroy();
-        $('#infocenter_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax: {
-                url: "/usuario/infocenter/getinfocenter/" + nodo,
-                type: "get",
-            },
-            columns: [{
-                data: 'tipodocumento',
-                name: 'tipodocumento',
-            }, {
-                data: 'documento',
-                name: 'documento',
-            }, {
-                data: 'nombre',
-                name: 'nombre',
-            }, {
-                data: 'email',
-                name: 'email',
-            }, {
-                data: 'telefono',
-                name: 'telefono',
-            }, {
-                data: 'estado',
-                name: 'estado',
-            }, {
-                data: 'detail',
-                name: 'detail',
-                orderable: false,
-            }, 
-            {
-                data: 'edit',
-                name: 'edit',
-                orderable: false,
-            }, ],
-        });
+        if (nodo != '') {
+            $('#infocenter_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                ajax: {
+                    url: "/usuario/infocenter/getinfocenter/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'telefono',
+                    name: 'telefono',
+                }, {
+                    data: 'estado',
+                    name: 'estado',
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, {
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false,
+                }, ],
+            });
+        }else{
+            $('#infocenter_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
     },
-    
 }
-// import {modalUser} from '../modaluser.js';
-// require('../modaluser.js');
 $(document).ready(function() {
     $('#talento_history_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false,
         processing: true,
         serverSide: true,
         ajax: {
@@ -1894,69 +1922,74 @@ $(document).ready(function() {
             data: 'detail',
             name: 'detail',
             orderable: false,
-        },
-        {
+        }, {
             data: 'edit',
             name: 'edit',
             orderable: false,
         }, ],
     });
 });
-
 $(document).ready(function() {
     $('#ingreso_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false
     });
-    // $('.dataTables_length select').addClass('browser-default');
 });
 var UserAdministradorIngreso = {
     selectIngresoForNodo: function() {
         let nodo = $('#selectnodo').val();
         $('#ingreso_table').dataTable().fnDestroy();
-        $('#ingreso_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax: {
-                url: "/usuario/ingreso/getingreso/" + nodo,
-                type: "get",
-            },
-            columns: [{
-                data: 'tipodocumento',
-                name: 'tipodocumento',
-            }, {
-                data: 'documento',
-                name: 'documento',
-            }, {
-                data: 'nombre',
-                name: 'nombre',
-            }, {
-                data: 'email',
-                name: 'email',
-            }, {
-                data: 'telefono',
-                name: 'telefono',
-            }, {
-                data: 'estado',
-                name: 'estado',
-            }, {
-                data: 'detail',
-                name: 'detail',
-                orderable: false,
-            }, 
-            {
-                data: 'edit',
-                name: 'edit',
-                orderable: false,
-            }, ],
-        });
+        if (nodo != '') {
+            $('#ingreso_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usuario/ingreso/getingreso/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'telefono',
+                    name: 'telefono',
+                }, {
+                    data: 'estado',
+                    name: 'estado',
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, {
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false,
+                }, ],
+            });
+        } else {
+            $('#ingreso_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
     },
-    
 }
 $(document).ready(function() {
     $('#gestores_dinamizador_table').DataTable({
@@ -1965,6 +1998,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/gestor/getgestor",
             type: "get",
@@ -2005,6 +2039,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/infocenter/getinfocenter",
             type: "get",
@@ -2045,6 +2080,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/ingreso/getingreso",
             type: "get",
@@ -2097,6 +2133,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/usuarios/allusuarios",
             type: "get",
@@ -2120,6 +2157,9 @@ $(document).ready(function() {
             data: 'role',
             name: 'role',
         }, {
+            data: 'estado',
+            name: 'estado',
+        },{
             data: 'detail',
             name: 'detail',
             orderable: false,
@@ -2201,6 +2241,19 @@ function modalUser(respuesta) {
                                                         </li>
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
+                                                                credit_card
+                                                            </i>
+                                                            <span class="title">
+                                                                Ciudad Expedición documento de identidad
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.ciudadexpedicion.nombre + `   
+                                                            </p>
+                                                        </li>
+                                                        
+
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
                                                                 local_hospital
                                                             </i>
                                                             <div class="left">
@@ -2280,6 +2333,18 @@ function modalUser(respuesta) {
                                                             <p>
                                                                ` + respuesta.data.user.gruposanguineo.nombre + `   
                                                             </p>
+                                                        </li>
+                                                        <li class="collection-item avatar">
+                                                            <i class="material-icons circle teal darken-2">
+                                                                credit_card
+                                                            </i>
+                                                            <span class="title">
+                                                                Deparamento Expedición documento de identidad
+                                                            </span>
+                                                            <p>
+                                                                ` + respuesta.data.user.ciudadexpedicion.departamento.nombre + `
+                                                            </p>
+                                                            
                                                         </li>
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">
@@ -3884,8 +3949,6 @@ function consultarProyectosDelNodoPorAnho() {
   });
 }
 
-
-
 $(document).ready(function() {
   $('#empresasDeTecnoparque_modEdt_table').DataTable({
     language: {
@@ -4303,7 +4366,6 @@ function detallesDeUnaEdt(id) {
   })
 }
 
-
 $(document).ready(function() {
     $('#laboratorio_administrador_table').DataTable({
         language: {
@@ -4328,12 +4390,6 @@ var selectLaboratorioNodo = {
                 ajax: {
                     url: "/laboratorio/nodo/" + nodo,
                     type: "get",
-                    // success: function (response) {
-                    //     console.log(response);
-                    // },
-                    error: function(){
-                        alert('no se encontraron datos');
-                    }
                 },
 
                 columns: [{
@@ -4367,7 +4423,6 @@ var selectLaboratorioNodo = {
                 }, ],
             });
         }else{
-            // alert("por favor seleccione un valor");
             $('#laboratorio_administrador_table').DataTable().clear().draw();
         }
         

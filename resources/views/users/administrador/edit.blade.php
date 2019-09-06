@@ -7,22 +7,47 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <h5>
-                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                        <i class="material-icons arrow-l">
-                            arrow_back
-                        </i>
-                    </a>
-                    Usuarios
-                </h5>
+                <div class="row">
+                    <div class="col s8 m8 l10">
+                        <h5 class="left-align">
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                    <i class="material-icons arrow-l">
+                                        arrow_back
+                                    </i>
+                                </a>
+                                Usuarios
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align">
+                        <ol class="breadcrumbs">
+                            <li>
+                                <a href="{{route('home')}}">
+                                    Inicio
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('usuario.index')}}">
+                                    Usuarios
+                                </a>
+                            </li>
+                            <li class="active">
+                                Editar Usuario
+                            </li>
+                        </ol>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-
                                 <center>
                                     <span class="card-title center-align">
-                                        Editar Usuario: <b>{{$user->nombres}} {{$user->apellidos}}</b>
+                                        Editar Usuario:
+                                        <b>
+                                            {{$user->nombres}} {{$user->apellidos}}
+                                        </b>
                                     </span>
                                     <i class="Small material-icons prefix">
                                         supervised_user_circle
@@ -30,42 +55,43 @@
                                 </center>
                                 <div class="divider">
                                 </div>
-                                <div class="col s12 m12 l12">                                
+                                <div class="col s12 m12 l12">
                                     <div class="mailbox-view">
                                         <div class="mailbox-view-header">
                                             <div class="center">
                                                 <div class="center">
                                                     <i class="Small material-icons prefix">
                                                         supervised_user_circle
-                                                    </i>               
+                                                    </i>
                                                 </div>
                                                 <div class="center">
-                                                    <span class="mailbox-title">Información Básica</span>
+                                                    <span class="mailbox-title">
+                                                        Información Básica
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
-                                <form action="{{ route('usuario.usuarios.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
-                                    {!! method_field('PUT')!!}
-                                    @include('users.administrador.form', [
-                                        'btnText' => 'Modificar',
-                                    ])
-                                </form>
-                              
+                                        <form action="{{ route('usuario.usuarios.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                            {!! method_field('PUT')!!}
+                                          @include('users.administrador.form', [
+                                              'btnText' => 'Modificar',
+                                          ])
+                                        </form>
                                     </div>
-                                 
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </div>
+</main>
 @endsection
 
 @push('script')
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
     $('.selectMultipe').select2({
       language: "es",
     });
@@ -76,9 +102,9 @@ $(document).ready(function() {
     TipoTalento.getSelectTipoTalento();
     regional.getCentroFormacion();
     UserEdit.getCiudad();
-        linea.getSelectLineaForNodo();
-    @if($errors->any())
-    @endif
+    UserEdit.getCiudadExpedicion();
+    linea.getSelectLineaForNodo();
+    
 });
 
 function falseCheckbox() {
@@ -375,7 +401,7 @@ var roles = {
         if($('#dinamizador').css('display') === 'block')
         {
               @if($errors->any())
-                  $("#txtnododinamizador").val({{old('txtnododinamizador')}});
+                  $("#txtnododinamizador").val("{{old('txtnododinamizador')}}");
               @else
                 $("#txtnododinamizador").val();
               @endif
@@ -387,7 +413,7 @@ var roles = {
             @if($errors->any())
                 $('#txtnodogestor').val({{old('txtnodogestor')}});
                 $('#txtlinea').val({{old('txtlinea')}});
-                $("#txthonorario").val({{old('txthonorario')}});
+                $("#txthonorario").val('{{old('txthonorario')}}');
             @else
                 $("#txtnodogestor").val();
                 $("#txtlinea").val();
@@ -403,8 +429,8 @@ var roles = {
 
         if ($('#infocenter').css('display') === 'block') {
             @if($errors->any())
-                $('#txtnodoinfocenter').val({{old('txtnodoinfocenter')}});
-                $('#txtextension').val({{old('txtextension')}});
+                $('#txtnodoinfocenter').val("{{old('txtnodoinfocenter')}}");
+                $('#txtextension').val("{{old('txtextension')}}");
             @else 
                 $("#txtnodoinfocenter").val();
                 $("#txtextension").val();
@@ -474,29 +500,32 @@ var linea = {
             $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
         }else{
 
-           @if(session()->get('login_role') == App\User::IsAdministrador() ||  session()->get('login_role') == App\User::IsGestor() || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) &&  $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id))
-              @if(isset($user->gestor->lineatecnologica_id))
-                            $('#txtlinea').append('<option value="{{$user->gestor->lineatecnologica_id}}">{{$user->gestor->lineatecnologica->nombre}}</option>');
-              @endif
-             
-             
+            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                $('#txtlinea').append('<option value="">Seleccione la linea</option>');
+
+                $.each(response.lineasForNodo.lineas, function(i, e) {  
+                      $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                           
+                });
+                
+                @if($errors->any())
+                    $('#txtlinea').val('{{old('txtlinea')}}');
+                @else
+                    @if(isset($user->gestor->lineatecnologica_id))
+                    $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+                    @endif
+                @endif
             @else
-
-            $('#txtlinea').append('<option disabled value="">Seleccione la linea</option>');
-
-            $.each(response.lineasForNodo.lineas, function(i, e) {  
-                  $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
-                       
-            });
-            @endif
-
-            @if($errors->any())
-                $('#txtlinea').val('{{old('txtlinea')}}');
-            @else
-                @if(isset($user->gestor->lineatecnologica_id))
-                $('#txtlinea').val('{{$user->gestor->lineatecnologica_id}}');
+                @if($errors->any())
+                    $('#txtlinea').val('{{old('txtlinea')}}');
+                @else
+                    @if(isset($user->gestor->lineatecnologica_id))
+                    $('#txtlinea').append('<option value="{{$user->gestor->lineatecnologica->id}}">{{$user->gestor->lineatecnologica->nombre}}</option>');
+                    @endif
                 @endif
             @endif
+
+
         }
         
         $('#txtlinea').material_select();
@@ -530,6 +559,29 @@ var UserEdit = {
         $('#txtciudad').material_select();
       });
     },
+
+    getCiudadExpedicion:function(){
+      let id;
+      id = $('#txtdepartamentoexpedicion').val();
+      $.ajax({
+        dataType:'json',
+        type:'get',
+        url:'/usuario/getciudad/'+id
+      }).done(function(response){
+        $('#txtciudadexpedicion').empty();
+        $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
+        $.each(response.ciudades, function(i, e) {
+
+          $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+        })
+        @if($errors->any())
+        $('#txtciudadexpedicion').val({{old('txtciudadexpedicion')}});
+        @else
+        $('#txtciudadexpedicion').val({{$user->ciudadexpedicion->id}});
+        @endif
+        $('#txtciudadexpedicion').material_select();
+      });
+    },
     getCiudadForModal:function(){
       let id;
       id = $('#txtdepartamentogrupo').val();
@@ -550,7 +602,5 @@ var UserEdit = {
       });
     },
 }
-
-
 </script>
 @endpush

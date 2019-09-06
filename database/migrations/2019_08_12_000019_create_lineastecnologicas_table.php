@@ -23,7 +23,7 @@ class CreateLineastecnologicasTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombre', 45);
+            $table->string('nombre', 45)->unique();
             $table->string('abreviatura', 5);
             $table->string('descripcion',1000)->nullable()->default(null);
 

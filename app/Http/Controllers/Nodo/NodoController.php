@@ -29,7 +29,7 @@ class NodoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(NodoDataTable $dataTable)
+    public function index()
     {
         switch (session()->get('login_role') && auth()->user()->hasAnyRole([User::IsAdministrador()])) {
             case User::IsAdministrador():
@@ -47,58 +47,15 @@ class NodoController extends Controller
                         })
                         ->rawColumns(['detail', 'edit'])
                         ->make(true);
-                    
 
-                    // return $dataTable->before(function (\Yajra\DataTables\DataTableAbstract $dataTable) {
-                    //     return $dataTable->addColumn('detail', function ($data) {
-                    //         $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" onclick="" data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
-
-                    //             return $button;
-                    //         })->addColumn('edit', function ($data) {
-                    //             $button = '<a href="' . route("nodo.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-
-                    //             return $button;
-                    //         })
-                    //         ->rawColumns(['detail','edit']);
-                    //     })
-                        
-                    //     ->withHtml(function (\Yajra\DataTables\Html\Builder $builder) {
-                    //         $builder->columns($this->getColumns())
-                    //                     ->parameters([
-                    //                            'dom'          => 'Bfrtip',
-                    //                            'buttons'      => ['export', 'print', 'reset', 'reload'],
-                    //                      ]);
-                    //     })  
-                    //     ->render('nodos.administrador.index');
                 }
                 return view('nodos.administrador.index');
-
                 break;
             default:
                 abort('404');
                 break;
         }
 
-    }
-
-    protected function getColumns()
-    {
-        return [
-            'id',
-            'nombres',
-            'created_at',
-            'updated_at',
-        ];
-    }
-
-    public function html()
-    {
-        return $this->builder()
-            ->columns($this->getColumns())
-            ->parameters([
-                'dom'     => 'Bfrtip',
-                'buttons' => ['export', 'print', 'reset', 'reload'],
-            ]);
     }
 
     /**
@@ -155,7 +112,9 @@ class NodoController extends Controller
      */
     public function edit($id)
     {
-        // $nodo = $this->nodoRepository->findByid($id);
+
+        $nodo = $this->nodoRepository->findByid($id);
+        // dd($nodo);
         return view('nodos.administrador.edit', [
             'entidad'       => $this->nodoRepository->findByid($id),
             'lineas'        => $this->nodoRepository->getAllLineas(),

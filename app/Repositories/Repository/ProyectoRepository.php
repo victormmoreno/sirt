@@ -51,6 +51,24 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta el talento líder de un proyecto
+   * @param int $id Id del proyecto
+   * @return Collection
+   * @author dum
+   */
+  public function consultarTalentoLiderDeUnProyecto($id)
+  {
+    return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto_talento.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('users', 'users.id', '=', 'talentos.user_id')
+    ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+    ->where('talento_lider', 1);
+  }
+
+  /**
   * Cambia el estado de la aprobacion de un proyecto de un usuario y rol
   * @param Request
   * @param int $id Id del proyecto
@@ -95,7 +113,7 @@ class ProyectoRepository
           }
           $padre = $proyecto->articulacion_proyecto->actividad;
           // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
-          $proyecto->articulacion_proyecto->articulacion_proyecto_talento()->delete();
+          $proyecto->articulacion_proyecto->talentos()->delete();
           // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
           $proyecto->users()->delete();
           // Elimina el registro de la tabla de proyecto

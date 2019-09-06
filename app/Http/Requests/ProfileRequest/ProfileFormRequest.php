@@ -124,6 +124,7 @@ class ProfileFormRequest extends FormRequest
             'txtfechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
 
             'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
+            'txtotra_ocupacion.regex'             => 'Sólo se permiten caracteres alfabeticos',
             'txtocupaciones.required'             => 'seleccione al menos una ocupación',
 
         ];

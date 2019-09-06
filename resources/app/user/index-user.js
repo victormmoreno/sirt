@@ -17,6 +17,7 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
+        "lengthChange": false,
         ajax: {
             url: "/usuario/usuarios/allusuarios",
             type: "get",
@@ -40,6 +41,9 @@ $(document).ready(function() {
             data: 'role',
             name: 'role',
         }, {
+            data: 'estado',
+            name: 'estado',
+        },{
             data: 'detail',
             name: 'detail',
             orderable: false,

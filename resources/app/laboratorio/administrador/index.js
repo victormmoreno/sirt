@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
     $('#laboratorio_administrador_table').DataTable({
         language: {
@@ -23,12 +22,6 @@ var selectLaboratorioNodo = {
                 ajax: {
                     url: "/laboratorio/nodo/" + nodo,
                     type: "get",
-                    // success: function (response) {
-                    //     console.log(response);
-                    // },
-                    error: function(){
-                        alert('no se encontraron datos');
-                    }
                 },
 
                 columns: [{
@@ -62,7 +55,6 @@ var selectLaboratorioNodo = {
                 }, ],
             });
         }else{
-            // alert("por favor seleccione un valor");
             $('#laboratorio_administrador_table').DataTable().clear().draw();
         }
         

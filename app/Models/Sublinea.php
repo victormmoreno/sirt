@@ -41,6 +41,15 @@ class Sublinea extends Model
         return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
     }
 
+    /**
+     * Devolver relacion entre sublinea y proyecto
+     * @author julian londoño
+     */
+    public function proyectos()
+    {
+      return $this->hasMany(Proyecto::class, 'sublinea_id', 'id');
+    }
+
 
     /*=====  End of relaciones eloquent  ======*/
 

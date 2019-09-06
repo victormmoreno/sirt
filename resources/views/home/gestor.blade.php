@@ -16,6 +16,18 @@
             </div>
           </a>
         </div>
+        <div class="col s12 m3 l3 ">
+          <a href="{{ route('pdf.proyecto.acc') }}" class="black-text">
+            <div class="card green lighten-3 stats-card">
+              <div class="card-content">
+                <h6>Pruebas de PDF</h6>
+              </div>
+              <div class="progress green darken-4 stats-card-progress">
+                <div class="determinate"></div>
+              </div>
+            </div>
+          </a>
+        </div>
         <div class="col s12 m3 l3">
           <div class="card stats-card">
             <div class="card-content">

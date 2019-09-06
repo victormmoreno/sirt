@@ -90,7 +90,7 @@ class ProyectoController extends Controller
   */
   public function aprobacion($id)
   {
-    PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
+    // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
     // $proyecto = Proyecto::find( $id);
     // $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
     // $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
