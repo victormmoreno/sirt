@@ -49,6 +49,6 @@ class IdeaReceived extends Notification implements ShouldQueue
             'autor' => "{$this->idea->nombres_contacto} {$this->idea->apellidos_contacto}",
             'text'  => "ha inscrito una nueva idea | {$this->idea->nombre_proyecto}",
         ];
-        
+
     }
 }

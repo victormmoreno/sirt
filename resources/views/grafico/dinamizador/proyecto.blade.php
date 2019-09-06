@@ -27,7 +27,7 @@
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">library_books</i>Inscripción de Proyecto por Fechas</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyecto inscritos por año</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
@@ -37,9 +37,13 @@
                               @endfor
                             </select>
                             <label for="txtanho_GraficoProyecto1">Seleccione el Año</label>
-                            {{-- <div class="center col s12 m12 l12">
-                              <button onclick="consultarProyectoInscritosPorAnho(0);" class="btn">Consultar</button>
-                            </div> --}}
+                            <div class="center col s12 m12 l12">
+                              <div class="material-icons">
+                                <a onclick="generarExcelGrafico1Proyecto(0)">
+                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                                </a>
+                              </div>
+                            </div>
                           </div>
                           <div class="col s12 m8 l8">
                             <div id="graficosProyectoPorMesYNodo_combinate" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
@@ -48,36 +52,31 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">library_books</i>Edt's por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyectos inscritos por año con empresas</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
                             <div class="input-field col s12 m12 l12">
-                              <select id="txtgestor_id_edtGrafico2" name="txtgestor_id_edtGrafico2" style="width: 100%" tabindex="-1">
-                                <option value="">Seleccione el Gestor</option>
-                                @foreach($gestores as $id => $nombres_gestor)
-                                  <option value="{{$id}}">{{$nombres_gestor}}</option>
-                                @endforeach
+                              <select style="width: 100%" name="txtanho_GraficoProyecto2" id="txtanho_GraficoProyecto2" onchange="consultarProyectosInscritosConEmpresasPorAnho_combinate(0, this.value)">
+                                @for ($i=2016; $i <= $yearNow; $i++)
+                                  <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
                               </select>
-                              <label for="txtgestor_id_edtGrafico2">Gestor</label>
-                            </div>
-                            <div class="input-field col s12 m6 l6">
-                              <input type="text" id="txtfecha_inicio_edtGrafico2" name="txtfecha_inicio_edtGrafico2" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
-                              <label for="txtfecha_inicio_edtGrafico2">Fecha Inicio</label>
-                            </div>
-                            <div class="input-field col s12 m6 l6">
-                              <input type="text" id="txtfecha_fin_edtGrafico2" name="txtfecha_fin_edtGrafico2" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                              <label for="txtfecha_fin_edtGrafico2">Fecha Fin</label>
+                              <label for="txtanho_GraficoProyecto2">Seleccione el Año</label>
                             </div>
                             <div class="center col s12 m12 l12">
-                              <button onclick="consultarEdtsPorGestorYFecha_stacked(0)" class="btn">Consultar</button>
+                              <div class="material-icons">
+                                <a onclick="generarExcelGrafico2Proyecto(0)">
+                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                                </a>
+                              </div>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
-                            <div id="graficosEdtsPorGestorYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
-                              <div class="row card-panel">
+                            <div id="graficosProyectoConEmpresaPorMesYNodo_combinate" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                              {{-- <div class="row card-panel">
                                 <h5 class="center">Para consultar las edts por gestor, se debe seleccionar un gestor y fechas válidas, luego presionar el botón consultar</h5>
-                              </div>
+                              </div> --}}
                             </div>
                           </div>
                         </div>
@@ -150,6 +149,7 @@
   <script>
     $(document).ready(function(){
       consultarProyectosInscritosPorAnho_combinate(0, '{{$yearNow}}');
+      consultarProyectosInscritosConEmpresasPorAnho_combinate(0, '{{$yearNow}}');
     });
   </script>
 @endpush

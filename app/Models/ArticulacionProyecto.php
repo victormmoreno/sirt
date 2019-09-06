@@ -46,6 +46,7 @@ class ArticulacionProyecto extends Model
   /**
   * Relación muchos a muchos con la tabla de talentos
   * @return Eloquent
+  * @author dum
   */
   public function talentos()
   {

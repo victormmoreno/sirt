@@ -3695,6 +3695,57 @@ function verTalentosDeUnProyecto(id){
   });
 }
 
+function consultarProyectosPendientesPorAprobacion() {
+  // let id = 0;
+  // if (bandera == 1) {
+  //   id = $('#txtnodo_id').val();
+  // }
+
+  $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
+  $('#tblproyectosPendienteDeAprobacion').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+      {
+        data: 'nombre_nodo',
+        name: 'nombre_nodo',
+      },
+      {
+        data: 'nombre_gestor',
+        name: 'nombre_gestor',
+      },
+      {
+        data: 'estado_aprobacion',
+        name: 'estado_aprobacion',
+      },
+      {
+        width: '8%',
+        data: 'aprobar',
+        name: 'aprobar',
+        orderable: false
+      },
+    ],
+  });
+  // if (id === '') {
+  //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
+  // } else {
+  //
+  // }
+}
+
 
 // Ajax que muestra los proyectos de un gestor por año
 function consultarProyectosDelGestorPorAnho() {
@@ -4771,74 +4822,193 @@ var graficosEdtId = {
 };
 
 var graficosProyectoId = {
-  grafico1: 'graficosProyectoPorMesYNodo_combinate'
+  grafico1: 'graficosProyectoPorMesYNodo_combinate',
+  grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate'
 };
 
-function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
-  id = 0;
+function alertaNodoNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+}
 
+function alertaGestorNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un gestor(a)', 'warning');
+}
+
+function alertaLineaNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+}
+
+function generarExcelGrafico1Articulacion(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    location.href = '/excel/excelArticulacionFinalizadasPorFechaYNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
+function generarExcelGrafico3Articulacion(bandera) {
+  let id = 0;
+  let linea = $('#txtlinea_tecnologica').val();
+  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    if (linea === '') {
+      alertaLineaNoValido();
+    } else {
+      location.href = '/excel/excelArticulacionFinalizadasPorFechaNodoYLinea/'+id+'/'+linea+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+
+}
+
+function generarExcelGrafico2Articulacion() {
+  let id = $('#txtgestor_id').val();
+  let fecha_inicio = $('#txtfecha_inicio_Grafico2').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico2').val();
+
+  if (id === '') {
+    alertaGestorNoValido();
+  } else {
+    location.href = '/excel/excelArticulacionFinalizadasPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
+function generarExcelGrafico4Articulacion(bandera) {
+  let id = 0;
+  let anho = $('#txtanho_Grafico4').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    location.href = '/excel/excelArticulacionFinalizadasPorNodoYAnho/'+id+'/'+anho;
+  }
+
+}
+
+function generarExcelGrafico1Proyecto(bandera) {
+  let id = 0;
+  let anho = $('#txtanho_GraficoProyecto1').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_excelGrafico1Proyecto').val();
+  }
+  location.href = '/excel/excelProyectosInscritosPorAnho/'+id+'/'+anho
+}
+
+function generarExcelGrafico2Proyecto(bandera) {
+  let id = 0;
+  let anho = $('#txtanho_GraficoProyecto2').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_excelGrafico2Proyecto').val();
+  }
+  location.href = '/excel/excelProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho
+}
+
+function graficosProyectosPromedioCantidadesMeses(data, name) {
+  let tamanho = data.proyectos.cantidades.length;
+  let datos = {
+    cantidades: [],
+    meses: [],
+    promedios: []
+  };
+  for (let i = 0; i < tamanho; i++) {
+    datos.cantidades.push(data.proyectos.cantidades[i]);
+  }
+  for (let i = 0; i < tamanho; i++) {
+    datos.meses.push(data.proyectos.meses[i]);
+  }
+  for (let i = 0; i < tamanho; i++) {
+    datos.promedios.push(data.proyectos.promedios[i]);
+  }
+  Highcharts.chart(name, {
+    title: {
+      text: 'Proyectos Inscritos'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad/Promedio'
+      }
+    },
+    xAxis: {
+      categories: datos.meses,
+      title: {
+        text: 'Meses'
+      }
+    },
+    series: [{
+      type: 'column',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades
+    }, {
+      type: 'spline',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades,
+      dataLabels: {
+        enabled: true
+      },
+      marker: {
+        lineWidth: 2,
+        lineColor: '#008981',
+        fillColor: '#008981'
+      }
+    }]
+  });
+}
+
+function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) {
+  id = 0;
   if (bandera == 1) {
     id = $('#txtnodo_proyectoGrafico1');
   }
-
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    url: '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
     success: function (data) {
-
-      let tamanho = data.proyectos.cantidades.length;
-      let datos = {
-        cantidades: [],
-        meses: []
-      };
-
-      for (let i = 0; i < tamanho; i++) {
-        datos.cantidades.push(data.proyectos.cantidades[i]);
-      }
-
-      for (let i = 0; i < tamanho; i++) {
-        datos.meses.push(data.proyectos.meses[i]);
-      }
-
-      // console.log(datos.cantidades);
-
-      Highcharts.chart(graficosProyectoId.grafico1, {
-        title: {
-          text: 'Proyectos Inscritos'
-        },
-        yAxis: {
-          title: {
-            text: 'Cantidad'
-          }
-        },
-        xAxis: {
-          categories: datos.meses,
-          title: {
-            text: 'Meses'
-          }
-        },
-        series: [{
-          type: 'column',
-          name: 'Proyectos Inscritos',
-          data: datos.cantidades
-        }, {
-          type: 'spline',
-          name: 'Proyectos Inscritos',
-          data: datos.cantidades,
-          marker: {
-            lineWidth: 2,
-            lineColor: '#008981',
-            fillColor: '#008981'
-          }
-        }]
-      });
+      graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico2);
     },
     error: function (xhr, textStatus, errorThrown) {
       alert("Error: " + errorThrown);
     },
   })
+}
 
+function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
+  id = 0;
+  if (bandera == 1) {
+    id = $('#txtnodo_proyectoGrafico1');
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    success: function (data) {
+      graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico1);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 }
 
 function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
@@ -5105,9 +5275,14 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
 }
 
 
-function consultarTiposDeArticulacionesDelAnho_variablepie(idnodo) {
+function consultarTiposDeArticulacionesDelAnho_variablepie(bandera) {
   let anho = $('#txtanho_Grafico4').val();
-  if (idnodo == '') {
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_id').val();
+  }
+
+  if (idnodo === '') {
     Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
   } else {
     $.ajax({
@@ -5160,9 +5335,7 @@ function consultarTiposDeArticulacionesDelAnho_variablepie(idnodo) {
   }
 }
 
-function consultaArticulacionesDelGestorPorNodoYFecha_stacked(id) {
-  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
-  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
   $.ajax({
     dataType: 'json',
     type: 'get',
@@ -5243,6 +5416,23 @@ function consultaArticulacionesDelGestorPorNodoYFecha_stacked(id) {
       alert("Error: " + errorThrown);
     },
   });
+}
+
+function consultaArticulacionesDelGestorPorNodoYFecha_stacked(id) {
+  let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+  let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+  articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin);
+}
+
+function consultaArticulacionesDelGestorPorNodoYFecha_stackedAdministrador() {
+  let id = $('#txtnodo_id').val();
+  if (id == '') {
+    Swal.fire('Advertencia!', 'Seleccione un Nodo!', 'warning');
+  } else {
+    let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
+    let fecha_fin = $('#txtfecha_fin_Grafico1').val();
+    articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin);
+  }
 }
 
 function consultarArticulacionesDeUnGestorPorFecha_stacked() {

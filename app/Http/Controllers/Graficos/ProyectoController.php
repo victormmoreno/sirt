@@ -12,10 +12,82 @@ class ProyectoController extends Controller
 {
 
   private $proyectoRepository;
+  private $idnodo;
 
   public function __construct(ProyectoRepository $proyectoRepository)
   {
     $this->setProyectoRepository($proyectoRepository);
+  }
+
+  /**
+   * Suma las cantidades de proyectos
+   *
+   * @param Collection $query
+   * @return int
+   */
+  private function sumarCantidadesProyectos($query)
+  {
+    $suma = 0;
+    foreach ($query as $key => $value) {
+      $suma += $value->cantidad;
+    }
+    return $suma;
+  }
+
+  /**
+   * Método para retorna el array para mostrar los datos en la gráfica
+   *
+   * @param Collection $query
+   * @param int $suma Suma de la cantidad total de proyectos
+   * @return array
+   * @author dum
+   */
+  private function getDatosGrafico($query, $suma)
+  {
+    $cantidades = array();
+    $meses = array();
+    $promedios = array();
+    foreach ($query as $key => $value) {
+      $cantidades[$key] = $value->cantidad;
+      $meses[$key] = $value->mes;
+      $promedios[$key] = round($value->cantidad / $suma * 100, 1);
+    }
+
+    return array('cantidades' => $cantidades, 'meses' => $meses, 'promedios' => $promedios);
+  }
+
+  /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   *
+   * @param type var Description
+   * @return Response
+   */
+  public function proyectosInscritosConEmpresasPorMesDeUnNodo_Controller($id, $anho)
+  {
+    $this->condicionalSobreElIdNodo($id);
+    $proyectos = $this->getProyectoRepository()->proyectosInscritosConEmpresasPorMesDeUnNodo_Repository($this->getIdNodo(), $anho);
+    $suma = $this->sumarCantidadesProyectos($proyectos);
+    $datos = $this->getDatosGrafico($proyectos, $suma);
+    return response()->json([
+      'proyectos' => $datos
+    ]);
+  }
+
+  /**
+   * Condición para asignarle un valor a $idnodo
+   *
+   * @param int $id Id del nodo
+   * @return void
+   * @author dum
+   */
+  private function condicionalSobreElIdNodo($id)
+  {
+    $this->setIdNodo($id);
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $this->setIdNodo(auth()->user()->dinamizador->nodo_id);
+    }
   }
 
   /**
@@ -27,28 +99,35 @@ class ProyectoController extends Controller
    */
   public function proyectosPorFechaInicioNodoYAnhoGrafico_Controller($id, $anho)
   {
-    $idnodo = $id;
-
-    if ( Session::get('login_role') == User::IsDinamizador() ) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
-    // dd($idnodo);
-
-    // dd($this->getProyectoRepository());
-    $proyectos = $this->getProyectoRepository()->proyectosInscritosPorMesDeUnNodo_Repository($idnodo, $anho);
-    $cantidades = array();
-    $meses = array();
-    foreach ($proyectos as $key => $value) {
-      // var_dump($value . '<br>');
-      $cantidades[$key] = $value->cantidad;
-      $meses[$key] = $value->mes;
-    }
-    $datos = array('cantidades' => $cantidades, 'meses' => $meses);
-    // dd($datos);
-    // dd($proyectos);
+    $this->condicionalSobreElIdNodo($id);
+    $proyectos = $this->getProyectoRepository()->proyectosInscritosPorMesDeUnNodo_Repository($this->getIdNodo(), $anho);
+    $suma = $this->sumarCantidadesProyectos($proyectos);
+    $datos = $this->getDatosGrafico($proyectos, $suma);
     return response()->json([
       'proyectos' => $datos
     ]);
+  }
+
+  /**
+   * Asgina un valor a $idnodo
+   *
+   * @param int $idnodo Description
+   * @return void
+   * @author dum
+   */
+  public function setIdNodo($idnodo)
+  {
+    $this->idnodo = $idnodo;
+  }
+
+  /**
+   * Retorna el valor de $idnodo
+   * @return int
+   * @author dum
+   */
+  private function getIdNodo()
+  {
+    return $this->idnodo;
   }
 
   /**

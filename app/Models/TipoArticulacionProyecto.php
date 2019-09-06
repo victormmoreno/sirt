@@ -16,4 +16,13 @@ class TipoArticulacionProyecto extends Model
   protected $fillable = [
     'nombre',
   ];
+
+  /**
+   * Relacion a la tabla de proyectos
+   */
+  public function proyectos()
+  {
+    return $this->hasMany(Proyecto::class, 'tipoarticulacionproyecto_id', 'id');
+  }
+
 }
