@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Laboratorio;
+use App\Models\LineaTecnologica;
 use App\Policies\Laboratorio\LaboratorioPolicy;
 use App\Policies\User\Profile\UserProfilePolicy;
+use App\Policies\LineaTecnologica\LineaTecnologicaPolicy;
 use App\Policies\User\UserPolicy;
 use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Laboratorio::class => LaboratorioPolicy::class,
         User::class        => UserPolicy::class,
+        LineaTecnologica::class => LineaTecnologicaPolicy::class,
     ];
 
     /**

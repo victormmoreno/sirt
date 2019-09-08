@@ -8,7 +8,12 @@
         <!-- Fonts -->
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet">
+        <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="https://editor.datatables.net/extensions/Editor/css/editor.dataTables.min.css">
+        <link href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
+
+
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token()}}">
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')">

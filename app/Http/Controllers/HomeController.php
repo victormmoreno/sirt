@@ -53,7 +53,7 @@ class HomeController extends Controller
           break;
 
         default:
-          // code...
+          return view('home.home');
           break;
       }
 

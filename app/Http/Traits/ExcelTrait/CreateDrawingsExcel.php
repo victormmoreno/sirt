@@ -2,8 +2,7 @@
 
 namespace App\Http\Traits\ExcelTrait;
 
-use PhpOffice\PhpSpreadsheet\Shared\Drawing;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 trait createDrawingsExcel
 {
