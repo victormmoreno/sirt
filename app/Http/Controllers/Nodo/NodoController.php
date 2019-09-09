@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Nodo;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
 use App\Http\Requests\NodoFormRequest;
+use App\Models\Nodo;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller
@@ -19,8 +18,8 @@ class NodoController extends Controller
 
     public function __construct(NodoRepository $nodoRepository, DepartamentoRepository $departamentoRepository)
     {
-        // $this->middleware('auth');
-        $this->middleware('role_session:Administrador|Dinamizador|Talento');
+        $this->middleware('auth');
+        $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
         $this->nodoRepository         = $nodoRepository;
         $this->departamentoRepository = $departamentoRepository;
     }
@@ -31,7 +30,11 @@ class NodoController extends Controller
      */
     public function index()
     {
-        switch (session()->get('login_role') && auth()->user()->hasAnyRole([User::IsAdministrador()])) {
+
+
+        $this->authorize('index', Nodo::class);
+
+        switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 if (request()->ajax()) {
                     return datatables()->of($this->nodoRepository->getAlltNodo())
@@ -49,10 +52,38 @@ class NodoController extends Controller
                         ->make(true);
 
                 }
-                return view('nodos.administrador.index');
+                return view('nodos.index');
+
+                break;
+            case User::IsDinamizador():
+                if (isset(auth()->user()->dinamizador)) {
+                    $nodo = auth()->user()->dinamizador->nodo->id;
+
+                    // return $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->first();
+
+                    return view('nodos.show', [
+                        'nodo' => $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->first(),
+                    ]);
+
+                }
+                abort('403');
+
+                break;
+            case User::IsGestor():
+
+                if (isset(auth()->user()->gestor)) {
+                    $nodo = auth()->user()->gestor->nodo->id;
+
+                    return $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->get();
+
+                    return view('nodos.show', [
+                        'nodo' => $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->get(),
+                    ]);
+                }
+                abort('403');
                 break;
             default:
-                abort('404');
+                abort('403');
                 break;
         }
 
@@ -65,8 +96,9 @@ class NodoController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Nodo::class);
 
-        return view('nodos.administrador.create', [
+        return view('nodos.create', [
             'lineas'        => $this->nodoRepository->getAllLineas(),
             'regionales'    => $this->nodoRepository->getAllRegionales(),
             'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
@@ -81,10 +113,11 @@ class NodoController extends Controller
      */
     public function store(NodoFormRequest $request)
     {
+        $this->authorize('store', Nodo::class);
         //metodo para guardad
         $nodoCreate = $this->nodoRepository->storeNodo($request);
 
-        if ($nodoCreate == true) {
+        if ($nodoCreate === true) {
 
             alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
         } else {
@@ -115,7 +148,7 @@ class NodoController extends Controller
 
         $nodo = $this->nodoRepository->findByid($id);
         // dd($nodo);
-        return view('nodos.administrador.edit', [
+        return view('nodos.edit', [
             'entidad'       => $this->nodoRepository->findByid($id),
             'lineas'        => $this->nodoRepository->getAllLineas(),
             'regionales'    => $this->nodoRepository->getAllRegionales(),

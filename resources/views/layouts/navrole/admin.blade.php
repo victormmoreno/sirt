@@ -13,9 +13,9 @@
       <li>
         <a href="{{route('nodo.index')}}">Nodos</a>
       </li>
-      <li>
+      {{-- <li>
         <a href="">Mapa</a>
-      </li>
+      </li> --}}
     </ul>
   </div>
 </li>

@@ -17,8 +17,32 @@ class Entidad extends Model
     protected $fillable = [
         'ciudad_id',
         'nombre',
+        'slug',
         'email_entidad',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'ciudad_id'     => 'integer',
+        'nombre'        => 'string',
+        'slug'          => 'string',
+        'email_entidad' => 'string',
+
+    ];
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     /*=========================================
     =            asesores eloquent            =
@@ -26,7 +50,7 @@ class Entidad extends Model
 
     public function getNombreAttribute($nombre)
     {
-        return ucwords(mb_strtolower(trim($nombre),'UTF-8'));
+        return ucwords(mb_strtolower(trim($nombre), 'UTF-8'));
     }
 
     public function getEmailEntidadAttribute($email_entidad)
@@ -41,7 +65,7 @@ class Entidad extends Model
 
     public function setNombreAttribute($nombre)
     {
-        $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre),'UTF-8'));
+        $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre), 'UTF-8'));
     }
 
     public function setEmailEntidadAttribute($email_entidad)
@@ -50,18 +74,22 @@ class Entidad extends Model
     }
     /*=====  End of mutador eloquent  ======*/
 
+    public function setSlugAttribute($nombre)
+    {
+        $this->attributes['slug'] = str_slug($nombre. str_random(7), '-');
+    }
+
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
 
-
     /**
-    * Relación muchos a muchos con la tabla de edts
-    * @return Eloquent
-    */
+     * Relación muchos a muchos con la tabla de edts
+     * @return Eloquent
+     */
     public function edts()
     {
-      return $this->belongsToMany(Edt::class, 'edt_entidad')->withTimestamps();
+        return $this->belongsToMany(Edt::class, 'edt_entidad')->withTimestamps();
     }
 
     public function centro()
@@ -107,7 +135,6 @@ class Entidad extends Model
     }
 
     /*=====  End of relaciones eloquent  ======*/
-
 
     /*========================================================================
     =            scope para consultar los grupos de investigacion            =

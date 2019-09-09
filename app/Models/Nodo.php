@@ -24,6 +24,19 @@ class Nodo extends Model
         'anho_inicio',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'centro_id'   => 'integer',
+        'entidad_id'  => 'integer',
+        'direccion'   => 'string',
+        'telefono'    => 'string',
+        'anho_inicio' => 'year',
+    ];
+
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
@@ -73,7 +86,7 @@ class Nodo extends Model
      */
     public function actividades()
     {
-      return $this->hasMany(Actividad::class, 'nodo_id', 'id');
+        return $this->hasMany(Actividad::class, 'nodo_id', 'id');
     }
 
     //relacion muchos a muchos con lineas
@@ -214,5 +227,20 @@ class Nodo extends Model
     {
 
         return $query->first();
+    }
+
+    /**
+     * mostar equipo humano de tecnoparque.
+     *
+     * @param array $relations
+     * @return array
+     * @author julian londoño
+     */
+    public function scopeTeamTecnoparque($query, array $relations)
+    {
+        if (isset($relations)) {
+            return $query->with($relations);
+        }
+        return $query;
     }
 }
