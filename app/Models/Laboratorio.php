@@ -30,7 +30,6 @@ class Laboratorio extends Model
         'nombre'               => 'string',
         'participacion_costos' => 'integer',
         'estado'               => 'integer',
-        'nombre'               => 'string',
     ];
 
     /**

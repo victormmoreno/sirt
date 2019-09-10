@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LineaTecnologica extends Model
 {
@@ -146,7 +145,6 @@ class LineaTecnologica extends Model
         return $query->first();
     }
 
-
     /**
      * Execute a query for a single record by ID.
      *
@@ -154,11 +152,10 @@ class LineaTecnologica extends Model
      * @param  array  $columns
      * @return mixed|static
      */
-    public function scopeFindLinea($query,$linea, $columns = ['*'])
+    public function scopeFindLinea($query, $linea, $columns = ['*'])
     {
         return $query->where('slug', '=', $linea)->first($columns);
     }
-
 
     /**
      * Find a model by its primary key or throw an exception.
@@ -174,13 +171,12 @@ class LineaTecnologica extends Model
             if (count($result) === count(array_unique($linea))) {
                 return $result;
             }
-        } elseif (! is_null($result)) {
+        } elseif (!is_null($result)) {
             return $result;
-        }else{
+        } else {
             abort('404');
         }
 
-        
     }
 
 }

@@ -29,15 +29,15 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <center><span class="card-title center-align">Editar Nodo <b>{{$entidad->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
+                                <center><span class="card-title center-align">Editar Nodo <b>{{$nodo->entidad->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
                                 <div class="divider mailbox-divider"></div>
                                
-                                <form action="{{ route('nodo.update', $entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                <form action="{{ route('nodo.update', $nodo->entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
                                 	{!! method_field('PUT')!!}
 	                                @include('nodos.form', [
-								    	'btnText' => 'Modificar',
-								   	])
-							   	</form>  
+              								    	'btnText' => 'Modificar',
+              								   	])
+              							   	</form>  
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@ var Regional = {
          @if($errors->any())
         $('#txtcentro').val('{{old('txtcentro')}}');
         @else
-        $('#txtcentro').val('{{$entidad->nodo->centro->id}}');
+        $('#txtcentro').val('{{$nodo->entidad->nodo->centro->id}}');
         @endif
         $('#txtcentro').material_select();
       });
@@ -102,7 +102,7 @@ var DepartamentsEdit = {
         @if($errors->any())
         $('#txtciudad').val('{{old('txtciudad')}}');
         @else
-            $('#txtciudad').val('{{$entidad->ciudad->id}}');
+            $('#txtciudad').val('{{$nodo->entidad->ciudad->id}}');
         @endif
         $('#txtciudad').material_select();
       });

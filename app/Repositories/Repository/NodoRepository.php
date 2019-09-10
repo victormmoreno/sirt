@@ -15,14 +15,13 @@ class NodoRepository
     public function getAlltNodo()
     {
 
-
-        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"))
+        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"), 'entidades.slug')
             ->join('centros', 'centros.id', '=', 'nodos.centro_id')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->join('entidades as ent', 'ent.id', '=', 'centros.entidad_id')
             ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
             ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-            ->orderBy('nodos','ASC')
+            ->orderBy('nodos', 'ASC')
             ->get();
     }
 
@@ -84,7 +83,7 @@ class NodoRepository
             $entidad = Entidad::create([
                 'ciudad_id'     => $request->input('txtciudad'),
                 'nombre'        => $request->input('txtnombre'),
-                'slug'          => str_slug($request->input('txtnombre'), '-'),
+                'slug'          => str_slug('Tecnoparque nodo ' . $request->input('txtnombre'), '-'),
                 'email_entidad' => $request->input('txtemail_entidad'),
             ]);
 
@@ -121,7 +120,7 @@ class NodoRepository
             $entidadNodo->update([
                 'ciudad_id'     => $request->input('txtciudad'),
                 'nombre'        => $request->input('txtnombre'),
-                'slug'          => str_slug($request->input('txtnombre'), '-'),
+                'slug'          => str_slug('Tecnoparque nodo ' . $request->input('txtnombre'), '-'),
                 'email_entidad' => $request->input('txtemail_entidad'),
             ]);
 
@@ -158,13 +157,34 @@ class NodoRepository
             'entidad.ciudad.departamento',
             'centro',
             'centro.entidad',
+            'centro.entidad.ciudad',
+            'centro.entidad.ciudad.departamento',
             'centro.regional',
             'lineas',
+            'laboratorios',
+            'laboratorios.lineatecnologica',
             'dinamizador',
+            'dinamizador.user',
             'infocenter',
+            'infocenter.user',
             'gestores',
+            'gestores.user',
+            'gestores.lineatecnologica',
+            'ingresos',
+            'ingresos.user',
         ]);
 
+    }
+
+    /**
+     * metodo para consular la informacion del nodo por el slug
+     * @param string nodo
+     * @author julian londoño
+     * @return collection
+     */
+    public function findNodoForShow(string $nodo)
+    {
+        return $this->getTeamTecnoparque()->findOrFailNodo($nodo);
     }
 
 }

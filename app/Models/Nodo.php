@@ -230,6 +230,44 @@ class Nodo extends Model
     }
 
     /**
+     * Execute a query for a single record by slug.
+     *
+     * @param  string  $nodo
+     * @param  array  $columns
+     * @return mixed|static
+     */
+    public function scopeFindNodo($query, $nodo, $columns = ['*'])
+    {
+        return $query->with('entidad')->whereHas('entidad',function($query) use ($nodo){
+            $query->where('slug','=', $nodo);
+        })->first($columns);
+
+        
+    }
+
+    /**
+     * Find a model by its slug or throw an exception.
+     *
+     * @param  mixed  $nodo
+     * @param  array  $columns
+     */
+    public function scopeFindOrFailNodo($nodo, $columns = ['*'])
+    {
+        $result = $this->scopeFindNodo($nodo, $columns);
+
+        if (is_array($nodo)) {
+            if (count($result) === count(array_unique($nodo))) {
+                return $result;
+            }
+        } elseif (!is_null($result)) {
+            return $result;
+        } else {
+            abort('404');
+        }
+
+    }
+
+    /**
      * mostar equipo humano de tecnoparque.
      *
      * @param array $relations

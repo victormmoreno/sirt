@@ -4,13 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{config('app.name')}} | @yield('meta-title',   config('app.name') )</title>
-        {{-- <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">    --}} 
-        <!-- Fonts -->
+
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet">
-        <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="https://editor.datatables.net/extensions/Editor/css/editor.dataTables.min.css">
-        <link href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
 
 
@@ -40,6 +36,7 @@
             </center>
           </div>
         </div>
+
         @include('layouts.footer')
     </div>
     <div class="left-sidebar-hover"></div>

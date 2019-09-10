@@ -10,13 +10,6 @@ class LaboratorioPolicy
 {
     use HandlesAuthorization;
 
-    // public function before($user, $ability)
-    // {
-    //     if ($user->getRoleNames()->contains(User::IsAdministrador())) {
-    //         return true;
-    //     }
-    // }
-
     /**
      * Determine whether the user can view the laboratorios.
      *

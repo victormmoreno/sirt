@@ -80,4 +80,10 @@
   'calibri-regular' => array(
     'normal' => $fontDir . '\fcd332cb8d4c83cb44e3b454e1dce3e1',
   ),
+  'material icons' => array(
+    'normal' => $fontDir . '\a83785ccbfc5713b63b97bbf71e6fa23',
+  ),
+  'roboto' => array(
+    'normal' => $fontDir . '\cf99a9d56c411ce3fa8a2fc49c520e74',
+  ),
 ) ?>
