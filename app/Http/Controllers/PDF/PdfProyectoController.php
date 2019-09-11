@@ -28,9 +28,13 @@ class PdfProyectoController extends Controller
   {
     $proyecto = Proyecto::find($id);
     $talento_lider = $this->getProyectoRepository()->consultarTalentoLiderDeUnProyecto($id)->first();
+    $gestor = $this->getProyectoRepository()->pivotAprobaciones($id)->where('roles.name', 'Gestor')->first();
+    $dinamizador = $this->getProyectoRepository()->pivotAprobaciones($id)->where('roles.name', 'Dinamizador')->first();
     $pdf = PDF::loadView('pdf.proyecto.acc', [
       'proyecto' => $proyecto,
-      'talento_lider' => $talento_lider
+      'talento_lider' => $talento_lider,
+      'gestor' => $gestor,
+      'dinamizador' => $dinamizador
     ]);
     return $pdf->stream();
   }
@@ -43,7 +47,7 @@ class PdfProyectoController extends Controller
    */
   private function setProyectoRepository($proyectoRepository)
   {
-    $this->proyectoRepository  = $proyectoRepository;
+    $this->proyectoRepository = $proyectoRepository;
   }
 
   /**

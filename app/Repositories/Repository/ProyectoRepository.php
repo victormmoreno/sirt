@@ -58,7 +58,7 @@ class ProyectoRepository
    */
   public function consultarTalentoLiderDeUnProyecto($id)
   {
-    return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento')
+    return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento', 'fechanacimiento')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto_talento.id')
@@ -138,7 +138,7 @@ class ProyectoRepository
    *
    * @param int $id Id del proyecto
    * @param int $user Id del usuario
-   * @param string
+   * @param string $role Nombre del rol
    */
   public function pivotAprobacionesUnica($id, $user, $role)
   {
@@ -163,7 +163,7 @@ class ProyectoRepository
    */
   public function pivotAprobaciones($id)
   {
-    return Proyecto::select('roles.name')
+    return Proyecto::select('roles.name', 'users.documento')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
     ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
     ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')

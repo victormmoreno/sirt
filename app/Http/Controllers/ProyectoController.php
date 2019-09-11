@@ -91,25 +91,30 @@ class ProyectoController extends Controller
   public function aprobacion($id)
   {
     // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
-    // $proyecto = Proyecto::find( $id);
-    // $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
-    // $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
-    //
-    // if ( Session::get('login_role') == User::IsGestor() ) {
-    //   return view('proyectos.gestor.aprobacion', [
-    //   'proyecto' => $proyecto,
-    //   'pivot' => $pivot,
-    //   'aprobado' => $aprobado
-    //   ]);
-    // } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-    //   return view('proyectos.dinamizador.aprobacion', [
-    //     'proyecto' => $proyecto,
-    //     'pivot' => $pivot,
-    //     'aprobado' => $aprobado
-    //   ]);
-    // } else {
-    //
-    // }
+    $proyecto = Proyecto::find( $id);
+    $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
+    $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
+
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('proyectos.gestor.aprobacion', [
+      'proyecto' => $proyecto,
+      'pivot' => $pivot,
+      'aprobado' => $aprobado
+      ]);
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('proyectos.dinamizador.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot,
+        'aprobado' => $aprobado
+      ]);
+    } else {
+      return view('proyectos.talento.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot,
+        'aprobado' => $aprobado
+      ]);
+
+    }
   }
 
   /**
@@ -598,6 +603,10 @@ class ProyectoController extends Controller
       return view('proyectos.administrador.index', [
       'nodos' => Nodo::SelectNodo()->get(),
       ]);
+      break;
+
+      case User::IsTalento():
+      return view('proyectos.talento.index');
       break;
 
       default:

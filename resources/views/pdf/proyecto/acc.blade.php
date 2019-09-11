@@ -1,10 +1,17 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <style>
 .page-break {
     page-break-after: always;
 }
 body {
     font-family: "calibri-regular";
+}
+ylee {
+  font-family: "ylee";
+  font-size: 15;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 15px;
 }
 calibriBold {
   font-family: "calibri-bold";
@@ -19,6 +26,12 @@ calibriBold {
   font-weight: normal;
   font-style: normal;
 },
+@font-face {
+  font-family: 'ylee';
+  src: url("{{ storage_path('fonts\ylee.ttf') }}") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+},
 .headerImg{
   font-size: 20px;
   border-style: solid;
@@ -26,6 +39,58 @@ calibriBold {
   border-color: black;
   width: 300px;
   text-align: left;
+}
+.col.title1 {
+  width: 46%;
+  /* margin-left: 10mm; */
+  left: auto;
+  right: auto;
+  bottom: auto;
+  background-color: #A6A6A6;
+}
+.col.firmaRep {
+  width: 46%;
+  /* margin-left: 10mm; */
+  left: auto;
+  right: auto;
+  bottom: auto;
+  height: 146px;
+  /* background-color: #A6A6A6; */
+}
+.col.contenedorGrande {
+  width: 95.7%;
+  /* margin-left: 10mm; */
+  left: auto;
+  right: auto;
+  bottom: auto;
+  height: 146px;
+  /* background-color: #A6A6A6; */
+}
+.col.contenedorGrande2 {
+  width: 95.7%;
+  /* margin-left: 10mm; */
+  left: auto;
+  right: auto;
+  bottom: auto;
+  height: 100px;
+  /* background-color: #A6A6A6; */
+}
+.col.title2 {
+  width: 46%;
+  /* margin-right: 30mm; */
+  left: auto;
+  right: auto;
+  bottom: auto;
+  background-color: #A6A6A6;
+}
+.col.firmaTec {
+  width: 46%;
+  /* margin-right: 30mm; */
+  left: auto;
+  right: auto;
+  bottom: auto;
+  height: 146px;
+  /* background-color: #A6A6A6; */
 }
 .headerText{
   font-size: 10px;
@@ -42,7 +107,8 @@ calibriBold {
   line-height: 15px;
 }
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link rel="stylesheet" href="{{ asset('css/app.css')}}">
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> --}}
 <head>
   <title>Acuerdo de Confidencialidad y Compromiso</title>
 </head>
@@ -439,10 +505,88 @@ calibriBold {
     a los <calibriBold>{{ Carbon\Carbon::now()->isoFormat('DD') }}</calibriBold> días del mes de: <calibriBold>{{ Carbon\Carbon::now()->monthName }}</calibriBold> de
     <calibriBold>{{ Carbon\Carbon::now()->isoFormat('YYYY') }}</calibriBold>, por los aceptantes:
   </p>
+  {{-- Página de la firma de las partes (gestor, dinamizador, talento líder) --}}
   <div class="page-break"></div>
-  <p>
-    Aceptantes
-  </p>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <div style="margin: 0mm 10mm 18mm 10mm; border-width: 1px; border-style: solid; border-color: blue; height: 930px">
+    <div class="row">
+      <div class="center">
+        <img src="{{ asset('img/encabezadoAcc.png') }}" class="img-responsive">
+      </div>
+    </div>
+    <br><br><br><br><br><br><br>
+    <div class="row" class="marginPdf">
+      <div style="border-width: 1px; border-style: solid; border-color: black" class="col title1 center"><calibriBold>REPRESENTANTES DEL PROYECTO</calibriBold></div>
+      <div style="border-width: 1px; border-style: solid; border-color: black" class="col title2 center"><calibriBold>RED TECNOPARQUE SENA</calibriBold></div>
+    </div>
+    <br>
+    <div class="row">
+      <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaRep">
+        <br>
+        Firma: <ylee>{{ $talento_lider->nombre_talento }}</ylee>
+        <br>
+        {{ $talento_lider->nombre_talento }}
+        <br>
+        <calibriBold>Nombre del Talento Interlocutor.</calibriBold>
+        <br>
+        C.C.
+        <br>
+        {{ $talento_lider->documento }}
+      </div>
+      <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaTec">
+        <br>
+        Firma: <ylee>{{ $gestor->usuario }}</ylee>
+        <br><br>
+        {{ $gestor->usuario }}
+        <br>
+        <calibriBold>Nombre del Gestor a cargo de las Asesorías del Proyecto.</calibriBold>
+        <br>
+        C.C. {{ $gestor->documento }}
+        <br>
+      </div>
+    </div>
+    <br><br><br><br><br><br><br>
+    <div class="row">
+      <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaRep">
+      </div>
+      <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaTec">
+        <br>
+        Firma: <ylee>{{ $dinamizador->usuario }}</ylee>
+        <br><br>
+        {{ $dinamizador->usuario }}
+        <br>
+        <calibriBold>Nombre del Dinamizador del Nodo.</calibriBold>
+        <br>
+        C.C.
+        <br>
+        {{ $dinamizador->documento }}
+      </div>
+    </div>
+    <br><br><br><br><br><br><br>
+    <div class="row">
+      <div style="border-width: 1px; border-style: solid; border-color: black" class="col contenedorGrande">
+        Firma Acudiente:
+        <br>
+        <ylee>{{ Carbon\Carbon::parse($talento_lider->fechanacimiento)->age < 18 ? $proyecto->nombre_acudiente : '' }}</ylee>
+        <br>
+        <calibriBold>Nombre Acudiente.</calibriBold>
+        <br>
+        {{ Carbon\Carbon::parse($talento_lider->fechanacimiento)->age < 18 ? $proyecto->nombre_acudiente : '' }}
+        <br>
+        <calibriBold>C.C.</calibriBold>
+        {{ Carbon\Carbon::parse($talento_lider->fechanacimiento)->age < 18 ? $proyecto->cedula_acudiente : '' }}
+      </div>
+    </div>
+    <br><br><br><br><br><br><br>
+    <div class="row">
+      <div style="border-width: 1px; border-style: solid; border-color: black" class="col contenedorGrande2">
+        <calibriBold>Nota:</calibriBold> El talento interlocutor será la persona encargada de comunicarse con el personal Tecnoparque.
+        <p style="line-height: 10px">
+          Todos los talentos tendrán igualdad de derechos morales y patrimoniales, al menos que se establezca por escrito lo contrario, dicho documento debe ser firmado por todos los integrantes del equipo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
