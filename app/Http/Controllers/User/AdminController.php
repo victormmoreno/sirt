@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Repository\UserRepository\AdminRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
+use PDF;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -76,7 +77,33 @@ class AdminController extends Controller
     public function exportAdminUser($extension = 'xlsx')
     {
         $this->authorize('exportAdminUser', User::class);
+        $user = $this->getData();
+        $this->setQuery($user);
+        return (new AdminUserExport($this->getQuery()))->download("administradores.{$extension}");
+    }
 
+    private function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Retorna el valor de $query
+     * @return object
+     * @author dum
+     */
+    private function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * retorna consulta de administradores
+     * @return collection
+     * @author dum
+     */
+    private function getData()
+    {
         $role = [User::IsAdministrador()];
 
         $relations = [
@@ -107,25 +134,30 @@ class AdminController extends Controller
             'ocupaciones',
         ];
 
-        $user = $this->userRepository->userInfoWithRelations($role, $relations)->get();
-
-        $this->setQuery($user);
-        return (new AdminUserExport($this->getQuery()))->download("administradores.{$extension}");
+        return $this->userRepository->userInfoWithRelations($role, $relations)->get();
     }
 
-    private function setQuery($query)
-    {
-        $this->query = $query;
-    }
 
     /**
-     * Retorna el valor de $query
+     * descargar pdf administradores
      * @return object
-     * @author dum
+     * @author devjul
      */
-    private function getQuery()
+    public function downloadPDFAdministrator($extennsion = '.pdf', $orientacion = 'portrait')
     {
-        return $this->query;
+        // $this->authorize('downloadCertificatedPlataform', User::class);
+
+        $user = $this->getData();
+
+
+        $pdf = PDF::loadView('pdf.user.admin.reportListAdministrator', compact('user'));
+
+        $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
+
+        // $pdf->setEncryption($user->documento);
+
+        return $pdf->stream("certificado  " . config('app.name') . $extennsion);
     }
+
 
 }

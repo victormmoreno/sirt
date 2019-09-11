@@ -75,6 +75,7 @@ Route::group([
     function () {
 
         Route::get('administrador', 'AdminController@index')->name('usuario.administrador.index');
+        Route::get('administrador/pdf', 'AdminController@downloadPDFAdministrator')->name('usuario.administrador.downloadpdf');
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
         Route::get('dinamizador', 'DinamizadorController@index')->name('usuario.dinamizador.index');

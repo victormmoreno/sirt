@@ -243,7 +243,6 @@ return [
 
         // Aliases Personalizados
         'NodoHelper'   => App\Helpers\NodoHelper::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

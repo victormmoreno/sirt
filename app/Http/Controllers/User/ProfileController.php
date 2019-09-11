@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProfileRequest\ChangePasswordRequest;
-use App\Http\Requests\ProfileRequest\ProfileFormRequest;
+use App\Http\Requests\ProfileRequest\{ChangePasswordRequest, ProfileFormRequest};
 use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
-use App\Repositories\Repository\ProfileRepository\ProfileRepository;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\{ProfileRepository\ProfileRepository, UserRepository\UserRepository};
 use App\User;
 use Illuminate\Http\Request;
 use PDF;
@@ -136,15 +134,13 @@ class ProfileController extends Controller
 
         $user = $this->getAuthUserFindById();
 
-        $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', $user);
+        $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', compact('user'));
 
-        
         $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
 
-        // $pdf->setEncryption($user->documento);
+        $pdf->setEncryption($user->documento);
 
-        return $pdf->stream("certificado  " . config('app.name') . $extennsion);
-        
+        return $pdf->download("certificado  " . config('app.name') . $extennsion);
     }
 
     /*=====  End of metodo para descargar certificado registro en plataforma  ======*/
