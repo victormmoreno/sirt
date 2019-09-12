@@ -1,63 +1,112 @@
-{!! csrf_field() !!}
-<p class="center card-title">
-    Seleccione con quién será el uso de infraestructura
-</p>
-<div class="input-field col s12 m12 l12">
-    <p class="center p-v-xs">
-        <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
-        <label for="IsProyecto">
-            Proyectos
-        </label>
-        <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
-        <label for="IsArticulacion">
-            Articulaciones
-        </label>
-        <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
-        <label for="IsEdt">
-            EDT
-        </label>
-    </p>
-    <center>
-        <small class="center-align error red-text" id="txttipousoinfraestructura-error">
-        </small>
-    </center>
-</div>
 <div class="row">
-    <div class="input-field col s12 m6 l6">
-        <i class="material-icons prefix">
-            vertical_split
-        </i>
-        <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$authUser->gestor->lineatecnologica->nombre}}"/>
-        <label class="active" for="txtlinea">
-            Linea
-            <span class="red-text">
-                *
-            </span>
-        </label>
-        @error('txtlinea')
-        <label class="error" for="txtlinea" id="txtlinea-error">
-            {{ $message }}
-        </label>
-        @enderror
+    <div class="col s12 m3 l3">
+        <blockquote>
+            <ul class="collection">
+                <li class="collection-item">
+                    <span class="title"><b>Nodo</b></span>
+                    <p>señor(a) ususario, por favor ingrese la información que se solcita en formulario.</p>
+                </li>
+                <li class="collection-item">
+                    <span class="title"><b>Nodo</b></span>
+                    <p>Por favor sólo ingrese el nombre del nodo. Ejemplo (Medellin)</p>
+                </li>
+            </ul>
+        </blockquote>
     </div>
-    <div class="input-field col s12 m6 l6">
-        <i class="material-icons prefix">
-            account_circle
-        </i>
-        <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$authUser->documento}} - {{$authUser->nombres}} {{$authUser->apellidos}}"/>
-        <label class="active" for="txtgestor">
-            Gestor
-            <span class="red-text">
-                *
-            </span>
-        </label>
-        @error('txtgestor')
-        <label class="error" for="txtgestor" id="txtgestor-error">
-            {{ $message }}
-        </label>
-        @enderror
+    <div class="col s12 m9 l9">
+
+        <fieldset>
+            <legend>Subscription info</legend>
+            <div class="row">
+                <div class="input-field col s12 m4 l4">
+                    <i class="material-icons prefix">
+                        date_range
+                    </i>
+                    <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}">
+                        <label for="txtfecha">
+                            fecha
+                            <span class="red-text">
+                                *
+                            </span>
+                        </label>
+                        @error('txtfecha')
+                        <label class="error" for="txtfecha" id="txtfecha-error">
+                            {{ $message }}
+                        </label>
+                        @enderror
+                    </input>
+                </div>
+                <div class="input-field col s12 m4 l4">
+                    <i class="material-icons prefix">
+                        vertical_split
+                    </i>
+                    <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$authUser->gestor->lineatecnologica->nombre}}"/>
+                    <label class="active" for="txtlinea">
+                        Linea
+                        <span class="red-text">
+                            *
+                        </span>
+                    </label>
+                    @error('txtlinea')
+                    <label class="error" for="txtlinea" id="txtlinea-error">
+                        {{ $message }}
+                    </label>
+                    @enderror
+                </div>
+                <div class="input-field col s12 m4 l4">
+                    <i class="material-icons prefix">
+                        account_circle
+                    </i>
+                    <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$authUser->documento}} - {{$authUser->nombres}} {{$authUser->apellidos}}"/>
+                    <label class="active" for="txtgestor">
+                        Gestor
+                        <span class="red-text">
+                            *
+                        </span>
+                    </label>
+                    @error('txtgestor')
+                    <label class="error" for="txtgestor" id="txtgestor-error">
+                        {{ $message }}
+                    </label>
+                    @enderror
+                </div>
+        </div>
+        <p class="center card-title cyan-text text-darken-4">
+           <b> <i class="medium material-icons center">info_outline</i> Seleccione a que se le hará el uso de infraestructura</b> 
+        </p>
+        <div class="row">
+            <div class="input-field col s12 m12 l12">
+                <p class="center p-v-xs">
+                    <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
+                    <label for="IsProyecto">
+                        Proyectos
+                    </label>
+                    <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
+                    <label for="IsArticulacion">
+                        Articulaciones
+                    </label>
+                    <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
+                    <label for="IsEdt">
+                        EDT
+                    </label>
+                </p>
+                <center>
+                    <small class="center-align error red-text" id="txttipousoinfraestructura-error">
+                    </small>
+                </center>
+            </div>
+        </div>
+        </fieldset>
+        
     </div>
 </div>
+
+
+
+{!! csrf_field() !!}
+
+
+
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">

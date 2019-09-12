@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers\UsoInfraestructura;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Edt;
+use App\Models\Proyecto;
+use App\Models\UsoInfraestructura;
+use App\Repositories\Repository\EdtRepository;
+use Carbon;
+use Illuminate\Http\Request;
 
 class UsoInfraestructuraController extends Controller
 {
 
-
-    public function __construct()
+    protected $edtRepostory;
+    public function __construct(EdtRepository $edtRepostory)
     {
- 
         $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
-        
+        $this->edtRepostory = $edtRepostory;
+
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +27,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function index()
     {
-     
+        $this->authorize('index', UsoInfraestructura::class);
         return view('usoinfraestructura.index');
     }
 
@@ -33,8 +38,40 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', UsoInfraestructura::class);
+
+        $date = Carbon\Carbon::now()->format('Y-m-d');
+        $user = auth()->user()->documento;
+
+        $proyectosPorGestor = Proyecto::with([
+            'articulacion_proyecto',
+            'articulacion_proyecto.talentos',
+            'articulacion_proyecto.actividad',
+            'articulacion_proyecto.actividad.gestor',
+            'articulacion_proyecto.actividad.gestor.user',
+        ])->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+            $query->where('documento', $user);
+        })->get();
+
+        $edt = $this->edtRepostory->findEdtByUser([
+            'actividad.gestor.user',
+        ])->whereHas('actividad.gestor.user', function ($query) use ($user) {
+            $query->where('documento', $user);
+        })->where('estado', Edt::IsActive())->get();
+
+        return $edt;
+
+        $proyectosPorTalento = Proyecto::with([
+            'articulacion_proyecto',
+            'articulacion_proyecto.talentos.user',
+        ])->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+            $query->where('documento', $user);
+        })->get();
+        return $proyectosPorGestor;
+
         return view('usoinfraestructura.create', [
-            'authUser' => auth()->user(), 
+            'authUser' => auth()->user(),
+            'date'     => $date,
         ]);
     }
 

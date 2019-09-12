@@ -7,21 +7,32 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <h5>
-                    <a class="footer-text left-align" href="{{ route('usoinfraestructura.index')}}">
-                        <i class="material-icons arrow-l">
-                            arrow_back
-                        </i>
-                    </a>
-                    Uso de Infraestructura
-                </h5>
+                <div class="row">
+                    <div class="col s12 m8 l8">
+                        <h5 class="left-align">
+                            <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
+                                  <i class="material-icons arrow-l">
+                                      arrow_back
+                                  </i>
+                              </a>
+                            Uso de Infraestructura
+                        </h5>
+                    </div>
+                    <div class="col s12 m4 l4 push-m2 l2">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('nodo.index')}}">Uso de Infraestructura</a></li>
+                            <li class="active">Nuevo Uso de Infraestructura</li>
+                        </ol>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Uso de Infraestructura
+                                        Nuevo Uso de Infraestructura 
                                     </span>
                                     <i class="Small material-icons prefix">
                                         domain

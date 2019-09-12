@@ -62,4 +62,9 @@ class Actividad extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
+    public function usoinfraestructuras()
+    {
+        return $this->hasMany(UsoInfraestructura::class, 'actividad_id', 'id');
+    }
+
 }

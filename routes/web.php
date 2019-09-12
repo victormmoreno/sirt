@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\UsoInfraestructura;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
