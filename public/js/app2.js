@@ -4838,6 +4838,24 @@ function alertaLineaNoValido() {
   Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
 }
 
+function generarExcelGrafico1Edt(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico1').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico1').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    location.href = '/excel/excelEdtsFinalizadasPorFechaYNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
+
 function generarExcelGrafico1Articulacion(bandera) {
   let id = 0;
   let fecha_inicio = $('#txtfecha_inicio_Grafico1').val();
@@ -5011,9 +5029,14 @@ function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
   })
 }
 
-function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
+function consultarEdtsDelNodoPorAnho_variablepie(bandera) {
   let anho = $('#txtanho_GraficoEdt4').val();
-  if (idnodo == '') {
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_id').val();
+  }
+
+  if (idnodo === '') {
     Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
   } else {
     $.ajax({
@@ -5068,7 +5091,7 @@ function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
 function consultarEdtsPorLineaYFecha_stacked(bandera) {
   let idnodo = 0;
   if (bandera == 1) {
-    idnodo = $('#txtnodo_edtGrafico3');
+    idnodo = $('#txtnodo_id').val();
   }
   let fecha_inicio = $('#txtfecha_inicio_GraficoEdt3').val();
   let fecha_fin = $('#txtfecha_fin_GraficoEdt3').val();
@@ -5126,7 +5149,7 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
 function consultarEdtsPorGestorYFecha_stacked(bandera) {
   let idnodo = 0;
   if (bandera == 1) {
-    idnodo = $('#txtnodo_edtGrafico2');
+    idnodo = $('#txtnodo_id').val();
   }
   let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
   let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
@@ -5186,7 +5209,7 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
   let fecha_fin = $('#txtfecha_fin_edtGrafico1').val();
   let idnodo = 0;
   if (bandera == 1) {
-    idnodo = $('#txtnodo_edtGrafico1');
+    idnodo = $('#txtnodo_id').val();
   }
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');

@@ -507,7 +507,7 @@ calibriBold {
   </p>
   {{-- Página de la firma de las partes (gestor, dinamizador, talento líder) --}}
   <div class="page-break"></div>
-  <div style="margin: 0mm 10mm 18mm 10mm; border-width: 1px; border-style: solid; border-color: blue; height: 930px">
+  <div style="margin: 0mm 10mm 18mm 10mm;">
     <div class="row">
       <div class="center">
         <img src="{{ asset('img/encabezadoAcc.png') }}" class="img-responsive">

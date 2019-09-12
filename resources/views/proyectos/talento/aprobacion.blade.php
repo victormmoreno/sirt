@@ -14,6 +14,9 @@
           <div class="row">
             <p class="flow-text">
               Talento <b>{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</b>, usted está próximo a iniciar el desarrollo de un Proyecto de Base Tecnolópgica con Tecnoparque,
+              <b>{{ $proyecto->idea->nombre_proyecto }}</b> con el código de idea de proyecto: <b>{{ $proyecto->idea->codigo_idea }}</b>, si usted está seguro que la información mostrada mas abajo es correcta,
+              y está de acuerdo con iniciar el desarrollo de un proyecto en Tecnparque nodo <b>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</b>, puede seleccionar la opción "Aprobar" ó "No Aprobar"
+              en caso contrario, también es importante leer la información que se muestra a continuación.
             </p>
           </div>
           <div class="divider"></div>

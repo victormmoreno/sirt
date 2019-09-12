@@ -4,7 +4,8 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea};
 use Illuminate\Support\Facades\{DB, Session, Notification};
-use App\Notifications\Proyecto\ProyectoPendiente;
+use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
+use App\Http\Controllers\PDF\PdfProyectoController;
 use Carbon\Carbon;
 use App\User;
 
@@ -77,6 +78,8 @@ class ProyectoRepository
   */
   public function updateAprobacionUsuario($request, $id)
   {
+
+
     DB::beginTransaction();
     try {
       if ( $request->txtaprobacion != Proyecto::IsAceptado() && $request->txtaprobacion != Proyecto::IsNoAceptado() ) {
@@ -89,21 +92,42 @@ class ProyectoRepository
       $update = DB::update("UPDATE aprobaciones SET aprobacion = $request->txtaprobacion WHERE proyecto_id = $id AND user_id = $user AND role_id = $role");
       $some = $this->pivotAprobaciones($id)->where('aprobacion', 0)->get();
       if ( count($some) == 0 ) {
-        $aprobados = $this->pivotAprobacion($id)->where('aprobacion', 1)->get();
+        $aprobados = $this->pivotAprobaciones($id)->where('aprobacion', 1)->get();
         $proyecto = Proyecto::find($id);
         if ( count($aprobados) == 3 ) {
           // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
 
-          // Espacio para generar el pdf del acuerdo de confidencialidad y compromiso
-          // code...
+          // Instancia de la clase ArchivoRepository
+          $archivoRepo = new ArchivoRepository();
+          // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
+          $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
+          // Guarda la ruta de los archivos en la base de datos
+          $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
 
-          // Cambia el estado de aprobacion del proyecto a aceptado
+          // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
           $proyecto->update([
             'estado_aprobacion' => Proyecto::IsAceptado(),
             'acc' => 1
           ]);
         } else {
           // En caso de que UNO SOLO no haya aprobado el proyecto
+
+          // Consulta todos los usuarios de un proyecto (tabla aprobaciones)
+          // $usersProyecto = $this->pivotAprobaciones($id)->get()->toArray();
+          // $idUsers = array();
+          //
+          // for ($i=0; $i < 2 ; $i++) {
+          //   $idUsers[$i] = $usersProyecto[$i]['user_id'];
+          // }
+          //
+          // // Array los del ids de los usuarios (método array_unique para no repetir los usuarios)
+          // $idUsers = array_unique($idUsers);
+          //
+          // // Alerta de que el proyecto no fue aprobado
+          // for ($i=0; $i < count($idUsers) ; $i++) {
+          //   Notification::send(User::find($idUsers[$i]), new ProyectoNoAprobado($proyecto));
+          // }
+
           //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
           $idea = $proyecto->idea;
           if ( $idea->tipo_idea == Idea::IsEmpresa() || $idea->tipo_idea == Idea::IsGrupoInvestigacion() ) {
@@ -112,16 +136,18 @@ class ProyectoRepository
             $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Admitido');
           }
           $padre = $proyecto->articulacion_proyecto->actividad;
+          // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
           // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
-          $proyecto->articulacion_proyecto->talentos()->delete();
+          $proyecto->articulacion_proyecto->talentos()->sync([]);
           // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
-          $proyecto->users()->delete();
+          $proyecto->users()->sync([]);
           // Elimina el registro de la tabla de proyecto
           $padre->articulacion_proyecto->proyecto()->delete();
           // Elimina el registro de la tabla la tabla de articulacion_proyecto
           $padre->articulacion_proyecto()->delete();
           // Elimina la tabla de actividades
           $padre->delete();
+
         }
       }
       DB::commit();
@@ -163,7 +189,7 @@ class ProyectoRepository
    */
   public function pivotAprobaciones($id)
   {
-    return Proyecto::select('roles.name', 'users.documento')
+    return Proyecto::select('roles.name', 'users.documento', 'users.id AS user_id')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
     ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
     ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
@@ -557,8 +583,13 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyectoFindById = Proyecto::find($id);
+
+      if ( $proyectoFindById->articulacion_proyecto->revisado_final != $request->txtrevisado_final ) {
+        Notification::send(User::find($proyectoFindById->articulacion_proyecto->actividad->gestor->user_id), new ProyectoRevisadoFinal($proyectoFindById));
+      }
+
       $proyectoFindById->articulacion_proyecto()->update([
-      'revisado_final' => $request->txtrevisado_final
+        'revisado_final' => $request->txtrevisado_final
       ]);
 
       DB::commit();

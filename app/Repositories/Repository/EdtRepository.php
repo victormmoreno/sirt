@@ -10,6 +10,40 @@ class EdtRepository
 {
 
   /**
+   * Consultaas las edts que se cerraron entre dos fecha (de cierre) y un nodo
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarEdtsDeUnNodoPorFecha($id, $fecha_inicio, $fecha_fin)
+  {
+    return Edt::select('codigo_actividad AS codigo_edt',
+    'tiposedt.nombre AS tipo_edt',
+    'areasconocimiento.nombre AS area_conocimiento',
+    'edts.id',
+    'fecha_inicio',
+    'fecha_cierre',
+    'edts.observaciones',
+    'empleados',
+    'instructores',
+    'aprendices',
+    'publico',
+    'actividades.nombre')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('IF(edts.estado = '. Edt::IsActive() .', "Activa", "Inactiva") AS estado')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->where('nodos.id', $id)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+  }
+
+  /**
    * Consulta las edts por tipos de un nodo y por año (de la fecha de cierre)
    * @param int $idnodo Id del nodo
    * @param string $anho Año por el que se filtran las edts (Fecha de Cierre)

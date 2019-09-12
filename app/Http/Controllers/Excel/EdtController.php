@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Excel;
 
 use App\Exports\Edts\{EdtsGestorExport, EdtsNodoExport, EdtsUnicaExport};
 use App\Repositories\Repository\{EdtRepository};
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\User;
 use Excel;
 
 class EdtController extends Controller
@@ -17,6 +19,25 @@ class EdtController extends Controller
   public function __construct(EdtRepository $edtRepository)
   {
     $this->setEdtRepository($edtRepository);
+  }
+
+  /**
+   * Genera el excel con las edts de un nodo finalizadas entre dos fecha (la fecha de filtro es la fecha_cierre)
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para filtrar
+   * @return Response\Excel
+   * @author dum
+   */
+  public function edtPorFechaCierreYNodo($id, $fecha_inicio, $fecha_fin)
+  {
+    $idnodo = $id;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
+    $query = $this->getEdtRepository()->consultarEdtsDeUnNodoPorFecha($idnodo, $fecha_inicio, $fecha_fin)->get();
+    $this->setQuery($query);
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }
 
   /**

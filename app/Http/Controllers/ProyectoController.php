@@ -955,7 +955,7 @@ class ProyectoController extends Controller
    */
   private function getServidorVideoRepository()
   {
-    return $this->servidorVideoRepository = $servidorVideoRepository;
+    return $this->servidorVideoRepository;
   }
 
 }

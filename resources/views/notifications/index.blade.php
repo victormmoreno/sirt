@@ -30,15 +30,15 @@
                                         <div class="mailbox-list">
                                             <ul>
                                                 @forelse($unreadNotifications as $unreadNotification)
-                                                
+
                                                 <li>
                                                     <a href="{{$unreadNotification->data['link']}}">
                                                         <div class="mail-checkbox">
-                                                            
+
                                                             <i class="material-icons">{{ $unreadNotification->data["icon"] }}</i>
-                                                          
+
                                                         </div>
-                                                        <h5 class="mail-author">Jonathan Smith</h5>
+                                                        <h5 class="mail-author">{{ $unreadNotification->data["autor"] }}</h5>
                                                         <h4 class="mail-title">{{ $unreadNotification->data["text"] }}</h4>
                                                         <p class="hide-on-small-and-down mail-text">{{$unreadNotification->created_at->diffForHumans()}}</p>
                                                         <div class="position-top-right p f-12 mail-date"><form method="POST" action="{{route('notifications.read', $unreadNotification->id)}}">
@@ -47,7 +47,7 @@
                                                             <div class="mail-checkbox">
                                                                 <h5 class="mail-author">
                                                                     <button class="position-top-right waves-effect waves-grey btn-flat m-t-xs" >X</button>
-                                                                    
+
                                                                 </h5>
                                                             </div>
                                                         </form></div>
@@ -60,7 +60,7 @@
                                                            <i class="large material-icons  teal-text lighten-2 center ">
                                                                 notifications_off
                                                             </i>
-                                                            <p class="center-align">No tienes notificationes</p> 
+                                                            <p class="center-align">No tienes notificationes</p>
                                                         </div>
                                                       </li>
                                                 @endforelse
@@ -85,15 +85,15 @@
                                         <div class="mailbox-list">
                                             <ul>
                                                 @forelse($readNotifications as $readNotification)
-                                                
+
                                                 <li>
                                                     <a href="{{$readNotification->data['link']}}">
                                                         <div class="mail-checkbox">
-                                                            
+
                                                             <i class="material-icons">{{ $readNotification->data["icon"] }}</i>
-                                                          
+
                                                         </div>
-                                                        <h5 class="mail-author">Jonathan Smith</h5>
+                                                        <h5 class="mail-author">{{ $readNotification->data["autor"] }}</h5>
                                                         <h4 class="mail-title">{{ $readNotification->data["text"] }}</h4>
                                                         <p class="hide-on-small-and-down mail-text">{{$readNotification->created_at->diffForHumans()}}</p>
                                                         <div class="position-top-right p f-12 mail-date">
@@ -114,7 +114,7 @@
                                                        <i class="large material-icons  teal-text lighten-2 center ">
                                                             notifications_off
                                                         </i>
-                                                        <p class="center-align">No tienes notificationes</p> 
+                                                        <p class="center-align">No tienes notificationes</p>
                                                     </div>
                                                   </li>
                                                 @endforelse

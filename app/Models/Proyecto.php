@@ -104,6 +104,11 @@ class Proyecto extends Model
       return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
   }
 
+  public function sublinea()
+  {
+      return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
+  }
+
   /**
    * Relación a la tabla users
    * @return Eloquent
@@ -116,6 +121,9 @@ class Proyecto extends Model
     ->withPivot('aprobacion');
   }
 
+  /**
+   * Relación con la tabla de ideas
+   */
   public function idea()
   {
     return $this->belongsTo(Idea::class, 'idea_id', 'id');

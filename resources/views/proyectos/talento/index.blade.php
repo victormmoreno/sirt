@@ -11,9 +11,9 @@
               <div class="row">
                 <div class="col s12 m12 l12">
                   <div class="row">
-                    <div class="col s12 m10 l10">
+                    <div class="col s12 m12 l12">
                       <div class="center-align">
-                        <span class="card-title center-align">Proyectos Pendientes de {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }} </span>
+                        <span class="card-title center-align">Proyectos Pendientes de Aprobación - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }} </span>
                       </div>
                     </div>
                   </div>
