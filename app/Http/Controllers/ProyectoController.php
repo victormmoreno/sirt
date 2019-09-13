@@ -35,122 +35,129 @@ use Illuminate\Validation\Rule;
 class ProyectoController extends Controller
 {
 
-    private $empresaRepository;
-    private $proyectoRepository;
-    private $gestorRepository;
-    private $entidadRepository;
-    private $articulacionProyectoRepository;
-    private $servidorVideoRepository;
 
-    public function __construct(ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
-    {
-        $this->setEmpresaRepository($empresaRepository);
-        $this->setProyectoRepository($proyectoRepository);
-        $this->setGestorRepository($gestorRepository);
-        $this->setEntidadRepository($entidadRepository);
-        $this->setArticulacionProyectoRepository($articulacionProyectoRepository);
-        $this->setServidorVideoRepository($servidorVideoRepository);
-        $this->middleware(['auth']);
+  private $empresaRepository;
+  private $proyectoRepository;
+  private $gestorRepository;
+  private $entidadRepository;
+  private $articulacionProyectoRepository;
+  private $servidorVideoRepository;
+
+  public function __construct(ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
+  {
+    $this->setEmpresaRepository($empresaRepository);
+    $this->setProyectoRepository($proyectoRepository);
+    $this->setGestorRepository($gestorRepository);
+    $this->setEntidadRepository($entidadRepository);
+    $this->setArticulacionProyectoRepository($articulacionProyectoRepository);
+    $this->setServidorVideoRepository($servidorVideoRepository);
+    $this->middleware(['auth']);
+  }
+
+  /**
+   * Vista para msotrar los proyectos pendientes de aprobación de un usuario
+   * @return Response
+   * @author dum
+   */
+  public function aprobaciones()
+  {
+    return view('proyectos.dinamizador.pendientes');
+    // if ( Session::get('login_role') == User::IsDinamizador() ) {
+
+    // }
+  }
+
+  /**
+  * Modifica el estado de una usuario de la aprobación del proyecto
+  *
+  * @param Request $request
+  * @param int $id Id del proyecto
+  * @return Response
+  * @author dum
+  */
+  public function updateAprobacion(Request $request, $id)
+  {
+
+    $validator = Validator::make($request->all(), [
+    'txtaprobacion' => 'required',
+    ], [
+    'txtaprobacion.required' => 'La aprobación del proyecto es obligatoria.'
+    ]);
+    if ($validator->fails()) {
+      Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto debe ser obligatoria!')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
 
-    /**
-     * Vista para msotrar los proyectos pendientes de aprobación de un usuario
-     * @return Response
-     * @author dum
-     */
-    public function aprobaciones()
-    {
-        return view('proyectos.dinamizador.pendientes');
-        // if ( Session::get('login_role') == User::IsDinamizador() ) {
 
-        // }
+    $update = $this->getProyectoRepository()->updateAprobacionUsuario($request, $id);
+    if ( $update ) {
+      Alert::success('Modificación Existosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+      return redirect('proyecto');
+    } else {
+      Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto no ha sido cambiada!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    }
+  }
+
+  /**
+  * Vista para la aprobación del proyecto
+  *
+  * @param int $id Id del proyecto
+  * @return Response*
+  * @author dum
+  */
+  public function aprobacion($id)
+  {
+    // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
+    $proyecto = Proyecto::find( $id);
+    $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
+    $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
+
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('proyectos.gestor.aprobacion', [
+      'proyecto' => $proyecto,
+      'pivot' => $pivot,
+      'aprobado' => $aprobado
+      ]);
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('proyectos.dinamizador.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot,
+        'aprobado' => $aprobado
+      ]);
+    } else {
+      return view('proyectos.talento.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot,
+        'aprobado' => $aprobado
+      ]);
+
+    }
+  }
+
+  /**
+  * Datatable que muestra los proyectos que están pendiente de aprobación de un usuario (dinamizador, talento, gestor)
+  *
+  * @return Response
+  * @author dum
+  */
+  public function datatableProyectosPendientes()
+  {
+    $id = "";
+
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $id = auth()->user()->dinamizador->user->id;
+    } else if ( Session::get('login_role') == User::IsGestor() ) {
+      $id = auth()->user()->gestor->user->id;
+    } else {
+      $id = auth()->user()->talento->user->id;
     }
 
-    /**
-     * Modifica el estado de una usuario de la aprobación del proyecto
-     *
-     * @param Request $request
-     * @param int $id Id del proyecto
-     * @return Response
-     * @author dum
-     */
-    public function updateAprobacion(Request $request, $id)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'txtaprobacion' => 'required',
-        ], [
-            'txtaprobacion.required' => 'La aprobación del proyecto es obligatoria.',
-        ]);
-        if ($validator->fails()) {
-            Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto debe ser obligatoria!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-
-        $update = $this->getProyectoRepository()->updateAprobacionUsuario($request, $id);
-        if ($update) {
-            Alert::success('Modificación Existosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
-            return redirect('proyecto');
-        } else {
-            Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto no ha sido cambiada!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-    }
-
-    /**
-     * Vista para la aprobación del proyecto
-     *
-     * @param int $id Id del proyecto
-     * @return Response*
-     * @author dum
-     */
-    public function aprobacion($id)
-    {
-        // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
-        // $proyecto = Proyecto::find( $id);
-        // $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
-        // $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
-        //
-        // if ( Session::get('login_role') == User::IsGestor() ) {
-        //   return view('proyectos.gestor.aprobacion', [
-        //   'proyecto' => $proyecto,
-        //   'pivot' => $pivot,
-        //   'aprobado' => $aprobado
-        //   ]);
-        // } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-        //   return view('proyectos.dinamizador.aprobacion', [
-        //     'proyecto' => $proyecto,
-        //     'pivot' => $pivot,
-        //     'aprobado' => $aprobado
-        //   ]);
-        // } else {
-        //
-        // }
-    }
-
-    /**
-     * Datatable que muestra los proyectos que están pendiente de aprobación de un usuario (dinamizador, talento, gestor)
-     *
-     * @return Response
-     * @author dum
-     */
-    public function datatableProyectosPendientes()
-    {
-        $id = "";
-
-        if (Session::get('login_role') == User::IsDinamizador()) {
-            $id = auth()->user()->dinamizador->user->id;
-        } else if (Session::get('login_role') == User::IsGestor()) {
-            $id = auth()->user()->gestor->user->id;
-        } else {
-            $id = auth()->user()->talento->user->id;
-        }
-
-        $proyectos = $this->getProyectoRepository()->proyectosPendientesDeAprobacion_Repository($id);
-        return datatables()->of($proyectos)
-            ->addColumn('aprobar', function ($data) {
-                $aprobar = '
-      <a class="btn light-blue m-b-xs" href="' . route('proyecto.aprobacion', $data->id) . '">
+    $proyectos = $this->getProyectoRepository()->proyectosPendientesDeAprobacion_Repository($id);
+    return datatables()->of($proyectos)
+    ->addColumn('aprobar', function ($data) {
+      $aprobar = '
+      <a class="btn light-blue m-b-xs" href="'. route('proyecto.aprobacion', $data->id) .'">
         <i class="material-icons">remove_red_eye</i>
       </a>
       ';
@@ -574,10 +581,188 @@ class ProyectoController extends Controller
         value="' . $data->id_entidad . '"/>
         <label for ="radioButton' . $data->id_entidad . '"></label>
         ';
-                    return $checkbox;
-                })->rawColumns(['checkbox'])->make(true);
+        return $checkbox;
+      })->rawColumns(['checkbox'])->make(true);
+    }
+  }
+
+  //
+  public function datatableEntidadesTecnoparque($id)
+  {
+    if (request()->ajax()) {
+      $nombre    = TipoArticulacionProyecto::where('id', $id)->get()->last();
+      $nombre    = $nombre->nombre;
+      $entidades = "";
+      if ($nombre == 'Grupos y Semilleros del SENA') {
+        $entidades = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueSena()->get();
+      }
+    }
+
+  }
+  /**
+  * Display a listing of the resource.
+  *
+  * @return \Illuminate\Http\Response
+  */
+  public function index()
+  {
+    // dd();
+    switch ( Session::get('login_role') ) {
+      case User::IsGestor():
+      return view('proyectos.gestor.index');
+      break;
+      case User::IsDinamizador():
+      return view('proyectos.dinamizador.index', [
+      'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+      ]);
+      break;
+
+      case User::IsAdministrador():
+      return view('proyectos.administrador.index', [
+      'nodos' => Nodo::SelectNodo()->get(),
+      ]);
+      break;
+
+      case User::IsTalento():
+      return view('proyectos.talento.index');
+      break;
+
+      default:
+      // code...
+      break;
+    }
+  }
+
+  /**
+  * Show the form for creating a new resource.
+  *
+  * @return \Illuminate\Http\Response
+  */
+  public function create()
+  {
+    switch ( Session::get('login_role') ) {
+      case User::IsGestor():
+      // dd(AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'));
+      // dd();
+      return view('proyectos.gestor.create', [
+      'tipoarticulacion'  => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
+      'sublineas'         => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+      'sectores'          => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
+      'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+      'estadosproyecto'   => EstadoProyecto::ConsultarEstadosDeProyectoNoCierre()->pluck('nombre', 'id'),
+      ]);
+      break;
+
+      default:
+      // code...
+      break;
+    }
+  }
+
+  /**
+  * Store a newly created resource in storage.
+  *
+  * @param  \Illuminate\Http\Request  $request
+  * @return \Illuminate\Http\Response
+  */
+  public function store(Request $request)
+  {
+    $req       = new ProyectoFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+      'fail'   => true,
+      'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->getProyectoRepository()->store($request);
+    if ($result == false) {
+      return response()->json([
+      'fail'         => false,
+      'redirect_url' => false,
+      ]);
+    } else {
+      return response()->json([
+      'fail'         => false,
+      'redirect_url' => url(route('proyecto')),
+      ]);
+    }
+  }
+
+  /**
+  * Show the form for editing the specified resource.
+  *
+  * @param int  $id
+  * @return \Illuminate\Http\Response
+  * @author Victor Manuel Moreno Vega
+  */
+  public function edit($id)
+  {
+    $proyecto = $this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id);
+
+    if ( $proyecto->estado_aprobacion != 1 ) {
+      Alert::error('Error!', 'El proyecto aún no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
+        Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        switch ( Session::get('login_role') ) {
+          case User::IsGestor():
+          $entidad = "";
+          $articulacion_repository = "";
+          /**
+          * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
+          */
+          if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos') {
+            $entidad = $this->getEntidadRepository()->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias') {
+            $entidad = $this->getEntidadRepository()->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Empresas') {
+            $entidad = $this->getEntidadRepository()->consultarEmpresaEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques') {
+            $entidad = $this->getEntidadRepository()->consultarNodoEntidadRepository($proyecto->entidad_id);
+          }
+
+          if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación') {
+            $entidad = $this->getEntidadRepository()->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
+          }
+          return view('proyectos.gestor.edit', [
+          'tipoarticulacion'  => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
+          'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+          'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
+          'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+          'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
+          'proyecto' => $proyecto,
+          'pivot' => $this->getArticulacionProyectoRepository()->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
+          'entidad' => $entidad,
+          'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
+          ]);
+          break;
+
+          case User::IsDinamizador():
+          $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+          return view('proyectos.dinamizador.edit', [
+          'proyecto' => $proyecto,
+          'gestores' => $gestores,
+          ]);
+          break;
+
+          default:
+          // code...
+          break;
+
         }
     }
+  }
+}
 
     //
     public function datatableEntidadesTecnoparque($id)
@@ -678,81 +863,7 @@ class ProyectoController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int  $id
-     * @return \Illuminate\Http\Response
-     * @author Victor Manuel Moreno Vega
-     */
-    public function edit($id)
-    {
-        $proyecto = $this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id);
-
-        if ($proyecto->estado_aprobacion != 1) {
-            Alert::error('Error!', 'El proyecto aún no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        } else {
-            if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
-                Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
-                return back();
-            } else {
-                switch (Session::get('login_role')) {
-                    case User::IsGestor():
-                        $entidad                 = "";
-                        $articulacion_repository = "";
-                        /**
-                         * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
-                         */
-                        if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos') {
-                            $entidad = $this->getEntidadRepository()->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
-                        }
-
-                        if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias') {
-                            $entidad = $this->getEntidadRepository()->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
-                        }
-
-                        if ($proyecto->nombre_tipoarticulacion == 'Empresas') {
-                            $entidad = $this->getEntidadRepository()->consultarEmpresaEntidadRepository($proyecto->entidad_id);
-                        }
-
-                        if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques') {
-                            $entidad = $this->getEntidadRepository()->consultarNodoEntidadRepository($proyecto->entidad_id);
-                        }
-
-                        if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación') {
-                            $entidad = $this->getEntidadRepository()->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
-                        }
-                        return view('proyectos.gestor.edit', [
-                            'tipoarticulacion'  => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
-                            'sublineas'         => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
-                            'sectores'          => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
-                            'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-                            'estadosproyecto'   => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
-                            'proyecto'          => $proyecto,
-                            'pivot'             => $this->getArticulacionProyectoRepository()->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
-                            'entidad'           => $entidad,
-                            'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
-                        ]);
-                        break;
-
-                    case User::IsDinamizador():
-                        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
-                        return view('proyectos.dinamizador.edit', [
-                            'proyecto' => $proyecto,
-                            'gestores' => $gestores,
-                        ]);
-                        break;
-
-                    default:
-                        // code...
-                        break;
-                }
-            }
-
-        }
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -825,207 +936,146 @@ class ProyectoController extends Controller
     =            metodo para consultar los proyectos en ejecucion de un gestor            =
     ========================================================================*/
 
-    public function projectsForGestor($id)
-    {
 
-        $projects = $this->getProyectoRepository()->getProjectsForGestor($id, ['Inicio', 'Planeacion', 'En ejecución']);
+  public function projectsForGestor($id)
+  {
 
-        return response()->json([
-            'projects' => $projects,
-        ]);
-
-    }
-
-    /*=====  End of metodo para consultar los proyectos en ejecucion de un gestor  ======*/
-
-    /**
-     * Asigna un valor a $proyectoRepository
-     * @param object $proyectoRepository
-     * @return void type
-     * @author dum
-     */
-    private function setProyectoRepository($proyectoRepository)
-    {
-        $this->proyectoRepository = $proyectoRepository;
-    }
-
-    /**
-     * Retorna el valor de $proyectoRepository
-     * @return object
-     * @author dum
-     */
-    private function getProyectoRepository()
-    {
-        return $this->proyectoRepository;
-    }
-
-    /**
-     * Asgina un valor a $empresaRepository
-     * @param object $empresaRepository
-     * @return void
-     * @author dum
-     */
-    private function setEmpresaRepository($empresaRepository)
-    {
-        $this->empresaRepository = $empresaRepository;
-    }
-
-    /**
-     * Retorna el valor de $empresaRepository
-     * @return object
-     * @author dum
-     */
-    private function getEmpresaRepository()
-    {
-        return $this->empresaRepository;
-    }
-
-    /**
-     * Asigna un valor a $gestorRepository
-     * @param object $gestorRepository
-     * @return void
-     * @author dum
-     */
-    private function setGestorRepository($gestorRepository)
-    {
-        $this->gestorRepository = $gestorRepository;
-    }
-
-    /**
-     * Retorna el valor de $gestorRepository
-     * @return object
-     * @author dum
-     */
-    private function getGestorRepository()
-    {
-        return $this->gestorRepository = $gestorRepository;
-    }
-
-    /**
-     * Asigna un valor a $entidadRepository
-     * @param object $entidadRepository
-     * @return void
-     * @author dum
-     */
-    private function setEntidadRepository($entidadRepository)
-    {
-        $this->entidadRepository = $entidadRepository;
-    }
-
-    /**
-     * Retorna el valor de $entidadRepository
-     * @return object
-     * @author dum
-     */
-    private function getEntidadRepository()
-    {
-        return $this->entidadRepository = $entidadRepository;
-    }
-
-    /**
-     * Asigna un valor a $articulacionProyectoRepository
-     * @param object $articulacionProyectoRepository
-     * @return void
-     * @author dum
-     */
-    private function setArticulacionProyectoRepository($articulacionProyectoRepository)
-    {
-        $this->articulacionProyectoRepository = $articulacionProyectoRepository;
-    }
-
-    /**
-     * Retorna el valor de $articulacionProyectoRepository
-     * @return object
-     * @author dum
-     */
-    private function getArticulacionProyectoRepository()
-    {
-        return $this->articulacionProyectoRepository = $articulacionProyectoRepository;
-    }
-
-    /**
-     * Asigna un valor a $servidorVideoRepository
-     * @param object $servidorVideoRepository
-     * @return void
-     * @author dum
-     */
-    private function setServidorVideoRepository($servidorVideoRepository)
-    {
-        $this->servidorVideoRepository = $servidorVideoRepository;
-    }
-
-    /**
-     * Retorna el valor de $servidorVideoRepository
-     * @return object
-     * @author dum
-     */
-    private function getServidorVideoRepository()
-    {
-        return $this->servidorVideoRepository = $servidorVideoRepository;
-    }
-
-    /**
-     * retorna query con los proyectos en fase Inicio, Planeación, En ejecución por usuarios
-     * @return object
-     * @author devjul
-     */
-    public function projectsForUser()
-    {
-        $user = auth()->user()->documento;
-
-        $estado = [
-            'Inicio',
-            'Planeación',
-            'En ejecución',
-        ];
-
-        $relations = [
-            'articulacion_proyecto',
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
-        ];
-
-        $projects = null;
-
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-            
-            $projects = $this->getProyectoRepository()->getProjectsForUser($relations, $estado)
-                ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
-                    $query->where('documento', $user);
-                })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
+    $projects = $this->getProyectoRepository()->getProjectsForGestor($id, ['Inicio', 'Planeacion', 'En ejecución']);
 
 
-        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
+    return response()->json([
+    'projects' => $projects,
+    ]);
 
-            $projects = $this->getProyectoRepository()->getProjectsForUser($relations, $estado)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
-                $query->where('documento', $user);
-            })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
-        } else {
-            abort('403');
-        }
+  }
 
-        if (request()->ajax()) {
+  /*=====  End of metodo para consultar los proyectos en ejecucion de un gestor  ======*/
 
-            return datatables()->of($projects)
-                ->addColumn('checkbox', function ($data) {
-                    $checkbox = '
-          <input type="radio" class="with-gap" name="txtproyecto"
-          onclick="usoInfraestructuraCreate.asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre. '\')" id="radioButton' . $data->id . '"
-          value="' . $data->id . '"/>
-          <label for ="radioButton' . $data->id . '"></label>
-          ';
-                    return $checkbox;
-                })->editColumn('codigo_actividad', function($data){
-                    return $data->articulacion_proyecto->actividad->codigo_actividad;
-                })
-                ->editColumn('nombre', function($data){
-                    return $data->articulacion_proyecto->actividad->nombre;
-                })
-                ->rawColumns(['checkbox','codigo_actividad' ])->make(true);
-        }
+  /**
+  * Asigna un valor a $proyectoRepository
+  * @param object $proyectoRepository
+  * @return void type
+  * @author dum
+  */
+  private function setProyectoRepository($proyectoRepository)
+  {
+    $this->proyectoRepository = $proyectoRepository;
+  }
 
-    }
+  /**
+   * Retorna el valor de $proyectoRepository
+   * @return object
+   * @author dum
+   */
+  private function getProyectoRepository()
+  {
+    return $this->proyectoRepository;
+  }
+
+  /**
+   * Asgina un valor a $empresaRepository
+   * @param object $empresaRepository
+   * @return void
+   * @author dum
+   */
+  private function setEmpresaRepository($empresaRepository)
+  {
+    $this->empresaRepository = $empresaRepository;
+  }
+
+  /**
+   * Retorna el valor de $empresaRepository
+   * @return object
+   * @author dum
+   */
+  private function getEmpresaRepository()
+  {
+    return $this->empresaRepository;
+  }
+
+  /**
+   * Asigna un valor a $gestorRepository
+   * @param object $gestorRepository
+   * @return void
+   * @author dum
+   */
+  private function setGestorRepository($gestorRepository)
+  {
+    $this->gestorRepository = $gestorRepository;
+  }
+
+  /**
+   * Retorna el valor de $gestorRepository
+   * @return object
+   * @author dum
+   */
+  private function getGestorRepository()
+  {
+    return $this->gestorRepository;
+  }
+
+  /**
+   * Asigna un valor a $entidadRepository
+   * @param object $entidadRepository
+   * @return void
+   * @author dum
+   */
+  private function setEntidadRepository($entidadRepository)
+  {
+    $this->entidadRepository = $entidadRepository;
+  }
+
+  /**
+   * Retorna el valor de $entidadRepository
+   * @return object
+   * @author dum
+   */
+  private function getEntidadRepository()
+  {
+    return $this->entidadRepository;
+  }
+
+  /**
+   * Asigna un valor a $articulacionProyectoRepository
+   * @param object $articulacionProyectoRepository
+   * @return void
+   * @author dum
+   */
+  private function setArticulacionProyectoRepository($articulacionProyectoRepository)
+  {
+    $this->articulacionProyectoRepository = $articulacionProyectoRepository;
+  }
+
+  /**
+   * Retorna el valor de $articulacionProyectoRepository
+   * @return object
+   * @author dum
+   */
+  private function getArticulacionProyectoRepository()
+  {
+    return $this->articulacionProyectoRepository;
+  }
+
+  /**
+   * Asigna un valor a $servidorVideoRepository
+   * @param object $servidorVideoRepository
+   * @return void
+   * @author dum
+   */
+  private function setServidorVideoRepository($servidorVideoRepository)
+  {
+    $this->servidorVideoRepository = $servidorVideoRepository;
+  }
+
+  /**
+   * Retorna el valor de $servidorVideoRepository
+   * @return object
+   * @author dum
+   */
+  private function getServidorVideoRepository()
+  {
+    return $this->servidorVideoRepository;
+  }
+
 
 }

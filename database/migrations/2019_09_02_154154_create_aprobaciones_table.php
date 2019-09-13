@@ -19,7 +19,7 @@ class CreateAprobacionesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('proyecto_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('rol_id');
+            $table->unsignedInteger('role_id');
             $table->tinyInteger('aprobacion');
             $table->timestamps();
 

@@ -28,6 +28,9 @@ trait IdeaTrait
     return self::IS_GRUPOINVESTIGACION;
   }
 
+  /**
+   * Relación a la tabla de proyectos
+   */
   public function proyecto()
   {
     return $this->hasOne(Proyecto::class, 'idea_id', 'id');

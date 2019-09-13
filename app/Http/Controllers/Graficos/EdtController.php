@@ -29,10 +29,15 @@ class EdtController extends Controller
   */
   public function edtsPorNodoAnhoGrafico_Controller($idnodo, $anho)
   {
+    $id = $idnodo;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $id = auth()->user()->dinamizador->nodo_id;
+    }
+
     $datosCompletos = array();
     $tiposEdt = TipoEdt::select('id', 'nombre')->get()->toArray();
     for ($i = 0; $i < 3 ; $i++) {
-      $edtsCantidad =$this->getEdtRepository()->consultarCantidadDeEdtsPorTipoYNodoYAnho_Repository($idnodo, $anho, $tiposEdt[$i]['nombre']);
+      $edtsCantidad =$this->getEdtRepository()->consultarCantidadDeEdtsPorTipoYNodoYAnho_Repository($id, $anho, $tiposEdt[$i]['nombre']);
       $datosCompletos = $this->condicionarConsultaDeEdts($i, $datosCompletos, $edtsCantidad);
     }
     return response()->json([

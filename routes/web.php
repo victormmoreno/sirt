@@ -333,6 +333,7 @@ Route::group([
 
 //Route group para el módulo de proyectos
 Route::group(
+
     [
         'prefix'     => 'proyecto',
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento'],
@@ -371,7 +372,6 @@ Route::group(
         //rutas de proyectos para el modulo de usos de ingraestructura
 
         Route::get('/usoinfraestructura/projectsforuser', 'ProyectoController@projectsForUser')->name('projectsforuser');
-
     }
 );
 
@@ -462,56 +462,66 @@ Route::group([
 /**
  * Route group para el módulo de gráficos
  */
-Route::group([
-    'prefix'     => 'grafico',
-    'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso'],
-],
-    function () {
-        Route::get('/', 'GraficoController@index')->name('grafico');
-        Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
-        Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'Graficos\ArticulacionController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsNodoGrafico')->name('grafico.edt.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarEdtsPorGestorYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsGestorGrafico')->name('grafico.edt.gestor')->middleware('role_session:Dinamizador|Administrador|Gestor');
-        Route::get('/consultarEdtsPorLineaYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsLineaGrafico')->name('grafico.edt.linea')->middleware('role_session:Dinamizador|Administrador|Gestor');
-        Route::get('/consultarEdtsPorNodoYAnho/{id}/{anho}', 'Graficos\EdtController@edtsPorNodoAnhoGrafico_Controller')->name('grafico.edt.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/proyectos', 'GraficoController@proyectosGraficos')->name('grafico.proyectos')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/consultarProyectosInscritosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosPorFechaInicioNodoYAnhoGrafico_Controller')->name('grafico.proyecto.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosInscritosConEmpresasPorMesDeUnNodo_Controller')->name('grafico.proyecto.empresas.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarGestoresYLineasDeUnNodo/{id}', 'GraficoController@gestoresYLineaDelNodo')->middleware('role_session:Dinamizador|Administrador');
 
-    }
+ Route::group([
+   'prefix'     => 'grafico',
+   'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso'],
+ ],
+ function () {
+   // Gráficos de articulaciones
+   Route::get('/', 'GraficoController@index')->name('grafico');
+   Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
+   Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'Graficos\ArticulacionController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
+   // Gráficos de edt
+   Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsNodoGrafico')->name('grafico.edt.nodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarEdtsPorGestorYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsGestorGrafico')->name('grafico.edt.gestor')->middleware('role_session:Dinamizador|Administrador|Gestor');
+   Route::get('/consultarEdtsPorLineaYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsLineaGrafico')->name('grafico.edt.linea')->middleware('role_session:Dinamizador|Administrador|Gestor');
+   Route::get('/consultarEdtsPorNodoYAnho/{id}/{anho}', 'Graficos\EdtController@edtsPorNodoAnhoGrafico_Controller')->name('grafico.edt.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   // Gráficos de proyecto
+   Route::get('/proyectos', 'GraficoController@proyectosGraficos')->name('grafico.proyectos')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/consultarProyectosInscritosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosPorFechaInicioNodoYAnhoGrafico_Controller')->name('grafico.proyecto.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosInscritosConEmpresasPorMesDeUnNodo_Controller')->name('grafico.proyecto.empresas.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarProyectosInscritosPorTipoNodoYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ProyectoController@proyectosPorTipoProyectoNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarProyectosFinalzadosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosFinalizadosPorNodoYAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarGestoresYLineasDeUnNodo/{id}', 'GraficoController@gestoresYLineaDelNodo')->middleware('role_session:Dinamizador|Administrador');
+
+ }
+
 );
 
 /**
  * Route group para la generación de excel
  */
-Route::group([
-    'prefix'     => 'excel',
-    'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso|Talento'],
-],
-    function () {
-        // Rutas para la generación de excel del módulo de edts
-        Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/excelEdtsDeUnGestor/{id}', 'Excel\EdtController@edtsDeUnGestor')->name('edt.excel.gestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/excelEdtsDeUnNodo/{id}', 'Excel\EdtController@edtsDeUnNodo')->name('edt.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
-        // Ruta para la generación de excel del módulo de articulaciones
-        Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
-        Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
-        Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorFechaYNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorGestorFecha_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorFechaNodoYLinea/{id}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoFechaLinea_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorNodoYAnho/{id}/{anho}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
-        // Rutas para la generacion de excel del módulo de proyectos
-        Route::get('/excelProyectosInscritosPorAnho/{id}/{anho}', 'Excel\ProyectoController@proyectosInscritosPorAnhosDeUnNodo')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
-    }
+ Route::group([
+   'prefix'     => 'excel',
+   'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso|Talento'],
+ ],
+ function () {
+   // Rutas para la generación de excel del módulo de edts
+   Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/excelEdtsDeUnGestor/{id}', 'Excel\EdtController@edtsDeUnGestor')->name('edt.excel.gestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/excelEdtsDeUnNodo/{id}', 'Excel\EdtController@edtsDeUnNodo')->name('edt.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelEdtsFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYNodo')->name('edt.excel.nodo.fecha')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/excelEdtsFinalizadasPorLineaNodoYFecha/{idnodo}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreLineaYNodo')->name('edt.excel.nodo.linea.fecha')->middleware('role_session:Dinamizador|Administrador');
+   // Ruta para la generación de excel del módulo de articulaciones
+   Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
+   Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
+   Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorFechaYNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorGestorFecha_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorFechaNodoYLinea/{id}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoFechaLinea_Controller')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelArticulacionFinalizadasPorNodoYAnho/{id}/{anho}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
+   // Rutas para la generacion de excel del módulo de proyectos
+   Route::get('/excelProyectosInscritosPorAnho/{id}/{anho}', 'Excel\ProyectoController@proyectosInscritosPorAnhosDeUnNodo')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
+ }
 );
 
 //-------------------Route group para todos los pdfs de la aplicacion
@@ -519,10 +529,12 @@ Route::group([
     'prefix'    => 'pdf',
     'namespace' => 'PDF',
 ],
-    function () {
-        Route::get('/', 'PdfComiteController@printPDF')->name('print');
-        Route::get('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
-    }
+
+function () {
+  Route::get('/', 'PdfComiteController@printPDF')->name('print');
+  Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
+}
+
 );
 
 /*===================================================================

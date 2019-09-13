@@ -11,122 +11,113 @@ use Illuminate\Support\Facades\DB;
 class EdtRepository
 {
 
-    /**
-     * Consulta las edts por tipos de un nodo y por año (de la fecha de cierre)
-     * @param int $idnodo Id del nodo
-     * @param string $anho Año por el que se filtran las edts (Fecha de Cierre)
-     * @param string $tipoEdt Tipo de la edt
-     * @return Collection
-     * @author dum
-     */
-    public function consultarCantidadDeEdtsPorTipoYNodoYAnho_Repository($idnodo, $anho, $tipoEdt)
-    {
-        return Edt::select('edts.tipoedt_id')
-            ->selectRaw('count(edts.id) AS cantidad')
-            ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-            ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
-            ->where('nodos.id', $idnodo)
-            ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipoEdt)->get()->first()->id)
-            ->whereYear('fecha_cierre', $anho)
-            ->groupBy('nodos.id', 'edts.tipoedt_id')
-            ->get()
-            ->last();
-    }
+  /**
+   * Consultaas las edts que se cerraron entre dos fecha (de cierre) y un nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return DB
+   * @author dum
+   */
+  public function consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)
+  {
+    return Edt::select('codigo_actividad AS codigo_edt',
+    'tiposedt.nombre AS tipo_edt',
+    'areasconocimiento.nombre AS area_conocimiento',
+    'edts.id',
+    'fecha_inicio',
+    'fecha_cierre',
+    'edts.observaciones',
+    'empleados',
+    'instructores',
+    'aprendices',
+    'publico',
+    'actividades.nombre')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('IF(edts.estado = '. Edt::IsActive() .', "Activa", "Inactiva") AS estado')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+  }
 
-    /**
-     * Consulta la cantidad de edts que tiene una línea tecnológica
-     * @param int $idnodo Id del nodo
-     * @param int $idlinea Id de la línea tecnológica
-     * @param string $tipoEdt Tipo de edt por el que se buscarán las articulaciones
-     * @param string $fecha_inicio Primera fecha por la que se filtrará la consulta
-     * @param string $fecha_fin Segunda fecha por la que se filtrará la consulta
-     * @return Collection
-     * @author dum
-     * @since
-     */
-    public function consultarCantidadDeEdtsPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipoEdt, $fecha_inicio, $fecha_fin)
-    {
-        return Edt::select('edts.tipoedt_id')
-            ->selectRaw('count(edts.id) AS cantidad')
-            ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-            ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
-            ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
-            ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
-            ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
-            ->where('nodos.id', $idnodo)
-            ->where('lineastecnologicas.id', $idlinea)
-            ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipoEdt)->get()->first()->id)
-            ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-            ->groupBy('lineastecnologicas.id', 'edts.tipoedt_id', 'nodos.id')
-            ->get()
-            ->last();
-    }
+  /**
+   * Consulta las edts por tipos de un nodo y por año (de la fecha de cierre)
+   * @param int $idnodo Id del nodo
+   * @param string $anho Año por el que se filtran las edts (Fecha de Cierre)
+   * @param string $tipoEdt Tipo de la edt
+   * @return Collection
+   * @author dum
+   */
+  public function consultarCantidadDeEdtsPorTipoYNodoYAnho_Repository($idnodo, $anho, $tipoEdt)
+  {
+    return Edt::select('edts.tipoedt_id')
+    ->selectRaw('count(edts.id) AS cantidad')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->where('nodos.id', $idnodo)
+    ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipoEdt)->get()->first()->id)
+    ->whereYear('fecha_cierre', $anho)
+    ->groupBy('nodos.id', 'edts.tipoedt_id')
+    ->get()
+    ->last();
+  }
 
-    /**
-     * Cambia el gestor de una edt
-     * @param Request $request
-     * @param int $id Id de la edt
-     * @return boolean
-     * @author dum
-     */
-    public function updateGestorEdt_Repository($request, $id)
-    {
-        DB::beginTransaction();
-        try {
-            $edt = Edt::find($id);
-            $edt->actividad()->update([
-                'gestor_id' => $request->txtgestor_id,
-            ]);
-            DB::commit();
-            return true;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return false;
-        }
+  /**
+   * Consulta la cantidad de edts que tiene una línea tecnológica
+   * @param int $idnodo Id del nodo
+   * @param int $idlinea Id de la línea tecnológica
+   * @param string $tipoEdt Tipo de edt por el que se buscarán las articulaciones
+   * @param string $fecha_inicio Primera fecha por la que se filtrará la consulta
+   * @param string $fecha_fin Segunda fecha por la que se filtrará la consulta
+   * @return Collection
+   * @author dum
+   * @since
+   */
+  public function consultarCantidadDeEdtsPorLineaTecnologicaYFecha_Repository($idnodo, $idlinea, $tipoEdt, $fecha_inicio, $fecha_fin)
+  {
+    return Edt::select('edts.tipoedt_id')
+    ->selectRaw('count(edts.id) AS cantidad')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+    ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
+    ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->where('nodos.id', $idnodo)
+    ->where('lineastecnologicas.id', $idlinea)
+    ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipoEdt)->get()->first()->id)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->groupBy('lineastecnologicas.id', 'edts.tipoedt_id', 'nodos.id')
+    ->get()
+    ->last();
+  }
 
-    }
+  /**
+   * Cambia el gestor de una edt
+   * @param Request $request
+   * @param int $id Id de la edt
+   * @return boolean
+   * @author dum
+   */
+  public function updateGestorEdt_Repository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $edt = Edt::find($id);
+      $edt->actividad()->update([
+        'gestor_id' => $request->txtgestor_id
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
 
-    /**
-     * Consulta las cantidad de tipos de articulación por gestor
-     * @param int $idgestor Id del gestor
-     * @param string $tipo_edt Nombre del tipo de edt (Tipo 1, Tipo 2, Tipo 3)
-     * @param int $idnodo Id del nodo
-     * @param string $fecha_inicio
-     * @param string $fecha_fin
-     * @return Collection
-     * @author dum
-     */
-    public function consultarCantidadDeEdtsPorTiposDeEdtGestorYAnho($idgestor, $tipo_edt, $idnodo, $fecha_inicio, $fecha_fin)
-    {
-        return Edt::select('tiposedt.nombre')
-            ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
-            ->selectRaw('count(edts.id) AS cantidad')
-            ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-            ->join('users', 'users.id', '=', 'gestores.user_id')
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-            ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
-            ->where('gestores.id', $idgestor)
-            ->where('nodos.id', $idnodo)
-            ->where('tiposedt.id', TipoEdt::select('id')->where('nombre', $tipo_edt)->get()->first()->id)
-            ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-            ->groupBy('gestores.id', 'tiposedt.nombre')
-            ->get()
-            ->last();
-    }
-
-    /**
-     * consulta los archivos de una edt
-     * @param int id Id de la EDT por el cual se consultaran sus archivos
-     * @return Collection
-     * @author dum
-     */
-    public function consultarArchivosDeUnaEdt($id)
-    {
-        return Edt::find($id)->rutamodel;
     }
 
     /**

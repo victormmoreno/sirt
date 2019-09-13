@@ -1,8 +1,8 @@
 @extends('layouts.app')
-@section('meta-title', 'Gráficos de Edts')
+@section('meta-title', 'Gráficos de Articulaciones')
 @section('content')
   @php
-    $yearNow = Carbon\Carbon::now()->isoFormat('YYYY')
+  $yearNow = Carbon\Carbon::now()->isoFormat('YYYY')
   @endphp
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -18,16 +18,25 @@
               <div class="row">
                 <div class="col s12 m12 l12">
                   <div class="row">
-                    <div class="col s12 m12 l12">
+                    <div class="input-field col s12 m4 l4">
+                      <select id="txtnodo_id" name="txtnodo_id" style="width: 100%" tabindex="-1" onchange="getGestorYLineasDeUnNodo(this.value)">
+                        <option value="">Seleccione el Nodo</option>
+                        @foreach($nodos as $id => $nombre)
+                          <option value="{{$id}}">{{$nombre}}</option>
+                        @endforeach
+                      </select>
+                      <label for="txtnodo_id">Seleccione un nodo</label>
+                    </div>
+                    <div class="col s12 m8 l8">
                       <div class="center-align">
-                        <span class="card-title center-align">Gráficos de Edt's</span>
+                        <span class="card-title center-align">Gráficos de Articulaciones</span>
                       </div>
                     </div>
                   </div>
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por fechas.</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por fechas</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
@@ -39,15 +48,8 @@
                               <input type="text" id="txtfecha_fin_edtGrafico1" name="txtfecha_fin_edtGrafico1" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_edtGrafico1">Fecha Fin</label>
                             </div>
-                            <div class="col s12 m6 l6">
-                              <button onclick="consultarEdtsPorNodoGestorYFecha_stacked(0);" class="btn">Consultar</button>
-                            </div>
-                            <div class="col s12 m6 l6 right">
-                              <div class="material-icons">
-                                <a onclick="generarExcelGrafico1Edt(0)">
-                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                                </a>
-                              </div>
+                            <div class="center col s12 m12 l12">
+                              <button onclick="consultarEdtsPorNodoGestorYFecha_stacked(1);" class="btn">Consultar</button>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -57,16 +59,14 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por gestor y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
                             <div class="input-field col s12 m12 l12">
                               <select id="txtgestor_id_edtGrafico2" name="txtgestor_id_edtGrafico2" style="width: 100%" tabindex="-1">
                                 <option value="">Seleccione el Gestor</option>
-                                @foreach($gestores as $id => $nombres_gestor)
-                                  <option value="{{$id}}">{{$nombres_gestor}}</option>
-                                @endforeach
+
                               </select>
                               <label for="txtgestor_id_edtGrafico2">Gestor</label>
                             </div>
@@ -78,15 +78,8 @@
                               <input type="text" id="txtfecha_fin_edtGrafico2" name="txtfecha_fin_edtGrafico2" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_edtGrafico2">Fecha Fin</label>
                             </div>
-                            <div class="center col s12 m6 l6">
-                              <button onclick="consultarEdtsPorGestorYFecha_stacked(0)" class="btn">Consultar</button>
-                            </div>
-                            <div class="center col s12 m6 l6">
-                              <div class="material-icons">
-                                <a onclick="generarExcelGrafico2Edt(0)">
-                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                                </a>
-                              </div>
+                            <div class="center col s12 m12 l12">
+                              <button onclick="consultarEdtsPorGestorYFecha_stacked(1)" class="btn">Consultar</button>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -100,16 +93,14 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por línea y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por línea y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
                             <div class="input-field col s12 m12 l12">
                               <select id="txtlinea_id_edtGrafico3" name="txtlinea_id_edtGrafico3" style="width: 100%">
                                 <option value="">Seleccione la Línea Tecnológica</option>
-                                @foreach($lineas as $id => $nombre)
-                                  <option value="{{$id}}">{{$nombre}}</option>
-                                @endforeach
+
                               </select>
                             </div>
                             <div class="input-field col s12 m6 l6">
@@ -120,15 +111,8 @@
                               <input type="text" id="txtfecha_fin_GraficoEdt3" name="txtfecha_fin_GraficoEdt3" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_GraficoEdt3">Fecha Fin</label>
                             </div>
-                            <div class="center col s12 m6 l6">
-                              <button onclick="consultarEdtsPorLineaYFecha_stacked()" class="btn">Consultar</button>
-                            </div>
-                            <div class="center col s12 m6 l6">
-                              <div class="material-icons">
-                                <a onclick="generarExcelGrafico3Edt(0)">
-                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                                </a>
-                              </div>
+                            <div class="center">
+                              <button onclick="consultarEdtsPorLineaYFecha_stacked(1)" class="btn">Consultar</button>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -146,7 +130,7 @@
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
-                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="consultarEdtsDelNodoPorAnho_variablepie(0)">
+                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="consultarEdtsDelNodoPorAnho_variablepie(1)">
                               @for ($i=2016; $i <= $yearNow; $i++)
                                 <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
                               @endfor
@@ -171,9 +155,37 @@
 @endsection
 @push('script')
   <script>
-    $(document).ready(function(){
-      consultarEdtsPorNodoGestorYFecha_stacked(0);
-      consultarEdtsDelNodoPorAnho_variablepie(0);
-    });
+    // $(document).ready(function(){});
+    function getGestorYLineasDeUnNodo(id) {
+      if (id == '') {
+        Swal.fire('Advertencia!', 'Seleccione un nodo válido!', 'warning');
+      } else {
+        $.ajax({
+          dataType: 'json',
+          type: 'get',
+          url: '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
+          success: function (data) {
+            $('#txtgestor_id_edtGrafico2').empty();
+            $('#txtgestor_id_edtGrafico2').append('<option value="">Seleccione el Gestor</option>')
+            $.each(data.gestores, function(i, e) {
+              // console.log(e.nombres_gestor);
+              $('#txtgestor_id_edtGrafico2').append('<option value="'+e.id+'">'+e.nombres_gestor+'</option>');
+            })
+
+            $('#txtlinea_id_edtGrafico3').empty();
+            $('#txtlinea_id_edtGrafico3').append('<option value="">Seleccione la Línea Tecnológica</option>')
+            $.each(data.lineas, function(i, e) {
+              // console.log(e.nombres_gestor);
+              $('#txtlinea_id_edtGrafico3').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+            })
+            $('#txtgestor_id_edtGrafico2').material_select();
+            $('#txtlinea_id_edtGrafico3').material_select();
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+          },
+        });
+      }
+    }
   </script>
 @endpush
