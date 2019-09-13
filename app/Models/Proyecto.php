@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\User;
+use Illuminate\Database\Eloquent\Model;
 
 class Proyecto extends Model
 {
+
 
   protected $table = 'proyectos';
 
@@ -163,11 +164,88 @@ class Proyecto extends Model
     if(empty($relations)) {
       return $query;
     }
-
-    return $query->with($relations)->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
-
   }
 
+    public static function IsNoAceptado()
+    {
+        return self::IS_NOACEPTADO;
+    }
+
+    /*===============================================
+    =            relaciones polimorficas            =
+    ===============================================*/
+
+    // Relación a la tabla de archivosproyecto
+    // public function archivosproyecto()
+    // {
+    //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
+    // }
+
+    public function tipoproyecto()
+    {
+        return $this->belongsTo(TipoArticulacionProyecto::class, 'tipoarticulacionproyecto_id', 'id');
+    }
+
+    public function areaconocimiento()
+    {
+        return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
+    }
+
+    /**
+     * Relación a la tabla users
+     * @return Eloquent
+     * @author dum
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'aprobaciones')
+            ->withTimestamps()
+            ->withPivot('aprobacion');
+    }
+
+    public function idea()
+    {
+        return $this->belongsTo(Idea::class, 'idea_id', 'id');
+    }
+
+    /**
+     * Relación a la tabla de roles
+     * @return Collection
+     * @author dum
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'aprobaciones')
+            ->withTimestamps()
+            ->withPivot('aprobacion');
+    }
+
+    /* relacion a la tabla estadosproyecto */
+    public function estadoproyecto()
+    {
+        return $this->belongsTo(EstadoProyecto::class, 'estadoproyecto_id', 'id');
+    }
+
+    public function articulacion_proyecto()
+    {
+        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
+    }
+
+    /*=====  End of relaciones polimorficas  ======*/
+
+    /*=====================================================================
+    =            scope para consultar los proyectos por estado            =
+    =====================================================================*/
+
+    public function scopeInfoProjects($query, array $relations = [], array $estado = [])
+    {
+        if (empty($relations)) {
+            return $query;
+        }
+
+        return $query->with($relations)->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
+
+    }
 
     /*=====  End of scope para consultar los proyectos por estado  ======*/
 
@@ -191,25 +269,22 @@ class Proyecto extends Model
 
     }
 
-  /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
+    /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
 
-  /*===================================================================
-  =            scope para consultar por estado de proyecto            =
-  ===================================================================*/
+    /*===================================================================
+    =            scope para consultar por estado de proyecto            =
+    ===================================================================*/
 
-  public function scopeEstadoOfProjects($query, array $estado = [])
-  {
+    public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
+    {
+        return $query->with($relations)->whereHas(
+            'estadoproyecto', function ($query) use ($estado) {
+                $query->whereIn('nombre', $estado);
+            }
+        );
 
-    if ($this->estadoproyecto()->exists()) {
-      return $query->whereHas(
-      'estadoproyecto', function ($query) use ($estado) {
-        $query->whereIn('nombre', $estado);
-      }
-      );
     }
-    return $query;
-  }
 
-  /*=====  End of scope para consultar por estado de proyecto  ======*/
+    /*=====  End of scope para consultar por estado de proyecto  ======*/
 
-  }
+}

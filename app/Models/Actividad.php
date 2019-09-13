@@ -9,9 +9,19 @@ class Actividad extends Model
 
     protected $table = 'actividades';
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
-        'fecha_inicio' => 'date:Y-m-d',
-        'fecha_cierre' => 'date:Y-m-d',
+        'gestor_id'        => 'integer',
+        'nodo_id'          => 'integer',
+        'codigo_actividad' => 'string',
+        'nombre'           => 'string',
+        'fecha_inicio'     => 'date:Y-m-d',
+        'fecha_cierre'     => 'date:Y-m-d',
+
     ];
 
     /**
@@ -50,6 +60,11 @@ class Actividad extends Model
     public function nodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
+
+    public function usoinfraestructuras()
+    {
+        return $this->hasMany(UsoInfraestructura::class, 'actividad_id', 'id');
     }
 
 }

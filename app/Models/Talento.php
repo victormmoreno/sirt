@@ -34,6 +34,13 @@ class Talento extends Model
             ->withPivot('talento_lider');
     }
 
+    // Relacion muchos a muchos con uso de infraestructura
+    public function usoinfraestructuras()
+    {
+        return $this->belongsToMany(UsoInfraestructura::class, 'uso_talentos')
+            ->withTimestamps();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

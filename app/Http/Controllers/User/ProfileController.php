@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProfileRequest\ChangePasswordRequest;
-use App\Http\Requests\ProfileRequest\ProfileFormRequest;
+use App\Http\Requests\ProfileRequest\{ChangePasswordRequest, ProfileFormRequest};
 use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
-use App\Repositories\Repository\ProfileRepository\ProfileRepository;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\{ProfileRepository\ProfileRepository, UserRepository\UserRepository};
 use App\User;
-use PDF;
 use Illuminate\Http\Request;
+use PDF;
 
 class ProfileController extends Controller
 {
@@ -130,20 +128,19 @@ class ProfileController extends Controller
     =            metodo para descargar certificado registro en plataforma            =
     ================================================================================*/
 
-    public function downloadCertificatedPlataform($extennsion = '.pdf')
+    public function downloadCertificatedPlataform($extennsion = '.pdf', $orientacion = 'portrait')
     {
         $this->authorize('downloadCertificatedPlataform', User::class);
 
         $user = $this->getAuthUserFindById();
 
-        $pdf =  \PDF::loadHTML('<h1>Test</h1>'); 
-        
-        // $pdf = App::make('dompdf.wrapper');
-        // $pdf->loadHTML('<h1>Test</h1>');
-        // return $pdf->stream();
-        // return $pdf->download("certificado {$user->nombres} {$user->apellidos} - ". config('app.name').".pdf");
-        return $pdf->download("certificado  - ". config('app.name').".pdf");
-        // return $pdf->stream("certificado  " . config('app.name') . $extennsion);
+        $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', compact('user'));
+
+        $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
+
+        $pdf->setEncryption($user->documento);
+
+        return $pdf->download("certificado  " . config('app.name') . $extennsion);
     }
 
     /*=====  End of metodo para descargar certificado registro en plataforma  ======*/

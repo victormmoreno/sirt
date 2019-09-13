@@ -16,17 +16,17 @@
 // });
 //
 
-Route::group([
+// Route::group([
 
-    'prefix' => 'auth',
+//     'prefix' => 'auth',
 
-], function ($router) {
+// ], function ($router) {
 
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+//     Route::post('login', 'AuthController@login');
+//     Route::post('logout', 'AuthController@logout');
+//     Route::post('refresh', 'AuthController@refresh');
+//     Route::post('me', 'AuthController@me');
 
-});
+// });
 
-Route::get('ideas','IdeaController@getIdeas');
+// Route::get('ideas','IdeaController@getIdeas');

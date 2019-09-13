@@ -93,4 +93,10 @@
   'ylee' => array(
     'normal' => $fontDir . '\e0baf87134b1361bd20d1a28485272f1',
   ),
+  'material icons' => array(
+    'normal' => $fontDir . '\a83785ccbfc5713b63b97bbf71e6fa23',
+  ),
+  'roboto' => array(
+    'normal' => $fontDir . '\cf99a9d56c411ce3fa8a2fc49c520e74',
+  ),
 ) ?>

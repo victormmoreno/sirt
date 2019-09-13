@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Repositories\Repository\NodoRepository;
 
+
 class LaboratorioController extends Controller
 {
 

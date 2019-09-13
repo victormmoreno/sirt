@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Nodo;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Nodo\DataTables\NodoDataTable;
 use App\Http\Requests\NodoFormRequest;
+use App\Models\Nodo;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller
@@ -19,8 +18,8 @@ class NodoController extends Controller
 
     public function __construct(NodoRepository $nodoRepository, DepartamentoRepository $departamentoRepository)
     {
-        // $this->middleware('auth');
-        $this->middleware('role_session:Administrador|Dinamizador|Talento');
+        $this->middleware('auth');
+        $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
         $this->nodoRepository         = $nodoRepository;
         $this->departamentoRepository = $departamentoRepository;
     }
@@ -31,17 +30,20 @@ class NodoController extends Controller
      */
     public function index()
     {
-        switch (session()->get('login_role') && auth()->user()->hasAnyRole([User::IsAdministrador()])) {
+
+        $this->authorize('index', Nodo::class);
+
+        switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 if (request()->ajax()) {
                     return datatables()->of($this->nodoRepository->getAlltNodo())
                         ->addColumn('detail', function ($data) {
-                            $button = '<a class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Lineas" onclick="" data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
+                            $button = '<a href="' . route("nodo.show", $data->slug) . '" class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Nodo"  data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
 
                             return $button;
                         })
                         ->addColumn('edit', function ($data) {
-                            $button = '<a href="' . route("nodo.edit", $data->id) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                            $button = '<a href="' . route("nodo.edit", $data->slug) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
                             return $button;
                         })
@@ -49,10 +51,34 @@ class NodoController extends Controller
                         ->make(true);
 
                 }
-                return view('nodos.administrador.index');
+                return view('nodos.index');
+
+                break;
+            case User::IsDinamizador():
+                if (isset(auth()->user()->dinamizador)) {
+                    $nodo = auth()->user()->dinamizador->nodo->id;
+
+                    return view('nodos.show', [
+                        'nodo' => $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->first(),
+                    ]);
+
+                }
+                abort('403');
+
+                break;
+            case User::IsGestor():
+
+                if (isset(auth()->user()->gestor)) {
+                    $nodo = auth()->user()->gestor->nodo->id;
+                    return view('nodos.show', [
+                        'nodo' => $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->first(),
+                    ]);
+
+                }
+                abort('403');
                 break;
             default:
-                abort('404');
+                abort('403');
                 break;
         }
 
@@ -65,8 +91,9 @@ class NodoController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Nodo::class);
 
-        return view('nodos.administrador.create', [
+        return view('nodos.create', [
             'lineas'        => $this->nodoRepository->getAllLineas(),
             'regionales'    => $this->nodoRepository->getAllRegionales(),
             'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
@@ -81,10 +108,11 @@ class NodoController extends Controller
      */
     public function store(NodoFormRequest $request)
     {
+        $this->authorize('store', Nodo::class);
         //metodo para guardad
         $nodoCreate = $this->nodoRepository->storeNodo($request);
 
-        if ($nodoCreate == true) {
+        if ($nodoCreate === true) {
 
             alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
         } else {
@@ -96,27 +124,32 @@ class NodoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $nodo
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($nodo)
     {
-        //
+        $nodo = $this->nodoRepository->findNodoForShow($nodo);
+        $this->authorize('show', $nodo);
+
+        return view('nodos.show', [
+            'nodo' => $nodo,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $nodo
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($nodo)
     {
 
-        $nodo = $this->nodoRepository->findByid($id);
-        // dd($nodo);
-        return view('nodos.administrador.edit', [
-            'entidad'       => $this->nodoRepository->findByid($id),
+        $nodo = $this->nodoRepository->findNodoForShow($nodo);
+        $this->authorize('edit', $nodo);
+        return view('nodos.edit', [
+            'nodo'          => $nodo,
             'lineas'        => $this->nodoRepository->getAllLineas(),
             'regionales'    => $this->nodoRepository->getAllRegionales(),
             'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
@@ -132,10 +165,8 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-
         $entidadNodo = $this->nodoRepository->findById($id);
-        // dd($nodo);
-        $nodoUdate = $this->nodoRepository->update($request, $entidadNodo);
+        $nodoUdate   = $this->nodoRepository->update($request, $entidadNodo);
 
         if ($nodoUdate == true) {
 
@@ -146,14 +177,4 @@ class NodoController extends Controller
         return redirect()->route('nodo.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

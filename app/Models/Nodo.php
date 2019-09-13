@@ -24,6 +24,19 @@ class Nodo extends Model
         'anho_inicio',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'centro_id'   => 'integer',
+        'entidad_id'  => 'integer',
+        'direccion'   => 'string',
+        'telefono'    => 'string',
+        'anho_inicio' => 'year',
+    ];
+
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
@@ -73,7 +86,7 @@ class Nodo extends Model
      */
     public function actividades()
     {
-      return $this->hasMany(Actividad::class, 'nodo_id', 'id');
+        return $this->hasMany(Actividad::class, 'nodo_id', 'id');
     }
 
     //relacion muchos a muchos con lineas
@@ -214,5 +227,58 @@ class Nodo extends Model
     {
 
         return $query->first();
+    }
+
+    /**
+     * Execute a query for a single record by slug.
+     *
+     * @param  string  $nodo
+     * @param  array  $columns
+     * @return mixed|static
+     */
+    public function scopeFindNodo($query, $nodo, $columns = ['*'])
+    {
+        return $query->with('entidad')->whereHas('entidad',function($query) use ($nodo){
+            $query->where('slug','=', $nodo);
+        })->first($columns);
+
+        
+    }
+
+    /**
+     * Find a model by its slug or throw an exception.
+     *
+     * @param  mixed  $nodo
+     * @param  array  $columns
+     */
+    public function scopeFindOrFailNodo($nodo, $columns = ['*'])
+    {
+        $result = $this->scopeFindNodo($nodo, $columns);
+
+        if (is_array($nodo)) {
+            if (count($result) === count(array_unique($nodo))) {
+                return $result;
+            }
+        } elseif (!is_null($result)) {
+            return $result;
+        } else {
+            abort('404');
+        }
+
+    }
+
+    /**
+     * mostar equipo humano de tecnoparque.
+     *
+     * @param array $relations
+     * @return array
+     * @author julian londoño
+     */
+    public function scopeTeamTecnoparque($query, array $relations)
+    {
+        if (isset($relations)) {
+            return $query->with($relations);
+        }
+        return $query;
     }
 }

@@ -15,14 +15,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        // Registered::class                   => [
-        //     SendEmailVerificationNotification::class,
-        // ],
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],
         'Illuminate\Auth\Events\PasswordReset' => [
-            // 'App\Listeners\User\Auth\ResetPassword\LogPasswordReset',
+
             'App\Listeners\User\Auth\ResetPassword\LogSuccessfulPasswordReset',
         ],
         'App\Events\Idea\IdeaHasReceived' => [
@@ -45,7 +42,5 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Exports\User\Administrador\AdminUserExport;
 use App\Http\Controllers\Controller;
 use App\Repositories\Repository\UserRepository\AdminRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
+use PDF;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -71,5 +73,91 @@ class AdminController extends Controller
         }
 
     }
+
+    public function exportAdminUser($extension = 'xlsx')
+    {
+        $this->authorize('exportAdminUser', User::class);
+        $user = $this->getData();
+        $this->setQuery($user);
+        return (new AdminUserExport($this->getQuery()))->download("administradores.{$extension}");
+    }
+
+    private function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Retorna el valor de $query
+     * @return object
+     * @author dum
+     */
+    private function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * retorna consulta de administradores
+     * @return collection
+     * @author dum
+     */
+    private function getData()
+    {
+        $role = [User::IsAdministrador()];
+
+        $relations = [
+            'tipodocumento'                 => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gradoescolaridad'              => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gruposanguineo'                => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'eps'                           => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudad'                        => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudad.departamento'           => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudadexpedicion'              => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudadexpedicion.departamento' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ocupaciones',
+        ];
+
+        return $this->userRepository->userInfoWithRelations($role, $relations)->get();
+    }
+
+
+    /**
+     * descargar pdf administradores
+     * @return object
+     * @author devjul
+     */
+    public function downloadPDFAdministrator($extennsion = '.pdf', $orientacion = 'portrait')
+    {
+        // $this->authorize('downloadCertificatedPlataform', User::class);
+
+        $user = $this->getData();
+
+
+        $pdf = PDF::loadView('pdf.user.admin.reportListAdministrator', compact('user'));
+
+        $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
+
+        // $pdf->setEncryption($user->documento);
+
+        return $pdf->stream("certificado  " . config('app.name') . $extennsion);
+    }
+
 
 }

@@ -825,4 +825,9 @@ class UserRepository
 
     /*=====  End of metodo para validar que solo exista un dinamizador por nodo  ======*/
 
+    public function userInfoWithRelations(array $role = [], array $relations = [])
+    {
+        return User::infoUserRole($role , $relations);
+    }
+
 }
