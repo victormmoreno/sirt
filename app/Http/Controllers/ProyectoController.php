@@ -892,7 +892,7 @@ class ProyectoController extends Controller
    */
   private function getGestorRepository()
   {
-    return $this->gestorRepository = $gestorRepository;
+    return $this->gestorRepository;
   }
 
   /**
@@ -913,7 +913,7 @@ class ProyectoController extends Controller
    */
   private function getEntidadRepository()
   {
-    return $this->entidadRepository = $entidadRepository;
+    return $this->entidadRepository;
   }
 
   /**
@@ -934,7 +934,7 @@ class ProyectoController extends Controller
    */
   private function getArticulacionProyectoRepository()
   {
-    return $this->articulacionProyectoRepository = $articulacionProyectoRepository;
+    return $this->articulacionProyectoRepository;
   }
 
   /**

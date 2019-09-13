@@ -22,6 +22,52 @@ class EdtController extends Controller
   }
 
   /**
+   * Genera el excel con las edts de un nodo por línea tecnológica entre fechas de cierre
+   * @param int $id Id del nodo
+   * @param int $idlinea Id de la línea tecnológica
+   * @param string $fecha_inicio Primera fecha para realizar el filtro (fecha de cierre)
+   * @param string $fecha_fin Segunda fecha para realizar el filtro (fecha de cierre)
+   * @return Response\Excel
+   * @author dum
+   */
+  public function edtPorFechaCierreLineaYNodo($id, $idlinea, $fecha_inicio, $fecha_fin)
+  {
+    $idnodo = $id;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
+
+    $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+    ->where('nodos.id', $idnodo)
+    ->where('lineastecnologicas.id', $idlinea)
+    ->get();
+    $this->setQuery($query);
+    // Aunque el excel se está generando con la clase EdtsNodoExport, en realidad no importa, ya que lo único que cambia es el query
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
+  }
+
+  /**
+   * Genera el excel con las edts de un gestor finalizadas por fechas
+   * @param int $id Id del gestor
+   * @param string $fecha_inicio Primera fecha del filtro
+   * @param string $fecha_cierre Segunda fecha del filtro
+   * @return Response\Excel
+   * @author dum
+   */
+  public function edtPorFechaCierreYGestor($id, $fecha_inicio, $fecha_fin)
+  {
+    $idgestor = $id;
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      $idgestor = auth()->user()->gestor->id;
+    }
+    $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->get();
+    $this->setQuery($query);
+    // Aunque el excel se está generando con la clase EdtsNodoExport, en realidad no importa, ya que lo único que cambia es el query
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
+  }
+
+  /**
    * Genera el excel con las edts de un nodo finalizadas entre dos fecha (la fecha de filtro es la fecha_cierre)
    * @param int $id Id del nodo
    * @param string $fecha_inicio Primera fecha para realizar el filtro
@@ -35,7 +81,7 @@ class EdtController extends Controller
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       $idnodo = auth()->user()->dinamizador->nodo_id;
     }
-    $query = $this->getEdtRepository()->consultarEdtsDeUnNodoPorFecha($idnodo, $fecha_inicio, $fecha_fin)->get();
+    $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
     $this->setQuery($query);
     return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }

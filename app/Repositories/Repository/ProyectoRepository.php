@@ -52,6 +52,49 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
+   *
+   * @param int $id Id del nodo
+   * @return Collection
+   */
+  public function proyectosFinalizadosPorMesDeUnNodo_Repository($id)
+  {
+    $this->traducirMeses();
+    return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
+    ->selectRaw('MONTH(actividades.fecha_cierre) AS meses')
+    ->selectRaw('CONCAT(UPPER(LEFT(date_format(actividades.fecha_cierre, "%M"), 1)), LOWER(SUBSTRING(date_format(actividades.fecha_cierre, "%M"), 2))) AS mes')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    // ->whereYear('fecha_inicio', $anho)
+    ->where('nodos.id', $id)
+    ->where('estado_aprobacion', Proyecto::IsAceptado())
+    ->groupBy('meses', 'mes')
+    ->orderBy('meses');
+  }
+
+  /**
+   * Consulta la cantidad de proyectos que se inscribieron entre dos fechas por nodo y tipos de poyecto
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarCantidadDeProyectosInscritosPorTipoProyecto_Repository($id, $fecha_inicio, $fecha_fin)
+  {
+    return Proyecto::select('tiposarticulacionesproyectos.nombre')
+    ->selectRaw('COUNT(proyectos.id) AS cantidad')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->where('nodos.id', $id)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->groupBy('proyectos.tipoarticulacionproyecto_id');
+  }
+
+  /**
    * Consulta el talento líder de un proyecto
    * @param int $id Id del proyecto
    * @return Collection
@@ -78,7 +121,6 @@ class ProyectoRepository
   */
   public function updateAprobacionUsuario($request, $id)
   {
-
 
     DB::beginTransaction();
     try {
@@ -198,9 +240,7 @@ class ProyectoRepository
     ->where('proyectos.id', $id);
   }
   /**
-   * undocumented function summary
-   *
-   * Undocumented function long description
+   * Consulta los proyectos pendientes de aprobación de un usuario (Dinamizador, Gestor, Talento)
    *
    * @param int $id Id del usuario
    * @return Collection
@@ -382,13 +422,12 @@ class ProyectoRepository
   }
 
   /**
-   * Consulta la cantidad de proyectos que se inscriben por mes de un año y un nodo
+   * Consulta la cantidad de proyectos que se inscriben por mes de un nodo
    *
    * @param int $id Id del nodo
-   * @param string $anho Año para filtrar
    * @return Collection
    */
-  public function proyectosInscritosPorMesDeUnNodo_Repository($id, $anho)
+  public function proyectosInscritosPorMesDeUnNodo_Repository($id)
   {
     $this->traducirMeses();
     return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
@@ -397,12 +436,11 @@ class ProyectoRepository
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-    ->whereYear('fecha_inicio', $anho)
+    // ->whereYear('fecha_inicio', $anho)
     ->where('nodos.id', $id)
     ->where('estado_aprobacion', Proyecto::IsAceptado())
     ->groupBy('meses', 'mes')
-    ->orderBy('meses')
-    ->get();
+    ->orderBy('meses');
   }
 
   /**

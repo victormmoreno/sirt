@@ -27,7 +27,7 @@
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por fechas (Fecha de cierre)</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por fechas.</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
@@ -57,7 +57,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por gestor y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -83,7 +83,7 @@
                             </div>
                             <div class="center col s12 m6 l6">
                               <div class="material-icons">
-                                <a onclick="generarExcelGrafico1Articulacion(0)">
+                                <a onclick="generarExcelGrafico2Edt(0)">
                                   <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
                                 </a>
                               </div>
@@ -100,7 +100,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por línea y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por línea y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -120,8 +120,15 @@
                               <input type="text" id="txtfecha_fin_GraficoEdt3" name="txtfecha_fin_GraficoEdt3" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_GraficoEdt3">Fecha Fin</label>
                             </div>
-                            <div class="center">
+                            <div class="center col s12 m6 l6">
                               <button onclick="consultarEdtsPorLineaYFecha_stacked()" class="btn">Consultar</button>
+                            </div>
+                            <div class="center col s12 m6 l6">
+                              <div class="material-icons">
+                                <a onclick="generarExcelGrafico3Edt(0)">
+                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                                </a>
+                              </div>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">

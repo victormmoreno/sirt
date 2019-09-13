@@ -17,7 +17,9 @@ var graficosEdtId = {
 
 var graficosProyectoId = {
   grafico1: 'graficosProyectoPorMesYNodo_combinate',
-  grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate'
+  grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate',
+  grafico3: 'graficoProyectosPorTipoNodoYFecha_column',
+  grafico4: 'graficoProyectosFinalizadosPorNodoYAnho_variablepie'
 };
 
 function alertaNodoNoValido() {
@@ -30,6 +32,46 @@ function alertaGestorNoValido() {
 
 function alertaLineaNoValido() {
   Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+}
+
+function generarExcelGrafico3Edt(bandera) {
+  let idnodo = 0;
+  let idlinea = $('#txtlinea_id_edtGrafico3').val();
+  let fecha_inicio = $('#txtfecha_inicio_GraficoEdt3').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoEdt3').val();
+
+  if ( bandera == 1 ) {
+    idnodo = $('#txtnodo_id').val();
+  }
+
+  if (idnodo === '') {
+    alertaNodoNoValido();
+  } else {
+    if ( idlinea === '' ) {
+      alertaLineaNoValido();
+    } else {
+      location.href = '/excel/excelEdtsFinalizadasPorLineaNodoYFecha/'+idnodo+'/'+idlinea+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+
+}
+
+function generarExcelGrafico2Edt(bandera) {
+  let id = 0;
+
+  if (bandera == 0) {
+    id = $('#txtgestor_id_edtGrafico2').val();
+  }
+
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
+
+  if (id === '') {
+    alertaGestorNoValido();
+  } else {
+    location.href = '/excel/excelEdtsFinalizadasPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
 }
 
 function generarExcelGrafico1Edt(bandera) {
@@ -185,6 +227,97 @@ function graficosProyectosPromedioCantidadesMeses(data, name) {
       }
     }]
   });
+}
+
+function graficosProyectosAgrupados(data, name, name_label) {
+  let tamanho = data.proyectos.cantidades.length;
+  let datos = {
+    cantidades: [],
+    labels: [],
+  };
+  for (let i = 0; i < tamanho; i++) {
+    datos.cantidades.push(data.proyectos.cantidades[i]);
+  }
+
+  for (let i = 0; i < tamanho; i++) {
+    datos.labels.push(data.proyectos.labels[i]);
+  }
+
+  Highcharts.chart(name, {
+    title: {
+      text: 'Proyectos Inscritos'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad'
+      }
+    },
+    xAxis: {
+      categories: datos.labels,
+      title: {
+        text: name_label
+      }
+    },
+    series: [{
+      type: 'column',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades
+    }, {
+      type: 'spline',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades,
+      dataLabels: {
+        enabled: true
+      },
+      marker: {
+        lineWidth: 2,
+        lineColor: '#008981',
+        fillColor: '#008981'
+      }
+    }]
+  });
+}
+
+function consultarProyectosInscritosPorTipoNodoYFecha_column(bandera) {
+
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_GraficoProyecto3').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoProyecto3').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    success: function (data) {
+      graficosProyectosAgrupados(data, graficosProyectoId.grafico3, 'Tipo de Proyecto');
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+
+}
+
+
+function consultarProyectosFinalizadosPorAnho_combinate(bandera) {
+  id = 0;
+  let anho = $('#txtanho_GraficoProyecto4').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
+    success: function (data) {
+      graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico4);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 }
 
 function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) {

@@ -9,15 +9,16 @@ use Carbon\Carbon;
 class EdtRepository
 {
 
+
+
   /**
    * Consultaas las edts que se cerraron entre dos fecha (de cierre) y un nodo
-   * @param int $id Id del nodo
    * @param string $fecha_inicio Primera fecha para realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
-   * @return Collection
+   * @return DB
    * @author dum
    */
-  public function consultarEdtsDeUnNodoPorFecha($id, $fecha_inicio, $fecha_fin)
+  public function consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)
   {
     return Edt::select('codigo_actividad AS codigo_edt',
     'tiposedt.nombre AS tipo_edt',
@@ -39,7 +40,6 @@ class EdtRepository
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-    ->where('nodos.id', $id)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
   }
 
