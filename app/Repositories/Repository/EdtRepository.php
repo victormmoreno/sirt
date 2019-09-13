@@ -119,6 +119,7 @@ class EdtRepository
       return false;
 
     }
+  }
 
     /**
      * Modifica los entregables de una edt

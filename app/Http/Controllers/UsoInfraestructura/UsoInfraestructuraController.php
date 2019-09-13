@@ -107,38 +107,49 @@ class UsoInfraestructuraController extends Controller
      * @return collection
      * @author devjul
      */
-    public function articulacionesForUser()
-    {
+    // public function articulacionesForUser()
+    // {
 
-        $user = auth()->user()->documento;
+    //     $user = auth()->user()->documento;
 
-        $estado = [
-            Articulacion::IsInicio(),
-            Articulacion::IsEjecucion(),
-        ];
+    //     $estado = [
+    //         Articulacion::IsInicio(),
+    //         Articulacion::IsEjecucion(),
+    //     ];
 
-        $relations = [
-            'articulacion_proyecto',
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
-        ];
+    //     $relations = [
+    //         'articulacion_proyecto',
+    //         'articulacion_proyecto.actividad' => function ($query) {
+    //             $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
+    //         },
+    //     ];
 
-        $artulaciones = null;
+    //     $artulaciones = null;
 
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
+    //     if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
-            return $this->articulacionRepository->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
-                $query->where('documento', $user);
-            })->estadoOfArticulaciones($estado)->get();
+    //         return $this->articulacionRepository->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+    //             $query->where('documento', $user);
+    //         })->estadoOfArticulaciones($estado)->get();
 
-        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
+    //     } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
 
-            return $this->articulacionRepository->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
-                $query->where('documento', $user);
-            })->estadoOfArticulaciones($estado)->get();
+    //         return $this->articulacionRepository->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+    //             $query->where('documento', $user);
+    //         })->estadoOfArticulaciones($estado)->get();
 
-        }
+    //     }
 
-    }
+    // }
+
+    // /*========================================================================
+    // =            metodo para consultar los proyectos de un ususario gestor talento         =
+    // ========================================================================*/
+
+    // public function getProjectsForUser(array $relations, array $estado = [])
+    // {
+    //     return Proyecto::estadoOfProjects($relations, $estado);
+    // }
+
+    /*=====  End of metodo para consultar los proyectos de un gestor o talento  ======*/
 }

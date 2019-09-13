@@ -27,7 +27,7 @@ class CreateAprobacionesTable extends Migration
 
             $table->index(["user_id"], 'fk_aprobaciones_users1_idx');
 
-            $table->index(["rol_id"], 'fk_aprobaciones_roles1_idx');
+            $table->index(["role_id"], 'fk_aprobaciones_roles1_idx');
 
             $table->foreign('proyecto_id', 'fk_aprobaciones_proyectos1_idx')
                 ->references('id')->on('proyectos')
@@ -39,7 +39,7 @@ class CreateAprobacionesTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('rol_id', 'fk_aprobaciones_roles1_idx')
+            $table->foreign('role_id', 'fk_aprobaciones_roles1_idx')
                 ->references('id')->on('roles')
                 ->onDelete('no action')
                 ->onUpdate('no action');
