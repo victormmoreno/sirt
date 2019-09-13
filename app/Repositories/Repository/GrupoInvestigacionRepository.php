@@ -55,7 +55,7 @@ class GrupoInvestigacionRepository
         DB::transaction(function () use ($request, $grupo) {
             $grupo->entidad->ciudad_id     = $request->input('txtciudad_id');
             $grupo->entidad->nombre        = $request->input('txtnombre');
-            $empresa->entidad->slug        = str_slug($request->input('nombre') . str_random(7), '-');
+            $grupo->entidad->slug        = str_slug($request->input('nombre') . str_random(7), '-');
             $grupo->entidad->email_entidad = $request->input('txtemail_entidad');
             $grupo->entidad->update();
             $grupo->clasificacioncolciencias_id = $request->input('txtclasificacionclociencias_id');

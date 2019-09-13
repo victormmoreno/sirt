@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Articulacion extends Model
 {
 
-    use ArticulacionTrait;
+  use ArticulacionTrait;
 
     // Constante para la entidad de no aplica
     const IS_NOAPLICA = 1;
@@ -75,18 +75,18 @@ class Articulacion extends Model
     public function scopeArticulacionesForEstado($query, int $estado)
     {
         $query->with([
-            'articulacion_proyecto'           => function ($query) {
-                $query->select('id', 'actividad_id');
+            'articulacion_proyecto' => function ($query) {
+                $query->select('id','actividad_id');
             },
             'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre')->orderBy('nombre');
+                $query->select('id','codigo_actividad','nombre')->orderBy('nombre');
             },
-            'tipoarticulacion'                => function ($query) {
+            'tipoarticulacion' => function ($query) {
                 $query->select('id', 'nombre');
             },
 
-        ])->select('id', 'articulacion_proyecto_id', 'tipoarticulacion_id', 'estado')
-            ->where('estado', $estado);
+        ])->select('id', 'articulacion_proyecto_id','tipoarticulacion_id','estado')
+          ->where('estado',$estado);
     }
 
     /*=====  End of scope para consultar las articulaciones por estado  ======*/
@@ -97,10 +97,11 @@ class Articulacion extends Model
 
     public function scopeArticulacionesForTipoArticulacion($query, int $tipoArticulacion)
     {
-        $query->where('tipo_articulacion', $tipoArticulacion);
+        $query->where('tipo_articulacion',$tipoArticulacion);
     }
 
     /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
+
 
     /*=========================================================================
     =            scope para consultar por estado de articulaciones            =
@@ -108,10 +109,11 @@ class Articulacion extends Model
 
     public function scopeEstadoOfArticulaciones($query, array $estado = [])
     {
-        return $query->whereIn('estado', $estado);
+        return $query->whereIn('estado',$estado);
     }
 
     /*=====  End of scope para consultar por estado de articulaciones  ======*/
+
 
     /*===================================================================
     =            scope para consultar articulaciones           =
@@ -125,3 +127,8 @@ class Articulacion extends Model
     /*=====  End of scope para consultar por estado de proyecto  ======*/
 
 }
+
+
+    
+
+

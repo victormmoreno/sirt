@@ -4,7 +4,6 @@ namespace App\Repositories\Repository;
 
 
 use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea};
-use App\Notifications\Proyecto\ProyectoPendiente;
 use Illuminate\Support\Facades\{DB, Session, Notification};
 use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
 use App\Http\Controllers\PDF\PdfProyectoController;
