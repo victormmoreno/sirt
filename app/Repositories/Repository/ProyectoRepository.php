@@ -2,11 +2,12 @@
 
 namespace App\Repositories\Repository;
 
+
 use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea};
-use Illuminate\Support\Facades\{DB, Session, Notification};
 use App\Notifications\Proyecto\ProyectoPendiente;
-use Carbon\Carbon;
 use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\{DB, Session, Notification};
 
 class ProyectoRepository
 {
@@ -1095,15 +1096,15 @@ class ProyectoRepository
   }
 
   /*========================================================================
-  =            metodo para consultar los proyectos de un gestor            =
+  =            metodo para consultar los proyectos de un ususario gestor talento         =
   ========================================================================*/
 
-  public function getProjectsForGestor($id, array $estado = [])
+  public function getProjectsForUser(array $relations, array $estado = [])
   {
-    return Proyecto::projectsForEstado($estado)->where('gestor_id', $id)->orderby('nombre')->get();
+    return Proyecto::estadoOfProjects($relations,$estado);
   }
 
 
-  /*=====  End of metodo para consultar los proyectos de un gestor  ======*/
+  /*=====  End of metodo para consultar los proyectos de un gestor o talento  ======*/
 
 }

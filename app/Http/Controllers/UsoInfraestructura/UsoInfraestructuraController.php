@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\UsoInfraestructura;
 
 use App\Http\Controllers\Controller;
+use App\Models\Articulacion;
 use App\Models\Edt;
-use App\Models\Proyecto;
 use App\Models\UsoInfraestructura;
 use App\Repositories\Repository\EdtRepository;
 use Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class UsoInfraestructuraController extends Controller
 {
@@ -40,18 +41,7 @@ class UsoInfraestructuraController extends Controller
     {
         $this->authorize('create', UsoInfraestructura::class);
 
-        $date = Carbon\Carbon::now()->format('Y-m-d');
         $user = auth()->user()->documento;
-
-        $proyectosPorGestor = Proyecto::with([
-            'articulacion_proyecto',
-            'articulacion_proyecto.talentos',
-            'articulacion_proyecto.actividad',
-            'articulacion_proyecto.actividad.gestor',
-            'articulacion_proyecto.actividad.gestor.user',
-        ])->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
-            $query->where('documento', $user);
-        })->get();
 
         $edt = $this->edtRepostory->findEdtByUser([
             'actividad.gestor.user',
@@ -59,16 +49,7 @@ class UsoInfraestructuraController extends Controller
             $query->where('documento', $user);
         })->where('estado', Edt::IsActive())->get();
 
-        return $edt;
-
-        $proyectosPorTalento = Proyecto::with([
-            'articulacion_proyecto',
-            'articulacion_proyecto.talentos.user',
-        ])->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
-            $query->where('documento', $user);
-        })->get();
-        return $proyectosPorGestor;
-
+        $date = Carbon\Carbon::now()->format('Y-m-d');
         return view('usoinfraestructura.create', [
             'authUser' => auth()->user(),
             'date'     => $date,
@@ -120,14 +101,44 @@ class UsoInfraestructuraController extends Controller
         //
     }
 
+    /*=====  End of metodo para consultar las articulaciones por gestor  ======*/
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * retorna query con las articulaciones en fase Inicio, En ejecución por usuarios
+     * @return collection
+     * @author devjul
      */
-    public function destroy($id)
+    public function articulacionesForUser()
     {
-        //
+
+        $user = auth()->user()->documento;
+
+        $estado = [
+            Articulacion::IsInicio(),
+            Articulacion::IsEjecucion(),
+        ];
+
+        $relations = [
+            'articulacion_proyecto',
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
+            },
+        ];
+
+        $artulaciones = null;
+
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
+
+            return $this->articulacionRepository->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+                $query->where('documento', $user);
+            })->estadoOfArticulaciones($estado)->get();
+
+        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
+
+            return $this->articulacionRepository->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                $query->where('documento', $user);
+            })->estadoOfArticulaciones($estado)->get();
+
+        }
+
     }
 }

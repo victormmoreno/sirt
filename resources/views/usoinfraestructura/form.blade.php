@@ -17,6 +17,7 @@
 
         <fieldset>
             <legend>Subscription info</legend>
+            {!! csrf_field() !!}
             <div class="row">
                 <div class="input-field col s12 m4 l4">
                     <i class="material-icons prefix">
@@ -96,101 +97,38 @@
                 </center>
             </div>
         </div>
+        <div class="divProyecto">
+            <div class="row">
+                 <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">
+                        library_books
+                    </i>
+                    <input id="txtproyecto" name="txtproyecto"  type="text" readonly />
+                    <label for="txtproyecto">
+                        Proyecto
+                        <span class="red-text">
+                            *
+                        </span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <div class="divArticulacion">
+            
+
+        </div>
         </fieldset>
+        
         
     </div>
 </div>
 
 
 
-{!! csrf_field() !!}
 
 
 
-<div class="row">
-    <div class="input-field col s12 m6 l6">
-        <i class="material-icons prefix">
-            date_range
-        </i>
-        <input class="datepicker" id="txtfecha" name="txtfecha" type="text">
-            <label for="txtfecha">
-                fecha
-                <span class="red-text">
-                    *
-                </span>
-            </label>
-            @error('txtfecha')
-            <label class="error" for="txtfecha" id="txtfecha-error">
-                {{ $message }}
-            </label>
-            @enderror
-        </input>
-    </div>
-    <div class="input-field col s12 m6 l6" id="divProyecto">
-        {{-- <i class="material-icons prefix">
-            library_books
-        </i> --}}
-        <select class="browser-default select2" id="txtproyecto" name="txtproyecto" style="width: 100%" tabindex="-1">
-            <option value="">
-                Seleccione Proyecto
-            </option>
-        </select>
-        <label for="txtproyecto" class="active">
-            Proyecto
-            <span class="red-text">
-                *
-            </span>
-        </label>
-        @error('txtproyecto')
-        <label class="error" for="txtproyecto" id="txtproyecto-error">
-            {{ $message }}
-        </label>
-        @enderror
-    </div>
-    <div class="input-field  divArticulacion col s12 m6 l6">
-        <i class="material-icons prefix">
-            library_books
-        </i>
-        <select id="txttipoarticulacion" name="txttipoarticulacion" tabindex="-1" style="width: 100%;" class="initialized" onchange="usoInfraestructuraCreate.selectTipoArticulacion(this)">
-            <option value="">Seleccione tipo articulación</option> 
-            <option value="0">Grupo de Investigación</option> 
-            <option value="1">Empresa</option> 
-            <option value="2">Emprendedor</option> 
-            
-        </select>
-        <label for="txttipoarticulacion">
-            Tipo Articulación
-            <span class="red-text">
-                *
-            </span>
-        </label>
-        @error('txttipoarticulacion')
-        <label class="error" for="txttipoarticulacion" id="txttipoarticulacion-error">
-            {{ $message }}
-        </label>
-        @enderror
-    </div>
-    <div class="input-field  divArticulacion col s12 m6 l6">
-        <i class="material-icons prefix">
-            library_books
-        </i>
-        <select id="txtarticulacion" name="txtarticulacion" tabindex="-1" style="width: 100%;" class="">
-            
-            
-        </select>
-        <label for="txttipoarticulacion">
-            Articulación
-            <span class="red-text">
-                *
-            </span>
-        </label>
-        @error('txttipoarticulacion')
-        <label class="error" for="txttipoarticulacion" id="txttipoarticulacion-error">
-            {{ $message }}
-        </label>
-        @enderror
-    </div>
-</div>
 <div class="divArticulacion">
     <div class="row divGrupoInvestigacion">
         <div class="input-field col s12 m6 l6 ">

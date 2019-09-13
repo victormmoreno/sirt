@@ -11,18 +11,28 @@
                     <div class="col s12 m8 l8">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
-                                  <i class="material-icons arrow-l">
-                                      arrow_back
-                                  </i>
-                              </a>
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
                             Uso de Infraestructura
                         </h5>
                     </div>
                     <div class="col s12 m4 l4 push-m2 l2">
                         <ol class="breadcrumbs">
-                            <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li><a href="{{route('nodo.index')}}">Uso de Infraestructura</a></li>
-                            <li class="active">Nuevo Uso de Infraestructura</li>
+                            <li>
+                                <a href="{{route('home')}}">
+                                    Inicio
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('nodo.index')}}">
+                                    Uso de Infraestructura
+                                </a>
+                            </li>
+                            <li class="active">
+                                Nuevo Uso de Infraestructura
+                            </li>
                         </ol>
                     </div>
                 </div>
@@ -32,7 +42,7 @@
                             <div class="row">
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Uso de Infraestructura 
+                                        Nuevo Uso de Infraestructura
                                     </span>
                                     <i class="Small material-icons prefix">
                                         domain
@@ -53,145 +63,163 @@
         </div>
     </div>
 </main>
+@include('usoinfraestructura.modals')
 @endsection
 
 @push('script')
 <script>
     $(document).ready(function() {
-        $divProyecto = $("#divProyecto");
+        $divProyecto = $(".divProyecto");
         $divArticulacion = $(".divArticulacion");
         $divProyecto.hide();
         $divArticulacion.hide();
-        usoInfraestructuraCreate.selectTipoArticulacion();
+        usoInfraestructuraCreate.checkTipoUsoInfraestrucuta();
 
 
-
-        $(document).on('submit', 'form#formUsoInfraestructuraCreate', function (event) {
-            event.preventDefault();
-            $('button[type="submit"]').attr('disabled', 'disabled');
-            console.log('hols');
-        });
-
-        $( "input[name='txttipousoinfraestructura']" ).change(function (){
-        if ( $("#IsProyecto").is(":checked") ) {
-            Swal.fire({
-                toast: true,
-                position: 'bottom-end',
-                title: 'proyecto',
-                text: "por favor seleccion un proyecto",
-                type: 'warning',
-                showConfirmButton: false,
-                timer: 3000
-            });
-            $divProyecto.show();
-            $divArticulacion.hide();
-
-            usoInfraestructuraCreate.selectProyecto();
-             $('input#txtfecha').parent().removeClass("s12 m4 l4");
-             $('input#txtfecha').parent().addClass("s12 m6 l6");
-              
-        } else if ( $("#IsArticulacion").is(":checked") ) {
-            $('input#txtfecha').parent().removeClass("s12 m6 l6");
-            $('input#txtfecha').parent().addClass("s12 m4 l4");
-            $('select#txttipoarticulacion').parent().parent().removeClass("col s12 m6 l6");
-            $('select#txttipoarticulacion').parent().parent().addClass("col s12 m4 l4");
-            $('select#txtarticulacion').parent().parent().removeClass("col s12 m6 l6");
-            $('select#txtarticulacion').parent().parent().addClass("col s12 m4 l4");
-            console.log();
-            Swal.fire({
-                toast: true,
-                position: 'bottom-end',
-                title: 'Articulación',
-                text: "por favor seleccione un tipo de articulación",
-                type: 'warning',
-                showConfirmButton: false,
-                timer: 3000
-            });
-          $divProyecto.hide();
-          $divArticulacion.show();
-
-        } else {
-          $divProyecto.hide();
-          $divArticulacion.hide();
-
-          
-        }
-       
-      });
+        
     });
 
     var usoInfraestructuraCreate = {
-        selectProyecto:function () {
-            $('#txtproyecto').empty();
-            $.ajax({
-                dataType:'json',
-                type:'get',
-                url:'/proyecto/gestor/'+{{{auth()->user()->gestor->id}}},
-            }).done(function(response){
-                if (response != '') {
-                   $('#txtproyecto').append('<option value="">Seleccione el proyecto</option>');
-                    $.each(response.projects, function(i, e) {
-                        $('#txtproyecto').append('<option value="'+e.id+'">'+e.articulacion_proyecto.actividad.codigo_actividad+' - '+e.articulacion_proyecto.actividad.nombre+'</option>');
-                    }); 
-                }else{
-                    $('#txtproyecto').append('<option value="">No se encontraron proyectos</option>');
+
+        checkTipoUsoInfraestrucuta:function () {
+            $( "input[name='txttipousoinfraestructura']" ).change(function (){
+                if ( $("#IsProyecto").is(":checked") ) {
+                    $divArticulacion.hide();
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        title: 'proyecto',
+                        text: "por favor seleccion un proyecto",
+                        type: 'warning',
+                        showConfirmButton: false,
+                        timer: 10000
+                    });
+                    usoInfraestructuraCreate.DatatableProjectsForUser();
+                                   
+                      
+                } else if ( $("#IsArticulacion").is(":checked") ) {
+                   
+                    $divProyecto.hide();
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        title: 'Articulación',
+                        text: "por favor seleccione una articulación",
+                        type: 'warning',
+                        showConfirmButton: false,
+                        timer: 10000
+                    });
+
+                    usoInfraestructuraCreate.dataTableArtculacionFindByUser();
+
+                } else {
+                  
+                  
                 }
-                
-                $('#txtproyecto').material_select();
-            })
+               
+              });
         },
-        selectTipoArticulacion:function (id) {
-            let tipoArticulacion_id = $(id).val();
-            let tipoArticulacion_nombre = $("#txttipoarticulacion option:selected").text();
-            console.log(tipoArticulacion_nombre);
-            console.log(tipoArticulacion_id);
-            let grupoInvestigacion = $(".divGrupoInvestigacion");
-            let empresa = $(".divEmpresa");
-            let emprendedor = $(".divEmprendedor");
+
+        DatatableProjectsForUser: function () {
+            $('#usoinfraestrucutaProjectsForUserTable').dataTable().fnDestroy();
+              $('#usoinfraestrucutaProjectsForUserTable').DataTable({
+                language: {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: [ 0, 'desc' ],
+                ajax:{
+                  url: "/proyecto/usoinfraestructura/projectsforuser",
+                  type: "get",
+                },
+                select: true,
+                columns: [
+                  {
+                    title: 'Codigo de proyecto',
+                    data: 'codigo_actividad',
+                    name: 'codigo_actividad',
+                  },
+                  {
+                    title: 'Nombre del Proyecto',
+                    data: 'nombre',
+                    name: 'nombre',
+                  },
+                  {
+                    width: '20%',
+                    data: 'checkbox',
+                    name: 'checkbox',
+                    orderable: false,
+                  },
+                ],
+              });
+
+            $('#modalUsoIngraestrucuta_proyjects_modal').openModal({
+                dismissible: false,
+            });
+        },
+        // Función para cerrar el modal y asignarle un valor al proyecto
+        asociarProyectoAUsoInfraestructura: function (id, codigo_actividad, nombre) {
+            $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              type: 'success',
+              title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            });
+
+            $('#txtproyecto').val(nombre);
+            $("label[for='txtproyecto']").addClass('active');
+            $divProyecto.show();
+
+        },
+
+        //ARTICULACIONES 
+        
+
+        dataTableArtculacionFindByUser: function () {
+            $('#usoinfraestrucutaArticulacionesForUserTable').dataTable().fnDestroy();
+            $('#usoinfraestrucutaArticulacionesForUserTable').DataTable({
+                language: {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: [ 0, 'desc' ],
+                ajax:{
+                  url: "/proyecto/usoinfraestructura/projectsforuser",
+                  type: "get",
+                },
+                select: true,
+                columns: [
+                  {
+                    title: 'Codigo de proyecto',
+                    data: 'codigo_actividad',
+                    name: 'codigo_actividad',
+                  },
+                  {
+                    title: 'Nombre del Proyecto',
+                    data: 'nombre',
+                    name: 'nombre',
+                  },
+                  {
+                    width: '20%',
+                    data: 'checkbox',
+                    name: 'checkbox',
+                    orderable: false,
+                  },
+                ],
+              });
+
+            $('#modalUsoIngraestrucuta_articulaciones_modal').openModal({
+                dismissible: false,
+            });
+        },
 
 
-            $('#txtarticulacion').empty();
-            $.ajax({
-                dataType:'json',
-                type:'get',
-                url:'/articulacion/gestor/'+{{{auth()->user()->gestor->id}}}+'/'+tipoArticulacion_id,
-            }).done(function(response){
-                
-                $('#txtarticulacion').empty();
-                if (response != '') {
-                   $('#txtarticulacion').append('<option value="">Seleccione el proyecto</option>');
-                    $.each(response.articulaciones, function(i, e) {
-                        $('#txtarticulacion').append('<option value="'+e.id+'">'+e.articulacion_proyecto.actividad.codigo_actividad+' - '+e.articulacion_proyecto.actividad.nombre+'</option>');
-                    }); 
-                }else{
-                    $('#txtarticulacion').append('<option value="">No se encontraron proyectos</option>');
-                }
-                $('#txtarticulacion').material_select();
-            })
 
-            if(tipoArticulacion_nombre == 'Grupo de Investigación'){
-                grupoInvestigacion.show();
-                empresa.hide();
-                emprendedor.hide();
-            }else if(tipoArticulacion_nombre == 'Empresa'){
-                grupoInvestigacion.hide();
-                emprendedor.hide();
-                empresa.show();
-            }else if(tipoArticulacion_nombre == 'Emprendedor'){
-                grupoInvestigacion.hide();
-                empresa.hide();
-                emprendedor.show();
-            }else{
-                grupoInvestigacion.hide();
-                empresa.hide();
-                emprendedor.hide();
-            }
-            
-           
-        }
     }
-
-    
-
 </script>
 @endpush

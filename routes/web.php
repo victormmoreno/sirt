@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\UsoInfraestructura;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -41,7 +40,6 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
     ->middleware('disablepreventback');
 /*=====  End of ruta para cambiar la session del usuario  ======*/
 
-
 /*=======================================================
 =            rutas para activacion de cuenta            =
 =======================================================*/
@@ -81,7 +79,6 @@ Route::group([
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
         Route::get('dinamizador', 'DinamizadorController@index')->name('usuario.dinamizador.index');
 
-    
         Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
         Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
         Route::get('gestor/getgestor', 'GestorController@getAllGestoresOfNodo')->name('usuario.gestor.getGestorofnodo');
@@ -132,8 +129,6 @@ Route::group([
     }
 );
 
-
-
 /*======================================================================
 =            seccion para las rutas de uso de infraestructa            =
 ======================================================================*/
@@ -154,6 +149,10 @@ Route::group([
     ])->parameters([
         'usoinfraestructura' => 'id',
     ]);
+
+    //consul se utlizan para el uso de infraestructura
+    Route::get('/articulacionesforuser', 'UsoInfraestructuraController@articulacionesForUser')
+        ->name('usoinfraestructura.articulacionesforuser');
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/
@@ -312,8 +311,6 @@ Route::group([
 ],
     function () {
 
-        //rutas para consultar articualciones por gestor
-        Route::get('/gestor/{id}/{tipoarticulacion}', 'ArticulacionController@ArticulacionForGestor')->name('articulacion.gestor');
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create')->middleware('role_session:Gestor');
         Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulacionesPorGestor')->name('articulacion.datatable');
@@ -342,8 +339,6 @@ Route::group(
     ],
     function () {
 
-        /*=====  rutas para consultar los proyectos por gestor ======*/
-        Route::get('/gestor/{id}', 'ProyectoController@projectsForGestor')->name('proyecto');
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
         Route::get('/pendientes', 'ProyectoController@aprobaciones')->name('proyecto.pendientes')->middleware('role_session:Talento|Gestor|Dinamizador');
@@ -372,6 +367,11 @@ Route::group(
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
+
+        //rutas de proyectos para el modulo de usos de ingraestructura
+
+        Route::get('/usoinfraestructura/projectsforuser', 'ProyectoController@projectsForUser')->name('projectsforuser');
+
     }
 );
 
