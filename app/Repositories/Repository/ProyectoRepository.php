@@ -1167,13 +1167,9 @@ class ProyectoRepository
   /*========================================================================
   =            metodo para consultar los proyectos de un ususario gestor talento         =
   ========================================================================*/
-
   public function getProjectsForUser(array $relations, array $estado = [])
   {
     return Proyecto::estadoOfProjects($relations,$estado);
   }
-
-
-  /*=====  End of metodo para consultar los proyectos de un gestor o talento  ======*/
 
 }

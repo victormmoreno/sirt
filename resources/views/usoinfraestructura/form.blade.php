@@ -86,10 +86,12 @@
                     <label for="IsArticulacion">
                         Articulaciones
                     </label>
-                    <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
-                    <label for="IsEdt">
-                        EDT
-                    </label>
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                        <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
+                        <label for="IsEdt">
+                            EDT
+                        </label>
+                    @endif
                 </p>
                 <center>
                     <small class="center-align error red-text" id="txttipousoinfraestructura-error">
@@ -115,9 +117,39 @@
             </div>
         </div>
         <div class="divArticulacion">
-            
-
+            <div class="row">
+                 <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">
+                        library_books
+                    </i>
+                    <input id="txtarticulacion" name="txtarticulacion"  type="text" readonly />
+                    <label for="txtarticulacion">
+                        Articulación
+                        <span class="red-text">
+                            *
+                        </span>
+                    </label>
+                </div>
+            </div>
         </div>
+        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+            <div class="divEdt">
+                <div class="row">
+                     <div class="input-field col s12 m12 l12">
+                        <i class="material-icons prefix">
+                            library_books
+                        </i>
+                        <input id="txtedt" name="txtedt"  type="text" readonly />
+                        <label for="txtedt">
+                            Edt
+                            <span class="red-text">
+                                *
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        @endif
         </fieldset>
         
         

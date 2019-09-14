@@ -36,3 +36,23 @@
     <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
   </div>
 </div>
+
+<div class="modal" id="modalUsoIngraestrucuta_edt_modal">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <table id="usoinfraestrucutaEdtForUserTable" style="width: 100%" class="centered">
+          <thead>
+            <th>Código de la EDT</th>
+            <th>Nombre</th>
+            <th>Empresas</th>
+            <th>Seleccionar EDT</th>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+  </div>
+</div>

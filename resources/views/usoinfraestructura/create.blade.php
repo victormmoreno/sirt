@@ -71,8 +71,10 @@
     $(document).ready(function() {
         $divProyecto = $(".divProyecto");
         $divArticulacion = $(".divArticulacion");
+        $divEdt = $(".divEdt");
         $divProyecto.hide();
         $divArticulacion.hide();
+        $divEdt.hide();
         usoInfraestructuraCreate.checkTipoUsoInfraestrucuta();
 
 
@@ -85,6 +87,7 @@
             $( "input[name='txttipousoinfraestructura']" ).change(function (){
                 if ( $("#IsProyecto").is(":checked") ) {
                     $divArticulacion.hide();
+                    $divEdt.hide();
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -100,6 +103,7 @@
                 } else if ( $("#IsArticulacion").is(":checked") ) {
                    
                     $divProyecto.hide();
+                    $divEdt.hide();
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -112,8 +116,10 @@
 
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
 
-                } else {
-                  
+                } else if( $("#IsEdt").is(":checked")) {
+                    $divProyecto.hide();
+                    $divArticulacion.hide();
+                    usoInfraestructuraCreate.dataTableEdtFindByUser();
                   
                 }
                
@@ -128,9 +134,10 @@
                 },
                 processing: true,
                 serverSide: true,
+                "lengthChange": false,
                 order: [ 0, 'desc' ],
                 ajax:{
-                  url: "/proyecto/usoinfraestructura/projectsforuser",
+                  url: "/usoinfraestructura/projectsforuser",
                   type: "get",
                 },
                 select: true,
@@ -187,15 +194,16 @@
                 },
                 processing: true,
                 serverSide: true,
+                "lengthChange": false,
                 order: [ 0, 'desc' ],
                 ajax:{
-                  url: "/proyecto/usoinfraestructura/projectsforuser",
+                  url: "/usoinfraestructura/articulacionesforuser",
                   type: "get",
                 },
                 select: true,
                 columns: [
                   {
-                    title: 'Codigo de proyecto',
+                    title: 'Codigo de Articulación',
                     data: 'codigo_actividad',
                     name: 'codigo_actividad',
                   },
@@ -203,6 +211,11 @@
                     title: 'Nombre del Proyecto',
                     data: 'nombre',
                     name: 'nombre',
+                  },
+                  {
+                    title: 'tipo articulacion',
+                    data: 'tipoarticulacion',
+                    name: 'tipoarticulacion',
                   },
                   {
                     width: '20%',
@@ -217,6 +230,34 @@
                 dismissible: false,
             });
         },
+        // Función para cerrar el modal y asignarle un valor al proyecto
+        asociarArticulacionAUsoInfraestructura: function (id, codigo_actividad, nombre) {
+            $('#modalUsoIngraestrucuta_articulaciones_modal').closeModal();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              type: 'success',
+              title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            });
+
+            $('#txtarticulacion').val(nombre);
+            $("label[for='txtarticulacion']").addClass('active');
+            $divArticulacion.show();
+
+        },
+
+        //EDTS
+        dataTableEdtFindByUser: function (){
+            $('#usoinfraestrucutaEdtForUserTable').dataTable().fnDestroy();
+
+
+            $('#modalUsoIngraestrucuta_edt_modal').openModal({
+                dismissible: false,
+            });
+        },
+    
 
 
 
