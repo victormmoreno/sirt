@@ -150,13 +150,16 @@ Route::group([
         'usoinfraestructura' => 'id',
     ]);
 
-    //consul se utlizan para el uso de infraestructura
+    //consultas que se utlizan para el uso de infraestructura
     
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
             ->name('usoinfraestructura.projectsforuser');
 
     Route::get('usoinfraestructura/articulacionesforuser', 'UsoInfraestructuraController@articulacionesForUser')
         ->name('usoinfraestructura.articulacionesforuser');
+
+    Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
+        ->name('usoinfraestructura.edtsforuser');
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/
