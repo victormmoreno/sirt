@@ -151,7 +151,7 @@ Route::group([
     ]);
 
     //consultas que se utlizan para el uso de infraestructura
-    
+
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
             ->name('usoinfraestructura.projectsforuser');
 
@@ -375,7 +375,7 @@ Route::group(
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
-        
+
     }
 );
 
@@ -492,6 +492,7 @@ Route::group([
    Route::get('/consultarProyectosInscritosPorTipoNodoYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ProyectoController@proyectosPorTipoProyectoNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/consultarProyectosFinalzadosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosFinalizadosPorNodoYAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/consultarGestoresYLineasDeUnNodo/{id}', 'GraficoController@gestoresYLineaDelNodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/consultarProyectosFinalizadosPorTipoNodoYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ProyectoController@proyectosFinalizadosPorTipoProyectoNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
 
  }
 

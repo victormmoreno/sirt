@@ -21,7 +21,8 @@ class ArticulacionesExport extends FatherExport implements FromView, ShouldAutoS
   {
     $this->articulacionRepository = $articulacionRepository;
     $this->id = $id;
-    $this->query = $this->articulacionRepository->consultarArticulacionesDeUnGestor($this->id);
+    $this->setQuery($this->articulacionRepository->consultarArticulacionesDeUnGestor($this->id));
+    // dd($this->getQuery()->count());
     $this->setCount($this->getQuery()->count() + 1);
     $this->setRangeHeadingCell('A1:P1');
     $this->setRangeBodyCell('A1:P'.$this->getCount());
@@ -29,9 +30,9 @@ class ArticulacionesExport extends FatherExport implements FromView, ShouldAutoS
 
   public function view(): View
   {
-    $query = $this->query;
+    // $query = $this->query;
     return view('exports.articulacion.gestor', [
-      'articulacion' => $query
+      'articulacion' => $this->getQuery()
     ]);
   }
 
@@ -58,7 +59,7 @@ class ArticulacionesExport extends FatherExport implements FromView, ShouldAutoS
     // $coordsPar = implode(',', $coordsPar);
     // dd($coordsPar);
     return [
-      AfterSheet::class => function(AfterSheet $event) use ($styles, $coordsPar) {
+      AfterSheet::class => function(AfterSheet $event) use ($styles) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->applyFromArray($this->styleArray())->getFont()->setSize(14)->setBold(1);
         $event->sheet->getStyle($this->getRangeBodyCell())->applyFromArray($this->styleArray());
 
