@@ -18,6 +18,33 @@
         <fieldset>
             <legend>Paso 1</legend>
             {!! csrf_field() !!}
+            <p class="center card-title cyan-text text-darken-4">
+               <b> <i class="medium material-icons center">info_outline</i> Seleccione a que se le hará el uso de infraestructura</b> 
+            </p>
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <p class="center p-v-xs">
+                        <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
+                        <label for="IsProyecto">
+                            Proyectos
+                        </label>
+                        <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
+                        <label for="IsArticulacion">
+                            Articulaciones
+                        </label>
+                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                            <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
+                            <label for="IsEdt">
+                                EDT
+                            </label>
+                        @endif
+                    </p>
+                    <center>
+                        <small class="center-align error red-text" id="txttipousoinfraestructura-error">
+                        </small>
+                    </center>
+                </div>
+            </div>
             <div class="row">
                 <div class="input-field col s12 m4 l4">
                     <i class="material-icons prefix">
@@ -30,126 +57,65 @@
                                 *
                             </span>
                         </label>
-                        @error('txtfecha')
-                        <label class="error" for="txtfecha" id="txtfecha-error">
-                            {{ $message }}
-                        </label>
-                        @enderror
+                        <label class="error" for="txtfecha" id="txtfecha-error"></label>
+        
                     </input>
                 </div>
                 <div class="input-field col s12 m4 l4">
                     <i class="material-icons prefix">
                         vertical_split
                     </i>
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$authUser->gestor->lineatecnologica->nombre}}"/>
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                        <input id="txtlinea" name="txtlinea" readonly="" type="text" value="primero seleccione el tipo de uso de infraestructura"/>
+                    @endif
                     <label class="active" for="txtlinea">
                         Linea
                         <span class="red-text">
                             *
                         </span>
                     </label>
-                    @error('txtlinea')
                     <label class="error" for="txtlinea" id="txtlinea-error">
-                        {{ $message }}
                     </label>
-                    @enderror
                 </div>
                 <div class="input-field col s12 m4 l4">
                     <i class="material-icons prefix">
                         account_circle
                     </i>
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$authUser->documento}} - {{$authUser->nombres}} {{$authUser->apellidos}}"/>
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                        <input id="txtgestor" name="txtgestor" readonly="" type="text" value="primero seleccione el tipo de uso de infraestructura"/>
+                    @endif
                     <label class="active" for="txtgestor">
                         Gestor
                         <span class="red-text">
                             *
                         </span>
                     </label>
-                    @error('txtgestor')
                     <label class="error" for="txtgestor" id="txtgestor-error">
-                        {{ $message }}
                     </label>
-                    @enderror
+                  
                 </div>
         </div>
-        <p class="center card-title cyan-text text-darken-4">
-           <b> <i class="medium material-icons center">info_outline</i> Seleccione a que se le hará el uso de infraestructura</b> 
-        </p>
-        <div class="row">
-            <div class="input-field col s12 m12 l12">
-                <p class="center p-v-xs">
-                    <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
-                    <label for="IsProyecto">
-                        Proyectos
-                    </label>
-                    <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
-                    <label for="IsArticulacion">
-                        Articulaciones
-                    </label>
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                        <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
-                        <label for="IsEdt">
-                            EDT
-                        </label>
-                    @endif
-                </p>
-                <center>
-                    <small class="center-align error red-text" id="txttipousoinfraestructura-error">
-                    </small>
-                </center>
-            </div>
-        </div>
-        <div class="divProyecto">
+        
+        <div class="divActividad">
             <div class="row">
                  <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">
                         library_books
                     </i>
-                    <input id="txtproyecto" name="txtproyecto"  type="text" readonly />
-                    <label for="txtproyecto">
+                    <input id="txtactividad" name="txtactividad"  type="text" readonly />
+                    <label for="txtactividad">
                         Proyecto
                         <span class="red-text">
                             *
                         </span>
                     </label>
                 </div>
-
             </div>
         </div>
-        <div class="divArticulacion">
-            <div class="row">
-                 <div class="input-field col s12 m12 l12">
-                    <i class="material-icons prefix">
-                        library_books
-                    </i>
-                    <input id="txtarticulacion" name="txtarticulacion"  type="text" readonly />
-                    <label for="txtarticulacion">
-                        Articulación
-                        <span class="red-text">
-                            *
-                        </span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-            <div class="divEdt">
-                <div class="row">
-                     <div class="input-field col s12 m12 l12">
-                        <i class="material-icons prefix">
-                            library_books
-                        </i>
-                        <input id="txtedt" name="txtedt"  type="text" readonly />
-                        <label for="txtedt">
-                            Edt
-                            <span class="red-text">
-                                *
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        @endif
         </fieldset>
     </div>
 </div>
@@ -177,29 +143,22 @@
                     <i class="material-icons prefix">
                         book
                     </i>
-                    <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="number"/>
+                    <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  />
                     <label class="active" for="txtasesoriadirecta">
                         Asesoria Directa (Horas)
                     </label>
-                    @error('txtasesoriadirecta')
-                    <label class="error" for="txtasesoriadirecta" id="txtasesoriadirecta-error">
-                        {{ $message }}
-                    </label>
-                    @enderror
+                    <label class="error" for="txtasesoriadirecta" id="txtasesoriadirecta-error"></label>
+                 
                 </div>
                 <div class="input-field col s12 m6 l6">
                     <i class="material-icons prefix">
                         bookmark
                     </i>
-                    <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="number"/>
+                    <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  />
                     <label class="active" for="txtasesoriaindirecta">
                         Asesoria Indirecta (Horas)
                     </label>
-                    @error('txtasesoriaindirecta')
-                    <label class="error" for="txtasesoriaindirecta" id="txtasesoriaindirecta-error">
-                        {{ $message }}
-                    </label>
-                    @enderror
+                    <label class="error" for="txtasesoriaindirecta" id="txtasesoriaindirecta-error"></label>
                 </div>
             </div>
             <div class="row">
@@ -207,7 +166,7 @@
                     <i class="material-icons prefix">
                         create
                     </i>
-                    <textarea class="materialize-textarea" id="txtdescripcion" length="500" name="txtdescripcion">
+                    <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
                     </textarea>
                     <label for="txtdescripcion">
                         Descripción
@@ -215,6 +174,7 @@
                             *
                         </span>
                     </label>
+                    <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
                 </div>
             </div>
         </fieldset>
@@ -224,11 +184,6 @@
 <div class="divider">
 </div>
 
-
-
-
-<div class="divider">
-</div>
 <div class="card-content">
     <span class="red-text text-darken-2">
         Para registrar el uso de un laboratorio o la asistencia de un talento dar click en el boton

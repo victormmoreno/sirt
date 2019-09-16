@@ -69,12 +69,14 @@
 @push('script')
 <script>
     $(document).ready(function() {
-        $divProyecto = $(".divProyecto");
-        $divArticulacion = $(".divArticulacion");
-        $divEdt = $(".divEdt");
-        $divProyecto.hide();
-        $divArticulacion.hide();
-        $divEdt.hide();
+        // $divProyecto = $(".divProyecto");
+        // $divArticulacion = $(".divArticulacion");
+        $divActividad = $(".divActividad");
+        // $divEdt = $(".divEdt");
+        // $divProyecto.hide();
+        // $divArticulacion.hide();
+        $divActividad.hide();
+        // $divEdt.hide();
         usoInfraestructuraCreate.checkTipoUsoInfraestrucuta();
 
 
@@ -86,8 +88,8 @@
         checkTipoUsoInfraestrucuta:function () {
             $( "input[name='txttipousoinfraestructura']" ).change(function (){
                 if ( $("#IsProyecto").is(":checked") ) {
-                    $divArticulacion.hide();
-                    $divEdt.hide();
+                    // $divArticulacion.hide();
+                    // $divEdt.hide();
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -97,6 +99,8 @@
                         showConfirmButton: false,
                         timer: 10000
                     });
+                    usoInfraestructuraCreate.limpiarInputsActividad();
+                    usoInfraestructuraCreate.removeValueLineaGestor();
                     usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.removeDisableSelectButtons();
                     usoInfraestructuraCreate.DatatableProjectsForUser();
@@ -104,8 +108,10 @@
                       
                 } else if ( $("#IsArticulacion").is(":checked") ) {
                    
-                    $divProyecto.hide();
-                    $divEdt.hide();
+                    // $divProyecto.hide();
+                    // $divEdt.hide();
+                    usoInfraestructuraCreate.limpiarInputsActividad();
+                    usoInfraestructuraCreate.removeValueLineaGestor();
                     
                     Swal.fire({
                         toast: true,
@@ -116,12 +122,25 @@
                         showConfirmButton: false,
                         timer: 10000
                     });
+                    
                     usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
 
                 } else if( $("#IsEdt").is(":checked")) {
-                    $divProyecto.hide();
-                    $divArticulacion.hide();
+                    // $divProyecto.hide();
+                    // $divArticulacion.hide();
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        title: 'Articulación',
+                        text: "por favor seleccione una edt ",
+                        type: 'warning',
+                        showConfirmButton: false,
+                        timer: 10000
+                    });
+                    
+                    usoInfraestructuraCreate.limpiarInputsActividad();
                     usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.removeOptionsSelect();
                     usoInfraestructuraCreate.disableSelectButtons();
@@ -185,9 +204,13 @@
               title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
 
-            $('#txtproyecto').val(nombre);
-            $("label[for='txtproyecto']").addClass('active');
-            $divProyecto.show();
+
+            
+
+            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $("label[for='txtactividad']").addClass('active');
+            $("label[for='txtactividad']").text("Proyecto");
+            $divActividad.show();
 
             usoInfraestructuraCreate.getSelectTalentoProyecto(id);
 
@@ -198,23 +221,36 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
-                
+
+
                 $('#txttalento').empty();
                 $('#txtlaboratorio').empty();
+                $('#txtgestor').removeAttr('value');
+                $('#txtlinea').removeAttr('value');
+
 
                 if (response != '') {
                     $('#txttalento').append('<option value="">Seleccione el talento</option>');
+                    $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
                     $.each(response.data, function(i, element) {
+
+                        $('#txtgestor').val(element.articulacion_proyecto.actividad.gestor.user.documento+ ' - '+ element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos);
+                        $("label[for='txtgestor']").addClass('active');
+
+                        $('#txtlinea').val(element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura+ ' - '+ element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre);
+                        $("label[for='txtlinea']").addClass('active');
+                            
+
                       
                         $.each(element.articulacion_proyecto.talentos, function(e, talentos) {
                     
-                            $('#txttalento').append('<option  value="'+talentos.id+'">'+ talentos.user.documento +' - '+talentos.user.nombres+' '+ talentos.user.apellidos + '</option>');
+                            $('#txttalento').append('<option value="'+talentos.id+'">'+ talentos.user.documento +' - '+talentos.user.nombres+' '+ talentos.user.apellidos + '</option>');
                         });
                     });
 
 
-                    $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
                     $.each(response.data, function(i, element) {
+
 
                                              
                         $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
@@ -235,6 +271,14 @@
                
             });
            
+        },
+        removeValueLineaGestor: function(){
+
+            $('#txtlinea').removeAttr('value');
+            $('#txtgestor').removeAttr('value');
+            console.log('cambiando');
+            $('#txtlinea').attr('value','primero seleccione el tipo de uso de infraestructura');
+            $('#txtgestor').attr('value','primero seleccione el tipo de uso de infraestructura');
         },
         removeOptionsSelect: function () {
             $('#txttalento')
@@ -317,9 +361,10 @@
               title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
 
-            $('#txtarticulacion').val(nombre);
-            $("label[for='txtarticulacion']").addClass('active');
-            $divArticulacion.show();
+            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $("label[for='txtactividad']").addClass('active');
+            $("label[for='txtactividad']").text("Articulación");
+            $divActividad.show();
 
             usoInfraestructuraCreate.getSelectTalentoArtculacionEmprendedores(id);
 
@@ -333,6 +378,8 @@
     
                 $('#txttalento').empty();
                 $('#txtlaboratorio').empty();
+                $('#txtgestor').removeAttr('value');
+                $('#txtlinea').removeAttr('value');
 
                 if (response.data.length != 0) {
                    
@@ -343,7 +390,13 @@
                     $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
                     $.each(response.data, function(i, element) {
 
-                                                
+                        console.log(element.articulacion_proyecto.actividad.gestor.user.documento);
+
+                        $('#txtgestor').val(element.articulacion_proyecto.actividad.gestor.user.documento+ ' - '+ element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos);
+                        $("label[for='txtgestor']").addClass('active');
+
+                        $('#txtlinea').val(element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura+ ' - '+ element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre);
+                        $("label[for='txtlinea']").addClass('active');               
                             
                             $.each(element.articulacion_proyecto.talentos, function(i, talento) {
                             $('#txttalento').append('<option  value="'+talento.id+'">'+ talento.user.documento +' - '+talento.user.nombres+' '+ talento.user.apellidos + '</option>');
@@ -352,8 +405,10 @@
 
                             $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
                     
-                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
-                        });
+                                $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                            });
+
+
                     }); 
 
                     $('#txttalento').attr("disabled", false).material_select();
@@ -433,9 +488,10 @@
 
 
 
-            $('#txtedt').val(nombre);
-            $("label[for='txtedt']").addClass('active');
-            $divEdt.show();
+            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $("label[for='txtactividad']").addClass('active');
+            $("label[for='txtactividad']").text("Edt");
+            $divActividad.show();
 
             usoInfraestructuraCreate.laboratorios();
 
@@ -633,8 +689,15 @@
             $('#detalleTalento').children("tr").remove();
             $('#detallesUsoInfraestructura').children("tr").remove();
         },
+        limpiarInputsActividad: function (){
+            $('#txtproyecto').removeAttr('value');
+            $('#txtarticulacion').removeAttr('value');
+            $('#txtedt').removeAttr('value');
+        }
 
     }
+    
+
 
     //Enviar formulario
     $(document).on('submit', 'form#formUsoInfraestructuraCreate', function (event) {
@@ -666,10 +729,36 @@
                       confirmButtonText: 'Ok'
                     })
                   for (control in data.errors) {
+
                     $('#' + control + '-error').html(data.errors[control]);
                     $('#' + control + '-error').show();
                   }
                 }
+
+                if (data.fail == false && data.redirect_url == false) {
+                      Swal.fire({
+                            title: 'El uso de infraestructua no se ha registrado, por favor inténtalo de nuevo',
+                            // text: "You won't be able to revert this!",
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                      });
+                }
+
+                if (data.fail == false && data.redirect_url != false) {
+                          Swal.fire({
+                            title: 'Registro Exitoso',
+                            text: "El uso de infraestructua ha sido creado satisfactoriamente",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                          });
+                          setTimeout(function(){
+                            window.location.replace("{{route('usoinfraestructura.index')}}");
+                          }, 1000);
+                    }
             }
         });
     });

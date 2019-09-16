@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UsoInfraestructura;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\Articulacion;
 use App\Models\Edt;
 use App\Models\Proyecto;
@@ -11,7 +12,6 @@ use App\Repositories\Repository\ArticulacionRepository;
 use App\Repositories\Repository\EdtRepository;
 use App\Repositories\Repository\ProyectoRepository;
 use App\Repositories\Repository\UsoInfraestructuraRepository;
-use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\User;
 use Carbon;
 use Illuminate\Http\Request;
@@ -57,9 +57,18 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', UsoInfraestructura::class);
+        $artulaciones = $this->getDataArticulaciones();
+        $edt = $this->getDataEdtForUser();
+        $projects = $this->getDataProjectsForUser();
+
+        // return [
+        //     'articulaciones' => $artulaciones->count(),
+        //     // 'edt' => $edt->count(),
+        //     'projects' => $projects->count(),
+        // ];
 
         $date = Carbon\Carbon::now()->format('Y-m-d');
+
         return view('usoinfraestructura.create', [
             'authUser' => auth()->user(),
             'date'     => $date,
@@ -77,15 +86,26 @@ class UsoInfraestructuraController extends Controller
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
-          return response()->json([
-          'fail'   => true,
-          'errors' => $validator->errors(),
-          ]);
+            return response()->json([
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
         }
+
         $result = $this->getUsoInfraestructuraRepository()->store($request);
-        return $result;
-        
-        // return $request->all();
+
+        if ($result == 'false') {
+            return response()->json([
+                'fail'         => false,
+                'redirect_url' => false,
+            ]);
+        } else if ($result == 'true') {
+            return response()->json([
+                'fail'         => false,
+                'redirect_url' => url(route('usoinfraestructura.index')),
+            ]);
+        }
+
     }
 
     /**
@@ -130,38 +150,7 @@ class UsoInfraestructuraController extends Controller
     public function articulacionesForUser()
     {
 
-        $user = auth()->user()->documento;
-
-        $estado = [
-            Articulacion::IsInicio(),
-            Articulacion::IsEjecucion(),
-        ];
-
-        $relations = [
-            'tipoarticulacion'                => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'articulacion_proyecto',
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
-        ];
-
-        $artulaciones = null;
-
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-            $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
-                $query->where('documento', $user);
-            })->estadoOfArticulaciones($estado)->get();
-
-        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
-
-            $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
-                $query->where('documento', $user);
-            })->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())->get();
-
-        }
+        $artulaciones = $this->getDataArticulaciones(); 
 
         if (request()->ajax()) {
 
@@ -187,6 +176,40 @@ class UsoInfraestructuraController extends Controller
 
     }
 
+    private function getDataArticulaciones()
+    {
+        $user = auth()->user()->documento;
+
+        $estado = [
+            Articulacion::IsInicio(),
+            Articulacion::IsEjecucion(),
+        ];
+
+        $relations = [
+            'tipoarticulacion'                => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'articulacion_proyecto',
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
+            },
+        ];
+
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
+
+            return $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+                $query->where('documento', $user);
+            })->estadoOfArticulaciones($estado)->get();
+
+        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
+
+            return $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                $query->where('documento', $user);
+            })->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())->get();
+
+        }
+    }
+
     /**
      * retorna query con los proyectos en fase Inicio, Planeación, En ejecución por usuarios
      * @return object
@@ -194,43 +217,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function projectsForUser()
     {
-        $user = auth()->user()->documento;
-
-        $estado = [
-            'Inicio',
-            'Planeación',
-            'En ejecución',
-        ];
-
-        $relations = [
-            'articulacion_proyecto'=> function ($query) {
-                $query->select('id', 'actividad_id');
-            },
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
-            'articulacion_proyecto.talentos.user'=> function ($query) {
-                $query->select('id', 'documento','nombres','apellidos');
-            },
-        ];
-
-        $projects = null;
-
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-            $projects = $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)
-                ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
-                    $query->where('documento', $user);
-                })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
-
-        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
-
-            $projects = $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
-                $query->where('documento', $user);
-            })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
-        } else {
-            abort('403');
-        }
+        $projects = $this->getDataProjectsForUser();
 
         if (request()->ajax()) {
 
@@ -251,6 +238,45 @@ class UsoInfraestructuraController extends Controller
 
     }
 
+    private function getDataProjectsForUser()
+    {
+        $user = auth()->user()->documento;
+
+        $estado = [
+            'Inicio',
+            'Planeación',
+            'En ejecución',
+        ];
+
+        $relations = [
+            'articulacion_proyecto'               => function ($query) {
+                $query->select('id', 'actividad_id');
+            },
+            'articulacion_proyecto.actividad'     => function ($query) {
+                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
+            },
+            'articulacion_proyecto.talentos.user' => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
+            },
+        ];
+
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
+
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)
+                ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+                    $query->where('documento', $user);
+                })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
+
+        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
+
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                $query->where('documento', $user);
+            })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
+        } else {
+            abort('403');
+        }
+    }
+
     /**
      * retorna query con las edt activas  por usuarios
      * @return collection
@@ -259,29 +285,8 @@ class UsoInfraestructuraController extends Controller
 
     public function edtsForUser()
     {
-        $user = auth()->user()->documento;
-
-        $relations = [
-            'actividad'  => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
-            'entidades' => function ($query) {
-                $query->select('entidades.id', 'entidades.nombre');
-            },
-            'entidades.empresa' => function ($query) {
-                $query->select('id', 'entidad_id','nit');
-            },
-        ];
-
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-            $edt = $this->getUsoIngraestructuraEdtRepository()->findEdtByUser($relations)
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                    $query->where('documento', $user);
-                })->where('estado', Edt::IsActive())->get();
-
-        }
-
+        
+        $edt = $this->getDataEdtForUser();
         if (request()->ajax()) {
 
             return datatables()->of($edt)
@@ -289,7 +294,6 @@ class UsoInfraestructuraController extends Controller
                     $checkbox = '<a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarEdtAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $data->actividad->nombre . '\')">
                         <i class="material-icons">done_all</i>
                       </a>';
-                          
 
                     return $checkbox;
                 })
@@ -300,11 +304,37 @@ class UsoInfraestructuraController extends Controller
                     return $data->actividad->nombre;
                 })
                 ->editColumn('empresas', function ($data) {
-                    return $data->entidades->implode('nombre',', ');
+                    return $data->entidades->implode('nombre', ', ');
                 })
                 ->rawColumns(['checkbox', 'codigo_actividad', 'empresas'])->make(true);
         }
 
+    }
+
+    private function getDataEdtForUser()
+    {
+        $user = auth()->user()->documento;
+
+        $relations = [
+            'actividad'         => function ($query) {
+                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
+            },
+            'entidades'         => function ($query) {
+                $query->select('entidades.id', 'entidades.nombre');
+            },
+            'entidades.empresa' => function ($query) {
+                $query->select('id', 'entidad_id', 'nit');
+            },
+        ];
+
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
+
+            return $this->getUsoIngraestructuraEdtRepository()->findEdtByUser($relations)
+                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                    $query->where('documento', $user);
+                })->where('estado', Edt::IsActive())->get();
+
+        }
     }
 
     /**
@@ -316,23 +346,26 @@ class UsoInfraestructuraController extends Controller
     public function talentosPorProyecto(int $id)
     {
         $relations = [
-            'articulacion_proyecto'=> function ($query) {
+            'articulacion_proyecto'                                                => function ($query) {
                 $query->select('id', 'actividad_id');
             },
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'gestor_id','nodo_id','codigo_actividad', 'nombre');
+            'articulacion_proyecto.actividad'                                      => function ($query) {
+                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre');
             },
-            'articulacion_proyecto.talentos.user'=> function ($query) {
-                $query->select('id', 'documento','nombres','apellidos');
+            'articulacion_proyecto.talentos.user'                                  => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-            'articulacion_proyecto.actividad.gestor'=> function ($query) {
-                $query->select('id', 'user_id','nodo_id','lineatecnologica_id');
+            'articulacion_proyecto.actividad.gestor'                               => function ($query) {
+                $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },
-            'articulacion_proyecto.actividad.gestor.lineatecnologica'=> function ($query) {
+            'articulacion_proyecto.actividad.gestor.user'                          => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
+            },
+            'articulacion_proyecto.actividad.gestor.lineatecnologica'              => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
             'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
-                $query->select('id', 'nodo_id', 'lineatecnologica_id','nombre');
+                $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
             },
         ];
 
@@ -343,7 +376,7 @@ class UsoInfraestructuraController extends Controller
         ];
 
         $proyectoTalento = $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)
-                ->where('estado_aprobacion', Proyecto::IsAceptado())->where('id', $id)->get();
+            ->where('estado_aprobacion', Proyecto::IsAceptado())->where('id', $id)->get();
 
         return response()->json([
             'data' => $proyectoTalento,
@@ -358,7 +391,6 @@ class UsoInfraestructuraController extends Controller
      */
     public function talentosPorArticulacion(int $id)
     {
-    
 
         $estado = [
             Articulacion::IsInicio(),
@@ -366,32 +398,36 @@ class UsoInfraestructuraController extends Controller
         ];
 
         $relations = [
-            'tipoarticulacion'                => function ($query) {
+            'tipoarticulacion'                                                     => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'articulacion_proyecto' => function ($query) {
+            'articulacion_proyecto'                                                => function ($query) {
                 $query->select('id', 'actividad_id');
             },
-            'articulacion_proyecto.actividad'=> function ($query) {
-                $query->select('id', 'gestor_id','nodo_id','codigo_actividad', 'nombre');
+            'articulacion_proyecto.actividad'                                      => function ($query) {
+                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre');
             },
-            'articulacion_proyecto.talentos.user'=> function ($query) {
-                $query->select('id', 'documento','nombres','apellidos');
+
+            'articulacion_proyecto.talentos.user'                                  => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-            'articulacion_proyecto.actividad.gestor'=> function ($query) {
-                $query->select('id', 'user_id','nodo_id','lineatecnologica_id');
+
+            'articulacion_proyecto.actividad.gestor'                               => function ($query) {
+                $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },
-            'articulacion_proyecto.actividad.gestor.lineatecnologica'=> function ($query) {
+            'articulacion_proyecto.actividad.gestor.user'                          => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
+            },
+            'articulacion_proyecto.actividad.gestor.lineatecnologica'              => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
             'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
-                $query->select('id', 'nodo_id', 'lineatecnologica_id','nombre');
+                $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
             },
         ];
 
         $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())->where('id', $id)->get();
 
-        
         return response()->json([
             'data' => $artulaciones,
         ]);
@@ -404,35 +440,34 @@ class UsoInfraestructuraController extends Controller
 
             $laboratorios = auth()->user()->gestor->lineatecnologica->laboratorios;
 
-        }else if(Session::has('login_role') && Session::get('login_role') == User::IsTalento()){
+        } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
             $estado = [
                 Articulacion::IsInicio(),
                 Articulacion::IsEjecucion(),
             ];
             $relations = [
-                'tipoarticulacion'                => function ($query) {
+                'tipoarticulacion'                                                     => function ($query) {
                     $query->select('id', 'nombre');
                 },
-                'articulacion_proyecto' => function ($query) {
+                'articulacion_proyecto'                                                => function ($query) {
                     $query->select('id', 'actividad_id');
                 },
-                'articulacion_proyecto.actividad'=> function ($query) {
-                    $query->select('id', 'gestor_id','nodo_id','codigo_actividad', 'nombre');
+                'articulacion_proyecto.actividad'                                      => function ($query) {
+                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre');
                 },
-                'articulacion_proyecto.talentos.user'=> function ($query) {
-                    $query->select('id', 'documento','nombres','apellidos');
+                'articulacion_proyecto.talentos.user'                                  => function ($query) {
+                    $query->select('id', 'documento', 'nombres', 'apellidos');
                 },
-                'articulacion_proyecto.actividad.gestor'=> function ($query) {
-                    $query->select('id', 'user_id','nodo_id','lineatecnologica_id');
+                'articulacion_proyecto.actividad.gestor'                               => function ($query) {
+                    $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica'=> function ($query) {
+                'articulacion_proyecto.actividad.gestor.lineatecnologica'              => function ($query) {
                     $query->select('id', 'nombre', 'abreviatura');
                 },
                 'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
-                    $query->select('id', 'nodo_id', 'lineatecnologica_id','nombre');
+                    $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
                 },
             ];
-
 
             $user = auth()->user()->documento;
 
@@ -440,18 +475,15 @@ class UsoInfraestructuraController extends Controller
                 ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
                     $query->where('documento', $user);
                 })
-            ->get();
-
+                ->get();
 
         }
 
         return response()->json([
-                'data' => $laboratorios
-            ]);
+            'data' => $laboratorios,
+        ]);
     }
 
-
-    
     private function setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository)
     {
         $this->UsoInfraestructuraProyectoRepository = $UsoInfraestructuraProyectoRepository;
