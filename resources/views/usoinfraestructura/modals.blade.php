@@ -12,9 +12,9 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
+  {{-- <div class="modal-footer">
     <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-  </div>
+  </div> --}}
 </div>
 
 <div class="modal" id="modalUsoIngraestrucuta_articulaciones_modal">
@@ -32,9 +32,9 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
+  {{-- <div class="modal-footer">
     <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-  </div>
+  </div> --}}
 </div>
 
 <div class="modal" id="modalUsoIngraestrucuta_edt_modal">
@@ -52,7 +52,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
+  {{-- <div class="modal-footer">
     <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-  </div>
+  </div> --}}
 </div>

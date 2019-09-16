@@ -97,6 +97,8 @@
                         showConfirmButton: false,
                         timer: 10000
                     });
+                    usoInfraestructuraCreate.eliminarContentTables();
+                    usoInfraestructuraCreate.removeDisableSelectButtons();
                     usoInfraestructuraCreate.DatatableProjectsForUser();
                                    
                       
@@ -104,6 +106,7 @@
                    
                     $divProyecto.hide();
                     $divEdt.hide();
+                    
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -113,14 +116,17 @@
                         showConfirmButton: false,
                         timer: 10000
                     });
-
+                    usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
 
                 } else if( $("#IsEdt").is(":checked")) {
                     $divProyecto.hide();
                     $divArticulacion.hide();
+                    usoInfraestructuraCreate.eliminarContentTables();
+                    usoInfraestructuraCreate.removeOptionsSelect();
+                    usoInfraestructuraCreate.disableSelectButtons();
                     usoInfraestructuraCreate.dataTableEdtFindByUser();
-                  
+                 
                 }
                
               });
@@ -164,9 +170,11 @@
             $('#modalUsoIngraestrucuta_proyjects_modal').openModal({
                 dismissible: false,
             });
+
+            
         },
         // Función para cerrar el modal y asignarle un valor al proyecto
-        asociarProyectoAUsoInfraestructura: function (id, codigo_actividad, nombre) {
+        asociarProyectoAUsoInfraestructura: function (id, codigo_actividad, nombre, talentos) {
             $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
             Swal.fire({
               toast: true,
@@ -181,6 +189,70 @@
             $("label[for='txtproyecto']").addClass('active');
             $divProyecto.show();
 
+            usoInfraestructuraCreate.getSelectTalentoProyecto(id);
+
+        },
+        getSelectTalentoProyecto:function (id){
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/usoinfraestructura/talentosporproyecto/'+id
+            }).done(function(response){
+                
+                $('#txttalento').empty();
+                $('#txtlaboratorio').empty();
+
+                if (response != '') {
+                    $('#txttalento').append('<option value="">Seleccione el talento</option>');
+                    $.each(response.data, function(i, element) {
+                      
+                        $.each(element.articulacion_proyecto.talentos, function(e, talentos) {
+                    
+                            $('#txttalento').append('<option  value="'+talentos.id+'">'+ talentos.user.documento +' - '+talentos.user.nombres+' '+ talentos.user.apellidos + '</option>');
+                        });
+                    });
+
+
+                    $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
+                    $.each(response.data, function(i, element) {
+
+                                             
+                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
+                    
+                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                        });
+                    });
+                    
+
+                }else{
+                    $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                    $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                }
+
+                $('#txttalento').material_select();
+                $('#txtlaboratorio').material_select();
+
+               
+            });
+           
+        },
+        removeOptionsSelect: function () {
+            $('#txttalento')
+            .empty()
+            .append('<option selected="selected" value="">seleccione talentos</option>').material_select();
+            $('#txtlaboratorio')
+            .empty()
+            .append('<option selected="selected"  value="">seleccione laboratorios</option>').material_select();          
+        },
+
+        disableSelectButtons: function () {
+            $('#txttalento').attr("disabled", true).material_select(); 
+            
+            $(".btnAgregarTalento").attr("disabled", true).removeAttr("onclick");
+        },
+        removeDisableSelectButtons: function () {
+            $('#txttalento').attr("disabled", false).material_select(); 
+             $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'usoInfraestructuraCreate.addTalentoAUso()');
         },
 
         //ARTICULACIONES 
@@ -215,7 +287,7 @@
                   {
                     title: 'tipo articulacion',
                     data: 'tipoarticulacion',
-                    name: 'tipoarticulacion',
+                        name: 'tipoarticulacion',
                   },
                   {
                     width: '20%',
@@ -225,6 +297,9 @@
                   },
                 ],
               });
+
+            $('#txttalento').empty();
+            $('#txtlaboratorio').empty();
 
             $('#modalUsoIngraestrucuta_articulaciones_modal').openModal({
                 dismissible: false,
@@ -246,21 +321,357 @@
             $("label[for='txtarticulacion']").addClass('active');
             $divArticulacion.show();
 
+            usoInfraestructuraCreate.getSelectTalentoArtculacionEmprendedores(id);
+
+        },
+        getSelectTalentoArtculacionEmprendedores:function (id){
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/usoinfraestructura/talentosporarticulacion/'+id
+            }).done(function(response){
+    
+                $('#txttalento').empty();
+                $('#txtlaboratorio').empty();
+
+                if (response.data.length != 0) {
+                   
+
+                    $('.btnAgregarTalento').attr('onclick', 'usoInfraestructuraCreate.addTalentoAUso()'); 
+                     
+                    $('#txttalento').append('<option value="">Seleccione el talento</option>');
+                    $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
+                    $.each(response.data, function(i, element) {
+
+                                                
+                            
+                            $.each(element.articulacion_proyecto.talentos, function(i, talento) {
+                            $('#txttalento').append('<option  value="'+talento.id+'">'+ talento.user.documento +' - '+talento.user.nombres+' '+ talento.user.apellidos + '</option>');
+                   
+                            }); 
+
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
+                    
+                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                        });
+                    }); 
+
+                    $('#txttalento').attr("disabled", false).material_select();
+                    $('#txtlaboratorio').material_select(); 
+
+                }else{
+                    $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                    $('#txttalento').attr("disabled", true).material_select();
+                    $('.btnAgregarTalento').attr("disabled", true).removeAttr("onclick");
+                    usoInfraestructuraCreate.laboratorios();
+                    
+                }
+
+                
+
+               
+            });
         },
 
         //EDTS
         dataTableEdtFindByUser: function (){
             $('#usoinfraestrucutaEdtForUserTable').dataTable().fnDestroy();
 
+            $('#usoinfraestrucutaEdtForUserTable').DataTable({
+                language: {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                order: [ 0, 'desc' ],
+                ajax:{
+                  url: "/usoinfraestructura/edtsforuser",
+                  type: "get",
+                },
+                select: true,
+                columns: [
+                  {
+                    title: 'Codigo de empresa',
+                    data: 'codigo_actividad',
+                    name: 'codigo_actividad',
+                  },
+                  {
+                    title: 'Nombre de la empresa',
+                    data: 'nombre',
+                    name: 'nombre',
+                  },
+                  {
+                    title: 'empresas',
+                    data: 'empresas',
+                    name: 'empresas',
+                  },
+                  {
+                    width: '20%',
+                    data: 'checkbox',
+                    name: 'checkbox',
+                    orderable: false,
+                  },
+                ],
+              });
+
 
             $('#modalUsoIngraestrucuta_edt_modal').openModal({
                 dismissible: false,
             });
         },
-    
+        asociarEdtAUsoInfraestructura: function (id, codigo_actividad, nombre) {
+            $('#modalUsoIngraestrucuta_edt_modal').closeModal();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              type: 'success',
+              title: 'La edt ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            });
 
 
+
+            $('#txtedt').val(nombre);
+            $("label[for='txtedt']").addClass('active');
+            $divEdt.show();
+
+            usoInfraestructuraCreate.laboratorios();
+
+        },
+        laboratorios: function () {
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/usoinfraestructura/laboratorios'
+            }).done(function(response){
+
+                console.log(response);
+                $('#txtlaboratorio').empty();
+                $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
+                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+
+                    $.each(response.data, function(e, laboratorio) {
+                
+                        $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                    });
+                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+
+                    $.each(response.data, function(i, element) {
+
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
+                    
+                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                        });
+                    }); 
+
+                @endif
+
+                $('#txtlaboratorio').material_select(); 
+
+            });
+        },
+
+        //añadir talento al uso de infraestructura
+
+        noRepeatTalento: function (id) {
+            let idtalento = $("#txttalento").val();
+              let a = document.getElementsByName("talento[]");
+              validacion = true;
+              if (a.length >= 1) {
+                for (x=0;x<a.length;x++){
+                  if (a[x].value == idtalento) {
+                    validacion = false;
+                  }
+                }
+              }
+            return validacion;
+
+        },
+        addTalentoAUso: function (id) {
+            let cont = 0;
+            let idtalento = $("#txttalento").val();
+            let nombreTalento = $('#txttalento option:selected').text();
+            console.log(idtalento);
+
+            if ($("#txttalento").val() == ""){
+                
+                Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'warning',
+                        title: 'Debe seleccionar un talento'
+                      });
+                
+            }else{
+                if (usoInfraestructuraCreate.noRepeatTalento(idtalento) == false) {
+                  
+                
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'error',
+                        title: 'El Talento ya esta listado.'
+                      });
+
+                    $("#txttalento").val();
+                }else{
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'warning',
+                        title: 'paso'
+                      });
+
+                    var a = document.getElementsByName("talento[]");
+                    let fila ="";
+
+                    fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-effect red lighten-3 btn" onclick="usoInfraestructuraCreate.eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    cont++;
+                    $('#detalleTalento').append(fila);
+
+                }
+            }
+        },
+
+        eliminarTalento: function (index){
+          $('#filaTalento'+ index).remove();
+          Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                type: 'success',
+                title: 'Talento eliminado.'
+              });
+        },
+
+        //agregar laboratorios
+
+
+        agregarLaboratorio: function(){
+            let  cont = 0;
+            let idlaboratorio = $("#txtlaboratorio").val();
+            let tiempouso = $("#txttiempouso").val();
+            let nombreLaboratorio = $('#txtlaboratorio option:selected').text();
+
+
+            if ($("#txtlaboratorio").val() == ""){
+                  Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'Debe seleccionar un laboratorio.'
+                  });
+
+            }else  if ($("#txttiempouso").val() == ""){
+              Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'Debe ingresa el tiempo de uso'
+                  });
+            }else{
+              if (usoInfraestructuraCreate.noRepeatLaboratorio() == true) {
+                var a = document.getElementsByName("laboratorio[]");
+                let fila ="";
+
+                fila = '<tr class="selected" id="filaLaboratorio'+cont+'"><td><input type="hidden" name="laboratorio[]" value="'+idlaboratorio+'">'+nombreLaboratorio+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="usoInfraestructuraCreate.eliminarLaboratorio('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                cont++;
+                $('#detallesUsoInfraestructura').append(fila);
+              }else{
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'error',
+                    title: 'El laboratorio ya esta listado.'
+                  });
+                $("#txtlaboratorio").val();
+
+              }
+            }
+        },
+
+        noRepeatLaboratorio: function () {
+          let idlaboratorio = $("#txtlaboratorio").val();
+          let a = document.getElementsByName("laboratorio[]");
+          validacion = true;
+          if (a.length >= 1) {
+            for (x=0;x<a.length;x++){
+              if (a[x].value == idlaboratorio) {
+                validacion = false;
+              }
+            }
+          }
+          return validacion;
+        },
+        eliminarLaboratorio: function (index){
+          $('#filaLaboratorio'+ index).remove();
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'Laboratorio eliminado.'
+          });
+        },
+        eliminarContentTables: function () {
+            $('#detalleTalento').children("tr").remove();
+            $('#detallesUsoInfraestructura').children("tr").remove();
+        },
 
     }
+
+    //Enviar formulario
+    $(document).on('submit', 'form#formUsoInfraestructuraCreate', function (event) {
+        $('button[type="submit"]').attr('disabled', 'disabled');
+        event.preventDefault();
+        var form = $(this);
+        let data = new FormData($(this)[0]);
+        // console.log(data);
+        var url = form.attr("action");
+
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('button[type="submit"]').removeAttr('disabled');
+                console.log(data);
+                $('.error').hide();
+                if (data.fail) {
+                    Swal.fire({
+                      title: 'Registro Erróneo',
+                      text: "Estas ingresando mal los datos!",
+                      type: 'error',
+                      showCancelButton: false,
+                      confirmButtonColor: '#3085d6',
+                      confirmButtonText: 'Ok'
+                    })
+                  for (control in data.errors) {
+                    $('#' + control + '-error').html(data.errors[control]);
+                    $('#' + control + '-error').show();
+                  }
+                }
+            }
+        });
+    });
 </script>
 @endpush

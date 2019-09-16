@@ -10,10 +10,13 @@ use App\Models\UsoInfraestructura;
 use App\Repositories\Repository\ArticulacionRepository;
 use App\Repositories\Repository\EdtRepository;
 use App\Repositories\Repository\ProyectoRepository;
+use App\Repositories\Repository\UsoInfraestructuraRepository;
+use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\User;
 use Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class UsoInfraestructuraController extends Controller
 {
@@ -21,16 +24,19 @@ class UsoInfraestructuraController extends Controller
     private $UsoInfraestructuraEdtRepository;
     private $UsoInfraestructuraProyectoRepository;
     private $UsoInfraestructuraArticulacionRepository;
+    private $UsoInfraestructuraRepository;
 
     public function __construct(
         ProyectoRepository $UsoInfraestructuraProyectoRepository,
         EdtRepository $UsoInfraestructuraEdtRepository,
-        ArticulacionRepository $setUsoIngraestructuraArtculacionRepository
+        ArticulacionRepository $setUsoIngraestructuraArtculacionRepository,
+        UsoInfraestructuraRepository $UsoInfraestructuraRepository
     ) {
         $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
         $this->setUsoIngraestructuraEdtRepository($UsoInfraestructuraEdtRepository);
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);
+        $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
 
     }
     /**
@@ -68,7 +74,18 @@ class UsoInfraestructuraController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $req       = new UsoInfraestructuraFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+          return response()->json([
+          'fail'   => true,
+          'errors' => $validator->errors(),
+          ]);
+        }
+        $result = $this->getUsoInfraestructuraRepository()->store($request);
+        return $result;
+        
+        // return $request->all();
     }
 
     /**
@@ -151,11 +168,10 @@ class UsoInfraestructuraController extends Controller
             return datatables()->of($artulaciones)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-          <input type="radio" class="with-gap" name="txtarticulacion"
-          onclick="usoInfraestructuraCreate.asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')" id="radioButton' . $data->id . '"
-          value="' . $data->id . '"/>
-          <label for ="radioButton' . $data->id . '"></label>
-          ';
+                    <a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')">
+                        <i class="material-icons">done_all</i>
+                      </a>';
+
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
                 return $data->articulacion_proyecto->actividad->codigo_actividad;
@@ -187,9 +203,14 @@ class UsoInfraestructuraController extends Controller
         ];
 
         $relations = [
-            'articulacion_proyecto',
+            'articulacion_proyecto'=> function ($query) {
+                $query->select('id', 'actividad_id');
+            },
             'articulacion_proyecto.actividad' => function ($query) {
                 $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
+            },
+            'articulacion_proyecto.talentos.user'=> function ($query) {
+                $query->select('id', 'documento','nombres','apellidos');
             },
         ];
 
@@ -215,12 +236,9 @@ class UsoInfraestructuraController extends Controller
 
             return datatables()->of($projects)
                 ->addColumn('checkbox', function ($data) {
-                    $checkbox = '
-          <input type="radio" class="with-gap" name="txtproyecto"
-          onclick="usoInfraestructuraCreate.asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')" id="radioButton' . $data->id . '"
-          value="' . $data->id . '"/>
-          <label for ="radioButton' . $data->id . '"></label>
-          ';
+                    $checkbox = '<a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')">
+                        <i class="material-icons">done_all</i>
+                      </a>';
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
                 return $data->articulacion_proyecto->actividad->codigo_actividad;
@@ -250,6 +268,9 @@ class UsoInfraestructuraController extends Controller
             'entidades' => function ($query) {
                 $query->select('entidades.id', 'entidades.nombre');
             },
+            'entidades.empresa' => function ($query) {
+                $query->select('id', 'entidad_id','nit');
+            },
         ];
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
@@ -261,14 +282,176 @@ class UsoInfraestructuraController extends Controller
 
         }
 
+        if (request()->ajax()) {
+
+            return datatables()->of($edt)
+                ->addColumn('checkbox', function ($data) {
+                    $checkbox = '<a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarEdtAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $data->actividad->nombre . '\')">
+                        <i class="material-icons">done_all</i>
+                      </a>';
+                          
+
+                    return $checkbox;
+                })
+                ->editColumn('codigo_actividad', function ($data) {
+                    return $data->actividad->codigo_actividad;
+                })
+                ->editColumn('nombre', function ($data) {
+                    return $data->actividad->nombre;
+                })
+                ->editColumn('empresas', function ($data) {
+                    return $data->entidades->implode('nombre',', ');
+                })
+                ->rawColumns(['checkbox', 'codigo_actividad', 'empresas'])->make(true);
+        }
+
     }
 
     /**
-     * Asigna un valor a $proyectoRepository
-     * @param object $UsoInfraestructuraProyectoRepository
-     * @return void type
+     * devuelve consulta con los talentos por proyecto
+     * @param int $id
+     * @return collection
      * @author devjul
      */
+    public function talentosPorProyecto(int $id)
+    {
+        $relations = [
+            'articulacion_proyecto'=> function ($query) {
+                $query->select('id', 'actividad_id');
+            },
+            'articulacion_proyecto.actividad' => function ($query) {
+                $query->select('id', 'gestor_id','nodo_id','codigo_actividad', 'nombre');
+            },
+            'articulacion_proyecto.talentos.user'=> function ($query) {
+                $query->select('id', 'documento','nombres','apellidos');
+            },
+            'articulacion_proyecto.actividad.gestor'=> function ($query) {
+                $query->select('id', 'user_id','nodo_id','lineatecnologica_id');
+            },
+            'articulacion_proyecto.actividad.gestor.lineatecnologica'=> function ($query) {
+                $query->select('id', 'nombre', 'abreviatura');
+            },
+            'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
+                $query->select('id', 'nodo_id', 'lineatecnologica_id','nombre');
+            },
+        ];
+
+        $estado = [
+            'Inicio',
+            'Planeación',
+            'En ejecución',
+        ];
+
+        $proyectoTalento = $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)
+                ->where('estado_aprobacion', Proyecto::IsAceptado())->where('id', $id)->get();
+
+        return response()->json([
+            'data' => $proyectoTalento,
+        ]);
+    }
+
+    /**
+     * devuelve consulta con los talentos por artculacion emprendedores
+     * @param int $id
+     * @return collection
+     * @author devjul
+     */
+    public function talentosPorArticulacion(int $id)
+    {
+    
+
+        $estado = [
+            Articulacion::IsInicio(),
+            Articulacion::IsEjecucion(),
+        ];
+
+        $relations = [
+            'tipoarticulacion'                => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'articulacion_proyecto' => function ($query) {
+                $query->select('id', 'actividad_id');
+            },
+            'articulacion_proyecto.actividad'=> function ($query) {
+                $query->select('id', 'gestor_id','nodo_id','codigo_actividad', 'nombre');
+            },
+            'articulacion_proyecto.talentos.user'=> function ($query) {
+                $query->select('id', 'documento','nombres','apellidos');
+            },
+            'articulacion_proyecto.actividad.gestor'=> function ($query) {
+                $query->select('id', 'user_id','nodo_id','lineatecnologica_id');
+            },
+            'articulacion_proyecto.actividad.gestor.lineatecnologica'=> function ($query) {
+                $query->select('id', 'nombre', 'abreviatura');
+            },
+            'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
+                $query->select('id', 'nodo_id', 'lineatecnologica_id','nombre');
+            },
+        ];
+
+        $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())->where('id', $id)->get();
+
+        
+        return response()->json([
+            'data' => $artulaciones,
+        ]);
+    }
+
+    public function usoinfraestructuraLaboratorios()
+    {
+        $laboratorios = null;
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
+
+            $laboratorios = auth()->user()->gestor->lineatecnologica->laboratorios;
+
+        }else if(Session::has('login_role') && Session::get('login_role') == User::IsTalento()){
+            $estado = [
+                Articulacion::IsInicio(),
+                Articulacion::IsEjecucion(),
+            ];
+            $relations = [
+                'tipoarticulacion'                => function ($query) {
+                    $query->select('id', 'nombre');
+                },
+                'articulacion_proyecto' => function ($query) {
+                    $query->select('id', 'actividad_id');
+                },
+                'articulacion_proyecto.actividad'=> function ($query) {
+                    $query->select('id', 'gestor_id','nodo_id','codigo_actividad', 'nombre');
+                },
+                'articulacion_proyecto.talentos.user'=> function ($query) {
+                    $query->select('id', 'documento','nombres','apellidos');
+                },
+                'articulacion_proyecto.actividad.gestor'=> function ($query) {
+                    $query->select('id', 'user_id','nodo_id','lineatecnologica_id');
+                },
+                'articulacion_proyecto.actividad.gestor.lineatecnologica'=> function ($query) {
+                    $query->select('id', 'nombre', 'abreviatura');
+                },
+                'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
+                    $query->select('id', 'nodo_id', 'lineatecnologica_id','nombre');
+                },
+            ];
+
+
+            $user = auth()->user()->documento;
+
+            $laboratorios = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())
+                ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                    $query->where('documento', $user);
+                })
+            ->get();
+
+
+        }
+
+        return response()->json([
+                'data' => $laboratorios
+            ]);
+    }
+
+
+    
     private function setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository)
     {
         $this->UsoInfraestructuraProyectoRepository = $UsoInfraestructuraProyectoRepository;
@@ -324,6 +507,27 @@ class UsoInfraestructuraController extends Controller
     private function getUsoIngraestructuraArtculacionRepository()
     {
         return $this->UsoInfraestructuraArticulacionRepository;
+    }
+
+    /**
+     * Asigna un valor a $UsoInfraestructuraArticulacionRepository
+     * @param object $UsoInfraestructuraArticulacionRepository
+     * @return void
+     * @author devjul
+     */
+    private function setUsoInfraestructuraRepository($UsoInfraestructuraRepository)
+    {
+        $this->UsoInfraestructuraRepository = $UsoInfraestructuraRepository;
+    }
+
+    /**
+     * Retorna el valor de $UsoInfraestructuraEdtRepository
+     * @return object
+     * @author devjul
+     */
+    private function getUsoInfraestructuraRepository()
+    {
+        return $this->UsoInfraestructuraRepository;
     }
 
 }
