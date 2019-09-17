@@ -17,9 +17,9 @@ class NumberOneDecimal implements Rule
      */
     public function passes($attribute, $value)
     {
-        $number = preg_match('^[0-9]{1}+(\\.[0-9]{1})?$', $value);
+        $number = preg_match('/^(?:d*.d{1,2}|d+)$', $value);
 
-        return $number;
+        return dd($number);
     }
 
     /**

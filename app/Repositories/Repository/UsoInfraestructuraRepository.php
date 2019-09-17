@@ -13,7 +13,7 @@ class UsoInfraestructuraRepository
 	public function store($request)
 	{
 
-		// return $request->all();
+	
 		
 		DB::beginTransaction();
     	try {

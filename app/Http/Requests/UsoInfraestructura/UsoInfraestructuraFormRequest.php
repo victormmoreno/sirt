@@ -31,8 +31,8 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txttipousoinfraestructura' => 'required',
             'txtactividad'              => 'required',
             'txtdescripcion'            => 'nullable|max:2000',
-            'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|digits_between:1,2',
-            'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|digits_between:1,2',
+            'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
+            'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
 
         ];
     }
