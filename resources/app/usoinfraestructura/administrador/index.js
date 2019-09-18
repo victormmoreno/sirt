@@ -10,7 +10,6 @@ $(document).ready(function() {
 var UsoInfraestructuraAdministrador = {
     selectUsoInfraestructuraPorNodo: function() {
         let nodo = $('#selectnodo').val();
-        console.log(nodo);
         $('#usoinfraestructura_administrador_table').dataTable().fnDestroy();
         if (nodo != '') {
             $('#usoinfraestructura_administrador_table').DataTable({

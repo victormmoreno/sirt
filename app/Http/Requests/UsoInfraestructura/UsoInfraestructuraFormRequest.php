@@ -40,21 +40,21 @@ class UsoInfraestructuraFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-            'txtfecha.required'                   => 'La fecha es obligatoria',
-            'txtfecha.date_format'                => 'La fecha debe tener un formato de Y-m-d',
-            'txtlinea.required'                   => 'La linea tecnológica es obligatoria',
-            'txtgestor.required'                  => 'El gestor es obligatorio',
-            'txttipousoinfraestructura.required'  => 'por favor seleccione el tipo de uso de infraestructura',
-            'txtactividad.required'               => 'El proyecto ó la articulación o la edt es obligatoria',
-            'txtdescripcion.max'                  => 'La descripcion debe tener máximo 2000 caracteres',
-            'txtasesoriadirecta.numeric'          => 'La asesoria directa debe ser un valor numérico',
-            'txtasesoriadirecta.min'              => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
-            'txtasesoriadirecta.max'              => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',
-            'txtasesoriadirecta.digits_between'   => 'La asesoria directa debe ser un valor numérico entre 1 y 2 digitos',
-            'txtasesoriaindirecta.numeric'        => 'La asesoria directa debe ser un valor numérico',
-            'txtasesoriaindirecta.min'            => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
-            'txtasesoriaindirecta.max'              => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',
-            'txtasesoriaindirecta.digits_between' => 'La asesoria directa debe ser un valor numérico entre 1 y 2 digitos',
+            'txtfecha.required'                  => 'La fecha es obligatoria',
+            'txtfecha.date_format'               => 'La fecha debe tener un formato de Y-m-d',
+            'txtlinea.required'                  => 'La linea tecnológica es obligatoria',
+            'txtgestor.required'                 => 'El gestor es obligatorio',
+            'txttipousoinfraestructura.required' => 'por favor seleccione el tipo de uso de infraestructura',
+            'txtactividad.required'              => 'El proyecto ó la articulación o la edt es obligatoria',
+            'txtdescripcion.max'                 => 'La descripcion debe tener máximo 2000 caracteres',
+            'txtasesoriadirecta.numeric'         => 'La asesoria directa debe ser un valor numérico',
+            'txtasesoriadirecta.min'             => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
+            'txtasesoriadirecta.max'             => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',
+            'txtasesoriadirecta.between'         => 'La asesoria directa debe ser un valor numérico 0 y 99.9',
+            'txtasesoriaindirecta.numeric'       => 'La asesoria directa debe ser un valor numérico',
+            'txtasesoriaindirecta.min'           => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
+            'txtasesoriaindirecta.max'           => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',
+            'txtasesoriaindirecta.between'       => 'La asesoria directa debe ser un valor numérico entre 0 y 99.9',
         ];
     }
 }

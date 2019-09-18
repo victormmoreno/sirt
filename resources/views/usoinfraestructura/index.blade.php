@@ -64,12 +64,44 @@
                         
                                     </table>
                                 </div>
+                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <div class="center-align">
+                                            <span class="card-title center-align">
+                                                Usos de Infraestructura  Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 l2">
+                                    
+                                </div>
+                                <div class="divider"></div>
+                                <br>
+                                
+                                <div class="row">
+                                    <table class="display responsive-table" id="usoinfraestructura_dinamizador_table">
+                                        <thead>
+                                            <th>Fecha</th>
+                                            <th>Nombre</th>
+                                            <th>Asesoria Directa</th>
+                                            <th>Asesoria Indirecta</th>
+                                            <th>Detalles</th>
+                                            {{-- <th>Laboratorios</th>
+                                            <th>Talentos</th> --}}
+                                            {{-- <th>Editar</th> --}}
+                                            {{-- <th>Anular</th> --}}
+                                        </thead>
+                        
+                                    </table>
+                                </div>
                             @else
                                 <div class="row">
                                     <div class="col s12 m12 l10">
                                         <div class="center-align">
                                             <span class="card-title center-align">
-                                                Usos de Infraestructura {{ config('app.name')}}
+                                                Usos de Infraestructura 
                                             </span>
                                         </div>
                                     </div>

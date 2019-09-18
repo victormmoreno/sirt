@@ -38,6 +38,7 @@
                 </div>
                 <div class="card">
                     <div class="card-content">
+                        @if($cantidadActividades >= 0)
                         <div class="row">
                             <div class="row">
                                 <center>
@@ -57,30 +58,56 @@
                                 </form>
                             </div>
                         </div>
+                        @else
+                            <div class="row">
+                                <div class="row">
+                                    <center>
+                                        <span class="card-title center-align">
+                                            Nuevo Uso de Infraestructura
+                                        </span>
+                                        <i class="Small material-icons prefix">
+                                            domain
+                                        </i>
+                                    </center>
+                                    <div class="divider"></div>
+                                </div>
+                            </div>
+                            <div class="center-align">
+                                <i class="large material-icons prefix">
+                                    block
+                                </i>
+                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                    <p>Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.</p>
+                                    <p>Aún no tienes articulaciones en fase de inicio o en fase de ejecución.</p>
+                                    <p>Aún no tienes EDTS registradas.</p>
+                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+
+                                    <p>Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el gestor asesor.</p>
+                                    <p>Aún no tienes articulaciones en fase de inicio o en fase de ejecución. Por favor consulta con el gestor asesor.</p>
+                                    <p>Aún no tienes EDTS registradas. Por favor consulta con el gestor asesor.</p>
+                                @endif
+                            </div>
+                            
+                            
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
+@if($cantidadActividades >= 0)
 @include('usoinfraestructura.modals')
+@endif
 @endsection
-
+@if($cantidadActividades >= 0)
 @push('script')
 <script>
     $(document).ready(function() {
-        // $divProyecto = $(".divProyecto");
-        // $divArticulacion = $(".divArticulacion");
         $divActividad = $(".divActividad");
-        // $divEdt = $(".divEdt");
-        // $divProyecto.hide();
-        // $divArticulacion.hide();
         $divActividad.hide();
-        // $divEdt.hide();
         usoInfraestructuraCreate.checkTipoUsoInfraestrucuta();
 
-
-        
     });
 
     var usoInfraestructuraCreate = {
@@ -88,8 +115,7 @@
         checkTipoUsoInfraestrucuta:function () {
             $( "input[name='txttipousoinfraestructura']" ).change(function (){
                 if ( $("#IsProyecto").is(":checked") ) {
-                    // $divArticulacion.hide();
-                    // $divEdt.hide();
+             
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -108,8 +134,6 @@
                       
                 } else if ( $("#IsArticulacion").is(":checked") ) {
                    
-                    // $divProyecto.hide();
-                    // $divEdt.hide();
                     usoInfraestructuraCreate.limpiarInputsActividad();
                     usoInfraestructuraCreate.removeValueLineaGestor();
                     
@@ -127,9 +151,7 @@
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
 
                 } else if( $("#IsEdt").is(":checked")) {
-                    // $divProyecto.hide();
-                    // $divArticulacion.hide();
-
+            
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -276,7 +298,6 @@
 
             $('#txtlinea').removeAttr('value');
             $('#txtgestor').removeAttr('value');
-            console.log('cambiando');
             $('#txtlinea').attr('value','primero seleccione el tipo de uso de infraestructura');
             $('#txtgestor').attr('value','primero seleccione el tipo de uso de infraestructura');
         },
@@ -390,7 +411,7 @@
                     $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
                     $.each(response.data, function(i, element) {
 
-                        console.log(element.articulacion_proyecto.actividad.gestor.user.documento);
+
 
                         $('#txtgestor').val(element.articulacion_proyecto.actividad.gestor.user.documento+ ' - '+ element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos);
                         $("label[for='txtgestor']").addClass('active');
@@ -502,8 +523,6 @@
                 type:'get',
                 url:'/usoinfraestructura/laboratorios'
             }).done(function(response){
-
-                console.log(response);
                 $('#txtlaboratorio').empty();
                 $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
@@ -549,8 +568,6 @@
             let cont = 0;
             let idtalento = $("#txttalento").val();
             let nombreTalento = $('#txttalento option:selected').text();
-            console.log(idtalento);
-
             if ($("#txttalento").val() == ""){
                 
                 Swal.fire({
@@ -572,7 +589,7 @@
                         showConfirmButton: false,
                         timer: 1500,
                         type: 'error',
-                        title: 'El Talento ya esta listado.'
+                        title: 'El Talento ' + nombreTalento + ' ya esta listado.'
                       });
 
                     $("#txttalento").val();
@@ -582,11 +599,14 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'warning',
-                        title: 'paso'
+                        type: 'success',
+                        title: 'el Talento ' + nombreTalento + ' agregado.'
                       });
+                    
 
-                    var a = document.getElementsByName("talento[]");
+                    // $("#txttalento option:contains(Seleccione el talento)").attr("selected", true);
+
+                    let a = document.getElementsByName("talento[]");
                     let fila ="";
 
                     fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-effect red lighten-3 btn" onclick="usoInfraestructuraCreate.eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
@@ -595,6 +615,9 @@
 
                 }
             }
+            // $("#txttalento").val();
+            $("#txttalento option[value='']").attr("selected", true);
+            $('#txttalento').material_select();
         },
 
         eliminarTalento: function (index){
@@ -613,10 +636,13 @@
 
 
         agregarLaboratorio: function(){
+            
             let  cont = 0;
             let idlaboratorio = $("#txtlaboratorio").val();
             let tiempouso = $("#txttiempouso").val();
             let nombreLaboratorio = $('#txtlaboratorio option:selected').text();
+
+            
 
 
             if ($("#txtlaboratorio").val() == ""){
@@ -640,6 +666,19 @@
                   });
             }else{
               if (usoInfraestructuraCreate.noRepeatLaboratorio() == true) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'success',
+                    title: 'Laboratorio ' + nombreLaboratorio + ' agregado.'
+                });
+
+                
+
+
+
                 var a = document.getElementsByName("laboratorio[]");
                 let fila ="";
 
@@ -653,12 +692,15 @@
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'error',
-                    title: 'El laboratorio ya esta listado.'
+                    title: 'El laboratorio ' + nombreLaboratorio + ' ya esta listado.'
                   });
-                $("#txtlaboratorio").val();
-
+                
               }
             }
+            $("#txtlaboratorio option[value='']").attr("selected", true);
+            $('#txtlaboratorio').material_select();
+            $("#txttiempouso").val('');
+            
         },
 
         noRepeatLaboratorio: function () {
@@ -693,6 +735,13 @@
             $('#txtproyecto').removeAttr('value');
             $('#txtarticulacion').removeAttr('value');
             $('#txtedt').removeAttr('value');
+        },
+        volverModal: function (){
+            $('#txtactividad').val('');
+            $("label[for='txtactividad']").removeClass('active');
+            $("label[for='txtactividad']").text("seleccione un tipo de uso de infraestructura");
+            usoInfraestructuraCreate.removeOptionsSelect();
+            $divActividad.show();
         }
 
     }
@@ -705,7 +754,7 @@
         event.preventDefault();
         var form = $(this);
         let data = new FormData($(this)[0]);
-        // console.log(data);
+
         var url = form.attr("action");
 
         $.ajax({
@@ -764,3 +813,4 @@
     });
 </script>
 @endpush
+@endif

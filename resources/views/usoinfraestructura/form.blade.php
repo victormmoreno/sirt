@@ -108,11 +108,12 @@
                     </i>
                     <input id="txtactividad" name="txtactividad"  type="text" readonly />
                     <label for="txtactividad">
-                        Proyecto
+                        seleccione un tipo de uso de infraestructura
                         <span class="red-text">
                             *
                         </span>
                     </label>
+                    <label class="error" for="txtactividad" id="txtactividad-error"></label>
                 </div>
             </div>
         </div>

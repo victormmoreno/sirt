@@ -19,7 +19,7 @@ class CreateUsoLaboratoriosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('usoinfraestructura_id');
             $table->unsignedBigInteger('laboratorio_id');
-            $table->decimal('tiempo',2,1)->default(0,0);
+            $table->decimal('tiempo',10,1)->default(0,0);
             $table->timestamps();
 
             $table->index(["usoinfraestructura_id"], 'fk_uso_laboratorio_usoinfraestructura1_idx');

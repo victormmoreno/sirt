@@ -43,8 +43,10 @@ class UsoInfraestructuraRepository
 			    foreach($request->get('laboratorio') as $id => $value){
 			    	$syncData[$id] =  array('laboratorio_id'=> $value, 'tiempo' => $request->get('tiempouso')[$id]);
 			    }
+
 				$usoInfraestructura->usolaboratorios()->sync($syncData);
 			}
+
 			DB::commit();
 	      	return 'true';
 	    } catch (Exception $e) {
