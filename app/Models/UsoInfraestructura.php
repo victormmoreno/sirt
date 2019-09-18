@@ -68,4 +68,9 @@ class UsoInfraestructura extends Model
     {
         return ucwords(strtolower(trim($descripcion)));
     }
+
+    public function scopeUsoInfraestructuraWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
 }

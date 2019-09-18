@@ -20,35 +20,101 @@
                 <div class="card ">
                     <div class="card-content">
                         <div class="row">
-                            <div class="row">
-                                <div class="col s12 m12 l10">
-                                    <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Usos de Infraestructura {{ config('app.name')}}
-                                        </span>
+                            
+                            
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <div class="center-align">
+                                            <span class="card-title center-align">
+                                                Usos de Infraestructura {{ config('app.name')}}
+                                            </span>
+                                        </div>
                                     </div>
+                                    <div class="col s12 l2">
+                                    
                                 </div>
-                                <div class="col s12 l2">
-                                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Uso de Infraestructura" href="{{route('usoinfraestructura.create')}}">
-                                            <i class="material-icons">
-                                                domain
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
                                 <div class="divider"></div>
                                 <br>
                                 <div class="row">
-                                    
+                                    <div class="col s12 m12 l12">
+                                        <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UsoInfraestructuraAdministrador.selectUsoInfraestructuraPorNodo()">
+                                            <option value="">Seleccione nodo</option>
+                                            @foreach($nodos as $id => $nodo)
+                                              <option value="{{$id}}">{{$nodo}}</option>
+                                            @endforeach
+                                        </select>
+                                        
+                                    </div>
                                 </div>
-                                
+                                <div class="row">
+                                    <table class="display responsive-table" id="usoinfraestructura_administrador_table">
+                                        <thead>
+                                            <th>Fecha</th>
+                                            <th>Nombre</th>
+                                            <th>Asesoria Directa</th>
+                                            <th>Asesoria Indirecta</th>
+                                            <th>Detalles</th>
+                                            {{-- <th>Laboratorios</th>
+                                            <th>Talentos</th> --}}
+                                            {{-- <th>Editar</th> --}}
+                                            {{-- <th>Anular</th> --}}
+                                        </thead>
+                        
+                                    </table>
+                                </div>
+                            @else
+                                <div class="row">
+                                    <div class="col s12 m12 l10">
+                                        <div class="center-align">
+                                            <span class="card-title center-align">
+                                                Usos de Infraestructura {{ config('app.name')}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 l2">
+                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                                            <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Uso de Infraestructura" href="{{route('usoinfraestructura.create')}}">
+                                                <i class="material-icons">
+                                                    domain
+                                                </i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <br>
+                                <div class="row">
+                                    <table class="display responsive-table" id="usoinfraestructura_table">
+                                        <thead>
+                                            <th>Fecha</th>
+                                            <th>Nombre</th>
+                                            <th>Asesoria Directa</th>
+                                            <th>Asesoria Indirecta</th>
+                                            <th>Detalles</th>
+                                            {{-- <th>Laboratorios</th>
+                                            <th>Talentos</th> --}}
+                                            <th>Editar</th>
+                                            {{-- <th>Anular</th> --}}
+                                        </thead>
+                        
+                                    </table>
+                                </div>
+                            @endif 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento())
+        <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+
+            <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Uso de Infraestructura">
+                 <i class="material-icons">domain</i>
+            </a>
+        </div>
+        @endif
     </div>
 </main>
 

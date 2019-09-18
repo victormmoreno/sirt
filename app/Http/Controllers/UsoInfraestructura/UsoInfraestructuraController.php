@@ -13,6 +13,7 @@ use App\Repositories\Repository\EdtRepository;
 use App\Repositories\Repository\ProyectoRepository;
 use App\Repositories\Repository\UsoInfraestructuraRepository;
 use App\User;
+use App\Models\Nodo;
 use Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -47,7 +48,196 @@ class UsoInfraestructuraController extends Controller
     public function index()
     {
         $this->authorize('index', UsoInfraestructura::class);
-        return view('usoinfraestructura.index');
+
+        $user = auth()->user()->id;
+
+        $nodo = 2;
+
+        $relations = $this->getDataIndex();
+
+        switch ( Session::get('login_role') ) {
+            case User::IsAdministrador():
+              $usoinfraestructura =$this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id','actividad_id','fecha','asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function($query) use($nodo){
+                        $query->where('id', $nodo);
+                })->get();
+              break;
+
+            
+
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo->id;
+                $usoinfraestructura =$this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id','actividad_id','fecha','asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function($query) use($nodo){
+                        $query->where('id', $nodo);
+                })->get();
+              break;
+
+            case User::IsGestor():
+                
+                $usoinfraestructura =$this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id','actividad_id','fecha','asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.gestor.user', function($query) use($user){
+                        $query->where('id', $user);
+                })->get();
+              break;
+            case User::IsTalento():
+            $usoinfraestructura =$this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id','actividad_id','fecha','asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.articulacion_proyecto.talentos.user', function($query) use($user){
+                        $query->where('id', $user);
+                })->orderBy('id','DESC')->get();
+                break;
+            default:
+              return abort('403');
+              break;
+          }
+
+        if (request()->ajax()) {
+            return datatables()->of($usoinfraestructura)
+                ->editColumn('fecha', function ($data) {
+                    return $data->fecha->isoFormat('LL');
+                })
+                ->editColumn('actividad', function ($data) {
+                    return $data->actividad->codigo_actividad . ' - ' . $data->actividad->nombre;
+                })
+                ->editColumn('asesoria_directa', function ($data) {
+                    if ($data->asesoria_directa == 0) {
+                        return 'no registra';
+                    }
+                    return $data->asesoria_directa . '  horas';
+                })
+                ->editColumn('asesoria_indirecta', function ($data) {
+                    if ($data->asesoria_indirecta == 0) {
+                        return 'no registra';
+                    }
+                    return $data->asesoria_indirecta . '  horas';
+                })
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })
+                ->addColumn('edit', function ($data) {
+                    
+                    $button = '<a href="' . route("usoinfraestructura.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    
+                    return $button;
+                })
+                ->rawColumns(['fecha','actividad','asesoria_directa','asesoria_indirecta','detail', 'edit'])
+                ->make(true);
+        }
+
+        // return $usoinfraestructura;
+        return view('usoinfraestructura.index',[
+            'nodos' => Nodo::selectNodo()->pluck('nodos', 'id'),
+        ]);
+        
+    }
+
+    public function getUsoInfraestructuraForNodo(int $nodo)
+    {
+        $relations = $this->getDataIndex();
+        $usoinfraestructura =$this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id','actividad_id','fecha','asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function($query) use($nodo){
+                        $query->where('id', $nodo);
+                })->get();
+
+        if (request()->ajax()) {
+            return datatables()->of($usoinfraestructura)
+                ->editColumn('fecha', function ($data) {
+                    return $data->fecha->isoFormat('LL');
+                })
+                ->editColumn('actividad', function ($data) {
+                    return $data->actividad->codigo_actividad . ' - ' . $data->actividad->nombre;
+                })
+                ->editColumn('asesoria_directa', function ($data) {
+                    if ($data->asesoria_directa == 0) {
+                        return 'no registra';
+                    }
+                    return $data->asesoria_directa . '  horas';
+                })
+                ->editColumn('asesoria_indirecta', function ($data) {
+                    if ($data->asesoria_indirecta == 0) {
+                        return 'no registra';
+                    }
+                    return $data->asesoria_indirecta . '  horas';
+                })
+                ->addColumn('detail', function ($data) {
+
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+
+                    return $button;
+                })
+            
+                ->rawColumns(['fecha','actividad','asesoria_directa','asesoria_indirecta','detail'])
+                ->make(true);
+        }
+    }
+
+
+    private function getDataIndex()
+    {
+        return [
+            'actividad' => function ($query) {
+                $query->select('id','gestor_id','nodo_id','codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
+            },
+            'actividad.nodo' => function ($query) {
+                $query->select('id','entidad_id','direccion','telefono');
+            },
+            'actividad.nodo.entidad'=> function ($query) {
+                $query->select('id','ciudad_id','nombre','email_entidad');
+            },
+            'actividad.nodo.entidad.ciudad.departamento',
+            'actividad.articulacion_proyecto' => function ($query) {
+                $query->select('id','entidad_id','actividad_id','revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
+            },
+            'actividad.articulacion_proyecto.talentos',
+            'actividad.articulacion_proyecto.talentos.user' => function ($query) {
+                    $query->select('id','documento','nombres', 'apellidos');
+            },
+            'actividad.articulacion_proyecto.proyecto'=> function ($query) {
+                    $query->select('id','articulacion_proyecto_id','sector_id', 'sublinea_id', 'areaconocimiento_id', 'estadoproyecto_id', 'tipoarticulacionproyecto_id', 'estadoprototipo_id', 'estado_aprobacion');
+            },
+            'actividad.articulacion_proyecto.proyecto.tipoproyecto'  => function ($query) {
+                    $query->select('id','nombre');
+            },
+            'actividad.articulacion_proyecto.proyecto.areaconocimiento' => function ($query) {
+                    $query->select('id','nombre');
+            },
+            'actividad.articulacion_proyecto.proyecto.sublinea' => function ($query) {
+                    $query->select('id','nombre');
+            },
+            'actividad.articulacion_proyecto.proyecto.estadoproyecto' => function ($query) {
+                    $query->select('id','nombre');
+            },
+            'actividad.articulacion_proyecto.articulacion'  => function ($query) {
+                    $query->select('id','articulacion_proyecto_id', 'tipoarticulacion_id', 'tipo_articulacion', 'fecha_ejecucion', 'observaciones', 'estado');
+            },
+            'actividad.articulacion_proyecto.articulacion.tipoarticulacion'  => function ($query) {
+                    $query->select('id','nombre', 'articulado_con');
+            },
+            
+            'actividad.edt.entidades',
+            'actividad.edt.entidades.empresa'  => function ($query) {
+                    $query->select('id','entidad_id', 'sector_id', 'nit', 'direccion');
+            },
+            'actividad.edt.entidades.empresa.sector'  => function ($query) {
+                    $query->select('id','nombre');
+            } ,
+            'actividad.edt.entidades.ciudad',
+            'actividad.edt.entidades.ciudad.departamento',
+            'actividad.gestor' => function ($query) {
+                    $query->select('id','user_id', 'nodo_id', 'lineatecnologica_id');
+            },
+            'actividad.gestor.nodo' => function ($query) {
+                    $query->select('id','entidad_id', 'direccion', 'telefono');
+            },
+            'actividad.gestor.nodo.entidad' => function ($query) {
+                    $query->select('id','ciudad_id', 'nombre', 'email_entidad');
+            },
+            'actividad.gestor.nodo.entidad.ciudad.departamento',
+            'actividad.gestor.lineatecnologica' => function ($query) {
+                    $query->select('id','nombre', 'abreviatura');
+            },
+            'actividad.gestor.user' => function ($query) {
+                    $query->select('id','documento', 'nombres', 'apellidos');
+            },
+        ];
     }
 
     /**

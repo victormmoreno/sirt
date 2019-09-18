@@ -53,4 +53,15 @@ class UsoInfraestructuraRepository
 	    }
 		
 	}
+
+
+	/**
+     * retorna query con los usos de infraestructura
+     * @return collection
+     * @author devjul
+     */
+    public function getUsoInfraestructuraForUser(array $relations)
+    {
+        return UsoInfraestructura::usoInfraestructuraWithRelations($relations);
+    }
 }

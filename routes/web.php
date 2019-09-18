@@ -171,6 +171,9 @@ Route::group([
     Route::get('usoinfraestructura/laboratorios', 'UsoInfraestructuraController@usoinfraestructuraLaboratorios')
         ->name('usoinfraestructura.laboratorios');
 
+    Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
+        ->name('usoinfraestructura.usoinfraestructurapornodo');
+
     
 
 });
