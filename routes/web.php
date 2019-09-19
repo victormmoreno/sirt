@@ -155,11 +155,27 @@ Route::group([
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
             ->name('usoinfraestructura.projectsforuser');
 
+    Route::get('usoinfraestructura/talentosporproyecto/{id}', 'UsoInfraestructuraController@talentosPorProyecto')->name('usoinfraestructura.talentosporproyecto');
+
     Route::get('usoinfraestructura/articulacionesforuser', 'UsoInfraestructuraController@articulacionesForUser')
         ->name('usoinfraestructura.articulacionesforuser');
 
+    Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
+        ->name('usoinfraestructura.talentosporarticulacion');
+
+    
+
     Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
         ->name('usoinfraestructura.edtsforuser');
+
+    Route::get('usoinfraestructura/laboratorios', 'UsoInfraestructuraController@usoinfraestructuraLaboratorios')
+        ->name('usoinfraestructura.laboratorios');
+
+    Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
+        ->name('usoinfraestructura.usoinfraestructurapornodo');
+
+    
+
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/

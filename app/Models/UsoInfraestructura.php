@@ -58,4 +58,19 @@ class UsoInfraestructura extends Model
             ->withTimestamps();
     }
 
+
+    public function setDescripcionAttribute($descripcion)
+    {
+        $this->attributes['descripcion'] = ucwords(mb_strtolower(trim($descripcion), 'UTF-8'));
+    }
+
+    public function getDescripcionAttribute($descripcion)
+    {
+        return ucwords(strtolower(trim($descripcion)));
+    }
+
+    public function scopeUsoInfraestructuraWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
 }

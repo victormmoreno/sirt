@@ -277,7 +277,6 @@ class UserController extends Controller
         } else {
             alert()->error("El Usuario {$user->nombres} {$user->apellidos} no ha sido  modificado.", 'Modificación Errónea', "error");
         }
-
         //redireccion
         return redirect()->route('usuario.index');
     }
