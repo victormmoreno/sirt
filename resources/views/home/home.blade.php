@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title','')
+@section('meta-title','Incio')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">

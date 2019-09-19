@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 class ProyectosNodoAnhoExport extends FatherExport
 {
 
-  private $tpye;
+  private $type;
 
   public function __construct($query, $type)
   {

@@ -39,5 +39,6 @@ class DeleteNotifications extends Command
     public function handle()
     {
         DB::table('notifications')->truncate();
+        $this->info('Table notifications truncated.');
     }
 }

@@ -25,7 +25,7 @@
   <p style="text-align: justify">
     Luego de seguir las recomendaciones usted podrá volver a inscribir su proyecto en Tecnoparque y el comité decidirá si se le asigna un gestor de Tecnoparque,
     quien lo contactará para iniciar con la metodología en caso de que el proyecto se admitido.
-    Cualquier información adicional la puede solicitar a los teléfonos 5760000 <b>ext.</b> {{ auth()->user()->infocenter->extension }}.
+    Cualquier información adicional la puede solicitar a los teléfonos {{ $telefonoNodo }} <b>ext.</b> {{ auth()->user()->infocenter->extension }}.
   </p>
   <p>
     Recuerde que además de la Asesoría Técnica para el Desarrollo de Proyectos de Base Tecnológica, la Red Tecnoparque Colombia pone a su disposición los siguientes servicios:

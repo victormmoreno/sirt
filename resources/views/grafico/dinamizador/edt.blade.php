@@ -27,7 +27,7 @@
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por fechas</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por fechas.</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
@@ -39,8 +39,15 @@
                               <input type="text" id="txtfecha_fin_edtGrafico1" name="txtfecha_fin_edtGrafico1" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_edtGrafico1">Fecha Fin</label>
                             </div>
-                            <div class="center col s12 m12 l12">
+                            <div class="col s12 m6 l6">
                               <button onclick="consultarEdtsPorNodoGestorYFecha_stacked(0);" class="btn">Consultar</button>
+                            </div>
+                            <div class="col s12 m6 l6 right">
+                              <div class="material-icons">
+                                <a onclick="generarExcelGrafico1Edt(0)">
+                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                                </a>
+                              </div>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -50,7 +57,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por gestor y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -71,8 +78,15 @@
                               <input type="text" id="txtfecha_fin_edtGrafico2" name="txtfecha_fin_edtGrafico2" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_edtGrafico2">Fecha Fin</label>
                             </div>
-                            <div class="center col s12 m12 l12">
+                            <div class="center col s12 m6 l6">
                               <button onclick="consultarEdtsPorGestorYFecha_stacked(0)" class="btn">Consultar</button>
+                            </div>
+                            <div class="center col s12 m6 l6">
+                              <div class="material-icons">
+                                <a onclick="generarExcelGrafico2Edt(0)">
+                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                                </a>
+                              </div>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -86,7 +100,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's por línea y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">record_voice_over</i>Edt's finalizadas por línea y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -106,8 +120,15 @@
                               <input type="text" id="txtfecha_fin_GraficoEdt3" name="txtfecha_fin_GraficoEdt3" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                               <label for="txtfecha_fin_GraficoEdt3">Fecha Fin</label>
                             </div>
-                            <div class="center">
+                            <div class="center col s12 m6 l6">
                               <button onclick="consultarEdtsPorLineaYFecha_stacked()" class="btn">Consultar</button>
+                            </div>
+                            <div class="center col s12 m6 l6">
+                              <div class="material-icons">
+                                <a onclick="generarExcelGrafico3Edt(0)">
+                                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                                </a>
+                              </div>
                             </div>
                           </div>
                           <div class="col s12 m8 l8">
@@ -125,7 +146,7 @@
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
-                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }})">
+                            <select style="width: 100%" name="txtanho_GraficoEdt4" id="txtanho_GraficoEdt4" onchange="consultarEdtsDelNodoPorAnho_variablepie(0)">
                               @for ($i=2016; $i <= $yearNow; $i++)
                                 <option value="{{ $i }}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{ $i }}</option>
                               @endfor
@@ -152,7 +173,7 @@
   <script>
     $(document).ready(function(){
       consultarEdtsPorNodoGestorYFecha_stacked(0);
-      consultarEdtsDelNodoPorAnho_variablepie({{ auth()->user()->dinamizador->nodo_id }});
+      consultarEdtsDelNodoPorAnho_variablepie(0);
     });
   </script>
 @endpush

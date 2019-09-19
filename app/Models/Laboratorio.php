@@ -30,7 +30,6 @@ class Laboratorio extends Model
         'nombre'               => 'string',
         'participacion_costos' => 'integer',
         'estado'               => 'integer',
-        'nombre'               => 'string',
     ];
 
     /**
@@ -129,5 +128,14 @@ class Laboratorio extends Model
     {
         return $query->with($relations);
     }
+
+    public function usoinfraestructuras()
+    {
+        return $this->belongsToMany(UsoInfraestructura::class, 'uso_laboratorios', 'usoinfraestructura_id','laboratorio_id')
+            ->withTimestamps()
+            ->withPivot('tiempo');
+    }
+
+
 
 }

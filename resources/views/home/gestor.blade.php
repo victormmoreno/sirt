@@ -17,7 +17,7 @@
           </a>
         </div>
         <div class="col s12 m3 l3 ">
-          <a href="{{ route('pdf.proyecto.acc') }}" class="black-text">
+          <a href="{{ route('pdf.proyecto.acc', 39) }}" class="black-text">
             <div class="card green lighten-3 stats-card">
               <div class="card-content">
                 <h6>Pruebas de PDF</h6>
@@ -71,7 +71,7 @@
               </center>
               <div class="row">
                 <div class="col s12 m12 l10 offset-l1">
-                  <img class="materialboxed responsive-img" src="{{ asset('img/logonacional_Negro.png') }}" alt="sena | Tecnoparque">
+                  <img class="materialboxed responsive-img" src="{{ asset('img/logonacional_Negro.png') }}" alt="Sena | Tecnoparque">
                 </div>
               </div>
             </div>
@@ -100,3 +100,6 @@
     </div>
   </div>
 @endsection
+@push('script')
+  <script href="resources"></script>
+@endpush

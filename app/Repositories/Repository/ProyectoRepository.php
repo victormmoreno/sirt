@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Repository;
 
+
 use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea};
 use Illuminate\Support\Facades\{DB, Session, Notification};
-use App\Notifications\Proyecto\ProyectoPendiente;
+use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
+use App\Http\Controllers\PDF\PdfProyectoController;
 use Carbon\Carbon;
 use App\User;
 
@@ -51,6 +53,74 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
+   *
+   * @param int $id Id del nodo
+   * @return Collection
+   */
+  public function proyectosFinalizadosPorMesDeUnNodo_Repository($id)
+  {
+    $this->traducirMeses();
+    return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
+    ->selectRaw('MONTH(actividades.fecha_cierre) AS meses')
+    ->selectRaw('CONCAT(UPPER(LEFT(date_format(actividades.fecha_cierre, "%M"), 1)), LOWER(SUBSTRING(date_format(actividades.fecha_cierre, "%M"), 2))) AS mes')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    // ->whereYear('fecha_inicio', $anho)
+    ->where('nodos.id', $id)
+    ->where('estado_aprobacion', Proyecto::IsAceptado())
+    ->groupBy('meses', 'mes')
+    ->orderBy('meses');
+  }
+
+  /**
+   * Consulta la cantidad de proyectos que se finalizaron entre dos fechas por nodo y tipos de poyecto
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarCantidadDeProyectosFinalizadosPorTipoProyecto_Repository($id, $fecha_inicio, $fecha_fin)
+  {
+    return Proyecto::select('tiposarticulacionesproyectos.nombre')
+    ->selectRaw('COUNT(proyectos.id) AS cantidad')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->where('nodos.id', $id)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('proyectos.estado_aprobacion', 1)
+    ->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV'])
+    ->groupBy('proyectos.tipoarticulacionproyecto_id');
+  }
+
+  /**
+   * Consulta la cantidad de proyectos que se inscribieron entre dos fechas por nodo y tipos de poyecto
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarCantidadDeProyectosInscritosPorTipoProyecto_Repository($id, $fecha_inicio, $fecha_fin)
+  {
+    return Proyecto::select('tiposarticulacionesproyectos.nombre')
+    ->selectRaw('COUNT(proyectos.id) AS cantidad')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->where('nodos.id', $id)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->where('proyectos.estado_aprobacion', 1)
+    ->groupBy('proyectos.tipoarticulacionproyecto_id');
+  }
+
+  /**
    * Consulta el talento líder de un proyecto
    * @param int $id Id del proyecto
    * @return Collection
@@ -58,13 +128,16 @@ class ProyectoRepository
    */
   public function consultarTalentoLiderDeUnProyecto($id)
   {
-    return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento')
+    return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento', 'fechanacimiento')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
+    ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_expedicion')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto_talento.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
     ->join('users', 'users.id', '=', 'talentos.user_id')
     ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+    ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_expedicion_id')
+    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
     ->where('talento_lider', 1);
   }
 
@@ -77,6 +150,7 @@ class ProyectoRepository
   */
   public function updateAprobacionUsuario($request, $id)
   {
+
     DB::beginTransaction();
     try {
       if ( $request->txtaprobacion != Proyecto::IsAceptado() && $request->txtaprobacion != Proyecto::IsNoAceptado() ) {
@@ -89,21 +163,44 @@ class ProyectoRepository
       $update = DB::update("UPDATE aprobaciones SET aprobacion = $request->txtaprobacion WHERE proyecto_id = $id AND user_id = $user AND role_id = $role");
       $some = $this->pivotAprobaciones($id)->where('aprobacion', 0)->get();
       if ( count($some) == 0 ) {
-        $aprobados = $this->pivotAprobacion($id)->where('aprobacion', 1)->get();
+        $aprobados = $this->pivotAprobaciones($id)->where('aprobacion', 1)->get();
         $proyecto = Proyecto::find($id);
         if ( count($aprobados) == 3 ) {
           // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
 
-          // Espacio para generar el pdf del acuerdo de confidencialidad y compromiso
-          // code...
+          // Instancia de la clase ArchivoRepository
+          $archivoRepo = new ArchivoRepository();
+          // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
+          $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
+          // dd($outputPdf);
+          // exit();
+          // Guarda la ruta de los archivos en la base de datos
+          $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
 
-          // Cambia el estado de aprobacion del proyecto a aceptado
+          // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
           $proyecto->update([
             'estado_aprobacion' => Proyecto::IsAceptado(),
             'acc' => 1
           ]);
         } else {
           // En caso de que UNO SOLO no haya aprobado el proyecto
+
+          // Consulta todos los usuarios de un proyecto (tabla aprobaciones)
+          // $usersProyecto = $this->pivotAprobaciones($id)->get()->toArray();
+          // $idUsers = array();
+          //
+          // for ($i=0; $i < 2 ; $i++) {
+          //   $idUsers[$i] = $usersProyecto[$i]['user_id'];
+          // }
+          //
+          // // Array los del ids de los usuarios (método array_unique para no repetir los usuarios)
+          // $idUsers = array_unique($idUsers);
+          //
+          // // Alerta de que el proyecto no fue aprobado
+          // for ($i=0; $i < count($idUsers) ; $i++) {
+          //   Notification::send(User::find($idUsers[$i]), new ProyectoNoAprobado($proyecto));
+          // }
+
           //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
           $idea = $proyecto->idea;
           if ( $idea->tipo_idea == Idea::IsEmpresa() || $idea->tipo_idea == Idea::IsGrupoInvestigacion() ) {
@@ -112,16 +209,18 @@ class ProyectoRepository
             $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Admitido');
           }
           $padre = $proyecto->articulacion_proyecto->actividad;
+          // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
           // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
-          $proyecto->articulacion_proyecto->talentos()->delete();
+          $proyecto->articulacion_proyecto->talentos()->sync([]);
           // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
-          $proyecto->users()->delete();
+          $proyecto->users()->sync([]);
           // Elimina el registro de la tabla de proyecto
           $padre->articulacion_proyecto->proyecto()->delete();
           // Elimina el registro de la tabla la tabla de articulacion_proyecto
           $padre->articulacion_proyecto()->delete();
           // Elimina la tabla de actividades
           $padre->delete();
+
         }
       }
       DB::commit();
@@ -138,7 +237,7 @@ class ProyectoRepository
    *
    * @param int $id Id del proyecto
    * @param int $user Id del usuario
-   * @param string
+   * @param string $role Nombre del rol
    */
   public function pivotAprobacionesUnica($id, $user, $role)
   {
@@ -163,7 +262,7 @@ class ProyectoRepository
    */
   public function pivotAprobaciones($id)
   {
-    return Proyecto::select('roles.name')
+    return Proyecto::select('roles.name', 'users.documento', 'users.id AS user_id')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
     ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
     ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
@@ -172,9 +271,7 @@ class ProyectoRepository
     ->where('proyectos.id', $id);
   }
   /**
-   * undocumented function summary
-   *
-   * Undocumented function long description
+   * Consulta los proyectos pendientes de aprobación de un usuario (Dinamizador, Gestor, Talento)
    *
    * @param int $id Id del usuario
    * @return Collection
@@ -356,13 +453,12 @@ class ProyectoRepository
   }
 
   /**
-   * Consulta la cantidad de proyectos que se inscriben por mes de un año y un nodo
+   * Consulta la cantidad de proyectos que se inscriben por mes de un nodo
    *
    * @param int $id Id del nodo
-   * @param string $anho Año para filtrar
    * @return Collection
    */
-  public function proyectosInscritosPorMesDeUnNodo_Repository($id, $anho)
+  public function proyectosInscritosPorMesDeUnNodo_Repository($id)
   {
     $this->traducirMeses();
     return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
@@ -371,12 +467,11 @@ class ProyectoRepository
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-    ->whereYear('fecha_inicio', $anho)
+    // ->whereYear('fecha_inicio', $anho)
     ->where('nodos.id', $id)
     ->where('estado_aprobacion', Proyecto::IsAceptado())
     ->groupBy('meses', 'mes')
-    ->orderBy('meses')
-    ->get();
+    ->orderBy('meses');
   }
 
   /**
@@ -557,8 +652,13 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyectoFindById = Proyecto::find($id);
+
+      if ( $proyectoFindById->articulacion_proyecto->revisado_final != $request->txtrevisado_final ) {
+        Notification::send(User::find($proyectoFindById->articulacion_proyecto->actividad->gestor->user_id), new ProyectoRevisadoFinal($proyectoFindById));
+      }
+
       $proyectoFindById->articulacion_proyecto()->update([
-      'revisado_final' => $request->txtrevisado_final
+        'revisado_final' => $request->txtrevisado_final
       ]);
 
       DB::commit();
@@ -1095,15 +1195,11 @@ class ProyectoRepository
   }
 
   /*========================================================================
-  =            metodo para consultar los proyectos de un gestor            =
+  =            metodo para consultar los proyectos de un ususario gestor talento         =
   ========================================================================*/
-
-  public function getProjectsForGestor($id, array $estado = [])
+  public function getProjectsForUser(array $relations, array $estado = [])
   {
-    return Proyecto::projectsForEstado($estado)->where('gestor_id', $id)->orderby('nombre')->get();
+    return Proyecto::estadoOfProjects($relations,$estado);
   }
-
-
-  /*=====  End of metodo para consultar los proyectos de un gestor  ======*/
 
 }

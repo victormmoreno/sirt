@@ -115,6 +115,20 @@ class Articulacion extends Model
     /*=====  End of scope para consultar por estado de articulaciones  ======*/
 
 
+    /*===================================================================
+    =            scope para consultar articulaciones           =
+    ===================================================================*/
 
+    public function scopeArticulacionesWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
+
+    /*=====  End of scope para consultar por estado de proyecto  ======*/
 
 }
+
+
+    
+
+

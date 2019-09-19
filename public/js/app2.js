@@ -4371,8 +4371,8 @@ $(document).ready(function() {
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false
     });
-    // $('.dataTables_length select').addClass('browser-default');
 });
 var selectLaboratorioNodo = {
     selectLaboraotrioForNodo: function() {
@@ -4386,12 +4386,15 @@ var selectLaboratorioNodo = {
                 },
                 processing: true,
                 serverSide: true,
-                order: false,
+                "lengthChange": false,
                 ajax: {
                     url: "/laboratorio/nodo/" + nodo,
                     type: "get",
                 },
-
+                dom: "Bfrtip",
+                buttons: [
+                    
+                ],
                 columns: [{
                     data: 'nombre',
                     name: 'nombre',
@@ -4423,7 +4426,12 @@ var selectLaboratorioNodo = {
                 }, ],
             });
         }else{
-            $('#laboratorio_administrador_table').DataTable().clear().draw();
+            $('#laboratorio_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
         }
         
     },
@@ -4468,6 +4476,127 @@ $(document).ready(function() {
             width: '8%'
         }, ],
     });
+});
+$(document).ready(function() {
+    $('#usoinfraestructura_administrador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+    });
+});
+
+var UsoInfraestructuraAdministrador = {
+    selectUsoInfraestructuraPorNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#usoinfraestructura_administrador_table').dataTable().fnDestroy();
+        if (nodo != '') {
+            $('#usoinfraestructura_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usoinfraestructura/usoinfraestructurapornodo/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'fecha',
+                    name: 'fecha',
+                },  {
+                    data: 'actividad',
+                    name: 'actividad',
+                }, {
+                    data: 'asesoria_directa',
+                    name: 'asesoria_directa',
+                }, {
+                    data: 'asesoria_indirecta',
+                    name: 'asesoria_indirecta',
+                },{
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, ],
+            });
+        }else{
+            $('#usoinfraestructura_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
+    },
+}
+$(document).ready(function() {
+    $('#usoinfraestructura_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        "lengthChange": false,
+        ajax: {
+            url: "/usoinfraestructura",
+            type: "get",
+        },
+        columns: [{
+                    data: 'fecha',
+                    name: 'fecha',
+                },  {
+                    data: 'actividad',
+                    name: 'actividad',
+                }, {
+                    data: 'asesoria_directa',
+                    name: 'asesoria_directa',
+                }, {
+                    data: 'asesoria_indirecta',
+                    name: 'asesoria_indirecta',
+                },{
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                },],    
+
+        });
+});
+$(document).ready(function() {
+    $('#usoinfraestructura_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        "lengthChange": false,
+        ajax: {
+            url: "/usoinfraestructura",
+            type: "get",
+        },
+        columns: [{
+                    data: 'fecha',
+                    name: 'fecha',
+                },  {
+                    data: 'actividad',
+                    name: 'actividad',
+                }, {
+                    data: 'asesoria_directa',
+                    name: 'asesoria_directa',
+                }, {
+                    data: 'asesoria_indirecta',
+                    name: 'asesoria_indirecta',
+                },{
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                },{
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false,
+                },],    
+
+        });
 });
 function datatableVisitantesPorNodo_Ingreso() {
   $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();
@@ -4823,7 +4952,10 @@ var graficosEdtId = {
 
 var graficosProyectoId = {
   grafico1: 'graficosProyectoPorMesYNodo_combinate',
-  grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate'
+  grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate',
+  grafico3: 'graficoProyectosPorTipoNodoYFecha_column',
+  grafico4: 'graficoProyectosFinalizadosPorNodoYAnho_column',
+  grafico5: 'graficoProyectosFinalizadosPorTipoNodoYFecha_column'
 };
 
 function alertaNodoNoValido() {
@@ -4837,6 +4969,68 @@ function alertaGestorNoValido() {
 function alertaLineaNoValido() {
   Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
 }
+
+function alertaFechasNoValidas() {
+  Swal.fire('Advertencia!', 'Seleccione fechas válidas!', 'warning');
+}
+
+function generarExcelGrafico3Edt(bandera) {
+  let idnodo = 0;
+  let idlinea = $('#txtlinea_id_edtGrafico3').val();
+  let fecha_inicio = $('#txtfecha_inicio_GraficoEdt3').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoEdt3').val();
+
+  if ( bandera == 1 ) {
+    idnodo = $('#txtnodo_id').val();
+  }
+
+  if (idnodo === '') {
+    alertaNodoNoValido();
+  } else {
+    if ( idlinea === '' ) {
+      alertaLineaNoValido();
+    } else {
+      location.href = '/excel/excelEdtsFinalizadasPorLineaNodoYFecha/'+idnodo+'/'+idlinea+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+
+}
+
+function generarExcelGrafico2Edt(bandera) {
+  let id = 0;
+
+  if (bandera == 0) {
+    id = $('#txtgestor_id_edtGrafico2').val();
+  }
+
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
+
+  if (id === '') {
+    alertaGestorNoValido();
+  } else {
+    location.href = '/excel/excelEdtsFinalizadasPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
+function generarExcelGrafico1Edt(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_edtGrafico1').val();
+  let fecha_fin = $('#txtfecha_fin_edtGrafico1').val();
+
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if (id === '') {
+    alertaNodoNoValido();
+  } else {
+    location.href = '/excel/excelEdtsFinalizadasPorFechaYNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+  }
+
+}
+
 
 function generarExcelGrafico1Articulacion(bandera) {
   let id = 0;
@@ -4975,6 +5169,122 @@ function graficosProyectosPromedioCantidadesMeses(data, name) {
   });
 }
 
+function graficosProyectosAgrupados(data, name, name_label) {
+  let tamanho = data.proyectos.cantidades.length;
+  let datos = {
+    cantidades: [],
+    labels: [],
+  };
+  for (let i = 0; i < tamanho; i++) {
+    datos.cantidades.push(data.proyectos.cantidades[i]);
+  }
+
+  for (let i = 0; i < tamanho; i++) {
+    datos.labels.push(data.proyectos.labels[i]);
+  }
+
+  Highcharts.chart(name, {
+    title: {
+      text: 'Proyectos Inscritos'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad'
+      }
+    },
+    xAxis: {
+      categories: datos.labels,
+      title: {
+        text: name_label
+      }
+    },
+    series: [{
+      type: 'column',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades
+    }, {
+      type: 'spline',
+      name: 'Proyectos Inscritos',
+      data: datos.cantidades,
+      dataLabels: {
+        enabled: true
+      },
+      marker: {
+        lineWidth: 2,
+        lineColor: '#008981',
+        fillColor: '#008981'
+      }
+    }]
+  });
+}
+
+function consultarProyectosFinalizadosPorTipoNodoYFecha_column(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_GraficoProyecto5').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoProyecto5').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( fecha_inicio > fecha_fin ) {
+    alertaFechasNoValidas();
+  } else {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+      success: function (data) {
+        graficosProyectosAgrupados(data, graficosProyectoId.grafico5, 'Tipo de Proyecto');
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+  }
+}
+
+function consultarProyectosInscritosPorTipoNodoYFecha_column(bandera) {
+
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_GraficoProyecto3').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoProyecto3').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    success: function (data) {
+      graficosProyectosAgrupados(data, graficosProyectoId.grafico3, 'Tipo de Proyecto');
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+
+}
+
+
+function consultarProyectosFinalizadosPorAnho_combinate(bandera) {
+  id = 0;
+  let anho = $('#txtanho_GraficoProyecto4').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
+    success: function (data) {
+      graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico4);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+}
+
 function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) {
   id = 0;
   if (bandera == 1) {
@@ -5011,9 +5321,14 @@ function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
   })
 }
 
-function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
+function consultarEdtsDelNodoPorAnho_variablepie(bandera) {
   let anho = $('#txtanho_GraficoEdt4').val();
-  if (idnodo == '') {
+  let idnodo = 0;
+  if (bandera == 1) {
+    idnodo = $('#txtnodo_id').val();
+  }
+
+  if (idnodo === '') {
     Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
   } else {
     $.ajax({
@@ -5068,7 +5383,7 @@ function consultarEdtsDelNodoPorAnho_variablepie(idnodo) {
 function consultarEdtsPorLineaYFecha_stacked(bandera) {
   let idnodo = 0;
   if (bandera == 1) {
-    idnodo = $('#txtnodo_edtGrafico3');
+    idnodo = $('#txtnodo_id').val();
   }
   let fecha_inicio = $('#txtfecha_inicio_GraficoEdt3').val();
   let fecha_fin = $('#txtfecha_fin_GraficoEdt3').val();
@@ -5126,7 +5441,7 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
 function consultarEdtsPorGestorYFecha_stacked(bandera) {
   let idnodo = 0;
   if (bandera == 1) {
-    idnodo = $('#txtnodo_edtGrafico2');
+    idnodo = $('#txtnodo_id').val();
   }
   let fecha_inicio = $('#txtfecha_inicio_edtGrafico2').val();
   let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
@@ -5186,7 +5501,7 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
   let fecha_fin = $('#txtfecha_fin_edtGrafico1').val();
   let idnodo = 0;
   if (bandera == 1) {
-    idnodo = $('#txtnodo_edtGrafico1');
+    idnodo = $('#txtnodo_id').val();
   }
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');

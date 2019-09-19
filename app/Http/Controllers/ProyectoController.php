@@ -91,25 +91,30 @@ class ProyectoController extends Controller
   public function aprobacion($id)
   {
     // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
-    // $proyecto = Proyecto::find( $id);
-    // $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
-    // $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
-    //
-    // if ( Session::get('login_role') == User::IsGestor() ) {
-    //   return view('proyectos.gestor.aprobacion', [
-    //   'proyecto' => $proyecto,
-    //   'pivot' => $pivot,
-    //   'aprobado' => $aprobado
-    //   ]);
-    // } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-    //   return view('proyectos.dinamizador.aprobacion', [
-    //     'proyecto' => $proyecto,
-    //     'pivot' => $pivot,
-    //     'aprobado' => $aprobado
-    //   ]);
-    // } else {
-    //
-    // }
+    $proyecto = Proyecto::find( $id);
+    $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
+    $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
+
+    if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('proyectos.gestor.aprobacion', [
+      'proyecto' => $proyecto,
+      'pivot' => $pivot,
+      'aprobado' => $aprobado
+      ]);
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+      return view('proyectos.dinamizador.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot,
+        'aprobado' => $aprobado
+      ]);
+    } else {
+      return view('proyectos.talento.aprobacion', [
+        'proyecto' => $proyecto,
+        'pivot' => $pivot,
+        'aprobado' => $aprobado
+      ]);
+
+    }
   }
 
   /**
@@ -600,6 +605,10 @@ class ProyectoController extends Controller
       ]);
       break;
 
+      case User::IsTalento():
+      return view('proyectos.talento.index');
+      break;
+
       default:
       // code...
       break;
@@ -883,7 +892,7 @@ class ProyectoController extends Controller
    */
   private function getGestorRepository()
   {
-    return $this->gestorRepository = $gestorRepository;
+    return $this->gestorRepository;
   }
 
   /**
@@ -904,7 +913,7 @@ class ProyectoController extends Controller
    */
   private function getEntidadRepository()
   {
-    return $this->entidadRepository = $entidadRepository;
+    return $this->entidadRepository;
   }
 
   /**
@@ -925,7 +934,7 @@ class ProyectoController extends Controller
    */
   private function getArticulacionProyectoRepository()
   {
-    return $this->articulacionProyectoRepository = $articulacionProyectoRepository;
+    return $this->articulacionProyectoRepository;
   }
 
   /**
@@ -946,7 +955,7 @@ class ProyectoController extends Controller
    */
   private function getServidorVideoRepository()
   {
-    return $this->servidorVideoRepository = $servidorVideoRepository;
+    return $this->servidorVideoRepository;
   }
 
 }

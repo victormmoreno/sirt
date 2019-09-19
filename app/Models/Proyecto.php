@@ -104,6 +104,11 @@ class Proyecto extends Model
       return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
   }
 
+  public function sublinea()
+  {
+      return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
+  }
+
   /**
    * Relación a la tabla users
    * @return Eloquent
@@ -116,6 +121,9 @@ class Proyecto extends Model
     ->withPivot('aprobacion');
   }
 
+  /**
+   * Relación con la tabla de ideas
+   */
   public function idea()
   {
     return $this->belongsTo(Idea::class, 'idea_id', 'id');
@@ -186,22 +194,23 @@ class Proyecto extends Model
   /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
 
   /*===================================================================
-  =            scope para consultar por estado de proyecto            =
-  ===================================================================*/
+    =            scope para consultar por estado de proyecto            =
+    ===================================================================*/
 
-  public function scopeEstadoOfProjects($query, array $estado = [])
-  {
+    public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
+    {
+        return $query->with($relations)->whereHas(
+            'estadoproyecto', function ($query) use ($estado) {
+                $query->whereIn('nombre', $estado);
+            }
+        );
 
-    if ($this->estadoproyecto()->exists()) {
-      return $query->whereHas(
-      'estadoproyecto', function ($query) use ($estado) {
-        $query->whereIn('nombre', $estado);
-      }
-      );
     }
-    return $query;
-  }
 
-  /*=====  End of scope para consultar por estado de proyecto  ======*/
+    /*=====  End of scope para consultar por estado de proyecto  ======*/
 
   }
+
+
+    
+

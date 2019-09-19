@@ -7,18 +7,16 @@ use App\Models\Nodo;
 
 class LineaRepository
 {
-	 /*=================================================================
+    /*=================================================================
     =            metodo para consultar las lineas por nodo            =
     =================================================================*/
-    
+
     public function getAllLineaNodo($nodo)
     {
         return Nodo::allLineasPorNodo($nodo);
     }
-    
-    
-    /*=====  End of metodo para consultar las lineas por nodo  ======*/
 
+    /*=====  End of metodo para consultar las lineas por nodo  ======*/
 
     /**
      * metodo para consular el id y nombre de las linas
@@ -40,12 +38,8 @@ class LineaRepository
      */
     public function findLineaForShow($linea)
     {
-        return LineaTecnologica::with(['nodos','nodos.entidad','nodos.entidad.centro','nodos.entidad.ciudad','nodos.entidad.ciudad.departamento','sublineas'])->select('id', 'abreviatura', 'nombre', 'descripcion', 'created_at')->findOrFailLinea($linea);
-        // return LineaTecnologica::findLinea($linea);
+        return LineaTecnologica::with(['nodos', 'nodos.entidad', 'nodos.entidad.centro', 'nodos.entidad.ciudad', 'nodos.entidad.ciudad.departamento', 'sublineas'])->select('id', 'abreviatura', 'nombre', 'descripcion', 'created_at')->findOrFailLinea($linea);
+
     }
 
-
-
-   
-    
 }

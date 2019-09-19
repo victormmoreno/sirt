@@ -26,6 +26,8 @@ class PdfComiteController extends Controller
   public static function printPDFNoAceptado($informacion)
   {
     // dd($informacion);
+    $nodo = Nodo::find( auth()->user()->infocenter->nodo_id );
+    $informacion['telefonoNodo'] = $nodo->telefono;
     $pdf = PDF::loadView('pdf.csibt.pdf_idea_rechazada', $informacion);
     // dd($pdf);
     return $pdf->stream();

@@ -142,8 +142,8 @@ class LineaController extends Controller
         $linea = $this->lineaRepository->findLineaForShow($linea);
 
         $this->authorize('show', $linea);
-        // return $linea;
-        return view('lineas.administrador.show', compact('linea'));
+        
+        return view('lineas.administrador.show', ['linea' => $linea]);
     }
 
     /**

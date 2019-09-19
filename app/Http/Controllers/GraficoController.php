@@ -50,10 +50,10 @@ class GraficoController extends Controller
   }
 
   /**
-   * Vista para mostrar los gráficos de las edts
-   * @return Response
-   * @author dum
-   */
+  * Vista para mostrar los gráficos de las edts
+  * @return Response
+  * @author dum
+  */
   public function edtsGraficos()
   {
     if ( Session::get('login_role') == User::IsDinamizador() ) {
@@ -61,6 +61,11 @@ class GraficoController extends Controller
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
+    }else if ( Session::get('login_role') == User::IsAdministrador() ) {
+      return view('grafico.administrador.edt', [
+        'nodos' => Nodo::SelectNodo()->get()->pluck('nodos', 'id')
+      ]);
+
     }
   }
 

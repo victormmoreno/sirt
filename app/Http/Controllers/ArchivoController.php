@@ -339,6 +339,8 @@ class ArchivoController extends Controller
         'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
       ]);
       $file = request()->file('nombreArchivo');
+      // dd(request()->file('nombreArchivo'));
+      // exit();
       // La ruta con la se guardan los archivos de un proyecto es la siguiente:
       // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
       $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();

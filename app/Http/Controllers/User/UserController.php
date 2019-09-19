@@ -66,25 +66,17 @@ class UserController extends Controller
             'talento.articulacionproyecto'        => function ($query) {
                 $query->select('articulacion_proyecto.id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
             },
-            'talento.articulacionproyecto.proyecto.sublinea.linea',
+            // 'talento.articulacionproyecto.proyecto.sublinea.linea',
             'talento.articulacionproyecto.articulacion.tipoarticulacion'])
             ->select('id', 'tipodocumento_id', 'gradoescolaridad_id', 'eps_id', 'ciudad_id', 'nombres', 'apellidos', 'documento', 'email', 'barrio', 'direccion', 'celular', 'telefono', 'fechanacimiento', 'genero', 'otra_eps', 'institucion', 'titulo_obtenido', 'estrato', 'otra_ocupacion', 'created_at')
-        // ->whereHas('talento.articulacionproyecto.proyecto.sublinea.linea.nodos', function ($query) use ($nodo) {
-        //     $query->where('nodos.id', $nodo);
-        // })
             ->whereHas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
                 $query->where('nodos.id', $nodo);
             })
             ->get();
-        $userdata = User::whereHas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
-            $query->where('nodos.id', $nodo);
-        })
-            ->get();
+       
 
-        // return $userdata;
+        // return $user;
 
-        // $user = User::with(['talento.articulacionproyecto.proyecto.sublinea.linea.nodos'])->get();
-        // dd($user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.index', [
@@ -285,7 +277,6 @@ class UserController extends Controller
         } else {
             alert()->error("El Usuario {$user->nombres} {$user->apellidos} no ha sido  modificado.", 'Modificación Errónea', "error");
         }
-
         //redireccion
         return redirect()->route('usuario.index');
     }

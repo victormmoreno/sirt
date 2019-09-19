@@ -17,8 +17,16 @@ class Departamento extends Model
         'nombre',
     ];
 
-    public $timestamps = false;
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'nombre' => 'string',
+    ];
 
+    public $timestamps = false;
 
     /*===========================================
     =            relaciones eloquent            =

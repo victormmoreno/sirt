@@ -41,7 +41,7 @@ class LineaTecnologicaPolicy
         return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
     }
 
-    public function show(User $user, LineaTecnologica $linea)
+    public function show(User $user)
     {
         return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
     }

@@ -3,8 +3,8 @@ $(document).ready(function() {
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
+        "lengthChange": false
     });
-    // $('.dataTables_length select').addClass('browser-default');
 });
 var selectLaboratorioNodo = {
     selectLaboraotrioForNodo: function() {
@@ -18,12 +18,15 @@ var selectLaboratorioNodo = {
                 },
                 processing: true,
                 serverSide: true,
-                order: false,
+                "lengthChange": false,
                 ajax: {
                     url: "/laboratorio/nodo/" + nodo,
                     type: "get",
                 },
-
+                dom: "Bfrtip",
+                buttons: [
+                    
+                ],
                 columns: [{
                     data: 'nombre',
                     name: 'nombre',
@@ -55,7 +58,12 @@ var selectLaboratorioNodo = {
                 }, ],
             });
         }else{
-            $('#laboratorio_administrador_table').DataTable().clear().draw();
+            $('#laboratorio_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
         }
         
     },
