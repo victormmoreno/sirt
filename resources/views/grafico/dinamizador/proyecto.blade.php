@@ -27,7 +27,7 @@
                   <div class="divider"></div>
                   <ul class="collapsible">
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyecto inscritos por año</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyectos inscritos por año</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="input-field col s12 m4 l4">
@@ -110,7 +110,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyectos Finalizados por año</div>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyectos finalizados por año</div>
                       <div class="collapsible-body">
                         <div class="row valign-wrapper">
                           <div class="input-field col s12 m4 l4">
@@ -130,6 +130,33 @@
                           </div>
                           <div class="col s12 m8 l8">
                             <div id="graficoProyectosFinalizadosPorNodoYAnho_variablepie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">library_books</i>Proyectos finalizados por tipo de proyecto</div>
+                      <div class="collapsible-body">
+                        <div class="row">
+                          <div class="col s12 m4 l4">
+                            <div class="input-field col s12 m6 l6">
+                              <input type="text" id="txtfecha_inicio_GraficoProyecto5" name="txtfecha_inicio_GraficoProyecto5" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                              <label for="txtfecha_inicio_GraficoProyecto5">Fecha Inicio</label>
+                            </div>
+                            <div class="input-field col s12 m6 l6">
+                              <input type="text" id="txtfecha_fin_GraficoProyecto5" name="txtfecha_fin_GraficoProyecto5" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                              <label for="txtfecha_fin_GraficoProyecto5">Fecha Fin</label>
+                            </div>
+                            <div class="center">
+                              <button onclick="consultarProyectosFinalizadosPorTipoNodoYFecha_column(0)" class="btn">Consultar</button>
+                            </div>
+                          </div>
+                          <div class="col s12 m8 l8">
+                            <div id="graficoProyectosFinalizadosPorTipoNodoYFecha_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                              <div class="row card-panel">
+                                <h5 class="center">Para consultar la cantidad de proyectos por tipo de proyecto, se deben seleccionar fechas válidas y luego presionar el botón CONSULTAR</h5>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

@@ -74,6 +74,24 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Consulta la cantidad de proyectos FINALIZADOS que tiene un nodo agrupados por tipos de proyectos de un nodo
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Response\Json
+   * @author dum
+   */
+  public function proyectosFinalizadosPorTipoProyectoNodo_Controller($id, $fecha_inicio, $fecha_fin)
+  {
+    $this->condicionalSobreElIdNodo($id);
+    $proyectos = $this->getProyectoRepository()->consultarCantidadDeProyectosFinalizadosPorTipoProyecto_Repository($this->getIdNodo(), $fecha_inicio, $fecha_fin)->get();
+    $datos = $this->getDatosProyectoAgrupados($proyectos);
+    return response()->json([
+      'proyectos' => $datos
+    ]);
+  }
+
+  /**
   * Consulta los proyectos inscritos por año en un nodo (Agrupados por mes)
   *
   * @param int $id Id del nodo

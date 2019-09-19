@@ -75,6 +75,30 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta la cantidad de proyectos que se finalizaron entre dos fechas por nodo y tipos de poyecto
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarCantidadDeProyectosFinalizadosPorTipoProyecto_Repository($id, $fecha_inicio, $fecha_fin)
+  {
+    return Proyecto::select('tiposarticulacionesproyectos.nombre')
+    ->selectRaw('COUNT(proyectos.id) AS cantidad')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->where('nodos.id', $id)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('proyectos.estado_aprobacion', 1)
+    ->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV'])
+    ->groupBy('proyectos.tipoarticulacionproyecto_id');
+  }
+
+  /**
    * Consulta la cantidad de proyectos que se inscribieron entre dos fechas por nodo y tipos de poyecto
    * @param int $id Id del nodo
    * @param string $fecha_inicio Primera fecha para realizar el filtro
@@ -92,6 +116,7 @@ class ProyectoRepository
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->where('nodos.id', $id)
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->where('proyectos.estado_aprobacion', 1)
     ->groupBy('proyectos.tipoarticulacionproyecto_id');
   }
 
@@ -105,11 +130,14 @@ class ProyectoRepository
   {
     return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento', 'fechanacimiento')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
+    ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_expedicion')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto_talento.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
     ->join('users', 'users.id', '=', 'talentos.user_id')
     ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+    ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_expedicion_id')
+    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
     ->where('talento_lider', 1);
   }
 
@@ -144,6 +172,8 @@ class ProyectoRepository
           $archivoRepo = new ArchivoRepository();
           // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
           $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
+          // dd($outputPdf);
+          // exit();
           // Guarda la ruta de los archivos en la base de datos
           $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
 

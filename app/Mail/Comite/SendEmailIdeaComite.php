@@ -32,7 +32,7 @@ class SendEmailIdeaComite extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->markdown('emails.comite.send-email-ideas-comite')
+        return $this->from(config('mail.from.address'), config('mail.from.name'))->markdown('emails.comite.send-email-ideas-comite')
             ->attachData(base64_decode($this->pdf), 'resultados-CSIBT.pdf', [
                 'mime' => 'application/pdf',
             ]);

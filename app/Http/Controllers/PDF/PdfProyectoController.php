@@ -27,6 +27,8 @@ class PdfProyectoController extends Controller
   {
     $proyecto = Proyecto::find($id);
     $talento_lider = $proyectoRepository->consultarTalentoLiderDeUnProyecto($id)->first();
+    // dd($talento_lider);
+    // exit();
     $gestor = $proyectoRepository->pivotAprobaciones($id)->where('roles.name', 'Gestor')->first();
     // dd($proyecto->articulacion_proyecto->actividad->gestor_id);
     $dinamizador = $proyectoRepository->pivotAprobaciones($id)->where('roles.name', 'Dinamizador')->first();

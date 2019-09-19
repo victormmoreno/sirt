@@ -46,7 +46,7 @@ class ProyectoRevisadoFinal extends Notification implements ShouldQueue
       'icon'  => 'library_books',
       'color' => 'green',
       'autor' => "Tecnoparque nodo {$this->getProyecto()->articulacion_proyecto->actividad->nodo->entidad->nombre}",
-      'text'  => "Revisado Final | <p class='red-text'>{$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}</p>",
+      'text'  => "Revisado Final | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
     ];
   }
 

@@ -132,7 +132,7 @@ calibriBold {
     se celebra la presente Acta de Confidencialidad y Compromisos entre la Red TecnoParque SENA Nodo
     <u><calibriBold>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</calibriBold></u> representado por los firmantes abajo en este documento, y por otra parte el Talento
     <u><calibriBold>{{ $talento_lider->nombre_talento }}</b></u>, identificado con <u><calibriBold>{{ $talento_lider->nombre_documento }}</b></u> N° <u><calibriBold>{{ $talento_lider->documento }}</calibriBold></u>
-    de <u><calibriBold>lugar de expedición del documento</calibriBold></u>, quien en adelante se denominará <calibriBold>El Talento Interlocutor</calibriBold> del proyecto:
+    de <u><calibriBold>{{ $talento_lider->ciudad_expedicion }}</calibriBold></u>, quien en adelante se denominará <calibriBold>El Talento Interlocutor</calibriBold> del proyecto:
   </p>
   <br>
   <p style="text-align: justify;" class="marginPdf">

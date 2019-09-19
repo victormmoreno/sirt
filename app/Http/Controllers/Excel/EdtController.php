@@ -1,320 +1,170 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Excel;
 
+use App\Exports\Edts\{EdtsGestorExport, EdtsNodoExport, EdtsUnicaExport};
+use App\Repositories\Repository\{EdtRepository};
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Session, Validator};
-use App\Http\Requests\{EdtFormRequest};
-use App\Repositories\Repository\{EntidadRepository, EdtRepository, UserRepository\GestorRepository};
-use App\Models\{Edt, TipoEdt, AreaConocimiento, Nodo};
+use Carbon\Carbon;
 use App\User;
-use App\Helpers\ArrayHelper;
-use Alert;
+use Excel;
 
 class EdtController extends Controller
 {
 
-  /**
-   * Un objeto la clase EntidadRepository
-   * @var object
-   */
-  private $entidadRepository;
-  /**
-   * Objeto de la clase EdtRepository
-   * @var object
-   */
   private $edtRepository;
-  /**
-  * Objeto de la clase GestorRepository
-  *
-  * @var object
-  */
-  private $gestorRepository;
-  public function __construct(GestorRepository $gestorRepository, EntidadRepository $entidadRepository, EdtRepository $edtRepository)
+  private $query;
+  public function __construct(EdtRepository $edtRepository)
   {
-    $this->entidadRepository = $entidadRepository;
-    $this->edtRepository = $edtRepository;
-    $this->gestorRepository = $gestorRepository;
-    $this->middleware('auth');
+    $this->setEdtRepository($edtRepository);
   }
 
   /**
-  * función para consultar las entidades (empresas) de una edt
-  * @param int id Id de la edt
-  * @param boolean tipo Tipo de petición que se hace (si es 1, se consultará para mostrar la entidades, si es 0 se consultará para mostrar información de la edt)
-  * @return Response
-  * @author Victor Manuel Moreno Vega
-  */
-  public function consultarDetallesDeUnaEdt($id, $tipo)
-  {
-    if (request()->ajax()) {
-      $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id)->toArray();
-      $edt = ArrayHelper::validarDatoNullDeUnArray($edt);
-      if ($tipo = 1) {
-        $entidades = $this->edtRepository->entidadesDeUnaEdt($id);
-        return response()->json([
-          'entidades' => $entidades,
-          'edt' => $edt
-        ]);
-      } else {
-        return response()->json([
-          'edt' => $edt,
-        ]);
-      }
-    }
-  }
-
-  /**
-   * Entregables de una edt
-   * @param int id Id de la edt
-   * @return Response
-   * @author Victor Manuel Moreno Vega
+   * Genera el excel con las edts de un nodo por línea tecnológica entre fechas de cierre
+   * @param int $id Id del nodo
+   * @param int $idlinea Id de la línea tecnológica
+   * @param string $fecha_inicio Primera fecha para realizar el filtro (fecha de cierre)
+   * @param string $fecha_fin Segunda fecha para realizar el filtro (fecha de cierre)
+   * @return Response\Excel
+   * @author dum
    */
-  public function entregables($id)
+  public function edtPorFechaCierreLineaYNodo($id, $idlinea, $fecha_inicio, $fecha_fin)
   {
-    // $edts = Edt::find($id)->rutamodel->id;
-    // dd($edts);
-    $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
-    // $edt = ArrayHelper::validarDatoNullDeUnArray($edt);
-    if ( Session::get('login_role') == User::IsGestor() ) {
-      return view('edt.gestor.evidencias', [
-        'edt' => $edt,
-      ]);
-    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-      return view('edt.dinamizador.evidencias', [
-        'edt' => $edt
-      ]);
-    } else {
-      return view('edt.dinamizador.evidencias', [
-        'edt' => $edt
-      ]);
-    }
-  }
-
-  /**
-  * Datatable que muestra las edts
-  * @param object consulta Consulta la cual se generará la datatable
-  * @return Response
-  * @author Victor Manuel Moreno Vega
-  */
-  private function datatableEdts($consulta)
-  {
-    return datatables()->of($consulta)
-    ->addColumn('details', function ($data) {
-      $details = '
-      <a class="btn light-blue m-b-xs" onclick="detallesDeUnaEdt(' . $data->id . ')">
-        <i class="material-icons">info</i>
-      </a>
-      ';
-      return $details;
-    })->addColumn('edit', function ($data) {
-      if ( $data->estado == 'Inactiva') {
-        $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
-      } else {
-        $edit = '<a class="btn m-b-xs" href='.route('edt.edit', $data->id).'><i class="material-icons">edit</i></a>';
-      }
-      return $edit;
-    })->addColumn('entregables', function ($data) {
-      $entregables = '
-      <a class="btn blue-grey m-b-xs" href='. route('edt.entregables', $data->id) .'>
-        <i class="material-icons">library_books</i>
-      </a>
-      ';
-      return $entregables;
-    })->addColumn('business', function ($data) {
-      $empresas = '
-      <a class="btn cyan m-b-xs" onclick="verEntidadesDeUnaEdt(' . $data->id . ')">
-        <i class="material-icons">business</i>
-      </a>
-      ';
-      return $empresas;
-    })->rawColumns(['details', 'edit', 'business', 'entregables'])->make(true);
-  }
-
-  /**
-   * datatable para mostrar las edts de un nodo
-   * @param int idnodo Id del nodo
-   * @return Collection
-   */
-  public function consultarEdtsDeUnNodo($idnodo)
-  {
-    $id = "";
+    $idnodo = $id;
     if ( Session::get('login_role') == User::IsDinamizador() ) {
-      $id = auth()->user()->dinamizador->nodo_id;
-    } else {
-      $id = $idnodo;
+      $idnodo = auth()->user()->dinamizador->nodo_id;
     }
-    $edts = $this->edtRepository->consultarEdtsDeUnNodo($id);
-    return $this->datatableEdts($edts);
+
+    $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+    ->where('nodos.id', $idnodo)
+    ->where('lineastecnologicas.id', $idlinea)
+    ->get();
+    $this->setQuery($query);
+    // Aunque el excel se está generando con la clase EdtsNodoExport, en realidad no importa, ya que lo único que cambia es el query
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }
 
   /**
-   * Muestra las edts de un gestor
-   * @param int id Id de un gestor
-   * @return Response
+   * Genera el excel con las edts de un gestor finalizadas por fechas
+   * @param int $id Id del gestor
+   * @param string $fecha_inicio Primera fecha del filtro
+   * @param string $fecha_cierre Segunda fecha del filtro
+   * @return Response\Excel
+   * @author dum
    */
-  public function consultarEdtsDeUnGestor($idgestor)
+  public function edtPorFechaCierreYGestor($id, $fecha_inicio, $fecha_fin)
   {
-    $id = "";
+    $idgestor = $id;
     if ( Session::get('login_role') == User::IsGestor() ) {
-      $id = auth()->user()->gestor->id;
+      $idgestor = auth()->user()->gestor->id;
     }
-    $edts = $this->edtRepository->consultarEdtsDeUnGestor($id);
-    return $this->datatableEdts($edts);
+    $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->get();
+    $this->setQuery($query);
+    // Aunque el excel se está generando con la clase EdtsNodoExport, en realidad no importa, ya que lo único que cambia es el query
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }
 
   /**
-  * Display a listing of the resource.
-  *
-  * @return \Illuminate\Http\Response
-  */
-  public function index()
+   * Genera el excel con las edts de un nodo finalizadas entre dos fecha (la fecha de filtro es la fecha_cierre)
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para filtrar
+   * @return Response\Excel
+   * @author dum
+   */
+  public function edtPorFechaCierreYNodo($id, $fecha_inicio, $fecha_fin)
   {
-    if ( Session::get('login_role') == User::IsGestor() ) {
-      return view('edt.gestor.index');
-    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-      return view('edt.dinamizador.index');
-    } else {
-      return view('edt.administrador.index', [
-        'nodos' => Nodo::SelectNodo()->get()
-      ]);
+    $idnodo = $id;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
     }
+    $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
+    $this->setQuery($query);
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }
 
   /**
-  * Show the form for creating a new resource.
-  *
-  * @return \Illuminate\Http\Response
-  */
-  public function create()
+   * Genera el excel para as edts de un gestor
+   * @param int $id Id del gestor
+   * @return Response
+   * @author dum
+   */
+  public function edtsDeUnGestor($id)
   {
-    return view('edt.gestor.create', [
-      'areasconocimiento' => AreaConocimiento::all()->pluck('nombre', 'id'),
-      'tiposedt' => TipoEdt::all(),
-    ]);
+    $query = $this->getEdtRepository()->consultarEdtsDeUnGestor($id);
+    $this->setQuery($query);
+    return Excel::download(new EdtsGestorExport($this->getQuery()), 'Edt.xls');
   }
 
   /**
-  * Store a newly created resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @return \Illuminate\Http\Response
-  */
-  public function store(Request $request)
+   * General el excel para las edts de un nodo
+   * @param int $id Id del nodo
+   * @return Response
+   * @author dum
+   */
+  public function edtsDeUnNodo($id)
   {
-    
-    $req = new EdtFormRequest;
-    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-    if ($validator->fails()) {
-      return response()->json([
-        'fail' => true,
-        'errors' => $validator->errors(),
-      ]);
-    }
-    $result = $this->edtRepository->storeEdtRepository($request);
-    if ($result == false) {
-      return response()->json([
-        'fail' => false,
-        'redirect_url' => "false"
-      ]);
-    } else {
-      return response()->json([
-        'fail' => false,
-        'redirect_url' => url(route('edt'))
-      ]);
-    }
+    $query = $this->getEdtRepository()->consultarEdtsDeUnNodo($id);
+    $this->setQuery($query);
+    return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }
 
   /**
-  * Show the form for editing the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  * @author Victor Manuel Moreno Vega
-  *
-  */
-  public function edit($id)
+   * Genera el excel de una edt
+   * @param int $id Id de la edt
+   * @return Response
+   * @author dum
+   */
+  public function edtsPorId($id)
   {
-    if ( Session::get('login_role') == User::IsGestor() ) {
-      return view('edt.gestor.edit', [
-        'edt' => $this->edtRepository->consultarDetalleDeUnaEdt($id),
-        'areasconocimiento' => AreaConocimiento::all()->pluck('nombre', 'id'),
-        'tiposedt' => TipoEdt::all(),
-        'entidades' => $this->edtRepository->entidadesDeUnaEdt($id)
-      ]);
-    } else {
-      $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
-      $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($edt->linea_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
-      return view('edt.dinamizador.edit', [
-        'edt' => $edt,
-        'gestores' => $gestores
-      ]);
-    }
+    $query = $this->getEdtRepository()->consultarDetalleDeUnaEdt($id);
+    $this->setQuery($query);
+    $entidades = $this->getEdtRepository()->entidadesDeUnaEdt($id);
+    return Excel::download(new EdtsUnicaExport($this->getQuery(), $entidades), 'Edt ' . $this->getQuery()->codigo_edt . '.xls');
   }
 
   /**
-  * Update the specified resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function update(Request $request, $id)
-  {
-    if ( Session::get('login_role') == User::IsGestor() ) {
-      $req = new EdtFormRequest;
-      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-      if ($validator->fails()) {
-        return response()->json([
-          'fail' => true,
-          'errors' => $validator->errors(),
-        ]);
-      }
-      $result = $this->edtRepository->updateEdtRepository($request, $id);
-      if ($result == false) {
-        return response()->json([
-          'fail' => false,
-          'redirect_url' => "false"
-        ]);
-      } else {
-        return response()->json([
-          'fail' => false,
-          'redirect_url' => url(route('edt'))
-        ]);
-      }
-    } else {
-      $validator = Validator::make($request->all(), [
-        'txtgestor_id' => 'required'
-      ], ['txtgestor_id.required' => 'El Gestor es obligatorio.']);
-      if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput();
-      }
-      $update = $this->edtRepository->updateGestorEdt_Repository($request, $id);
-      if ($update) {
-        Alert::success('Modificación Existosa!', 'El gestor de la edt se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
-        return redirect('edt');
-      } else {
-        Alert::error('Modificación Errónea!', 'El gestor de la edt no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
-        return back();
-      }
-    }
+   * Inicio del encapsulamiento
+   */
 
+  /**
+   * Asigna un valor a $edtRepository
+   * @param object $edtRepository
+   * @return void
+   * @author dum
+   */
+  private function setEdtRepository($edtRepository) {
+    $this->edtRepository = $edtRepository;
   }
 
   /**
-  * Modifica los entregables de una edt
-  * @param  \Illuminate\Http\Request  $request
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function updateEntregables(Request $request, $id)
-  {
-    $result = $this->edtRepository->updateEntregableRepository($request, $id);
-    if ($result) {
-      Alert::success('Los entregables de la EDT se han modificado exitosamente!', 'Modificación Existosa!')->showConfirmButton('Ok', '#3085d6');
-      return redirect('edt');
-    } else {
-      Alert::error('Los entregables de la EDT no se han modificado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
-    }
+   * Retorna el valor de $edtRepository
+   * @return object
+   * @author dum
+   */
+  private function getEdtRepository(){
+    return $this->edtRepository;
+  }
+
+  /**
+   * Asigna un valor a $query
+   * @param object $query
+   * @return void
+   * @author dum
+   */
+  private function setQuery($query) {
+    $this->query = $query;
+  }
+
+  /**
+   * Retorna el valor de $query
+   * @return object
+   * @author dum
+   */
+  private function getQuery(){
+    return $this->query;
   }
 }

@@ -4954,7 +4954,8 @@ var graficosProyectoId = {
   grafico1: 'graficosProyectoPorMesYNodo_combinate',
   grafico2: 'graficosProyectoConEmpresaPorMesYNodo_combinate',
   grafico3: 'graficoProyectosPorTipoNodoYFecha_column',
-  grafico4: 'graficoProyectosFinalizadosPorNodoYAnho_variablepie'
+  grafico4: 'graficoProyectosFinalizadosPorNodoYAnho_column',
+  grafico5: 'graficoProyectosFinalizadosPorTipoNodoYFecha_column'
 };
 
 function alertaNodoNoValido() {
@@ -4967,6 +4968,10 @@ function alertaGestorNoValido() {
 
 function alertaLineaNoValido() {
   Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+}
+
+function alertaFechasNoValidas() {
+  Swal.fire('Advertencia!', 'Seleccione fechas válidas!', 'warning');
 }
 
 function generarExcelGrafico3Edt(bandera) {
@@ -5211,6 +5216,31 @@ function graficosProyectosAgrupados(data, name, name_label) {
       }
     }]
   });
+}
+
+function consultarProyectosFinalizadosPorTipoNodoYFecha_column(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_GraficoProyecto5').val();
+  let fecha_fin = $('#txtfecha_fin_GraficoProyecto5').val();
+  if (bandera == 1) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( fecha_inicio > fecha_fin ) {
+    alertaFechasNoValidas();
+  } else {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+      success: function (data) {
+        graficosProyectosAgrupados(data, graficosProyectoId.grafico5, 'Tipo de Proyecto');
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+  }
 }
 
 function consultarProyectosInscritosPorTipoNodoYFecha_column(bandera) {
