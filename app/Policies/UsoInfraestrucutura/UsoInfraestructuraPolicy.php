@@ -55,13 +55,13 @@ class UsoInfraestructuraPolicy
     }
 
     /**
-     * Determine whether the user can show usos de infraestructura.
+     * Determine whether the user can show and edit usos de infraestructura.
      *
      * @param  \App\User  $user
      * @param  \App\Models\UsoInfraestructura  $uso
      * @return bool
      */
-    public function show(User $user, UsoInfraestructura $uso)
+    public function showEdit(User $user, UsoInfraestructura $uso)
     {
         if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsAdministrador()) {
             return true;

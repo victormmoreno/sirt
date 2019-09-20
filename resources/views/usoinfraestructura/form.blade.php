@@ -24,19 +24,36 @@
             <div class="row">
                 <div class="input-field col s12 m12 l12">
                     <p class="center p-v-xs">
-                        <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
-                        <label for="IsProyecto">
-                            Proyectos
-                        </label>
-                        <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
-                        <label for="IsArticulacion">
-                            Articulaciones
-                        </label>
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                            <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
-                            <label for="IsEdt">
-                                EDT
+                        @if(isset($usoinfraestructura->tipo_usoinfraestructura))
+                            <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsProyecto() ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
+                            <label for="IsProyecto">
+                                Proyectos
                             </label>
+                            <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion() ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
+                            <label for="IsArticulacion">
+                                Articulaciones
+                            </label>
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsEdt() ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
+                                <label for="IsEdt">
+                                    EDT
+                                </label>
+                            @endif
+                        @else
+                            <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
+                            <label for="IsProyecto">
+                                Proyectos
+                            </label>
+                            <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
+                            <label for="IsArticulacion">
+                                Articulaciones
+                            </label>
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
+                                <label for="IsEdt">
+                                    EDT
+                                </label>
+                            @endif
                         @endif
                     </p>
                     <center>
@@ -65,10 +82,20 @@
                     <i class="material-icons prefix">
                         vertical_split
                     </i>
+                    {{-- {{var_dump($usoinfraestructura->actividad->gestor->user->documento)}} --}}
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                    <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$authUser->gestor->lineatecnologica->nombre}}"/>
+                        @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
+                        @else
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                        @endif
+                   
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        <input id="txtlinea" name="txtlinea" readonly="" type="text" value="primero seleccione el tipo de uso de infraestructura"/>
+                        @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
+                        @else
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                        @endif
                     @endif
                     <label class="active" for="txtlinea">
                         Linea
@@ -84,9 +111,19 @@
                         account_circle
                     </i>
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                    <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$authUser->documento}} - {{$authUser->nombres}} {{$authUser->apellidos}}"/>
+
+                        @if(isset($usoinfraestructura->actividad->gestor->user))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
+                        @else
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                        @endif
+                    
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        <input id="txtgestor" name="txtgestor" readonly="" type="text" value="primero seleccione el tipo de uso de infraestructura"/>
+                        @if(isset($usoinfraestructura->actividad->gestor->user))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
+                        @else
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                        @endif
                     @endif
                     <label class="active" for="txtgestor">
                         Gestor
@@ -106,13 +143,32 @@
                     <i class="material-icons prefix">
                         library_books
                     </i>
-                    <input id="txtactividad" name="txtactividad"  type="text" readonly />
-                    <label for="txtactividad">
-                        seleccione un tipo de uso de infraestructura
-                        <span class="red-text">
-                            *
-                        </span>
-                    </label>
+                    @if(isset($usoinfraestructura->actividad->nombre))
+                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->actividad->codigo_actividad) ? $usoinfraestructura->actividad->codigo_actividad :  old('txtactividad')}} - {{ isset($usoinfraestructura->actividad->nombre) ? $usoinfraestructura->actividad->nombre : old('txtactividad')}}" readonly />
+                        <label for="txtactividad">
+                            @if($usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsProyecto())
+                                Proyecto
+                            @elseif($usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion())
+                                Articulación
+                            @elseif($usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsEdt())
+                                Edt
+                            @else
+                                seleccione un tipo de uso de infraestructura
+                            @endif
+                            <span class="red-text">
+                                *
+                            </span>
+                        </label>
+                    @else
+                        <input id="txtactividad" name="txtactividad"  type="text" readonly />
+                        <label for="txtactividad">
+                                seleccione un tipo de uso de infraestructura
+                            <span class="red-text">
+                                *
+                            </span>
+                        </label>
+                    @endif
+                    
                     <label class="error" for="txtactividad" id="txtactividad-error"></label>
                 </div>
             </div>
@@ -144,7 +200,11 @@
                     <i class="material-icons prefix">
                         book
                     </i>
-                    <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  />
+                    @if(isset($usoinfraestructura->asesoria_directa))
+                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="{{ isset($usoinfraestructura->asesoria_directa) ? $usoinfraestructura->asesoria_directa :  old('txtasesoriadirecta')}}" />
+                    @else
+                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  />
+                    @endif
                     <label class="active" for="txtasesoriadirecta">
                         Asesoria Directa (Horas)
                     </label>
@@ -155,7 +215,11 @@
                     <i class="material-icons prefix">
                         bookmark
                     </i>
-                    <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  />
+                    @if(isset($usoinfraestructura->asesoria_indirecta))
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="{{ isset($usoinfraestructura->asesoria_indirecta) ? $usoinfraestructura->asesoria_indirecta :  old('txtasesoriaindirecta')}}" /> 
+                    @else
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  />
+                    @endif
                     <label class="active" for="txtasesoriaindirecta">
                         Asesoria Indirecta (Horas)
                     </label>
@@ -167,8 +231,14 @@
                     <i class="material-icons prefix">
                         create
                     </i>
-                    <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
-                    </textarea>
+                    @if(isset($usoinfraestructura->descripcion))
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
+                            {{$usoinfraestructura->descripcion}}
+                        </textarea>
+                    @else
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
+                        </textarea>
+                    @endif
                     <label for="txtdescripcion">
                         Descripción
                         <span class="red-text">
@@ -213,9 +283,21 @@
                     <div class="row">
                         <div class="input-field col s10 m10 l11">
                             <select class="js-states"    id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
-                                <option value="">
-                                    Seleccione primero el tipo de uso de infraestructura
-                                </option>
+                                @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
+                                    <option value="">
+                                        Seleccione Talento
+                                    </option>
+                                    @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
+                                    <option value="">
+                                        {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
+                                    </option>
+                                    @endforeach
+                                @else
+                                    <option value="">
+                                        Seleccione primero el tipo de uso de infraestructura
+                                    </option>
+                                @endif
+                                
                             </select>
                             <label class="active" for="txttalento">
                                 Talento
@@ -232,14 +314,25 @@
                             </a>
                         </div>
                     </div>
-
+                    {{-- {{var_dump($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios)}} --}}
                     <div class="row">
                         <div class="input-field col s5 m6 l6">
                             <!-- <i class="material-icons prefix">local_drink</i> -->
                             <select class="js-states" id="txtlaboratorio" name="txtlaboratorio" style="width: 100%" tabindex="-1">
-                                <option value="">
-                                    Seleccione Laboratorio
-                                </option>
+                                @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios))
+                                    <option value="">
+                                        Seleccione Laboratorio
+                                    </option>
+                                    @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios as $laboratorio)
+                                    <option value="">
+                                        {{$laboratorio->nombre}}
+                                    </option>
+                                    @endforeach
+                                @else
+                                    <option value="">
+                                        Seleccione primero el tipo de uso de infraestructura
+                                    </option>
+                                @endif
                             </select>
                             <label class="active" for="txtlaboratorio">
                                 Laboratorio
@@ -256,7 +349,7 @@
                             </input>
                         </div>
                         <div class="col s2 m2 l1">
-                            <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregartimelaboratorio" data-delay="50" data-position="button" data-tooltip="Agregar Uso"  onclick="usoInfraestructuraCreate.agregarLaboratorio()">
+                            <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregartimelaboratorio" data-delay="50" data-position="button" data-tooltip="Agregar Uso"  onclick="agregarLaboratorioAusoInfraestructura()">
                                 <i class="material-icons">
                                     add
                                 </i>

@@ -9,7 +9,7 @@
       </section>
       <div class="header-title col s2 m2 l2">
         <a href="">
-          <img class="chapter-title responsive-img" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
+          <img class="chapter-title " height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
         </a>
       </div>
       <ul class="right col s10 m10 l10 nav-right-menu">

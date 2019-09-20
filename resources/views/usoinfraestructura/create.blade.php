@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Usuarios')
+@section('meta-title', 'Nuevo Uso de Infraestructura')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -26,7 +26,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{route('nodo.index')}}">
+                                <a href="{{route('usoinfraestructura.index')}}">
                                     Uso de Infraestructura
                                 </a>
                             </li>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="card">
                     <div class="card-content">
-                        @if($cantidadActividades >= 0)
+                        @if($cantidadActividades != 0)
                         <div class="row">
                             <div class="row">
                                 <center>
@@ -59,36 +59,43 @@
                             </div>
                         </div>
                         @else
+                        <div class="row">
                             <div class="row">
-                                <div class="row">
-                                    <center>
-                                        <span class="card-title center-align">
-                                            Nuevo Uso de Infraestructura
-                                        </span>
-                                        <i class="Small material-icons prefix">
-                                            domain
-                                        </i>
-                                    </center>
-                                    <div class="divider"></div>
+                                <center>
+                                    <span class="card-title center-align">
+                                        Nuevo Uso de Infraestructura
+                                    </span>
+                                    <i class="Small material-icons prefix">
+                                        domain
+                                    </i>
+                                </center>
+                                <div class="divider">
                                 </div>
                             </div>
-                            <div class="center-align">
-                                <i class="large material-icons prefix">
-                                    block
-                                </i>
-                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                    <p>Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.</p>
-                                    <p>Aún no tienes articulaciones en fase de inicio o en fase de ejecución.</p>
-                                    <p>Aún no tienes EDTS registradas.</p>
-                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-
-                                    <p>Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el gestor asesor.</p>
-                                    <p>Aún no tienes articulaciones en fase de inicio o en fase de ejecución. Por favor consulta con el gestor asesor.</p>
-                                    <p>Aún no tienes EDTS registradas. Por favor consulta con el gestor asesor.</p>
-                                @endif
-                            </div>
-                            
-                            
+                        </div>
+                        <div class="center-align">
+                            <i class="large material-icons prefix">
+                                block
+                            </i>
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                            <p>
+                                Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.
+                            </p>
+                            <p>
+                                Aún no tienes articulaciones en fase de inicio o en fase de ejecución.
+                            </p>
+                            <p>
+                                Aún no tienes EDTS registradas.
+                            </p>
+                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                            <p>
+                                Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el gestor asesor.
+                            </p>
+                            <p>
+                                Aún no tienes articulaciones en fase de inicio o en fase de ejecución. Por favor consulta con el gestor asesor.
+                            </p>
+                            @endif
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -96,11 +103,11 @@
         </div>
     </div>
 </main>
-@if($cantidadActividades >= 0)
+@if($cantidadActividades != 0)
 @include('usoinfraestructura.modals')
 @endif
 @endsection
-@if($cantidadActividades >= 0)
+@if($cantidadActividades != 0)
 @push('script')
 <script>
     $(document).ready(function() {
@@ -155,7 +162,7 @@
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
-                        title: 'Articulación',
+                        title: 'EDT',
                         text: "por favor seleccione una edt ",
                         type: 'warning',
                         showConfirmButton: false,
@@ -214,29 +221,7 @@
 
             
         },
-        // Función para cerrar el modal y asignarle un valor al proyecto
-        asociarProyectoAUsoInfraestructura: function (id, codigo_actividad, nombre, talentos) {
-            $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
-            });
 
-
-            
-
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
-            $("label[for='txtactividad']").addClass('active');
-            $("label[for='txtactividad']").text("Proyecto");
-            $divActividad.show();
-
-            usoInfraestructuraCreate.getSelectTalentoProyecto(id);
-
-        },
         getSelectTalentoProyecto:function (id){
             $.ajax({
                 dataType:'json',
@@ -321,8 +306,6 @@
         },
 
         //ARTICULACIONES 
-        
-
         dataTableArtculacionFindByUser: function () {
             $('#usoinfraestrucutaArticulacionesForUserTable').dataTable().fnDestroy();
             $('#usoinfraestrucutaArticulacionesForUserTable').DataTable({
@@ -370,26 +353,7 @@
                 dismissible: false,
             });
         },
-        // Función para cerrar el modal y asignarle un valor al proyecto
-        asociarArticulacionAUsoInfraestructura: function (id, codigo_actividad, nombre) {
-            $('#modalUsoIngraestrucuta_articulaciones_modal').closeModal();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
-            });
-
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
-            $("label[for='txtactividad']").addClass('active');
-            $("label[for='txtactividad']").text("Articulación");
-            $divActividad.show();
-
-            usoInfraestructuraCreate.getSelectTalentoArtculacionEmprendedores(id);
-
-        },
+        
         getSelectTalentoArtculacionEmprendedores:function (id){
             $.ajax({
                 dataType:'json',
@@ -632,74 +596,15 @@
               });
         },
 
-        //agregar laboratorios
-
-
-        agregarLaboratorio: function(){
-            
-            let  cont = 0;
-            let idlaboratorio = $("#txtlaboratorio").val();
+        
+        validateTiempoUso: function (){
             let tiempouso = $("#txttiempouso").val();
-            let nombreLaboratorio = $('#txtlaboratorio option:selected').text();
-
-            
-
-
-            if ($("#txtlaboratorio").val() == ""){
-                  Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'warning',
-                    title: 'Debe seleccionar un laboratorio.'
-                  });
-
-            }else  if ($("#txttiempouso").val() == ""){
-              Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'warning',
-                    title: 'Debe ingresa el tiempo de uso'
-                  });
+            let re = new RegExp("^[0-9]{1,2}(?:.[0-9]{1})?$");
+            if (re.test(tiempouso) == true) {
+                return true;
             }else{
-              if (usoInfraestructuraCreate.noRepeatLaboratorio() == true) {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'success',
-                    title: 'Laboratorio ' + nombreLaboratorio + ' agregado.'
-                });
-
-                
-
-
-
-                var a = document.getElementsByName("laboratorio[]");
-                let fila ="";
-
-                fila = '<tr class="selected" id="filaLaboratorio'+cont+'"><td><input type="hidden" name="laboratorio[]" value="'+idlaboratorio+'">'+nombreLaboratorio+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="usoInfraestructuraCreate.eliminarLaboratorio('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
-                cont++;
-                $('#detallesUsoInfraestructura').append(fila);
-              }else{
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'error',
-                    title: 'El laboratorio ' + nombreLaboratorio + ' ya esta listado.'
-                  });
-                
-              }
-            }
-            $("#txtlaboratorio option[value='']").attr("selected", true);
-            $('#txtlaboratorio').material_select();
-            $("#txttiempouso").val('');
+                return false;
+            };
             
         },
 
@@ -736,13 +641,7 @@
             $('#txtarticulacion').removeAttr('value');
             $('#txtedt').removeAttr('value');
         },
-        volverModal: function (){
-            $('#txtactividad').val('');
-            $("label[for='txtactividad']").removeClass('active');
-            $("label[for='txtactividad']").text("seleccione un tipo de uso de infraestructura");
-            usoInfraestructuraCreate.removeOptionsSelect();
-            $divActividad.show();
-        }
+        
 
     }
     
@@ -811,6 +710,129 @@
             }
         });
     });
+
+    function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre, talentos) {
+            $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              type: 'success',
+              title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            });
+
+
+            
+
+            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $("label[for='txtactividad']").addClass('active');
+            $("label[for='txtactividad']").text("Proyecto");
+            $divActividad.show();
+
+            usoInfraestructuraCreate.getSelectTalentoProyecto(id);
+
+    }
+
+    function volverModalusoInfrestructura(){
+        $('#txtactividad').val('');
+        $("label[for='txtactividad']").removeClass('active');
+        $("label[for='txtactividad']").text("seleccione un tipo de uso de infraestructura");
+        usoInfraestructuraCreate.removeOptionsSelect();
+        $divActividad.show();
+    }
+
+    function agregarLaboratorioAusoInfraestructura(){
+            
+            let  cont = 0;
+            let idlaboratorio = $("#txtlaboratorio").val();
+            let tiempouso = $("#txttiempouso").val();
+            let nombreLaboratorio = $('#txtlaboratorio option:selected').text();
+
+            if ($("#txtlaboratorio").val() == ""){
+                  Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'Debe seleccionar un laboratorio.'
+                  });
+
+            }else  if ($("#txttiempouso").val() == ""){
+              Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'Debe ingresa el tiempo de uso'
+                  });
+            }else if(usoInfraestructuraCreate.validateTiempoUso() != true){
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'error',
+                    title: 'El tiempo de uso debe ser un valor numerico entre 0 y 99.9.'
+                });
+            }else{
+              if (usoInfraestructuraCreate.noRepeatLaboratorio() == true) {
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'success',
+                    title: 'Laboratorio ' + nombreLaboratorio + ' agregado.'
+                });
+
+                var a = document.getElementsByName("laboratorio[]");
+                let fila ="";
+
+                fila = '<tr class="selected" id="filaLaboratorio'+cont+'"><td><input type="hidden" name="laboratorio[]" value="'+idlaboratorio+'">'+nombreLaboratorio+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="usoInfraestructuraCreate.eliminarLaboratorio('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                cont++;
+                $('#detallesUsoInfraestructura').append(fila);
+              }else{
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'error',
+                    title: 'El laboratorio ' + nombreLaboratorio + ' ya esta listado.'
+                  });
+                
+              }
+            }
+            $("#txtlaboratorio option[value='']").attr("selected", true);
+            $('#txtlaboratorio').material_select();
+            $("#txttiempouso").val('');
+            
+        }
+
+        // Función para cerrar el modal y asignarle un valor al proyecto
+        function asociarArticulacionAUsoInfraestructura(id, codigo_actividad, nombre) {
+            $('#modalUsoIngraestrucuta_articulaciones_modal').closeModal();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              type: 'success',
+              title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            });
+
+            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $("label[for='txtactividad']").addClass('active');
+            $("label[for='txtactividad']").text("Articulación");
+            $divActividad.show();
+
+            usoInfraestructuraCreate.getSelectTalentoArtculacionEmprendedores(id);
+
+        }
 </script>
 @endpush
 @endif
