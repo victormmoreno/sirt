@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class UsoInfraestructuraRepository
 {
+
+	/**
+     * retorna registro de un uso de infraestructura
+     * @return bool
+     * @param $request
+     * @author devjul
+     */
 	public function store($request)
 	{
 		DB::beginTransaction();
@@ -51,6 +58,17 @@ class UsoInfraestructuraRepository
 	    }
 		
 	}
+
+	/**
+     * retorna actualizacion de un uso de infraestructura
+     * @return bool
+     * @param $request
+     * @author devjul
+     */
+    public function update($request)
+    {
+    	# code...
+    }
 
 
 	/**

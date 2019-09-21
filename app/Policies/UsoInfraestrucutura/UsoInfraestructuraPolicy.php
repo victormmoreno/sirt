@@ -55,19 +55,58 @@ class UsoInfraestructuraPolicy
     }
 
     /**
-     * Determine whether the user can show and edit usos de infraestructura.
+     * Determine whether the user can show usos de infraestructura.
      *
      * @param  \App\User  $user
      * @param  \App\Models\UsoInfraestructura  $uso
      * @return bool
      */
-    public function showEdit(User $user, UsoInfraestructura $uso)
+    public function show(User $user, UsoInfraestructura $uso)
     {
         if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsAdministrador()) {
             return true;
         } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsDinamizador() && $uso->actividad->nodo->id == $user->dinamizador->nodo->id) {
             return true;
         } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() && $uso->actividad->gestor->user->id == $user->id) {
+            return true;
+        } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->actividad->articulacion_proyecto->talentos->contains($user->talento->id)) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    /**
+     * Determine whether the user can edit usos de infraestructura.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\UsoInfraestructura  $uso
+     * @return bool
+     */
+    public function edit(User $user, UsoInfraestructura $uso)
+    {
+        if ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->actividad->gestor->user->id == $user->id) {
+            return true;
+        } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->actividad->articulacion_proyecto->talentos->contains($user->talento->id)) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    /**
+     * Determine whether the user can update usos de infraestructura.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\UsoInfraestructura  $uso
+     * @return bool
+     */
+    public function update(User $user, UsoInfraestructura $uso)
+    {
+        if ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->actividad->gestor->user->id == $user->id) {
             return true;
         } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->actividad->articulacion_proyecto->talentos->contains($user->talento->id)) {
             return true;

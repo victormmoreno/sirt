@@ -3,12 +3,12 @@
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
-                    <span class="title"><b>Nodo</b></span>
+                    <span class="title"><b>Uso de Infraestructura</b></span>
                     <p>señor(a) ususario, por favor ingrese la información que se solcita en formulario.</p>
                 </li>
                 <li class="collection-item">
-                    <span class="title"><b>Nodo</b></span>
-                    <p>Por favor sólo ingrese el nombre del nodo. Ejemplo (Medellin)</p>
+                    <span class="title"><b>Paso 1</b></span>
+                    <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos - Articulaciones - EDT)</p>
                 </li>
             </ul>
         </blockquote>
@@ -67,16 +67,18 @@
                     <i class="material-icons prefix">
                         date_range
                     </i>
-                    <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}">
-                        <label for="txtfecha">
-                            fecha
-                            <span class="red-text">
-                                *
-                            </span>
-                        </label>
-                        <label class="error" for="txtfecha" id="txtfecha-error"></label>
-        
-                    </input>
+                    @if(isset($usoinfraestructura->fecha))
+                        <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$usoinfraestructura->fecha->format('Y-m-d')}}"/>
+                    @else
+                        <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}"/>
+                    @endif
+                    <label for="txtfecha">
+                        fecha
+                        <span class="red-text">
+                            *
+                        </span>
+                    </label>
+                    <label class="error" for="txtfecha" id="txtfecha-error"></label>
                 </div>
                 <div class="input-field col s12 m4 l4">
                     <i class="material-icons prefix">
@@ -241,9 +243,6 @@
                     @endif
                     <label for="txtdescripcion">
                         Descripción
-                        <span class="red-text">
-                            *
-                        </span>
                     </label>
                     <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
                 </div>
@@ -282,20 +281,28 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="input-field col s10 m10 l11">
-                            <select class="js-states"    id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
+                            <select class="js-states" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
+
                                 @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
                                     <option value="">
                                         Seleccione Talento
                                     </option>
                                     @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                                    <option value="">
+                                    <option value="{{$talento->id}}">
                                         {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
                                     </option>
                                     @endforeach
                                 @else
-                                    <option value="">
-                                        Seleccione primero el tipo de uso de infraestructura
-                                    </option>
+                                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt())
+                                        <option value="">
+                                            No se encontraron resultados
+                                        </option>
+                                    @else
+                                        <option value="">
+                                            Seleccione primero el tipo de uso de infraestructura
+                                        </option>
+                                    @endif
+                                    
                                 @endif
                                 
                             </select>
@@ -307,11 +314,20 @@
                             </label>
                         </div>
                         <div class="input-field col s2 m2 l1">
-                            <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregarTalento" data-delay="50" data-position="button" data-tooltip="Agregar Talento" onclick="usoInfraestructuraCreate.addTalentoAUso()">
-                                <i class="material-icons">
-                                    add
-                                </i>
-                            </a>
+                            @if(isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt())
+                                <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregarTalento" data-delay="50" data-position="button" data-tooltip="Agregar Talento" disabled>
+                                    <i class="material-icons">
+                                        add
+                                    </i>
+                                </a>
+                            @else
+                                <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregarTalento" data-delay="50" data-position="button" data-tooltip="Agregar Talento" onclick="addTalentoAUso()">
+                                    <i class="material-icons">
+                                        add
+                                    </i>
+                                </a>
+                            @endif
+                            
                         </div>
                     </div>
                     {{-- {{var_dump($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios)}} --}}
@@ -324,7 +340,7 @@
                                         Seleccione Laboratorio
                                     </option>
                                     @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios as $laboratorio)
-                                    <option value="">
+                                    <option value="{{$laboratorio->id}}">
                                         {{$laboratorio->nombre}}
                                     </option>
                                     @endforeach
@@ -364,6 +380,7 @@
                                         Detalle Talentos
                                     </p>
                                 </center>
+                                {{-- {{var_dump($usoinfraestructura->usolaboratorios)}} --}}
                                 <table class="striped centered responsive-table" id="tbldetallelineas">
                                     <thead>
                                         <tr>
@@ -376,6 +393,29 @@
                                         </tr>
                                     </thead>
                                     <tbody id="detalleTalento">
+                                        @if(isset($usoinfraestructura->usotalentos))
+                                            @forelse ($usoinfraestructura->usotalentos as $key => $talento)
+                                                    
+                                                    <tr id="filaTalento{{$talento->id}}">
+                                                        <td>
+                                                            <input type="hidden" name="talento[]" value="{{$talento->id}}"/>
+                                                            {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->nombres}}
+                                                        </td>
+                                                        <td>
+                                                            <a class="waves-effect red lighten-3 btn" onclick="eliminarTalento({{$talento->id}});">
+                                                                <i class="material-icons">delete_sweep</i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                            @empty
+                                                <tr>
+                                                    <td>
+                                                        No se encontraron resultados
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            @endforelse
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -402,6 +442,30 @@
                                         </tr>
                                     </thead>
                                     <tbody id="detallesUsoInfraestructura">
+                                        @if(isset($usoinfraestructura->usolaboratorios))
+                                            @forelse ($usoinfraestructura->usolaboratorios as $key => $laboratorio)
+                                                    
+                                                    <tr id="filaLaboratorio{{$laboratorio->id}}">
+                                                        <td>
+                                                            <input type="hidden" name="laboratorio[]" value="{{$laboratorio->id}}"/>{{$laboratorio->nombre}}
+                                                        </td>
+                                                        <td>
+                                                            <input type="hidden" name="tiempouso[]" value="{{$laboratorio->pivot->tiempo}}"/>
+                                                            {{$laboratorio->pivot->tiempo}}
+                                                        </td>
+                                                        <td>
+                                                            <a class="waves-effect red lighten-3 btn" onclick="eliminarLaboratorio({{$laboratorio->id}});">
+                                                                <i class="material-icons">delete_sweep</i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                            @empty
+                                                <td>
+                                                    No se encontraron resultados
+                                                </td>
+                                                <td></td>
+                                            @endforelse
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>

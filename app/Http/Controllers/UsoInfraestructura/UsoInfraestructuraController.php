@@ -241,6 +241,22 @@ class UsoInfraestructuraController extends Controller
             'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
                 $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
             },
+            'usotalentos',
+            'usotalentos.user' => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
+            },
+            'usolaboratorios',
+            'usolaboratorios.nodo'  => function ($query) {
+                $query->select('id', 'entidad_id', 'direccion', 'telefono');
+            },
+            'usolaboratorios.nodo.entidad' => function ($query) {
+                $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+            },
+            'usolaboratorios.nodo.entidad.ciudad.departamento',
+            'usolaboratorios.lineatecnologica'  => function ($query) {
+                $query->select('id', 'nombre', 'abreviatura');
+            },
+
         ];
     }
 
@@ -333,7 +349,7 @@ class UsoInfraestructuraController extends Controller
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
             ->select('id', 'actividad_id','tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
-        $this->authorize('showEdit', $usoinfraestructura);
+        $this->authorize('show', $usoinfraestructura);
         $user = auth()->user()->id;
 
         return $usoinfraestructura;
@@ -355,7 +371,7 @@ class UsoInfraestructuraController extends Controller
             ->select('id', 'actividad_id','tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
 
-        $this->authorize('showEdit', $usoinfraestructura);
+        $this->authorize('edit', $usoinfraestructura);
 
         $date = Carbon\Carbon::now()->format('Y-m-d');
 
@@ -375,7 +391,26 @@ class UsoInfraestructuraController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $relations          = $this->getDataIndex();
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
+            ->select('id', 'actividad_id','tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->findOrFail($id);
+
+        $this->authorize('update', $usoinfraestructura);
+
+        $req       = new UsoInfraestructuraFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+        if ($validator->fails()) {
+            return response()->json([
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        
+        // $result = $this->getUsoInfraestructuraRepository()->update($request);
+
+        // return $result;
     }
 
     /**
@@ -531,7 +566,7 @@ class UsoInfraestructuraController extends Controller
 
             return datatables()->of($edt)
                 ->addColumn('checkbox', function ($data) {
-                    $checkbox = '<a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarEdtAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $data->actividad->nombre . '\')">
+                    $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarEdtAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $data->actividad->nombre . '\')">
                         <i class="material-icons">done_all</i>
                       </a>';
 
@@ -673,7 +708,10 @@ class UsoInfraestructuraController extends Controller
                 },
             ];
 
-            $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())->where('id', $id)->get();
+            $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)
+            ->estadoOfArticulaciones($estado)
+            // ->where('tipo_articulacion', Articulacion::IsEmprendedor())
+            ->where('id', $id)->get();
 
             return response()->json([
                 'data' => $artulaciones,
