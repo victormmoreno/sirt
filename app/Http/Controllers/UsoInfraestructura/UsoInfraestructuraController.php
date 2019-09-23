@@ -345,6 +345,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function show($id)
     {
+        return abort('403');
         $relations          = $this->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
             ->select('id', 'actividad_id','tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
@@ -366,6 +367,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function edit($id)
     {
+        return abort('403');
         $relations          = $this->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
             ->select('id', 'actividad_id','tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
