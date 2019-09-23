@@ -54,6 +54,16 @@ class Edt extends Model
         return $this->morphMany(RutaModel::class, 'model');
     }
 
+    public function areaconocimiento()
+    {
+        return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
+    }
+
+    public function tipoedt()
+    {
+        return $this->belongsTo(TipoEdt::class, 'tipoedt_id', 'id');
+    }
+
     /**
      * Retorna consulta informacion edt con relaciones
      * @return collection

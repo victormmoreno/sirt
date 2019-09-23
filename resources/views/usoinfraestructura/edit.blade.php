@@ -733,30 +733,29 @@
                       }
                     }
 
-                    // if (data.fail == false && data.redirect_url == false) {
-                    //       Swal.fire({
-                    //             title: 'El uso de infraestructua no se ha registrado, por favor inténtalo de nuevo',
-                    //             // text: "You won't be able to revert this!",
-                    //             type: 'warning',
-                    //             showCancelButton: false,
-                    //             confirmButtonColor: '#3085d6',
-                    //             confirmButtonText: 'Ok'
-                    //       });
-                    // }
+                    if (data.fail == false && data.redirect_url == false) {
+                          Swal.fire({
+                                title: 'El uso de infraestructua no se ha modificado, por favor inténtalo de nuevo',
+                                type: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Ok'
+                          });
+                    }
 
-                    // if (data.fail == false && data.redirect_url != false) {
-                    //   Swal.fire({
-                    //     title: 'Registro Exitoso',
-                    //     text: "El uso de infraestructua ha sido creado satisfactoriamente",
-                    //     type: 'success',
-                    //     showCancelButton: false,
-                    //     confirmButtonColor: '#3085d6',
-                    //     confirmButtonText: 'Ok'
-                    //   });
-                    //   setTimeout(function(){
-                    //     window.location.replace("{{route('usoinfraestructura.index')}}");
-                    //   }, 1000);
-                    // }
+                    if (data.fail == false && data.redirect_url != false) {
+                      Swal.fire({
+                        title: 'Modificación Exitosa',
+                        text: "El uso de infraestructua ha sido modificado satisfactoriamente",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                      });
+                      setTimeout(function(){
+                        window.location.replace("{{route('usoinfraestructura.index')}}");
+                      }, 1000);
+                    }
                 }
             });
 
