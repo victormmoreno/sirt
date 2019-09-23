@@ -11,6 +11,7 @@ return [
     'local'      => [
         ['name' => FasesTableSeeder::class, 'callable' => true],
         ['name' => TiposEdtTableSeeder::class, 'callable' => true],
+        ['name' => TiposMaterialesTableSeeder::class, 'callable' => true],
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
         ['name' => TiposVisitanteTableSeeder::class, 'callable' => true],
         ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],

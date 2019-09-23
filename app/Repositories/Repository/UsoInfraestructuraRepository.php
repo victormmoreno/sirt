@@ -10,21 +10,24 @@ use Illuminate\Support\Facades\DB;
 
 class UsoInfraestructuraRepository
 {
+
+	/**
+     * retorna registro de un uso de infraestructura
+     * @return bool
+     * @param $request
+     * @author devjul
+     */
 	public function store($request)
 	{
-
-	
-		
 		DB::beginTransaction();
     	try {
 
-			// $gestor = User::where('documento',explode(" - ", $request->txtgestor)[0])->first()->gestor->id;
-			// $linea = LineaTecnologica::where('nombre', $request->txtlinea)->first()->id;
 			$actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])	
 									->first()->id;
 
 			$usoInfraestructura = UsoInfraestructura::create([
 				'actividad_id' => $actividad,
+				'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'), 
 				'fecha' => $request->txtfecha,
 				'asesoria_directa' => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
 				'asesoria_indirecta' => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',
@@ -55,6 +58,17 @@ class UsoInfraestructuraRepository
 	    }
 		
 	}
+
+	/**
+     * retorna actualizacion de un uso de infraestructura
+     * @return bool
+     * @param $request
+     * @author devjul
+     */
+    public function update($request)
+    {
+    	# code...
+    }
 
 
 	/**

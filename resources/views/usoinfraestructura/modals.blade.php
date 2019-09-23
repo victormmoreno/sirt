@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a href="#!" onclick="usoInfraestructuraCreate.volverModal();"  class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    <a href="#!" onclick="volverModalusoInfrestructura();"  class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
   </div>
 </div>
 
@@ -33,7 +33,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a href="#!" onclick="usoInfraestructuraCreate.volverModal();"  class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    <a href="#!" onclick="volverModalusoInfrestructura();"  class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
   </div>
 </div>
 
@@ -53,6 +53,6 @@
     </div>
   </div>
   <div class="modal-footer">
-    <a href="#!" onclick="usoInfraestructuraCreate.volverModal();"  class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+    <a href="#!" onclick="volverModalusoInfrestructura();"  class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
   </div>
 </div>

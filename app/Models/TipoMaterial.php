@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoMaterial extends Model
 {
-    protected $table = 'tiposmateriales';
+    protected $table = 'tipos_materiales';
 
     /**
      * The attributes that are mass assignable.
