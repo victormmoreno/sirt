@@ -454,14 +454,14 @@
                                                                     </div>
                                                                     <div class="col s12 m6 l6">
                                                                         
-                                                                        <span>
+                                                                        {{-- <span>
                                                                             <b class="teal-text darken-2">
                                                                                 Entidad Asociada
                                                                             </b>
                                                                         </span>
                                                                         @if($user->talento->perfil->nombre == App\Models\Perfil::IsEgresadoSena() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaConApoyo() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaSinApoyo())                    
                                                                          <p>{{$user->talento->perfil->nombre == App\Models\Perfil::IsEgresadoSena() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaConApoyo() || $user->talento->perfil->nombre == App\Models\Perfil::IsAprendizSenaSinApoyo() ? 'Regional: '. $user->talento->entidad->centro->regional->nombre . ', Centro de formación: ' .$user->talento->entidad->nombre . ', Programa de formación: ' . $user->talento->programa_formacion : 'No registra' }}</p>
-                                                                        @endif
+                                                                        @endif --}}
                                                                         @if($user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioEmpresaPublica() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMicroempresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa())
                                                                                 <p>
                                                                             {{$user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioEmpresaPublica() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMicroempresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa() || $user->talento->perfil->nombre == App\Models\Perfil::IsFuncionarioMedianaEmpresa() ? $user->talento->empresa : 'No registra'}}</p>
