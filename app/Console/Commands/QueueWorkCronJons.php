@@ -38,7 +38,7 @@ class QueueWorkCronJons extends Command
      */
     public function handle()
     {
-        Artisan::call('queue:work');
+        Artisan::call('queue:work --stop-when-emphy');
 
         $this->info('crob jobs executed');
     }

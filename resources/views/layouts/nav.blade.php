@@ -234,7 +234,7 @@
         </a>
       </div>
     </div>
-    <div class="sidebar-account-settings">
+    <div class="sidebar-account-settings ">
 
       <ul>
         <li class="no-padding">

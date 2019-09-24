@@ -5,7 +5,7 @@
 </li>
 <li class="no-padding {{setActiveRoute('usuario')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}">
-    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
+    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Talentos
   </a>
 </li>
 
@@ -24,9 +24,9 @@
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">record_voice_over</i>EDT's
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('usoinfraestructura.index')}}">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura.index')}}" href="{{route('usoinfraestructura.index')}}">
-    <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura.index')}}">domain</i>Usos de infraestructura
+<li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('empresa')}}">
@@ -39,11 +39,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">attach_money</i>Costos
   </a>
-</li>
+</li> --}}
 <li class="no-padding">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.ideas')}}">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas

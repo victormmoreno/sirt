@@ -6,7 +6,7 @@
 <main class="mn-inner inner-active-sidebar">
   <div class="middle-content">
     <div class="row no-m-t no-m-b">
-      <div class="col s12 m3 l3 ">
+      {{-- <div class="col s12 m3 l3 ">
         <div class="card stats-card">
           <div class="card-content">
             <div class="card-options">
@@ -21,9 +21,9 @@
             <div class="determinate"></div>
           </div>
         </div>
-      </div>
+      </div> --}}
 
-      <div class="col s12 m3 l3">
+      {{-- <div class="col s12 m3 l3">
         <div class="card stats-card">
           <div class="card-content">
             <span class="card-title">Dinamizadores</span>
@@ -33,9 +33,9 @@
             <div class="determinate"></div>
           </div>
         </div>
-      </div>
+      </div> --}}
 
-      <div class="col s12 m3 l3">
+      {{-- <div class="col s12 m3 l3">
         <div class="card stats-card">
           <div class="card-content">
             <span class="card-title">Gestores</span>
@@ -45,8 +45,8 @@
             <div class="determinate"></div>
           </div>
         </div>
-      </div>
-      <div class="col s12 m3 l3">
+      </div> --}}
+      {{-- <div class="col s12 m3 l3">
         <div class="card stats-card">
           <div class="card-content">
             <span class="card-title">Talentos</span>
@@ -56,7 +56,7 @@
             <div class="determinate"></div>
           </div>
         </div>
-      </div>
+      </div> --}}
     </div>
 
     <div class="row no-m-t no-m-b">
@@ -83,7 +83,7 @@
     </div>
 
   </div>
-  <div class="inner-sidebar">
+  {{-- <div class="inner-sidebar">
     <span class="inner-sidebar-title center-aling"><b></b> Admintradores </span>
     <div class="message-list">
       
@@ -91,7 +91,7 @@
     </div>
   
 
-  </div>
+  </div> --}}
 </main>
 
 <!-- modal  -->
