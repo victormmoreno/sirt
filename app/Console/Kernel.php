@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\DeleteNotifications;
+use App\Console\Commands\QueueWorkCronJons;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         DeleteNotifications::class,
+        QueueWorkCronJons::class,
     ];
 
     /**
@@ -29,6 +31,8 @@ class Kernel extends ConsoleKernel
             ->environments(config('app.env'))
             ->monthly()
             ->between('22:00', '24:00');
+
+        $schedule->command('queuework:jobs')->everyMinute();
     }
 
     /**
