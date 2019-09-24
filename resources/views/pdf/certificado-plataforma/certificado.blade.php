@@ -33,7 +33,7 @@ brinda un servicio que apoya el desarrollo de proyectos innovadores de base tecn
         </b>
         identificado con
 {{$user->tipodocumento->nombre}} {{$user->documento}}, se inscribió en nuestro sistema el día
-{{$user->created_at->isoFormat('LL')}}.
+{{optional($user->created_at)->isoFormat('LL')}}.
         <br/>
         <br/>
         El presente certificado se genera el día {{Carbon\Carbon::now()->isoFormat('LL')}}, por solicitud del interesado.

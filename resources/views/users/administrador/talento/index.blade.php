@@ -50,7 +50,7 @@
                             </div>
                             <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                               <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
-                              <li class="tab col s3"><a href="#TalentoProyectoNodo" >Talentos con proyectos realizados en {{config('app.name')}}</a></li>
+                              {{-- <li class="tab col s3"><a href="#TalentoProyectoNodo" >Talentos con proyectos realizados en {{config('app.name')}}</a></li> --}}
                               <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                             </ul>
                             <div class="divider">
@@ -73,7 +73,7 @@
                 
                             </table>
                             </div>
-                            <div id="TalentoProyectoNodo">
+                            {{-- <div id="TalentoProyectoNodo">
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <div class="file-field input-field">
@@ -102,7 +102,7 @@
                                 </thead>
                 
                             </table>
-                        </div>
+                        </div> --}}
                         </div>
                     </div>
                 </div>
