@@ -32,7 +32,7 @@ class ProyectoFormRequest extends FormRequest
       'txtsector_id' => 'required',
       'txtareaconocimiento_id' => 'required',
       'txtestadoproyecto_id' => 'required',
-      'txtnombre' => 'required|min:10|max:200',
+      'txtnombre' => 'required|min:4|max:200',
       'txtcedula_acudiente' => 'numeric|digits_between:11,20|nullable',
       'txtnombre_acudiente' => 'min:10|max:60|nullable',
       'txtentidad_proyecto_id' => Rule::requiredIf(
@@ -75,7 +75,7 @@ class ProyectoFormRequest extends FormRequest
       'txtestadoproyecto_id.required' => 'El Estaodo del Proyecto es obligatorio.',
       // Mensajes para el input txtnombre
       'txtnombre.required' => 'El Nombre del Proyecto es obligatorio.',
-      'txtnombre.min' => 'El Nombre del Proyecto debe ser mínimo 10 carácteres.',
+      'txtnombre.min' => 'El Nombre del Proyecto debe ser mínimo 4 carácteres.',
       'txtnombre.max' => 'El Nombre del Proyecto debe ser máximo 200 carácteres.',
       // Mensajes para el input txtcedula_acudiente
       'txtcedula_acudiente.numeric' => 'La cédula del acudiente debe ser numérica.',
