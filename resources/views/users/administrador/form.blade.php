@@ -148,12 +148,7 @@
                             <option value="{{$user->ingreso->nodo->id}}" selected="">Tecnoparque Nodo {{$user->ingreso->nodo->entidad->nombre}}</option>
                         @else
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
-                                <option value="{{auth()->user()->ingreso->nodo->id}}">Tecnoparque Nodo {{auth()->user()->ingreso->nodo->entidad->nombre}}</option>
-                            {{-- @else
-                                <option value="">Seleccione Nodo</option>
-                                @foreach($nodos as $id => $nodo)
-                                        <option value="{{$id}}" {{old('txtnodoingreso') ==  $id ? 'selected':''}}>{{$nodo}}</option>                        
-                                @endforeach --}}
+                                <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
                             @endif
                         @endif    
                 </select>

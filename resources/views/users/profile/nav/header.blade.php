@@ -15,7 +15,7 @@
         <span class="mailbox-author">
             {{$user->getRoleNames()->implode(', ')}}
             <br>
-                Miembro desde {{$user->created_at->isoFormat('LL')}}
+                Miembro desde {{optional($user->created_at)->isoFormat('LL')}}
                 <br>
                     {{$user->fechanacimiento->age}} años
                 </br>
