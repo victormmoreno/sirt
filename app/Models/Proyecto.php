@@ -94,6 +94,11 @@ class Proyecto extends Model
   //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
   // }
 
+  public function sector()
+  {
+      return $this->belongsTo(Sector::class, 'sector_id', 'id');
+  }
+
   public function tipoproyecto()
   {
       return $this->belongsTo(TipoArticulacionProyecto::class, 'tipoarticulacionproyecto_id', 'id');

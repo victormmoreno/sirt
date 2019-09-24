@@ -57,26 +57,26 @@ class UsoInfraestructuraController extends Controller
 
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
+                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
                     $query->where('id', $nodo);
                 })->get();
                 break;
 
             case User::IsDinamizador():
                 $nodo               = auth()->user()->dinamizador->nodo->id;
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
+                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
                     $query->where('id', $nodo);
                 })->get();
                 break;
 
             case User::IsGestor():
 
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.gestor.user', function ($query) use ($user) {
                     $query->where('id', $user);
                 })->get();
                 break;
             case User::IsTalento():
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.articulacion_proyecto.talentos.user', function ($query) use ($user) {
                     $query->where('id', $user);
                 })->orderBy('id', 'DESC')->get();
                 break;
@@ -133,7 +133,7 @@ class UsoInfraestructuraController extends Controller
 
         $this->authorize('getUsoInfraestructuraForNodo', UsoInfraestructura::class);
         $relations          = $this->getDataIndex();
-        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
             $query->where('id', $nodo);
         })->get();
 
@@ -174,70 +174,98 @@ class UsoInfraestructuraController extends Controller
     private function getDataIndex()
     {
         return [
-            'actividad'                                                     => function ($query) {
+            'actividad'                                                                      => function ($query) {
                 $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
             },
-            'actividad.nodo'                                                => function ($query) {
+            'actividad.nodo'                                                                 => function ($query) {
                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
             },
-            'actividad.nodo.entidad'                                        => function ($query) {
+            'actividad.nodo.entidad'                                                         => function ($query) {
                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
             },
             'actividad.nodo.entidad.ciudad.departamento',
-            'actividad.articulacion_proyecto'                               => function ($query) {
+            'actividad.articulacion_proyecto'                                                => function ($query) {
                 $query->select('id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
             },
             'actividad.articulacion_proyecto.talentos',
-            'actividad.articulacion_proyecto.talentos.user'                 => function ($query) {
+            'actividad.articulacion_proyecto.talentos.user'                                  => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-            'actividad.articulacion_proyecto.proyecto'                      => function ($query) {
+            'actividad.articulacion_proyecto.proyecto'                                       => function ($query) {
                 $query->select('id', 'articulacion_proyecto_id', 'sector_id', 'sublinea_id', 'areaconocimiento_id', 'estadoproyecto_id', 'tipoarticulacionproyecto_id', 'estadoprototipo_id', 'estado_aprobacion');
             },
-            'actividad.articulacion_proyecto.proyecto.tipoproyecto'         => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.sector'                          => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.areaconocimiento'     => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.tipoproyecto'                          => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.sublinea'             => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.areaconocimiento'                      => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.estadoproyecto'       => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.sublinea'                              => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.articulacion'                  => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.estadoproyecto'                        => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'actividad.articulacion_proyecto.articulacion'                                   => function ($query) {
                 $query->select('id', 'articulacion_proyecto_id', 'tipoarticulacion_id', 'tipo_articulacion', 'fecha_ejecucion', 'observaciones', 'estado');
             },
-            'actividad.articulacion_proyecto.articulacion.tipoarticulacion' => function ($query) {
+            'actividad.articulacion_proyecto.articulacion.tipoarticulacion'                  => function ($query) {
                 $query->select('id', 'nombre', 'articulado_con');
             },
 
             'actividad.edt.entidades',
-            'actividad.edt.entidades.empresa'                               => function ($query) {
+            'actividad.edt.entidades.empresa'                                                => function ($query) {
                 $query->select('id', 'entidad_id', 'sector_id', 'nit', 'direccion');
             },
-            'actividad.edt.entidades.empresa.sector'                        => function ($query) {
+            'actividad.edt.entidades.empresa.sector'                                         => function ($query) {
                 $query->select('id', 'nombre');
             },
             'actividad.edt.entidades.ciudad',
             'actividad.edt.entidades.ciudad.departamento',
-            'actividad.gestor'                                              => function ($query) {
+            'actividad.edt.areaconocimiento'                                                 => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'actividad.edt.tipoedt'                                                          => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'actividad.gestor'                                                               => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },
-            'actividad.gestor.nodo'                                         => function ($query) {
+            'actividad.gestor.nodo'                                                          => function ($query) {
                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
             },
-            'actividad.gestor.nodo.entidad'                                 => function ($query) {
+            'actividad.gestor.nodo.entidad'                                                  => function ($query) {
                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
             },
             'actividad.gestor.nodo.entidad.ciudad.departamento',
-            'actividad.gestor.lineatecnologica'                             => function ($query) {
+            'actividad.gestor.lineatecnologica'                                              => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
-            'actividad.gestor.user'                                         => function ($query) {
+            'actividad.gestor.user'                                                          => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
+            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
+                $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
+            },
+            'usotalentos',
+            'usotalentos.user'                                                               => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
+            },
+            'usolaboratorios',
+            'usolaboratorios.nodo'                                                           => function ($query) {
+                $query->select('id', 'entidad_id', 'direccion', 'telefono');
+            },
+            'usolaboratorios.nodo.entidad'                                                   => function ($query) {
+                $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+            },
+            'usolaboratorios.nodo.entidad.ciudad.departamento',
+            'usolaboratorios.lineatecnologica'                                               => function ($query) {
+                $query->select('id', 'nombre', 'abreviatura');
+            },
+
         ];
     }
 
@@ -248,6 +276,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', UsoInfraestructura::class);
         $sumasArray   = [];
         $artulaciones = $this->getDataArticulaciones()->count();
         $projects     = $this->getDataProjectsForUser()->count();
@@ -258,6 +287,7 @@ class UsoInfraestructuraController extends Controller
                 'edt'            => $edt,
                 'projects'       => $projects,
             ];
+
         } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
             $sumasArray = [
                 'articulaciones' => $artulaciones,
@@ -299,7 +329,7 @@ class UsoInfraestructuraController extends Controller
         }
 
         $result = $this->getUsoInfraestructuraRepository()->store($request);
-
+        
         if ($result == 'false') {
             return response()->json([
                 'fail'         => false,
@@ -323,26 +353,16 @@ class UsoInfraestructuraController extends Controller
     public function show($id)
     {
 
-        $relations = $this->getDataIndex();
+        $relations          = $this->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-        ->select('id', 'actividad_id', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
-        ->findOrFail($id);
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->findOrFail($id);
+
         $this->authorize('show', $usoinfraestructura);
-        $user = auth()->user()->id;
-        // $usoinfraestructura->actividad->articulacion_proyecto->talentos->each(function ($item) use($user) {
-        //     if ($item->user->id == $user) {
-        //         dd(false);
-        //     }
-        //     // dd(true);
-        // });
 
-        $val  = $usoinfraestructura->actividad->articulacion_proyecto->talentos->contains(auth()->user()->talento->id);
-
-        dd($val);
-
-        // 
-        // return $talento;
-        return $usoinfraestructura;
+        return view('usoinfraestructura.show', [
+            'usoinfraestructura' => $usoinfraestructura,
+        ]);
     }
 
     /**
@@ -353,7 +373,21 @@ class UsoInfraestructuraController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $relations          = $this->getDataIndex();
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->findOrFail($id);
+
+        $this->authorize('edit', $usoinfraestructura);
+
+        $date = Carbon\Carbon::now()->format('Y-m-d');
+
+        return view('usoinfraestructura.edit', [
+            'usoinfraestructura' => $usoinfraestructura,
+            'date'               => $date,
+            'authUser'           => auth()->user(),
+        ]);
     }
 
     /**
@@ -361,11 +395,40 @@ class UsoInfraestructuraController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $relations          = $this->getDataIndex();
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->findOrFail($id);
+
+        $this->authorize('update', $usoinfraestructura);
+
+        $req       = new UsoInfraestructuraFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+        if ($validator->fails()) {
+            return response()->json([
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        $result = $this->getUsoInfraestructuraRepository()->update($request,$id);
+
+        // return response()->json(['data' => $result]);
+        if ($result == false) {
+            return response()->json([
+                'fail'         => false,
+                'redirect_url' => false,
+            ]);
+        } else if ($result == true) {
+            return response()->json([
+                'fail'         => false,
+                'redirect_url' => url(route('usoinfraestructura.index')),
+            ]);
+        }
     }
 
     /**
@@ -383,7 +446,7 @@ class UsoInfraestructuraController extends Controller
             return datatables()->of($artulaciones)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-                    <a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')">
+                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')">
                         <i class="material-icons">done_all</i>
                       </a>';
 
@@ -451,7 +514,7 @@ class UsoInfraestructuraController extends Controller
 
             return datatables()->of($projects)
                 ->addColumn('checkbox', function ($data) {
-                    $checkbox = '<a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')">
+                    $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $data->articulacion_proyecto->actividad->nombre . '\')">
                         <i class="material-icons">done_all</i>
                       </a>';
                     return $checkbox;
@@ -462,7 +525,7 @@ class UsoInfraestructuraController extends Controller
                     return $data->articulacion_proyecto->actividad->nombre;
                 })
                 ->rawColumns(['checkbox', 'codigo_actividad'])->make(true);
-        }else{
+        } else {
             abort('403');
         }
 
@@ -521,7 +584,7 @@ class UsoInfraestructuraController extends Controller
 
             return datatables()->of($edt)
                 ->addColumn('checkbox', function ($data) {
-                    $checkbox = '<a class="btn cyan m-b-xs" onclick="usoInfraestructuraCreate.asociarEdtAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $data->actividad->nombre . '\')">
+                    $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarEdtAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $data->actividad->nombre . '\')">
                         <i class="material-icons">done_all</i>
                       </a>';
 
@@ -614,7 +677,7 @@ class UsoInfraestructuraController extends Controller
             return response()->json([
                 'data' => $proyectoTalento,
             ]);
-        }else{
+        } else {
             abort('403');
         }
 
@@ -663,7 +726,10 @@ class UsoInfraestructuraController extends Controller
                 },
             ];
 
-            $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())->where('id', $id)->get();
+            $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)
+                ->estadoOfArticulaciones($estado)
+            // ->where('tipo_articulacion', Articulacion::IsEmprendedor())
+                ->where('id', $id)->get();
 
             return response()->json([
                 'data' => $artulaciones,
