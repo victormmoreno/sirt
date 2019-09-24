@@ -28,8 +28,8 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a href="">
     <i class="material-icons">description</i>Reportes
   </a>
-</li>
+</li> --}}

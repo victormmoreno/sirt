@@ -16,7 +16,7 @@
             </div>
           </a>
         </div>
-        <div class="col s12 m3 l3">
+        {{-- <div class="col s12 m3 l3">
           <div class="card stats-card">
             <div class="card-content">
               <span class="card-title">Dinamizadores</span>
@@ -26,8 +26,8 @@
               <div class="determinate"></div>
             </div>
           </div>
-        </div>
-        <div class="col s12 m3 l3">
+        </div> --}}
+        {{-- <div class="col s12 m3 l3">
           <div class="card stats-card">
             <div class="card-content">
               <span class="card-title">Gestores</span>
@@ -37,8 +37,8 @@
               <div class="determinate"></div>
             </div>
           </div>
-        </div>
-        <div class="col s12 m3 l3">
+        </div> --}}
+        {{-- <div class="col s12 m3 l3">
           <div class="card stats-card">
             <div class="card-content">
               <span class="card-title">Talentos</span>
@@ -48,7 +48,7 @@
               <div class="determinate"></div>
             </div>
           </div>
-        </div>
+        </div> --}}
       </div>
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
@@ -68,23 +68,4 @@
       </div>
     </div>
   </main>
-  <div id="loginrole" class="modal" style="width: 30%">
-    <div class="modal-content">
-      <h4 class="center red-text ">Roles {{auth()->user()->nombres}} {{auth()->user()->apellidos}}</h4>
-      <div class="col s12 m12 l12">
-        <ul class="collection with-header">
-          @forelse(auth()->user()->getRoleNames() as  $name)
-            <li class="collection-item">
-              <p class="p-v-xs">
-                <input class="with-gap" id="rolesesion{{$name}}" name="rolesesion" type="radio" value="{{$name}}" />
-                <label for="rolesesion{{$name}}">{{$name}}</label>
-              </p>
-            </li>
-          @empty
-            <p>No tienes roles asignados</p>
-          @endforelse
-        </ul>
-      </div>
-    </div>
-  </div>
 @endsection

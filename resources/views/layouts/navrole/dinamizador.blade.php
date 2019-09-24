@@ -38,11 +38,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">filter_center_focus</i>Sublineas
   </a>
-</li>
+</li> --}}
 <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
@@ -68,14 +68,14 @@
     </ul>
   </div>
 </li>
-<li class="no-padding {{setActiveRoute('laboratorio.index')}}">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('laboratorio.index')}}" href="{{route('laboratorio.index')}}">
-    <i class="material-icons {{setActiveRouteActiveIcon('laboratorio.index')}}">local_drink</i>Laboratorios
+<li class="no-padding {{setActiveRoute('laboratorio')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('laboratorio')}}" href="{{route('laboratorio.index')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('laboratorio')}}">local_drink</i>Laboratorios
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('usoinfraestructura.index')}}">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura.index')}}" href="{{route('usoinfraestructura.index')}}">
-    <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura.index')}}">domain</i>Usos de infraestructura
+<li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('grupo')}}">
@@ -88,7 +88,7 @@
     <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('visitante'), setActiveRouteActivePage('ingreso') }} {{ setActiveRoutePadding('visitante'), setActiveRoutePadding('ingreso') }}">
     <i class="material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">directions_walk</i>Ingresos
     <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">keyboard_arrow_right</i>
@@ -107,7 +107,7 @@
       </li>
     </ul>
   </div>
-</li>
+</li> --}}
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">local_drink</i>Laboratorios
