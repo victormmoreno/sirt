@@ -93,4 +93,17 @@ class UsoInfraestructura extends Model
     {
         return $query->with($relations);
     }
+
+    public static function TipoUsoInfraestructura($tipo_usoinfraestructura)
+    {
+        if ($tipo_usoinfraestructura == self::IsProyecto()) {
+            return 'Proyecto ';
+        }else if($tipo_usoinfraestructura == self::IsArticulacion()){
+            return 'Articulacion ';
+        }else if($tipo_usoinfraestructura == self::IsEdt()){
+            return 'EDT ';
+        }else{
+            return 'No registra';
+        }
+    }
 }

@@ -137,6 +137,8 @@
                     usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.removeDisableSelectButtons();
                     usoInfraestructuraCreate.DatatableProjectsForUser();
+                    usoInfraestructuraCreate.limpiarListaTalentos();
+                    usoInfraestructuraCreate.limpiarListaLaboratorios();
                                    
                       
                 } else if ( $("#IsArticulacion").is(":checked") ) {
@@ -156,6 +158,8 @@
                     
                     usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
+                    usoInfraestructuraCreate.limpiarListaTalentos();
+                    usoInfraestructuraCreate.limpiarListaLaboratorios();
 
                 } else if( $("#IsEdt").is(":checked")) {
             
@@ -174,6 +178,8 @@
                     usoInfraestructuraCreate.removeOptionsSelect();
                     usoInfraestructuraCreate.disableSelectButtons();
                     usoInfraestructuraCreate.dataTableEdtFindByUser();
+                    usoInfraestructuraCreate.limpiarListaTalentos();
+                    usoInfraestructuraCreate.limpiarListaLaboratorios();
                  
                 }
                
@@ -535,8 +541,12 @@
             $('#txtarticulacion').removeAttr('value');
             $('#txtedt').removeAttr('value');
         },
-        
-
+        limpiarListaTalentos: function (){
+            $('#detalleTalento').empty();
+        },
+        limpiarListaLaboratorios: function (){
+            $('#detallesUsoInfraestructura').empty();
+        },
     }
 
     function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre, talentos) {

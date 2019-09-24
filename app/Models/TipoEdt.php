@@ -17,4 +17,19 @@ class TipoEdt extends Model
       'observaciones'
   ];
 
+  /**
+  * The attributes that should be cast to native types.
+  *
+  * @var array
+  */
+  protected $casts = [
+    'nombre'        => 'string',
+    'observaciones' => 'string',
+  ];
+
+  public function edts()
+  {
+    return $this->hasMany(Edt::class, 'tipoedt_id', 'id');
+  }
+
 }

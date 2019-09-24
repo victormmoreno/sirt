@@ -464,6 +464,7 @@
                                                     No se encontraron resultados
                                                 </td>
                                                 <td></td>
+                                                <td></td>
                                             @endforelse
                                         @endif
                                     </tbody>
