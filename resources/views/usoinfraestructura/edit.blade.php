@@ -97,6 +97,8 @@
 	                    usoInfraestructuraUpdate.eliminarContentTables();
 	                    usoInfraestructuraUpdate.removeDisableSelectButtons();
 	                    usoInfraestructuraUpdate.DatatableProjectsForUser();
+	                    usoInfraestructuraUpdate.limpiarListaTalentos();
+	                    usoInfraestructuraUpdate.limpiarListaLaboratorios();
 	                                   
 	                      
 	                } else if ( $("#IsArticulacion").is(":checked") ) {
@@ -117,6 +119,8 @@
 	                    usoInfraestructuraUpdate.removeValueLineaGestor();
 	                    usoInfraestructuraUpdate.eliminarContentTables();
 	                    usoInfraestructuraUpdate.dataTableArtculacionFindByUser();
+	                    usoInfraestructuraUpdate.limpiarListaTalentos();
+	                    usoInfraestructuraUpdate.limpiarListaLaboratorios();
 
 	                } else if( $("#IsEdt").is(":checked")) {
 	            
@@ -135,6 +139,8 @@
 	                    usoInfraestructuraUpdate.removeOptionsSelect();
 	                    usoInfraestructuraUpdate.disableSelectButtons();
 	                    usoInfraestructuraUpdate.dataTableEdtFindByUser();
+	                    usoInfraestructuraUpdate.limpiarListaTalentos();
+	                    usoInfraestructuraUpdate.limpiarListaLaboratorios();
 	                 
 	                }
 	               
@@ -407,7 +413,12 @@
 	            $('#txtarticulacion').removeAttr('value');
 	            $('#txtedt').removeAttr('value');
 	        },
-	        
+	        limpiarListaTalentos: function (){
+	            $('#detalleTalento').empty();
+	        },
+	        limpiarListaLaboratorios: function (){
+	            $('#detallesUsoInfraestructura').empty();
+	        },
 	        eliminarContentTables: function () {
 	            $('#detalleTalento').children("tr").remove();
 	            $('#detallesUsoInfraestructura').children("tr").remove();

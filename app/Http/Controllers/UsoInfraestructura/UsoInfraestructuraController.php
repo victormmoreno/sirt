@@ -276,6 +276,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', UsoInfraestructura::class);
         $sumasArray   = [];
         $artulaciones = $this->getDataArticulaciones()->count();
         $projects     = $this->getDataProjectsForUser()->count();
@@ -297,8 +298,6 @@ class UsoInfraestructuraController extends Controller
         }
 
         $cantActividades = array_sum($sumasArray);
-
-        // dd($cantActividades);
 
         $date = Carbon\Carbon::now()->format('Y-m-d');
 

@@ -37,6 +37,8 @@ class UsoInfraestructuraRepository
 
                 $usoInfraestructura->usotalentos()->sync($request->get('talento'), false);
 
+            }else{
+                $usoInfraestructura->usotalentos()->sync([]);
             }
 
             if ($request->filled('laboratorio')) {
@@ -46,6 +48,8 @@ class UsoInfraestructuraRepository
                 }
 
                 $usoInfraestructura->usolaboratorios()->sync($syncData);
+            }else{
+                $usoInfraestructura->usolaboratorios()->sync([]);
             }
 
             DB::commit();
@@ -84,6 +88,8 @@ class UsoInfraestructuraRepository
 
                 $usoInfraestructura->usotalentos()->sync($request->get('talento'));
 
+            }else{
+                $usoInfraestructura->usotalentos()->sync([]);
             }
 
             if ($request->filled('laboratorio')) {
@@ -93,7 +99,11 @@ class UsoInfraestructuraRepository
                 }
 
                 $usoInfraestructura->usolaboratorios()->sync($syncData);
+            }else{
+                $usoInfraestructura->usolaboratorios()->sync([]);
             }
+
+            
 
             DB::commit();
             return true;
