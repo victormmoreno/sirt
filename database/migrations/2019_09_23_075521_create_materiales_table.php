@@ -16,6 +16,7 @@ class CreateMaterialesTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->unsignedInteger('tipomaterial_id');
             $table->unsignedBigInteger('laboratorio_id');

@@ -3,6 +3,7 @@
 namespace Repositories\Repository;
 
 use App\Models\Centro;
+use App\Models\CostoAdministrativo;
 use App\Models\Entidad;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
@@ -96,6 +97,15 @@ class NodoRepository
             ]);
 
             $nodo->lineas()->sync($request->get('txtlineas'), false);
+
+            $costo = CostoAdministrativo::all();
+            if (!$costo->isEmpty()) {
+                $syncData = array();
+                foreach ($costo as $id => $value) {
+                    $syncData[$id] = array('costo_administrativo_id' => $value->id,  'anho' =>Carbon::now()->year, 'valor' => 0);
+                }
+                $nodo->costoadministrativonodo()->sync($syncData);
+            }
 
             DB::commit();
             return true;

@@ -44,4 +44,13 @@ class Dinamizador extends Model
         return self::CANT_DINAMIZADOR;
     }
 
+    /**
+     * Devolver cantidad de dinamizadores
+     * @author julian londoño
+     */
+    public function scopeCountDinamizadores($query)
+    {
+        return $query->count();
+    }
+
 }

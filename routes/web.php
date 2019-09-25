@@ -16,6 +16,11 @@ DB::listen(function ($query) {
 ===========================================================*/
 
 Route::get('email', function () {
+    $costo = App\Models\CostoAdministrativo::with([
+        'nodocostosadministrativos',
+        'nodocostosadministrativos.entidad',
+    ])->get();
+    return $costo;
     // return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
     // return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
     // return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
@@ -128,6 +133,31 @@ Route::group([
 
     }
 );
+
+
+/*========================================================================
+=            seccion para las rutas de costos administrativos            =
+========================================================================*/
+
+Route::resource('costos-administrativos', 'CostoAdministrativoController', [
+        'as' => 'costos-administrativos', 
+        'except' => [
+            'create',
+            'store',
+            'destroy'
+        ]
+    ])->names([
+        'update'  => 'costoadministrativo.update',
+        'edit'    => 'costoadministrativo.edit',
+        'show'    => 'costoadministrativo.show',
+        'index'   => 'costoadministrativo.index',
+    ])
+    ->parameters([
+        'costos_administrativo' => 'id',
+    ]);
+
+/*=====  End of seccion para las rutas de costos administrativos  ======*/
+
 
 /*======================================================================
 =            seccion para las rutas de uso de infraestructa            =

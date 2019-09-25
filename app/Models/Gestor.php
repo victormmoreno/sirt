@@ -86,4 +86,13 @@ class Gestor extends Model
     }
 
     /*=====  End of mutador eloquent  ======*/
+
+    /**
+     * Devolver cantidad de gestores
+     * @author julian londoño
+     */
+    public function scopeCountGestores($query)
+    {
+        return $query->with('user')->count();
+    }
 }

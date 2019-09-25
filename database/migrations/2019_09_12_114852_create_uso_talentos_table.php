@@ -16,6 +16,7 @@ class CreateUsoTalentosTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->engine = 'InnoDB';
             $table->unsignedBigInteger('usoinfraestructura_id');
             $table->unsignedInteger('talento_id');
             $table->timestamps();

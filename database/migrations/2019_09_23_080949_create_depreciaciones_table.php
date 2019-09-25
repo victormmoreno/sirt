@@ -16,6 +16,7 @@ class CreateDepreciacionesTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedBigInteger('laboratorio_id');
             $table->string('equipo',45);
