@@ -182,7 +182,7 @@
   <script>
     $(document).ready(function(){
       consultaArticulacionesDelGestorPorNodoYFecha_stacked({{auth()->user()->dinamizador->nodo_id}});
-      consultarTiposDeArticulacionesDelAnho_variablepie({{auth()->user()->dinamizador->nodo_id}});
+      consultarTiposDeArticulacionesDelAnho_variablepie(0);
     });
   </script>
 @endpush
