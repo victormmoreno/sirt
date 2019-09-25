@@ -163,7 +163,7 @@ Route::group([
     Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
         ->name('usoinfraestructura.talentosporarticulacion');
 
-    
+
 
     Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
         ->name('usoinfraestructura.edtsforuser');
@@ -174,7 +174,7 @@ Route::group([
     Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
         ->name('usoinfraestructura.usoinfraestructurapornodo');
 
-    
+
 
 });
 
@@ -544,6 +544,20 @@ Route::group([
    Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
  }
 );
+
+/**
+ * Route group para el nódulo de seguimiento
+ */
+Route::group([
+    'prefix' => 'seguimiento',
+    'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor',]
+],
+  function () {
+    Route::get('/', 'SeguimientoController@index')->name('seguimiento');
+    Rpute::get('/', 'SeguimientoController@index');
+  }
+);
+
 
 //-------------------Route group para todos los pdfs de la aplicacion
 Route::group([
