@@ -129,7 +129,7 @@
                             </div> --}}
                           </div>
                           <div class="col s12 m8 l8">
-                            <div id="graficoProyectosFinalizadosPorNodoYAnho_variablepie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+                            <div id="graficoProyectosFinalizadosPorNodoYAnho_column" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
                           </div>
                         </div>
                       </div>
