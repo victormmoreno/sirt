@@ -554,7 +554,7 @@ Route::group([
 ],
   function () {
     Route::get('/', 'SeguimientoController@index')->name('seguimiento');
-    Rpute::get('/', 'SeguimientoController@index');
+    Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
   }
 );
 

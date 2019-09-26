@@ -33,15 +33,15 @@
                         <label for="txtgestor_id">Gestor</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_inicio" name="txtfecha_inicio" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
-                        <label for="txtfecha_inicio">Fecha Inicio</label>
+                        <input type="text" id="txtfecha_inicio_Gestor" name="txtfecha_inicio_Gestor" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                        <label for="txtfecha_inicio_Gestor">Fecha Inicio</label>
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_fin" name="txtfecha_fin" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                        <label for="txtfecha_fin">Fecha Fin</label>
+                        <input type="text" id="txtfecha_fin_Gestor" name="txtfecha_fin_Gestor" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                        <label for="txtfecha_fin_Gestor">Fecha Fin</label>
                       </div>
                       <div class="center col s12 m6 l6">
-                        <button onclick="consultarSeguimientoDeUnGestor()" class="btn">Consultar</button>
+                        <button onclick="consultarSeguimientoDeUnGestor(1)" class="btn">Consultar</button>
                       </div>
                       {{-- <div class="center col s12 m6 l6">
                         <div class="material-icons">

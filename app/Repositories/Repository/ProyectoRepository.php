@@ -53,6 +53,35 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta la cantidad de proyectos
+   * @param type var Description
+   * @return return type
+   */
+  public function consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha()
+  {
+
+  }
+
+  /**
+   * Consulta cantidad de proyectos
+   * @param string $estadoProyecto Estado del proyecto que se quiere buscar
+   * @param string $fecha_inicio Primera fecha oara realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas($estadoProyecto, $fecha_inicio, $fecha_fin)
+  {
+    return Proyecto::selectRaw('count(proyectos.id) as cantidad')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->where('estadosproyecto.nombre', $estadoProyecto)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+  }
+
+  /**
    * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
    *
    * @param int $id Id del nodo
@@ -1034,7 +1063,7 @@ class ProyectoRepository
       });
     })
     ->groupBy('proyectos.id')
-    ->get();
+    ->dd();
   }
 
   /**
@@ -1165,7 +1194,7 @@ class ProyectoRepository
       'aprobacion' => 0);
 
       // Array con el dinamizador del nodo
-      $dataAprobacion[2] = array('user_id' => Nodo::find( auth()->user()->gestor->nodo_id )->dinamizador->id,
+      $dataAprobacion[2] = array('user_id' => Nodo::find( auth()->user()->gestor->nodo_id )->dinamizador->user->id,
       'role_id' => Role::findByName('Dinamizador')->id,
       'aprobacion' => 0);
 
