@@ -11,26 +11,15 @@ class CostoAdministrativoPolicy
     use HandlesAuthorization;
     
     /**
-     * Determine whether the user can view any costo administrativos.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can view the costo administrativo.
      *
      * @param  \App\User  $user
      * @param  \App\CostoAdministrativo  $costoAdministrativo
      * @return mixed
      */
-    public function view(User $user, CostoAdministrativo $costoAdministrativo)
+    public function index(User $user)
     {
-        //
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador()]);
     }
 
     /**

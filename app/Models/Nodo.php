@@ -82,7 +82,7 @@ class Nodo extends Model
 
     public function costoadministrativonodo()
     {
-        return $this->belongsToMany(Nodo::class, 'nodo_costoadministrativo', 'nodo_id', 'costo_administrativo_id')
+        return $this->belongsToMany(CostoAdministrativo::class, 'nodo_costoadministrativo', 'nodo_id', 'costo_administrativo_id')
             ->withTimestamps()
             ->withPivot([
                 'anho',

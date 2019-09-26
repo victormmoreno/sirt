@@ -104,7 +104,7 @@ class NodoRepository
                 foreach ($costo as $id => $value) {
                     $syncData[$id] = array('costo_administrativo_id' => $value->id,  'anho' =>Carbon::now()->year, 'valor' => 0);
                 }
-                $nodo->costoadministrativonodo()->sync($syncData);
+                $nodo->costoadministrativonodo()->attach($syncData);
             }
 
             DB::commit();

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\DeleteNotifications;
 use App\Console\Commands\QueueWorkCronJons;
+use App\Console\Commands\CostoAdministrativo\CreateCostoAdministrativoForYear;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         DeleteNotifications::class,
         QueueWorkCronJons::class,
+        CreateCostoAdministrativoForYear::class,
     ];
 
     /**
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('costoadministrativo:create')
+                ->yearly()->monthlyOn(1, '01:00');    
         $schedule->command('task:deletenotifications')
             ->environments(config('app.env'))
             ->monthly()

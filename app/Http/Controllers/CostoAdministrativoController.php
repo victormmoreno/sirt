@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CostoAdministrativo;
+use App\Models\Nodo;
+use App\User;
+use Carbon\Carbon;
 use App\Repositories\Repository\CostoAdministrativoRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CostoAdministrativoController extends Controller
 {
@@ -14,7 +18,6 @@ class CostoAdministrativoController extends Controller
     {
         $this->costoAdministrativoRepository = $costoAdministrativoRepository;
         $this->middleware('auth');
-        // abort('403');
     }
     /**
      * Display a listing of the resource.
@@ -24,9 +27,39 @@ class CostoAdministrativoController extends Controller
     public function index()
     {
 
-        // $costos = CostoAdministrativo::with(['nodocostosadministrativos'])->get();
+        $this->authorize('index', CostoAdministrativo::class);
+
+        switch (Session::get('login_role')) {
+            case User::IsAdministrador():
+                return view('costoadministrativo.index');
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo->id;
+                $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->wherePivot('anho', '=', Carbon::now()->addYears(4)->year)->get();
+                return $costos;
+                // return view('costoadministrativo.index');
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+        
+        
+        // $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->get();
         // return $costos;
-        return view('costoadministrativo.index');
+
+        
+        
+        // $costos = CostoAdministrativo::with([
+        //     'nodocostosadministrativos',
+        //     'nodocostosadministrativos.entidad',
+        //     'nodocostosadministrativos.entidad.nodo',
+        // ])->whereHas('nodocostosadministrativos.entidad.nodo', function($query) use($nodo){
+        //     $query->where('nodos.id', '=',$nodo);
+        // })->where('id',1)->first();
+        
+        // return $costos;
+        
     }
 
     /**
