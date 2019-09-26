@@ -7,16 +7,19 @@ use App\Models\Nodo;
 use App\User;
 use Carbon\Carbon;
 use App\Repositories\Repository\CostoAdministrativoRepository;
+use Repositories\Repository\NodoRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class CostoAdministrativoController extends Controller
 {
     private $costoAdministrativoRepository;
+    private $nodoRepository;
 
-    public function __construct(CostoAdministrativoRepository $costoAdministrativoRepository)
+    public function __construct(CostoAdministrativoRepository $costoAdministrativoRepository,  NodoRepository $nodoRepository)
     {
         $this->costoAdministrativoRepository = $costoAdministrativoRepository;
+        $this->nodoRepository = $nodoRepository;
         $this->middleware('auth');
     }
     /**
@@ -29,15 +32,42 @@ class CostoAdministrativoController extends Controller
 
         $this->authorize('index', CostoAdministrativo::class);
 
+        if (request()->ajax()) {
+             
+            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+
+                $nodo = auth()->user()->dinamizador->nodo->id;
+                $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->wherePivot('anho', '=', Carbon::now()->year)->get();
+                return datatables()->of($costos)
+                    
+                   
+
+                    ->addColumn('edit', function ($data) {
+
+                        $button = '<a href="' . route("laboratorio.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+                        return $button;
+                    })
+                    ->rawColumns(['materiales', 'estado', 'lineatecnologica', 'participacion_costos', 'edit'])
+                    ->make(true);
+            }
+
+        }
+
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
-                return view('costoadministrativo.index');
+                return view('costoadministrativo.index',[
+                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                ]);
                 break;
             case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo->id;
-                $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->wherePivot('anho', '=', Carbon::now()->addYears(4)->year)->get();
+               $nodo = auth()->user()->dinamizador->nodo->id;
+                // $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->wherePivot('anho', '=', Carbon::now()->year)->get();
+               $costos = Nodo::findOrFail($nodo)->with(['entidad', 'costoadministrativonodo'])->whereHas('costoadministrativonodo', function($query){
+                    $query->where('costoadministrativonodo.anho') = Carbon::now()->year;
+               });
                 return $costos;
-                // return view('costoadministrativo.index');
+                return view('costoadministrativo.index');
                 break;
             default:
                 return abort('403');
@@ -45,21 +75,29 @@ class CostoAdministrativoController extends Controller
         }
         
         
-        // $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->get();
-        // return $costos;
+    }
+     /**
+     * devolver datatables laboratorio por nodo.
+     *
+     * @param  int nodo
+     * @return \Illuminate\Http\Response
+     */
+    public function getCostoAdministrativoPorNodo($nodo)
+    {
 
-        
-        
-        // $costos = CostoAdministrativo::with([
-        //     'nodocostosadministrativos',
-        //     'nodocostosadministrativos.entidad',
-        //     'nodocostosadministrativos.entidad.nodo',
-        // ])->whereHas('nodocostosadministrativos.entidad.nodo', function($query) use($nodo){
-        //     $query->where('nodos.id', '=',$nodo);
-        // })->where('id',1)->first();
-        
-        // return $costos;
-        
+        if (request()->ajax()) {
+            return datatables()->of($this->laboratorioRepository->findLaboratorioForNodo($nodo))
+                
+
+                ->addColumn('edit', function ($data) {
+
+                    $button = '<a href="' . route("laboratorio.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+                    return $button;
+                })
+                ->rawColumns(['edit'])
+                ->make(true);
+        }
     }
 
     /**
@@ -82,6 +120,8 @@ class CostoAdministrativoController extends Controller
     {
         //
     }
+
+
 
     /**
      * Display the specified resource.
@@ -147,5 +187,27 @@ class CostoAdministrativoController extends Controller
     private function getCostoAdministrativoRepository()
     {
         return $this->costoAdministrativoRepository;
+    }
+
+
+    /**
+     * Asigna un valor a $nodoRepository
+     * @param object $nodoRepository
+     * @return void
+     * @author devjul
+     */
+    private function setNodoRepository($nodoRepository)
+    {
+        $this->nodoRepository = $nodoRepository;
+    }
+
+    /**
+     * Retorna el valor de $nodoRepository
+     * @return object
+     * @author devjul
+     */
+    private function getNodoRepository()
+    {
+        return $this->nodoRepository;
     }
 }
