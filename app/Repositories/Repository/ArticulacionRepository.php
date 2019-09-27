@@ -5,7 +5,8 @@ namespace App\Repositories\Repository;
 use App\Models\Actividad;
 use App\Models\Articulacion;
 use App\Models\ArticulacionProyecto;
-use App\Models\Entidad;use Carbon\Carbon;
+use App\Models\Entidad;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ArticulacionRepository

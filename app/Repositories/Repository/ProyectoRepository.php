@@ -53,17 +53,30 @@ class ProyectoRepository
   }
 
   /**
-   * Consulta la cantidad de proyectos
-   * @param type var Description
-   * @return return type
+   * Consulta la cantidad de proyectos por fecha de inicio y estados diferente a los de cierre
+   * @param int $id Id del gestor
+   * @param string $fecha_inicio Primera fecha para realizar el fitro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
    */
-  public function consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha()
+  public function consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($id, $fecha_inicio, $fecha_fin)
   {
-
+    return Proyecto::select('ep.nombre')
+    ->selectRaw('count(proyectos.id) AS cantidad')
+    ->join('estadosproyecto AS ep', 'ep.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
+    ->join('gestores AS g', 'g.id', '=', 'a.gestor_id')
+    ->where('g.id', $id)
+    ->where('proyectos.estado_aprobacion', 1)
+    ->whereBetween('fecha_inicio', ['2019-01-01', '2019-09-27'])
+    ->whereIn('ep.nombre', ['Inicio', 'Planeacion', 'En ejecución'])
+    ->groupBy('ep.nombre');
   }
 
   /**
-   * Consulta cantidad de proyectos
+   * Consulta cantidad de proyectos por fechas de cierre
    * @param string $estadoProyecto Estado del proyecto que se quiere buscar
    * @param string $fecha_inicio Primera fecha oara realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
@@ -1063,7 +1076,7 @@ class ProyectoRepository
       });
     })
     ->groupBy('proyectos.id')
-    ->dd();
+    ->get();
   }
 
   /**
