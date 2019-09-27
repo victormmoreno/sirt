@@ -36,7 +36,7 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Costos Administrativo {{config('app.name')}}
+                                            Costos Administrativos Fijos Mensuales {{config('app.name')}}
                                         </span>
                                         <i class="material-icons">
                                             settings_input_svideo
@@ -50,7 +50,7 @@
                             <div class="row">
                                     <div class="col s12 m12 l12">
                                         <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " onchange="selectLaboratorioNodo.selectLaboraotrioForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
+                                        <select class="js-states browser-default select2 " onchange="selectCostoAdministrativoNodo.selectCostoAdministrativoForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
                                             <option value="">Seleccione nodo</option>
                                             @foreach($nodos as $nodo)
                                               <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
@@ -62,13 +62,12 @@
                                 <br>
                                 <table class="display responsive-table" id="costoadministrativo_administrador_table">
                                     <thead>
+                                        <th>Nodo</th>
                                         <th>Nombre</th>
-                                        <th>Linea</th>
-                                        <th>Costo Administrativo</th>
-                                        <th>Estado</th>
-                                        <th>Materiales de formación</th>
-                                        <th>Editar</th>                                        
+                                        <th>Costos Administrativos por mes</th>                                      
+                                        <th>Costos Administrativos por día</th>                                      
                                     </thead>
+
                     
                                 </table>
                         </div>
@@ -78,7 +77,7 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Costos Administrativos Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                                            Costos Administrativos Fijos Mensuales Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
                                         </span>
                                         <i class="material-icons">
                                             settings_input_svideo
@@ -91,13 +90,13 @@
                             </div>
                                                        
                                 <br>
-                                <table class="display responsive-table" id="costoadministrativo_dinamizador_table">
+                                <table class="display responsive-table" id="costoadministrativo_dinamizador_table1">
                                     <thead>
+                                        <th>Nodo</th>
                                         <th>Nombre</th>
-                                        <th>Linea</th>
-                                        <th>Costo Administrativo</th>
-                                        <th>Estado</th>
-                                        <th>Materiales de formación</th>
+                                        <th>Costos Administrativos por mes</th>
+                                        <th>Costos Administrativos por día</th>
+                                        <th>Costos Administrativos por hora</th>
                                         <th>Editar</th>  
                                     </thead>
                     

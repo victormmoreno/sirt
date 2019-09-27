@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class CostoAdministrativo extends Model
 {
+
+    const MAX_HORA_ANIO = 1600;
+    const DIAS_AL_ANIO = 243;
+    const DIAS_AL_MES = 26;
+    const HORAS_AL_DIA = 8;
+    
     protected $table = 'costos_administrativos';
 
     /**

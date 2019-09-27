@@ -4,9 +4,9 @@
   </a>
 </li>
 <li class="no-padding  ">
-  <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('nodo') !!} {!! setActiveRoutePadding('nodo')!!}">
+  <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('nodo')!!} {!! setActiveRoutePadding('nodo')!!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodos
-    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('nodo') }}">keyboard_arrow_right</i>
+    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('nodo'), setActiveRouteActiveIcon('costos-administrativos') }}">keyboard_arrow_right</i>
   </a>
   <div class="collapsible-body">
     <ul>
@@ -15,11 +15,17 @@
           <i class="material-icons {{setActiveRouteActiveIcon('nodo')}}">domain</i>
         Nodos</a>
       </li>
+      
       {{-- <li>
         <a href="">Mapa</a>
       </li> --}}
     </ul>
   </div>
+</li>
+<li class="no-padding {{setActiveRoute('costos-administrativos')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos-administrativos')}}" href="{{route('costoadministrativo.index')}}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('costos-administrativos') }}">settings_input_svideo</i>Costos Administrativos
+  </a>
 </li>
 <li class="no-padding {{setActiveRoute('lineas')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}">
