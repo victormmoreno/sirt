@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository};
 use Illuminate\Support\Facades\{Session};
 use Illuminate\Http\Request;
-use App\Models\Gestor;
+use App\Models\{Gestor, Articulacion};
 use App\User;
 
 class SeguimientoController extends Controller
@@ -46,6 +46,29 @@ class SeguimientoController extends Controller
   }
 
   /**
+   * Retorna array con los valores de la cantidad de proyectos de incio, planeacion y ejecucion
+   * @param Collection $proyecto Proyectos
+   * @return array
+   * @author dum
+   */
+  private function agruparProyectosEnInicioPlaneacionEjecucion($proyectos)
+  {
+    $inicio = 0;
+    $planeacion = 0;
+    $ejecucion = 0;
+    foreach ($proyectos as $key => $value) {
+      if ($value->nombre == 'Inicio') {
+        $inicio = $value->cantidad;
+      } else if ($value->nombre == 'Planeacion') {
+        $planeacion = $value->cantidad;
+      } else {
+        $ejecucion = $value->cantidad;
+      }
+    }
+    return array('inicio' => $inicio, 'planeacion' => $planeacion, 'ejecucion' => $ejecucion);
+  }
+
+  /**
    * Consulta el seguimiento de un gestor
    *
    * @param int $id Id del gestor
@@ -67,27 +90,22 @@ class SeguimientoController extends Controller
     $inicio = 0;
     $planeacion = 0;
     $ejecucion = 0;
+    $articulacionGrupos = 0;
+    $articulacionEmpresas = 0;
     $cierrePF = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas('Cierre PF', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $cierrePMV = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas('Cierre PMV', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($idgestor, $fecha_inicio, $fecha_fin)->get();
-    $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionPorGestorYFechasFinalizadas($idgestor, $fecha_inicio, $fecha_fin)->get();
-
-    foreach ($inicios as $key => $value) {
-      if ($value->nombre == 'Inicio') {
-        $inicio = $value->cantidad;
-      } else if ($value->nombre == 'Planeacion') {
-        $planeacion = $value->cantidad;
-      } else {
-        $ejecucion  = $value->cantidad;
-      }
-    }
+    $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorYFechas_Repository($idgestor, $fecha_inicio, $fecha_fin)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorYFechas_Repository($idgestor, $fecha_inicio, $fecha_fin)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
+    $agrupacion = $this->agruparProyectosEnInicioPlaneacionEjecucion($inicios);
 
     $datos['CierrePF'] = $cierrePF;
     $datos['CierrePMV'] = $cierrePMV;
-    $datos['Inicio'] = $inicio;
-    $datos['Planeacion'] = $planeacion;
-    $datos['Ejecucion'] = $ejecucion;
-
+    $datos['Inicio'] = $agrupacion['inicio'];
+    $datos['Planeacion'] = $agrupacion['planeacion'];
+    $datos['Ejecucion'] = $agrupacion['ejecucion'];
+    $datos['ArticulacionesGI'] = $articulacionGrupos;
+    $datos['ArticulacionesEmp'] = $articulacionEmpresas;
 
     return response()->json([
       'datos' => $datos

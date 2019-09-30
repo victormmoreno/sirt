@@ -199,6 +199,11 @@
           name: 'entregables',
           orderable: false
         },
+        {
+          data: 'edit',
+          name: 'edit',
+          orderable: false
+        },
         ],
       });
     }
