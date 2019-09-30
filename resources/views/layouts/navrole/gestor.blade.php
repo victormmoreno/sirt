@@ -39,6 +39,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('seguimiento')}}">
+  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
+  </a>
+</li>
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">attach_money</i>Costos

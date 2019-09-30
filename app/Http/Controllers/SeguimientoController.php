@@ -41,6 +41,10 @@ class SeguimientoController extends Controller
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         // 'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
+    } else if ( Session::get('login_role') == User::IsGestor() ) {
+      return view('seguimiento.gestor.index');
+    } else {
+      abort('403');
     }
 
   }

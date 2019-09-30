@@ -152,7 +152,7 @@
         id = $('#txtgestor_id').val();
       }
 
-      if ( id == "" ) {
+      if ( id === "" ) {
         alertaGestorNoValido();
       } else {
         if ( fecha_inicio > fecha_fin ) {
