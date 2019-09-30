@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 class EdtRepository
 {
 
+  public function consultarArchivosDeUnaEdt($id)
+  {
+    return Edt::find($id)->rutamodel;
+  }
+
   /**
    * Consultaas las edts que se cerraron entre dos fecha (de cierre) y un nodo
    * @param string $fecha_inicio Primera fecha para realizar el filtro

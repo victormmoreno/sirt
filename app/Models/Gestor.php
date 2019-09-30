@@ -37,7 +37,8 @@ class Gestor extends Model
             ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS nombres')
             ->join('users', 'users.id', '=', 'gestores.user_id')
             ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-            ->where('nodos.id', $id);
+            ->where('nodos.id', $id)
+            ->orderBy('users.nombres');
     }
 
     public function user()
