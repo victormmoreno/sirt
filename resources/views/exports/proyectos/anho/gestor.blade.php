@@ -51,8 +51,8 @@
           <td>{{ $value->nombre_linea }}</td>
           <td>{{ $value->sublinea_nombre }}</td>
           <td>{{ $value->nombre_areaconocimiento }}</td>
-          <td>{{ $value->nombre_estadoproyecto }}</td>
-          <td>{{ $value->nombre_tipoproyecto }}</td>
+          <td>{{ $value->estado_nombre }}</td>
+          <td>{{ $value->nombre_tipoarticulacion }}</td>
           <td>{{ $value->talentos }}</td>
           <td>{{ $value->fecha_inicio }}</td>
           <td>{{ $value->fecha_cierre }}</td>

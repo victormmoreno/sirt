@@ -38,6 +38,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('seguimiento')}}">
+  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
+  </a>
+</li>
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">filter_center_focus</i>Sublineas
