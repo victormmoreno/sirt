@@ -44,47 +44,47 @@
                         <button onclick="consultarSeguimientoDeUnGestor(1)" class="btn">Consultar</button>
                       </div>
                       {{-- <div class="center col s12 m6 l6">
-                        <div class="material-icons">
-                          <a onclick="">
-                            <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                          </a>
-                        </div>
-                      </div> --}}
-                    </div>
-                    <div class="col s12 m8 l8">
-                      <div id="graficoSeguimientoPorGestorDeUnNodo_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
-                        <div class="row card-panel">
-                          <h5 class="center">
-                            Para consultar el seguimiento de un gestor, debes seleccionar en el campo de gestores, luego seleccionar
-                            un rango de fecha y por último pulsar el botón de consultar.
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
+                      <div class="material-icons">
+                      <a onclick="">
+                      <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                    </a>
+                  </div>
+                </div> --}}
+              </div>
+              <div class="col s12 m8 l8">
+                <div id="graficoSeguimientoPorGestorDeUnNodo_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                  <div class="row card-panel">
+                    <h5 class="center">
+                      Para consultar el seguimiento de un gestor, debes seleccionar en el campo de gestores, luego seleccionar
+                      un rango de fecha y por último pulsar el botón de consultar.
+                    </h5>
                   </div>
                 </div>
-                {{-- <div id="tecnoparque" class="col s12 m12 l12">
-                <div class="row">
-                <div class="col s12 m4 l4">
-                <div class="row">
-                <div class="input-field col s12 m6 l6">
-                <input type="text" id="fecha_inicioTecnoparque" name="fecha_inicioTecnoparque" class="datepicker picker__input" value="">
-                <label for="fecha_inicioTecnoparque">Fecha Inicio</label>
               </div>
-              <div class="input-field col s12 m6 l6">
-              <input type="text" id="fecha_finTecnoparque" name="fecha_finTecnoparque" class="datepicker picker__input" value="">
-              <label for="fecha_finTecnoparque">Fecha Fin</label>
             </div>
           </div>
-          <center>
-          <button id="consultarTecnoparque" class="btn">Consultar</button>
-          <button id="jsPDFTecnoparque" class="btn red">PDF</button>
-        </center>
+          {{-- <div id="tecnoparque" class="col s12 m12 l12">
+          <div class="row">
+          <div class="col s12 m4 l4">
+          <div class="row">
+          <div class="input-field col s12 m6 l6">
+          <input type="text" id="fecha_inicioTecnoparque" name="fecha_inicioTecnoparque" class="datepicker picker__input" value="">
+          <label for="fecha_inicioTecnoparque">Fecha Inicio</label>
+        </div>
+        <div class="input-field col s12 m6 l6">
+        <input type="text" id="fecha_finTecnoparque" name="fecha_finTecnoparque" class="datepicker picker__input" value="">
+        <label for="fecha_finTecnoparque">Fecha Fin</label>
       </div>
-      <div id="idSeguimientoTecnoparque" class="col s12 m8 l8">
-      <canvas id="SeguimientoTecnoparque" height="140"></canvas>
     </div>
-  </div>
+    <center>
+    <button id="consultarTecnoparque" class="btn">Consultar</button>
+    <button id="jsPDFTecnoparque" class="btn red">PDF</button>
+  </center>
+</div>
+<div id="idSeguimientoTecnoparque" class="col s12 m8 l8">
+  <canvas id="SeguimientoTecnoparque" height="140"></canvas>
+</div>
+</div>
 </div> --}}
 {{-- <div id="linea" class="col s12 m12 l12">
   <div class="row">
@@ -125,9 +125,119 @@
 @endsection
 @push('script')
   <script>
-    $(document).ready(function(){
-      // consultarEdtsPorNodoGestorYFecha_stacked(0);
-      // consultarEdtsDelNodoPorAnho_variablepie(0);
-    });
-  </script>
-@endpush
+    var graficosSeguimiento = {
+      gestor: 'graficoSeguimientoPorGestorDeUnNodo_column'
+    };
+
+    function alertaLineaNoValido() {
+      Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+    };
+
+    function alertaGestorNoValido() {
+      Swal.fire('Advertencia!', 'Seleccione un Gestor', 'warning');
+    };
+
+    function alertaFechasNoValidas() {
+      Swal.fire('Advertencia!', 'Seleccione fechas válidas', 'warning');
+    };
+    // 0 para cuando el Dinamizador consultar
+    // 1 para cuando el gestor consulta
+
+    function consultarSeguimientoDeUnGestor(bandera) {
+      let id = 0;
+      let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
+      let fecha_fin = $('#txtfecha_fin_Gestor').val();
+
+      if ( bandera == 1 ) {
+        id = $('#txtgestor_id').val();
+      }
+
+      if ( id == "" ) {
+        alertaGestorNoValido();
+      } else {
+        if ( fecha_inicio > fecha_fin ) {
+          alertaFechasNoValidas();
+        } else {
+          $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: '/seguimiento/seguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+            success: function (data) {
+              // console.log(data.length);
+              // for (var i = 0; i < 7; i++) {
+                //   console.log(data.datos[i]);
+                // }
+                graficoSeguimiento(data, graficosSeguimiento.gestor);
+              },
+              error: function (xhr, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+              },
+            })
+          }
+        }
+      };
+
+      function graficoSeguimiento(data, name) {
+        console.log(data.datos.Inicio);
+        Highcharts.chart(name, {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: 'Seguimiento'
+          },
+          yAxis: {
+            title: {
+              text: 'Cantidad'
+            }
+          },
+          xAxis: {
+            type: 'category'
+          },
+          legend: {
+            enabled: false
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+          },
+          series: [
+          {
+            colorByPoint: true,
+            data: [
+            {
+              name: "Proyectos en Inicio",
+              y: data.datos.Inicio,
+            },
+            {
+              name: "Proyectos en Planeación",
+              y: data.datos.Planeacion,
+            },
+            {
+              name: "Proyectos en Ejecución",
+              y: data.datos.Ejecucion,
+            },
+            {
+              name: "Proyectos en Cierre PF",
+              y: data.datos.CierrePF,
+            },
+            {
+              name: "Proyectos en Cierre PMV",
+              y: data.datos.CierrePMV,
+            },
+            {
+              name: "Articulaciones con Grupo de Investigación",
+              y: data.datos.ArticulacionesGI,
+            },
+            {
+              name: "Articulaciones con Grupo de Empresas",
+              y: data.datos.ArticulacionesEmp,
+            }
+            ]
+          }
+          ],
+        });
+      }
+
+    </script>
+  @endpush
