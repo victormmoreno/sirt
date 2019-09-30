@@ -37,7 +37,7 @@ class CostoAdministrativoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
 
                 $nodo   = auth()->user()->dinamizador->nodo->id;
-                $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
+                $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativoNodo()
                     ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
                     ->where('nodos.id', $nodo)
                     ->get();
@@ -48,16 +48,16 @@ class CostoAdministrativoController extends Controller
                         return $button;
                     })
                     ->addColumn('costosadministrativospordia', function ($data) {
-                        return '$ '.number_format(round($data->valor/CostoAdministrativo::DIAS_AL_MES,2));
+                        return '$ ' . number_format(round($data->valor / CostoAdministrativo::DIAS_AL_MES, 2));
                     })
                     ->addColumn('costosadministrativosporhora', function ($data) {
-                        return '$ '.number_format(round(($data->valor/CostoAdministrativo::DIAS_AL_MES)/CostoAdministrativo::HORAS_AL_DIA,2));
+                        return '$ ' . number_format(round(($data->valor / CostoAdministrativo::DIAS_AL_MES) / CostoAdministrativo::HORAS_AL_DIA, 2));
                     })
-                    ->editColumn('valor', function($data){
-                         return '$ '.number_format($data->valor);
+                    ->editColumn('valor', function ($data) {
+                        return '$ ' . number_format($data->valor);
                     })
-                    ->editColumn('entidad', function($data){
-                         return 'Tecnoparque Nodo '.$data->entidad;
+                    ->editColumn('entidad', function ($data) {
+                        return 'Tecnoparque Nodo ' . $data->entidad;
                     })
                     ->rawColumns(['edit', 'costosadministrativospordia', 'costosadministrativosporhora'])
                     ->make(true);
@@ -78,7 +78,7 @@ class CostoAdministrativoController extends Controller
                 // $costos = Nodo::findOrFail($nodo)->costoadministrativonodo()->wherePivot('anho', '=', Carbon::now()->year)->get();
                 // $data = (CostoAdministrativo::HORAS_AL_DIA * CostoAdministrativo::DIAS_AL_MES);
                 // return $data;
-                $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
+                $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativoNodo()
                     ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
                     ->where('nodos.id', $nodo)
                     ->get();
@@ -104,7 +104,7 @@ class CostoAdministrativoController extends Controller
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
-                $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
+                $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativoNodo()
                     ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
                     ->where('nodos.id', $nodo)
                     ->get();
@@ -116,14 +116,17 @@ class CostoAdministrativoController extends Controller
 
                         return $button;
                     })
-                    ->editColumn('valor', function($data){
-                         return '$ '.$data->valor;
+                    ->editColumn('valor', function ($data) {
+                        return '$ ' . number_format($data->valor);
+                    })
+                    ->addColumn('costosadministrativosporhora', function ($data) {
+                        return '$ ' . number_format(round(($data->valor / CostoAdministrativo::DIAS_AL_MES) / CostoAdministrativo::HORAS_AL_DIA, 2));
                     })
                     ->addColumn('costosadministrativospordia', function ($data) {
 
-                        return '$ '.round($data->valor/CostoAdministrativo::DIAS_AL_MES,2);
+                        return '$ ' . number_format(round($data->valor / CostoAdministrativo::DIAS_AL_MES, 2));
                     })
-                    ->rawColumns(['edit', 'costosadministrativospordia'])
+                    ->rawColumns(['edit', 'costosadministrativospordia', 'costosadministrativosporhora'])
                     ->make(true);
             } else {
                 return response()->json(['data' => 'no response']);
@@ -132,27 +135,6 @@ class CostoAdministrativoController extends Controller
         } else {
             abort('403');
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -174,48 +156,61 @@ class CostoAdministrativoController extends Controller
      */
     public function edit($id)
     {
-        $costo = CostoAdministrativo::findOrFail($id);
-        $past = $costo->nodocostosadministrativos()
-            ->wherePivot('anho', Carbon::now()->year)
-            ->get();
 
-        // return $past;
-        // return CostoAdministrativo::with(['nodocostosadministrativos'])
-        // // ->whereHas('nodocostosadministrativos', function($query){
-        // //     $query->where('id',1);
-        // // })
-        // ->get();
-        return CostoAdministrativo::select('nodos.id', 'entidades.slug', 'entidades.nombre as entidad', 'entidades.email_entidad', 'nodo_costoadministrativo.valor', 'nodo_costoadministrativo.anho', 'costos_administrativos.nombre as costoadministrativo')
-            ->join('nodo_costoadministrativo', 'nodo_costoadministrativo.costo_administrativo_id', '=', 'costos_administrativos.id')
-            ->join('nodos', 'nodos.id', '=', 'nodo_costoadministrativo.nodo_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        $costoAdministrativo = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
             ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
-            ->where('nodos.id',auth()->user()->dinamizador->nodo->id)
-
+            ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
             ->findOrFail($id);
+
+        $this->authorize('edit', $costoAdministrativo);
+
+        return view('costoadministrativo.edit', [
+            'costoadministrativo' => $costoAdministrativo,
+        ]);
+
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $costoAdministrativo = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
+            ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
+            ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
+            ->findOrFail($id);
+
+        $this->authorize('update', $costoAdministrativo);
+
+        $this->validateCostoAdministrativo($request);
+
+        $responseCostoAdministrativo = $this->getCostoAdministrativoRepository()->update($request, $costoAdministrativo);
+
+        if ($responseCostoAdministrativo == true) {
+            
+            alert()->success("El Costo Administrativo ha sido  modificado.", 'Modificación Exitosa', "success");
+        } else {
+            alert()->error("El Costo Administrativo ha sido  modificado.", 'Modificación Errónea', "error");
+        }
+
+        return redirect()->route('costoadministrativo.index');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Validate the user costo administrativo request.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 
      */
-    public function destroy($id)
+    protected function validateCostoAdministrativo(Request $request)
     {
-        //
+        $this->validate($request, [
+            'txtvalor' => 'required|numeric|between:0,999999999999.99',
+        ], [
+            'txtvalor.required' => 'El valor es obligatorio',
+            'txtvalor.numeric'  => 'El valor es debe ser numérico',
+            'txtvalor.between'  => 'El valor es debe estar entre 0 y 999999999999.99',
+        ]);
     }
 
     /**

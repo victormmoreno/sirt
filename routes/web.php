@@ -140,12 +140,12 @@ Route::resource('costos-administrativos', 'CostoAdministrativoController', [
         'except' => [
             'create',
             'store',
-            'destroy'
+            'destroy',
+            'show',
         ]
     ])->names([
         'update'  => 'costoadministrativo.update',
         'edit'    => 'costoadministrativo.edit',
-        'show'    => 'costoadministrativo.show',
         'index'   => 'costoadministrativo.index',
     ])
     ->parameters([
@@ -155,6 +155,33 @@ Route::resource('costos-administrativos', 'CostoAdministrativoController', [
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 
 /*=====  End of seccion para las rutas de costos administrativos  ======*/
+
+/*======================================================================
+=            seccion para las rutas de los costos proyectos            =
+======================================================================*/
+
+Route::resource('costos', 'CostoController', [
+        'as' => 'costos', 
+        // 'except' => [
+        //     'create',
+        //     'store',
+        //     'destroy'
+        // ]
+    ])->names([
+        'create'  => 'costo.create',
+        'update'  => 'costo.update',
+        'edit'    => 'costo.edit',
+        'show'    => 'costo.show',
+        'index'   => 'costo.index',
+        'destroy'   => 'costo.destroy',
+
+    ]);
+    // ->parameters([
+    //     'costos_administrativo' => 'id',
+    // ]);
+
+/*=====  End of seccion para las rutas de los costos proyectos  ======*/
+
 
 
 /*======================================================================

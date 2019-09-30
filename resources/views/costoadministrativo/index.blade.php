@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Laboratorio Tecnopaque nodo ' )
+@section('meta-title', 'Laboratorio Tecnopaque nodo ')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -33,7 +33,7 @@
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                         <div class="row">
                             <div class="row">
-                                <div class="col s12 m12 l10">
+                                <div class="col s12 m12 l12">
                                     <div class="center-align">
                                         <span class="card-title center-align">
                                             Costos Administrativos Fijos Mensuales {{config('app.name')}}
@@ -42,8 +42,7 @@
                                             settings_input_svideo
                                         </i>
                                     </div>
-                                </div>
-                                
+                                </div> 
                             </div>
                             <div class="divider">
                             </div>
@@ -67,23 +66,29 @@
                                         <tr>
                                             <th rowspan="2">Nodo</th>
                                             <th rowspan="2">Nombre</th>
-                                            <th colspan="2">Costos</th>
+                                            <th colspan="3">Costos</th>
                                         </tr>
-                                        <tr>
-                                                
+                                        <tr>   
                                             <th>Costos Administrativos por mes</th>                                  
                                             <th>Costos Administrativos por día</th>
-                                        </tr>
-                                                                              
+                                            <th>Costos Administrativos por hora</th>
+                                        </tr>                                     
                                     </thead>
-
-                    
+                                    <tfoot>
+                                    <tr>
+                                        <th colspan="2" style="text-align:right"></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        
+                                    </tr>
+                                </tfoot>
                                 </table>
                         </div>
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
                         <div class="row">
                             <div class="row">
-                                <div class="col s12 m12 l10">
+                                <div class="col s12 m12 l12">
                                     <div class="center-align">
                                         <span class="card-title center-align">
                                             Costos Administrativos Fijos Mensuales Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
@@ -96,20 +101,32 @@
                                
                             </div>
                             <div class="divider">
-                            </div>
-                                                       
-                                <br>
-                                <table class="display responsive-table" id="costoadministrativo_dinamizador_table1">
-                                    <thead>
-                                        <th>Nodo</th>
-                                        <th>Nombre</th>
-                                        <th>Costos Administrativos por mes</th>
+                            </div>                      
+                            <br>
+                            <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_dinamizador_table1">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Nodo</th>
+                                        <th rowspan="2">Nombre</th>
+                                        <th colspan="3">Costos</th>
+                                        <th rowspan="2">Editar</th>
+                                    </tr>
+                                    <tr>   
+                                        <th>Costos Administrativos por mes</th>                                  
                                         <th>Costos Administrativos por día</th>
                                         <th>Costos Administrativos por hora</th>
-                                        <th>Editar</th>  
-                                    </thead>
-                    
-                                </table>
+                                       
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" style="text-align:right"></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     @endif
                     </div>
