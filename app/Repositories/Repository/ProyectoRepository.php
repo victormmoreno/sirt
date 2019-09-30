@@ -1217,7 +1217,7 @@ class ProyectoRepository
       $articulacion_proyecto->talentos()->sync($syncData, false);
 
       $idUsers = array();
-      for ($i=0; $i < 2 ; $i++) {
+      for ($i=0; $i < 3 ; $i++) {
         $idUsers[$i] = $dataAprobacion[$i]['user_id'];
       }
 
