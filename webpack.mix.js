@@ -31,6 +31,7 @@ mix.scripts([
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
+		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
 		'resources/assets/plugins/select2/js/select2.min.js',
 		'resources/assets/plugins/select2/js/i18n/es.js',
 		'resources/assets/plugins/dropzone/dropzone.js',

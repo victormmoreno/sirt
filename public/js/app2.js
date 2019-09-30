@@ -4567,8 +4567,28 @@ $(document).ready(function() {
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
-        "lengthChange": false
+        "pagingType": "full_numbers",
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text:      '<i class="fa fa-files-o"></i>',
+                titleAttr: 'EXCEL',
+                className: 'waves-effect waves-light btn',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                }
+            },
+            {
+                text: 'PDF',
+                className: 'waves-effect waves-light btn red',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                }
+            }
+        ],
+
     });
+
 });
 
 var selectCostoAdministrativoNodo = {
@@ -4584,11 +4604,26 @@ var selectCostoAdministrativoNodo = {
                 processing: true,
                 serverSide: true,
                 "lengthChange": false,
+                "order": [[ 1, "asc" ]],
+                 fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                
+    
+                // "paging":   false,
+                // "ordering": false,
+                // "info":     false,
+                // "dom": '<"top"i>rt<"bottom"flp><"clear">',
+                // stateSave: true,
+                // "scrollY":        "200px",
+                // // "scrollCollapse": true,
+                "pagingType": "full_numbers",
                 ajax: {
                     url: "/costos-administrativos/costoadministrativo/" + nodo,
                     type: "get",
                 },
-                dom: "Bfrtip",
+                
  
          
                 columns: [{
@@ -4613,12 +4648,14 @@ var selectCostoAdministrativoNodo = {
 
            	});
 
+
         }else{
             $('#costoadministrativo_administrador_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
-                "lengthChange": false
+                "lengthChange": false,
+                "pagingType": "full_numbers",
             }).clear().draw();
         }
         

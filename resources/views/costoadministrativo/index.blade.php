@@ -60,12 +60,21 @@
                                     </div>
                                 </div>
                                 <br>
-                                <table class="display responsive-table" id="costoadministrativo_administrador_table">
+                                
+                                <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_administrador_table"  style="width:100%">
+
                                     <thead>
-                                        <th>Nodo</th>
-                                        <th>Nombre</th>
-                                        <th>Costos Administrativos por mes</th>                                      
-                                        <th>Costos Administrativos por día</th>                                      
+                                        <tr>
+                                            <th rowspan="2">Nodo</th>
+                                            <th rowspan="2">Nombre</th>
+                                            <th colspan="2">Costos</th>
+                                        </tr>
+                                        <tr>
+                                                
+                                            <th>Costos Administrativos por mes</th>                                  
+                                            <th>Costos Administrativos por día</th>
+                                        </tr>
+                                                                              
                                     </thead>
 
                     
