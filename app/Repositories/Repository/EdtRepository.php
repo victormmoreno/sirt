@@ -2,11 +2,9 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\Actividad;
-use App\Models\Edt;
-use App\Models\TipoEdt;
-use Carbon\Carbon;
+use App\Models\{Actividad, Edt, TipoEdt};
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class EdtRepository
 {
@@ -14,6 +12,22 @@ class EdtRepository
   public function consultarArchivosDeUnaEdt($id)
   {
     return Edt::find($id)->rutamodel;
+  }
+
+  /**
+   * Consulta la cantidad de edts entre un rango de fechas (fecha_inicio)
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Collection
+   * @author dum
+   */
+  public function consultaEdtsDeUnGestorPorFechas_Respository($fecha_inicio, $fecha_fin)
+  {
+    return Edt::selectRaw('COUNT(edts.id) AS cantidad')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
   }
 
   /**
