@@ -174,13 +174,14 @@ class ProyectoRepository
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
     ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_expedicion')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto_talento.id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
     ->join('users', 'users.id', '=', 'talentos.user_id')
     ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
     ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_expedicion_id')
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-    ->where('talento_lider', 1);
+    ->where('talento_lider', 1)
+    ->where('proyectos.id', $id);
   }
 
   /**
@@ -1217,11 +1218,16 @@ class ProyectoRepository
       $articulacion_proyecto->talentos()->sync($syncData, false);
 
       $idUsers = array();
+      // $auxiliar = array();
       for ($i=0; $i < 3 ; $i++) {
         $idUsers[$i] = $dataAprobacion[$i]['user_id'];
       }
 
       $idUsers = array_unique($idUsers);
+      $idUsers = array_values($idUsers);
+      // $auxiliar = $idUsers;
+
+      // dd($idUsers);
 
       for ($i=0; $i < count($idUsers) ; $i++) {
         Notification::send(User::find($idUsers[$i]), new ProyectoPendiente($proyecto));
