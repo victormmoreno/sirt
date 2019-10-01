@@ -18,7 +18,8 @@ class EdtsUnicaExport extends FatherExport
   {
     $this->setEntidades($entidades);
     $this->setQuery($query);
-    $this->setCount($this->getQuery()->count() + 7);
+    $this->setCount(8);
+    // dd($this->getEntidades()->count());
     $this->setRangeHeadingCell('A7:O7');
     $this->setRangeBodyCell('A8:O8');
   }
@@ -80,8 +81,35 @@ class EdtsUnicaExport extends FatherExport
         $event->sheet->getStyle('N7:N'.$this->getCount())->applyFromArray($styles['impares']);
         $event->sheet->getStyle('O7:O'.$this->getCount())->applyFromArray($styles['pares']);
         // $event->sheet->getStyle('P7:P8')->applyFromArray($styles['impares']);
+        $this->printEntidades($event, $styles);
+
       },
     ];
+  }
+
+  /**
+   * Muestra las entidades de una edt en el archivo Excel
+   * @param AfterSheet $event
+   * @param array $styles
+   * @return void
+   * @author dum
+   */
+  public function printEntidades($event, $styles)
+  {
+    $event->sheet->mergeCells('G11:H11');
+    $event->sheet->setCellValue('G11', 'Empresas que participan');
+    $event->sheet->setCellValue('G12', 'Nit');
+    $event->sheet->setCellValue('H12', 'Nombre');
+    $event->sheet->getStyle('G11:H12')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+    $row = 0;
+    $inicio = 13;
+    foreach ($this->getEntidades() as $key => $value) {
+      $row = $inicio + $key;
+      $event->sheet->setCellValue('G'.$row, $value->nit);
+      $event->sheet->setCellValue('H'.$row, $value->nombre);
+    }
+    $event->sheet->getStyle('G11:H'.$row)->applyFromArray($styles['pares']);
+    $event->sheet->getStyle('G11:H'.$row)->applyFromArray($this->styleArray())->getFont()->setBold(1);
   }
 
   /**

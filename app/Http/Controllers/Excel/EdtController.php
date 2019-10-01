@@ -122,6 +122,7 @@ class EdtController extends Controller
   {
     $query = $this->getEdtRepository()->consultarDetalleDeUnaEdt($id);
     $this->setQuery($query);
+    // dd(count($query));
     $entidades = $this->getEdtRepository()->entidadesDeUnaEdt($id);
     return Excel::download(new EdtsUnicaExport($this->getQuery(), $entidades), 'Edt ' . $this->getQuery()->codigo_edt . '.xls');
   }
