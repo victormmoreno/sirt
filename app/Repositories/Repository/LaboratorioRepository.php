@@ -71,6 +71,23 @@ class LaboratorioRepository
     }
 
     /**
+     * devolver consulta laboratorios por nodo pluck con id y nombre.
+     *
+     * @param int $nodo
+     * @return array
+     */
+
+    public function pluckLaboratorioForNodo($nodo)
+    {
+        return Laboratorio::LaboratorioWithRelations(['nodo'])
+            ->whereHas('nodo', function ($query) use ($nodo) {
+                $query->where('id', $nodo);
+            });
+    }
+
+
+
+    /**
      * devolver consulta laboratorios por id.
      *
      * @param int $id

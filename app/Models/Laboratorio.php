@@ -131,11 +131,14 @@ class Laboratorio extends Model
 
     public function usoinfraestructuras()
     {
-        return $this->belongsToMany(UsoInfraestructura::class, 'uso_laboratorios', 'usoinfraestructura_id','laboratorio_id')
+        return $this->belongsToMany(UsoInfraestructura::class, 'uso_laboratorios', 'usoinfraestructura_id', 'laboratorio_id')
             ->withTimestamps()
             ->withPivot('tiempo');
     }
 
-
+    public function equipos()
+    {
+        return $this->hasMany(Equipos::class, 'laboratorio_id', 'id');
+    }
 
 }

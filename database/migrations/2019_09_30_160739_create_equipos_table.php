@@ -18,7 +18,8 @@ class CreateEquiposTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedBigInteger('laboratorio_id');
-            $table->string('referencia', 20)->unique();
+            $table->string('codigo_equipo', 20)->unique();
+            $table->string('referencia', 50);
             $table->string('nombre', 45);
             $table->string('marca', 45);
             $table->string('costo_adquisicion', 45)->default(0);

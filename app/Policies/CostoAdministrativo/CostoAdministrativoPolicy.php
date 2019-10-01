@@ -2,7 +2,6 @@
 
 namespace App\Policies\CostoAdministrativo;
 
-use App\CostoAdministrativo;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

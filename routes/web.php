@@ -182,6 +182,36 @@ Route::resource('costos', 'CostoController', [
 
 /*=====  End of seccion para las rutas de los costos proyectos  ======*/
 
+/*===============================================
+=            seccion para los equipo            =
+===============================================*/
+
+Route::get('/equipos/consultarEquipoPorCodigo/{codigo}', 'EquipoController@getEquipoPorCodigo')->name('equipo.consultaequipoporcodigo');
+Route::resource('equipos', 'EquipoController', [
+        'as' => 'equipos', 
+        'except' => [
+            // 'create',
+            // 'store',
+            // 'destroy',
+            // 'show',
+        ]
+    ])->names([
+        'index'   => 'equipo.index',
+        'create'  => 'equipo.create',
+        'store'   => 'equipo.store',
+        'show'    => 'equipo.show',
+        'update'  => 'equipo.update',
+        'edit'    => 'equipo.edit',
+        'destroy' => 'equipo.destroy',
+    ])
+    ->parameters([
+        'equipos' => 'id',
+    ]);
+
+/*=====  End of seccion para los equipo  ======*/
+
+Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
+
 
 
 /*======================================================================
