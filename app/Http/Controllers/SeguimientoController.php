@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository};
+use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository, EdtRepository};
 use Illuminate\Support\Facades\{Session};
 use Illuminate\Http\Request;
 use App\Models\{Gestor, Articulacion};
@@ -22,10 +22,17 @@ class SeguimientoController extends Controller
    * @var object
    */
   private $articulacionRepository;
+  /**
+   * Objeto para la clade EdtRepository
+   *
+   * @var object
+   */
+  private $edtRepository;
 
-  public function __construct(ProyectoRepository $proyectoRepository, ArticulacionRepository $articulacionRepository) {
+  public function __construct(ProyectoRepository $proyectoRepository, ArticulacionRepository $articulacionRepository, EdtRepository $edtRepository) {
     $this->setProyectoRepository($proyectoRepository);
     $this->setArticulacionRepository($articulacionRepository);
+    $this->setEdtRepository($edtRepository);
   }
 
   /**
@@ -96,12 +103,14 @@ class SeguimientoController extends Controller
     $ejecucion = 0;
     $articulacionGrupos = 0;
     $articulacionEmpresas = 0;
+    $edts = 0;
     $cierrePF = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas('Cierre PF', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $cierrePMV = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas('Cierre PMV', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($idgestor, $fecha_inicio, $fecha_fin)->get();
     $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorYFechas_Repository($idgestor, $fecha_inicio, $fecha_fin)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
     $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorYFechas_Repository($idgestor, $fecha_inicio, $fecha_fin)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
     $agrupacion = $this->agruparProyectosEnInicioPlaneacionEjecucion($inicios);
+    $edts = $this->getEdtRepository()->consultaEdtsDeUnGestorPorFechas_Respository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
 
     $datos['CierrePF'] = $cierrePF;
     $datos['CierrePMV'] = $cierrePMV;
@@ -110,6 +119,7 @@ class SeguimientoController extends Controller
     $datos['Ejecucion'] = $agrupacion['ejecucion'];
     $datos['ArticulacionesGI'] = $articulacionGrupos;
     $datos['ArticulacionesEmp'] = $articulacionEmpresas;
+    $datos['Edts'] = $edts;
 
     return response()->json([
       'datos' => $datos
@@ -156,6 +166,27 @@ class SeguimientoController extends Controller
   private function getArticulacionRepository()
   {
     return $this->articulacionRepository;
+  }
+
+  /**
+   * Asigna un valor a $edtRepository
+   * @param object $edtRepository
+   * @return void
+   * @author dum
+   */
+  private function setEdtRepository($edtRepository)
+  {
+    $this->edtRepository = $edtRepository;
+  }
+
+  /**
+   * Retorna el valor de $edtRepository
+   * @return object
+   * @author dum
+   */
+  private function getEdtRepository()
+  {
+    return $this->edtRepository;
   }
 
 }
