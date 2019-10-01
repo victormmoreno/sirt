@@ -211,18 +211,18 @@ class ProyectoRepository
           // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
 
           // Instancia de la clase ArchivoRepository
-          $archivoRepo = new ArchivoRepository();
+          // $archivoRepo = new ArchivoRepository();
+
           // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
-          $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
-          // dd($outputPdf);
-          // exit();
+          // $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
+
           // Guarda la ruta de los archivos en la base de datos
-          $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
+          // $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
 
           // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
           $proyecto->update([
-            'estado_aprobacion' => Proyecto::IsAceptado(),
-            'acc' => 1
+            'estado_aprobacion' => Proyecto::IsAceptado()
+            // 'acc' => 1
           ]);
         } else {
           // En caso de que UNO SOLO no haya aprobado el proyecto
