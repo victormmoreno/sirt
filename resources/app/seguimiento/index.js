@@ -36,10 +36,6 @@ function consultarSeguimientoDeUnGestor(bandera) {
         type: 'get',
         url: '/seguimiento/seguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data.length);
-          // for (var i = 0; i < 7; i++) {
-          //   console.log(data.datos[i]);
-          // }
           graficoSeguimiento(data, graficosSeguimiento.gestor);
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -51,7 +47,6 @@ function consultarSeguimientoDeUnGestor(bandera) {
 };
 
 function graficoSeguimiento(data, name) {
-  console.log(data.datos.Inicio);
   Highcharts.chart(name, {
     chart: {
       type: 'column'
@@ -105,6 +100,10 @@ function graficoSeguimiento(data, name) {
           {
             name: "Articulaciones con Grupo de Empresas",
             y: data.datos.ArticulacionesEmp,
+          },
+          {
+            name: "Edts",
+            y: data.datos.Edts,
           }
         ]
       }
