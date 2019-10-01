@@ -197,11 +197,11 @@
             <div class="row">
                 <div class="input-field col s12 m6 l6">
 
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
+                    </i> --}}
                     @if(isset($user->ciudadexpedicion->departamento->id))
-                    <select class="" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserEdit.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserEdit.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudadexpedicion->departamento->id))
@@ -212,7 +212,7 @@
                         @endforeach
                     </select>
                     @else
-                    <select class="" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudadexpedicion->departamento->id))
@@ -223,28 +223,28 @@
                         @endforeach
                     </select>
                     @endif
-                    <label for="txtdepartamentoexpedicion">Departamento de Expedición <span class="red-text">*</span></label>
+                    <label class="active" for="txtdepartamentoexpedicion">Departamento de Expedición <span class="red-text">*</span></label>
                     @error('txtdepartamentoexpedicion')
                         <label id="txtdepartamentoexpedicion-error" class="error" for="txtdepartamentoexpedicion">{{ $message }}</label>
                     @enderror
                 </div>
 
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
+                    </i> --}}
                     @if(isset($user->ciudad_expedicion_id))
-                    <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
 
                     </select>
                     @else
-                    <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
                     </select>
                     @endif
 
-                    <label for="txtciudadexpedicion">Ciudad de Expedición <span class="red-text">*</span></label>
+                    <label class="active" for="txtciudadexpedicion">Ciudad de Expedición <span class="red-text">*</span></label>
                     @error('txtciudadexpedicion')
                         <label id="txtciudadexpedicion-error" class="error" for="txtciudadexpedicion">{{ $message }}</label>
                     @enderror
@@ -305,10 +305,10 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6" >
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
-                    <select class="" id="txteps" name="txteps" style="width: 100%" tabindex="-1" onchange="eps.getOtraEsp(this)">
+                    </i> --}}
+                    <select class="js-states browser-default select2" id="txteps" name="txteps" style="width: 100%" tabindex="-1" onchange="eps.getOtraEsp(this)">
                         <option value="">Seleccione eps</option>
                         @foreach($eps as $value)
                             @if(isset($user->eps_id))
@@ -318,7 +318,7 @@
                             @endif
                         @endforeach
                     </select>
-                    <label for="txteps" >Esp <span class="red-text">*</span></label>
+                    <label class="active" for="txteps" >Esp <span class="red-text">*</span></label>
                     @error('txteps')
                         <label id="txteps-error" class="error" for="txteps">{{ $message }}</label>
                     @enderror
@@ -357,11 +357,11 @@
             <div class="row">
                 <div class="input-field col s12 m6 l6">
 
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
+                    </i> --}}
                     @if(isset($user->ciudad->departamento->id))
-                    <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserEdit.getCiudad()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="UserEdit.getCiudad()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudad->departamento->id))
@@ -372,7 +372,7 @@
                         @endforeach
                     </select>
                     @else
-                    <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudad->departamento->id))
@@ -383,28 +383,28 @@
                         @endforeach
                     </select>
                     @endif
-                    <label for="txtdepartamento">Departamento de Residencia <span class="red-text">*</span></label>
+                    <label class="active" for="txtdepartamento">Departamento de Residencia <span class="red-text">*</span></label>
                     @error('txtdepartamento')
                         <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
                     @enderror
                 </div>
 
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
+                    </i> --}}
                     @if(isset($user->ciudad_id))
-                    <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
 
                     </select>
                     @else
-                    <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
                     </select>
                     @endif
 
-                    <label for="txtciudad">Ciudad de Residencia <span class="red-text">*</span></label>
+                    <label class="active" for="txtciudad">Ciudad de Residencia <span class="red-text">*</span></label>
                     @error('txtciudad')
                         <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
                     @enderror
