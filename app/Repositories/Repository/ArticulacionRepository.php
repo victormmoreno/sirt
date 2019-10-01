@@ -66,6 +66,7 @@ class ArticulacionRepository
     'actividades.fecha_inicio',
     'actividades.fecha_cierre',
     'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'articulaciones.observaciones',
     'actividades.nombre')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
@@ -106,6 +107,7 @@ class ArticulacionRepository
     'actividades.fecha_inicio',
     'actividades.fecha_cierre',
     'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'articulaciones.observaciones',
     'actividades.nombre')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
@@ -148,6 +150,7 @@ class ArticulacionRepository
     'actividades.fecha_inicio',
     'actividades.fecha_cierre',
     'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'articulaciones.observaciones',
     'actividades.nombre')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
@@ -187,6 +190,7 @@ class ArticulacionRepository
     'actividades.fecha_inicio',
     'actividades.fecha_cierre',
     'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'articulaciones.observaciones',
     'actividades.nombre')
     ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
