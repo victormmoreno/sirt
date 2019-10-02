@@ -17,8 +17,7 @@ class CreateEquiposTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedBigInteger('laboratorio_id');
-            $table->string('codigo_equipo', 20)->unique();
+            $table->unsignedInteger('lineatecnologica_id');
             $table->string('referencia', 50);
             $table->string('nombre', 45);
             $table->string('marca', 45);
@@ -27,10 +26,10 @@ class CreateEquiposTable extends Migration
             $table->year('anio_compra');
             $table->timestamps();
 
-            $table->index(["laboratorio_id"], 'fk_laboratorio_equipos1_idx');
+            $table->index(["lineatecnologica_id"], 'fk_lineatecnologica_equipos1_idx');
 
-            $table->foreign('laboratorio_id', 'fk_laboratorio_equipos1_idx')
-                ->references('id')->on('laboratorios')
+            $table->foreign('lineatecnologica_id', 'fk_lineatecnologica_equipos1_idx')
+                ->references('id')->on('lineastecnologicas')
                 ->onDelete('no action')
                 ->onUpdate('no action');
         });

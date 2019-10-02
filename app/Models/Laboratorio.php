@@ -136,9 +136,4 @@ class Laboratorio extends Model
             ->withPivot('tiempo');
     }
 
-    public function equipos()
-    {
-        return $this->hasMany(Equipos::class, 'laboratorio_id', 'id');
-    }
-
 }

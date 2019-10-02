@@ -16,6 +16,8 @@ mix.js('resources/js/app.js', 'public/js');
 mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
+		'resources/assets/plugins/font-awesome/css/all.css',
+		
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
 		'resources/assets/plugins/select2/css/select2.css',
 		'resources/assets/plugins/materialize-clockpicker-master/dist/css/materialize.clockpicker.css',
@@ -32,6 +34,7 @@ mix.scripts([
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
+		'resources/assets/plugins/font-awesome/js/all.js',
 		'resources/assets/plugins/select2/js/select2.min.js',
 		'resources/assets/plugins/select2/js/i18n/es.js',
 		'resources/assets/plugins/dropzone/dropzone.js',
@@ -86,6 +89,8 @@ mix.scripts([
 		'resources/app/laboratorio/dinamizador/index.js',
 		'resources/app/costoadministrativo/dinamizador/index.js',
 		'resources/app/costoadministrativo/dinamizador/index.js',
+		'resources/app/equipos/administrador/index.js',
+		'resources/app/equipos/dinamizador/index.js',
 		'resources/app/costoadministrativo/administrador/index.js',
 		'resources/app/usoinfraestructura/dinamizador/index.js',
 		'resources/app/usoinfraestructura/index.js',

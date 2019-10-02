@@ -9,7 +9,7 @@
                     <div class="col s8 m8 l9">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('equipo.index')}}">
-				              	<i class="material-icons arrow-l">arrow_back</i>
+				              	<i class="fas fa-user"></i>
 				            </a> Equipos Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
@@ -30,7 +30,7 @@
 			                </center>
                 			<div class="divider"></div>
                 			<br/>
-                			<form  action="{{route('ingreso.store')}}" method="POST" onsubmit="return checkSubmit()">
+                			<form  action="{{route('equipo.store')}}" method="POST" onsubmit="return checkSubmit()">
 			                  	{!! csrf_field() !!}
 			                  	@include('equipo.form', [
 			                  	'btnText' => 'Registrar'

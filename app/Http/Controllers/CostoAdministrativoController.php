@@ -191,7 +191,7 @@ class CostoAdministrativoController extends Controller
             
             alert()->success("El Costo Administrativo ha sido  modificado.", 'Modificación Exitosa', "success");
         } else {
-            alert()->error("El Costo Administrativo ha sido  modificado.", 'Modificación Errónea', "error");
+            alert()->error("El Costo Administrativo no ha sido  modificado.", 'Modificación Errónea', "error");
         }
 
         return redirect()->route('costoadministrativo.index');

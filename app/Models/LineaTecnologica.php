@@ -71,6 +71,11 @@ class LineaTecnologica extends Model
         return $this->hasMany(Laboratorio::class, 'lineatecnologica_id', 'id');
     }
 
+    public function equipos()
+    {
+      return $this->hasMany(Equipo::class, 'lineatecnologica_id', 'id');
+    }
+
     /*=====  End of relaciones elquent  ======*/
 
     public function setSlugAttribute($nombre)
@@ -177,6 +182,17 @@ class LineaTecnologica extends Model
             abort('404');
         }
 
+    }
+
+    /**
+     * Devuelve el consulta con relaciones de la tabla lineastecnologicas
+     *
+     * @author julian londoño
+     * @return object
+     */
+    public static function scopeLineaTecnologicaWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
     }
 
 }

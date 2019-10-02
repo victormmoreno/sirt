@@ -186,14 +186,14 @@ Route::resource('costos', 'CostoController', [
 =            seccion para los equipo            =
 ===============================================*/
 
-Route::get('/equipos/consultarEquipoPorCodigo/{codigo}', 'EquipoController@getEquipoPorCodigo')->name('equipo.consultaequipoporcodigo');
+Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorNodo')
+            ->name('equipo.getequipospornodo');
+
 Route::resource('equipos', 'EquipoController', [
         'as' => 'equipos', 
         'except' => [
-            // 'create',
-            // 'store',
-            // 'destroy',
-            // 'show',
+            'destroy',
+            'show',
         ]
     ])->names([
         'index'   => 'equipo.index',

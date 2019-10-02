@@ -13,9 +13,7 @@
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <i class="material-icons left">
-                                straighten
-                            </i>
+                            <i class="fas fa-user"></i>
                             Equipos
                         </h5>
                     </div>
@@ -40,13 +38,25 @@
                                 </div>
                             </div>
                             <div class="divider">
-                            </div>  
+                            </div> 
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
+                                    <select class="js-states browser-default select2 " onchange="selectEquipoPorNodo.selectEquipoForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
+                                        <option value="">Seleccione nodo</option>
+                                        @foreach($nodos as $nodo)
+                                          <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                        @endforeach
+                                    </select>
+                                    
+                                </div>
+                            </div>
                             <br>
-                                <table class="display responsive-table" id="equipo_tecnoparque_administrador_table">
+                                <table class="display responsive-table" id="equipos_de_tecnoparque_administrador_table">
                                     <thead>
-                                        <th width="15%">Laboratorio</th>
-                                        <th width="15%">Referencia</th>
+                                        <th width="15%">Linea Tecnológica</th>
                                         <th width="15%">Equipo</th>
+                                        <th width="15%">Referencia</th>
                                         <th width="15%">Marca</th>
                                         <th width="15%">Costo Adquisición</th>
                                         <th width="15%">Vida Util (Años)</th>
@@ -83,9 +93,9 @@
                                 <br>
                                     <table class="display responsive-table" id="equipo_tecnoparque_dinamizador_table">
                                         <thead>
-                                            <th width="15%">Laboratorio</th>
-                                            <th width="15%">Referencia</th>
+                                            <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
+                                            <th width="15%">Referencia</th>
                                             <th width="15%">Marca</th>
                                             <th width="15%">Costo Adquisición</th>
                                             <th width="15%">Vida Util (Años)</th>

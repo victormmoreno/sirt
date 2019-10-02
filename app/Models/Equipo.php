@@ -17,8 +17,7 @@ class Equipo extends Model
      * @var array
      */
     protected $fillable = [
-        'laboratorio_id',
-        'codigo_equipo',
+        'lineatecnologica_id',
         'referencia',
         'nombre',
         'marca',
@@ -27,21 +26,18 @@ class Equipo extends Model
         'anio_compra',
     ];
 
-    
-
     /**
      * The attributes that should be cast to native types.
      * @var array
      */
     protected $casts = [
-        'laboratorio_id'    => 'integer',
-        'codigo_equipo'     => 'string',
-        'referencia'        => 'string',
-        'nombre'            => 'string',
-        'marca'             => 'string',
-        'costo_adquisicion' => 'string',
-        'vida_util'         => 'boolean',
-        'anio_compra'       => 'year',
+        'lineatecnologica_id' => 'integer',
+        'referencia'          => 'string',
+        'nombre'              => 'string',
+        'marca'               => 'string',
+        'costo_adquisicion'   => 'string',
+        'vida_util'           => 'integer',
+        'anio_compra'         => 'year',
     ];
 
     /**
@@ -50,7 +46,7 @@ class Equipo extends Model
      */
     public function setReferenciaAttribute($referencia)
     {
-        $this->attributes['referencia'] = strtoupper(trim($referencia), 'UTF-8');
+        $this->attributes['referencia'] = strtoupper(trim($referencia));
     }
 
     /**
@@ -134,24 +130,15 @@ class Equipo extends Model
         return trim($vida_util);
     }
 
-    public function laboratorio()
-    {
-        return $this->belongsTo(Laboratorio::class, 'laboratorio_id', 'id');
-    }
-
     public function equiposmantenimientos()
     {
         return $this->hasMany(EquipoMantenimiento::class, 'equipo_id', 'id');
     }
 
-
-    /**
-     * scope para consultar los equipos por codigo_equipo.
-     * @param $query
-     * @param $codigo_equipo
-     */
-    public function scopeFindCodigoEquipo($query, $codigo_equipo)
+    public function lineatecnologica()
     {
-        return $query->where('codigo_equipo',$codigo_equipo);
+        return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
     }
+
+
 }

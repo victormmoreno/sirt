@@ -161,13 +161,13 @@
 
     </div>
     <div class="col s12 m9 l9">
-        <div class="divider mailbox-divider"></div>
+        {{-- <div class="divider mailbox-divider"></div> --}}
         <div class="mailbox-text">
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                          credit_card
-                    </i>
+                    </i> --}}
                     <select class="" id="txttipo_documento" name="txttipo_documento" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione tipo documento</option>
                         @foreach($tiposdocumentos as $value)
@@ -184,9 +184,9 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         assignment_ind
-                    </i>
+                    </i> --}}
                     <input id="txtdocumento" name="txtdocumento" type="text" value="{{ isset($user->documento) ? $user->documento : old('txtdocumento')}}">
                     <label for="txtdocumento">Documento <span class="red-text">*</span></label>
                     @error('txtdocumento')
@@ -197,11 +197,11 @@
             <div class="row">
                 <div class="input-field col s12 m6 l6">
 
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
+                    </i> --}}
                     @if(isset($user->ciudadexpedicion->departamento->id))
-                    <select class="" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserEdit.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2 " id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserEdit.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudadexpedicion->departamento->id))
@@ -212,7 +212,7 @@
                         @endforeach
                     </select>
                     @else
-                    <select class="" id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2 " id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudadexpedicion->departamento->id))
@@ -223,16 +223,16 @@
                         @endforeach
                     </select>
                     @endif
-                    <label for="txtdepartamentoexpedicion">Departamento de Expedición <span class="red-text">*</span></label>
+                    <label class="active" for="txtdepartamentoexpedicion">Departamento de Expedición <span class="red-text">*</span></label>
                     @error('txtdepartamentoexpedicion')
                         <label id="txtdepartamentoexpedicion-error" class="error" for="txtdepartamentoexpedicion">{{ $message }}</label>
                     @enderror
                 </div>
 
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         details
-                    </i>
+                    </i> --}}
                     @if(isset($user->ciudad_expedicion_id))
                     <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
@@ -252,9 +252,9 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         account_circle
-                    </i>
+                    </i> --}}
                     <input class="validate" id="txtnombres" name="txtnombres" type="text"  value="{{ isset($user->nombres) ? $user->nombres : old('txtnombres')}}">
                     <label for="txtnombres">Nombres <span class="red-text">*</span></label>
                     @error('txtnombres')
@@ -262,9 +262,9 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         account_circle
-                    </i>
+                    </i> --}}
                     <input class="validate" id="txtapellidos" name="txtapellidos" type="text" value="{{ isset($user->apellidos) ? $user->apellidos : old('txtapellidos')}}">
                     <label for="txtapellidos">Apellidos <span class="red-text">*</span></label>
                     @error('txtapellidos')
@@ -274,9 +274,9 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
+                    {{-- <i class="material-icons prefix">
                         date_range
-                    </i>
+                    </i> --}}
                     <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfecha_nacimiento')}}">
                     <label for="txtfecha_nacimiento">Fecha de Nacimiento <span class="red-text">*</span></label>
                     @error('txtfecha_nacimiento')
