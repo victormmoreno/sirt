@@ -399,6 +399,8 @@ class ProyectoRepository
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
     ->join('users', 'users.id', '=', 'talentos.user_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users AS g', 'g.id', '=', 'gestores.user_id')
     ->whereYear('fecha_inicio', $anho)
     ->where('nodos.id', $id)
     ->where('tiposarticulacionesproyectos.nombre', 'Empresas')
@@ -443,8 +445,10 @@ class ProyectoRepository
     'lecciones_aprendidas',
     'actividades.codigo_actividad',
     'estado_aprobacion',
+    'fecha_cierre',
     'actividades.nombre')
     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('CONCAT(g.documento, " - ", g.nombres, " ", g.apellidos) AS gestor')
     ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
     ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
     ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
@@ -462,6 +466,8 @@ class ProyectoRepository
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
     ->join('users', 'users.id', '=', 'talentos.user_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users AS g', 'g.id', '=', 'gestores.user_id')
     ->whereYear('fecha_inicio', $anho)
     ->where('nodos.id', $id)
     ->where('estado_aprobacion', Proyecto::IsAceptado())

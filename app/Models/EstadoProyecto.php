@@ -28,19 +28,19 @@ class EstadoProyecto extends Model
     public function scopeConsultarTodosEstadosDeProyecto($query)
     {
       return $query->select('id', 'nombre')
-      ->whereIn('nombre', ['Inicio', 'Planeación', 'En ejecución', 'Cierre PF', 'Cierre PMV']);
+      ->whereIn('nombre', ['Inicio', 'Planeación', 'En ejecución', 'Cierre PF', 'Cierre PMV', 'Suspendido']);
     }
 
     /*===============================================
     =            relaciones polimorficas            =
     ===============================================*/
-    
+
     /* relacion con la tabla proyecto */
-    
+
     public function proyectos()
     {
       return $this->hasMany(Proyecto::class, 'estadoproyecto_id', 'id');
     }
     /*=====  End of relaciones polimorficas  ======*/
-    
+
 }
