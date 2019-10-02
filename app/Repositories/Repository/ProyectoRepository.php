@@ -382,6 +382,7 @@ class ProyectoRepository
     'actividades.codigo_actividad',
     'actividades.nombre')
     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('concat(g.documento, " - ", g.nombres, " ", g.apellidos) AS gestor')
     ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
     ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
     ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
