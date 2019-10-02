@@ -24,7 +24,8 @@ class EquipoFormRequest extends FormRequest
     public function rules()
     {
         return [
-            
+            'txtlaboratorio' => 'required',
+            'txtlaboratorio' => 'required',
         ];
     }
 }

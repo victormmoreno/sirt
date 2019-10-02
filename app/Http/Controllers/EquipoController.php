@@ -66,14 +66,7 @@ class EquipoController extends Controller
      */
     public function store(Request $request)
     {
-        $req       = new IngresoVisitanteFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'fail'   => true,
-                'errors' => $validator->errors(),
-            ]);
-        }
+        return $request->all();
     }
 
     /**
