@@ -103,6 +103,13 @@
     <i class="material-icons {{setActiveRouteActiveIcon('laboratorio')}}">local_drink</i>Laboratorios
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('equipo')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('equipo')}}" href="{{route('equipo.index')}}">
+    {{-- <i class="material-icons ">local_drink</i> --}}
+    <i class="{{setActiveRouteActiveIcon('equipo')}} fas fa-box"></i>
+      Equipos
+  </a>
+</li>
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">filter_center_focus</i>Focos

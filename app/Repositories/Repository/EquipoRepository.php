@@ -9,7 +9,8 @@ class EquipoRepository
 {
     public function getInfoDataEquipos()
     {
-        return Equipo::select('equipos.id', 'equipos.referencia', 'equipos.nombre as nombreequipo', 'equipos.marca', 'equipos.vida_util','equipos.costo_adquisicion', 'equipos.anio_compra', 'equipos.created_at', 'lineastecnologicas.nombre as nombrelinea', 'lineastecnologicas.abreviatura','lineastecnologicas.id as lineatecnologica_id', 'nodos.id as nodoid')->join('lineastecnologicas','lineastecnologicas.id','=', 'equipos.lineatecnologica_id')
+        return Equipo::select('equipos.id', 'equipos.referencia', 'equipos.nombre as nombreequipo', 'equipos.marca', 'equipos.vida_util','equipos.costo_adquisicion', 'equipos.anio_compra', 'equipos.created_at', 'lineastecnologicas.nombre as nombrelinea', 'lineastecnologicas.abreviatura','lineastecnologicas.id as lineatecnologica_id', 'nodos.id as nodoid')
+        ->join('lineastecnologicas','lineastecnologicas.id','=', 'equipos.lineatecnologica_id')
         ->join('lineastecnologicas_nodos','lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
         ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id');
     }

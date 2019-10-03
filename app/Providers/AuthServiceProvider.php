@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\CostoAdministrativo;
 use App\Models\Equipo;
+use App\Models\EquipoMantenimiento;
 use App\Models\Laboratorio;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
@@ -12,6 +13,7 @@ use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Equipo\EquipoPolicy;
 use App\Policies\Laboratorio\LaboratorioPolicy;
 use App\Policies\LineaTecnologica\LineaTecnologicaPolicy;
+use App\Policies\Mantenimiento\MantenimientoPolicy;
 use App\Policies\Nodo\NodoPolicy;
 use App\Policies\User\UserPolicy;
 use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
@@ -34,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         UsoInfraestructura::class  => UsoInfraestructuraPolicy::class,
         CostoAdministrativo::class => CostoAdministrativoPolicy::class,
         Equipo::class              => EquipoPolicy::class,
+        EquipoMantenimiento::class => MantenimientoPolicy::class,
     ];
 
     /**

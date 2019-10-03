@@ -10,7 +10,7 @@ class EquipoMantenimiento extends Model
      * define el nombre de la tabla.
      * @var string
      */
-    protected $table = 'equipo_manteminiento';
+    protected $table = 'equipo_mantenimiento';
 
     /**
      * valor permitidos a ingresar. proteccion asignacion masiva de datos
@@ -20,14 +20,6 @@ class EquipoMantenimiento extends Model
         'equipo_id',
         'anio',
         'valor',
-    ];
-
-    /**
-     * convierte valores de fecha para que carbon los lea.
-     * @var array
-     */
-    protected $dates = [
-        'anio',
     ];
 
     /**

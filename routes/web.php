@@ -135,6 +135,8 @@ Route::group([
 =            seccion para las rutas de costos administrativos            =
 ========================================================================*/
 
+Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
+
 Route::resource('costos-administrativos', 'CostoAdministrativoController', [
         'as' => 'costos-administrativos', 
         'except' => [
@@ -185,6 +187,8 @@ Route::resource('costos', 'CostoController', [
 /*===============================================
 =            seccion para los equipo            =
 ===============================================*/
+Route::get('/equipos/getequiposporlinea/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
+            ->name('equipo.getequiposporlinea');
 
 Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorNodo')
             ->name('equipo.getequipospornodo');
@@ -210,8 +214,30 @@ Route::resource('equipos', 'EquipoController', [
 
 /*=====  End of seccion para los equipo  ======*/
 
-Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
+/*========================================================
+=            seccion para los mantenimientos             =
+========================================================*/
+Route::resource('mantenimientos', 'MantenimientoController', [
+        'as' => 'equipos', 
+        'except' => [
+            // 'destroy',
+            // 'show',
+        ]
+    ])->names([
+        'index'   => 'mantenimiento.index',
+        'create'  => 'mantenimiento.create',
+        'store'   => 'mantenimiento.store',
+        'show'    => 'mantenimiento.show',
+        'update'  => 'mantenimiento.update',
+        'edit'    => 'mantenimiento.edit',
+        'destroy' => 'mantenimiento.destroy',
+    ])
+    ->parameters([
+        'mantenimientos' => 'id',
+    ]);
 
+
+/*=====  End of seccion para los mantenimientos   ======*/
 
 
 /*======================================================================

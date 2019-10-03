@@ -31,7 +31,6 @@
                 			<div class="divider"></div>
                 			<br/>
                 			<form  action="{{route('equipo.store')}}" method="POST" onsubmit="return checkSubmit()">
-			                  	{!! csrf_field() !!}
 			                  	@include('equipo.form', [
 			                  	'btnText' => 'Registrar'
 			                  	])

@@ -63,7 +63,7 @@ h5.breadcrumbs-header {
     text-align: center;
 }
 
-
+/* fuentes institucionales */
 .hand-of-Sean-fonts {
   font-family: 'Hand of Sean';
   font-weight: 400;
@@ -94,7 +94,7 @@ h5.breadcrumbs-header {
 
 /* Waves */
 
-.waves-color-demo-sena-agregar .btn:not(.waves-light-sena-add ), .waves-color-demo-sena .btn-large-sena-agregar:not(.waves-light-sena-add ) {
+/*.waves-color-demo-sena-agregar .btn:not(.waves-light-sena-add ), .waves-color-demo-sena .btn-large-sena-agregar:not(.waves-light-sena-add ) {
     background-color: #59b548;
     color: #59b548;
 }
@@ -107,8 +107,8 @@ h5.breadcrumbs-header {
   letter-spacing: .5px;
   transition: .2s ease-out;
   cursor: pointer;
-}
+}*/
 
- .btn-large-sena-agregar:hover {
+/* .btn-large-sena-agregar:hover {
   background-color: #59b548;
-}
+}*/

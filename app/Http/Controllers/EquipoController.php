@@ -7,10 +7,10 @@ use App\Models\Equipo;
 use App\Models\Nodo;
 use App\Repositories\Repository\EquipoRepository;
 use App\Repositories\Repository\LineaRepository;
-use Repositories\Repository\NodoRepository;
 use App\User;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Repositories\Repository\NodoRepository;
 
 class EquipoController extends Controller
 {
@@ -19,7 +19,7 @@ class EquipoController extends Controller
     {
         $this->equipoRepository = $equipoRepository;
         $this->lineaRepository  = $lineaRepository;
-        $this->nodoRepository  = $nodoRepository;
+        $this->nodoRepository   = $nodoRepository;
         $this->middleware('auth');
     }
     /**
@@ -34,15 +34,15 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
 
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-                    $nodo = auth()->user()->dinamizador->nodo->id;
+                    $nodo    = auth()->user()->dinamizador->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()->where('nodos.id', $nodo)->get();
-                }elseif(session()->has('login_role') && session()->get('login_role') == User::IsGestor()){
-                    $linea = auth()->user()->gestor->lineatecnologica->id;
-                    $nodo = auth()->user()->gestor->nodo->id;
+                } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+                    $linea   = auth()->user()->gestor->lineatecnologica->id;
+                    $nodo    = auth()->user()->gestor->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->where('nodos.id', $nodo)
-                    ->where('lineastecnologicas.id', $linea)
-                    ->get();
+                        ->where('nodos.id', $nodo)
+                        ->where('lineastecnologicas.id', $linea)
+                        ->get();
                 }
 
                 return datatables()->of($equipos)
@@ -66,8 +66,7 @@ class EquipoController extends Controller
 
                     ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
                     ->make(true);
-            } 
-            else {
+            } else {
                 abort('403');
             }
 
@@ -90,8 +89,6 @@ class EquipoController extends Controller
                 break;
         }
 
-        
-        
     }
 
     /**
@@ -137,6 +134,32 @@ class EquipoController extends Controller
         } else {
             abort('403');
         }
+    }
+
+    /**
+     * devolver consulta de equipos por linea Tecnologica.
+     *
+     * @param  int linea
+     * @return \Illuminate\Http\Response
+     */
+    public function getEquiposPorLinea($linea)
+    {
+        if (request()->ajax()) {
+            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                    ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
+                    ->where('lineastecnologicas.id', $linea)
+                    ->get();
+
+                return response()->json([
+                    'equipos' => $equipos,
+                ]);
+            }
+
+        } else {
+            abort('403');
+        }
+
     }
 
     /**
@@ -230,10 +253,8 @@ class EquipoController extends Controller
         $this->authorize('update', $equipo);
 
         $equipoUpdate = $this->getEquipoRepository()->updateEquipo($request, $equipo);
-        // return $equipoUpdate;
-
         if ($equipoUpdate == true) {
-            
+
             alert()->success("El equipo ha sido  modificado.", 'Modificación Exitosa', "success");
         } else {
             alert()->error("El equipo no ha sido  modificado.", 'Modificación Errónea', "error");
