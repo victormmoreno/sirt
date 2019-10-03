@@ -91,6 +91,7 @@ mix.scripts([
 		'resources/app/costoadministrativo/dinamizador/index.js',
 		'resources/app/equipos/administrador/index.js',
 		'resources/app/equipos/dinamizador/index.js',
+		'resources/app/equipos/gestor/index.js',
 		'resources/app/costoadministrativo/administrador/index.js',
 		'resources/app/usoinfraestructura/dinamizador/index.js',
 		'resources/app/usoinfraestructura/index.js',

@@ -55,13 +55,13 @@ class EquipoRepository
         try {
 
             $equipo->update([
-                // 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
-                // 'nombre'              => $request->input('txtnombre'),
-                // 'referencia'          => $request->input('txtreferencia'),
-                // 'marca'               => $request->input('txtmarca'),
-                // 'costo_adquisicion'   => $request->input('txtcostoadquisicion'),
+                'lineatecnologica_id' => $request->input('txtlineatecnologica'),
+                'nombre'              => $request->input('txtnombre'),
+                'referencia'          => $request->input('txtreferencia'),
+                'marca'               => $request->input('txtmarca'),
+                'costo_adquisicion'   => $request->input('txtcostoadquisicion'),
                 'vida_util'           => $request->input('txtvida_util'),
-                // 'anio_compra'         => $request->input('txtaniocompra'),
+                'anio_compra'         => $request->input('txtaniocompra'),
             ]);
             DB::commit();
             return true;

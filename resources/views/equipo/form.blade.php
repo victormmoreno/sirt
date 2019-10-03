@@ -21,15 +21,7 @@
         </div>
     </div>
     @endif
-    <div class="row">
-            <div class="col s12 m12 l12">
-                <blockquote>
-                    <ul class="collection">
-                        <li class="collection-item">Debes tener en cuenta que el equipo sólo se registra una vez, en caso de que se desee hacer un mantemiento a un equipo previamente registrado tienes que editarlo.</li>
-                </ul>
-            </blockquote>
-        </div>
-    </div>
+    
     <div class="row">
 		<div class="input-field col s12 m6 l6">
 		    <label class="active" for="txtlineatecnologica">Linea Tecnológica <span class="red-text">*</span></label>

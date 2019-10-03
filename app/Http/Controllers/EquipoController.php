@@ -31,11 +31,19 @@ class EquipoController extends Controller
     {
         if (request()->ajax()) {
 
-            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
 
-                $nodo = auth()->user()->dinamizador->nodo->id;
-
-                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()->where('nodos.id', $nodo)->get();
+                if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+                    $nodo = auth()->user()->dinamizador->nodo->id;
+                    $equipos = $this->getEquipoRepository()->getInfoDataEquipos()->where('nodos.id', $nodo)->get();
+                }elseif(session()->has('login_role') && session()->get('login_role') == User::IsGestor()){
+                    $linea = auth()->user()->gestor->lineatecnologica->id;
+                    $nodo = auth()->user()->gestor->nodo->id;
+                    $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                    ->where('nodos.id', $nodo)
+                    ->where('lineastecnologicas.id', $linea)
+                    ->get();
+                }
 
                 return datatables()->of($equipos)
                     ->addColumn('edit', function ($data) {
@@ -58,7 +66,8 @@ class EquipoController extends Controller
 
                     ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
                     ->make(true);
-            } else {
+            } 
+            else {
                 abort('403');
             }
 
@@ -71,7 +80,6 @@ class EquipoController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                
                 return view('equipo.index');
                 break;
             case User::IsGestor():

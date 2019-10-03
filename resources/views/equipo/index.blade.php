@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <i class="fas fa-user"></i>
+                            <i class="fas fa-box"></i>
                             Equipos
                         </h5>
                     </div>
@@ -63,7 +63,6 @@
                                         <th width="15%">Año de compra</th>
                                         <th width="15%">Año fin depreciación</th>
                                         <th width="15%">Depreciación por año</th>
-                                        <th width="15%">Editar</th>
                                     </thead>
                     
                                 </table>
@@ -103,6 +102,35 @@
                                             <th width="15%">Año fin depreciación</th>
                                             <th width="15%">Depreciación por año</th>
                                             <th width="15%">Editar</th>
+                                        </thead>
+                        
+                                    </table>
+                            </div>
+                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <div class="center-align">
+                                            <span class="card-title center-align">
+                                                Equipos {{auth()->user()->gestor->lineatecnologica->nombre}} |  Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="divider">
+                                </div>  
+                                <br>
+                                    <table class="display responsive-table" id="equipo_tecnoparque_gestor_table">
+                                        <thead>
+                                            <th width="15%">Linea Tecnológica</th>
+                                            <th width="15%">Equipo</th>
+                                            <th width="15%">Referencia</th>
+                                            <th width="15%">Marca</th>
+                                            <th width="15%">Costo Adquisición</th>
+                                            <th width="15%">Vida Util (Años)</th>
+                                            <th width="15%">Año de compra</th>
+                                            <th width="15%">Año fin depreciación</th>
+                                            <th width="15%">Depreciación por año</th>
                                         </thead>
                         
                                     </table>
