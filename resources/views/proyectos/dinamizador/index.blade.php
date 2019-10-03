@@ -14,7 +14,7 @@
               <div class="divider"></div>
               <div class="row">
                 <div class="col s12 m12 l12">
-                  <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                  <ul class="tabs" style="width: 100%;">
                     <li class="tab col s3"><a href="#proyectos_por_nodo" class="active">Proyectos del Nodo</a></li>
                     <li class="tab col s3"><a class="" href="#proyectos_por_gestor">Proyectos por Gestor</a></li>
                     <div class="indicator" style="right: 580.5px; left: 0px;"></div>
@@ -37,15 +37,29 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="right material-icons">
+                  @include('proyectos.table')
+                  <div class="col s12 m2 l2">
+                    <a onclick="generarExcelDeProyectosDelNodoPorAnho()" href="javascript:void(0)">
+                      <div class="card green">
+                        <div class="card-content center">
+                          <span class="white-text">Descargar tabla</span>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  {{-- <div class="left material-icons">
                     <a onclick="generarExcelDeProyectosDelNodoPorAnho()">
                       <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
                     </a>
-                  </div>
-                  @include('proyectos.table')
+                  </div> --}}
                 </div>
               </div>
               <div id="proyectos_por_gestor">
+                <span>
+                  Para consultar los proyectos de un gestor, debes seleccionar el año (de la fecha de cierre de los proyectos), luego un gestor del nodo y por último presionar el
+                  botón <b>"Consultar proyectos"</b>.
+                </span>
+                <br><br>
                 <div class="row">
                   <div class="input-field col s12 m6 l6">
                     <select class="js-states"  tabindex="-1" style="width: 100%" id="anho_proyectoPorAnhoGestorNodo" name="anho_proyectoPorAnhoGestorNodo">
@@ -58,7 +72,7 @@
                   </div>
                   <div class="input-field col s12 m6 l6">
                     <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                      <option value="">Seleccione el Gestor</option>
+                      <option value="">Seleccione un gestor del nodo</option>
                       @foreach($gestores as $id => $nombres_gestor)
                         <option value="{{$id}}">{{$nombres_gestor}}</option>
                       @endforeach
@@ -67,18 +81,28 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col s12 m12 l12 center">
-                    <a class="btn-floating blue" onclick="consulta();"><i class="material-icons left">search</i>Buscar</a>
-                    {{-- <a class="waves-effect waves-light btn" onclick="consulta();"><i class="material-icons left">cloud</i>button</a> --}}
+                  <div class="col s12 m4 l4 offset-l4">
+                    <a onclick="consulta();" href="javascript:void(0)">
+                      <div class="card blue">
+                        <div class="card-content center">
+                          <i class="left material-icons white-text">search</i>
+                          <span class="white-text">Consultar proyectos</span>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="right material-icons">
-                    <a onclick="generarExcelDeProyectosDelGestorPorAnho()">
-                      <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                  @include('proyectos.table2')
+                  <div class="col s12 m2 l2">
+                    <a onclick="generarExcelDeProyectosDelGestorPorAnho()" href="javascript:void(0)">
+                      <div class="card green">
+                        <div class="card-content center">
+                          <span class="white-text">Descargar tabla</span>
+                        </div>
+                      </div>
                     </a>
                   </div>
-                  @include('proyectos.table2')
                 </div>
               </div>
             </div>

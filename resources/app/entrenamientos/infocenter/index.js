@@ -1,11 +1,11 @@
 $(document).ready(function() {
-  $('#entrenamientos_nodo_table').DataTable({
+  $('#entrenamientos_nodo_table').dataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
     processing: true,
     serverSide: true,
-    paging: false,
+    paging: true,
     ajax:{
       url: "/entrenamientos",
       type: "get",

@@ -44,7 +44,7 @@ class ComiteController extends Controller
           ';
           return $button;
         })->addColumn('edit', function ($data) {
-          $edit = '<a href="'. route("csibt.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+          $edit = '<a disabled class="btn m-b-xs"><i class="material-icons">edit</i></a>';
           return $edit;
         })->addColumn('evidencias', function ($data) {
           $button = '
@@ -67,7 +67,14 @@ class ComiteController extends Controller
           </a>
           ';
           return $button;
-        })->rawColumns(['details'])->make(true);
+        })->addColumn('evidencias', function ($data) {
+          $button = '
+          <a class="btn blue-grey m-b-xs" disabled>
+          <i class="material-icons">library_books</i>
+          </a>
+          ';
+          return $button;
+        })->rawColumns(['details', 'evidencias'])->make(true);
       }
       return view('comite.gestor.index');
     } else if ( \Session::get('login_role') == User::IsAdministrador() ) {

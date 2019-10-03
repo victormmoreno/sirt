@@ -21,7 +21,7 @@
 </li>
 <li class="{!! setActiveRoute('edt') !!}">
   <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}">
-  <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">record_voice_over</i>EDT's
+  <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">hearing</i>EDT's
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">

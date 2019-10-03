@@ -7,7 +7,7 @@
       <div class="col s12 m12 l12">
         <h5>
           <a class="footer-text left-align" href="{{route('entrenamientos')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="left material-icons">arrow_back</i>
           </a> Entrenamientos
         </h5>
         <div class="card">
@@ -37,7 +37,6 @@
                 <form action="{{route('entrenamientos.update', $entrenamiento->id)}}" method="post" id="formEntrenamientosEdit" onsubmit="return checkSubmit()">
                   {!! method_field('PUT')!!}
                   {!! csrf_field() !!}
-                  <input type="text" id="xxx" value="{{$entrenamiento->id}}">
                   <div class="row">
                     <div class="input-field col s12 m6 l6">
                       <input type="text" name="txtfecha_sesion1" id="txtfecha_sesion1" value="{{ old('txtfecha_sesion1', $entrenamiento->fecha_sesion1->toDateString()) }}">
@@ -63,7 +62,7 @@
                           <option value="{{$value['id']}}">{{$value['nombre_proyecto']}}</option>
                         @endforeach
                       </select>
-                      <label>Idea de Proyecto <span class="red-text">*</span></label>
+                      <label class="active" for="txtidea">Idea de Proyecto <span class="red-text">*</span></label>
                     </div>
                   </div>
                   <div class="row">
@@ -96,67 +95,6 @@
                           <li class="collection-item">Para agregar una idea de proyecto al entrenamiento solo debe buscarla y seleccionarla.</li>
                         </ul>
                       </blockquote>
-                    </div>
-                  </div>
-                  <div class="divider"></div>
-                  <div class="row">
-                    <h5>Entregables</h5>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <p class="p-v-xs">
-                          <input type="checkbox" id="txtcorreos" {{ old('txtcorreos') ? 'checked' : '' }} {{ $entrenamiento->correos == 'Si' ? 'checked' : '' }} name="txtcorreos" value="1"/>
-                          <label for="txtcorreos">Correos</label>
-                        </p>
-                      </div>
-                      {{-- <div class="col s12 m6 l6">
-                        <div class="file-field input-field">
-                          <div class="btn">
-                            <span>File</span>
-                            <input type="file" name="file_correos">
-                          </div>
-                          <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text" placeholder="Subir un archivo">
-                          </div>
-                        </div>
-                      </div> --}}
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <p class="p-v-xs">
-                          <input type="checkbox" id="txtfotos" {{ old('txtfotos') ? 'checked' : '' }} {{ $entrenamiento->fotos == 'Si' ? 'checked' : '' }} name="txtfotos" value="1"/>
-                          <label for="txtfotos">Evidencias Fotográficas</label>
-                        </p>
-                      </div>
-                      {{-- <div class="col s12 m6 l6">
-                        <div class="file-field input-field">
-                          <div class="btn">
-                            <span>File</span>
-                            <input type="file" name="file_fotos">
-                          </div>
-                          <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text" placeholder="Subir un archivo">
-                          </div>
-                        </div>
-                      </div> --}}
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <p class="p-v-xs">
-                          <input type="checkbox" id="txtlistado_asistencia" {{ old('txtlistado_asistencia') ? 'checked' : '' }} {{ $entrenamiento->listado_asistencia == 'Si' ? 'checked' : '' }} name="txtlistado_asistencia" value="1"/>
-                          <label for="txtlistado_asistencia">Listado de Asistencia</label>
-                        </p>
-                      </div>
-                      {{-- <div class="col s12 m6 l6">
-                        <div class="file-field input-field">
-                          <div class="btn">
-                            <span>File</span>
-                            <input type="file" name="file_listado_asistencia">
-                          </div>
-                          <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text" placeholder="Subir un archivo">
-                          </div>
-                        </div>
-                      </div> --}}
                     </div>
                   </div>
                   <div class="divider"></div>

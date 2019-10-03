@@ -28,7 +28,7 @@ class EmpresaFormRequest extends FormRequest
       'nombre' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
       'nit' => 'required|numeric|digits_between:6,45|unique:empresas,nit,'.$this->route('id'),
       'email_entidad' => 'email|nullable|min:7|max:200',
-      'direccion' => 'max:100',
+      'direccion' => 'max:100|nullable',
       'txtdepartamento' => 'required',
       'txtciudad_id' => 'required',
       'txtsector' => 'required',
@@ -52,10 +52,7 @@ class EmpresaFormRequest extends FormRequest
       'email_entidad.min' => 'El Email de la Empresa debe ser minimo de 7 caracteres.',
       'email_entidad.max' => 'El Email de la Empresa debe ser máximo de 200 caracteres.',
 
-      'direccion.required' => 'La Dirección de la Empresa es obligatoria.',
-      'direccion.min' => 'La Dirección de la Empresa deben ser minimo de 1 caracter.',
       'direccion.max' => 'La Dirección de la Empresa deben ser máximo de 100 caracteres.',
-      'direccion.regex' => 'El formato del campo Dirección de la Empresa es incorrecto.',
 
       'txtdepartamento' => 'El Departamento de la Empresa es obligatorio.',
 

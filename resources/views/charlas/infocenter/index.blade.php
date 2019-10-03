@@ -17,11 +17,14 @@
                       </div>
                     </div>
                     <div class="col s12 m2 l2">
-                      <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                        <a href="{{route('charla.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nueva Charla Informativa">
-                          <i class="material-icons">exposure_plus_1</i>
-                        </a>
-                      </div>
+                      <a href="{{ route('charla.create') }}">
+                        <div class="card green">
+                          <div class="card-content center">
+                            <i class="left material-icons white-text">add</i>
+                            <span class="white-text">Nueva Charla Informativa</span>
+                          </div>
+                        </div>
+                      </a>
                     </div>
                   </div>
                   <div class="divider"></div>

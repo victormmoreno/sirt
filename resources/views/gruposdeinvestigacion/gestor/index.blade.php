@@ -5,7 +5,7 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>Grupos de Investigación</h5>
+        <h5><i class="left material-icons">group_work</i>Grupos de Investigación</h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
@@ -17,11 +17,14 @@
                     </div>
                   </div>
                   <div class="col s12 m2 l2">
-                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="{{route('grupo.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nuevo Grupo de Investigación">
-                        <i class="material-icons">exposure_plus_1</i>
-                      </a>
-                    </div>
+                    <a href="{{ route('grupo.create') }}">
+                      <div class="card green">
+                        <div class="card-content center">
+                          <i class="left valign-wrap material-icons white-text">add</i>
+                          <span class="white-text">Nuevo Grupo de Investigación</span>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                 </div>
                 <div class="divider"></div>
@@ -47,11 +50,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href="{{route('grupo.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Grupo de Investigación">
-          <i class="material-icons">exposure_plus_1</i>
-        </a>
       </div>
     </div>
   </div>
