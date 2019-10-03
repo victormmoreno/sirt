@@ -24,7 +24,7 @@ a {
 }
 
 text {
-    font-family: "Roboto", sans-serif;
+    font-family: "Roboto","Hand of Sean", sans-serif;
 }
 
 mark {
@@ -77,7 +77,7 @@ a:focus {
 }
 
 .waves-effect.waves-light .waves-ripple {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #fc7323;
 }
 
 .waves-effect.waves-grey .waves-ripple {

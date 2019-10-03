@@ -4289,13 +4289,25 @@ nav .input-field label.active {
   font-weight: 700;
 }
 
+@font-face {
+  font-family: "Hand of Sean";
+  src: url("/fonts/Hand_Of_Sean/Hand_Of_Sean.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Zurich BT";
+  src: url("/fonts/zurich/zurich-bt.ttf") format("truetype");
+  font-weight: 700;
+}
+
 a {
   text-decoration: none;
 }
 
 html {
   line-height: 1.5;
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto","Hand of Sean", "Zurich BT", sans-serif;
   font-weight: normal;
   color: rgba(0, 0, 0, 0.87);
 }
@@ -13930,7 +13942,7 @@ a {
 }
 
 text {
-    font-family: "Roboto", sans-serif;
+    font-family: "Roboto","Hand of Sean", sans-serif;
 }
 
 mark {
@@ -13983,7 +13995,7 @@ a:focus {
 }
 
 .waves-effect.waves-light .waves-ripple {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #fc7323;
 }
 
 .waves-effect.waves-grey .waves-ripple {
@@ -18241,4 +18253,54 @@ h5.breadcrumbs-header {
 }
 .icon-center {
     text-align: center;
+}
+
+
+.hand-of-Sean-fonts {
+  font-family: 'Hand of Sean';
+  font-weight: 400;
+}
+
+.zurich-bt-fonts {
+  font-family: 'Zurich BT';
+  font-weight: 400;
+}
+/* colores institucionales */
+
+.btn-flat-sena {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.btn-flat.waves-orange-sena {
+    color: #fc7323;
+}
+
+.waves-effect.waves-orange-sena .waves-ripple {
+    background-color: #fc7323
+}
+
+.waves-effect.waves-light-sena-add .waves-ripple {
+    background-color: #59b548;
+}
+
+/* Waves */
+
+.waves-color-demo-sena-agregar .btn:not(.waves-light-sena-add ), .waves-color-demo-sena .btn-large-sena-agregar:not(.waves-light-sena-add ) {
+    background-color: #59b548;
+    color: #59b548;
+}
+
+ .btn-large-sena-agregar {
+  text-decoration: none;
+  color: #fff;
+  background-color: #59b548;
+  text-align: center;
+  letter-spacing: .5px;
+  transition: .2s ease-out;
+  cursor: pointer;
+}
+
+ .btn-large-sena-agregar:hover {
+  background-color: #59b548;
 }

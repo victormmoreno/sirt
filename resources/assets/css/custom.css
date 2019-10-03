@@ -62,3 +62,53 @@ h5.breadcrumbs-header {
 .icon-center {
     text-align: center;
 }
+
+
+.hand-of-Sean-fonts {
+  font-family: 'Hand of Sean';
+  font-weight: 400;
+}
+
+.zurich-bt-fonts {
+  font-family: 'Zurich BT';
+  font-weight: 400;
+}
+/* colores institucionales */
+
+.btn-flat-sena {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.btn-flat.waves-orange-sena {
+    color: #fc7323;
+}
+
+.waves-effect.waves-orange-sena .waves-ripple {
+    background-color: #fc7323
+}
+
+.waves-effect.waves-light-sena-add .waves-ripple {
+    background-color: #59b548;
+}
+
+/* Waves */
+
+.waves-color-demo-sena-agregar .btn:not(.waves-light-sena-add ), .waves-color-demo-sena .btn-large-sena-agregar:not(.waves-light-sena-add ) {
+    background-color: #59b548;
+    color: #59b548;
+}
+
+ .btn-large-sena-agregar {
+  text-decoration: none;
+  color: #fff;
+  background-color: #59b548;
+  text-align: center;
+  letter-spacing: .5px;
+  transition: .2s ease-out;
+  cursor: pointer;
+}
+
+ .btn-large-sena-agregar:hover {
+  background-color: #59b548;
+}

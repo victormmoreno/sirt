@@ -7,9 +7,9 @@
         	<div class="col s12 m12 l12">
         		<div class="row">
                     <div class="col s8 m8 l9">
-                        <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('equipo.index')}}">
-				              	<i class="fas fa-user"></i>
+                        <h5 class="left-align hand-of-Sean-fonts">
+                            <a class="footer-text left-align " href="{{route('equipo.index')}}">
+				              	<i class="fas fa-box"></i>
 				            </a> Equipos Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
@@ -25,7 +25,7 @@
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align">Nuevo Equipo Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                <span class="card-title center-align hand-of-Sean-fonts">Nuevo Equipo Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
 				                </span>
 			                </center>
                 			<div class="divider"></div>

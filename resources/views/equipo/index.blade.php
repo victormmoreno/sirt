@@ -79,11 +79,11 @@
                                     </div>
                                     <div class="col s12 l2">
                                         <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                            <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Equipo" href="{{route('equipo.create')}}">
-                                                <i class="material-icons">
-                                                    straighten
-                                                </i>
+                                            <a class="btnregister waves-effect waves-light-sena btn" href="{{route('equipo.create')}}">
+                                                <i class="fas fa-box"></i>
+                                                 Nuevo Equipo
                                             </a>
+                                            
                                         </div>
                                     </div>
                                 </div>
