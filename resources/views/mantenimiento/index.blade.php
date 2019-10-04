@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <i class="fas fa-box"></i>
+                            <i class="material-icons">build</i>
                             Mantenimientos
                         </h5>
                     </div>
@@ -39,10 +39,10 @@
                             </div>
                             <div class="divider">
                             </div> 
-                            {{-- <div class="row">
+                            <div class="row">
                                 <div class="col s12 m12 l12">
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
-                                    <select class="js-states browser-default select2 " onchange="selectEquipoPorNodo.selectEquipoForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
+                                    <select class="js-states browser-default select2 " onchange="selectMantenimientosEquiposPorNodo.selectMantenimientosEquipoForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
                                         <option value="">Seleccione nodo</option>
                                         @foreach($nodos as $nodo)
                                           <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
@@ -50,13 +50,12 @@
                                     </select>
                                     
                                 </div>
-                            </div> --}}
+                            </div>
                             <br>
                                 <table class="display responsive-table" id="mantenimientosequipos_administrador_table">
                                     <thead>
                                         <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
-                                            
                                             <th width="15%">Año</th>
                                             <th width="15%">valor</th>
                                             <th width="15%">Detalle</th>
@@ -77,7 +76,7 @@
                                     <div class="col s12 l2">
                                         <div class="click-to-toggle show-on-large hide-on-med-and-down">
                                             <a class="btnregister waves-effect waves-light-sena btn" href="{{route('mantenimiento.create')}}">
-                                                <i class="fas fa-box"></i>
+                                                <i class="material-icons">add_circle_outline</i>
                                                  Nuevo Mantenimiento
                                             </a>
                                             

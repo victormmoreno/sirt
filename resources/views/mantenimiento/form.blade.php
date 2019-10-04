@@ -24,11 +24,16 @@
     <div class="row">
         <div class="input-field col s12 m6 l6">
             <label class="active" for="txtlineatecnologica">Linea Tecnológica <span class="red-text">*</span></label>
-            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="mantenimientoCreate.getEquipoPorLinea()">
+            @if(isset($mantenimiento->lineatecnologica_id))
+                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="mantenimientoEdit.getEquipoPorLinea()">
+            @else
+                <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="mantenimientoCreate.getEquipoPorLinea()">
+            @endif
+            
                 <option value="">Seleccione Linea Tecnológica</option>
                 @forelse($lineastecnologicas as $id => $linea)
-                    @if(isset($equipo->lineatecnologica_id))
-                        <option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologica_id) == $id ? 'selected':'' }}>{{$linea}}</option>
+                    @if(isset($mantenimiento->lineatecnologica_id))
+                        <option value="{{$id}}" {{ old('txtlineatecnologica', $mantenimiento->lineatecnologica_id) == $id ? 'selected':'' }}>{{$linea}}</option>
                     @else
                         <option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
                     @endif
@@ -56,7 +61,7 @@
     </div>
     <div class="row">
         <div class="input-field col s12 m6 l6">
-            <input type="text" name="txtanio" id="txtanio" value="{{ isset($equipo) ? $equipo->referencia: old('txtanio')}}"/>
+            <input type="text" name="txtanio" id="txtanio" value="{{ isset($mantenimiento) ? $mantenimiento->anio_mantenimiento: old('txtanio')}}"/>
             <label class="active" for="txtanio">Año Mantenimiento <span class="red-text">*</span></label>
             @error('txtanio')
             <label class="error" for="txtanio" id="txtanio-error">
@@ -65,7 +70,7 @@
             @enderror
         </div>
         <div class="input-field col s12 m6 l6">
-            <input type="text" name="txtvalor" id="txtvalor" value="{{ isset($equipo) ? $equipo->marca: old('txtvalor')}}"/>
+            <input type="text" name="txtvalor" id="txtvalor" value="{{ isset($mantenimiento) ? $mantenimiento->valor_mantenimiento: old('txtvalor')}}"/>
             <label class="active" for="txtvalor">Valor Mantenimiento <span class="red-text">*</span></label>
             @error('txtvalor')
             <label class="error" for="txtvalor" id="txtvalor-error">

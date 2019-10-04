@@ -217,11 +217,13 @@ Route::resource('equipos', 'EquipoController', [
 /*========================================================
 =            seccion para los mantenimientos             =
 ========================================================*/
+Route::get('/mantenimientos/getmantenimientosequipospornodo/{nodo}', 'MantenimientoController@getMantenimientosEquiposPorNodo')
+            ->name('mantenimiento.getmantenimientosequipospornodo');
+
 Route::resource('mantenimientos', 'MantenimientoController', [
         'as' => 'equipos', 
         'except' => [
-            // 'destroy',
-            // 'show',
+            'destroy',
         ]
     ])->names([
         'index'   => 'mantenimiento.index',

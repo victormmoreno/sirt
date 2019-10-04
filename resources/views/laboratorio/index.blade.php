@@ -10,14 +10,12 @@
                         <h5 class="left-align">
 
                             <a class="footer-text left-align" href="{{route('laboratorio.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
+                                <i class="material-icons">
+                                    local_drink
                                 </i>
                             </a>
                             Laboratorios
-                            <i class="material-icons">
-                                local_drink
-                            </i>
+                            
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align">
@@ -38,9 +36,7 @@
                                         <span class="card-title center-align">
                                             Laboratorios {{config('app.name')}}
                                         </span>
-                                        <i class="material-icons">
-                                            local_drink
-                                        </i>
+                                        
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
@@ -88,9 +84,7 @@
                                         <span class="card-title center-align">
                                             Laboratorios Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
                                         </span>
-                                        <i class="material-icons">
-                                            local_drink
-                                        </i>
+                                        
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
@@ -126,7 +120,7 @@
         </div>
     </div>
 </main>
-<div  class="modal detalleUsers">
+{{-- <div  class="modal detalleUsers">
   <div class="modal-content">
     <center><h4 class="center-aling"></h4></center>
     <div class="divider"></div>
@@ -135,5 +129,5 @@
   <div class="modal-footer">
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
-</div>
+</div> --}}
 @endsection

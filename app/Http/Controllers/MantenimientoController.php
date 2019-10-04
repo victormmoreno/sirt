@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MantenimientoFormRequest;
 use App\Models\EquipoMantenimiento;
+use App\Models\Nodo;
 use App\Repositories\Repository\LineaRepository;
 use App\Repositories\Repository\MantenimientoRepository;
 use App\User;
@@ -33,13 +34,13 @@ class MantenimientoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
 
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-                    $nodo    = auth()->user()->dinamizador->nodo->id;
+                    $nodo           = auth()->user()->dinamizador->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
-                            ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
-                            ->get();
+                        ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
+                        ->get();
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
-                    $linea   = auth()->user()->gestor->lineatecnologica->id;
-                    $nodo    = auth()->user()->gestor->nodo->id;
+                    $linea          = auth()->user()->gestor->lineatecnologica->id;
+                    $nodo           = auth()->user()->gestor->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
                         ->where('nodos.id', $nodo)
                         ->where('lineastecnologicas.id', $linea)
@@ -57,7 +58,7 @@ class MantenimientoController extends Controller
 
                         return $button;
                     })
-                    
+
                     ->addColumn('valor_mantenimiento', function ($data) {
                         return '$ ' . number_format(round($data->valor_mantenimiento, 2));
                     })
@@ -68,14 +69,99 @@ class MantenimientoController extends Controller
                         return $data->lineatecnologica_abreviatura . ' - ' . $data->lineatecnologica_nombre;
                     })
 
-                    ->rawColumns(['edit','detail', 'nombrelinea', 'costo_adquisicion', 'valor_mantenimiento'])
+                    ->rawColumns(['edit', 'detail', 'nombrelinea', 'costo_adquisicion', 'valor_mantenimiento'])
                     ->make(true);
             } else {
                 abort('403');
             }
 
         }
-        return view('mantenimiento.index');
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('mantenimiento.index', [
+                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                return view('mantenimiento.index');
+                break;
+            case User::IsGestor():
+                return view('mantenimiento.index');
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+
+    }
+
+    /**
+     * devolver datatables mantenimientos de equipos por nodo.
+     *
+     * @param  int nodo
+     * @return \Illuminate\Http\Response
+     * @author devjul
+     */
+    public function getMantenimientosEquiposPorNodo($nodo)
+    {
+        $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
+                    ->where('lineastecnologicas_nodos.nodo_id', $nodo)
+                    ->dd();
+                // $mantenimientos = Nodo::with(['lineas','lineas.equipos.equiposmantenimientos'])
+                // ->where('id', $nodo)
+                // ->get();
+        // ->sortByDesc('lineas.equipos.equiposmantenimientos.created_at');
+        // 4
+            return $mantenimientos;
+         // return $mantenimientos->each(function ($item, $key) {
+         //         $item->each(function ($item2, $key2) {
+         //                echo $item2;
+         //            });
+         //    });
+        
+        if (request()->ajax()) {
+            
+
+            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
+
+                // $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
+                //     ->where('lineastecnologicas_nodos.nodo_id', $nodo)
+                //     ->get();
+                // $mantenimientos = Nodo::with(['lineas','lineas.equipos.equiposmantenimientos'])
+                // ->where('id', $nodo)
+                // ->get();
+
+                return datatables()->of($mantenimientos)
+                    ->addColumn('edit', function ($data) {
+                        $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+                        return $button;
+                    })
+                    ->addColumn('detail', function ($data) {
+                        $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+
+                        return $button;
+                    })
+
+                    ->addColumn('valor_mantenimiento', function ($data) {
+                        return '$ ' . number_format(round($data->valor_mantenimiento, 2));
+                    })
+                    ->editColumn('costo_adquisicion', function ($data) {
+                        return '$ ' . number_format($data->costo_adquisicion);
+                    })
+                    ->editColumn('nombrelinea', function ($data) {
+                        return $data->lineatecnologica_abreviatura . ' - ' . $data->lineatecnologica_nombre;
+                    })
+
+                    ->rawColumns(['edit', 'detail', 'nombrelinea', 'costo_adquisicion', 'valor_mantenimiento'])
+                    ->make(true);
+            } else {
+                return response()->json(['data' => 'no response']);
+            }
+
+        } else {
+            abort('403');
+        }
 
     }
 
@@ -128,8 +214,11 @@ class MantenimientoController extends Controller
     public function show($id)
     {
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
-        $this->authorize('show', $mantenimiento );
-        return $mantenimiento;
+        $this->authorize('show', $mantenimiento);
+        // return $mantenimiento;
+        return view('mantenimiento.show', [
+            'mantenimiento' => $mantenimiento,
+        ]);
     }
 
     /**
@@ -141,8 +230,18 @@ class MantenimientoController extends Controller
     public function edit($id)
     {
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
-        $this->authorize('edit', $mantenimiento );
-        return $mantenimiento;
+        $this->authorize('edit', $mantenimiento);
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            $nodoDinamizador    = auth()->user()->dinamizador->nodo->id;
+            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
+            // return $mantenimiento ;
+            return view('mantenimiento.edit', [
+                'lineastecnologicas' => $lineastecnologicas,
+                'mantenimiento'      => $mantenimiento,
+            ]);
+        } else {
+            abort('403');
+        }
     }
 
     /**
@@ -152,20 +251,20 @@ class MantenimientoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MantenimientoFormRequest $request, $id)
     {
-        //
-    }
+        $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
+        $this->authorize('update', $mantenimiento);
+        $mantenimientoUpdate = $this->getMantenimientoRepository()->updateMantenimiento($request, $mantenimiento);
+        if ($mantenimientoUpdate == true) {
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            alert()->success("El mantenimiento ha sido  modificado.", 'Modificación Exitosa', "success");
+        } else {
+            alert()->error("El mantenimiento no ha sido  modificado.", 'Modificación Errónea', "error");
+        }
+
+        return redirect()->route('mantenimiento.index');
+
     }
 
     /**

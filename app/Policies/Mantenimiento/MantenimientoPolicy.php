@@ -42,10 +42,10 @@ class MantenimientoPolicy
     }
 
     /**
-     * Determine whether the user can show usos de infraestructura.
+     * Determine whether the user can show equipo mantenimientos.
      *
      * @param  \App\User  $user
-     * @param  \App\Models\Equipo  $uso
+     * @param  \App\Models\EquipoMantenimiento  $mantenimiento
      * @return bool
      */
     public function show(User $user, $mantenimiento)
@@ -64,13 +64,26 @@ class MantenimientoPolicy
     }
 
     /**
-     * Determine whether the user can edit usos de infraestructura.
+     * Determine whether the user can edit equipo mantenimientos.
      *
      * @param  \App\User  $user
-     * @param  \App\Models\Equipo  $uso
+     * @param  \App\Models\EquipoMantenimiento  $mantenimiento
      * @return bool
      */
     public function edit(User $user, $mantenimiento)
+    {
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->nodo_id == $user->dinamizador->nodo->id;
+
+    }
+
+    /**
+     * Determine whether the user can update equipo mantenimientos.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\EquipoMantenimiento  $mantenimiento
+     * @return bool
+     */
+    public function update(User $user, $mantenimiento)
     {
         return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->nodo_id == $user->dinamizador->nodo->id;
 

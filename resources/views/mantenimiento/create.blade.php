@@ -16,7 +16,7 @@
                     <div class="col s4 m4 l3 rigth-align">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li><a href="{{route('equipo.index')}}">Equipos</a></li>
+                            <li><a href="{{route('mantenimiento.index')}}">Equipos</a></li>
                             <li class="active">Nuevo Equipo</li>
                         </ol>
                     </div>
@@ -67,7 +67,7 @@
                         $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                         @if($errors->any())
                             $.each(response.equipos, function(i, e) {
-                            $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombreequipo+'</option>');
+                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombreequipo+'</option>');
                             });
                         @else
                             $.each(response.equipos, function(i, e) {

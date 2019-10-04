@@ -92,7 +92,7 @@ class EquipoController extends Controller
     }
 
     /**
-     * devolver datatables Costo Administrativo por nodo.
+     * devolver datatables equipos por nodo.
      *
      * @param  int nodo
      * @return \Illuminate\Http\Response
