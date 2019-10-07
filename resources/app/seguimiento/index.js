@@ -141,7 +141,7 @@ function graficoSeguimiento(data, name) {
             y: data.datos.ArticulacionesGI,
           },
           {
-            name: "Articulaciones con Grupo de Empresas",
+            name: "Articulaciones con Empresas",
             y: data.datos.ArticulacionesEmp,
           },
           {
