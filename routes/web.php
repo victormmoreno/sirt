@@ -556,6 +556,7 @@ Route::group([
   function () {
     Route::get('/', 'SeguimientoController@index')->name('seguimiento');
     Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
+    Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
   }
 );
 

@@ -1,5 +1,6 @@
 var graficosSeguimiento = {
-  gestor: 'graficoSeguimientoPorGestorDeUnNodo_column'
+  gestor: 'graficoSeguimientoPorGestorDeUnNodo_column',
+  nodo: 'graficoSeguimientoDeUnNodo_column'
 };
 
 function alertaLineaNoValido() {
@@ -12,6 +13,10 @@ function alertaGestorNoValido() {
 
 function alertaFechasNoValidas() {
   Swal.fire('Advertencia!', 'Seleccione fechas válidas', 'warning');
+};
+
+function alertaNodoNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
 };
 // 0 para cuando el Dinamizador consultar
 // 1 para cuando el gestor consulta
@@ -37,6 +42,40 @@ function consultarSeguimientoDeUnGestor(bandera) {
         url: '/seguimiento/seguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           graficoSeguimiento(data, graficosSeguimiento.gestor);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
+  }
+};
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Administrador consulta
+
+function consultarSeguimientoDeUnNodo(bandera) {
+  console.log('ddd');
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
+  let fecha_fin = $('#txtfecha_fin_Nodo').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaNodoNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/seguimiento/seguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        success: function (data) {
+          graficoSeguimiento(data, graficosSeguimiento.nodo);
         },
         error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
@@ -92,6 +131,10 @@ function graficoSeguimiento(data, name) {
           {
             name: "Proyectos en Cierre PMV",
             y: data.datos.CierrePMV,
+          },
+          {
+            name: "Proyectos Suspendidos",
+            y: data.datos.Suspendido,
           },
           {
             name: "Articulaciones con Grupo de Investigación",

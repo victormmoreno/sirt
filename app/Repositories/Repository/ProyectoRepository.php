@@ -54,13 +54,12 @@ class ProyectoRepository
 
   /**
    * Consulta la cantidad de proyectos por fecha de inicio y estados diferente a los de cierre
-   * @param int $id Id del gestor
    * @param string $fecha_inicio Primera fecha para realizar el fitro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
    * @return Collection
    * @author dum
    */
-  public function consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($id, $fecha_inicio, $fecha_fin)
+  public function consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)
   {
     return Proyecto::select('ep.nombre')
     ->selectRaw('count(proyectos.id) AS cantidad')
@@ -68,9 +67,9 @@ class ProyectoRepository
     ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
     ->join('gestores AS g', 'g.id', '=', 'a.gestor_id')
-    ->where('g.id', $id)
+    ->join('nodos', 'nodos.id', '=', 'a.nodo_id')
     ->where('proyectos.estado_aprobacion', 1)
-    ->whereBetween('fecha_inicio', ['2019-01-01', '2019-09-27'])
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
     ->whereIn('ep.nombre', ['Inicio', 'Planeacion', 'En ejecución'])
     ->groupBy('ep.nombre');
   }
@@ -83,13 +82,14 @@ class ProyectoRepository
    * @return Collection
    * @author dum
    */
-  public function consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas($estadoProyecto, $fecha_inicio, $fecha_fin)
+  public function consultarProyectoEnEstadosDeCierreDeEntreFechas($estadoProyecto, $fecha_inicio, $fecha_fin)
   {
     return Proyecto::selectRaw('count(proyectos.id) as cantidad')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->where('estadosproyecto.nombre', $estadoProyecto)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
   }

@@ -21,7 +21,7 @@ class EdtRepository
   * @return Collection
   * @author dum
   */
-  public function consultaEdtsDeUnGestorPorFechas_Respository($fecha_inicio, $fecha_fin)
+  public function consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)
   {
     return Edt::selectRaw('COUNT(edts.id) AS cantidad')
     ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
