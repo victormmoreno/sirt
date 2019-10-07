@@ -80,11 +80,81 @@ class SeguimientoController extends Controller
   }
 
   /**
+   * Retorna un array con los valores del seguimiento
+   * @param int $cierrePF Valor entero de cierrePF
+   * @param int $cierrePMV Valor entero de cierrePMV
+   * @param int $suspendido Valor entero de suspendido
+   * @param int $inicios Valor entero de inicios
+   * @param int $articulacionGrupos Valor entero de articulacionGrupos
+   * @param int $articulacionEmpresas Valor entero de articulacionEmpresas
+   * @param int $agrupacion Valor entero de agrupacion
+   * @param int $edts Valor entero de edts
+   * @return array
+   * @author dum
+   */
+  private function retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $agrupacion, $edts)
+  {
+    $datos = array();
+    $datos['CierrePF'] = $cierrePF;
+    $datos['CierrePMV'] = $cierrePMV;
+    $datos['Suspendido'] = $suspendido;
+    $datos['Inicio'] = $agrupacion['inicio'];
+    $datos['Planeacion'] = $agrupacion['planeacion'];
+    $datos['Ejecucion'] = $agrupacion['ejecucion'];
+    $datos['ArticulacionesGI'] = $articulacionGrupos;
+    $datos['ArticulacionesEmp'] = $articulacionEmpresas;
+    $datos['Edts'] = $edts;
+    return $datos;
+  }
+
+  /**
+   * Consulta el seguimiento de un nodo
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro del seguimiento
+   * @param string $fecha_fin Segunda fecha para realizar el filtro del seguimiento
+   * @return Response
+   * @author dum
+   */
+  public function seguimientoDelNodo($id, $fecha_inicio, $fecha_fin)
+  {
+    $idnodo = $id;
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
+
+    $datos = array();
+    $cierrePF = 0;
+    $cierrePMV = 0;
+    $suspendido = 0;
+    $inicio = 0;
+    $planeacion = 0;
+    $ejecucion = 0;
+    $articulacionGrupos = 0;
+    $articulacionEmpresas = 0;
+    $edts = 0;
+    $cierrePF = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Cierre PF', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
+    $cierrePMV = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Cierre PMV', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
+    $suspendido = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Suspendido', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
+    $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
+    $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
+    $edts = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
+    $agrupacion = $this->agruparProyectosEnInicioPlaneacionEjecucion($inicios);
+
+    $datos = $this->retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $agrupacion, $edts);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
+
+  }
+
+  /**
    * Consulta el seguimiento de un gestor
    *
    * @param int $id Id del gestor
-   * @param string $fecha_inicio Primera fecha para realizar el filtro
-   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @param string $fecha_inicio Primera fecha para realizar el filtro del seguimiento
+   * @param string $fecha_fin Segunda fecha para realizar el filtro del seguimiento
    * @return Reponse
    * @author dum
    */
@@ -98,28 +168,23 @@ class SeguimientoController extends Controller
     $datos = array();
     $cierrePF = 0;
     $cierrePMV = 0;
+    $suspendido = 0;
     $inicio = 0;
     $planeacion = 0;
     $ejecucion = 0;
     $articulacionGrupos = 0;
     $articulacionEmpresas = 0;
     $edts = 0;
-    $cierrePF = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas('Cierre PF', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
-    $cierrePMV = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeUnGestorEntreFechas('Cierre PMV', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
-    $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($idgestor, $fecha_inicio, $fecha_fin)->get();
-    $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorYFechas_Repository($idgestor, $fecha_inicio, $fecha_fin)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
-    $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorYFechas_Repository($idgestor, $fecha_inicio, $fecha_fin)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
+    $cierrePF = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Cierre PF', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
+    $cierrePMV = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Cierre PMV', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
+    $suspendido = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Suspendido', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
+    $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)->where('g.id', $id)->get();
+    $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
+    $edts = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $agrupacion = $this->agruparProyectosEnInicioPlaneacionEjecucion($inicios);
-    $edts = $this->getEdtRepository()->consultaEdtsDeUnGestorPorFechas_Respository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
 
-    $datos['CierrePF'] = $cierrePF;
-    $datos['CierrePMV'] = $cierrePMV;
-    $datos['Inicio'] = $agrupacion['inicio'];
-    $datos['Planeacion'] = $agrupacion['planeacion'];
-    $datos['Ejecucion'] = $agrupacion['ejecucion'];
-    $datos['ArticulacionesGI'] = $articulacionGrupos;
-    $datos['ArticulacionesEmp'] = $articulacionEmpresas;
-    $datos['Edts'] = $edts;
+    $datos = $this->retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $agrupacion, $edts);
 
     return response()->json([
       'datos' => $datos
