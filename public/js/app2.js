@@ -4740,8 +4740,8 @@ var selectEquipoPorNodo = {
                     name: 'nombrelinea',
                     width: '30%'
                 }, {
-                    data: 'nombreequipo',
-                    name: 'nombreequipo',
+                    data: 'nombre',
+                    name: 'nombre',
                     width: '30%'
                 }, {
                     data: 'referencia',
@@ -4811,8 +4811,8 @@ $(document).ready(function() {
             name: 'nombrelinea',
             width: '30%'
         }, {
-            data: 'nombreequipo',
-            name: 'nombreequipo',
+            data: 'nombre',
+            name: 'nombre',
             width: '30%'
         }, {
             data: 'referencia',
@@ -4875,8 +4875,8 @@ $(document).ready(function() {
             name: 'nombrelinea',
             width: '30%'
         }, {
-            data: 'nombreequipo',
-            name: 'nombreequipo',
+            data: 'nombre',
+            name: 'nombre',
             width: '30%'
         }, {
             data: 'referencia',
@@ -4951,16 +4951,16 @@ var selectMantenimientosEquiposPorNodo = {
                     type: "get",
                 },
                 columns: [{
-                    data: 'nombrelinea',
-                    name: 'nombrelinea',
+                    data: 'lineatecnologica',
+                    name: 'lineatecnologica',
                     width: '30%'
                 }, {
-                    data: 'equipo_nombre',
-                    name: 'equipo_nombre',
+                    data: 'equipo',
+                    name: 'equipo',
                     width: '30%'
                 }, {
-                    data: 'anio_mantenimiento',
-                    name: 'anio_mantenimiento',
+                    data: 'anio',
+                    name: 'anio',
                     width: '15%'
                 }, {
                     data: 'valor_mantenimiento',
@@ -5000,16 +5000,16 @@ $(document).ready(function() {
             type: "get",
         },
         columns: [{
-            data: 'nombrelinea',
-            name: 'nombrelinea',
+            data: 'lineatecnologica',
+            name: 'lineatecnologica',
             width: '30%'
         }, {
-            data: 'equipo_nombre',
-            name: 'equipo_nombre',
+            data: 'equipo',
+            name: 'equipo',
             width: '30%'
         }, {
-            data: 'anio_mantenimiento',
-            name: 'anio_mantenimiento',
+            data: 'anio',
+            name: 'anio',
             width: '15%'
         }, {
             data: 'valor_mantenimiento',
@@ -5041,16 +5041,16 @@ $(document).ready(function() {
             type: "get",
         },
         columns: [{
-            data: 'nombrelinea',
-            name: 'nombrelinea',
+            data: 'lineatecnologica',
+            name: 'lineatecnologica',
             width: '30%'
         }, {
-            data: 'equipo_nombre',
-            name: 'equipo_nombre',
+            data: 'equipo',
+            name: 'equipo',
             width: '30%'
         }, {
-            data: 'anio_mantenimiento',
-            name: 'anio_mantenimiento',
+            data: 'anio',
+            name: 'anio',
             width: '15%'
         }, {
             data: 'valor_mantenimiento',

@@ -36,8 +36,8 @@ var selectEquipoPorNodo = {
                     name: 'nombrelinea',
                     width: '30%'
                 }, {
-                    data: 'nombreequipo',
-                    name: 'nombreequipo',
+                    data: 'nombre',
+                    name: 'nombre',
                     width: '30%'
                 }, {
                     data: 'referencia',

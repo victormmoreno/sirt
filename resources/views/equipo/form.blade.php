@@ -44,7 +44,7 @@
             @enderror
 		</div>
 		 <div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtnombre" id="txtnombre" value="{{ isset($equipo) ? $equipo->nombreequipo: old('txtnombre')}}"/>
+	      	<input type="text" name="txtnombre" id="txtnombre" value="{{ isset($equipo) ? $equipo->nombre: old('txtnombre')}}"/>
 	      	<label class="active" for="txtnombre">Nombre de Equipo <span class="red-text">*</span></label>
 	      	@error('txtnombre')
             <label class="error" for="txtnombre" id="txtnombre-error">
@@ -94,8 +94,20 @@
             @enderror
 	    </div>
 		 <div class="input-field col s12 m4 l4">
-	      	<input type="text" name="txtaniocompra" id="txtaniocompra" value="{{ isset($equipo) ? $equipo->anio_compra:  old('txtaniocompra')}}"/>
-	      	<label class="active" for="txtaniocompra">Año de compra <span class="red-text">*</span></label>
+		 	<select class="js-states browser-default select2"   tabindex="-1" style="width: 100%" id="txtaniocompra" name="txtaniocompra">
+		 		<option>Seleccione el año de compra</option>
+            	{!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
+            	@for ($i=2016; $i <= $year; $i++)
+              		
+              		@if(isset($equipo->anio_compra))
+		            	
+		            	<option value="{{$i}}" {{ old('txtaniocompra', $equipo->anio_compra) ==  $i  ? 'selected' : Carbon\Carbon::now()->isoFormat('YYYY') }}>{{$i}}</option>
+		            @else
+		            	<option value="{{$i}}" {{ $i  == old('txtaniocompra')  ? 'selected' :  Carbon\Carbon::now()->isoFormat('YYYY')}}>{{$i}}</option>
+		            @endif
+            	@endfor
+          	</select>
+	      	<label class="active"  for="txtaniocompra">Año de compra <span class="red-text">*</span></label>
 	      	@error('txtaniocompra')
             <label class="error" for="txtaniocompra" id="txtaniocompra-error">
                 {{ $message }}
@@ -103,19 +115,7 @@
             @enderror
 	    </div>
 	</div>
-	{{-- <div class="row">
-		<h4 class="center">¿El equipo tiene mantenimiento?</h4>
-	</div>
-	<div class="row">
-		<div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtaniomantenimiento" id="txtaniomantenimiento" value="{{ isset($equipo) ? $equipo->marca: ''}}"/>
-	      	<label class="active" for="txtaniomantenimiento">Año mantenimiento</label>
-	    </div>
-		 <div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtvalormantenimiento" id="txtvalormantenimiento" value="{{ isset($equipo) ? $equipo->costo_adquisicion: ''}}"/>
-	      	<label class="active" for="txtvalormantenimiento">Valor Mantenimiento</label>
-	    </div>
-	</div> --}}
+
 	<div class="divider"></div>
 	<center>
 	  	<button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>

@@ -67,11 +67,11 @@
                         $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                         @if($errors->any())
                             $.each(response.equipos, function(i, e) {
-                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombreequipo+'</option>');
+                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                             });
                         @else
                             $.each(response.equipos, function(i, e) {
-                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombreequipo+'</option>');
+                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                             });
                         @endif
                     }

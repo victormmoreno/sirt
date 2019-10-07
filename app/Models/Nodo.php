@@ -80,6 +80,11 @@ class Nodo extends Model
         return $this->hasMany(Laboratorio::class, 'nodo_id', 'id');
     }
 
+    public function equipos()
+    {
+      return $this->hasMany(Equipo::class, 'nodo_id', 'id');
+    }
+
     public function costoadministrativonodo()
     {
         return $this->belongsToMany(CostoAdministrativo::class, 'nodo_costoadministrativo', 'nodo_id', 'costo_administrativo_id')
@@ -104,7 +109,10 @@ class Nodo extends Model
     public function lineas()
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot([
+                'porcentaje_linea',
+            ]);
 
     }
 

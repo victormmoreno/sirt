@@ -17,6 +17,7 @@ class Equipo extends Model
      * @var array
      */
     protected $fillable = [
+        'nodo_id',
         'lineatecnologica_id',
         'referencia',
         'nombre',
@@ -31,6 +32,7 @@ class Equipo extends Model
      * @var array
      */
     protected $casts = [
+        'nodo_id' => 'integer',
         'lineatecnologica_id' => 'integer',
         'referencia'          => 'string',
         'nombre'              => 'string',
@@ -138,6 +140,11 @@ class Equipo extends Model
     public function lineatecnologica()
     {
         return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
+    }
+
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
 

@@ -58,7 +58,12 @@ class LineaTecnologica extends Model
     public function nodos()
     {
         return $this->belongsToMany(Nodo::class, 'lineastecnologicas_nodos')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot([
+                'porcentaje_linea',
+            ]);
+
+
     }
 
     public function gestores()

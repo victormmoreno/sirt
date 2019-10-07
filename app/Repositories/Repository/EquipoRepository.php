@@ -3,16 +3,22 @@
 namespace App\Repositories\Repository;
 
 use App\Models\Equipo;
+use App\User;
 use Illuminate\Support\Facades\DB;
 
 class EquipoRepository
 {
     public function getInfoDataEquipos()
     {
-        return Equipo::select('equipos.id', 'equipos.referencia', 'equipos.nombre as nombreequipo', 'equipos.marca', 'equipos.vida_util','equipos.costo_adquisicion', 'equipos.anio_compra', 'equipos.created_at', 'lineastecnologicas.nombre as nombrelinea', 'lineastecnologicas.abreviatura','lineastecnologicas.id as lineatecnologica_id', 'nodos.id as nodoid')
-        ->join('lineastecnologicas','lineastecnologicas.id','=', 'equipos.lineatecnologica_id')
-        ->join('lineastecnologicas_nodos','lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
-        ->join('nodos', 'nodos.id', '=', 'lineastecnologicas_nodos.nodo_id');
+        return Equipo::with([
+            'nodo' => function($query){
+                $query->select('id', 'centro_id', 'entidad_id', 'direccion', 'telefono', 'anho_inicio');
+            },
+            'nodo.entidad' => function($query){
+                $query->select('id', 'ciudad_id', 'nombre', 'slug', 'email_entidad');
+            },
+            'lineatecnologica'
+        ]);
     }
 
 
@@ -24,6 +30,7 @@ class EquipoRepository
         try {
 
             Equipo::create([
+                'nodo_id' =>  session()->get('login_role') == User::IsDinamizador() ? auth()->user()->dinamizador->nodo->id : session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id,
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
                 'nombre'              => $request->input('txtnombre'),
                 'referencia'          => $request->input('txtreferencia'),
@@ -56,6 +63,7 @@ class EquipoRepository
         try {
 
             $equipo->update([
+                'nodo_id' =>  session()->get('login_role') == User::IsDinamizador() ? auth()->user()->dinamizador->nodo->id : session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id,
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
                 'nombre'              => $request->input('txtnombre'),
                 'referencia'          => $request->input('txtreferencia'),

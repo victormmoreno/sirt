@@ -52,9 +52,9 @@ class MantenimientoPolicy
     {
         if ($user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador()) {
             return true;
-        } elseif ($user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->nodo_id == $user->dinamizador->nodo->id) {
+        } elseif ($user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id) {
             return true;
-        } elseif ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $mantenimiento->lineatecnologica_id == $user->gestor->lineatecnologica->id) {
+        } elseif ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $mantenimiento->equipo->lineatecnologica->id == $user->gestor->lineatecnologica->id) {
 
             return true;
         } else {
@@ -72,7 +72,7 @@ class MantenimientoPolicy
      */
     public function edit(User $user, $mantenimiento)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->nodo_id == $user->dinamizador->nodo->id;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id;
 
     }
 
@@ -85,7 +85,7 @@ class MantenimientoPolicy
      */
     public function update(User $user, $mantenimiento)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->nodo_id == $user->dinamizador->nodo->id;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id;
 
     }
 

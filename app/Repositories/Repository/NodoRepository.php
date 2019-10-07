@@ -96,7 +96,14 @@ class NodoRepository
                 'telefono'    => $request->input('txttelefono'),
             ]);
 
-            $nodo->lineas()->sync($request->get('txtlineas'), false);
+            $porcentaje = 100 / count($request->get('txtlineas'));
+
+            $syncDataLinea = array();
+                foreach ($request->get('txtlineas') as $id => $value) {
+                    $syncDataLinea[$id] = array('linea_tecnologica_id' => $value,  'porcentaje_linea' =>$porcentaje);
+                }
+
+            $nodo->lineas()->sync($syncDataLinea);
 
             $costo = CostoAdministrativo::all();
             if (!$costo->isEmpty()) {

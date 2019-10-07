@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Mantenimientos | '. $mantenimiento->equipo_nombre)
+@section('meta-title', 'Mantenimientos | '. $mantenimiento->equipo->nombre)
 
 @section('content')
 
@@ -10,8 +10,12 @@
                 <div class="row">
                     <div class="col s12 m8 l8">
                         <h5 class="left-align">
-                            
-                            Mantenimiento de equipo {{$mantenimiento->equipo_nombre}}
+                            <a class="footer-text left-align" href="{{route('mantenimiento.index')}}">
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
+                            Mantenimiento de equipo {{$mantenimiento->equipo->nombre}}
                         </h5>
                     </div>
                     <div class="col s12 m4 l4 ">
@@ -40,22 +44,22 @@
                                                         </div>
                                                         <div class="left">
                                                             <span class="mailbox-title">
-                                                                Tecnoparque nodo {{$mantenimiento->entidad_nombre}} 
+                                                                Tecnoparque nodo {{$mantenimiento->equipo->nodo->entidad->nombre}} 
                                                             </span>
                                                             <span class="mailbox-author">
-                                                                <b>Dirección: </b> {{$mantenimiento->nodo_direccion}}<br/>
+                                                                <b>Dirección: </b> {{$mantenimiento->equipo->nodo->direccion}}<br/>
                                                                 <b>Correo Electrónco: </b> 
-                                                                {{isset($mantenimiento->email_entidad) ? $mantenimiento->email_entidad : 'No registra'}}<br/>
+                                                                {{isset($mantenimiento->equipo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->nodo->entidad->email_entidad : 'No registra'}}<br/>
                                                                 <b>Teléfono: </b> 
-                                                                {{isset($mantenimiento->nodo_telefono) ? $mantenimiento->nodo_telefono : 'No registra'}}<br/>
+                                                                {{isset($mantenimiento->equipo->nodo->telefono) ? $mantenimiento->equipo->nodo->telefono : 'No registra'}}<br/>
                                                             </span>
                                                         </div>
                                                         
                                                     </div>
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
-                                                            <p class="center">Información Mantenimiento de equipo {{$mantenimiento->equipo_nombre}} </p><br/>
-                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->lineatecnologica_abreviatura}} - {{$mantenimiento->lineatecnologica_nombre}} </p>
+                                                            <p class="center">Información Mantenimiento de equipo {{$mantenimiento->equipo->nombre}} </p><br/>
+                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologica->nombre}} </p>
                                                         </span>
 
                                                     </div>
@@ -80,36 +84,32 @@
                                                         <ul class="collection">
                                                             <li class="collection-item"> 
                                                                 <span class="title">
-                                                                    Nombre: {{$mantenimiento->equipo_nombre}}
+                                                                    Nombre: {{$mantenimiento->equipo->nombre}}
                                                                 </span>
                                                                 <p>
-                                                                   Referencia: {{$mantenimiento->referencia}}
+                                                                   Referencia: {{$mantenimiento->equipo->referencia}}
                                                                 </p>
                                                                 <p>
-                                                                   Marca: {{$mantenimiento->marca}}
+                                                                   Marca: {{$mantenimiento->equipo->marca}}
                                                                 </p>
                                                                 <p>
-                                                                   Costo Adquisición: ${{number_format($mantenimiento->costo_adquisicion,0)}} 
+                                                                   Costo Adquisición: ${{number_format($mantenimiento->equipo->costo_adquisicion,0)}} 
                                                                 </p>
                                                                 <p>
-                                                                   Vida Util: {{$mantenimiento->vida_util}} años
+                                                                   Vida Util: {{$mantenimiento->equipo->vida_util}} años
                                                                 </p>
                                                                 <p>
-                                                                   Año de compra: {{$mantenimiento->anio_compra}} 
-                                                                </p>
-                                                                    
+                                                                   Año de compra: {{$mantenimiento->equipo->anio_compra}} 
+                                                                </p>    
                                                             </li>
-                                                            
-                                                            
                                                         </ul>
-                                                        
                                                     </div>
                                                     <div class="col s12 m8 l8 push-l1 push-m1 pull-l1 pull-m1">
                                                         <div class="center">
                                                             <span class="mailbox-title">
-                                                                {{-- <i class="material-icons fas fa- user-friends"></i> --}}
-                                                                <i class="material-icons    fas fa-user-friends"></i>
-                                                                Información Mantenimiento de equipo {{$mantenimiento->equipo_nombre}} 
+                                                               
+                                                                <i class="material-icons">build</i>
+                                                                Información Mantenimiento de equipo {{$mantenimiento->equipo->nombre}} 
                                                             </span>
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
@@ -121,7 +121,7 @@
                                                                                 Linea Tecnológica
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->lineatecnologica_nombre}}
+                                                                              {{$mantenimiento->equipo->lineatecnologica->nombre}}
                                                                             </p>  
                                                                         </li>
                                                                         <li class="collection-item"> 
@@ -129,7 +129,7 @@
                                                                                 Año de Mantenimiento
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->anio_mantenimiento}}
+                                                                              {{$mantenimiento->anio}}
                                                                             </p>  
                                                                         </li>
                                                                     </ul>
@@ -141,7 +141,7 @@
                                                                                 Equipo
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->equipo_nombre}}
+                                                                              {{$mantenimiento->equipo->nombre}}
                                                                             </p>  
                                                                         </li>
                                                                         <li class="collection-item"> 
@@ -149,7 +149,7 @@
                                                                                 Valor de Mantenimiento
                                                                             </span>
                                                                             <p>
-                                                                               ${{number_format($mantenimiento->valor_mantenimiento,0)}}
+                                                                               ${{number_format($mantenimiento->valor,0)}}
                                                                             </p>    
                                                                         </li>
                                                                     </ul>

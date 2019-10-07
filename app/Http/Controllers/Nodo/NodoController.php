@@ -109,6 +109,8 @@ class NodoController extends Controller
     public function store(NodoFormRequest $request)
     {
         $this->authorize('store', Nodo::class);
+
+        // return count($request->get('txtlineas'));
         //metodo para guardad
         $nodoCreate = $this->nodoRepository->storeNodo($request);
 

@@ -16,7 +16,7 @@
                                       arrow_back
                                   </i>
                               </a>
-                            Mantenimientos buildTecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                            Mantenimientos Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
                     <div class="col s4 m4 l4 rigth-align">
@@ -31,7 +31,7 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <center><span class="card-title center-align">Editar Mantenimiento de equipo<b> | {{$mantenimiento->equipo_nombre}}</b></span> <i class="Small material-icons prefix">build </i></center>
+                                <center><span class="card-title center-align">Editar Mantenimiento de equipo<b> | {{$mantenimiento->equipo->nombre}}</b></span> <i class="Small material-icons prefix">build </i></center>
                                 <div class="divider"></div>
                                 <br/>
                                 <form action="{{ route('mantenimiento.update', $mantenimiento->id)}}" method="POST" onsubmit="return checkSubmit()">
@@ -66,19 +66,20 @@
                     url:'/equipos/getequiposporlinea/'+lineatecnologica
                 }).done(function(response){
                     $('#txtequipo').empty();
-                        
+                                            
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
                     }else{
                         $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                         $.each(response.equipos, function(i, e) {
-                            $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombreequipo+'</option>');
+
+                            $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                         });
 
                         @if($errors->any())
                         $('#txtequipo').val({{old('txtequipo')}});
                         @else
-                        $('#txtequipo').val('{{$mantenimiento->equipo_id}}');
+                        $('#txtequipo').val('{{$mantenimiento->equipo->id}}');
                         @endif
                     }
                     $('#txtequipo').select2();

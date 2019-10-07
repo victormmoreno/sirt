@@ -25,7 +25,7 @@
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align">Editar Equipo <b>{{$equipo->nombreequipo}}</b>  | Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                <span class="card-title center-align">Editar Equipo <b>{{$equipo->nombre}}</b>  | Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
 				                </span>
 			                </center>
                 			<div class="divider"></div>

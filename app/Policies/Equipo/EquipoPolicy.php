@@ -43,9 +43,8 @@ class EquipoPolicy
      */
     public function edit(User $user, $equipo)
     {
-        if ($user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $equipo->nodoid == $user->dinamizador->nodo->id) {
-            return true;
-        }
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id;
+            
 
     }
 
@@ -58,7 +57,7 @@ class EquipoPolicy
      */
     public function update(User $user, $equipo)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $equipo->nodoid == $user->dinamizador->nodo->id;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id;
            
     }
 
