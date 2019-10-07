@@ -120,13 +120,13 @@
                               @endfor
                             </select>
                             <label for="txtanho_GraficoProyecto4">Seleccione el Año</label>
-                            {{-- <div class="center col s12 m12 l12">
+                            <div class="center col s12 m12 l12">
                               <div class="material-icons">
-                                <a onclick="generarExcelGrafico1Proyecto(0)">
+                                <a onclick="generarExcelGrafico4Proyecto(0)">
                                   <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
                                 </a>
                               </div>
-                            </div> --}}
+                            </div>
                           </div>
                           <div class="col s12 m8 l8">
                             <div id="graficoProyectosFinalizadosPorNodoYAnho_column" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
@@ -172,6 +172,7 @@
   </main>
 @endsection
 @push('script')
+  <script src="{{asset('js/seguimiento/index.js')}}" charset="utf-8"></script>
   <script>
     $(document).ready(function(){
       consultarProyectosInscritosPorAnho_combinate(0, '{{$yearNow}}');

@@ -7,7 +7,7 @@
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('empresa')}}">
-              <i class="material-icons arrow-l">business_center</i>
+              <i class="left material-icons">arrow_back</i>
             </a> Empresas
           </h5>
           <div class="card">
@@ -78,22 +78,22 @@
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
-                        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="EmpresaCreate.getCiudad()" style="width: 100%" tabindex="-1">
+                        <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="EmpresaCreate.getCiudad()" style="width: 100%" tabindex="-1">
                           <option value="">Seleccione el departamento</option>
                           @foreach($departamentos as $value)
                             <option value="{{$value->id}}" {{ old('txtdepartamento') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
                           @endforeach
                         </select>
-                        <label for="txtdepartamento">Departamento de la Empresa <span class="red-text">*</span></label>
+                        <label class="active" for="txtdepartamento">Departamento de la Empresa <span class="red-text">*</span></label>
                         @error('txtdepartamento')
                           <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
                         @enderror
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <select class="" id="txtciudad_id" name="txtciudad_id" style="width: 100%" tabindex="-1">
+                        <select class="js-states browser-default select2" id="txtciudad_id" name="txtciudad_id" style="width: 100%" tabindex="-1">
                           <option value="">Seleccione Primero el Departamento</option>
                         </select>
-                        <label for="txtciudad_id">Ciudad de la Empresa <span class="red-text">*</span></label>
+                        <label class="active" for="txtciudad_id">Ciudad de la Empresa <span class="red-text">*</span></label>
                         @error('txtciudad_id')
                             <label id="txtciudad_id-error" class="error" for="txtciudad_id">{{ $message }}</label>
                         @enderror

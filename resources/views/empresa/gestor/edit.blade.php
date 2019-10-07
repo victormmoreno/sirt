@@ -71,7 +71,7 @@
                       </div>
                       <div class="input-field col s12 m6 l6">
                         <input type="text" name="direccion" id="direccion" value="{{ old('direccion', $empresa->direccion) }}">
-                        <label for="direccion">Dirección de la Empresa <span class="red-text">*</span></label>
+                        <label for="direccion">Dirección de la Empresa</label>
                         @error('direccion')
                              <label id="direccion-error" class="error" for="direccion">{{ $message }}</label>
                         @enderror
@@ -79,7 +79,7 @@
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
-                        <select class="" id="txtdepartamento" name="txtdepartamento" onchange="EmpresaCreate.getCiudad()" style="width: 100%" tabindex="-1">
+                        <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="EmpresaCreate.getCiudad()" style="width: 100%" tabindex="-1">
                           <option value="">Seleccione el departamento</option>
                           @foreach($departamentos as $value)
                             <option value="{{$value->id}}"
@@ -87,16 +87,16 @@
                              </option>
                           @endforeach
                         </select>
-                        <label for="txtdepartamento">Departamento de la Empresa <span class="red-text">*</span></label>
+                        <label class="active" for="txtdepartamento">Departamento de la Empresa <span class="red-text">*</span></label>
                         @error('txtdepartamento')
                           <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
                         @enderror
                       </div>
                       <div class="input-field col s12 m6 l6">
-                        <select class="" id="txtciudad_id" name="txtciudad_id" style="width: 100%" tabindex="-1">
+                        <select class="js-states browser-default select2" id="txtciudad_id" name="txtciudad_id" style="width: 100%" tabindex="-1">
                           <option value="">Seleccione Primero el Departamento</option>
                         </select>
-                        <label for="txtciudad_id">Ciudad de la Empresa <span class="red-text">*</span></label>
+                        <label class="active" for="txtciudad_id">Ciudad de la Empresa <span class="red-text">*</span></label>
                         @error('txtciudad_id')
                             <label id="txtciudad_id-error" class="error" for="txtciudad_id">{{ $message }}</label>
                         @enderror
@@ -120,6 +120,10 @@
 @push('script')
   <script>
   $(document).ready(function() {
+    @if($errors->any())
+    $('#txtdepartamento').val({{old('txtdepartamento')}});
+    $('#txtdepartamento').select2();
+    @endif
     EmpresaCreate.getCiudad();
   });
 
@@ -143,7 +147,7 @@
         @else
         $('#txtciudad_id').val({{$empresa->entidad->ciudad->id}});
         @endif
-        $('#txtciudad_id').material_select();
+        $('#txtciudad_id').select2();
       });
     },
   }

@@ -5,7 +5,7 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>Entrenamientos</h5>
+        <h5><i class="left material-icons">library_books</i>Entrenamientos</h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
@@ -17,15 +17,16 @@
                     </div>
                   </div>
                   <div class="col s12 m2 l2">
-                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="{{route('entrenamientos.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nuevo Entrenamiento">
-                        <i class="material-icons">exposure_plus_1</i>
-                      </a>
-                    </div>
+                    <a href="{{ route('entrenamientos.create') }}">
+                      <div class="card green">
+                        <div class="card-content center">
+                          <i class="left material-icons white-text">add</i>
+                          <span class="white-text">Nuevo Entrenamiento</span>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                 </div>
-                <center>
-                </center>
                 <div class="divider"></div>
                 <table id="entrenamientos_nodo_table" class="display responsive-table datatable-example dataTable">
                   <thead>

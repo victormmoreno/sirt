@@ -5,7 +5,7 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5>Gráficos</h5>
+          <h5><i class="left material-icons">insert_chart</i>Gráficos</h5>
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -33,7 +33,7 @@
                       <a href="{{route('grafico.edt')}}">
                         <div class="card indigo lighten-4">
                           <div class="card-content center">
-                            <i class="left material-icons black-text">record_voice_over</i>
+                            <i class="left material-icons black-text">hearing</i>
                             <span class="black-text">Edt's</span>
                           </div>
                         </div>

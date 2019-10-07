@@ -17,8 +17,8 @@
             </div>
             <div class="row">
               <div class="col s12 m12 l12">
-                <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                  <li class="tab col s3"><a href="#articulaciones_por_nodo" class="active">Articulaciones del Nodo</a></li>
+                <ul class="tabs" style="width: 100%;">
+                  <li class="tab col s3"><a href="javascript:void(0)" class="active">Articulaciones del Nodo</a></li>
                   <li class="tab col s3"><a class="" href="#articulaciones_por_gestor">Articulaciones por Gestor</a></li>
                   <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                 </ul>
@@ -27,10 +27,9 @@
             </div>
             <div id="articulaciones_por_gestor">
               <div class="input-fiel col s12 m12 l12">
-                <i class="material-icons">domain</i>
                 <label for="txtgestor_id">Gestor</label>
                 <select class="initialized" id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1" onchange="consultarArticulacionesGestor(this.value)">
-                  <option value="">Seleccione el Gestor * </option>
+                  <option value="">Seleccione un gestor del nodo * </option>
                   @foreach($gestores as $id => $nombres_gestor)
                     <option value="{{$id}}">{{$nombres_gestor}}</option>
                   @endforeach
@@ -38,9 +37,13 @@
               </div>
             </div>
             <div class="divider"></div>
-            <div class="right material-icons">
+            <div class="col s12 m2 l2">
               <a href="{{route('articulacion.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
-                <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
+                <div class="card green">
+                  <div class="card-content center">
+                    <span class="white-text">Descargar tabla</span>
+                  </div>
+                </div>
               </a>
             </div>
             @include('articulaciones.table')

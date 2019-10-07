@@ -7,8 +7,8 @@
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('edt')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
-            </a> Edt
+              <i class="left material-icons arrow-l">arrow_back</i>
+            </a> Edt's
           </h5>
           <div class="card">
             <div class="card-content">
@@ -16,7 +16,7 @@
                 <div class="col s12 m12 l12">
                   <br>
                   <center>
-                    <span class="card-title center-align">Modificar Edt - <b>{{ $edt->codigo_articulacion }}</b></span>
+                    <span class="card-title center-align">Modificar Edt - <b>{{ $edt->codigo_edt }}</b></span>
                   </center>
                   <div class="divider"></div>
                   <div class="row">

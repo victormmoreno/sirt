@@ -32,7 +32,7 @@ class ArticulacionFormRequest extends FormRequest
       'txtempresa_id' => Rule::requiredIf(request()->group1 == Articulacion::IsEmpresa()),
       'talentos' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
       'radioTalentoLider' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
-      'txtnombre' => 'required|min:10|max:200',
+      'txtnombre' => 'required|min:4|max:200',
       'txttipoarticulacion_id' => 'required',
       'txtestado' => 'required',
       'txtfecha_inicio' => 'required|date_format:"Y-m-d"',
@@ -56,7 +56,7 @@ class ArticulacionFormRequest extends FormRequest
 
       'txtnombre.required' => 'El Nombre de la Articulación es obligatorio.',
       'txtnombre.max' => 'El Nombre de la Articulación debe ser máximo 1000 caracteres.',
-      'txtnombre.min' => 'El Nombre de la Articulación debe ser mínimo 10 caracteres.',
+      'txtnombre.min' => 'El Nombre de la Articulación debe ser mínimo 4 caracteres.',
 
       'txttipoarticulacion_id.required' => 'La Actividad debe ser obligatoria.',
 

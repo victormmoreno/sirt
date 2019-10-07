@@ -5,22 +5,22 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons">record_voice_over</i>Edt</h5>
+          <h5><i class="left material-icons">hearing</i>Edt</h5>
           <div class="card stats-card">
             <div class="card-content">
               <div class="row">
-                <div class="col s12 m10 l10">
+                <div class="col s12 m12 l12">
                   <div class="center-align">
                     <span class="card-title center-align"> Edts de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                   </div>
                 </div>
               </div>
               <div class="divider"></div>
-              <div class="right material-icons">
+              {{-- <div class="right material-icons">
                 <a href="{{route('edt.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
                   <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
                 </a>
-              </div>
+              </div> --}}
               <table class="display responsive-table datatable-example" style="width: 100%" id="edtPorNodo_table" >
                 <thead>
                   <th>Código de la Edt</th>
@@ -34,6 +34,15 @@
                   <th>Editar</th>
                 </thead>
               </table>
+              <div class="col s12 m2 l2">
+                <a href="{{route('edt.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
+                  <div class="card green">
+                    <div class="card-content center">
+                      <span class="white-text">Descargar tabla</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>

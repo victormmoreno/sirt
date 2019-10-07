@@ -7,7 +7,7 @@
       <div class="col s12 m12 l12">
         <h5>
           <a class="footer-text left-align" href="{{route('grupo')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="left material-icons">arrow_back</i>
           </a> Grupos de Investigación
         </h5>
         <div class="card">
