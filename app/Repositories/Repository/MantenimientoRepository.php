@@ -43,9 +43,9 @@ class MantenimientoRepository
     {
         return EquipoMantenimiento::with([
                             'equipo',
-                            'equipo.lineatecnologica',
-                            'equipo.nodo',
-                            'equipo.nodo.entidad',
+                            'equipo.lineatecnologicanodo.lineatecnologica',
+                            'equipo.lineatecnologicanodo.nodo',
+                            'equipo.lineatecnologicanodo.nodo.entidad',
                         ]);
     }
 

@@ -30,12 +30,27 @@
 			                </center>
                 			<div class="divider"></div>
                 			<br/>
-                			<form  action="{{route('equipo.update',$equipo->id)}}" method="POST" onsubmit="return checkSubmit()">
-			                  	{!! method_field('PUT')!!}
-			                  	@include('equipo.form', [
-			                  	'btnText' => 'Modificar'
-			                  	])
-                			</form>
+                            @if( $lineastecnologicas->count() == 0)
+                                
+                                <div class="center-align">
+                                    <i class="large material-icons prefix">
+                                        block
+                                    </i>
+                                    
+                                    <p>
+                                        Para registrar un nuevo equipo, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                    </p>
+                                    
+                                    
+                                </div>
+                            @else
+                    			<form  action="{{route('equipo.update',$equipo->id)}}" method="POST" onsubmit="return checkSubmit()">
+    			                  	{!! method_field('PUT')!!}
+    			                  	@include('equipo.form', [
+    			                  	'btnText' => 'Modificar'
+    			                  	])
+                    			</form>
+                            @endif
               			</div>
             		</div>
           		</div>

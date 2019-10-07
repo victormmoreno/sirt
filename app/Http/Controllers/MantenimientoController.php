@@ -38,7 +38,7 @@ class MantenimientoController extends Controller
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo           = auth()->user()->dinamizador->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
-                        ->whereHas('equipo.nodo', function($query) use($nodo){
+                        ->whereHas('equipo.lineatecnologicanodo.nodo', function($query) use($nodo){
                             $query->where('id',$nodo);
                         })
                         ->get();
@@ -46,10 +46,10 @@ class MantenimientoController extends Controller
                     $linea          = auth()->user()->gestor->lineatecnologica->id;
                     $nodo           = auth()->user()->gestor->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
-                        ->whereHas('equipo.nodo', function($query) use($nodo){
+                        ->whereHas('equipo.lineatecnologicanodo.nodo', function($query) use($nodo){
                             $query->where('id',$nodo);
                         })
-                        ->whereHas('equipo.lineatecnologica', function($query) use($linea){
+                        ->whereHas('equipo.lineatecnologicanodo.lineatecnologica', function($query) use($linea){
                             $query->where('id',$linea);
                         })
                         ->get();
@@ -76,7 +76,7 @@ class MantenimientoController extends Controller
                                 }));
                     })
                     ->editColumn('lineatecnologica', function ($data) {
-                        return $data->equipo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologica->nombre;
+                        return $data->equipo->lineatecnologicanodo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologicanodo->lineatecnologica->nombre;
                     })
                     ->editColumn('equipo', function ($data) {
                         return $data->equipo->nombre;
@@ -121,7 +121,7 @@ class MantenimientoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
                 $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
-                        ->whereHas('equipo.nodo', function($query) use($nodo){
+                        ->whereHas('equipo.lineatecnologicanodo.nodo', function($query) use($nodo){
                             $query->where('id',$nodo);
                         })
                         ->get();
@@ -147,7 +147,7 @@ class MantenimientoController extends Controller
                                 }));
                     })
                     ->editColumn('lineatecnologica', function ($data) {
-                        return $data->equipo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologica->nombre;
+                        return $data->equipo->lineatecnologicanodo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologicanodo->lineatecnologica->nombre;
                     })
                     ->editColumn('equipo', function ($data) {
                         return $data->equipo->nombre;

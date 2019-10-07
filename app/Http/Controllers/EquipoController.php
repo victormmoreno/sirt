@@ -30,7 +30,14 @@ class EquipoController extends Controller
      */
     public function index()
     {
+
         
+        $nodo    = auth()->user()->dinamizador->nodo->id;
+        $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
+                                    $query->where('id', $nodo);
+                                })->get();
+        // return $equipos;
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
@@ -38,17 +45,17 @@ class EquipoController extends Controller
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo    = auth()->user()->dinamizador->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
+                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })->get();
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea   = auth()->user()->gestor->lineatecnologica->id;
                     $nodo    = auth()->user()->gestor->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
+                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })
-                                ->whereHas('lineatecnologica', function($query) use( $linea ){
+                                ->whereHas('lineatecnologicanodo.lineatecnologica', function($query) use( $linea ){
                                     $query->where('id', $linea);
                                 })->get();
                 }
@@ -69,7 +76,7 @@ class EquipoController extends Controller
                         return '$ ' . number_format($data->costo_adquisicion);
                     })
                     ->editColumn('nombrelinea', function ($data) {
-                        return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
+                        return $data->lineatecnologicanodo->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologicanodo->lineatecnologica->nombre;
                     })
 
                     ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
@@ -113,7 +120,7 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
+                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })->get();
 
@@ -133,7 +140,7 @@ class EquipoController extends Controller
                         return '$ ' . number_format($data->costo_adquisicion);
                     })
                     ->editColumn('nombrelinea', function ($data) {
-                        return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
+                        return $data->lineatecnologicanodo->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologicanodo->lineatecnologica->nombre;
                     })
 
                     ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
@@ -159,10 +166,10 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                 $nodo    = auth()->user()->dinamizador->nodo->id;
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
+                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })
-                                ->whereHas('lineatecnologica', function($query) use( $linea ){
+                                ->whereHas('lineatecnologicanodo.lineatecnologica', function($query) use( $linea ){
                                     $query->where('id', $linea);
                                 })->get();
 
@@ -184,11 +191,13 @@ class EquipoController extends Controller
      */
     public function create()
     {
+
         $this->authorize('create', Equipo::class);
         if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
             $nodoDinamizador = auth()->user()->dinamizador->nodo->id;
 
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
+
 
             return view('equipo.create', [
                 'lineastecnologicas' => $lineastecnologicas,
@@ -212,6 +221,7 @@ class EquipoController extends Controller
 
         //metodo para guardad
         $equipoCreate = $this->getEquipoRepository()->storeEquipo($request);
+       
         if ($equipoCreate === true) {
 
             alert()->success('Registro Exitoso.', 'El equipo ha sido creado satisfactoriamente');
@@ -221,16 +231,6 @@ class EquipoController extends Controller
         return redirect()->route('equipo.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.

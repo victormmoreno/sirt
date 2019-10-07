@@ -44,14 +44,14 @@
                                                         </div>
                                                         <div class="left">
                                                             <span class="mailbox-title">
-                                                                Tecnoparque nodo {{$mantenimiento->equipo->nodo->entidad->nombre}} 
+                                                                Tecnoparque nodo {{$mantenimiento->equipo->lineatecnologicanodo->nodo->entidad->nombre}} 
                                                             </span>
                                                             <span class="mailbox-author">
-                                                                <b>Dirección: </b> {{$mantenimiento->equipo->nodo->direccion}}<br/>
+                                                                <b>Dirección: </b> {{$mantenimiento->equipo->lineatecnologicanodo->nodo->direccion}}<br/>
                                                                 <b>Correo Electrónco: </b> 
-                                                                {{isset($mantenimiento->equipo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->nodo->entidad->email_entidad : 'No registra'}}<br/>
+                                                                {{isset($mantenimiento->equipo->lineatecnologicanodo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->lineatecnologicanodo->nodo->entidad->email_entidad : 'No registra'}}<br/>
                                                                 <b>Teléfono: </b> 
-                                                                {{isset($mantenimiento->equipo->nodo->telefono) ? $mantenimiento->equipo->nodo->telefono : 'No registra'}}<br/>
+                                                                {{isset($mantenimiento->equipo->lineatecnologicanodo->nodo->telefono) ? $mantenimiento->equipo->lineatecnologicanodo->nodo->telefono : 'No registra'}}<br/>
                                                             </span>
                                                         </div>
                                                         
@@ -59,7 +59,7 @@
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
                                                             <p class="center">Información Mantenimiento de equipo {{$mantenimiento->equipo->nombre}} </p><br/>
-                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologica->nombre}} </p>
+                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->nombre}} </p>
                                                         </span>
 
                                                     </div>
@@ -121,7 +121,7 @@
                                                                                 Linea Tecnológica
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->equipo->lineatecnologica->nombre}}
+                                                                              {{$mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->nombre}}
                                                                             </p>  
                                                                         </li>
                                                                         <li class="collection-item"> 

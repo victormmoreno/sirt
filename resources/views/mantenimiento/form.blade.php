@@ -32,8 +32,8 @@
             
                 <option value="">Seleccione Linea Tecnológica</option>
                 @forelse($lineastecnologicas as $id => $linea)
-                    @if(isset($mantenimiento->equipo->lineatecnologica->id))
-                        <option value="{{$id}}" {{ old('txtlineatecnologica', $mantenimiento->equipo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
+                    @if(isset($mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->id))
+                        <option value="{{$id}}" {{ old('txtlineatecnologica', $mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
                     @else
                         <option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
                     @endif

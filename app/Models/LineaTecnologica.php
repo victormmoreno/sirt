@@ -76,9 +76,10 @@ class LineaTecnologica extends Model
         return $this->hasMany(Laboratorio::class, 'lineatecnologica_id', 'id');
     }
 
-    public function equipos()
+    
+    public function lineastecnologicasnodos()
     {
-      return $this->hasMany(Equipo::class, 'lineatecnologica_id', 'id');
+        return $this->hasMany(LineaTecnologicaNodo::class, 'linea_tecnologica_id', 'id');
     }
 
     /*=====  End of relaciones elquent  ======*/
