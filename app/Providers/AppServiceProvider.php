@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if (app()->environment() == 'production') {
           $this->app->bind('path.public', function () {
-            return 'home/gestionred/public_html';
+            return '/home/gestionred/public_html';
           });
         }
     }
