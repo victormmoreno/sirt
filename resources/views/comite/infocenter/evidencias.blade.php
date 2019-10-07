@@ -32,13 +32,13 @@
                     <div class="col s12 m4 l4">
                       <p class="p-v-xs">
                         <input type="checkbox" name="ev_correos" {{ $comite->correos == 0 ? '' : 'checked' }} id="ev_correos" value="1">
-                        <label for="ev_correos">Correos<span class="red-text">*</span></label>
+                        <label for="ev_correos">Correos</label>
                       </p>
                     </div>
                     <div class="col s6 m4 l4">
                       <p class="p-v-xs">
                         <input type="checkbox" name="ev_listado" {{ $comite->listado_asistencia == 0 ? '' : 'checked' }} id="ev_listado" value="1">
-                        <label for="ev_listado">Listado de Asistencia <span class="red-text">*</span></label>
+                        <label for="ev_listado">Listado de Asistencia</label>
                       </p>
                     </div>
                     <div class="col s6 m4 l4">

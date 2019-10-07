@@ -13,6 +13,14 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token()}}">
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')">
+        <style>
+        .tabs .tab .active {
+          color:#26a69a;
+          /*Custom Text Color While Active*/
+          background-color: rgba(89, 181, 72, 0.2);
+          /*Custom Background Color While Active*/
+        }
+        </style>
         @stack('style')
 </head>
 <body>

@@ -217,7 +217,7 @@ Route::group([
 ],
     function () {
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
-        Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
+        // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
         Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
@@ -227,7 +227,7 @@ Route::group([
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/', 'IdeaController@store')->name('idea.store');
-        Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi')->middleware(['auth', 'role_session:Infocenter']);
+        // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/addIdeaDeProyectoAlComite', 'IdeaController@addIdeaDeProyectoCreate');
     }
 );
@@ -255,7 +255,7 @@ function () {
   Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea')->middleware('role_session:Infocenter');
   Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
   Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
-  Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
+  // Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
   Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Infocenter');
   Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Infocenter');
   Route::post('/addidea', 'EntrenamientoController@add_idea')->middleware('role_session:Infocenter');
@@ -542,6 +542,7 @@ Route::group([
    Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
    Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelProyectosFinalizadosPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoFinalizadosPorAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
  }
 );
 

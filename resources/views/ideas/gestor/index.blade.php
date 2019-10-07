@@ -5,7 +5,7 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5><i class="material-icons">lightbulb</i>Ideas de Proyecto</h5>
+        <h5><i class="left material-icons">lightbulb</i>Ideas de Proyecto</h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
@@ -18,9 +18,8 @@
                   </div>
                 </div>
                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                  <li class="tab col s3"><a href="#ideasProyecto" class="active">Ideas de Proyecto (emprendedor)</a></li>
-                  <li class="tab col s3"><a href="#ideasProyectoEmpresa" onclick="secondDataTable()">Ideas de Proyecto (empresa/grupo de investigación)</a></li>
-                  <li class="tab col s3"><a href="#ideaUnica">Buscar Idea</a></li>
+                  <li class="tab col s3"><a href="#ideasProyecto" class="active">Ideas de Proyecto</a></li>
+                  <li class="tab col s3"><a href="#ideaUnica">Buscar Ideas</a></li>
                   <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                 </ul>
                 <div class="divider"></div>
@@ -60,21 +59,6 @@
                     </thead>
                     <tbody>
 
-                    </tbody>
-                  </table>
-                </div>
-                <div id="ideasProyectoEmpresa">
-                  <table id="ideasEmpresasGIPorNodo_table" class="display responsive-table datatable-example" style="width: 100%">
-                    <thead>
-                      <tr>
-                        <th>Consecutivo de la Idea</th>
-                        <th>Fecha de Registro</th>
-                        <th>Nit</th>
-                        <th>Razón Social</th>
-                        <th>Nombre de la Idea</th>
-                      </tr>
-                    </thead>
-                    <tbody>
                     </tbody>
                   </table>
                 </div>

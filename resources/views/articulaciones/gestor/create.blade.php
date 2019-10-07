@@ -7,7 +7,7 @@
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('articulacion')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
+              <i class="left material-icons arrow-l">arrow_back</i>
             </a> Articulaciones
           </h5>
           <div class="card">
@@ -45,7 +45,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <p class="center card-title">Seleccione con quién será la articulación</p><br>
+                      <p class="center card-title">Seleccione con quién será la articulación <span class="red-text">*</span></p><br>
                       <div class="input-field col s12 m12 l12">
                         <p class="center p-v-xs">
                           <input class="with-gap" name="group1" type="radio" id="IsGrupo" value="0"/>

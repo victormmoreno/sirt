@@ -7,7 +7,7 @@
         <h5>
           <a class="footer-text left-align" href="{{route('edt')}}">
             <i class="left material-icons">arrow_back</i>
-          </a> Edt
+          </a> Edt's
         </h5>
         <div class="card">
           <div class="card-content">

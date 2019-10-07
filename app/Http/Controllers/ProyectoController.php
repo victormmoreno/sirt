@@ -341,13 +341,10 @@ class ProyectoController extends Controller
   {
     if (Session::get('login_role') == User::IsGestor()) {
       $validator = Validator::make($request->all(), [
-      'txtservidorvideo' => Rule::requiredIf(isset($request->txtvideo_tutorial)),
-      'txturl_videotutorial' => [Rule::requiredIf(isset($request->txtvideo_tutorial)), 'url', new CreateValidationForDomainRequest, 'max:1000'],
+      'txturl_videotutorial' => ['url', 'max:1000', 'nullable'],
       ], [
-      'txturl_videotutorial.required' => 'La Url del Video es obligatoria.',
       'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.',
       'txturl_videotutorial.max' => 'La Url del Video debe ser máximo de 1000 carácteres.',
-      'txtservidorvideo.required' => 'El Servidor de Videos de obligatorio.'
       ]);
       if ($validator->fails()) {
         return back()->withErrors($validator)->withInput();
