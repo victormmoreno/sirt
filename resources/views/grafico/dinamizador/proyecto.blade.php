@@ -172,7 +172,7 @@
   </main>
 @endsection
 @push('script')
-  <script src="{{asset('js/seguimiento/index.js')}}" charset="utf-8"></script>
+  {{-- <script src="{{asset('js/seguimiento/index.js')}}" charset="utf-8"></script> --}}
   <script>
     $(document).ready(function(){
       consultarProyectosInscritosPorAnho_combinate(0, '{{$yearNow}}');
