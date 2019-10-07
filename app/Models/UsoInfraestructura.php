@@ -73,6 +73,13 @@ class UsoInfraestructura extends Model
             ->withPivot('tiempo');
     }
 
+    public function usoequipos()
+    {
+        return $this->belongsToMany(Equipo::class, 'equipo_uso', 'usoinfraestructura_id','equipo_id')
+            ->withTimestamps()
+            ->withPivot('tiempo');
+    }
+
     public function usotalentos()
     {
         return $this->belongsToMany(Talento::class, 'uso_talentos', 'usoinfraestructura_id', 'talento_id')
@@ -98,11 +105,11 @@ class UsoInfraestructura extends Model
     {
         if ($tipo_usoinfraestructura == self::IsProyecto()) {
             return 'Proyecto ';
-        }else if($tipo_usoinfraestructura == self::IsArticulacion()){
+        } else if ($tipo_usoinfraestructura == self::IsArticulacion()) {
             return 'Articulacion ';
-        }else if($tipo_usoinfraestructura == self::IsEdt()){
+        } else if ($tipo_usoinfraestructura == self::IsEdt()) {
             return 'EDT ';
-        }else{
+        } else {
             return 'No registra';
         }
     }

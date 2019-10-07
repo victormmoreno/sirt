@@ -281,8 +281,8 @@ Route::group([
     Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
         ->name('usoinfraestructura.edtsforuser');
 
-    Route::get('usoinfraestructura/laboratorios', 'UsoInfraestructuraController@usoinfraestructuraLaboratorios')
-        ->name('usoinfraestructura.laboratorios');
+    Route::get('usoinfraestructura/equipos', 'UsoInfraestructuraController@usoinfraestructuraEquipos')
+        ->name('usoinfraestructura.equipos');
 
     Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
         ->name('usoinfraestructura.usoinfraestructurapornodo');

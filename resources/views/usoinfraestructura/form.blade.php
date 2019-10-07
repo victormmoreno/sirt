@@ -256,7 +256,7 @@
 
 <div class="card-content">
     <span class="red-text text-darken-2">
-        Para registrar el uso de un laboratorio o la asistencia de un talento dar click en el boton
+        Para registrar el uso de un equipo o la asistencia de un talento dar click en el boton
         <a class="btn-floating waves-effect waves-light blue">
             <i class="material-icons">
                 add
@@ -275,13 +275,13 @@
                 <i class="material-icons left">
                     info_outline
                 </i>
-                Si no se van a registrar laboratorios y tiempo de uso, por favor no agregue al detalle de uso de infraestructura.
+                Si no se van a registrar equipos y tiempo de uso, por favor no agregue al detalle de uso de infraestructura.
             </p>
             <div class="collapsible-body">
                 <div class="card-content">
                     <div class="row">
                         <div class="input-field col s10 m10 l11">
-                            <select class="js-states" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
+                            <select class="js-states browser-default select2" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
 
                                 @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
                                     <option value="">
@@ -308,9 +308,6 @@
                             </select>
                             <label class="active" for="txttalento">
                                 Talento
-                                <span class="red-text">
-                                    *
-                                </span>
                             </label>
                         </div>
                         <div class="input-field col s2 m2 l1">
@@ -330,18 +327,18 @@
                             
                         </div>
                     </div>
-                    {{-- {{var_dump($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios)}} --}}
+                    
                     <div class="row">
                         <div class="input-field col s5 m6 l6">
                             <!-- <i class="material-icons prefix">local_drink</i> -->
-                            <select class="js-states" id="txtlaboratorio" name="txtlaboratorio" style="width: 100%" tabindex="-1">
-                                @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios))
+                            <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
+                                @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->equipos))
                                     <option value="">
-                                        Seleccione Laboratorio
+                                        Seleccione el equipo
                                     </option>
-                                    @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->laboratorios as $laboratorio)
-                                    <option value="{{$laboratorio->id}}">
-                                        {{$laboratorio->nombre}}
+                                    @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->equipos as $equipo)
+                                    <option value="{{$equipo->id}}">
+                                        {{$equipo->nombre}}
                                     </option>
                                     @endforeach
                                 @else
@@ -350,8 +347,8 @@
                                     </option>
                                 @endif
                             </select>
-                            <label class="active" for="txtlaboratorio">
-                                Laboratorio
+                            <label class="active" for="txtequipo">
+                                Equipo
                             </label>
                         </div>
                         <div class="input-field col s5 m4 l5">
@@ -365,7 +362,7 @@
                             </input>
                         </div>
                         <div class="col s2 m2 l1">
-                            <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregartimelaboratorio" data-delay="50" data-position="button" data-tooltip="Agregar Uso"  onclick="agregarLaboratorioAusoInfraestructura()">
+                            <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregartimelaboratorio" data-delay="50" data-position="button" data-tooltip="Agregar Uso"  onclick="agregarEquipoAusoInfraestructura()">
                                 <i class="material-icons">
                                     add
                                 </i>
@@ -380,7 +377,7 @@
                                         Detalle Talentos
                                     </p>
                                 </center>
-                                {{-- {{var_dump($usoinfraestructura->usolaboratorios)}} --}}
+                               
                                 <table class="striped centered responsive-table" id="tbldetallelineas">
                                     <thead>
                                         <tr>
@@ -424,14 +421,14 @@
                             <div class="card ">
                                 <center>
                                     <p class="center-aling">
-                                        Detalle Uso
+                                        Detalle Uso de Equipos
                                     </p>
                                 </center>
                                 <table class="striped centered responsive-table" id="tbldetallelineas">
                                     <thead>
                                         <tr>
                                             <th>
-                                                Laboratorio
+                                                Equipo
                                             </th>
                                             <th>
                                                 Tiempo Uso
@@ -442,19 +439,19 @@
                                         </tr>
                                     </thead>
                                     <tbody id="detallesUsoInfraestructura">
-                                        @if(isset($usoinfraestructura->usolaboratorios))
-                                            @forelse ($usoinfraestructura->usolaboratorios as $key => $laboratorio)
+                                        @if(isset($usoinfraestructura->usoequipos))
+                                            @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
                                                     
-                                                    <tr id="filaLaboratorio{{$laboratorio->id}}">
+                                                    <tr id="filaEquipo{{$equipo->id}}">
                                                         <td>
-                                                            <input type="hidden" name="laboratorio[]" value="{{$laboratorio->id}}"/>{{$laboratorio->nombre}}
+                                                            <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
                                                         </td>
                                                         <td>
-                                                            <input type="hidden" name="tiempouso[]" value="{{$laboratorio->pivot->tiempo}}"/>
-                                                            {{$laboratorio->pivot->tiempo}}
+                                                            <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
+                                                            {{$equipo->pivot->tiempo}}
                                                         </td>
                                                         <td>
-                                                            <a class="waves-effect red lighten-3 btn" onclick="eliminarLaboratorio({{$laboratorio->id}});">
+                                                            <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$equipo->id}});">
                                                                 <i class="material-icons">delete_sweep</i>
                                                             </a>
                                                         </td>
@@ -480,7 +477,7 @@
 <center>
    
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
-    <a class="btn waves-effect red lighten-2 center-aling" href="{{route('sublineas.index')}}">
+    <a class="btn waves-effect red lighten-2 center-aling" href="{{route('usoinfraestructura.index')}}">
         <i class="material-icons right">
             backspace
         </i>

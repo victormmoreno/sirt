@@ -49,7 +49,9 @@
     <script>
 
         $(document).ready(function() {
-            mantenimientoCreate.getEquipoPorLinea();
+            @if($errors->any())
+                mantenimientoCreate.getEquipoPorLinea();
+            @endif
         });
 
         var mantenimientoCreate = {

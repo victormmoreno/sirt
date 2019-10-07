@@ -23,8 +23,8 @@
       <div class="col s12 m12 l12">
         <table id="usoinfraestrucutaArticulacionesForUserTable" style="width: 100%" class="centered">
           <thead>
-            <th>Código de Articulación</th>
-            <th>Nombre</th>
+            <th>Código de la Articulación</th>
+            <th>Nombre de la Articulación</th>
             <th>Tipo de artculación</th>
             <th>Seleccionar Articulación</th>
           </thead>

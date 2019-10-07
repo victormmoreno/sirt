@@ -147,5 +147,12 @@ class Equipo extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
+    public function usoinfraestructuras()
+    {
+        return $this->belongsToMany(UsoInfraestructura::class, 'equipo_uso', 'usoinfraestructura_id','equipo_id')
+            ->withTimestamps()
+            ->withPivot('tiempo');
+    }
+
 
 }

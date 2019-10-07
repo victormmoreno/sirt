@@ -41,15 +41,15 @@ class UsoInfraestructuraRepository
                 $usoInfraestructura->usotalentos()->sync([]);
             }
 
-            if ($request->filled('laboratorio')) {
+            if ($request->filled('equipo')) {
                 $syncData = array();
-                foreach ($request->get('laboratorio') as $id => $value) {
-                    $syncData[$id] = array('laboratorio_id' => $value, 'tiempo' => $request->get('tiempouso')[$id]);
+                foreach ($request->get('equipo') as $id => $value) {
+                    $syncData[$id] = array('equipo_id' => $value, 'tiempo' => $request->get('tiempouso')[$id]);
                 }
 
-                $usoInfraestructura->usolaboratorios()->sync($syncData);
+                $usoInfraestructura->usoequipos()->sync($syncData);
             }else{
-                $usoInfraestructura->usolaboratorios()->sync([]);
+                $usoInfraestructura->usoequipos()->sync([]);
             }
 
             DB::commit();
@@ -92,18 +92,16 @@ class UsoInfraestructuraRepository
                 $usoInfraestructura->usotalentos()->sync([]);
             }
 
-            if ($request->filled('laboratorio')) {
+            if ($request->filled('equipo')) {
                 $syncData = array();
-                foreach ($request->get('laboratorio') as $id => $value) {
-                    $syncData[$id] = array('laboratorio_id' => $value, 'tiempo' => $request->get('tiempouso')[$id]);
+                foreach ($request->get('equipo') as $id => $value) {
+                    $syncData[$id] = array('equipo_id' => $value, 'tiempo' => $request->get('tiempouso')[$id]);
                 }
 
-                $usoInfraestructura->usolaboratorios()->sync($syncData);
+                $usoInfraestructura->usoequipos()->sync($syncData);
             }else{
-                $usoInfraestructura->usolaboratorios()->sync([]);
+                $usoInfraestructura->usoequipos()->sync([]);
             }
-
-            
 
             DB::commit();
             return true;

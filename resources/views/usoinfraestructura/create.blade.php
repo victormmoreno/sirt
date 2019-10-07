@@ -127,7 +127,7 @@
                         toast: true,
                         position: 'bottom-end',
                         title: 'proyecto',
-                        text: "por favor seleccion un proyecto",
+                        text: "por favor seleccione un proyecto",
                         type: 'warning',
                         showConfirmButton: false,
                         timer: 10000
@@ -138,7 +138,7 @@
                     usoInfraestructuraCreate.removeDisableSelectButtons();
                     usoInfraestructuraCreate.DatatableProjectsForUser();
                     usoInfraestructuraCreate.limpiarListaTalentos();
-                    usoInfraestructuraCreate.limpiarListaLaboratorios();
+                    usoInfraestructuraCreate.limpiarListaEquipos();
                                    
                       
                 } else if ( $("#IsArticulacion").is(":checked") ) {
@@ -159,7 +159,7 @@
                     usoInfraestructuraCreate.eliminarContentTables();
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
                     usoInfraestructuraCreate.limpiarListaTalentos();
-                    usoInfraestructuraCreate.limpiarListaLaboratorios();
+                    usoInfraestructuraCreate.limpiarListaEquipos();
 
                 } else if( $("#IsEdt").is(":checked")) {
             
@@ -179,7 +179,7 @@
                     usoInfraestructuraCreate.disableSelectButtons();
                     usoInfraestructuraCreate.dataTableEdtFindByUser();
                     usoInfraestructuraCreate.limpiarListaTalentos();
-                    usoInfraestructuraCreate.limpiarListaLaboratorios();
+                    usoInfraestructuraCreate.limpiarListaEquipos();
                  
                 }
                
@@ -235,16 +235,15 @@
                 url:'/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
 
-
                 $('#txttalento').empty();
-                $('#txtlaboratorio').empty();
+                $('#txtequipo').empty();
                 $('#txtgestor').removeAttr('value');
                 $('#txtlinea').removeAttr('value');
 
 
                 if (response != '') {
                     $('#txttalento').append('<option value="">Seleccione el talento</option>');
-                    $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
+                    $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                     $.each(response.data, function(i, element) {
 
                         $('#txtgestor').val(element.articulacion_proyecto.actividad.gestor.user.documento+ ' - '+ element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos);
@@ -263,23 +262,22 @@
 
 
                     $.each(response.data, function(i, element) {
-
-
-                                             
-                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
+       
+                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
                     
-                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                         });
                     });
                     
 
                 }else{
                     $('#txttalento').append('<option value="">no se encontraron resultados</option>');
-                    $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                    $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
+                   
                 }
 
-                $('#txttalento').material_select();
-                $('#txtlaboratorio').material_select();
+                $('#txttalento').select2();
+                $('#txtequipo').select2();
 
                
             });
@@ -295,19 +293,19 @@
         removeOptionsSelect: function () {
             $('#txttalento')
             .empty()
-            .append('<option selected="selected" value="">seleccione talentos</option>').material_select();
-            $('#txtlaboratorio')
+            .append('<option selected="selected" value="">seleccione el talento</option>').select2();
+            $('#txtequipo')
             .empty()
-            .append('<option selected="selected"  value="">seleccione laboratorios</option>').material_select();          
+            .append('<option selected="selected"  value="">seleccione el equipo</option>').select2();          
         },
 
         disableSelectButtons: function () {
-            $('#txttalento').attr("disabled", true).material_select(); 
+            $('#txttalento').attr("disabled", true).select2(); 
             
             $(".btnAgregarTalento").attr("disabled", true).removeAttr("onclick");
         },
         removeDisableSelectButtons: function () {
-            $('#txttalento').attr("disabled", false).material_select(); 
+            $('#txttalento').attr("disabled", false).select2(); 
              $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'addTalentoAUso()');
         },
 
@@ -353,7 +351,7 @@
               });
 
             $('#txttalento').empty();
-            $('#txtlaboratorio').empty();
+            $('#txtequipo').empty();
 
             $('#modalUsoIngraestrucuta_articulaciones_modal').openModal({
                 dismissible: false,
@@ -367,9 +365,11 @@
                 url:'/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
                 $('#txttalento').empty();
-                $('#txtlaboratorio').empty();
+                $('#txtequipo').empty();
                 $('#txtgestor').removeAttr('value');
                 $('#txtlinea').removeAttr('value');
+
+             
 
                 $.each(response.data, function(i, element) {
 
@@ -383,7 +383,7 @@
                     if (element.articulacion_proyecto.talentos.length != 0) {
                         $('.btnAgregarTalento').attr('onclick', 'addTalentoAUso()'); 
                         $('#txttalento').append('<option value="">Seleccione el talento</option>');
-                        $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
+                        $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
 
                         
 
@@ -392,18 +392,18 @@
                
                         }); 
 
-                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
+                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
                 
-                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                         });
 
-                        $('#txttalento').attr("disabled", false).material_select();
-                        $('#txtlaboratorio').material_select();
+                        $('#txttalento').attr("disabled", false).select2();
+                        $('#txtequipo').select2();
                     }else{
                         $('#txttalento').append('<option value="">no se encontraron resultados</option>');
-                        $('#txttalento').attr("disabled", true).material_select();
+                        $('#txttalento').attr("disabled", true).select2();
                         $('.btnAgregarTalento').attr("disabled", true).removeAttr("onclick");
-                        usoInfraestructuraCreate.laboratorios();
+                        usoInfraestructuraCreate.equipos();
                     }
 
                 }); 
@@ -459,33 +459,34 @@
             });
         },
         
-        laboratorios: function () {
+        equipos: function () {
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/usoinfraestructura/laboratorios'
+                url:'/usoinfraestructura/equipos'
             }).done(function(response){
-                $('#txtlaboratorio').empty();
-                $('#txtlaboratorio').append('<option value="">Seleccione el laboratorio</option>');
+            
+                $('#txtequipo').empty();
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
 
-                    $.each(response.data, function(e, laboratorio) {
+                    $.each(response.data, function(e, equipo) {
                 
-                        $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                        $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                     });
                 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
 
                     $.each(response.data, function(i, element) {
 
-                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios, function(e, laboratorio) {
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
                     
-                            $('#txtlaboratorio').append('<option  value="'+laboratorio.id+'">'+ laboratorio.nombre + '</option>');
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                         });
                     }); 
 
                 @endif
 
-                $('#txtlaboratorio').material_select(); 
+                $('#txtequipo').select2(); 
 
             });
         },
@@ -518,13 +519,13 @@
             
         },
 
-        noRepeatLaboratorio: function () {
-          let idlaboratorio = $("#txtlaboratorio").val();
-          let a = document.getElementsByName("laboratorio[]");
+        noRepeatEquipo: function () {
+          let idequipo = $("#txtequipo").val();
+          let a = document.getElementsByName("equipo[]");
           validacion = true;
           if (a.length >= 1) {
             for (x=0;x<a.length;x++){
-              if (a[x].value == idlaboratorio) {
+              if (a[x].value == idequipo) {
                 validacion = false;
               }
             }
@@ -544,12 +545,12 @@
         limpiarListaTalentos: function (){
             $('#detalleTalento').empty();
         },
-        limpiarListaLaboratorios: function (){
+        limpiarListaEquipos: function (){
             $('#detallesUsoInfraestructura').empty();
         },
     }
 
-    function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre, talentos) {
+    function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
             $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
             Swal.fire({
               toast: true,
@@ -580,21 +581,21 @@
         $divActividad.show();
     }
 
-    function agregarLaboratorioAusoInfraestructura(){
+    function agregarEquipoAusoInfraestructura(){
             
             let  cont = 0;
-            let idlaboratorio = $("#txtlaboratorio").val();
+            let idequipo = $("#txtequipo").val();
             let tiempouso = $("#txttiempouso").val();
-            let nombreLaboratorio = $('#txtlaboratorio option:selected').text();
+            let nombreEquipo = $('#txtequipo option:selected').text();
 
-            if ($("#txtlaboratorio").val() == ""){
+            if ($("#txtequipo").val() == ""){
                   Swal.fire({
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'warning',
-                    title: 'Debe seleccionar un laboratorio.'
+                    title: 'Debe seleccionar un equipo.'
                   });
 
             }else  if ($("#txttiempouso").val() == ""){
@@ -616,7 +617,7 @@
                     title: 'El tiempo de uso debe ser un valor numerico entre 0 y 99.9.'
                 });
             }else{
-              if (usoInfraestructuraCreate.noRepeatLaboratorio() == true) {
+              if (usoInfraestructuraCreate.noRepeatEquipo() == true) {
 
                 Swal.fire({
                     toast: true,
@@ -624,13 +625,13 @@
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'success',
-                    title: 'Laboratorio ' + nombreLaboratorio + ' agregado.'
+                    title: 'Equipo ' + nombreEquipo + ' agregado.'
                 });
 
-                var a = document.getElementsByName("laboratorio[]");
+                var a = document.getElementsByName("equipo[]");
                 let fila ="";
 
-                fila = '<tr class="selected" id="filaLaboratorio'+cont+'"><td><input type="hidden" name="laboratorio[]" value="'+idlaboratorio+'">'+nombreLaboratorio+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarLaboratorio('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                 cont++;
                 $('#detallesUsoInfraestructura').append(fila);
               }else{
@@ -640,13 +641,13 @@
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'error',
-                    title: 'El laboratorio ' + nombreLaboratorio + ' ya esta listado.'
+                    title: 'El Equipo ' + nombreEquipo + ' ya esta listado.'
                   });
                 
               }
             }
-            $("#txtlaboratorio option[value='']").attr("selected", true);
-            $('#txtlaboratorio').material_select();
+            $("#txtequipo option[value='']").attr("selected", true);
+            $('#txtequipo').select2();
             $("#txttiempouso").val('');
             
         }
@@ -690,7 +691,7 @@
             $("label[for='txtactividad']").text("Edt");
             $divActividad.show();
 
-            usoInfraestructuraCreate.laboratorios();
+            usoInfraestructuraCreate.equipos();
 
         }
 
@@ -747,7 +748,7 @@
             }
             // $("#txttalento").val();
             $("#txttalento option[value='']").attr("selected", true);
-            $('#txttalento').material_select();
+            $('#txttalento').select2();
         }
 
         function eliminarTalento(index){
@@ -762,15 +763,15 @@
               });
         }
 
-        function eliminarLaboratorio(index){
-          $('#filaLaboratorio'+ index).remove();
+        function eliminarEquipo(index){
+          $('#filaEquipo'+ index).remove();
           Swal.fire({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
             type: 'success',
-            title: 'Laboratorio eliminado.'
+            title: 'Equipo eliminado.'
           });
         }
 
@@ -813,7 +814,6 @@
                     if (data.fail == false && data.redirect_url == false) {
                           Swal.fire({
                                 title: 'El uso de infraestructua no se ha registrado, por favor inténtalo de nuevo',
-                                // text: "You won't be able to revert this!",
                                 type: 'warning',
                                 showCancelButton: false,
                                 confirmButtonColor: '#3085d6',

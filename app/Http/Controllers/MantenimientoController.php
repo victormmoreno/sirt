@@ -8,6 +8,7 @@ use App\Models\Nodo;
 use App\Repositories\Repository\LineaRepository;
 use App\Repositories\Repository\MantenimientoRepository;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Repositories\Repository\NodoRepository;
 
@@ -178,6 +179,7 @@ class MantenimientoController extends Controller
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
             return view('mantenimiento.create', [
                 'lineastecnologicas' => $lineastecnologicas,
+                'year' =>  Carbon::now()->isoFormat('YYYY'),
             ]);
         } else {
             abort('403');
@@ -233,6 +235,7 @@ class MantenimientoController extends Controller
             $nodoDinamizador    = auth()->user()->dinamizador->nodo->id;
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
             return view('mantenimiento.edit', [
+                'year' =>  Carbon::now()->isoFormat('YYYY'),
                 'lineastecnologicas' => $lineastecnologicas,
                 'mantenimiento'      => $mantenimiento,
             ]);

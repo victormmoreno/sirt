@@ -96,14 +96,14 @@
 		 <div class="input-field col s12 m4 l4">
 		 	<select class="js-states browser-default select2"   tabindex="-1" style="width: 100%" id="txtaniocompra" name="txtaniocompra">
 		 		<option>Seleccione el año de compra</option>
-            	{!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
+        
             	@for ($i=2016; $i <= $year; $i++)
               		
               		@if(isset($equipo->anio_compra))
 		            	
-		            	<option value="{{$i}}" {{ old('txtaniocompra', $equipo->anio_compra) ==  $i  ? 'selected' : Carbon\Carbon::now()->isoFormat('YYYY') }}>{{$i}}</option>
+		            	<option value="{{$i}}" {{ old('txtaniocompra', $equipo->anio_compra) ==  $i  ? 'selected' : '' }}>{{$i}}</option>
 		            @else
-		            	<option value="{{$i}}" {{ $i  == old('txtaniocompra')  ? 'selected' :  Carbon\Carbon::now()->isoFormat('YYYY')}}>{{$i}}</option>
+		            	<option value="{{$i}}" {{ $i  == old('txtaniocompra')  ? 'selected' :  ''}}>{{$i}}</option>
 		            @endif
             	@endfor
           	</select>

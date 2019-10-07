@@ -8,6 +8,7 @@ use App\Models\Nodo;
 use App\Repositories\Repository\EquipoRepository;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Repositories\Repository\NodoRepository;
@@ -156,7 +157,7 @@ class EquipoController extends Controller
     {
         if (request()->ajax()) {
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-                $nodo    = auth()->user()->gestor->nodo->id;
+                $nodo    = auth()->user()->dinamizador->nodo->id;
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                                 ->whereHas('nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
@@ -191,6 +192,7 @@ class EquipoController extends Controller
 
             return view('equipo.create', [
                 'lineastecnologicas' => $lineastecnologicas,
+                'year' =>  Carbon::now()->isoFormat('YYYY'),
             ]);
         } else {
             abort('403');
@@ -246,6 +248,7 @@ class EquipoController extends Controller
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
             // return $lineastecnologicas;
             return view('equipo.edit', [
+                'year' =>  Carbon::now()->isoFormat('YYYY'),
                 'lineastecnologicas' => $lineastecnologicas,
                 'equipo'             => $equipo,
             ]);
