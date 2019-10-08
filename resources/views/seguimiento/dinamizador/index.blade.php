@@ -78,7 +78,9 @@
                 </div>
                 <div class="center col s12 m6 l6">
                   <button onclick="consultarSeguimientoDeUnNodo(0)" class="btn">Consultar</button>
-                  {{-- <button id="jsPDFTecnoparque" class="btn red">PDF</button> --}}
+                </div>
+                <div class="center col s12 m6 l6">
+                  <button onclick="generarExcelSeguimentoNodo(0)" class="btn green">Excel</button>
                 </div>
               </div>
               <div class="col s12 m8 l8">

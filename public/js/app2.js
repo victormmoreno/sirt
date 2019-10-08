@@ -5928,7 +5928,6 @@ function consultarSeguimientoDeUnGestor(bandera) {
 // 1 para cuando el Administrador consulta
 
 function consultarSeguimientoDeUnNodo(bandera) {
-  console.log('ddd');
   let id = 0;
   let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
   let fecha_fin = $('#txtfecha_fin_Nodo').val();
@@ -5957,6 +5956,28 @@ function consultarSeguimientoDeUnNodo(bandera) {
     }
   }
 };
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Administrador consulta
+function generarExcelSeguimentoNodo(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
+  let fecha_fin = $('#txtfecha_fin_Nodo').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaNodoNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      location.href = '/excel/excelSeguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+}
 
 function graficoSeguimiento(data, name) {
   Highcharts.chart(name, {
@@ -6014,7 +6035,7 @@ function graficoSeguimiento(data, name) {
             y: data.datos.ArticulacionesGI,
           },
           {
-            name: "Articulaciones con Grupo de Empresas",
+            name: "Articulaciones con Empresas",
             y: data.datos.ArticulacionesEmp,
           },
           {

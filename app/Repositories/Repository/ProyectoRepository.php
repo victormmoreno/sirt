@@ -95,6 +95,38 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta la información de los proyectos por un estado de proyecto especfico
+   * @param string $estadoProyecto
+   * @return Builder
+   * @author dum
+   */
+  public function consultarProyectosPorEstados_Detalle($estadoProyecto)
+  {
+    return Proyecto::select('codigo_actividad',
+    'actividades.nombre AS nombre_proyecto',
+    'sectores.nombre AS nombre_sector',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sublineas.nombre AS nombre_sublinea',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
+    'estadosproyecto.nombre AS nombre_estado',
+    'fecha_inicio',
+    'fecha_cierre')
+    ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->where('proyectos.estado_aprobacion', 1)
+    ->where('estadosproyecto.nombre', $estadoProyecto);
+  }
+
+  /**
    * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
    *
    * @param int $id Id del nodo
