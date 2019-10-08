@@ -47,6 +47,8 @@ class UsoInfraestructuraController extends Controller
      */
     public function index()
     {
+
+        
         $this->authorize('index', UsoInfraestructura::class);
 
         $user = auth()->user()->id;
@@ -54,6 +56,7 @@ class UsoInfraestructuraController extends Controller
         $nodo = 2;
 
         $relations = $this->getDataIndex();
+
 
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
@@ -250,20 +253,20 @@ class UsoInfraestructuraController extends Controller
             'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
                 $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
             },
-            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
             'usotalentos',
             'usotalentos.user'                                                               => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
             'usoequipos',
-            'usoequipos.nodo'                                                                => function ($query) {
+            'usoequipos.lineatecnologicanodo.nodo'                                                                => function ($query) {
                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
             },
-            'usoequipos.nodo.entidad'                                                        => function ($query) {
+            'usoequipos.lineatecnologicanodo.nodo.entidad'                                                        => function ($query) {
                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
             },
-            'usoequipos.nodo.entidad.ciudad.departamento',
-            'usoequipos.lineatecnologica'                                               => function ($query) {
+            'usoequipos.lineatecnologicanodo.nodo.entidad.ciudad.departamento',
+            'usoequipos.lineatecnologicanodo.lineatecnologica'                                               => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
             'usolaboratorios',
@@ -429,7 +432,6 @@ class UsoInfraestructuraController extends Controller
 
         $result = $this->getUsoInfraestructuraRepository()->update($request, $id);
 
-        // return response()->json(['data' => $result]);
         if ($result == false) {
             return response()->json([
                 'fail'         => false,
@@ -686,7 +688,7 @@ class UsoInfraestructuraController extends Controller
                 'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
                     $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+                'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
             ];
 
             $estado = [
@@ -748,7 +750,7 @@ class UsoInfraestructuraController extends Controller
                 'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
                     $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+                'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
             ];
 
             $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)
@@ -770,7 +772,9 @@ class UsoInfraestructuraController extends Controller
             $equipos = null;
             if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
-                $equipos = auth()->user()->gestor->lineatecnologica->equipos;
+                $equipos = auth()->user()->gestor->lineatecnologica->lineastecnologicasnodos->each(function ($item, $key) {
+                    $item->equipos;
+                });
 
             } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
                 $estado = [
@@ -796,9 +800,7 @@ class UsoInfraestructuraController extends Controller
                     'articulacion_proyecto.actividad.gestor.lineatecnologica'         => function ($query) {
                         $query->select('id', 'nombre', 'abreviatura');
                     },
-                    'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos' => function ($query) {
-                        $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
-                    },
+                    'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
                 ];
 
                 $user = auth()->user()->documento;

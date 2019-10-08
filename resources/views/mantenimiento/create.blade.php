@@ -30,12 +30,22 @@
 			                </center>
                 			<div class="divider"></div>
                 			<br/>
-                			<form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
-			                  	
-			                  	@include('mantenimiento.form', [
-			                  	'btnText' => 'Registrar'
-			                  	])
-                			</form>
+                            @if( $lineastecnologicas->count() == 0)
+                                <div class="center-align">
+                                    <i class="large material-icons prefix">
+                                        block
+                                    </i>
+                                    <p>
+                                        Para registrar un nuevo mantenimiento, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                    </p>                                    
+                                </div>
+                            @else
+                    			<form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
+    			                  	@include('mantenimiento.form', [
+    			                  	'btnText' => 'Registrar'
+    			                  	])
+                    			</form>
+                            @endif
               			</div>
             		</div>
           		</div>

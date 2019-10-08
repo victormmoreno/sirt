@@ -332,14 +332,16 @@
                         <div class="input-field col s5 m6 l6">
                             <!-- <i class="material-icons prefix">local_drink</i> -->
                             <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
-                                @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->equipos))
+                                @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->lineastecnologicasnodos))
                                     <option value="">
                                         Seleccione el equipo
                                     </option>
-                                    @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->equipos as $equipo)
-                                    <option value="{{$equipo->id}}">
-                                        {{$equipo->nombre}}
-                                    </option>
+                                    @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->lineastecnologicasnodos as $equipos)
+                                        @foreach($equipos->equipos as $equipo)
+                                        <option value="{{$equipo->id}}">
+                                            {{$equipo->nombre}}
+                                        </option>
+                                        @endforeach
                                     @endforeach
                                 @else
                                     <option value="">

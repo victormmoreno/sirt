@@ -234,6 +234,7 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
+                console.log(response);
 
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
@@ -263,9 +264,13 @@
 
                     $.each(response.data, function(i, element) {
        
-                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
-                    
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos, function(e, equipos) {        
+
+                            $.each(equipos.equipos, function(e, equipo) {
+                        
+                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                                
+                            });
                         });
                     });
                     
@@ -392,9 +397,12 @@
                
                         }); 
 
-                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
+                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos, function(e, equipos) {
                 
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                            $.each(equipos.equipos, function(e, equipo) {
+                    
+                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                            });
                         });
 
                         $('#txttalento').attr("disabled", false).select2();
@@ -465,23 +473,32 @@
                 type:'get',
                 url:'/usoinfraestructura/equipos'
             }).done(function(response){
+                console.log(response.data);
             
                 $('#txtequipo').empty();
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
 
-                    $.each(response.data, function(e, equipo) {
-                
-                        $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                    $.each(response.data, function(e, element) {
+
+                        $.each(element.equipos, function(e, equipo) {
+                    
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                        });
+            
                     });
                 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
 
                     $.each(response.data, function(i, element) {
 
-                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos, function(e, equipos) {
+
+                                $.each(equipos.equipos, function(e, equipo) {
                     
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
-                        });
+                                    $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                                });
+                    
+                            });
                     }); 
 
                 @endif

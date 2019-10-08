@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <i class="fas fa-box"></i>
+                            <i class="material-icons">account_balance_wallet</i>
                             Equipos
                         </h5>
                     </div>
@@ -80,7 +80,7 @@
                                     <div class="col s12 l2">
                                         <div class="click-to-toggle show-on-large hide-on-med-and-down">
                                             <a class="btnregister waves-effect waves-light-sena btn" href="{{route('equipo.create')}}">
-                                                <i class="fas fa-box"></i>
+                                                <i class="material-icons">add_circle</i>
                                                  Nuevo Equipo
                                             </a>
                                             

@@ -34,12 +34,23 @@
                                 <center><span class="card-title center-align">Editar Mantenimiento de equipo<b> | {{$mantenimiento->equipo->nombre}}</b></span> <i class="Small material-icons prefix">build </i></center>
                                 <div class="divider"></div>
                                 <br/>
-                                <form action="{{ route('mantenimiento.update', $mantenimiento->id)}}" method="POST" onsubmit="return checkSubmit()">
-                                	{!! method_field('PUT')!!}
-	                                @include('mantenimiento.form', [
-								    	'btnText' => 'Modificar',
-								   	])
-							   	</form>
+                                @if( $lineastecnologicas->count() == 0)
+                                    <div class="center-align">
+                                        <i class="large material-icons prefix">
+                                            block
+                                        </i>
+                                        <p>
+                                            Para registrar un nuevo mantenimiento, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                        </p>                                    
+                                    </div>
+                                @else
+                                    <form action="{{ route('mantenimiento.update', $mantenimiento->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                    	{!! method_field('PUT')!!}
+    	                                @include('mantenimiento.form', [
+    								    	'btnText' => 'Modificar',
+    								   	])
+    							   	</form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -50,6 +61,7 @@
 </main>
 
 @endsection
+@if( $lineastecnologicas->count() != 0)
 @push('script')
     <script>
         $(document).ready(function() {
@@ -88,3 +100,4 @@
         }
     </script>
 @endpush
+@endif

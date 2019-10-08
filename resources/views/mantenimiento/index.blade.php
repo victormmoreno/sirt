@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
-                            <i class="material-icons">build</i>
+                           <i class="material-icons">settings_applications</i>
                             Mantenimientos
                         </h5>
                     </div>

@@ -72,9 +72,7 @@
 @push('script')
 <script>
     $(document).ready(function() {
-	        
 	        usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
-
 	    });
 
 	    var usoInfraestructuraUpdate = {
@@ -215,14 +213,15 @@
 	                        });
 	                    });
 
-
 	                    $.each(response.data, function(i, element) {
+       
+	                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos, function(e, equipos) {        
 
-
-	                                             
-	                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
-	                    
-	                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+	                            $.each(equipos.equipos, function(e, equipo) {
+	                        
+	                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+	                                
+	                            });
 	                        });
 	                    });
 	                    
@@ -316,6 +315,7 @@
 	                type:'get',
 	                url:'/usoinfraestructura/talentosporarticulacion/'+id
 	            }).done(function(response){
+	            	
 	                $('#txttalento').empty();
 	                $('#txtequipo').empty();
 	                $('#txtgestor').removeAttr('value');
@@ -342,10 +342,13 @@
                    
                             }); 
 
-                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
-                    
-                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
-                            });
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos, function(e, equipos) {
+                
+	                            $.each(equipos.equipos, function(e, equipo) {
+	                    
+	                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+	                            });
+	                        });
 
                             $('#txttalento').attr("disabled", false).select2();
                     		$('#txtequipo').select2();
@@ -432,18 +435,26 @@
 	                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
 	                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
 
-	                    $.each(response.data, function(e, equipo) {
-	                
-	                        $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+	                    $.each(response.data, function(e, element) {
+
+	                        $.each(element.equipos, function(e, equipo) {
+	                    
+	                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+	                        });
+	            
 	                    });
 	                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
 
 	                    $.each(response.data, function(i, element) {
 
-	                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
-	                    
-	                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
-	                        });
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos, function(e, equipos) {
+
+                                $.each(equipos.equipos, function(e, equipo) {
+                    
+                                    $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                                });
+                    
+                            });
 	                    }); 
 
 	                @endif
@@ -506,8 +517,7 @@
             $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
             $("label[for='txtactividad']").addClass('active');
             $("label[for='txtactividad']").text("Proyecto");
-            // $divActividad.show();
-
+    
             usoInfraestructuraUpdate.getSelectTalentoProyecto(id);
 
 	    }
