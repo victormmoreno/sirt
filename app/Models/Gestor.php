@@ -67,6 +67,18 @@ class Gestor extends Model
       return $this->hasMany(Actividad::class, 'gestor_id', 'id');
     }
 
+
+    public function usoinfraestructuras()
+    {
+        return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id','gestor_id')
+            ->withTimestamps()
+            ->withPivot([
+                'asesoria_directa',
+                'asesoria_indirecta',
+                'costo_asesoria',
+            ]);
+    }
+
     /*=========================================
     =            asesores eloquent            =
     =========================================*/

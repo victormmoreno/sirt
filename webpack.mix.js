@@ -96,6 +96,7 @@ mix.scripts([
 		'resources/app/mantenimiento/dinamizador/index.js',
 		'resources/app/mantenimiento/gestor/index.js',
 		'resources/app/costoadministrativo/administrador/index.js',
+		'resources/app/usoinfraestructura/administrador/index.js',
 		'resources/app/usoinfraestructura/dinamizador/index.js',
 		'resources/app/usoinfraestructura/index.js',
 		'resources/app/visitante/index.js',

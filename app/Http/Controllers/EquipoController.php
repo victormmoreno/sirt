@@ -163,7 +163,7 @@ class EquipoController extends Controller
     public function getEquiposPorLinea($linea)
     {
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+        
                 $nodo    = auth()->user()->dinamizador->nodo->id;
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                                 ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
@@ -176,7 +176,7 @@ class EquipoController extends Controller
                 return response()->json([
                     'equipos' => $equipos,
                 ]);
-            }
+        
 
         } else {
             abort('403');

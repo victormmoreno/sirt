@@ -63,7 +63,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s12 m4 l4">
+                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                <div class="input-field col s12 m6 l6">
                     <i class="material-icons prefix">
                         date_range
                     </i>
@@ -80,11 +81,11 @@
                     </label>
                     <label class="error" for="txtfecha" id="txtfecha-error"></label>
                 </div>
-                <div class="input-field col s12 m4 l4">
+                <div class="input-field col s12 m6 l6">
                     <i class="material-icons prefix">
                         vertical_split
                     </i>
-                    {{-- {{var_dump($usoinfraestructura->actividad->gestor->user->documento)}} --}}
+                    
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                         @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
                             <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
@@ -100,7 +101,7 @@
                         @endif
                     @endif
                     <label class="active" for="txtlinea">
-                        Linea
+                        Linea Tecnológica 
                         <span class="red-text">
                             *
                         </span>
@@ -108,27 +109,58 @@
                     <label class="error" for="txtlinea" id="txtlinea-error">
                     </label>
                 </div>
-                <div class="input-field col s12 m4 l4">
+                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                    <div class="input-field col s12 m4 l4">
+                        <i class="material-icons prefix">
+                            date_range
+                        </i>
+                        @if(isset($usoinfraestructura->fecha))
+                            <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$usoinfraestructura->fecha->format('Y-m-d')}}"/>
+                        @else
+                            <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}"/>
+                        @endif
+                        <label for="txtfecha">
+                            fecha
+                            <span class="red-text">
+                                *
+                            </span>
+                        </label>
+                        <label class="error" for="txtfecha" id="txtfecha-error"></label>
+                    </div>
+                    <div class="input-field col s12 m4 l4">
+                        <i class="material-icons prefix">
+                            vertical_split
+                        </i>
+                        
+                        
+                            @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
+                                <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
+                            @else
+                                <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                            @endif
+                        
+                        <label class="active" for="txtlinea">
+                            Linea Tecnológica 
+                            <span class="red-text">
+                                *
+                            </span>
+                        </label>
+                        <label class="error" for="txtlinea" id="txtlinea-error">
+                        </label>
+                    </div>
+                    <div class="input-field col s12 m4 l4">
                     <i class="material-icons prefix">
                         account_circle
                     </i>
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-
+                    
                         @if(isset($usoinfraestructura->actividad->gestor->user))
                             <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
                         @else
                             <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
                         @endif
                     
-                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        @if(isset($usoinfraestructura->actividad->gestor->user))
-                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
-                        @else
-                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
-                        @endif
-                    @endif
                     <label class="active" for="txtgestor">
-                        Gestor
+                        Gestor a cargo
                         <span class="red-text">
                             *
                         </span>
@@ -137,10 +169,12 @@
                     </label>
                   
                 </div>
+                @endif
+                
         </div>
         
-        <div class="divActividad">
-            <div class="row">
+      
+            <div class="row divActividad">
                  <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">
                         library_books
@@ -174,14 +208,16 @@
                     <label class="error" for="txtactividad" id="txtactividad-error"></label>
                 </div>
             </div>
-        </div>
+       
         </fieldset>
     </div>
 </div>
+
+@if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
 <div class="divider">
 </div>
 <div class="row">
-    <div class="col s12 m3 l3">
+    {{-- <div class="col s12 m3 l3">
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
@@ -193,41 +229,238 @@
                 
             </ul>
         </blockquote>
-    </div>
-    <div class="col s12 m9 l9">
+    </div> --}}
+
+    <div class="col s12 m12 l12">
         <fieldset>
             <legend>Paso 2</legend>
+            <p class="center card-title cyan-text text-darken-4">
+               <b> <i class="medium material-icons center">info_outline</i> Gestor A cargo</b> 
+            </p>
             <div class="row">
-                <div class="input-field col s12 m6 l6">
+                <div class="col s12 m8 l8 offset-l2 m2">
+                    {{-- <center>
+                        <p class="center-aling">
+                            Detalle Uso de Equipos
+                        </p>
+                    </center> --}}
+                    <table class="striped centered responsive-table" id="tbldetallegestores">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Linea Tecnológica
+                                </th>
+                                <th>
+                                   Gestor
+                                </th>
+                                <th>
+                                    Asesoria Directa (Horas)
+                                </th>
+                                <th>
+                                  Asesoria Indirecta (Horas)
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="detallesGestores">
+                            @if(isset($usoinfraestructura->usoequipos))
+                                @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
+                                        
+                                        <tr id="filaGestor{{$equipo->id}}">
+                                            <td>
+                                                <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
+                                                {{$equipo->pivot->tiempo}}
+                                            </td>
+                                            <td>
+                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$equipo->id}});">
+                                                    <i class="material-icons">delete_sweep</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                @empty
+                                    <td>
+                                        No se encontraron resultados
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                @endforelse
+                            @endif
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Seleccione primero el tipo de uso de infraestructura.</td>
+                                <td></td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            <div class="divider"></div>
+            <p class="center card-title cyan-text text-darken-4">
+               <b> <i class="medium material-icons center">info_outline</i> Gestores Asesores</b> 
+            </p>
+            <div class="row">
+                <div class="input-field col s12 m4 l5">
+                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1">
+                        <option value="">
+                                Seleccione Gestor
+                            </option>
+                        @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
+                            
+                            @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
+                            <option value="{{$talento->id}}">
+                                {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
+                            </option>
+                            @endforeach
+                        @else
+                           
+                                @foreach($gestores as $gestor)
+                                <option value="{{$gestor->id}}">
+                                    {{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}} / {{$gestor->lineatecnologica->nombre}}
+                                </option>
+                                @endforeach
+                        @endif
+                        
+                    </select>
+                    <label class="active" for="txtgestorasesor">
+                        Gestores
+                    </label>
+                </div>
+                <div class="input-field col s12 m3 l3">
                     <i class="material-icons prefix">
                         book
                     </i>
                     @if(isset($usoinfraestructura->asesoria_directa))
                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="{{ isset($usoinfraestructura->asesoria_directa) ? $usoinfraestructura->asesoria_directa :  old('txtasesoriadirecta')}}" />
                     @else
-                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  />
+                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="0" />
                     @endif
                     <label class="active" for="txtasesoriadirecta">
                         Asesoria Directa (Horas)
                     </label>
                     <label class="error" for="txtasesoriadirecta" id="txtasesoriadirecta-error"></label>
-                 
                 </div>
-                <div class="input-field col s12 m6 l6">
+                <div class="input-field col s12 m3 l3">
                     <i class="material-icons prefix">
                         bookmark
                     </i>
                     @if(isset($usoinfraestructura->asesoria_indirecta))
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="{{ isset($usoinfraestructura->asesoria_indirecta) ? $usoinfraestructura->asesoria_indirecta :  old('txtasesoriaindirecta')}}" /> 
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0" /> 
                     @else
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  />
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="0" />
                     @endif
                     <label class="active" for="txtasesoriaindirecta">
                         Asesoria Indirecta (Horas)
                     </label>
                     <label class="error" for="txtasesoriaindirecta" id="txtasesoriaindirecta-error"></label>
                 </div>
+                <div class="input-field col s2 m2 l1">
+                   
+                        
+                    
+                        <a class="btn-floating btn-large waves-effect waves-light blue lighten-1 tooltipped btnAgregarGestorAsesor" data-delay="50" data-position="button" data-tooltip="Agregar Gestor" onclick="addGestoresAUso()">
+                            <i class="material-icons">
+                                add
+                            </i>
+                        </a>
+                    
+                    
+                </div>
+                <div class="row">
+                    <div class="col s12 m8 l8 offset-l2 m2">
+                        
+                        <table class="striped centered responsive-table" id="tbldetallegestorAsesor">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>
+                                       Gestor
+                                    </th>
+                                    <th>
+                                        Asesoria Directa (Horas)
+                                    </th>
+                                    <th>
+                                      Asesoria Indirecta (Horas)
+                                    </th>
+                                    <th>
+                                        Eliminar
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="detallesGestoresAsesores">
+                                @if(isset($usoinfraestructura->usoequipos))
+                                    @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
+                                            
+                                            <tr id="filaGestorAsesor{{$equipo->id}}">
+                                                <td>
+                                                    <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
+                                                    {{$equipo->pivot->tiempo}}
+                                                </td>
+                                                <td>
+                                                    <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$equipo->id}});">
+                                                        <i class="material-icons">delete_sweep</i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                    @empty
+                                        <td>
+                                            No se encontraron resultados
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    @endforelse
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+                    
+
             </div>
+            <div class="row">
+                
+                {{-- <div class="input-field col s12 m4 l4">
+                    <i class="material-icons prefix">
+                        account_circle
+                    </i>
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+
+                        @if(isset($usoinfraestructura->actividad->gestor->user))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
+                        @else
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                        @endif
+                    
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                        @if(isset($usoinfraestructura->actividad->gestor->user))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
+                        @else
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                        @endif
+                    @endif
+                    <label class="active" for="txtgestor">
+                        Gestor Asesor
+                        <span class="red-text">
+                            *
+                        </span>
+                    </label>
+                    <label class="error" for="txtgestor" id="txtgestor-error">
+                    </label>
+                  
+                </div> --}}
+                
+                
+            </div>
+            <div class="divider"></div>
             <div class="row">
                 <div class="input-field col s12 m12 l8 offset-l2">
                     <i class="material-icons prefix">
@@ -250,6 +483,7 @@
         </fieldset>
     </div>
 </div>
+@endif
 
 <div class="divider">
 </div>
@@ -329,7 +563,25 @@
                     </div>
                     
                     <div class="row">
-                        <div class="input-field col s5 m6 l6">
+                        <div class="input-field col s12 m4 l4">
+       
+                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraCreate.getEquipoPorLinea()">
+                    <option value="">Seleccione Linea Tecnológica</option>
+                    @forelse($lineastecnologicas as $id => $linea)
+                        @if(isset($equipo->lineatecnologicanodo->lineatecnologica->id))
+                            <option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologicanodo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
+                        @else
+                            <option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
+                        @endif
+                    @empty
+                        <option value="">No hay información disponible</option>
+                    @endforelse
+                </select>
+                            <label class="active" for="txtlineatecnologica">
+                                Linea Tecnológica
+                            </label>
+                        </div>
+                        <div class="input-field col s12 m4 l4">
                             <!-- <i class="material-icons prefix">local_drink</i> -->
                             <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
                                 @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->lineastecnologicasnodos))
@@ -353,7 +605,7 @@
                                 Equipo
                             </label>
                         </div>
-                        <div class="input-field col s5 m4 l5">
+                        <div class="input-field col s12 m2 l3">
                             <i class="material-icons prefix">
                                 av_timer
                             </i>
