@@ -62,16 +62,14 @@ class UsoInfraestructuraController extends Controller
 
         $user = auth()->user()->id;
 
-        $nodo = 2;
-
         $relations = $this->getDataIndex();
 
 
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
-                    $query->where('id', $nodo);
-                })->get();
+                // $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
+                //     $query->where('id', $nodo);
+                // })->get();
                 break;
 
             case User::IsDinamizador():
@@ -376,8 +374,6 @@ class UsoInfraestructuraController extends Controller
     {
 
         $this->authorize('store', UsoInfraestructura::class);
-        return $request->all();
-
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {

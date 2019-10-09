@@ -27,7 +27,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
         return [
             'txtfecha'                  => 'required|date_format:"Y-m-d"',
             'txtlinea'                  => 'required',
-            'txtgestor'                 => 'required',
+            // 'txtgestor'                 => 'required',
             'txttipousoinfraestructura' => 'required',
             'txtactividad'              => 'required',
             'txtdescripcion'            => 'nullable|max:2000',

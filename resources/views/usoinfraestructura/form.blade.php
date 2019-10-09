@@ -306,7 +306,7 @@
             </p>
             <div class="row">
                 <div class="input-field col s12 m4 l5">
-                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" disabled>
                         <option value="">
                                 Seleccione Gestor
                             </option>
@@ -336,9 +336,9 @@
                         book
                     </i>
                     @if(isset($usoinfraestructura->asesoria_directa))
-                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="{{ isset($usoinfraestructura->asesoria_directa) ? $usoinfraestructura->asesoria_directa :  old('txtasesoriadirecta')}}" />
+                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="{{ isset($usoinfraestructura->asesoria_directa) ? $usoinfraestructura->asesoria_directa :  old('txtasesoriadirecta')}}" readonly />
                     @else
-                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="0" />
+                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="0" readonly />
                     @endif
                     <label class="active" for="txtasesoriadirecta">
                         Asesoria Directa (Horas)
@@ -350,9 +350,9 @@
                         bookmark
                     </i>
                     @if(isset($usoinfraestructura->asesoria_indirecta))
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0" /> 
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0" readonly /> 
                     @else
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="0" />
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="0" readonly />
                     @endif
                     <label class="active" for="txtasesoriaindirecta">
                         Asesoria Indirecta (Horas)
@@ -418,6 +418,12 @@
                                         <td></td>
                                     @endforelse
                                 @endif
+                                <td></td>
+                                <td>
+                                    No se encontraron resultados
+                                </td>
+                                <td></td>
+                                <td></td>
                             </tbody>
                         </table>
                     </div>

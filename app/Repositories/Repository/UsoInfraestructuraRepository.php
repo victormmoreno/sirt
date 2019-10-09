@@ -27,8 +27,6 @@ class UsoInfraestructuraRepository
                 'actividad_id'            => $actividad,
                 'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
                 'fecha'                   => $request->txtfecha,
-                'asesoria_directa'        => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
-                'asesoria_indirecta'      => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',
                 'descripcion'             => $request->txtdescripcion,
                 'estado'                  => 1,
             ]);
@@ -41,6 +39,19 @@ class UsoInfraestructuraRepository
                 $usoInfraestructura->usotalentos()->sync([]);
             }
 
+            if ($request->filled('gestor')) {
+                $syncData = array();
+                foreach ($request->get('gestor') as $id => $value) {
+                    $syncData[$id] = array('gestor_id' => $value,
+                    'asesoria_directa' => $request->get('asesoriadirecta')[$id],
+                    'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => 0 );
+                }
+
+                $usoInfraestructura->usogestores()->sync($syncData);
+            }else{
+                $usoInfraestructura->usogestores()->sync([]);
+            }
+
             if ($request->filled('equipo')) {
                 $syncData = array();
                 foreach ($request->get('equipo') as $id => $value) {
@@ -51,6 +62,8 @@ class UsoInfraestructuraRepository
             }else{
                 $usoInfraestructura->usoequipos()->sync([]);
             }
+
+            
 
             DB::commit();
             return 'true';

@@ -114,6 +114,7 @@
         $divActividad = $(".divActividad");
         $divActividad.hide();
         usoInfraestructuraCreate.checkTipoUsoInfraestrucuta();
+        usoInfraestructuraCreate.addDisableButtonGestorAsesor();
 
     });
 
@@ -140,7 +141,8 @@
                     usoInfraestructuraCreate.limpiarListaTalentos();
                     usoInfraestructuraCreate.limpiarListaEquipos();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
-                    usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    // usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
                                    
                       
                 } else if ( $("#IsArticulacion").is(":checked") ) {
@@ -163,7 +165,8 @@
                     usoInfraestructuraCreate.limpiarListaTalentos();
                     usoInfraestructuraCreate.limpiarListaEquipos();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
-                    usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    // usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
 
                 } else if( $("#IsEdt").is(":checked")) {
             
@@ -185,7 +188,8 @@
                     usoInfraestructuraCreate.limpiarListaTalentos();
                     usoInfraestructuraCreate.limpiarListaEquipos();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
-                    usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    // usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
                  
                 }
                
@@ -261,7 +265,7 @@
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoria_directa[]" value="0"></td><td><input type="number" name="asesoria_indirecta[]" value="0"></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" value="0"></td><td><input type="number" name="asesoriaindirecta[]" value="0"></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
 
@@ -337,6 +341,19 @@
             $('#txttalento').attr("disabled", false).select2(); 
              $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'addTalentoAUso()');
         },
+        removeDisableButtonGestorAsesor: function () {
+             $(".btnAgregarGestorAsesor").removeAttr("disabled").attr('onclick', 'addGestoresAUso()');
+             $('#txtgestorasesor').attr("disabled", false).select2(); 
+             $('#txtasesoriadirecta').removeAttr("readonly"); 
+             $('#txtasesoriaindirecta').removeAttr("readonly"); 
+
+        },
+        addDisableButtonGestorAsesor: function () {
+             $(".btnAgregarGestorAsesor").removeAttr('onclick', 'addGestoresAUso()').attr("disabled");
+             $('#txtgestorasesor').attr("disabled", true).select2(); 
+             $('#txtasesoriadirecta').attr("readonly", true); 
+             $('#txtasesoriaindirecta').attr("readonly", true);
+        },
 
         //ARTICULACIONES 
         dataTableArtculacionFindByUser: function () {
@@ -406,7 +423,7 @@
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoria_directa[]" value="0"></td><td><input type="number" name="asesoria_indirecta[]" value="0"></td></td><td></tr>';
+                    fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" value="0"></td><td><input type="number" name="asesoriaindirecta[]" value="0"></td></td><td></tr>';
                     cont++;
                     $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
@@ -595,7 +612,7 @@
         },
 
         noRepeatGestor: function () {
-          let idequipo = $("#txtgestor").val();
+          let idequipo = $("#txtgestorasesor").val();
           let a = document.getElementsByName("gestor[]");
           validacion = true;
           if (a.length >= 1) {
@@ -694,6 +711,7 @@
         $("label[for='txtactividad']").removeClass('active');
         $("label[for='txtactividad']").text("seleccione un tipo de uso de infraestructura");
         usoInfraestructuraCreate.removeOptionsSelect();
+        usoInfraestructuraCreate.addDisableButtonGestorAsesor();
         $divActividad.show();
     }
 
@@ -893,6 +911,7 @@
 
 
         function addGestoresAUso() {
+            // usoInfraestructuraCreate.limpiarListaGestorAsesores();
             let cont = 0;
             let idgestor = $("#txtgestorasesor").val();
             let asesoriadirecta = $("#txtasesoriadirecta").val(); 
@@ -923,6 +942,31 @@
                       });
 
                     $("#txtgestorasesor").val();
+                    
+                }else if($("#txtasesoriadirecta").val() == '' || $("#txtasesoriadirecta").val() < 0 || (!/^([0-9])*$/.test($("#txtasesoriadirecta").val()))
+      ){
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'error',
+                        title: 'Por favor ingrese una hora de asesoria directa correcta'
+                      });
+                    $("#txtasesoriadirecta").val(0);
+                    $("label[for='txtasesoriadirecta']").addClass('active');
+                }else if($("#txtasesoriaindirecta").val() == '' || $("#txtasesoriaindirecta").val() < 0 ||  (!/^([0-9])*$/.test($("#txtasesoriaindirecta").val()))){
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'error',
+                        title: 'Por favor ingrese una hora de asesoria indirecta correcta.'
+                      });
+                    $("#txtasesoriaindirecta").val(0);
+                    $("label[for='txtasesoriaindirecta']").addClass('active');
+                
                 }else{
                     Swal.fire({
                         toast: true,
@@ -938,7 +982,7 @@
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" name="asesoriadirecta[]" value="'+asesoriaindirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
 
