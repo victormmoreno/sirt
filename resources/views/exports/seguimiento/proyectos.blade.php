@@ -16,7 +16,7 @@
         <th>Área de Conocimiento</th>
         <th>Estado del Proyecto</th>
         <th>Tipo de Proyecto</th>
-        <th>Talentos que participan en el proyecto</th>
+        {{-- <th>Talentos que participan en el proyecto</th> --}}
         <th>Fecha de Inicio de Proyecto</th>
         <th>Fecha de Cierre de Proyecto</th>
         <th>Observaciones del Proyecto</th>
@@ -29,7 +29,7 @@
         <th>¿Recibido a través del área de emprendimiento SENA?</th>
         <th>¿Dinero de Regalías?</th>
         <th>Formato de confidencialidad y compromiso</th>
-        <th>Manuel de uso de infraestructa</th>
+        <th>Manual de uso de infraestructa</th>
         <th>Acta de Inicio</th>
         <th>Estado del Arte</th>
         <th>Actas de Seguimiento</th>
@@ -52,8 +52,8 @@
           <td>{{ $value->nombre_sublinea }}</td>
           <td>{{ $value->nombre_areaconocimiento }}</td>
           <td>{{ $value->nombre_estado }}</td>
-          <td>{{ $value->nombre_tipoarticulacion }}</td>
-          <td>{{ $value->talentos }}</td>
+          <td>{{ $value->nombre_tipoproyecto }}</td>
+          {{-- <td>{{ $value->talentos }}</td> --}}
           <td>{{ $value->fecha_inicio }}</td>
           <td>{{ $value->fecha_cierre }}</td>
           <td>{{ $value->observaciones_proyecto }}</td>

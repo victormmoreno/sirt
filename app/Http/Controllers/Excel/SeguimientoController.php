@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 // use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Articulacion;
 use App\User;
 use Excel;
 
@@ -16,21 +17,21 @@ class SeguimientoController extends Controller
 
   /**
    * Objeto para la clase ArticulacionRepository
-   * @var object
+   * @var ArticulacionRepository
    * @author dum
    */
   private $articulacionRepository;
 
   /**
    * Objeto para la clase EdtRepository
-   * @var object
+   * @var EdtRepository
    * @author dum
    */
   private $edtRepository;
 
   /**
    * Objeto para la clase ProyectoRepository
-   * @var object
+   * @var ProyectoRepository
    * @author dum
    */
   private $proyectoRepository;
@@ -50,11 +51,16 @@ class SeguimientoController extends Controller
     }
 
     $queryInicio = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Inicio')->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('nodos.id', $idnodo)->get();
+    $queryPlaneacion = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Planeacion')->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('nodos.id', $idnodo)->get();
+    $queryEjecucion = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('En ejecución')->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('nodos.id', $idnodo)->get();
     $queryPF = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PF')->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('nodos.id', $idnodo)->get();
     $queryPMV = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PMV')->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('nodos.id', $idnodo)->get();
     $querySuspendidos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Suspendido')->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('nodos.id', $idnodo)->get();
+    $queryArticulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFecha_Detalle($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->get();
+    $queryArticulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFecha_Detalle($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmpresa())->get();
+    $queryArticulacionEmprendedores = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFecha_Detalle($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmprendedor())->get();
 
-    return Excel::download(new SeguimientoExport($queryInicio, $queryPF, $queryPMV, $querySuspendidos), 'Seguimiento.xls');
+    return Excel::download(new SeguimientoExport($queryInicio, $queryPlaneacion, $queryEjecucion, $queryPF, $queryPMV, $querySuspendidos, $queryArticulacionGrupos, $queryArticulacionEmpresas, $queryArticulacionEmprendedores), 'Seguimiento.xls');
   }
 
 

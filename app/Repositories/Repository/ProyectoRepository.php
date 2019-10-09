@@ -109,9 +109,30 @@ class ProyectoRepository
     'sublineas.nombre AS nombre_sublinea',
     'areasconocimiento.nombre AS nombre_areaconocimiento',
     'estadosproyecto.nombre AS nombre_estado',
+    'tiposarticulacionesproyectos.nombre AS nombre_tipoproyecto',
     'fecha_inicio',
-    'fecha_cierre')
+    'fecha_cierre',
+    'observaciones_proyecto',
+    'impacto_proyecto',
+    'resultado_proyecto',
+    'economia_naranja',
+    'art_cti',
+    'nom_act_cti',
+    'diri_ar_emp',
+    'reci_ar_emp',
+    'dine_reg',
+    'acc',
+    'manual_uso_inf',
+    'acta_inicio',
+    'estado_arte',
+    'actas_seguimiento',
+    'video_tutorial',
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta')
     ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
+    ->selectRaw('IF(revisado_final = '. ArticulacionProyecto::IsPorEvaluar() .', "Por Evaluar", IF(revisado_final = '. ArticulacionProyecto::IsAprobado() .', "Aprobado", "No Aprobado")) AS revisado_final')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
@@ -122,6 +143,7 @@ class ProyectoRepository
     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
     ->where('proyectos.estado_aprobacion', 1)
     ->where('estadosproyecto.nombre', $estadoProyecto);
   }

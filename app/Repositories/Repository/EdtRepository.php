@@ -15,6 +15,24 @@ class EdtRepository
   }
 
   /**
+   * Consulta la edts que se inscribiron entre dos fechas
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Builder
+   * @author dum
+   */
+  public function consultarEdtsPorFecha_Detalle($fecha_inicio, $fecha_fin)
+  {
+    return Edt::select('codigo_actividad',
+    'actividades.nombre',
+    '')
+    ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+  }
+
+  /**
   * Consulta la cantidad de edts entre un rango de fechas (fecha_inicio)
   * @param string $fecha_inicio Primera fecha para realizar el filtro
   * @param string $fecha_fin Segunda fecha para realizar el filtro

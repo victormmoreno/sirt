@@ -158,12 +158,16 @@ function graficoSeguimiento(data, name) {
             y: data.datos.Suspendido,
           },
           {
-            name: "Articulaciones con Grupo de Investigación",
+            name: "Articulacion con G.I",
             y: data.datos.ArticulacionesGI,
           },
           {
-            name: "Articulaciones con Empresas",
+            name: "Articulacion con Empresas",
             y: data.datos.ArticulacionesEmp,
+          },
+          {
+            name: "Articulacion con Emprendedores",
+            y: data.datos.ArticulacionesEmprendedores,
           },
           {
             name: "Edts",

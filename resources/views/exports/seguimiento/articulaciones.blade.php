@@ -8,7 +8,7 @@
     <thead>
     <tr>
         <th>Código de la Articulación</th>
-        <th>Nombre</th>
+        <th>Nombre de la Articulación</th>
         <th>Tipo de Articulación</th>
         <th>Articulación con: </th>
         <th>Fecha de Inicio</th>
@@ -26,24 +26,24 @@
     </tr>
     </thead>
     <tbody>
-    @foreach($articulacion as $value)
+    @foreach($articulaciones as $value)
         <tr>
-            <td>{{ $value->codigo_articulacion }}</td>
+            <td>{{ $value->codigo_actividad }}</td>
             <td>{{ $value->nombre }}</td>
-            <td>{{ $value->tipoarticulacion }}</td>
+            <td>{{ $value->nombre_tipoarticulacion }}</td>
             <td>{{ $value->tipo_articulacion }}</td>
             <td>{{ $value->fecha_inicio->toDateString() }}</td>
             <td>{{ $value->estado }}</td>
             <td>{{ $value->fecha_cierre }}</td>
             <td>{{ $value->revisado_final }}</td>
-            <td>{{ $value->nombre_completo_gestor }}</td>
+            <td>{{ $value->gestor }}</td>
             <td>{{ $value->observaciones }}</td>
-            <td>{{ $value->acta_inicio }}</td>
-            <td>{{ $value->acc }}</td>
-            <td>{{ $value->actas_seguimiento }}</td>
-            <td>{{ $value->acta_cierre }}</td>
-            <td>{{ $value->informe_final }}</td>
-            <td>{{ $value->pantallazo }}</td>
+            <td>{{ $value->acta_inicio == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->acc == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->actas_seguimiento == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->acta_cierre == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->informe_final == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->pantallazo == 1 ? 'Si' : 'No' }}</td>
         </tr>
     @endforeach
     </tbody>
