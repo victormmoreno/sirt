@@ -20,11 +20,12 @@ class MantenimientoRepository
 
         try {
             EquipoMantenimiento::create([
-                'lineatecnologica_id' => $request->input('txtlineatecnologica'),
-                'equipo_id'           => $request->input('txtequipo'),
-                'anio'                => $request->input('txtanio'),
-                'valor'               => $request->input('txtvalor'),
-
+                'lineatecnologica_id'       => $request->input('txtlineatecnologica'),
+                'equipo_id'                 => $request->input('txtequipo'),
+                'ultimo_anio_mantenimiento' => $request->input('txtanio'),
+                'vida_util_mantenimiento'   => $request->input('txtvidautil'),
+                'horas_uso_anio'            => $request->get('txthorasuso'),
+                'valor_mantenimiento'       => $request->input('txtvalor'),
             ]);
             DB::commit();
             return true;
@@ -42,11 +43,11 @@ class MantenimientoRepository
     public function findInfoMantenimiento()
     {
         return EquipoMantenimiento::with([
-                            'equipo',
-                            'equipo.lineatecnologicanodo.lineatecnologica',
-                            'equipo.lineatecnologicanodo.nodo',
-                            'equipo.lineatecnologicanodo.nodo.entidad',
-                        ]);
+            'equipo',
+            'equipo.lineatecnologicanodo.lineatecnologica',
+            'equipo.lineatecnologicanodo.nodo',
+            'equipo.lineatecnologicanodo.nodo.entidad',
+        ]);
     }
 
     /**
@@ -63,10 +64,12 @@ class MantenimientoRepository
 
         try {
             $mantenimiento->update([
-                'lineatecnologica_id' => $request->input('txtlineatecnologica'),
-                'equipo_id'           => $request->input('txtequipo'),
-                'anio'                => $request->input('txtanio'),
-                'valor'               => $request->input('txtvalor'),
+                'lineatecnologica_id'       => $request->input('txtlineatecnologica'),
+                'equipo_id'                 => $request->input('txtequipo'),
+                'ultimo_anio_mantenimiento' => $request->input('txtanio'),
+                'vida_util_mantenimiento'   => $request->input('txtvidautil'),
+                'horas_uso_anio'            => $request->get('txthorasuso'),
+                'valor_mantenimiento'       => $request->input('txtvalor'),
             ]);
             DB::commit();
             return true;

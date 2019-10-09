@@ -4959,8 +4959,8 @@ var selectMantenimientosEquiposPorNodo = {
                     name: 'equipo',
                     width: '30%'
                 }, {
-                    data: 'anio',
-                    name: 'anio',
+                    data: 'ultimo_anio_mantenimiento',
+                    name: 'ultimo_anio_mantenimiento',
                     width: '15%'
                 }, {
                     data: 'valor_mantenimiento',
@@ -5008,8 +5008,8 @@ $(document).ready(function() {
             name: 'equipo',
             width: '30%'
         }, {
-            data: 'anio',
-            name: 'anio',
+            data: 'ultimo_anio_mantenimiento',
+            name: 'ultimo_anio_mantenimiento',
             width: '15%'
         }, {
             data: 'valor_mantenimiento',
@@ -5049,8 +5049,8 @@ $(document).ready(function() {
             name: 'equipo',
             width: '30%'
         }, {
-            data: 'anio',
-            name: 'anio',
+            data: 'ultimo_anio_mantenimiento',
+            name: 'ultimo_anio_mantenimiento',
             width: '15%'
         }, {
             data: 'valor_mantenimiento',

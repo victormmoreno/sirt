@@ -73,7 +73,11 @@ class UsoInfraestructura extends Model
     {
         return $this->belongsToMany(Equipo::class, 'equipo_uso', 'usoinfraestructura_id','equipo_id')
             ->withTimestamps()
-            ->withPivot('tiempo');
+            ->withPivot([
+                'tiempo',
+                'costo_equipo',
+
+            ]);
     }
 
     public function usotalentos()

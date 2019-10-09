@@ -3,6 +3,8 @@
 namespace App\Repositories\Repository;
 
 use App\Models\Actividad;
+use App\Models\CostoAdministrativo;
+use App\Models\Gestor;
 use App\Models\UsoInfraestructura;
 use Illuminate\Support\Facades\DB;
 
@@ -41,10 +43,18 @@ class UsoInfraestructuraRepository
 
             if ($request->filled('gestor')) {
                 $syncData = array();
+                $honorario = array();
                 foreach ($request->get('gestor') as $id => $value) {
+                    //calculo de costo de horas de asesoria
+                    $honorarioGestor = Gestor::where('id',$value)->first()->honorarios;
+                    //suma de las horas de asesoria directa y horas de asesoria indirecta
+                    $horasAsesoriaGestor = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
+                    $honorario[$id] = round(($honorarioGestor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor);
+
+                    //array que almacena los datos a 
                     $syncData[$id] = array('gestor_id' => $value,
                     'asesoria_directa' => $request->get('asesoriadirecta')[$id],
-                    'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => 0 );
+                    'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => $honorario[$id]);
                 }
 
                 $usoInfraestructura->usogestores()->sync($syncData);

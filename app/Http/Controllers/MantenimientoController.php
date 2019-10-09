@@ -139,7 +139,7 @@ class MantenimientoController extends Controller
                     })
 
                     ->addColumn('valor_mantenimiento', function ($data) {
-                        return '$ ' . number_format(round($data->valor, 2));
+                        return '$ ' . number_format(round($data->valor_mantenimiento, 2));
                     })
                     ->editColumn('costo_adquisicion', function ($data) {
                         return '$ ' . number_format($data->equipo->each(function ($item) {
@@ -195,6 +195,7 @@ class MantenimientoController extends Controller
      */
     public function store(MantenimientoFormRequest $request)
     {
+
         $this->authorize('store', EquipoMantenimiento::class);
         $mantenimientoCreate = $this->getMantenimientoRepository()->storeMantenimiento($request);
         if ($mantenimientoCreate === true) {

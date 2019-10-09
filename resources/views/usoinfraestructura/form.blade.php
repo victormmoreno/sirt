@@ -263,22 +263,20 @@
                             </tr>
                         </thead>
                         <tbody id="detallesGestores">
-                            @if(isset($usoinfraestructura->usoequipos))
-                                @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
-                                        
-                                        <tr id="filaGestor{{$equipo->id}}">
-                                            <td>
-                                                <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
-                                            </td>
-                                            <td>
-                                                <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
-                                                {{$equipo->pivot->tiempo}}
-                                            </td>
-                                            <td>
-                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$equipo->id}});">
-                                                    <i class="material-icons">delete_sweep</i>
-                                                </a>
-                                            </td>
+                            @if(isset($usoinfraestructura->usogestores))
+                                @forelse ($usoinfraestructura->usogestores as $key => $gestor)
+
+                                        <tr id="filaGestor{{$gestor->id}}">
+                                            @if($gestor->id == auth()->user()->gestor->id)
+                                            
+                                                <td>{{$gestor->lineatecnologica->abreviatura}} -  {{$gestor->lineatecnologica->nombre}}</td>
+                                                <td>
+                                                    <input type="hidden" name="gestor[]" value="{{$gestor->id}}"/>{{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo  
+                                                </td>
+                                                <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}"></td>
+                                                <td><input type="number" name="asesoriaindirecta[]" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
+                                            @endif
+                    
                                         </tr>
                                 @empty
                                     <td>
@@ -287,13 +285,15 @@
                                     <td></td>
                                     <td></td>
                                 @endforelse
+                            @else
+                               <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Seleccione primero el tipo de uso de infraestructura.</td>
+                                    <td></td>
+                                </tr> 
                             @endif
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>Seleccione primero el tipo de uso de infraestructura.</td>
-                                <td></td>
-                            </tr>
+                            
                             
                         </tbody>
                     </table>
@@ -306,17 +306,19 @@
             </p>
             <div class="row">
                 <div class="input-field col s12 m4 l5">
-                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" disabled>
+                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->usogestores) ? '' : 'disabled'}} >
                         <option value="">
                                 Seleccione Gestor
                             </option>
-                        @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
+                        @if(isset($usoinfraestructura->usogestores))
                             
-                            @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                            <option value="{{$talento->id}}">
-                                {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
-                            </option>
-                            @endforeach
+                            @foreach($gestores as $gestor)
+                                <option value="{{$gestor->id}}">
+                                    {{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}} / {{$gestor->lineatecnologica->nombre}}
+                                </option>
+                                @endforeach
+
+
                         @else
                            
                                 @foreach($gestores as $gestor)
@@ -336,7 +338,7 @@
                         book
                     </i>
                     @if(isset($usoinfraestructura->asesoria_directa))
-                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="{{ isset($usoinfraestructura->asesoria_directa) ? $usoinfraestructura->asesoria_directa :  old('txtasesoriadirecta')}}" readonly />
+                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value=" 0 " />
                     @else
                          <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="0" readonly />
                     @endif
@@ -350,7 +352,7 @@
                         bookmark
                     </i>
                     @if(isset($usoinfraestructura->asesoria_indirecta))
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0" readonly /> 
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0"  /> 
                     @else
                         <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="0" readonly />
                     @endif
@@ -394,21 +396,21 @@
                             </thead>
                             <tbody id="detallesGestoresAsesores">
                                 @if(isset($usoinfraestructura->usoequipos))
-                                    @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
+                                    @forelse ($usoinfraestructura->usogestores as $key => $gestor)
                                             
-                                            <tr id="filaGestorAsesor{{$equipo->id}}">
+                                            <tr id="filaGestorAsesor{{$gestor->id}}">
+                                                @if($gestor->id != auth()->user()->gestor->id)
                                                 <td>
-                                                    <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
+                                                    <input type="hidden" name="gestor[]" value="{{$gestor->id}}"/>{{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                                                 </td>
+                                                <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}"></td>
+                                                <td><input type="number" name="asesoriaindirecta[]" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
                                                 <td>
-                                                    <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
-                                                    {{$equipo->pivot->tiempo}}
-                                                </td>
-                                                <td>
-                                                    <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$equipo->id}});">
+                                                    <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$gestor->id}});">
                                                         <i class="material-icons">delete_sweep</i>
                                                     </a>
                                                 </td>
+                                                @endif
                                             </tr>
                                     @empty
                                         <td>
@@ -417,13 +419,15 @@
                                         <td></td>
                                         <td></td>
                                     @endforelse
+                                @else
+                                    <td></td>
+                                    <td>
+                                        No se encontraron resultados
+                                    </td>
+                                    <td></td>
+                                    <td></td>
                                 @endif
-                                <td></td>
-                                <td>
-                                    No se encontraron resultados
-                                </td>
-                                <td></td>
-                                <td></td>
+                                
                             </tbody>
                         </table>
                     </div>

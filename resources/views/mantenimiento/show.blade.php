@@ -129,7 +129,7 @@
                                                                                 Año de Mantenimiento
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->anio}}
+                                                                              {{$mantenimiento->anio_mantenimiento}}
                                                                             </p>  
                                                                         </li>
                                                                     </ul>
@@ -149,7 +149,7 @@
                                                                                 Valor de Mantenimiento
                                                                             </span>
                                                                             <p>
-                                                                               ${{number_format($mantenimiento->valor,0)}}
+                                                                               ${{number_format($mantenimiento->valor_mantenimiento,0)}}
                                                                             </p>    
                                                                         </li>
                                                                     </ul>

@@ -19,8 +19,10 @@ class CreateEquipoMantenimientoTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('equipo_id');
-            $table->year('anio');
-            $table->string('valor', 45);
+            $table->year('ultimo_anio_mantenimiento'); //ultimo año del matenimiento
+            $table->integer('vida_util_mantenimiento'); //numero de años de vida util del mantenimiento
+            $table->string('horas_uso_anio'); //estimado horas de uso al año
+            $table->string('valor_mantenimiento', 45)->default(0);
             $table->timestamps();
 
             $table->index(["equipo_id"], 'fk_laboratorio_id_equipo1_idx');

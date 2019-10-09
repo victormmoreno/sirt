@@ -59,15 +59,35 @@
             @enderror
         </div>
     </div>
+    
+    <div class="row">
+        
+        <div class="input-field col s12 m6 l6">
+            
+            <input class="validate" id="txtvidautil" name="txtvidautil" type="text"  value="{{ isset($mantenimiento->vida_util_mantenimiento) ? $mantenimiento->vida_util_mantenimiento : old('txtvidautil')}}">
+            <label for="txtvidautil">Vida uitl del mantenimiento (Años) <span class="red-text">*</span></label>
+            @error('txtvidautil')
+                <label id="txtvidautil-error" class="error" for="txtvidautil">{{ $message }}</label>
+            @enderror
+        </div>
+        <div class="input-field col s12 m6 l6">
+            
+            <input class="validate" id="txthorasuso" name="txthorasuso" type="text"  value="{{ isset($mantenimiento->horas_uso_anio) ? $mantenimiento->horas_uso_anio : old('txthorasuso')}}">
+            <label for="txthorasuso">Horas de uso al año <span class="red-text">*</span></label>
+            @error('txthorasuso')
+                <label id="txthorasuso-error" class="error" for="txthorasuso">{{ $message }}</label>
+            @enderror
+        </div>
+    </div>
     <div class="row">
         <div class="input-field col s12 m6 l6">
             <select class="js-states browser-default select2"   tabindex="-1" style="width: 100%" id="txtanio" name="txtanio">
                 <option>Seleccione el año de mantenimiento</option>
                 @for ($i=2016; $i <= $year; $i++)
                     
-                    @if(isset($mantenimiento->anio))
+                    @if(isset($mantenimiento->ultimo_anio_mantenimiento))
                         
-                        <option value="{{$i}}" {{ old('txtanio', $mantenimiento->anio) ==  $i  ? 'selected' : '' }}>{{$i}}</option>
+                        <option value="{{$i}}" {{ old('txtanio', $mantenimiento->ultimo_anio_mantenimiento) ==  $i  ? 'selected' : '' }}>{{$i}}</option>
                     @else
                         <option value="{{$i}}" {{ $i  == old('txtanio')  ? 'selected' : ''}}>{{$i}}</option>
                     @endif
@@ -81,7 +101,7 @@
             @enderror
         </div>
         <div class="input-field col s12 m6 l6">
-            <input type="text" name="txtvalor" id="txtvalor" value="{{ isset($mantenimiento) ? $mantenimiento->valor: old('txtvalor')}}"/>
+            <input type="text" name="txtvalor" id="txtvalor" value="{{ isset($mantenimiento) ? $mantenimiento->valor_mantenimiento: old('txtvalor')}}"/>
             <label class="active" for="txtvalor">Valor Mantenimiento <span class="red-text">*</span></label>
             @error('txtvalor')
             <label class="error" for="txtvalor" id="txtvalor-error">
