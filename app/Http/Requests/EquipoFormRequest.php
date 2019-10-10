@@ -31,6 +31,7 @@ class EquipoFormRequest extends FormRequest
             'txtcostoadquisicion' => 'required|between:0,999999999999.99|numeric',
             'txtvida_util'        => 'required|integer|min:1',
             'txtaniocompra'       => 'required|date_format:"Y"',
+            'txthorasuso'       => 'required|integer|min:1',
         ];
     }
 
@@ -60,6 +61,11 @@ class EquipoFormRequest extends FormRequest
             'txtvida_util.min'             => 'La vida util debe ser minimo 1 caracter',
             'txtvida_util.max'             => 'La vida util  debe ser máximo 4 caracteres',
             'txtvida_util.integer'         => 'La vida util debe ser un número entero.',
+
+            'txthorasuso.required'        => 'El promedio de horas de uso al año es obligatorio.',
+            'txthorasuso.min'             => 'El promedio de horas de uso al año debe ser minimo 1 caracter',
+            'txthorasuso.max'             => 'El promedio de horas de uso al año  debe ser máximo 4 caracteres',
+            'txthorasuso.integer'         => 'El promedio de horas de uso al año debe ser un número entero.',
 
             'txtaniocompra.required'       => 'El año de compra es obligatorio.',
             'txtaniocompra.date_format'    => 'El año de compra no corresponde al formato de año.',

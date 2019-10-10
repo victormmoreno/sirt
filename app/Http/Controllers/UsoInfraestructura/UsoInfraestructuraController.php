@@ -10,6 +10,7 @@ use App\Models\Gestor;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Proyecto;
+use App\Models\Equipo;
 use App\Models\UsoInfraestructura;
 use App\Repositories\Repository\ArticulacionRepository;
 use App\Repositories\Repository\EdtRepository;
@@ -380,38 +381,31 @@ class UsoInfraestructuraController extends Controller
 
         $this->authorize('store', UsoInfraestructura::class);
 
-        // if ($request->filled('gestor')) {
-        //         $syncData = array();
-        //         $asesorias = array();
-        //         $honorario = array();
-        //         //$horasAsesoriaGestor = array();
+        if ($request->filled('gestor')) {
+                $syncData = array();
+                $honorario = array();
+                foreach ($request->get('gestor') as $id => $value) {
+                    //calculo de costo de horas de asesoria
+                    $honorarioGestor = Gestor::where('id',$value)->first()->honorarios;
+                    //suma de las horas de asesoria directa y horas de asesoria indirecta
+                    $horasAsesoriaGestor = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
+                    // $honorario[$id] = round(($honorarioGestor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor);
 
-        //         foreach ($request->get('gestor') as $id => $value) {
-        //             $honorarioGestor = Gestor::where('id',$value)->first()->honorarios;
-        //             $horasAsesoriaGestor = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
-
-
-        //             $honorario[$id] = round(($honorarioGestor / 21 / 8) * (int) $horasAsesoriaGestor);
-        //             // $honorarios = $gestor->honorarios;
-                    
-        
-                     
-
-        //         }
-
-        //         return $honorario;
+                    // //array que almacena los datos a 
+                    // $syncData[$id] = array('gestor_id' => $value,
+                    // 'asesoria_directa' => $request->get('asesoriadirecta')[$id],
+                    // 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => $honorario[$id]);
+                }
 
                 
 
+                return $horasAsesoriaGestor;
 
                 
+            }else{
 
-        //     }else{
+            }
 
-        //     }
-
-        // $gestor = Gestor::with('user')->where('id', $request->get('gestor'))->get();
-        // return $gestor;
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {

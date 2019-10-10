@@ -37,6 +37,7 @@
                     </div>
                 </div>
                 <div class="card">
+                    
                     <div class="card-content">
                         @if($cantidadActividades != 0)
                         <div class="row">
@@ -1006,7 +1007,7 @@
 
         //Enviar formulario
         $(document).on('submit', 'form#formUsoInfraestructuraCreate', function (event) {
-            $('button[type="submit"]').attr('disabled', 'disabled');
+            // $('button[type="submit"]').attr('disabled', 'disabled');
             event.preventDefault();
             var form = $(this);
             let data = new FormData($(this)[0]);

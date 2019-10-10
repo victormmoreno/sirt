@@ -24,6 +24,7 @@ class Equipo extends Model
         'costo_adquisicion',
         'vida_util',
         'anio_compra',
+        'horas_uso_anio',
     ];
 
     /**
@@ -38,6 +39,7 @@ class Equipo extends Model
         'costo_adquisicion'   => 'string',
         'vida_util'           => 'integer',
         'anio_compra'         => 'year',
+        'horas_uso_anio'         => 'integer',
     ];
 
     /**
@@ -149,6 +151,7 @@ class Equipo extends Model
             ->withPivot([
                 'tiempo',
                 'costo_equipo',
+                'costo_administrativo',
             ]);
     }
 

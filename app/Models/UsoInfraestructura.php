@@ -76,7 +76,7 @@ class UsoInfraestructura extends Model
             ->withPivot([
                 'tiempo',
                 'costo_equipo',
-
+                'costo_administrativo',
             ]);
     }
 

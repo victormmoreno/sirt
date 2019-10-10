@@ -75,16 +75,7 @@
 		 
 	</div>
 	<div class="row">
-		<div class="input-field col s12 m4 l4">
-	      	<input type="text" name="txtcostoadquisicion" id="txtcostoadquisicion" value="{{ isset($equipo) ? $equipo->costo_adquisicion: old('txtcostoadquisicion')}}"/>
-	      	<label class="active" for="txtcostoadquisicion">Costo Adquisición con IVA<span class="red-text">*</span> </label>
-	      	@error('txtcostoadquisicion')
-            <label class="error" for="txtcostoadquisicion" id="txtcostoadquisicion-error">
-                {{ $message }}
-            </label>
-            @enderror
-	    </div>
-		<div class="input-field col s12 m4 l4">
+		<div class="input-field col s12 m6 l6">
 	      	<input type="text" name="txtvida_util" id="txtvida_util" value="{{ isset($equipo) ? $equipo->vida_util: old('txtvida_util')}}"/>
 	      	<label class="active" for="txtvida_util">Vida Util (años) <span class="red-text">*</span></label>
 	      	@error('txtvida_util')
@@ -93,7 +84,18 @@
             </label>
             @enderror
 	    </div>
-		 <div class="input-field col s12 m4 l4">
+	    <div class="input-field col s12 m6 l6">
+	      	<input type="text" name="txthorasuso" id="txthorasuso" value="{{ isset($equipo) ? $equipo->horas_uso_anio: old('txthorasuso')}}"/>
+	      	<label class="active" for="txthorasuso">Promedio horas uso por Año <span class="red-text">*</span></label>
+	      	@error('txthorasuso')
+            <label class="error" for="txthorasuso" id="txthorasuso-error">
+                {{ $message }}
+            </label>
+            @enderror
+	    </div>
+	</div>
+	<div class="row">
+		<div class="input-field col s12 m6 l6">
 		 	<select class="js-states browser-default select2"   tabindex="-1" style="width: 100%" id="txtaniocompra" name="txtaniocompra">
 		 		<option>Seleccione el año de compra</option>
         
@@ -114,6 +116,17 @@
             </label>
             @enderror
 	    </div>
+		<div class="input-field col s12 m6 l6">
+	      	<input type="text" name="txtcostoadquisicion" id="txtcostoadquisicion" value="{{ isset($equipo) ? $equipo->costo_adquisicion: old('txtcostoadquisicion')}}"/>
+	      	<label class="active" for="txtcostoadquisicion">Costo Adquisición con IVA<span class="red-text">*</span> </label>
+	      	@error('txtcostoadquisicion')
+            <label class="error" for="txtcostoadquisicion" id="txtcostoadquisicion-error">
+                {{ $message }}
+            </label>
+            @enderror
+	    </div>
+		
+		 
 	</div>
 
 	<div class="divider"></div>

@@ -38,6 +38,7 @@ class EquipoRepository
                 'costo_adquisicion'    => $request->input('txtcostoadquisicion'),
                 'vida_util'            => $request->input('txtvida_util'),
                 'anio_compra'          => $request->input('txtaniocompra'),
+                'horas_uso_anio'       => $request->input('txthorasuso'),
             ]);
 
             DB::commit();
@@ -69,6 +70,7 @@ class EquipoRepository
                 'costo_adquisicion' => $request->input('txtcostoadquisicion'),
                 'vida_util'         => $request->input('txtvida_util'),
                 'anio_compra'       => $request->input('txtaniocompra'),
+                'horas_uso_anio'       => $request->input('txthorasuso'),
             ]);
             DB::commit();
             return true;
