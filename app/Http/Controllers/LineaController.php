@@ -12,17 +12,13 @@ use Illuminate\Http\Request;
 
 class LineaController extends Controller
 {
-    public $lineaRepository;
+    private $lineaRepository;
 
     public function __construct(LineaRepository $lineaRepository)
     {
-
-        $this->middleware([
-            'auth',
-        ]);
-
+        $this->middleware(['auth']);
+        $this->middleware(['role_session:Administrador|Dinamizador|Gestor|Talento'])->except('getAllLineasForNodo');
         $this->lineaRepository = $lineaRepository;
-
     }
 
     /*=====================================================================
@@ -65,27 +61,30 @@ class LineaController extends Controller
                 ->rawColumns(['action', 'show', 'descripcion'])
                 ->toJson();
         }
-        $this->authorize('index', User::class);
-
+        $this->authorize('index', LineaTecnologica::class);
+        $relations = [
+                    'sublineas', 
+                    'gestores', 'gestores.user',
+                    'laboratorios'
+                ];
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                return view('lineas.administrador.index');
+                return view('lineas.index');
                 break;
             case User::IsDinamizador():
 
                 $nodo = auth()->user()->dinamizador->nodo->id;
-
-                $linea = LineaTecnologica::with(['sublineas', 'gestores', 'gestores.user', 'laboratorios'])->whereHas('nodos', function ($query) use ($nodo) {
+                $linea = $this->lineaRepository->lineasWithRelations($relations)->whereHas('nodos', function ($query) use ($nodo) {
                     $query->where('nodos.id', $nodo);
                 })->get();
-                return $linea;
 
+                return view('lineas.index');
                 break;
 
             case User::IsGestor():
 
                 $lineatecnologica = auth()->user()->gestor->lineatecnologica->id;
-                $linea            = LineaTecnologica::with(['sublineas', 'gestores', 'gestores.user', 'laboratorios'])->find($lineatecnologica);
+                $linea            = $this->lineaRepository->lineasWithRelations($relations)->find($lineatecnologica);
                 return $linea;
                 break;
             default:
@@ -95,6 +94,8 @@ class LineaController extends Controller
 
     }
 
+
+
     /**
      * Show the form for creating a new resource.s
      *
@@ -102,8 +103,8 @@ class LineaController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', User::class);
-        return view('lineas.administrador.create');
+        $this->authorize('create', LineaTecnologica::class);
+        return view('lineas.create');
     }
 
     /**
@@ -143,7 +144,7 @@ class LineaController extends Controller
 
         $this->authorize('show', $linea);
         
-        return view('lineas.administrador.show', ['linea' => $linea]);
+        return view('lineas.show', ['linea' => $linea]);
     }
 
     /**
@@ -155,7 +156,7 @@ class LineaController extends Controller
     public function edit(LineaTecnologica $linea)
     {
         $this->authorize('edit', $linea);
-        return view('lineas.administrador.edit', compact('linea'));
+        return view('lineas.edit', compact('linea'));
     }
 
     /**

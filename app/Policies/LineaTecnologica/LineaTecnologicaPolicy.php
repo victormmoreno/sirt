@@ -27,7 +27,6 @@ class LineaTecnologicaPolicy
      */
     public function create(User $user)
     {
-
         return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
     }
 

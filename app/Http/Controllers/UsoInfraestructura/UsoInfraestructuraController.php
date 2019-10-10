@@ -5,12 +5,13 @@ namespace App\Http\Controllers\UsoInfraestructura;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\Articulacion;
+use App\Models\CostoAdministrativo;
 use App\Models\Edt;
+use App\Models\Equipo;
 use App\Models\Gestor;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Proyecto;
-use App\Models\Equipo;
 use App\Models\UsoInfraestructura;
 use App\Repositories\Repository\ArticulacionRepository;
 use App\Repositories\Repository\EdtRepository;
@@ -381,30 +382,30 @@ class UsoInfraestructuraController extends Controller
 
         $this->authorize('store', UsoInfraestructura::class);
 
-        if ($request->filled('gestor')) {
-                $syncData = array();
-                $honorario = array();
-                foreach ($request->get('gestor') as $id => $value) {
-                    //calculo de costo de horas de asesoria
-                    $honorarioGestor = Gestor::where('id',$value)->first()->honorarios;
-                    //suma de las horas de asesoria directa y horas de asesoria indirecta
-                    $horasAsesoriaGestor = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
-                    // $honorario[$id] = round(($honorarioGestor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor);
+        // if ($request->filled('equipo')) {
+        //         $syncData = array();
+        //         $depreciacionEquipo = array();
+        //         foreach ($request->get('equipo') as $id => $value) {
+        //             //calculo de costo de horas de asesoria
+        //             $equipo = Equipo::where('id',$value)->first();
+        //             // suma de las horas de asesoria directa y horas de asesoria indirecta
+        //             // $horasAsesoriaGestor = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
+        //             $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion/$equipo->vida_util/$equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
 
-                    // //array que almacena los datos a 
-                    // $syncData[$id] = array('gestor_id' => $value,
-                    // 'asesoria_directa' => $request->get('asesoriadirecta')[$id],
-                    // 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => $honorario[$id]);
-                }
-
-                
-
-                return $horasAsesoriaGestor;
+        //             // //array que almacena los datos a 
+        //             // $syncData[$id] = array('gestor_id' => $value,
+        //             // 'asesoria_directa' => $request->get('asesoriadirecta')[$id],
+        //             // 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => $honorario[$id]);
+        //         }
 
                 
-            }else{
 
-            }
+        //         return $depreciacionEquipo;
+
+                
+        //     }else{
+
+        //     }
 
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -416,6 +417,7 @@ class UsoInfraestructuraController extends Controller
         }
 
         $result = $this->getUsoInfraestructuraRepository()->store($request);
+        // return $result;
 
         if ($result == 'false') {
             return response()->json([

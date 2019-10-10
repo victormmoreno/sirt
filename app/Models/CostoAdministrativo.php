@@ -11,6 +11,7 @@ class CostoAdministrativo extends Model
     const DIAS_AL_ANIO = 243;
     const DIAS_AL_MES = 26;
     const HORAS_AL_DIA = 8;
+    const DEDICACION = 2;  //decicacion de a tareas administrativas y dedicacion a proyectos
     
     protected $table = 'costos_administrativos';
 
