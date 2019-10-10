@@ -34,6 +34,7 @@ class SeguimientoArticulacionesSheetExport extends FatherExport
         $this->setCellsValues($event);
         $this->mergedCells($event);
         $this->styledCells($event);
+        $this->setFilters($event);
       },
     ];
   }

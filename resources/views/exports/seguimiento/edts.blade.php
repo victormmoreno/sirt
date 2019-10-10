@@ -14,7 +14,7 @@
         <th>Fecha de Inicio</th>
         <th>Fecha de Cierre</th>
         <th>Gestor</th>
-        <th>Empresas que participan</th>
+        {{-- <th>Empresas que participan</th> --}}
         <th>Observaciones</th>
         <th>Empleados</th>
         <th>Instructores</th>
@@ -30,12 +30,12 @@
         <tr>
           <td>{{ $value->codigo_actividad }}</td>
           <td>{{ $value->nombre }}</td>
-          <td>{{ $value->tipo_edt }}</td>
-          <td>{{ $value->area_conocimiento }}</td>
+          <td>{{ $value->nombre_tipoedt }}</td>
+          <td>{{ $value->nombre_areaconocimiento }}</td>
           <td>{{ $value->fecha_inicio }}</td>
           <td>{{ $value->fecha_cierre }}</td>
           <td>{{ $value->gestor }}</td>
-          <td>{{ $value->empresas }}</td>
+          {{-- <td>{{ $value->empresas }}</td> --}}
           <td>{{ $value->observaciones }}</td>
           <td>{{ $value->empleados }}</td>
           <td>{{ $value->instructores }}</td>

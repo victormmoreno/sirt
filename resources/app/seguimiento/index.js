@@ -106,6 +106,28 @@ function generarExcelSeguimentoNodo(bandera) {
   }
 }
 
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Gestor consulta
+function generarExcelSeguimentoDeUnGestor(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
+  let fecha_fin = $('#txtfecha_fin_Gestor').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtgestor_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaGestorNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      location.href = '/excel/excelSeguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+}
+
 function graficoSeguimiento(data, name) {
   Highcharts.chart(name, {
     chart: {

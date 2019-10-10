@@ -24,8 +24,12 @@ class SeguimientoExport implements WithMultipleSheets
   private $queryArticulacionGrupos;
   private $queryArticulacionEmpresas;
   private $queryArticulacionEmprendedores;
+  private $queryEdts;
+  private $queryTalentos;
+  private $queryEmpresas;
+  private $queryGruposInvestigacion;
 
-  public function __construct($queryInicio, $queryPlaneacion, $queryEjecucion, $queryPF, $queryPMV, $querySuspendidos, $queryArticulacionGrupos, $queryArticulacionEmpresas, $queryArticulacionEmprendedores)
+  public function __construct($queryInicio, $queryPlaneacion, $queryEjecucion, $queryPF, $queryPMV, $querySuspendidos, $queryArticulacionGrupos, $queryArticulacionEmpresas, $queryArticulacionEmprendedores, $queryEdts, $queryTalentos, $queryEmpresas, $queryGruposInvestigacion)
   {
     $this->setQueryInicio($queryInicio);
     $this->setQueryPlaneacion($queryPlaneacion);
@@ -36,6 +40,10 @@ class SeguimientoExport implements WithMultipleSheets
     $this->setQueryArticulacionGrupos($queryArticulacionGrupos);
     $this->setQueryArticulacionEmpresas($queryArticulacionEmpresas);
     $this->setQueryArticulacionEmprendedores($queryArticulacionEmprendedores);
+    $this->setQueryEdts($queryEdts);
+    $this->setQueryTalentos($queryTalentos);
+    $this->setQueryEmpresas($queryEmpresas);
+    $this->setQueryGruposInvestigacion($queryGruposInvestigacion);
   }
 
   /**
@@ -54,6 +62,11 @@ class SeguimientoExport implements WithMultipleSheets
       $sheets[] = new SeguimientoArticulacionesSheetExport($this->getQueryArticulacionGrupos(), 'G.I');
       $sheets[] = new SeguimientoArticulacionesSheetExport($this->getQueryArticulacionEmpresas(), 'Empresas');
       $sheets[] = new SeguimientoArticulacionesSheetExport($this->getQueryArticulacionEmprendedores(), 'Emprendedores');
+      $sheets[] = new SeguimientoEdtsSheetExport($this->getQueryEdts());
+      $sheets[] = new SeguimientoTalentosProyectosSheetExport($this->getQueryTalentos());
+      $sheets[] = new SeguimientoEmpresasSheetExport($this->getQueryEmpresas());
+      $sheets[] = new SeguimientoGruposInvestigacionSheetExport($this->getQueryGruposInvestigacion());
+
 
       return $sheets;
   }
@@ -193,7 +206,7 @@ class SeguimientoExport implements WithMultipleSheets
   * Get the value of Query Articulacion Grupos
   * @return Collection
   */
-  public function getQueryArticulacionGrupos()
+  private function getQueryArticulacionGrupos()
   {
     return $this->queryArticulacionGrupos;
   }
@@ -203,7 +216,7 @@ class SeguimientoExport implements WithMultipleSheets
   * @param Collection queryArticulacionGrupos
   * @return void
   */
-  public function setQueryArticulacionGrupos($queryArticulacionGrupos)
+  private function setQueryArticulacionGrupos($queryArticulacionGrupos)
   {
     $this->queryArticulacionGrupos = $queryArticulacionGrupos;
   }
@@ -212,7 +225,7 @@ class SeguimientoExport implements WithMultipleSheets
   * Get the value of Query Articulacion Empresas
   * @return mixed
   */
-  public function getQueryArticulacionEmpresas()
+  private function getQueryArticulacionEmpresas()
   {
     return $this->queryArticulacionEmpresas;
   }
@@ -222,7 +235,7 @@ class SeguimientoExport implements WithMultipleSheets
   * @param Collection queryArticulacionEmpresas
   * @return void
   */
-  public function setQueryArticulacionEmpresas($queryArticulacionEmpresas)
+  private function setQueryArticulacionEmpresas($queryArticulacionEmpresas)
   {
     $this->queryArticulacionEmpresas = $queryArticulacionEmpresas;
   }
@@ -231,7 +244,7 @@ class SeguimientoExport implements WithMultipleSheets
   * Get the value of Query Articulacion Emprendedores
   * @return Collection
   */
-  public function getQueryArticulacionEmprendedores()
+  private function getQueryArticulacionEmprendedores()
   {
     return $this->queryArticulacionEmprendedores;
   }
@@ -241,9 +254,86 @@ class SeguimientoExport implements WithMultipleSheets
   * @param Collection queryArticulacionEmprendedores
   * @return void
   */
-  public function setQueryArticulacionEmprendedores($queryArticulacionEmprendedores)
+  private function setQueryArticulacionEmprendedores($queryArticulacionEmprendedores)
   {
     $this->queryArticulacionEmprendedores = $queryArticulacionEmprendedores;
+  }
+
+  /**
+  * Get the value of Query Edts
+  *
+  * @return Collection
+  */
+  private function getQueryEdts()
+  {
+    return $this->queryEdts;
+  }
+
+  /**
+  * Set the value of Query Edts
+  *
+  * @param Collection queryEdts
+  * @return void
+  */
+  private function setQueryEdts($queryEdts)
+  {
+    $this->queryEdts = $queryEdts;
+  }
+
+
+  /**
+  * Get the value of Query Talentos
+  * @return Collection
+  */
+  private function getQueryTalentos()
+  {
+    return $this->queryTalentos;
+  }
+
+  /**
+  * Set the value of Query Talentos
+  * @param mixed queryTalentos
+  * @return void
+  */
+  private function setQueryTalentos($queryTalentos)
+  {
+    $this->queryTalentos = $queryTalentos;
+  }
+
+  /**
+  * Get the value of Query Empresas
+  * @return Collection
+  */
+  private function getQueryEmpresas()
+  {
+    return $this->queryEmpresas;
+  }
+
+  /**
+  * Set the value of Query Empresas
+  * @param Collection queryEmpresas
+  */
+  private function setQueryEmpresas($queryEmpresas)
+  {
+    $this->queryEmpresas = $queryEmpresas;
+  }
+
+  /**
+  * Get the value of Query gruposinvestigacion
+  * @return Collection
+  */
+  private function getQueryGruposInvestigacion()
+  {
+    return $this->queryGruposInvestigacion;
+  }
+
+  /**
+  * Set the value of Query Grupos de Investigacion
+  * @param Collection query Grupos Investigacion
+  */
+  private function setQueryGruposInvestigacion($queryGruposInvestigacion)
+  {
+    $this->queryGruposInvestigacion = $queryGruposInvestigacion;
   }
 
 }

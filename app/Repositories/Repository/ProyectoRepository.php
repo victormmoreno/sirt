@@ -131,11 +131,13 @@ class ProyectoRepository
     'acta_cierre',
     'encuesta')
     ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS nombre_gestor')
     ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
     ->selectRaw('IF(revisado_final = '. ArticulacionProyecto::IsPorEvaluar() .', "Por Evaluar", IF(revisado_final = '. ArticulacionProyecto::IsAprobado() .', "Aprobado", "No Aprobado")) AS revisado_final')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')

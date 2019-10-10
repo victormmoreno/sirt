@@ -32,7 +32,7 @@
             <td>{{ $value->nombre }}</td>
             <td>{{ $value->nombre_tipoarticulacion }}</td>
             <td>{{ $value->tipo_articulacion }}</td>
-            <td>{{ $value->fecha_inicio->toDateString() }}</td>
+            <td>{{ $value->fecha_inicio }}</td>
             <td>{{ $value->estado }}</td>
             <td>{{ $value->fecha_cierre }}</td>
             <td>{{ $value->revisado_final }}</td>

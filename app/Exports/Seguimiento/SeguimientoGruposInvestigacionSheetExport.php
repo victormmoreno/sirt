@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Events\{AfterSheet};
 use Illuminate\Contracts\View\View;
 use App\Exports\FatherExport;
 
-class SeguimientoEdtsSheetExport extends FatherExport
+class SeguimientoGruposInvestigacionSheetExport extends FatherExport
 {
 
 
@@ -18,33 +18,20 @@ class SeguimientoEdtsSheetExport extends FatherExport
   {
     $this->setQuery($query);
     $this->setCount($this->getQuery()->count() + 7);
-    $this->setRangeHeadingCell('A7:O7');
+    $this->setRangeHeadingCell('A7:D7');
   }
 
   public function registerEvents(): array
   {
     $columnPar = $this->styleArrayColumnsPar();
     $columnImPar = $this->styleArrayColumnsImPar();
-    // $styles = array('pares' => $columnPar, 'impares' => $columnImPar);
     return [
       AfterSheet::class => function(AfterSheet $event) {
-        $this->setCellsValues($event);
         $this->mergedCells($event);
         $this->styledCells($event);
         $this->setFilters($event);
       },
     ];
-  }
-
-  /**
-   * Asigna valores a celdas
-   * @param AfterSheet $event
-   * @return void
-   */
-  private function setCellsValues(AfterSheet $event)
-  {
-    $event->sheet->setCellValue('I6', 'Asistentes');
-    $event->sheet->setCellValue('M6', 'Entregables');
   }
 
   /**
@@ -55,19 +42,11 @@ class SeguimientoEdtsSheetExport extends FatherExport
    */
   private function styledCells(AfterSheet $event)
   {
-    // Estilos para la celda de Entregables y Asistentes
-    $event->sheet->getStyle('I6:O6')->applyFromArray($this->styleArray());
-    // Estilos para la celda de asistentes
-    $event->sheet->getStyle('I6')->applyFromArray($this->styleArrayColumnsImPar())->getFont()->setBold(1);
-    $event->sheet->getStyle('I6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    // Estilos para la celda de entregables
-    $event->sheet->getStyle('M6')->applyFromArray($this->styleArrayColumnsPar())->getFont()->setBold(1);
-    $event->sheet->getStyle('M6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
     // Estilos para los nombres de las columnas
     $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
     // Estilos para los registros de la consulta
     $init = 'A';
-    for ($i=0; $i < 15 ; $i++) {
+    for ($i=0; $i < 4 ; $i++) {
       $temp = $init++;
       $coordenadas = $temp . '7:'. $temp . $this->getCount();
       $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
@@ -87,14 +66,8 @@ class SeguimientoEdtsSheetExport extends FatherExport
    */
   private function mergedCells(AfterSheet $event)
   {
-    // Celdas combinadas hasta donde inician los asistentes
-    $event->sheet->mergeCells('A1:H6');
-    // Celdas combinadas de los asistentes y entregables
-    $event->sheet->mergeCells('I6:L6');
-    // Celdas combinadas arriba de los asistentes
-    $event->sheet->mergeCells('I1:O5');
-    // Celdas combinadas de los entregables
-    $event->sheet->mergeCells('M6:O6');
+    // Celdas combinadas arriba de los grupos de investigacion
+    $event->sheet->mergeCells('A1:D6');
   }
 
   /**
@@ -102,8 +75,8 @@ class SeguimientoEdtsSheetExport extends FatherExport
   */
   public function view(): View
   {
-    return view('exports.seguimiento.edts', [
-      'edts' => $this->getQuery()
+    return view('exports.seguimiento.grupos', [
+      'grupos' => $this->getQuery()
     ]);
 
   }
@@ -116,7 +89,7 @@ class SeguimientoEdtsSheetExport extends FatherExport
   */
   public function title(): String
   {
-    return 'Edts';
+    return 'Grupos de Investigación';
   }
 
   /**
@@ -135,14 +108,7 @@ class SeguimientoEdtsSheetExport extends FatherExport
     $drawing->setWidth(120);
     $drawing->setCoordinates('A1');
 
-    $drawing2 = new Drawing();
-    $drawing2->setName('Logo Sennova');
-    $drawing2->setPath(public_path('/img/sennova.png'));
-    $drawing2->setResizeProportional(false);
-    $drawing2->setHeight(104);
-    $drawing2->setWidth(180);
-    $drawing2->setCoordinates('F1');
-    return [$drawing, $drawing2];
+    return $drawing;
   }
 
 }

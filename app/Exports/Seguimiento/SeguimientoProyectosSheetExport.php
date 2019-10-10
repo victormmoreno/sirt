@@ -19,9 +19,8 @@ class SeguimientoProyectosSheetExport extends FatherExport
   {
     $this->setTitle($title);
     $this->setQuery($query);
-    // dd($this->getQuery());
     $this->setCount($this->getQuery()->count() + 7);
-    $this->setRangeHeadingCell('A7:AG7');
+    $this->setRangeHeadingCell('A7:AF7');
   }
 
   public function registerEvents(): array
@@ -34,6 +33,7 @@ class SeguimientoProyectosSheetExport extends FatherExport
         $this->setCellsValues($event);
         $this->mergedCells($event);
         $this->styledCells($event);
+        $this->setFilters($event);
       },
     ];
   }
@@ -45,7 +45,7 @@ class SeguimientoProyectosSheetExport extends FatherExport
    */
   private function setCellsValues(AfterSheet $event)
   {
-    $event->sheet->setCellValue('U6', 'Entregables');
+    $event->sheet->setCellValue('V6', 'Entregables');
   }
 
   /**
@@ -57,14 +57,14 @@ class SeguimientoProyectosSheetExport extends FatherExport
   private function styledCells(AfterSheet $event)
   {
     // Estilos para la centa de Entregables
-    $event->sheet->getStyle('U6:AD6')->applyFromArray($this->styleArray());
-    $event->sheet->getStyle('U6')->applyFromArray($this->styleArrayColumnsImPar())->getFont()->setBold(1);
-    $event->sheet->getStyle('U6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+    $event->sheet->getStyle('V6:AE6')->applyFromArray($this->styleArray());
+    $event->sheet->getStyle('V6')->applyFromArray($this->styleArrayColumnsImPar())->getFont()->setBold(1);
+    $event->sheet->getStyle('V6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
     // Estilos para los nombres de las columnas
     $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
     // Estilos para los registros de la consulta
     $init = 'A';
-    for ($i=0; $i < 31 ; $i++) {
+    for ($i=0; $i < 32 ; $i++) {
       $temp = $init++;
       $coordenadas = $temp . '7:'. $temp . $this->getCount();
       $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
@@ -85,15 +85,15 @@ class SeguimientoProyectosSheetExport extends FatherExport
   private function mergedCells(AfterSheet $event)
   {
     // Celdas combinadas hasta donde inician los entregables
-    $event->sheet->mergeCells('A1:T6');
+    $event->sheet->mergeCells('A1:U6');
     // Celdas combinadas arribas de los entregables
-    $event->sheet->mergeCells('U1:AD5');
+    $event->sheet->mergeCells('V1:AE5');
     // Celdas combinadas de los entregables
-    $event->sheet->mergeCells('U6:AD6');
+    $event->sheet->mergeCells('V6:AE6');
     // Celdas combinadas hasta el final de los entregables
-    $event->sheet->mergeCells('W1:AD5');
+    $event->sheet->mergeCells('X1:AE5');
     // Celdas combinadas restantes
-    $event->sheet->mergeCells('AE1:AE6');
+    $event->sheet->mergeCells('AF1:AF6');
   }
 
   /**

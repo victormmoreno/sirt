@@ -73,7 +73,7 @@ class ProyectoController extends Controller
 
     $update = $this->getProyectoRepository()->updateAprobacionUsuario($request, $id);
     if ( $update ) {
-      Alert::success('Modificación Existosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Modificación Exitosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
       return redirect('proyecto');
     } else {
       Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto no ha sido cambiada!')->showConfirmButton('Ok', '#3085d6');
@@ -352,7 +352,7 @@ class ProyectoController extends Controller
 
       $update = $this->getProyectoRepository()->updateEntregablesProyectoRepository($request, $id);
       if ($update) {
-        Alert::success('Modificación Existosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Modificación Exitosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
         return redirect('proyecto');
       } else {
         Alert::error('Modificación Errónea!', 'Los entregables del proyecto no se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -366,7 +366,7 @@ class ProyectoController extends Controller
       } else {
         $update = $this->getProyectoRepository()->updateRevisadoFinalProyectoRepository($request, $id);
         if ($update) {
-          Alert::success('Modificación Existosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
+          Alert::success('Modificación Exitosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
           return redirect('proyecto');
         } else {
           Alert::error('Modificación Errónea!', 'El revisado final del proyecto no se modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -769,7 +769,7 @@ class ProyectoController extends Controller
 
       $update = $this->getProyectoRepository()->updateProyectoDinamizadorRepository($request, $id);
       if ($update) {
-        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Existosa!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
         return redirect('proyecto');
       } else {
         Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');

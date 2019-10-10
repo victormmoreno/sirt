@@ -25,10 +25,25 @@ class EdtRepository
   {
     return Edt::select('codigo_actividad',
     'actividades.nombre',
-    '')
+    'tiposedt.nombre AS nombre_tipoedt',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
+    'fecha_inicio',
+    'fecha_cierre',
+    'edts.observaciones',
+    'empleados',
+    'instructores',
+    'aprendices',
+    'publico',
+    'fotografias',
+    'listado_asistencia',
+    'informe_final')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
   }
 

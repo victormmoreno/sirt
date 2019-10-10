@@ -11,6 +11,7 @@
         <th>Nombre del Proyecto</th>
         <th>Idea de Proyecto</th>
         <th>Sector</th>
+        <th>Gestor</th>
         <th>Línea Tecnológica</th>
         <th>Sublínea</th>
         <th>Área de Conocimiento</th>
@@ -48,6 +49,7 @@
           <td>{{ $value->nombre_proyecto }}</td>
           <td>{{ $value->nombre_idea }}</td>
           <td>{{ $value->nombre_sector }}</td>
+          <td>{{ $value->nombre_gestor }}</td>
           <td>{{ $value->nombre_linea }}</td>
           <td>{{ $value->nombre_sublinea }}</td>
           <td>{{ $value->nombre_areaconocimiento }}</td>
