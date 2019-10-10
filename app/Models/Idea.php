@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Traits\IdeaTrait\IdeaTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Idea extends Model
 {
@@ -128,11 +129,12 @@ class Idea extends Model
     ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
     ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
     ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-    ->join('entrenamiento_idea', 'entrenamiento_idea.idea_id', '=', 'ideas.id')
-    ->join('entrenamientos', 'entrenamientos.id', '=', 'entrenamiento_idea.entrenamiento_id')
+    // ->join('entrenamiento_idea', 'entrenamiento_idea.idea_id', '=', 'ideas.id')
+    // ->join('entrenamientos', 'entrenamientos.id', '=', 'entrenamiento_idea.entrenamiento_id')
     ->where('nodo_id', $id)
-    ->where('tipo_idea', $this->IsEmprendedor())
-    ->where('estadosidea.nombre', 'Convocado')
+    ->whereYear('ideas.created_at', Carbon::now()->isoFormat('YYYY'))
+    // ->where('tipo_idea', $this->IsEmprendedor())
+    ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado'])
     ->groupBy('ideas.id')
     ->orderBy('nombre_proyecto');
   }

@@ -3,17 +3,52 @@
 namespace App\Repositories\Repository;
 
 use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad};
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ArticulacionRepository
 {
 
   /**
+   * Consulta las articulaciones finalizadas entre dos fechas
+   * @param string $fecha_inicio Primera fecha para relizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Builder
+   * @author dum
+   */
+  public function consultarArticulacionesFinalizadasPorFecha_Detalle($fecha_inicio, $fecha_fin)
+  {
+    return Articulacion::select('codigo_actividad',
+    'actividades.nombre',
+    'tiposarticulaciones.nombre AS nombre_tipoarticulacion',
+    'fecha_inicio',
+    'fecha_cierre',
+    'articulaciones.observaciones',
+    'acta_inicio',
+    'acc',
+    'actas_seguimiento',
+    'acta_cierre',
+    'informe_final',
+    'pantallazo')
+    ->selectRaw('IF(tipo_articulacion = ' . Articulacion::IsGrupo() . ', "Grupo de Investigación", IF(tipo_articulacion = ' . Articulacion::IsEmpresa() . ', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsInicio() . ', "Inicio", IF(articulaciones.estado = ' . Articulacion::IsEjecucion() . ', "Ejecución", "Cierre")) AS estado')
+    ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('articulaciones.estado', Articulacion::IsCierre());
+  }
+
+  /**
    * Consulta articulaciones finalizadas entre dos fechas (de cierre)
    * @param string $fecha_inicio Primera fecha para realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
-   * @return Collection
+   * @return Builder
    */
   public function consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)
   {
