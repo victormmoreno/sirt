@@ -92,7 +92,7 @@ class SeguimientoController extends Controller
    * @return array
    * @author dum
    */
-  private function retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $agrupacion, $edts)
+  private function retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $articulacionEmprendedores, $agrupacion, $edts)
   {
     $datos = array();
     $datos['CierrePF'] = $cierrePF;
@@ -103,6 +103,7 @@ class SeguimientoController extends Controller
     $datos['Ejecucion'] = $agrupacion['ejecucion'];
     $datos['ArticulacionesGI'] = $articulacionGrupos;
     $datos['ArticulacionesEmp'] = $articulacionEmpresas;
+    $datos['ArticulacionesEmprendedores'] = $articulacionEmprendedores;
     $datos['Edts'] = $edts;
     return $datos;
   }
@@ -138,10 +139,11 @@ class SeguimientoController extends Controller
     $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
     $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
     $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
+    $articulacionEmprendedores = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmprendedor())->first()->cantidad;
     $edts = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
     $agrupacion = $this->agruparProyectosEnInicioPlaneacionEjecucion($inicios);
 
-    $datos = $this->retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $agrupacion, $edts);
+    $datos = $this->retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $articulacionEmprendedores, $agrupacion, $edts);
 
     return response()->json([
       'datos' => $datos
@@ -178,13 +180,14 @@ class SeguimientoController extends Controller
     $cierrePF = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Cierre PF', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $cierrePMV = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Cierre PMV', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $suspendido = $this->getProyectoRepository()->consultarProyectoEnEstadosDeCierreDeEntreFechas('Suspendido', $fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
-    $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)->where('g.id', $id)->get();
+    $inicios = $this->getProyectoRepository()->consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->get();
     $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
     $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
+    $articulacionEmprendedores = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->where('tipo_articulacion', Articulacion::IsEmprendedor())->first()->cantidad;
     $edts = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->first()->cantidad;
     $agrupacion = $this->agruparProyectosEnInicioPlaneacionEjecucion($inicios);
 
-    $datos = $this->retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $agrupacion, $edts);
+    $datos = $this->retornarValoresDelSeguimiento($cierrePF, $cierrePMV, $suspendido, $inicios, $articulacionGrupos, $articulacionEmpresas, $articulacionEmprendedores, $agrupacion, $edts);
 
     return response()->json([
       'datos' => $datos

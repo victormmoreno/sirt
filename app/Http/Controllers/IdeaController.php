@@ -71,7 +71,7 @@ class IdeaController extends Controller
    */
   public function updateEstadoIdea($id, $estado)
   {
-    $idea = Idea::ConsultarIdeaId($id);
+    $idea = Idea::ConsultarIdeaId($id)->first();
     if ($idea->estado_idea == 'Inicio') {
       $this->ideaRepository->updateEstadoIdea($id, $estado);
       return response()->json([
@@ -196,13 +196,13 @@ class IdeaController extends Controller
   //IdeaFormRequest
   public function store(IdeaFormRequest $request)
   {
-    
+
     $idea = $this->ideaRepository->Store($request);
     if ($idea != null) {
-      
+
         // $idea = $this->ideaRepository->getIdeaWithRelations($idea);
         return redirect()->back()->withSuccess('success');
-      
+
     }
     return redirect('ideas');
   }
@@ -218,7 +218,7 @@ class IdeaController extends Controller
     return redirect('idea');
   }
 
- 
+
   /**
   * Show the form for editing the specified resource.
   *

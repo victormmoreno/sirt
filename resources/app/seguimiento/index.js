@@ -55,7 +55,6 @@ function consultarSeguimientoDeUnGestor(bandera) {
 // 1 para cuando el Administrador consulta
 
 function consultarSeguimientoDeUnNodo(bandera) {
-  console.log('ddd');
   let id = 0;
   let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
   let fecha_fin = $('#txtfecha_fin_Nodo').val();
@@ -84,6 +83,50 @@ function consultarSeguimientoDeUnNodo(bandera) {
     }
   }
 };
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Administrador consulta
+function generarExcelSeguimentoNodo(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
+  let fecha_fin = $('#txtfecha_fin_Nodo').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaNodoNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      location.href = '/excel/excelSeguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+}
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Gestor consulta
+function generarExcelSeguimentoDeUnGestor(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
+  let fecha_fin = $('#txtfecha_fin_Gestor').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtgestor_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaGestorNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      location.href = '/excel/excelSeguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+}
 
 function graficoSeguimiento(data, name) {
   Highcharts.chart(name, {
@@ -137,12 +180,16 @@ function graficoSeguimiento(data, name) {
             y: data.datos.Suspendido,
           },
           {
-            name: "Articulaciones con Grupo de Investigación",
+            name: "Articulacion con G.I",
             y: data.datos.ArticulacionesGI,
           },
           {
-            name: "Articulaciones con Empresas",
+            name: "Articulacion con Empresas",
             y: data.datos.ArticulacionesEmp,
+          },
+          {
+            name: "Articulacion con Emprendedores",
+            y: data.datos.ArticulacionesEmprendedores,
           },
           {
             name: "Edts",

@@ -95,6 +95,62 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta la información de los proyectos por un estado de proyecto especfico
+   * @param string $estadoProyecto
+   * @return Builder
+   * @author dum
+   */
+  public function consultarProyectosPorEstados_Detalle($estadoProyecto)
+  {
+    return Proyecto::select('codigo_actividad',
+    'actividades.nombre AS nombre_proyecto',
+    'sectores.nombre AS nombre_sector',
+    'lineastecnologicas.nombre AS nombre_linea',
+    'sublineas.nombre AS nombre_sublinea',
+    'areasconocimiento.nombre AS nombre_areaconocimiento',
+    'estadosproyecto.nombre AS nombre_estado',
+    'tiposarticulacionesproyectos.nombre AS nombre_tipoproyecto',
+    'fecha_inicio',
+    'fecha_cierre',
+    'observaciones_proyecto',
+    'impacto_proyecto',
+    'resultado_proyecto',
+    'economia_naranja',
+    'art_cti',
+    'nom_act_cti',
+    'diri_ar_emp',
+    'reci_ar_emp',
+    'dine_reg',
+    'acc',
+    'manual_uso_inf',
+    'acta_inicio',
+    'estado_arte',
+    'actas_seguimiento',
+    'video_tutorial',
+    'ficha_caracterizacion',
+    'acta_cierre',
+    'encuesta')
+    ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS nombre_gestor')
+    ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
+    ->selectRaw('IF(revisado_final = '. ArticulacionProyecto::IsPorEvaluar() .', "Por Evaluar", IF(revisado_final = '. ArticulacionProyecto::IsAprobado() .', "Aprobado", "No Aprobado")) AS revisado_final')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+    ->where('proyectos.estado_aprobacion', 1)
+    ->where('estadosproyecto.nombre', $estadoProyecto);
+  }
+
+  /**
    * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
    *
    * @param int $id Id del nodo

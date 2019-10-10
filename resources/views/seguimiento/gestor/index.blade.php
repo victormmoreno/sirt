@@ -34,6 +34,9 @@
                       <div class="center col s12 m6 l6">
                         <button onclick="consultarSeguimientoDeUnGestor(0)" class="btn">Consultar</button>
                       </div>
+                      <div class="center col s12 m6 l6">
+                        <button onclick="generarExcelSeguimentoDeUnGestor(0)" class="btn green">Excel</button>
+                      </div>
                     </div>
                     <div class="col s12 m8 l8">
                       <div id="graficoSeguimientoPorGestorDeUnNodo_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">

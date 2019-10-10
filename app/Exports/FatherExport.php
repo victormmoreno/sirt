@@ -19,6 +19,17 @@ abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAu
   private $count;
 
   /**
+   * Asigna filtro a celdas
+   * @param AfterSheet $event
+   * @return void
+   * @author dum
+   */
+  protected function setFilters($event)
+  {
+    $event->sheet->setAutoFilter($this->getRangeHeadingCell());
+  }
+
+  /**
   * Array de estilos para el archivo de excel
   *
   * @return array

@@ -37,16 +37,18 @@
               </div>
             </div>
             <div class="divider"></div>
-            <div class="col s12 m2 l2">
-              <a href="{{route('articulacion.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
-                <div class="card green">
-                  <div class="card-content center">
-                    <span class="white-text">Descargar tabla</span>
+            <div class="row">
+              @include('articulaciones.table')
+              <div class="col s12 m2 l2">
+                <a href="{{route('articulacion.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
+                  <div class="card green">
+                    <div class="card-content center">
+                      <span class="white-text">Descargar tabla</span>
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
             </div>
-            @include('articulaciones.table')
           </div>
         </div>
       </div>

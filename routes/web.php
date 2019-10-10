@@ -543,6 +543,9 @@ Route::group([
    Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
    Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelProyectosFinalizadosPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoFinalizadosPorAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
+   // Rutas para la generación de excel del módulo de seguimiento
+   Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
  }
 );
 
