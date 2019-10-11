@@ -295,7 +295,6 @@ class ProyectoRepository
     ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
     ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_expedicion_id')
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-    ->where('talento_lider', 1)
     ->where('proyectos.id', $id);
   }
 
@@ -327,37 +326,21 @@ class ProyectoRepository
           // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
 
           // Instancia de la clase ArchivoRepository
-          // $archivoRepo = new ArchivoRepository();
+          $archivoRepo = new ArchivoRepository();
 
           // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
-          // $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
+          $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
 
           // Guarda la ruta de los archivos en la base de datos
-          // $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
+          $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
 
           // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
           $proyecto->update([
-            'estado_aprobacion' => Proyecto::IsAceptado()
-            // 'acc' => 1
+            'estado_aprobacion' => Proyecto::IsAceptado(),
+            'acc' => 1
           ]);
         } else {
           // En caso de que UNO SOLO no haya aprobado el proyecto
-
-          // Consulta todos los usuarios de un proyecto (tabla aprobaciones)
-          // $usersProyecto = $this->pivotAprobaciones($id)->get()->toArray();
-          // $idUsers = array();
-          //
-          // for ($i=0; $i < 2 ; $i++) {
-          //   $idUsers[$i] = $usersProyecto[$i]['user_id'];
-          // }
-          //
-          // // Array los del ids de los usuarios (método array_unique para no repetir los usuarios)
-          // $idUsers = array_unique($idUsers);
-          //
-          // // Alerta de que el proyecto no fue aprobado
-          // for ($i=0; $i < count($idUsers) ; $i++) {
-          //   Notification::send(User::find($idUsers[$i]), new ProyectoNoAprobado($proyecto));
-          // }
 
           //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
           $idea = $proyecto->idea;
@@ -1313,7 +1296,9 @@ class ProyectoRepository
       'nom_act_cti' => request()->txtnom_act_cti,
       'diri_ar_emp' => $diri_ar_emp,
       'reci_ar_emp' => $reci_ar_emp,
-      'dine_reg' => $dine_reg
+      'dine_reg' => $dine_reg,
+      'aporte_sena' => 0,
+      'aporte_talento' => 0
       ]);
 
       $syncData = array();

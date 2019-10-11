@@ -315,45 +315,41 @@ class ComiteController extends Controller
 
     $idea = Idea::ConsultarIdeaId($input['Idea'])->get($input['Idea'])->last();
 
-    if ($idea->estado_idea == 'Convocado') {
 
-      // Aquí se agregan los campos de las ideas de proyecto
-      $idea['Hora'] = $input['hora'];
-      $idea['Asistencia'] = $input['asistencia'];
-      // $idea['Observaciones'] = $input['observaciones'];
-      $input['observaciones'] == null ? $idea['Observaciones'] = '' : $idea['Observaciones'] = $input['observaciones'];
-      $idea['Admitido'] = $input['admitido'];
+    // Aquí se agregan los campos de las ideas de proyecto
+    $idea['Hora'] = $input['hora'];
+    $idea['Asistencia'] = $input['asistencia'];
+    // $idea['Observaciones'] = $input['observaciones'];
+    $input['observaciones'] == null ? $idea['Observaciones'] = '' : $idea['Observaciones'] = $input['observaciones'];
+    $idea['Admitido'] = $input['admitido'];
 
-      if (session("ideasComiteCreate") != null) {
+    if (session("ideasComiteCreate") != null) {
 
-        $existe = false;
-        $dato   = null;
+      $existe = false;
+      $dato   = null;
 
-        $ideas = session("ideasComiteCreate");
-        foreach ($ideas as $key => $value) {
-          if ($value["id"] == $input["Idea"]) {
-            $dato = $value;
+      $ideas = session("ideasComiteCreate");
+      foreach ($ideas as $key => $value) {
+        if ($value["id"] == $input["Idea"]) {
+          $dato = $value;
 
-            unset($ideas[$key]);
+          unset($ideas[$key]);
 
-            $existe = true;
-          }
+          $existe = true;
         }
-
-        if (!$existe) {
-          array_push($ideas, $idea);
-        } else {
-          return json_encode(['data' => 3]);
-        }
-        session(["ideasComiteCreate" => $ideas]);
-      } else {
-        session(["ideasComiteCreate" => [$idea]] );
       }
 
-      return json_encode(['data' => 2]);
+      if (!$existe) {
+        array_push($ideas, $idea);
+      } else {
+        return json_encode(['data' => 3]);
+      }
+      session(["ideasComiteCreate" => $ideas]);
     } else {
-      return json_encode(['data' => 1]);
+      session(["ideasComiteCreate" => [$idea]] );
     }
+
+    return json_encode(['data' => 2]);
   }
 
   // Devuelve los elemento de la sesion de las ideas del comité (Create)

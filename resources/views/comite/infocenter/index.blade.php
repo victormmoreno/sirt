@@ -17,7 +17,7 @@
                     </div>
                   </div>
                   <div class="col s12 m2 l2">
-                    <a class="red" target="_blank" href="{{ route('csibt.create') }}">
+                    <a class="red" href="{{ route('csibt.create') }}">
                       <div class="card green">
                         <div class="card-content center">
                           <i class="left material-icons white-text">add</i>

@@ -3,6 +3,7 @@ $(document).ready(function() {
 });
 
 function datatableEdtsPorNodo(id) {
+  let anho = $('#txtanho_edts_Nodo').val();
   $('#edtPorNodo_table').dataTable().fnDestroy();
   $('#edtPorNodo_table').DataTable({
     language: {
@@ -12,51 +13,65 @@ function datatableEdtsPorNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnNodo/"+id,
+      url: "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
       type: "get",
     },
     columns: [
       {
-        width: '15%',
+        width: '10%',
         data: 'codigo_edt',
         name: 'codigo_edt',
       },
       {
+        width: '15%',
         data: 'nombre',
         name: 'nombre',
       },
       {
+        width: '15%',
         data: 'gestor',
         name: 'gestor',
       },
       {
+        width: '6%',
         data: 'area_conocimiento',
         name: 'area_conocimiento',
       },
       {
+        width: '6%',
         data: 'tipo_edt',
         name: 'tipo_edt',
       },
       {
         width: '8%',
+        data: 'fecha_inicio',
+        name: 'fecha_inicio',
+      },
+      {
+        width: '8%',
+        data: 'estado',
+        name: 'estado',
+      },
+      {
+        width: '6%',
         data: 'business',
         name: 'business',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'entregables',
         name: 'entregables',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'edit',
         name: 'edit',
         orderable: false

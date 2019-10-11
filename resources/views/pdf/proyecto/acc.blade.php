@@ -22,13 +22,13 @@ calibriBold {
 }
 @font-face {
   font-family: 'calibri-regular';
-  src: url("{{ storage_path('fonts\calibri-regular.ttf') }}") format("truetype");
+  src: url("{{ storage_path('fonts/calibri-regular.ttf') }}") format("truetype");
   font-weight: normal;
   font-style: normal;
 },
 @font-face {
   font-family: 'ylee';
-  src: url("{{ storage_path('fonts\ylee.ttf') }}") format("truetype");
+  src: url("{{ storage_path('fonts/ylee.ttf') }}") format("truetype");
   font-weight: normal;
   font-style: normal;
 },
@@ -544,23 +544,76 @@ calibriBold {
         <br>
       </div>
     </div>
-    <br><br><br><br><br><br><br>
-    <div class="row">
-      <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaRep">
+    @if ($autores->count() > 0)
+      @foreach ($autores as $key => $value)
+        @if ($key == 0)
+          <br><br><br><br><br><br><br>
+          <div class="row">
+            <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaRep">
+              <br>
+              Firma: <ylee>{{ $value->nombre_talento }}</ylee>
+              <br>
+              {{ $value->nombre_talento }}
+              <br>
+              <calibriBold>Nombre del Talento.</calibriBold>
+              <br>
+              C.C.
+              <br>
+              {{ $value->documento }}
+            </div>
+            <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaTec">
+              <br>
+              Firma: <ylee>{{ $dinamizador->usuario }}</ylee>
+              <br><br>
+              {{ $dinamizador->usuario }}
+              <br>
+              <calibriBold>Nombre del Dinamizador del Nodo.</calibriBold>
+              <br>
+              C.C.
+              <br>
+              {{ $dinamizador->documento }}
+            </div>
+          </div>
+        @else
+          <br><br><br><br><br><br><br>
+          <div class="row">
+            <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaRep">
+              <br>
+              Firma: <ylee>{{ $value->nombre_talento }}</ylee>
+              <br>
+              {{ $value->nombre_talento }}
+              <br>
+              <calibriBold>Nombre del Talento.</calibriBold>
+              <br>
+              C.C.
+              <br>
+              {{ $value->documento }}
+            </div>
+            <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaTec">
+
+            </div>
+          </div>
+        @endif
+      @endforeach
+    @else
+      <br><br><br><br><br><br><br>
+      <div class="row">
+        <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaRep">
+        </div>
+        <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaTec">
+          <br>
+          Firma: <ylee>{{ $dinamizador->usuario }}</ylee>
+          <br><br>
+          {{ $dinamizador->usuario }}
+          <br>
+          <calibriBold>Nombre del Dinamizador del Nodo.</calibriBold>
+          <br>
+          C.C.
+          <br>
+          {{ $dinamizador->documento }}
+        </div>
       </div>
-      <div style="border-width: 1px; border-style: solid; border-color: black; line-height: 15px;" class="col firmaTec">
-        <br>
-        Firma: <ylee>{{ $dinamizador->usuario }}</ylee>
-        <br><br>
-        {{ $dinamizador->usuario }}
-        <br>
-        <calibriBold>Nombre del Dinamizador del Nodo.</calibriBold>
-        <br>
-        C.C.
-        <br>
-        {{ $dinamizador->documento }}
-      </div>
-    </div>
+    @endif
     <br><br><br><br><br><br><br>
     <div class="row">
       <div style="border-width: 1px; border-style: solid; border-color: black" class="col contenedorGrande">

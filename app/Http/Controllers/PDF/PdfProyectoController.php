@@ -17,8 +17,7 @@ class PdfProyectoController extends Controller
   /**
    * Genera el archivo pdf del acuerdo de confidencial y compromiso
    *
-   * @param object $proyectoRepository
-   * @param string $route Ruta donde se guarda el archivo
+   * @param ProyectoRepository $proyectoRepository
    * @param int $id Id del proyecto
    * @return array
    * @author dum
@@ -26,7 +25,10 @@ class PdfProyectoController extends Controller
   public static function printAcuerdoConfidencialidadCompromiso(ProyectoRepository $proyectoRepository, $id)
   {
     $proyecto = Proyecto::find($id);
-    $talento_lider = $proyectoRepository->consultarTalentoLiderDeUnProyecto($id)->first();
+    // Consulta el talento líder del proyecto
+    $talento_lider = $proyectoRepository->consultarTalentoLiderDeUnProyecto($id)->where('talento_lider', 1)->first();
+    // Consulta los talento de un proyecto menos al lider del proyecto
+    $talentos_autores = $proyectoRepository->consultarTalentoLiderDeUnProyecto($id)->where('talento_lider', 0)->get();
     // dd($talento_lider);
     // exit();
     $gestor = $proyectoRepository->pivotAprobaciones($id)->where('roles.name', 'Gestor')->first();
@@ -36,7 +38,8 @@ class PdfProyectoController extends Controller
       'proyecto' => $proyecto,
       'talento_lider' => $talento_lider,
       'gestor' => $gestor,
-      'dinamizador' => $dinamizador
+      'dinamizador' => $dinamizador,
+      'autores' => $talentos_autores
     ]);
     $route = "";
     // Nombre del archivo pdf
@@ -54,6 +57,8 @@ class PdfProyectoController extends Controller
     // Ruta del archivo
     $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $id . '/' . $fase->nombre . '/' . $nombreArchivo;
     // Almacena el archivo pdf en el servidor
+    // return $pdf->download('invoice.pdf');
+
     Storage::put($route, $pdf->output());
     return [
       'articulacion_proyecto_id' => $proyecto->articulacion_proyecto_id,

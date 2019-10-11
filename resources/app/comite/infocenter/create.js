@@ -41,8 +41,6 @@ csibt_create = {
         type: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
-        // cancelButtonColor: '#d33',
-        // cancelButtonText: 'Cancelar',
         confirmButtonText: 'Entendido!'
       })
     } else {
@@ -66,11 +64,6 @@ csibt_create = {
         if ( $('#txtadmitido').is(":checked") ) {
           ideaAdmitida = 1;
         }
-        console.log('Asistencia');
-        console.log(asistenciaAlComite);
-        console.log('Admitido');
-        console.log(ideaAdmitida);
-
         let token = $("#formComiteCreate input[name=_token]").val();
 
         $.ajax({

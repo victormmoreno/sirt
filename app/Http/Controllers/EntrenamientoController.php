@@ -37,7 +37,7 @@ class EntrenamientoController extends Controller
   {
     $update = $this->entrenamientoRepository->updateEvidencias($request, $id);
     if ($update) {
-      Alert::success('Modificación Existosa!', 'Los entregables del entrenamiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Modificación Exitosa!', 'Los entregables del entrenamiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
       return redirect('entrenamientos');
     } else {
       Alert::error('Modificación Errónea!', 'Los entregables del entrenamiento no se han modificado!')->showConfirmButton('Ok', '#3085d6');

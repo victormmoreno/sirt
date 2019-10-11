@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('meta-title', 'Eventos de Divulgación Tecnológica')
 @section('content')
+  @php
+    $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
+  @endphp
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
@@ -16,11 +19,18 @@
                 </div>
               </div>
               <div class="divider"></div>
-              {{-- <div class="right material-icons">
-                <a href="{{route('edt.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
-                  <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                </a>
-              </div> --}}
+              <div class="row">
+                <div class="col s12 m12 l12">
+                  <div class="input-field col s12 m12 l12">
+                    <select class="js-states"  tabindex="-1" style="width: 100%" id="txtanho_edts_Nodo" name="txtanho_edts_Nodo" onchange="datatableEdtsPorNodo(0);">
+                      @for ($i=2016; $i <= $year; $i++)
+                        <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                      @endfor
+                    </select>
+                    <label for="txtanho_edts_Nodo">Seleccione el Año</label>
+                  </div>
+                </div>
+              </div>
               <table class="display responsive-table datatable-example" style="width: 100%" id="edtPorNodo_table" >
                 <thead>
                   <th>Código de la Edt</th>
@@ -28,13 +38,15 @@
                   <th>Gestor</th>
                   <th>Área de Conocimiento</th>
                   <th>Tipo de Edt</th>
+                  <th>Fecha de Inicio</th>
+                  <th>Estado</th>
                   <th>Empresas</th>
                   <th>Detalles</th>
                   <th>Entregables</th>
                   <th>Editar</th>
                 </thead>
               </table>
-              <div class="col s12 m2 l2">
+              {{-- <div class="col s12 m2 l2">
                 <a href="{{route('edt.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
                   <div class="card green">
                     <div class="card-content center">
@@ -42,7 +54,7 @@
                     </div>
                   </div>
                 </a>
-              </div>
+              </div> --}}
             </div>
           </div>
         </div>
