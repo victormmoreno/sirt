@@ -313,7 +313,7 @@ class EdtRepository
   * @return Collection
   * @author dum
   */
-  public function consultarEdtsDeUnNodo($id)
+  public function consultarEdtsDeUnNodo($id, $anho)
   {
     return Edt::select('codigo_actividad AS codigo_edt',
     'tiposedt.nombre AS tipo_edt',
@@ -328,7 +328,7 @@ class EdtRepository
     'publico',
     'actividades.nombre')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
-    ->selectRaw('IF(edts.estado = ' . Edt::IsActive() . ', "Activa", "Inactiva") AS estado')
+    ->selectRaw('IF(edts.estado = ' . Edt::IsActive() . ', "Abierta", "Cerrada") AS estado')
     ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
     ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
@@ -336,15 +336,18 @@ class EdtRepository
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->where('nodos.id', $id)
+    ->whereYear('fecha_inicio', $anho)
     ->get();
   }
 
   /**
   * Consulta las edts de un gestor
   * @param int id Id del gestor
+  * @param string $anho Año para filtrar por la fecha de inicio
   * @return Collection
+  * @author dum
   */
-  public function consultarEdtsDeUnGestor($id)
+  public function consultarEdtsDeUnGestor($id, $anho)
   {
     return Edt::select('codigo_actividad AS codigo_edt',
     'tiposedt.nombre AS tipo_edt',
@@ -360,7 +363,7 @@ class EdtRepository
     'actividades.nombre')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('GROUP_CONCAT(nit, " - ", entidades.nombre SEPARATOR "; ") AS empresas')
-    ->selectRaw('IF(edts.estado = ' . Edt::IsActive() . ', "Activa", "Inactiva") AS estado')
+    ->selectRaw('IF(edts.estado = ' . Edt::IsActive() . ', "Abierta", "Cerrada") AS estado')
     ->join('tiposedt', 'tiposedt.id', '=', 'edts.tipoedt_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'edts.areaconocimiento_id')
     ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
@@ -370,6 +373,7 @@ class EdtRepository
     ->join('entidades', 'edt_entidad.entidad_id', '=', 'entidades.id')
     ->join('empresas', 'empresas.entidad_id', '=', 'entidades.id')
     ->where('gestores.id', $id)
+    ->whereYear('fecha_inicio', $anho)
     ->groupBy('edts.id')
     ->get();
   }

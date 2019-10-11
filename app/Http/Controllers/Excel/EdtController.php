@@ -86,18 +86,18 @@ class EdtController extends Controller
     return Excel::download(new EdtsNodoExport($this->getQuery()), 'Edt.xls');
   }
 
-  /**
-   * Genera el excel para as edts de un gestor
-   * @param int $id Id del gestor
-   * @return Response
-   * @author dum
-   */
-  public function edtsDeUnGestor($id)
-  {
-    $query = $this->getEdtRepository()->consultarEdtsDeUnGestor($id);
-    $this->setQuery($query);
-    return Excel::download(new EdtsGestorExport($this->getQuery()), 'Edt.xls');
-  }
+  // /**
+  //  * Genera el excel para as edts de un gestor
+  //  * @param int $id Id del gestor
+  //  * @return Response
+  //  * @author dum
+  //  */
+  // public function edtsDeUnGestor($id)
+  // {
+  //   $query = $this->getEdtRepository()->consultarEdtsDeUnGestor($id);
+  //   $this->setQuery($query);
+  //   return Excel::download(new EdtsGestorExport($this->getQuery()), 'Edt.xls');
+  // }
 
   /**
    * General el excel para las edts de un nodo

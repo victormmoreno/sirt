@@ -132,11 +132,12 @@ class EdtController extends Controller
   }
 
   /**
-   * datatable para mostrar las edts de un nodo
+   * datatable para mostrar las edts de un nodo por año
    * @param int idnodo Id del nodo
+   * @param string $anho Año de la fecha de inicio del edt
    * @return Collection
    */
-  public function consultarEdtsDeUnNodo($idnodo)
+  public function consultarEdtsDeUnNodo($idnodo, $anho)
   {
     $id = "";
     if ( Session::get('login_role') == User::IsDinamizador() ) {
@@ -144,22 +145,24 @@ class EdtController extends Controller
     } else {
       $id = $idnodo;
     }
-    $edts = $this->edtRepository->consultarEdtsDeUnNodo($id);
+    $edts = $this->edtRepository->consultarEdtsDeUnNodo($id, $anho);
     return $this->datatableEdts($edts);
   }
 
   /**
    * Muestra las edts de un gestor
    * @param int id Id de un gestor
+   * @param $anho Año de la fecha de inicio de la edt
    * @return Response
+   * @author dum
    */
-  public function consultarEdtsDeUnGestor($idgestor)
+  public function consultarEdtsDeUnGestor($idgestor, $anho)
   {
     $id = "";
     if ( Session::get('login_role') == User::IsGestor() ) {
       $id = auth()->user()->gestor->id;
     }
-    $edts = $this->edtRepository->consultarEdtsDeUnGestor($id);
+    $edts = $this->edtRepository->consultarEdtsDeUnGestor($id, $anho);
     return $this->datatableEdts($edts);
   }
 
@@ -202,7 +205,7 @@ class EdtController extends Controller
   */
   public function store(Request $request)
   {
-    
+
     $req = new EdtFormRequest;
     $validator = Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
@@ -291,7 +294,7 @@ class EdtController extends Controller
       }
       $update = $this->edtRepository->updateGestorEdt_Repository($request, $id);
       if ($update) {
-        Alert::success('Modificación Existosa!', 'El gestor de la edt se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Modificación Exitosa!', 'El gestor de la edt se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
         return redirect('edt');
       } else {
         Alert::error('Modificación Errónea!', 'El gestor de la edt no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
@@ -311,7 +314,7 @@ class EdtController extends Controller
   {
     $result = $this->edtRepository->updateEntregableRepository($request, $id);
     if ($result) {
-      Alert::success('Los entregables de la EDT se han modificado exitosamente!', 'Modificación Existosa!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Los entregables de la EDT se han modificado exitosamente!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
       return redirect('edt');
     } else {
       Alert::error('Los entregables de la EDT no se han modificado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
