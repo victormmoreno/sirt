@@ -47,11 +47,13 @@ class LineaTecnologicaPolicy
 
     public function edit(User $user, LineaTecnologica $linea)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsGestor(), User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || $linea->lineastecnologicasnodos->firstWhere('nodo_id', auth()->user()->dinamizador->nodo->id);
+
+       
     }
 
     public function update(User $user, LineaTecnologica $linea)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsGestor(), User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || $linea->lineastecnologicasnodos->firstWhere('nodo_id', auth()->user()->dinamizador->nodo->id);
     }
 }

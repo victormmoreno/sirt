@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#linea_administrador_table').DataTable({
+    $('#linea_dinamizador_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -18,12 +18,7 @@ $(document).ready(function() {
         }, {
             data: 'descripcion',
             name: 'descripcion',
-        }, 
-        {
-            data: 'show',
-            name: 'show',
-            orderable: false
-        },{
+        }, {
             data: 'action',
             name: 'action',
             orderable: false

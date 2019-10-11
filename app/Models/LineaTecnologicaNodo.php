@@ -29,10 +29,6 @@ class LineaTecnologicaNodo extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
-    public function equipos()
-    {
-        return $this->hasMany(Equipo::class, 'lineatecnologica_nodo_id', 'id');
-    }
 
     /**
      * asesor para el campo porcentaje_linea.

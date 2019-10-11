@@ -60,6 +60,7 @@
                                         <th width="15%">Marca</th>
                                         <th width="15%">Costo Adquisición</th>
                                         <th width="15%">Vida Util (Años)</th>
+                                        <th width="15%">Promedio Horas uso al año</th>
                                         <th width="15%">Año de compra</th>
                                         <th width="15%">Año fin depreciación</th>
                                         <th width="15%">Depreciación por año</th>
@@ -98,6 +99,7 @@
                                             <th width="15%">Marca</th>
                                             <th width="15%">Costo Adquisición</th>
                                             <th width="15%">Vida Util (Años)</th>
+                                            <th width="15%">Promedio Horas uso al año</th>
                                             <th width="15%">Año de compra</th>
                                             <th width="15%">Año fin depreciación</th>
                                             <th width="15%">Depreciación por año</th>
@@ -128,6 +130,7 @@
                                             <th width="15%">Marca</th>
                                             <th width="15%">Costo Adquisición</th>
                                             <th width="15%">Vida Util (Años)</th>
+                                            <th width="15%">Promedio Horas uso al año</th>
                                             <th width="15%">Año de compra</th>
                                             <th width="15%">Año fin depreciación</th>
                                             <th width="15%">Depreciación por año</th>

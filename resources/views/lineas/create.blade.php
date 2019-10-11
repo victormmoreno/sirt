@@ -39,6 +39,7 @@
                                             dns
                                         </i>
                                     </center>
+                                    <div class="divider"></div>
                                     <form action="{{ route('lineas.store')}}" method="POST" onsubmit="return checkSubmit()">
                                         @include('lineas.form', [
                                             'btnText' => 'Guardar',

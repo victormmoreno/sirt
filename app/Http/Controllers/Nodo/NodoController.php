@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Nodo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NodoFormRequest;
 use App\Models\Nodo;
+use App\Models\Equipo;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -147,7 +148,6 @@ class NodoController extends Controller
      */
     public function edit($nodo)
     {
-
         $nodo = $this->nodoRepository->findNodoForShow($nodo);
         $this->authorize('edit', $nodo);
         return view('nodos.edit', [
@@ -167,10 +167,11 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
+        
         $entidadNodo = $this->nodoRepository->findById($id);
-        $nodoUdate   = $this->nodoRepository->update($request, $entidadNodo);
+        $nodoUpdate   = $this->nodoRepository->update($request, $entidadNodo);
 
-        if ($nodoUdate == true) {
+        if ($nodoUpdate == true) {
 
             alert()->success('Modificación Exitoso.', 'El nodo ha sido modificado satisfactoriamente');
         } else {

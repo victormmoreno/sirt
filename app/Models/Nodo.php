@@ -80,7 +80,10 @@ class Nodo extends Model
         return $this->hasMany(Laboratorio::class, 'nodo_id', 'id');
     }
 
-    
+    public function equipos()
+    {
+        return $this->hasMany(Equipo::class, 'nodo_id', 'id');
+    }
 
     public function lineastecnologicasnodos()
     {

@@ -28,8 +28,8 @@
 		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" >
 	            <option value="">Seleccione Linea Tecnológica</option>
 	            @forelse($lineastecnologicas as $id => $linea)
-		            @if(isset($equipo->lineatecnologicanodo->lineatecnologica->id))
-		            	<option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologicanodo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
+		            @if(isset($equipo->lineatecnologica->id))
+		            	<option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
 		            @else
 		            	<option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
 		            @endif

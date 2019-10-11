@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Nodo;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -15,13 +16,12 @@ DB::listen(function ($query) {
 =            ruta para revisar funcionaliddes de prueba          =
 ===========================================================*/
 
-Route::get('email', function () {
-   
+// Route::get('email', function () {
     // return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
     // return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
     // return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
     // return new App\Mail\User\SendNotificationPassoword(App\User::first(), 'asdafasafasdf');
-});
+// });
 
 Route::get('excel', 'User\AdminController@exportAdminUser');
 

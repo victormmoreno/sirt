@@ -44,14 +44,14 @@
                                                         </div>
                                                         <div class="left">
                                                             <span class="mailbox-title">
-                                                                Tecnoparque nodo {{$mantenimiento->equipo->lineatecnologicanodo->nodo->entidad->nombre}} 
+                                                                Tecnoparque nodo {{$mantenimiento->equipo->nodo->entidad->nombre}} 
                                                             </span>
                                                             <span class="mailbox-author">
-                                                                <b>Dirección: </b> {{$mantenimiento->equipo->lineatecnologicanodo->nodo->direccion}}<br/>
+                                                                <b>Dirección: </b> {{$mantenimiento->equipo->nodo->direccion}}<br/>
                                                                 <b>Correo Electrónco: </b> 
-                                                                {{isset($mantenimiento->equipo->lineatecnologicanodo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->lineatecnologicanodo->nodo->entidad->email_entidad : 'No registra'}}<br/>
+                                                                {{isset($mantenimiento->equipo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->nodo->entidad->email_entidad : 'No registra'}}<br/>
                                                                 <b>Teléfono: </b> 
-                                                                {{isset($mantenimiento->equipo->lineatecnologicanodo->nodo->telefono) ? $mantenimiento->equipo->lineatecnologicanodo->nodo->telefono : 'No registra'}}<br/>
+                                                                {{isset($mantenimiento->equipo->nodo->telefono) ? $mantenimiento->equipo->nodo->telefono : 'No registra'}}<br/>
                                                             </span>
                                                         </div>
                                                         
@@ -59,7 +59,7 @@
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
                                                             <p class="center">Información Mantenimiento de equipo {{$mantenimiento->equipo->nombre}} </p><br/>
-                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->nombre}} </p>
+                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologica->nombre}} </p>
                                                         </span>
 
                                                     </div>
@@ -121,7 +121,15 @@
                                                                                 Linea Tecnológica
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->equipo->lineatecnologicanodo->lineatecnologica->nombre}}
+                                                                              {{$mantenimiento->equipo->lineatecnologica->nombre}}
+                                                                            </p>  
+                                                                        </li>
+                                                                        <li class="collection-item"> 
+                                                                            <span class="title">
+                                                                                Vida util del mantenimiento (Años)
+                                                                            </span>
+                                                                            <p>
+                                                                              {{$mantenimiento->vida_util_mantenimiento}}
                                                                             </p>  
                                                                         </li>
                                                                         <li class="collection-item"> 
@@ -129,7 +137,7 @@
                                                                                 Año de Mantenimiento
                                                                             </span>
                                                                             <p>
-                                                                              {{$mantenimiento->anio_mantenimiento}}
+                                                                              {{$mantenimiento->ultimo_anio_mantenimiento}}
                                                                             </p>  
                                                                         </li>
                                                                     </ul>
@@ -142,6 +150,14 @@
                                                                             </span>
                                                                             <p>
                                                                               {{$mantenimiento->equipo->nombre}}
+                                                                            </p>  
+                                                                        </li>
+                                                                        <li class="collection-item"> 
+                                                                            <span class="title">
+                                                                                Horas de uso al año
+                                                                            </span>
+                                                                            <p>
+                                                                              {{$mantenimiento->horas_uso_anio}}
                                                                             </p>  
                                                                         </li>
                                                                         <li class="collection-item"> 

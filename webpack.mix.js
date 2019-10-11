@@ -51,6 +51,7 @@ mix.scripts([
 
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
+		'resources/app/linea/dinamizador/index.js',
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
 		'resources/app/ideas/administrador/index.js',

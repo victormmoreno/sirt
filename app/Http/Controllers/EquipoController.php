@@ -32,12 +32,7 @@ class EquipoController extends Controller
     {
 
         
-        $nodo    = auth()->user()->dinamizador->nodo->id;
-        $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })->get();
-        // return $equipos;
+       
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
@@ -45,17 +40,17 @@ class EquipoController extends Controller
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo    = auth()->user()->dinamizador->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
+                                ->whereHas('nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })->get();
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea   = auth()->user()->gestor->lineatecnologica->id;
                     $nodo    = auth()->user()->gestor->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
+                                ->whereHas('nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })
-                                ->whereHas('lineatecnologicanodo.lineatecnologica', function($query) use( $linea ){
+                                ->whereHas('lineatecnologica', function($query) use( $linea ){
                                     $query->where('id', $linea);
                                 })->get();
                 }
@@ -76,7 +71,7 @@ class EquipoController extends Controller
                         return '$ ' . number_format($data->costo_adquisicion);
                     })
                     ->editColumn('nombrelinea', function ($data) {
-                        return $data->lineatecnologicanodo->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologicanodo->lineatecnologica->nombre;
+                        return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
                     })
 
                     ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
@@ -120,7 +115,7 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
+                                ->whereHas('nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })->get();
 
@@ -140,7 +135,7 @@ class EquipoController extends Controller
                         return '$ ' . number_format($data->costo_adquisicion);
                     })
                     ->editColumn('nombrelinea', function ($data) {
-                        return $data->lineatecnologicanodo->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologicanodo->lineatecnologica->nombre;
+                        return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
                     })
 
                     ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
@@ -166,10 +161,10 @@ class EquipoController extends Controller
         
                 $nodo    = auth()->user()->dinamizador->nodo->id;
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('lineatecnologicanodo.nodo', function($query) use($nodo){
+                                ->whereHas('nodo', function($query) use($nodo){
                                     $query->where('id', $nodo);
                                 })
-                                ->whereHas('lineatecnologicanodo.lineatecnologica', function($query) use( $linea ){
+                                ->whereHas('lineatecnologica', function($query) use( $linea ){
                                     $query->where('id', $linea);
                                 })->get();
 

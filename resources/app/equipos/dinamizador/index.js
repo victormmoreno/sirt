@@ -39,10 +39,16 @@ $(document).ready(function() {
             width: '15%'
         },
         {
+            data: 'horas_uso_anio',
+            name: 'horas_uso_anio',
+            width: '15%'
+        },
+        {
             data: 'anio_compra',
             name: 'anio_compra',
             width: '15%'
         },
+        
         {
             data: 'anio_fin_depreciacion',
             name: 'anio_fin_depreciacion',

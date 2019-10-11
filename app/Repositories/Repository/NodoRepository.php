@@ -6,6 +6,7 @@ use App\Models\Centro;
 use App\Models\CostoAdministrativo;
 use App\Models\Entidad;
 use App\Models\LineaTecnologica;
+use App\Models\LineaTecnologicaNodo;
 use App\Models\Nodo;
 use App\Models\Regional;
 use Carbon\Carbon;
@@ -96,7 +97,7 @@ class NodoRepository
                 'telefono'    => $request->input('txttelefono'),
             ]);
 
-            $porcentaje = 100 / count($request->get('txtlineas'));
+            $porcentaje = 100 / count($request->get('txtlineas'))  ;
 
             $syncDataLinea = array();
                 foreach ($request->get('txtlineas') as $id => $value) {
@@ -147,7 +148,19 @@ class NodoRepository
                 'telefono'  => $request->input('txttelefono'),
             ]);
 
-            $entidadNodo->nodo->lineas()->sync($request->get('txtlineas'));
+            $porcentaje =  100 / count($request->get('txtlineas'));
+
+           
+            $syncDataLinea = array();
+                foreach ($request->get('txtlineas') as $id => $value) {
+                        
+                    $syncDataLinea[$id] = array('linea_tecnologica_id' => $value,  'porcentaje_linea' =>$porcentaje);
+                    
+
+                }
+
+            $entidadNodo->nodo->lineas()->sync($syncDataLinea, true);
+            
 
             DB::commit();
             return true;

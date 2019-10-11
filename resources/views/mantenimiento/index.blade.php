@@ -56,8 +56,8 @@
                                     <thead>
                                         <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
-                                            <th width="15%">Año</th>
-                                            <th width="15%">valor</th>
+                                            <th width="15%">Año Mantenimiento</th>
+                                            <th width="15%">valor Mantenimiento</th>
                                             <th width="15%">Detalle</th>
                                     </thead>
                     
@@ -91,8 +91,8 @@
                                             <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
                                             
-                                            <th width="15%">Año</th>
-                                            <th width="15%">valor</th>
+                                            <th width="15%">Año Mantenimiento</th>
+                                            <th width="15%">valor Mantenimiento</th>
                                             <th width="15%">Detalle</th>
                                             <th width="15%">Editar</th>
                                         </thead>
@@ -117,8 +117,8 @@
                                         <thead>
                                             <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
-                                            <th width="15%">Año</th>
-                                            <th width="15%">valor</th>
+                                            <th width="15%">Año Mantenimiento</th>
+                                            <th width="15%">valor Mantenimiento</th>
                                             <th width="15%">Detalle</th>
                                             
                                         </thead>

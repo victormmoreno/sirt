@@ -17,7 +17,8 @@ class Equipo extends Model
      * @var array
      */
     protected $fillable = [
-        'lineatecnologica_nodo_id',
+        'nodo_id',
+        'lineatecnologica_id',
         'referencia',
         'nombre',
         'marca',
@@ -32,14 +33,15 @@ class Equipo extends Model
      * @var array
      */
     protected $casts = [
-        'lineatecnologica_nodo_id' => 'integer',
+        'nodo_id'             => 'integer',
+        'lineatecnologica_id' => 'integer',
         'referencia'          => 'string',
         'nombre'              => 'string',
         'marca'               => 'string',
         'costo_adquisicion'   => 'string',
         'vida_util'           => 'integer',
         'anio_compra'         => 'year',
-        'horas_uso_anio'         => 'integer',
+        'horas_uso_anio'      => 'integer',
     ];
 
     /**
@@ -137,16 +139,19 @@ class Equipo extends Model
         return $this->hasMany(EquipoMantenimiento::class, 'equipo_id', 'id');
     }
 
-   
-
-    public function lineatecnologicanodo()
+    public function lineatecnologica()
     {
-        return $this->belongsTo(LineaTecnologicaNodo::class, 'lineatecnologica_nodo_id', 'id');
+        return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
+    }
+
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
     public function usoinfraestructuras()
     {
-        return $this->belongsToMany(UsoInfraestructura::class, 'equipo_uso', 'usoinfraestructura_id','equipo_id')
+        return $this->belongsToMany(UsoInfraestructura::class, 'equipo_uso', 'usoinfraestructura_id', 'equipo_id')
             ->withTimestamps()
             ->withPivot([
                 'tiempo',
@@ -154,6 +159,5 @@ class Equipo extends Model
                 'costo_administrativo',
             ]);
     }
-
 
 }

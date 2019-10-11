@@ -27,27 +27,38 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <div class="col s12 m12 l10">
-                                    <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Lineas {{ config('app.name')}}
-                                        </span>
+                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                    <div class="col s12 m12 l10">
+                                        <div class="center-align">
+                                            <span class="card-title center-align">
+                                                Lineas {{ config('app.name')}}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col s12 l2">
-                                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nueva Linea" href="{{route('lineas.create')}}">
-                                            <i class="material-icons">
-                                                dns
-                                            </i>
-                                        </a>
+                                    <div class="col s12 l2">
+                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                                            <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nueva Linea" href="{{route('lineas.create')}}">
+                                                <i class="material-icons">
+                                                    dns
+                                                </i>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                    <div class="col s12 m12 l12">
+                                        <div class="center-align">
+                                            <span class="card-title center-align">
+                                                Lineas Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                            </span>
+                                        </div>
+                                    </div>  
+                                @endif
                             </div>
                             <div class="divider">
                             </div>  
                             <br>
-                                <table class="display responsive-table" id="linea_table">
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                <table class="display responsive-table" id="linea_administrador_table">
                                     <thead>
                                         <th width="15%">Abreviatura</th>
                                         <th width="30%">Linea</th>
@@ -55,8 +66,17 @@
                                         <th width="40%">Detalles</th>
                                         <th width="15%">Editar</th>
                                     </thead>
-                    
                                 </table>
+                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                <table class="display responsive-table" id="linea_dinamizador_table">
+                                    <thead>
+                                        <th width="15%">Abreviatura</th>
+                                        <th width="30%">Linea</th>
+                                        <th width="40%">Descripcion</th>
+                                        <th width="15%">Editar</th>
+                                    </thead>
+                                </table>
+                            @endif
                         </div>
                     </div>
                 </div>

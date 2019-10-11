@@ -153,8 +153,10 @@ class LineaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(LineaTecnologica $linea)
+    public function edit($linea)
     {
+       $linea =  LineaTecnologica::with(['lineastecnologicasnodos'])->findOrFailLinea($linea);
+       
         $this->authorize('edit', $linea);
         return view('lineas.edit', compact('linea'));
     }
