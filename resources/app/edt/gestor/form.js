@@ -23,7 +23,6 @@ divFechaCierreEdt = $('#divFechaCierreEdt');
 divFechaCierreEdt.hide();
 
 function actiarFechaFinDeLaEdt() {
-  console.log('hello');
   if ( $('#txtestado').is(':checked') ) {
     divFechaCierreEdt.show();
   } else {

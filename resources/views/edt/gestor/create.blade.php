@@ -11,7 +11,7 @@
           <div class="card">
             <div class="card-content">
               <div class="row">
-                <center><span class="card-title center-align">Nueva Edt</span> <i class="small material-icons prefix">record_voice_over</i></center>
+                <center><span class="card-title center-align">Nueva Edt</span> <i class="small material-icons prefix">hearing</i></center>
                 <form method="post" id="formEdtCreate" action="{{route('edt.store')}}">
                   @include('edt.gestor.form', [
                     'btnText' => 'Registrar'
