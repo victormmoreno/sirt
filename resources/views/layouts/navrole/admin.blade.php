@@ -52,6 +52,11 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('edt') }}">record_voice_over</i>EDT's
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('materiales')}}">
+  <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('charla')}}">
   <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas

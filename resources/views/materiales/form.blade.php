@@ -24,7 +24,7 @@
     
     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
     <div class="row">
-		<div class="input-field col s12 m12 l12">
+		<div class="input-field col s12 m6 l6">
 		    <label class="active" for="txtlineatecnologica">Linea Tecnológica <span class="red-text">*</span></label>
 		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" >
 	            <option value="">Seleccione Linea Tecnológica</option>
@@ -44,8 +44,28 @@
             </label>
             @enderror
 		</div>
-		
+		<div class="input-field col s12 m6 l6">
+	      	<input type="text" name="txtfecha" id="txtfecha" class="datepicker" value="{{ isset($material) ? $material->fecha: old('txtfecha')}}"/>
+	      	<label class="active" for="txtfecha">Fecha Adquisición<span class="red-text">*</span></label>
+	      	@error('txtfecha')
+            <label class="error" for="txtfecha" id="txtfecha-error">
+                {{ $message }}
+            </label>
+            @enderror
+	    </div>
 	</div>
+	@elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+		<div class="row">
+			<div class="input-field col s12 m12 l12">
+		      	<input type="text" name="txtfecha" id="txtfecha" class="datepicker" value="{{ isset($material) ? $material->fecha->format('Y-m-d'): old('txtfecha')}}"/>
+		      	<label class="active" for="txtfecha">Fecha Adquisición<span class="red-text">*</span></label>
+		      	@error('txtfecha')
+	            <label class="error" for="txtfecha" id="txtfecha-error">
+	                {{ $message }}
+	            </label>
+	            @enderror
+		    </div>
+		</div>
 	@endif
 
 	<div class="row">
@@ -54,8 +74,8 @@
 		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txttipomaterial" id="txttipomaterial" >
 	            <option value="">Seleccione Tipo Material</option>
 	            @forelse($tiposmateriales as $id => $tipomaterial)
-		            @if(isset($material->lineatecnologica->id))
-		            	<option value="{{$id}}" {{ old('txttipomaterial', $material->lineatecnologica->id) == $id ? 'selected':'' }}>{{$tipomaterial}}</option>
+		            @if(isset($material->tipomaterial->id))
+		            	<option value="{{$id}}" {{ old('txttipomaterial', $material->tipomaterial->id) == $id ? 'selected':'' }}>{{$tipomaterial}}</option>
 		            @else
 		            	<option value="{{$id}}" {{ old('txttipomaterial') == $id ? 'selected':'' }}>{{$tipomaterial}}</option>
 		            @endif
@@ -71,11 +91,11 @@
 		</div>
 		<div class="input-field col s12 m6 l6">
 		    <label class="active" for="txtcategoria">Categoria Material <span class="red-text">*</span></label>
-		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtcategoria" id="txtcategoria" >
+		    <select class="js-states browser-default select2Tags " tabindex="-1" style="width: 100%" name="txtcategoria" id="txtcategoria" >
 	            <option value="">Seleccione Categoria Material</option>
 	            @forelse($categoriasMateriales as $id => $categoriaMaterial)
-		            @if(isset($material->lineatecnologica->id))
-		            	<option value="{{$id}}" {{ old('txtcategoria', $material->lineatecnologica->id) == $id ? 'selected':'' }}>{{$categoriaMaterial}}</option>
+		            @if(isset($material->categoriamaterial->id))
+		            	<option value="{{$id}}" {{ old('txtcategoria', $material->categoriamaterial->id) == $id ? 'selected':'' }}>{{$categoriaMaterial}}</option>
 		            @else
 		            	<option value="{{$id}}" {{ old('txtcategoria') == $id ? 'selected':'' }}>{{$categoriaMaterial}}</option>
 		            @endif
@@ -93,11 +113,11 @@
 	<div class="row">
 		<div class="input-field col s12 m6 l6">
 		    <label class="active" for="txtpresentacion">Presentación <span class="red-text">*</span></label>
-		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtpresentacion" id="txtpresentacion" >
+		    <select class="js-states browser-default select2Tags " tabindex="-1" style="width: 100%" name="txtpresentacion" id="txtpresentacion" >
 	            <option value="">Seleccione Presentación</option>
 	            @forelse($presentaciones as $id => $presentacion)
-		            @if(isset($material->lineatecnologica->id))
-		            	<option value="{{$id}}" {{ old('txtpresentacion', $material->lineatecnologica->id) == $id ? 'selected':'' }}>{{$presentacion}}</option>
+		            @if(isset($material->presentacion->id))
+		            	<option value="{{$id}}" {{ old('txtpresentacion', $material->presentacion->id) == $id ? 'selected':'' }}>{{$presentacion}}</option>
 		            @else
 		            	<option value="{{$id}}" {{ old('txtpresentacion') == $id ? 'selected':'' }}>{{$presentacion}}</option>
 		            @endif
@@ -116,8 +136,8 @@
 		    <select class="js-states browser-default select2Tags" tabindex="-1" style="width: 100%" name="txtmedida" id="txtmedida" >
 	            <option value="">Seleccione Medida</option>
 	            @forelse($medidas as $id => $medida)
-		            @if(isset($material->lineatecnologica->id))
-		            	<option value="{{$id}}" {{ old('txtmedida', $material->lineatecnologica->id) == $id ? 'selected':'' }}>{{$medida}}</option>
+		            @if(isset($material->medida->id))
+		            	<option value="{{$id}}" {{ old('txtmedida', $material->medida->id) == $id ? 'selected':'' }}>{{$medida}}</option>
 		            @else
 		            	<option value="{{$id}}" {{ old('txtmedida') == $id ? 'selected':'' }}>{{$medida}}</option>
 		            @endif
@@ -134,8 +154,9 @@
 	</div>
 	
 	<div class="row">
+		
 		<div class="input-field col s12 m3 l2">
-	      	<input type="text" name="txtcantidad" id="txtcantidad" value="{{ isset($material) ? $material->referencia: old('txtcantidad')}}"/>
+	      	<input type="text" name="txtcantidad" id="txtcantidad" value="{{ isset($material) ? $material->cantidad: old('txtcantidad')}}"/>
 	      	<label class="active" for="txtcantidad">Cantidad <span class="red-text">*</span></label>
 	      	@error('txtcantidad')
             <label class="error" for="txtcantidad" id="txtcantidad-error">
@@ -153,7 +174,7 @@
             @enderror
 	    </div>
 		<div class="input-field col s12 m3 l4">
-	      	<input type="text" name="txtvalorcompra" id="txtvalorcompra" value="{{ isset($material) ? $material->marca: old('txtvalorcompra')}}"/>
+	      	<input type="text" name="txtvalorcompra" id="txtvalorcompra" value="{{ isset($material) ? $material->valor_compra: old('txtvalorcompra')}}"/>
 	      	<label class="active" for="txtvalorcompra">Valor total compra <span class="red-text">*</span></label>
 	      	@error('txtvalorcompra')
             <label class="error" for="txtvalorcompra" id="txtvalorcompra-error">
@@ -164,8 +185,17 @@
 		 
 	</div>
 	<div class="row">
-		<div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtmarca" id="txtmarca" value="{{ isset($material) ? $material->horas_uso_anio: old('txtmarca')}}"/>
+		<div class="input-field col s12 m2 l2">
+	      	<input type="text" name="txthorasuso" id="txthorasuso" value="{{ isset($material) ? $material->horas_uso_anio: old('txthorasuso')}}"/>
+	      	<label class="active" for="txthorasuso">Horas de uso promedio al año <span class="red-text">*</span></label>
+	      	@error('txthorasuso')
+            <label class="error" for="txthorasuso" id="txthorasuso-error">
+                {{ $message }}
+            </label>
+            @enderror
+	    </div>
+		<div class="input-field col s12 m5 l5">
+	      	<input type="text" name="txtmarca" id="txtmarca" value="{{ isset($material) ? $material->marca: old('txtmarca')}}"/>
 	      	<label class="active" for="txtmarca">Marca <span class="red-text">*</span></label>
 	      	@error('txtmarca')
             <label class="error" for="txtmarca" id="txtmarca-error">
@@ -173,8 +203,8 @@
             </label>
             @enderror
 	    </div>
-		<div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtproveedor" id="txtproveedor" value="{{ isset($material) ? $material->vida_util: old('txtproveedor')}}"/>
+		<div class="input-field col s12 m5 l5">
+	      	<input type="text" name="txtproveedor" id="txtproveedor" value="{{ isset($material) ? $material->proveedor: old('txtproveedor')}}"/>
 	      	<label class="active" for="txtproveedor">Proveedor <span class="red-text">*</span></label>
 	      	@error('txtproveedor')
             <label class="error" for="txtproveedor" id="txtproveedor-error">

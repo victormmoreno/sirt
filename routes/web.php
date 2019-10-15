@@ -218,6 +218,8 @@ Route::resource('equipos', 'EquipoController', [
 =            seccion para los materiales            =
 ===============================================*/
 
+Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMaterialesPorNodo')
+            ->name('material.getmaterialespornodo');
 
 Route::resource('materiales', 'MaterialController', [
         'as' => 'materiales', 

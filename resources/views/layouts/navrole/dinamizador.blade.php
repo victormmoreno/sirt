@@ -3,6 +3,11 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
   </a>
 </li>
+<li class="{!! setActiveRoute('costos-administrativos') !!}">
+  <a class="waves-effect waves-grey {!! setActiveRouteActivePage('costos-administrativos') !!}" href="{{route('costoadministrativo.index')}}">
+  <i class="material-icons {!! setActiveRouteActiveIcon('costos-administrativos') !!}">settings_input_svideo</i>Costos Administrativos
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('usuario')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}">
     <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
@@ -23,11 +28,11 @@
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">record_voice_over</i>EDT's
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">settings_input_svideo</i>Costos Administrativos
+<li class="no-padding {{setActiveRoute('materiales')}}">
+  <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
   </a>
-</li> --}}
+</li>
 <li class="no-padding {{setActiveRoute('charla')}}">
   <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas

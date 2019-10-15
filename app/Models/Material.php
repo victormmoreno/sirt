@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Medida;
+use App\Models\CategoriaMaterial;
+use App\Models\Presentacion;
 
 class Material extends Model
 {
@@ -21,12 +23,18 @@ class Material extends Model
         'categoria_material_id',
         'presentacion_id',
         'medida_id',
+        'fecha',
         'codigo_material',
         'nombre',
         'cantidad',
         'valor_compra',
+        'horas_uso_anio',
         'proveedor',
         'marca',
+    ];
+
+    protected $dates = [
+        'fecha',
     ];
 
     /**
@@ -41,10 +49,12 @@ class Material extends Model
         'categoria_material_id'  => 'integer',
         'presentacion_id'  => 'integer',
         'medida_id'  => 'integer',
+        'fecha'  => 'date:Y-m-d',
         'codigo_material'  => 'string',
         'nombre'  => 'string',
         'cantidad'  => 'float',
         'valor_compra'  => 'float',
+        'horas_uso_anio'  => 'integer',
         'proveedor'  => 'sgtring', 
         'marca'  => 'string',
     ];
@@ -104,7 +114,17 @@ class Material extends Model
 
     public function setMedidaIdAttribute($medida_id)
     {
-        $this->attributes['medida_id'] = Medida::find($medida_id) ? medida_id : Medida::create(['nombre' =>  $medida_id])->id;
+        $this->attributes['medida_id'] = Medida::find($medida_id) ? $medida_id : Medida::create(['nombre' =>  $medida_id])->id;
+    }
+
+    public function setCategoriaMaterialIdAttribute($categoria_material_id)
+    {
+        $this->attributes['categoria_material_id'] = CategoriaMaterial::find($categoria_material_id) ? $categoria_material_id : CategoriaMaterial::create(['nombre' =>  $categoria_material_id])->id;
+    }
+
+    public function setPresentacionIdAttribute($presentacion_id)
+    {
+        $this->attributes['presentacion_id'] = Presentacion::find($presentacion_id) ? $presentacion_id : Presentacion::create(['nombre' =>  $presentacion_id])->id;
     }
 
     public function getNombreAttribute($nombre)
@@ -125,6 +145,16 @@ class Material extends Model
     public function setCantidadAttribute($cantidad)
     {
         $this->attributes['cantidad'] = trim($cantidad);
+    }
+
+    public function getHorasUsoAnioAttribute($horas_uso_anio)
+    {
+        return trim($horas_uso_anio);
+    }
+
+    public function setHorasUsoAnioAttribute($horas_uso_anio)
+    {
+        $this->attributes['horas_uso_anio'] = trim($horas_uso_anio);
     }
 
     public function getProveedorAttribute($proveedor)

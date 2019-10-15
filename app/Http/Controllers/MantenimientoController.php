@@ -121,7 +121,7 @@ class MantenimientoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
                 $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
-                        ->whereHas('equipo.lineatecnologicanodo.nodo', function($query) use($nodo){
+                        ->whereHas('equipo.nodo', function($query) use($nodo){
                             $query->where('id',$nodo);
                         })
                         ->get();
@@ -216,7 +216,7 @@ class MantenimientoController extends Controller
     public function show($id)
     {
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
-        // return $mantenimiento;
+
         $this->authorize('show', $mantenimiento);
         return view('mantenimiento.show', [
             'mantenimiento' => $mantenimiento,

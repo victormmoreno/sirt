@@ -24,6 +24,11 @@
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">record_voice_over</i>EDT's
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('materiales')}}">
+  <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
