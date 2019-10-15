@@ -23,7 +23,7 @@ class CreateGestorUsoTable extends Migration
             $table->unsignedBigInteger('usoinfraestructura_id');
             $table->string('asesoria_directa',10)->default(0);
             $table->string('asesoria_indirecta',10)->default(0);
-            $table->float('costo_asesoria')->default(0);
+            $table->float('costo_asesoria',30,2)->default(0);
             $table->timestamps();
 
             $table->index(["gestor_id"], 'fk_gestor_uso_gestor1_idx');

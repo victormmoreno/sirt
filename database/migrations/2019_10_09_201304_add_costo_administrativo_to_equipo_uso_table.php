@@ -15,7 +15,7 @@ class AddCostoAdministrativoToEquipoUsoTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->float('costo_administrativo')->default(0)->after('costo_equipo');
+            $table->float('costo_administrativo',30,2)->default(0)->after('costo_equipo');
         });
     }
 

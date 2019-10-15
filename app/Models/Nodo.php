@@ -100,6 +100,11 @@ class Nodo extends Model
             ]);
     }
 
+    public function materiales()
+    {
+        return $this->hasMany(Material::class, 'nodo_id', 'id');
+    }
+
     /**
      * Devolver relacion entre actividades y nodo
      * @author julian londoño

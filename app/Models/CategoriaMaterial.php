@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TipoMaterial extends Model
+class CategoriaMaterial extends Model
 {
-    protected $table = 'tiposmateriales';
+     protected $table = 'categoria_material';
 
     /**
      * The attributes that are mass assignable.
@@ -29,7 +29,7 @@ class TipoMaterial extends Model
 
     public function materiales()
 	{
-	   return $this->hasMany(Material::class, 'tipomaterial_id', 'id');
+	   return $this->hasMany(Material::class, 'categoria_material_id', 'id');
 	}
 
 
@@ -44,14 +44,15 @@ class TipoMaterial extends Model
     }
 
     /**
-     * Execute a query for select a all tipos materiales.
+     * Execute a query for select a all categorias of materiales.
      *
      * @param  string  $orderBy
      * @return mixed|static
      */
-    public function scopeSelectAllTiposMateriales($query, string $orderBy)
+    public function scopeSelectAllCategoriasMateriales($query, string $orderBy)
     {
         return $query->select('nombre','id')
-        ->orderBy($orderBy); 
+        ->orderBy($orderBy);
+        
     }
 }

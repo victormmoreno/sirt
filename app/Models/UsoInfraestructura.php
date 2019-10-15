@@ -80,6 +80,16 @@ class UsoInfraestructura extends Model
             ]);
     }
 
+    public function usomateriales()
+    {
+        return $this->belongsToMany(Material::class, 'material_uso', 'usoinfraestructura_id','material_id')
+            ->withTimestamps()
+            ->withPivot([
+                'costo_material',
+                'unidad',
+            ]);
+    }
+
     public function usotalentos()
     {
         return $this->belongsToMany(Talento::class, 'uso_talentos', 'usoinfraestructura_id', 'talento_id')

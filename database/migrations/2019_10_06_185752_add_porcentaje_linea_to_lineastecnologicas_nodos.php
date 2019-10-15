@@ -16,7 +16,7 @@ class AddPorcentajeLineaToLineastecnologicasNodos extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->float('porcentaje_linea')->default(0)->after('nodo_id');
+            $table->float('porcentaje_linea',20,2)->default(0)->after('nodo_id');
         });
     }
 

@@ -17,9 +17,9 @@ class CreateMaterialUsoTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedInteger('usoinfraestructura_id');
+            $table->unsignedBigInteger('usoinfraestructura_id');
             $table->unsignedInteger('material_id');
-            $table->float('costo_material');
+            $table->float('costo_material',30,2);
             $table->float('unidad');
             $table->timestamps();
 
@@ -31,7 +31,7 @@ class CreateMaterialUsoTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('material_id', 'fk_lineatecnologica_materiales1_idx')
+            $table->foreign('material_id', 'fk_material_material_uso1_idx')
                 ->references('id')->on('materiales')
                 ->onDelete('no action')
                 ->onUpdate('no action');

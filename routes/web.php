@@ -214,6 +214,34 @@ Route::resource('equipos', 'EquipoController', [
 
 /*=====  End of seccion para los equipo  ======*/
 
+/*===============================================
+=            seccion para los materiales            =
+===============================================*/
+
+
+Route::resource('materiales', 'MaterialController', [
+        'as' => 'materiales', 
+        'except' => [
+            'destroy',
+            // 'show',
+        ]
+    ])->names([
+        'index'   => 'material.index',
+        'create'  => 'material.create',
+        'store'   => 'material.store',
+        'show'    => 'material.show',
+        'update'  => 'material.update',
+        'edit'    => 'material.edit',
+        'destroy' => 'material.destroy',
+    ])
+    ->parameters([
+        'materiales' => 'id',
+    ]);
+
+/*=====  End of seccion para los materiales  ======*/
+
+
+
 /*========================================================
 =            seccion para los mantenimientos             =
 ========================================================*/

@@ -82,6 +82,11 @@ class LineaTecnologica extends Model
         return $this->hasMany(Equipo::class, 'lineatecnologica_id', 'id');
     }
 
+    public function materiales()
+    {
+        return $this->hasMany(Material::class, 'lineatecnologica_id', 'id');
+    }
+
     /*=====  End of relaciones elquent  ======*/
 
     public function setSlugAttribute($nombre)

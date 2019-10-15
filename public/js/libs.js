@@ -25941,6 +25941,10 @@ $(document).ready(function() {
     $('.select2').select2({
       language: "es"
     });
+    $('.select2Tags').select2({
+        tags: true,
+        language: "es"
+    });
     $('.datepicker').pickadate({
         selectMonths: true,
         selectYears: 60,
@@ -26033,3 +26037,5 @@ function checkSubmit() {
     $('button[type="submit"]').attr('disabled', 'disabled');
     return true;
 }
+
+

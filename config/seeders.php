@@ -11,7 +11,6 @@ return [
     'local'      => [
         ['name' => FasesTableSeeder::class, 'callable' => true],
         ['name' => TiposEdtTableSeeder::class, 'callable' => true],
-        ['name' => TiposMaterialesTableSeeder::class, 'callable' => true],
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
         ['name' => TiposVisitanteTableSeeder::class, 'callable' => true],
         ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],
@@ -47,6 +46,11 @@ return [
         ['name' => ServidorVideosTableSeeder::class, 'callable' => true],
         ['name' => LaboratoriosTableSeeder::class, 'callable' => true],
         ['name' => EquiposTableSeeder::class, 'callable' => true],
+        ['name' => PresentacionesTableSeeder::class, 'callable' => true],
+        ['name' => MedidasTableSeeder::class, 'callable' => true],
+        ['name' => CategoriaMaterialTableSeeder::class, 'callable' => true],
+        ['name' => TiposMaterialesTableSeeder::class, 'callable' => true],
+        ['name' => MaterialesTableSeeder::class, 'callable' => true],
 
     ],
 ];

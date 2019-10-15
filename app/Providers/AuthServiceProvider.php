@@ -8,6 +8,7 @@ use App\Models\EquipoMantenimiento;
 use App\Models\Laboratorio;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
+use App\Models\Material;
 use App\Models\UsoInfraestructura;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Equipo\EquipoPolicy;
@@ -17,6 +18,7 @@ use App\Policies\Mantenimiento\MantenimientoPolicy;
 use App\Policies\Nodo\NodoPolicy;
 use App\Policies\User\UserPolicy;
 use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
+use App\Policies\Material\MaterialPolicy;
 use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -37,6 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         CostoAdministrativo::class => CostoAdministrativoPolicy::class,
         Equipo::class              => EquipoPolicy::class,
         EquipoMantenimiento::class => MantenimientoPolicy::class,
+        Material::class => MaterialPolicy::class,
     ];
 
     /**

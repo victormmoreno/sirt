@@ -16,7 +16,7 @@ class AddCostoEquipoToEquipoUsoTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->float('costo_equipo')->default(0)->after('tiempo');
+            $table->float('costo_equipo',30,2)->default(0)->after('tiempo');
         });
     }
 

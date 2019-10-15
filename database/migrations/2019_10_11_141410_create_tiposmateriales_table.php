@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMedidasTable extends Migration
+class CreateTiposmaterialesTable extends Migration
 {
-    public $tableName = 'medidas';
+    public $tableName = 'tiposmateriales';
     /**
      * Run the migrations.
      *
@@ -17,7 +17,7 @@ class CreateMedidasTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('nombre', 45)->unique();
+            $table->string('nombre',45)->unique();
             $table->timestamps();
         });
     }
