@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Medida;
 use App\Models\CategoriaMaterial;
+use App\Models\Medida;
 use App\Models\Presentacion;
+use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
@@ -43,22 +43,21 @@ class Material extends Model
      * @var array
      */
     protected $casts = [
-        'nodo_id' => 'integer',
-        'lineatecnologica_id'  => 'integer',
-        'tipomaterial_id'  => 'integer',
-        'categoria_material_id'  => 'integer',
-        'presentacion_id'  => 'integer',
-        'medida_id'  => 'integer',
-        'fecha'  => 'date:Y-m-d',
-        'codigo_material'  => 'string',
-        'nombre'  => 'string',
-        'cantidad'  => 'float',
-        'valor_compra'  => 'float',
-        'horas_uso_anio'  => 'integer',
-        'proveedor'  => 'sgtring', 
-        'marca'  => 'string',
+        'nodo_id'               => 'integer',
+        'lineatecnologica_id'   => 'integer',
+        'tipomaterial_id'       => 'integer',
+        'categoria_material_id' => 'integer',
+        'presentacion_id'       => 'integer',
+        'medida_id'             => 'integer',
+        'fecha'                 => 'date:Y-m-d',
+        'codigo_material'       => 'string',
+        'nombre'                => 'string',
+        'cantidad'              => 'float',
+        'valor_compra'          => 'float',
+        'horas_uso_anio'        => 'integer',
+        'proveedor'             => 'sgtring',
+        'marca'                 => 'string',
     ];
-
 
     public function nodo()
     {
@@ -90,7 +89,6 @@ class Material extends Model
         return $this->belongsTo(Medida::class, 'medida_id', 'id');
     }
 
-
     public function usoinfraestructuramaterial()
     {
         return $this->belongsToMany(UsoInfraestructura::class, 'material_uso', 'material_id', 'usoinfraestructura_id')
@@ -100,7 +98,6 @@ class Material extends Model
                 'unidad',
             ]);
     }
-
 
     public function getCodigoMaterialAttribute($codigo_material)
     {
@@ -114,17 +111,17 @@ class Material extends Model
 
     public function setMedidaIdAttribute($medida_id)
     {
-        $this->attributes['medida_id'] = Medida::find($medida_id) ? $medida_id : Medida::create(['nombre' =>  $medida_id])->id;
+        $this->attributes['medida_id'] = Medida::find($medida_id) ? $medida_id : Medida::create(['nombre' => $medida_id])->id;
     }
 
     public function setCategoriaMaterialIdAttribute($categoria_material_id)
     {
-        $this->attributes['categoria_material_id'] = CategoriaMaterial::find($categoria_material_id) ? $categoria_material_id : CategoriaMaterial::create(['nombre' =>  $categoria_material_id])->id;
+        $this->attributes['categoria_material_id'] = CategoriaMaterial::find($categoria_material_id) ? $categoria_material_id : CategoriaMaterial::create(['nombre' => $categoria_material_id])->id;
     }
 
     public function setPresentacionIdAttribute($presentacion_id)
     {
-        $this->attributes['presentacion_id'] = Presentacion::find($presentacion_id) ? $presentacion_id : Presentacion::create(['nombre' =>  $presentacion_id])->id;
+        $this->attributes['presentacion_id'] = Presentacion::find($presentacion_id) ? $presentacion_id : Presentacion::create(['nombre' => $presentacion_id])->id;
     }
 
     public function getNombreAttribute($nombre)
@@ -159,21 +156,52 @@ class Material extends Model
 
     public function getProveedorAttribute($proveedor)
     {
-        return ucwords(mb_strtolower(trim($proveedor),'UTF-8'));
+        return ucwords(mb_strtolower(trim($proveedor), 'UTF-8'));
     }
 
     public function setProveedorAttribute($proveedor)
     {
-        $this->attributes['proveedor'] = ucwords(mb_strtolower(trim($proveedor),'UTF-8'));
+        $this->attributes['proveedor'] = ucwords(mb_strtolower(trim($proveedor), 'UTF-8'));
     }
 
     public function getMarcaAttribute($marca)
     {
-        return ucwords(mb_strtolower(trim($marca),'UTF-8'));
+        return ucwords(mb_strtolower(trim($marca), 'UTF-8'));
     }
 
     public function setMarcaAttribute($marca)
     {
-        $this->attributes['marca'] = ucwords(mb_strtolower(trim($marca),'UTF-8'));
+        $this->attributes['marca'] = ucwords(mb_strtolower(trim($marca), 'UTF-8'));
     }
+
+    /**
+     * devolve consulta de materiales por nodo.
+     *
+     * @return array
+     * @author devjul
+     */
+    public function scopeMaterialesForNodo($query, $nodo)
+    {
+
+        $query->whereHas('nodo', function ($q) use ($nodo) {
+            $q->where('id', $nodo);
+        });
+
+    }
+
+    /**
+     * devolve consulta de materiales por linea.
+     *
+     * @return array
+     * @author devjul
+     */
+    public function scopeMaterialesForLineaTecnologica($query, $lineatecnologica)
+    {
+
+        $query->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+            $query->where('id', $lineatecnologica);
+        });
+
+    }
+
 }

@@ -85,10 +85,6 @@ class Nodo extends Model
         return $this->hasMany(Equipo::class, 'nodo_id', 'id');
     }
 
-    public function lineastecnologicasnodos()
-    {
-        return $this->hasMany(LineaTecnologicaNodo::class, 'nodo_id', 'id');
-    }
 
     public function costoadministrativonodo()
     {

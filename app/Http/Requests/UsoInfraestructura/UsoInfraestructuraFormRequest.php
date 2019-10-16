@@ -27,12 +27,14 @@ class UsoInfraestructuraFormRequest extends FormRequest
         return [
             'txtfecha'                  => 'required|date_format:"Y-m-d"',
             'txtlinea'                  => 'required',
-            // 'txtgestor'                 => 'required',
+
             'txttipousoinfraestructura' => 'required',
             'txtactividad'              => 'required',
             'txtdescripcion'            => 'nullable|max:2000',
             'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
             'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
+            // 'asesoriadirecta'           => 'required|numeric|min:0|max:99|between:0,99.9|min:0.5',
+            // 'asesoriaindirecta'         => 'required|numeric|min:0|max:99|between:0,99.9|min:0.5',
 
         ];
     }

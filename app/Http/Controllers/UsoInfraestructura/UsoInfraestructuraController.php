@@ -5,11 +5,10 @@ namespace App\Http\Controllers\UsoInfraestructura;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\Articulacion;
-use App\Models\CostoAdministrativo;
 use App\Models\Edt;
-use App\Models\Equipo;
 use App\Models\Gestor;
 use App\Models\LineaTecnologica;
+use App\Models\Material;
 use App\Models\Nodo;
 use App\Models\Proyecto;
 use App\Models\UsoInfraestructura;
@@ -185,115 +184,102 @@ class UsoInfraestructuraController extends Controller
     {
         return [
 
-            'actividad'                                                                      => function ($query) {
+            'actividad'                                                     => function ($query) {
                 $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
             },
-            'actividad.nodo'                                                                 => function ($query) {
+            'actividad.nodo'                                                => function ($query) {
                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
             },
-            'actividad.nodo.entidad'                                                         => function ($query) {
+            'actividad.nodo.entidad'                                        => function ($query) {
                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
             },
             'actividad.nodo.entidad.ciudad.departamento',
-            'actividad.articulacion_proyecto'                                                => function ($query) {
+            'actividad.articulacion_proyecto'                               => function ($query) {
                 $query->select('id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
             },
             'actividad.articulacion_proyecto.talentos',
-            'actividad.articulacion_proyecto.talentos.user'                                  => function ($query) {
+            'actividad.articulacion_proyecto.talentos.user'                 => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-            'actividad.articulacion_proyecto.proyecto'                                       => function ($query) {
+            'actividad.articulacion_proyecto.proyecto'                      => function ($query) {
                 $query->select('id', 'articulacion_proyecto_id', 'sector_id', 'sublinea_id', 'areaconocimiento_id', 'estadoproyecto_id', 'tipoarticulacionproyecto_id', 'estadoprototipo_id', 'estado_aprobacion');
             },
-            'actividad.articulacion_proyecto.proyecto.sector'                                => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.sector'               => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.tipoproyecto'                          => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.tipoproyecto'         => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.areaconocimiento'                      => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.areaconocimiento'     => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.sublinea'                              => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.sublinea'             => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.proyecto.estadoproyecto'                        => function ($query) {
+            'actividad.articulacion_proyecto.proyecto.estadoproyecto'       => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.articulacion'                                   => function ($query) {
+            'actividad.articulacion_proyecto.articulacion'                  => function ($query) {
                 $query->select('id', 'articulacion_proyecto_id', 'tipoarticulacion_id', 'tipo_articulacion', 'fecha_ejecucion', 'observaciones', 'estado');
             },
-            'actividad.articulacion_proyecto.articulacion.tipoarticulacion'                  => function ($query) {
+            'actividad.articulacion_proyecto.articulacion.tipoarticulacion' => function ($query) {
                 $query->select('id', 'nombre', 'articulado_con');
             },
 
             'actividad.edt.entidades',
-            'actividad.edt.entidades.empresa'                                                => function ($query) {
+            'actividad.edt.entidades.empresa'                               => function ($query) {
                 $query->select('id', 'entidad_id', 'sector_id', 'nit', 'direccion');
             },
-            'actividad.edt.entidades.empresa.sector'                                         => function ($query) {
+            'actividad.edt.entidades.empresa.sector'                        => function ($query) {
                 $query->select('id', 'nombre');
             },
             'actividad.edt.entidades.ciudad',
             'actividad.edt.entidades.ciudad.departamento',
-            'actividad.edt.areaconocimiento'                                                 => function ($query) {
+            'actividad.edt.areaconocimiento'                                => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.edt.tipoedt'                                                          => function ($query) {
+            'actividad.edt.tipoedt'                                         => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.gestor'                                                               => function ($query) {
+            'actividad.gestor'                                              => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },
-            'actividad.gestor.nodo'                                                          => function ($query) {
+            'actividad.gestor.nodo'                                         => function ($query) {
                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
             },
-            'actividad.gestor.nodo.entidad'                                                  => function ($query) {
+            'actividad.gestor.nodo.entidad'                                 => function ($query) {
                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
             },
             'actividad.gestor.nodo.entidad.ciudad.departamento',
-            'actividad.gestor.lineatecnologica'                                              => function ($query) {
+            'actividad.gestor.lineatecnologica'                             => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
-            'actividad.gestor.user'                                                          => function ($query) {
+            'actividad.gestor.user'                                         => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
-                $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
-            },
-            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
+
+            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
             'usotalentos',
-            'usotalentos.user'                                                               => function ($query) {
+            'usotalentos.user'                                              => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-            
+
             'usogestores',
-            'usogestores.lineatecnologica' => function ($query) {
+            'usogestores.lineatecnologica'                                  => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
-            'usogestores.user'=> function ($query) {
+            'usogestores.user'                                              => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
             'usoequipos',
-            'usoequipos.lineatecnologicanodo.nodo'                                           => function ($query) {
+            'usoequipos.nodo'                                               => function ($query) {
                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
             },
-            'usoequipos.lineatecnologicanodo.nodo.entidad'                                   => function ($query) {
+            'usoequipos.nodo.entidad'                                       => function ($query) {
                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
             },
-            'usoequipos.lineatecnologicanodo.nodo.entidad.ciudad.departamento',
-            'usoequipos.lineatecnologicanodo.lineatecnologica'                               => function ($query) {
-                $query->select('id', 'nombre', 'abreviatura');
-            },
-            'usolaboratorios',
-            'usolaboratorios.nodo'                                                           => function ($query) {
-                $query->select('id', 'entidad_id', 'direccion', 'telefono');
-            },
-            'usolaboratorios.nodo.entidad'                                                   => function ($query) {
-                $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-            },
-            'usolaboratorios.nodo.entidad.ciudad.departamento',
-            'usolaboratorios.lineatecnologica'                                               => function ($query) {
+            'usoequipos.nodo.entidad.ciudad.departamento',
+            'usoequipos.lineatecnologica'                                   => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
 
@@ -315,7 +301,8 @@ class UsoInfraestructuraController extends Controller
         $date         = Carbon\Carbon::now()->format('Y-m-d');
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-            $edt        = $this->getDataEdtForUser()->count();
+            $edt = $this->getDataEdtForUser()->count();
+
             $sumasArray = [
                 'articulaciones' => $artulaciones,
                 'edt'            => $edt,
@@ -331,9 +318,10 @@ class UsoInfraestructuraController extends Controller
                     $query->select('id', 'nombre', 'abreviatura');
                 },
             ];
-            $user     = auth()->user()->id;
-            $nodo     = auth()->user()->gestor->nodo->id;
-            $gestores = $this->getGestorRepository()->getInfoGestor($relations)
+            $user             = auth()->user()->id;
+            $nodo             = auth()->user()->gestor->nodo->id;
+            $lineaTecnologica = auth()->user()->gestor->lineatecnologica->id;
+            $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
                 ->whereHas('user', function ($query) use ($user) {
                     $query->where('id', '!=', $user)->where('estado', User::IsActive());
                 })
@@ -341,11 +329,17 @@ class UsoInfraestructuraController extends Controller
                     $query->where('id', $nodo);
                 })->get();
 
-            $nodo               = auth()->user()->gestor->nodo->id;
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-            // return $lineas;
+
+            $materiales = Material::materialesForNodo($nodo)
+                ->materialesForLineaTecnologica($lineaTecnologica)
+                ->select('id', 'nombre', 'codigo_material', 'nodo_id', 'lineatecnologica_id')
+                ->selectRaw('CONCAT(materiales.codigo_material, " - ", materiales.nombre) AS nombre_material')
+                ->get()
+                ->pluck('nombre_material', 'id');
 
             return view('usoinfraestructura.create', [
+                'materiales'          => $materiales,
                 'gestores'            => $gestores,
                 'lineastecnologicas'  => $lineastecnologicas,
                 'authUser'            => auth()->user(),
@@ -381,31 +375,6 @@ class UsoInfraestructuraController extends Controller
     {
 
         $this->authorize('store', UsoInfraestructura::class);
-
-        // if ($request->filled('equipo')) {
-        //         $syncData = array();
-        //         $depreciacionEquipo = array();
-        //         foreach ($request->get('equipo') as $id => $value) {
-        //             //calculo de costo de horas de asesoria
-        //             $equipo = Equipo::where('id',$value)->first();
-        //             // suma de las horas de asesoria directa y horas de asesoria indirecta
-        //             // $horasAsesoriaGestor = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
-        //             $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion/$equipo->vida_util/$equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
-
-        //             // //array que almacena los datos a 
-        //             // $syncData[$id] = array('gestor_id' => $value,
-        //             // 'asesoria_directa' => $request->get('asesoriadirecta')[$id],
-        //             // 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id], 'costo_asesoria' => $honorario[$id]);
-        //         }
-
-                
-
-        //         return $depreciacionEquipo;
-
-                
-        //     }else{
-
-        //     }
 
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -475,13 +444,13 @@ class UsoInfraestructuraController extends Controller
         $date = Carbon\Carbon::now()->format('Y-m-d');
 
         $relationGestor = [
-                'user'             => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos');
-                },
-                'lineatecnologica' => function ($query) {
-                    $query->select('id', 'nombre', 'abreviatura');
-                },
-            ];
+            'user'             => function ($query) {
+                $query->select('id', 'documento', 'nombres', 'apellidos');
+            },
+            'lineatecnologica' => function ($query) {
+                $query->select('id', 'nombre', 'abreviatura');
+            },
+        ];
 
         $user     = auth()->user()->id;
         $nodo     = auth()->user()->gestor->nodo->id;
@@ -494,12 +463,22 @@ class UsoInfraestructuraController extends Controller
             })->get();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
 
+        $lineaTecnologica = auth()->user()->gestor->lineatecnologica->id;
+
+        $materiales = Material::materialesForNodo($nodo)
+            ->materialesForLineaTecnologica($lineaTecnologica)
+            ->select('id', 'nombre', 'codigo_material', 'nodo_id', 'lineatecnologica_id')
+            ->selectRaw('CONCAT(materiales.codigo_material, " - ", materiales.nombre) AS nombre_material')
+            ->get()
+            ->pluck('nombre_material', 'id');
+
         return view('usoinfraestructura.edit', [
             'usoinfraestructura' => $usoinfraestructura,
+            'materiales'         => $materiales,
             'date'               => $date,
             'authUser'           => auth()->user(),
-            'gestores'            => $gestores,
-            'lineastecnologicas'  => $lineastecnologicas,
+            'gestores'           => $gestores,
+            'lineastecnologicas' => $lineastecnologicas,
         ]);
     }
 
@@ -765,29 +744,28 @@ class UsoInfraestructuraController extends Controller
     {
         if (request()->ajax()) {
             $relations = [
-                'articulacion_proyecto'                                                => function ($query) {
+                'articulacion_proyecto'                                   => function ($query) {
                     $query->select('id', 'actividad_id');
                 },
-                'articulacion_proyecto.actividad'                                      => function ($query) {
+                'articulacion_proyecto.actividad'                         => function ($query) {
                     $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre');
                 },
-                'articulacion_proyecto.talentos.user'                                  => function ($query) {
+                'articulacion_proyecto.talentos.user'                     => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos');
                 },
-                'articulacion_proyecto.actividad.gestor'                               => function ($query) {
+                'articulacion_proyecto.actividad.gestor'                  => function ($query) {
                     $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
                 },
-                'articulacion_proyecto.actividad.gestor.user'                          => function ($query) {
+                'articulacion_proyecto.actividad.gestor.user'             => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica'              => function ($query) {
+                'articulacion_proyecto.actividad.gestor.lineatecnologica' => function ($query) {
                     $query->select('id', 'nombre', 'abreviatura');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
-                    $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
-                },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.nodo.lineas',
+
+                'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+                'articulacion_proyecto.actividad.nodo.materiales',
+                'articulacion_proyecto.actividad.nodo.lineas',
             ];
 
             $estado = [
@@ -823,33 +801,33 @@ class UsoInfraestructuraController extends Controller
             ];
 
             $relations = [
-                'tipoarticulacion'                                                     => function ($query) {
+                'tipoarticulacion'                                        => function ($query) {
                     $query->select('id', 'nombre');
                 },
-                'articulacion_proyecto'                                                => function ($query) {
+                'articulacion_proyecto'                                   => function ($query) {
                     $query->select('id', 'actividad_id');
                 },
-                'articulacion_proyecto.actividad'                                      => function ($query) {
+                'articulacion_proyecto.actividad'                         => function ($query) {
                     $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre');
                 },
 
-                'articulacion_proyecto.talentos.user'                                  => function ($query) {
+                'articulacion_proyecto.talentos.user'                     => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos');
                 },
 
-                'articulacion_proyecto.actividad.gestor'                               => function ($query) {
+                'articulacion_proyecto.actividad.gestor'                  => function ($query) {
                     $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
                 },
-                'articulacion_proyecto.actividad.gestor.user'                          => function ($query) {
+                'articulacion_proyecto.actividad.gestor.user'             => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica'              => function ($query) {
+                'articulacion_proyecto.actividad.gestor.lineatecnologica' => function ($query) {
                     $query->select('id', 'nombre', 'abreviatura');
                 },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.laboratorios' => function ($query) {
-                    $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre');
-                },
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
+
+                'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+                'articulacion_proyecto.actividad.nodo.materiales',
+                'articulacion_proyecto.actividad.nodo.lineas',
             ];
 
             $artulaciones = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)
@@ -865,13 +843,51 @@ class UsoInfraestructuraController extends Controller
 
     }
 
+    public function edtForUser($id)
+    {
+        if (request()->ajax()) {
+            $edts = Edt::with([
+                'actividad'                                 => function ($query) {
+                    $query->select('id', 'gestor_id', 'nodo_id', 'nombre', 'fecha_inicio', 'fecha_cierre');
+                },
+                'actividad.gestor'                          => function ($query) {
+                    $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id', 'honorarios');
+                },
+                'actividad.gestor.user'                     => function ($query) {
+                    $query->select('id', 'documento', 'nombres', 'apellidos');
+                },
+                'actividad.gestor.lineatecnologica'         => function ($query) {
+                    $query->select('id', 'nombre', 'abreviatura');
+                },
+                'actividad.gestor.lineatecnologica.equipos' => function ($query) {
+                    $query->select('id', 'nodo_id', 'lineatecnologica_id', 'nombre', 'referencia');
+                },
+                'actividad.nodo'                            => function ($query) {
+                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
+                },
+                'actividad.nodo.materiales'                 => function ($query) {
+                    $query->select('id', 'lineatecnologica_id', 'nodo_id', 'codigo_material', 'nombre');
+                },
+                'actividad.nodo.lineas',
+            ])
+                ->where('estado', Edt::IS_ACTIVE)
+                ->where('id', $id)
+                ->get();
+            return response()->json([
+                'data' => $edts,
+            ]);
+        } else {
+            abort('403');
+        }
+    }
+
     public function usoinfraestructuraEquipos()
     {
         if (request()->ajax()) {
             $equipos = null;
             if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
-                $equipos = auth()->user()->gestor->lineatecnologica->lineastecnologicasnodos->each(function ($item, $key) {
+                $equipos = auth()->user()->gestor->lineatecnologica->each(function ($item, $key) {
                     $item->equipos;
                 });
 
@@ -899,7 +915,7 @@ class UsoInfraestructuraController extends Controller
                     'articulacion_proyecto.actividad.gestor.lineatecnologica' => function ($query) {
                         $query->select('id', 'nombre', 'abreviatura');
                     },
-                    'articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos',
+                    'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
                 ];
 
                 $user = auth()->user()->documento;
