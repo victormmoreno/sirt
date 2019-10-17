@@ -6,10 +6,17 @@
                     <span class="title"><b>Uso de Infraestructura</b></span>
                     <p>señor(a) ususario, por favor ingrese la información que se solcita en formulario.</p>
                 </li>
-                <li class="collection-item">
-                    <span class="title"><b>Paso 1</b></span>
-                    <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos - Articulaciones - EDT)</p>
-                </li>
+                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    <li class="collection-item">
+                        <span class="title"><b>Paso 1</b></span>
+                        <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos - Articulaciones - EDT)</p>
+                    </li>
+                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                    <li class="collection-item">
+                        <span class="title"><b>Paso 1</b></span>
+                        <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos)</p>
+                    </li>
+                @endif
             </ul>
         </blockquote>
     </div>
@@ -33,11 +40,12 @@
                             <label for="IsProyecto">
                                 Proyectos
                             </label>
-                            <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion() ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
-                            <label for="IsArticulacion">
-                                Articulaciones
-                            </label>
+                            
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion() ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
+                                <label for="IsArticulacion">
+                                    Articulaciones
+                                </label>
                                 <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsEdt() ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
                                 <label for="IsEdt">
                                     EDT
@@ -48,11 +56,12 @@
                             <label for="IsProyecto">
                                 Proyectos
                             </label>
-                            <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
-                            <label for="IsArticulacion">
-                                Articulaciones
-                            </label>
+                            
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
+                                <label for="IsArticulacion">
+                                    Articulaciones
+                                </label>
                                 <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
                                 <label for="IsEdt">
                                     EDT
@@ -212,6 +221,28 @@
                     <label class="error" for="txtactividad" id="txtactividad-error"></label>
                 </div>
             </div>
+            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="input-field col s12 m12 l8 offset-l2">
+                        <i class="material-icons prefix">
+                            create
+                        </i>
+                        @if(isset($usoinfraestructura->descripcion))
+                            <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
+                                {{$usoinfraestructura->descripcion}}
+                            </textarea>
+                        @else
+                            <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
+                            </textarea>
+                        @endif
+                        <label for="txtdescripcion">
+                            Descripción
+                        </label>
+                        <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
+                    </div>
+                </div>
+            @endif
        
         </fieldset>
     </div>

@@ -98,7 +98,7 @@ class UsoInfraestructuraRepository
                     $equiposmantenimiento = EquipoMantenimiento::where('equipo_id', $value)->where('ultimo_anio_mantenimiento', $anioActual)->first();
 
                     if (isset($equiposmantenimiento)) {
-                        $mantenimientoEquipo[$id] = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->vida_util_mantenimiento / $equiposmantenimiento->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
+                        $mantenimientoEquipo[$id] = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
 
                     } else {
                         $mantenimientoEquipo[$id] = 0;
@@ -111,11 +111,12 @@ class UsoInfraestructuraRepository
                         ->where('nodo_costoadministrativo.nodo_id', auth()->user()->gestor->nodo->id)
                         ->first();
 
-                    $lineas      = Nodo::AllLineasPorNodo($equipo->nodo->id);
-                    $countlineas = $lineas->lineas->count();
+                    $nodolineas      = Nodo::AllLineasPorNodo($equipo->nodo->id);
+                    $countlineas = $nodolineas->lineas->count();
+                    $countequipos = $nodolineas->equipos->count();
 
                     $costoAdministracion[$id] = round((($costo->valor_costo_administrativo / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA / $countlineas / CostoAdministrativo::DEDICACION)
-                         * ($equipo->lineatecnologica->nodos->where('id', $equipo->nodo->id)->first()->pivot->porcentaje_linea * (int) $request->get('tiempouso')[$id]) / 100));
+                         * (100/($countequipos) * (int) $request->get('tiempouso')[$id]) / 100));
 
                     $syncData[$id] = array(
                         'equipo_id'            => $value,

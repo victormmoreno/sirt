@@ -3,25 +3,26 @@
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
-                    <span class="title"><b>Paso 3</b></span>
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                        <span class="title"><b>Paso 3</b></span>
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                        <span class="title"><b>Paso 2</b></span>
+                    @endif
                     <p>
-                        señor(a) ususario, por favor ingrese las horas de asesoria.
+                        señor(a) ususario, para ingresar los talentos al uso de infraestructura debe seleccionar el talento y presionar el boton agregar talento.
                     </p>
-                </li>
-                <li class="collection-item">
-                    <span class="title"><b>Paso 2</b></span>
-                    <p>
-                        señor(a) ususario, si la asesoria fue acompañada por otro gestor ingrese este en la sección de gestores Asesores.
-                    </p>
-                </li>
-                
+                </li>     
             </ul>
         </blockquote>
     </div>
 
     <div class="col s12 m9 l9">
         <fieldset>
-            <legend>Paso 3</legend>
+            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                <legend>Paso 3</legend>
+            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                <legend>Paso 2</legend>
+            @endif
             <p class="center card-title orange-text text-darken-3">
                <b> Talentos</b> 
             </p>

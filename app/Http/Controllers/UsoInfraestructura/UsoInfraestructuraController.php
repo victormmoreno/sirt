@@ -103,16 +103,25 @@ class UsoInfraestructuraController extends Controller
                     return $data->actividad->codigo_actividad . ' - ' . $data->actividad->nombre;
                 })
                 ->editColumn('asesoria_directa', function ($data) {
-                    if ($data->asesoria_directa == 0) {
-                        return 'no registra';
+
+                    if ($data->usogestores->isEmpty()) {
+                        return 'No registra';
+                    } else {
+                        if ($data->usogestores->sum('pivot.asesoria_directa') == 1) {
+                            return $data->usogestores->sum('pivot.asesoria_directa') . ' hora';
+                        }
+                        return $data->usogestores->sum('pivot.asesoria_directa') . ' horas';     
                     }
-                    return $data->asesoria_directa . '  horas';
                 })
                 ->editColumn('asesoria_indirecta', function ($data) {
-                    if ($data->asesoria_indirecta == 0) {
-                        return 'no registra';
+                    if ($data->usogestores->isEmpty()) {
+                        return 'No registra';
+                    } else {
+                        if ($data->usogestores->sum('pivot.asesoria_indirecta') == 1) {
+                            return $data->usogestores->sum('pivot.asesoria_indirecta') . ' hora';
+                        }
+                        return $data->usogestores->sum('pivot.asesoria_indirecta') . ' horas'; 
                     }
-                    return $data->asesoria_indirecta . '  horas';
                 })
                 ->addColumn('detail', function ($data) {
 
@@ -763,7 +772,7 @@ class UsoInfraestructuraController extends Controller
                     $query->select('id', 'nombre', 'abreviatura');
                 },
 
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+                'articulacion_proyecto.actividad.nodo.equipos',
                 'articulacion_proyecto.actividad.nodo.materiales',
                 'articulacion_proyecto.actividad.nodo.lineas',
             ];
@@ -825,7 +834,7 @@ class UsoInfraestructuraController extends Controller
                     $query->select('id', 'nombre', 'abreviatura');
                 },
 
-                'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
+                'articulacion_proyecto.actividad.nodo.equipos',
                 'articulacion_proyecto.actividad.nodo.materiales',
                 'articulacion_proyecto.actividad.nodo.lineas',
             ];
@@ -869,6 +878,7 @@ class UsoInfraestructuraController extends Controller
                     $query->select('id', 'lineatecnologica_id', 'nodo_id', 'codigo_material', 'nombre');
                 },
                 'actividad.nodo.lineas',
+                'actividad.nodo.equipos',
             ])
                 ->where('estado', Edt::IS_ACTIVE)
                 ->where('id', $id)
@@ -879,62 +889,6 @@ class UsoInfraestructuraController extends Controller
         } else {
             abort('403');
         }
-    }
-
-    public function usoinfraestructuraEquipos()
-    {
-        if (request()->ajax()) {
-            $equipos = null;
-            if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-                $equipos = auth()->user()->gestor->lineatecnologica->each(function ($item, $key) {
-                    $item->equipos;
-                });
-
-            } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
-                $estado = [
-                    Articulacion::IsInicio(),
-                    Articulacion::IsEjecucion(),
-                ];
-                $relations = [
-                    'tipoarticulacion'                                        => function ($query) {
-                        $query->select('id', 'nombre');
-                    },
-                    'articulacion_proyecto'                                   => function ($query) {
-                        $query->select('id', 'actividad_id');
-                    },
-                    'articulacion_proyecto.actividad'                         => function ($query) {
-                        $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre');
-                    },
-                    'articulacion_proyecto.talentos.user'                     => function ($query) {
-                        $query->select('id', 'documento', 'nombres', 'apellidos');
-                    },
-                    'articulacion_proyecto.actividad.gestor'                  => function ($query) {
-                        $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
-                    },
-                    'articulacion_proyecto.actividad.gestor.lineatecnologica' => function ($query) {
-                        $query->select('id', 'nombre', 'abreviatura');
-                    },
-                    'articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
-                ];
-
-                $user = auth()->user()->documento;
-
-                $equipos = $this->getUsoIngraestructuraArtculacionRepository()->getArticulacionesForUser($relations)->estadoOfArticulaciones($estado)->where('tipo_articulacion', Articulacion::IsEmprendedor())
-                    ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
-                        $query->where('documento', $user);
-                    })
-                    ->get();
-
-            }
-
-            return response()->json([
-                'data' => $equipos,
-            ]);
-        } else {
-            abort('403');
-        }
-
     }
 
     private function setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository)

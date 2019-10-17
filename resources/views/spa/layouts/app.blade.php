@@ -1,17 +1,16 @@
 <!DOCTYPE doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <title>
-            {{config('app.name')}} | @yield('meta-tittle',   config('app.name') )
+            {{config('app.name')}} | @yield('meta-title',   config('app.name') )
         </title>
-        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
-
-                        <!-- CSRF Token -->
-        <meta content="{{ csrf_token() }}" name="csrf-token">
-        <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description">
+        <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description"/>
+        <meta content="{{ csrf_token()}}" name="csrf-token"/>
+        <link href="{{config('app.url')}}" rel="canonical"/>
+        <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
 
     </head>
     <body class="white">
@@ -30,7 +29,6 @@
         </div>
         <script  src="{{ asset('js/app.js') }}"></script>
         <script  src="{{ asset('js/libs.js') }}"></script>
-        {{-- @include('sweet::alert') --}}
         @include('sweetalert::alert')
     </body>
 </html>

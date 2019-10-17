@@ -3,25 +3,27 @@
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
-                    <span class="title"><b>Paso 5</b></span>
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                        <span class="title"><b>Paso 5</b></span>
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                        <span class="title"><b>Paso 4</b></span>
+                    @endif
                     <p>
-                        señor(a) ususario, por favor ingrese las horas de asesoria.
+                        señor(a) ususario, para ingresar los materiales de formación al uso de infraestructura debe seleccionar el material e ingresar la cantidad y presionar el boton agregar material.
                     </p>
                 </li>
-                <li class="collection-item">
-                    <span class="title"><b>Paso 5</b></span>
-                    <p>
-                        señor(a) ususario, si la asesoria fue acompañada por otro gestor ingrese este en la sección de gestores Asesores.
-                    </p>
-                </li>
-                
             </ul>
         </blockquote>
     </div>
 
     <div class="col s12 m9 l9">
         <fieldset>
-            <legend>Paso 5</legend>
+            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                <legend>Paso 5</legend>
+            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                <legend>Paso 4</legend>
+            @endif
+            
             <p class="center card-title orange-text text-darken-3">
                <b> Materiales de Formación</b> 
             </p>
@@ -31,15 +33,7 @@
 
                     <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" >
                         <option value="">Seleccione Material de  Formación</option>
-                        {{-- @forelse($materiales as $id => $material)
-                            @if(isset($equipo->lineatecnologica->id))
-                                <option value="{{$id}}" {{ old('txtmaterial', $equipo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$material}}</option>
-                            @else
-                                <option value="{{$id}}" {{ old('txtmaterial') == $id ? 'selected':'' }}>{{$material}}</option>
-                            @endif
-                        @empty
-                            <option value="">No hay información disponible</option>
-                        @endforelse --}}
+
                     </select>
                     <label class="active" for="txtmaterial">
                         Matrerial de Formación

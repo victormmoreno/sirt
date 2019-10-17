@@ -13,7 +13,7 @@
                 <li class="collection-item">
                     <span class="title"><b>Paso 2</b></span>
                     <p>
-                        señor(a) ususario, si la asesoria fue acompañada por otro gestor ingrese este en la sección de gestores Asesores.
+                        señor(a) ususario, si la asesoria fue acompañada por otro gestor agregue a este en la sección de gestores Asesores, pulsando el boton agregar gestor.
                     </p>
                 </li>
                 

@@ -37,7 +37,6 @@
                     </div>
                 </div>
                 <div class="card">
-                    
                     <div class="card-content">
                         @if($cantidadActividades != 0)
                         <div class="row">
@@ -267,6 +266,8 @@
                 if (response != '') {
                     $('#txttalento').append('<option value="">Seleccione el talento</option>');
                     $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                    $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
+                    $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
                    
                     $.each(response.data, function(i, element) {
                         @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
@@ -274,7 +275,7 @@
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" value="1"></td><td><input type="number" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" min="1" maxlength="6" value="1"></td><td><input type="number" name="asesoriaindirecta[]" min="1" maxlength="6" value="1"></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
 
@@ -301,7 +302,7 @@
                             $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
                         });
        
-                        $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {        
+                        $.each(element.articulacion_proyecto.actividad.nodo.equipos, function(e, equipo) {        
                             $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                         });
 
@@ -470,14 +471,17 @@
                 $('#txtmaterial').empty();
 
              
-
+                $('#txttalento').append('<option value="">Seleccione el talento</option>');
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
+                $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
                 $.each(response.data, function(i, element) {
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     let cont;
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" value="1"></td><td><input type="number" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
+                    fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" min="1" maxlength="6" name="asesoriadirecta[]" value="1"></td><td><input type="number" min="1" maxlength="6" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
                     cont++;
                     $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
@@ -507,7 +511,7 @@
                                 $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
                             });
            
-                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {        
+                            $.each(element.articulacion_proyecto.actividad.nodo.equipos, function(e, equipo) {        
                                 $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                             });
 
@@ -533,7 +537,7 @@
                         $('#txtlineatecnologica').attr("disabled", true).select2();
                         $('#txtmaterial').attr("disabled", true).select2();
                         $('.btnAgregarTalento').attr("disabled", true).removeAttr("onclick");
-                        // usoInfraestructuraCreate.equipos();
+
                     }
 
                 }); 
@@ -602,13 +606,16 @@
                 $('#txtlineatecnologica').empty();
                 $('#txtmaterial').empty();
 
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
+                $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
                 $.each(response.data, function(i, element) {
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     let cont;
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.actividad.gestor.id+'">'+element.actividad.gestor.user.nombres + ' ' + element.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" value="1"></td><td><input type="number" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
+                    fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]" value="'+element.actividad.gestor.id+'">'+element.actividad.gestor.user.nombres + ' ' + element.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" min="1" maxlength="6" name="asesoriadirecta[]" value="1"></td><td><input type="number" min="1" maxlength="6" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
                     cont++;
                     $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
@@ -624,7 +631,7 @@
                         $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
                     });
    
-                    $.each(element.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {        
+                    $.each(element.actividad.nodo.equipos, function(e, equipo) {        
                         $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
                     });
 
@@ -644,56 +651,7 @@
 
             });
         },
-        equipos: function () {
-            $.ajax({
-                dataType:'json',
-                type:'get',
-                url:'/usoinfraestructura/equipos'
-            }).done(function(response){
-
-                $('#txtlinea').empty();
-                $('#txtlinea').append('<option value="">Seleccione la linea tecnológica</option>')
-                $.each(response.data, function(e, element) {
-
-                        $.each(element.equipos, function(e, equipo) {
-                    
-                            $('#txtlinea').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
-                        });
-            
-                    });
-            
-                $('#txtequipo').empty();
-                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-
-                    $.each(response.data, function(e, element) {
-
-                        $.each(element.equipos, function(e, equipo) {
-                    
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
-                        });
-            
-                    });
-                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-
-                    $.each(response.data, function(i, element) {
-
-                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.lineastecnologicasnodos.equipos, function(e, equipos) {
-
-                                $.each(equipos.equipos, function(e, equipo) {
-                    
-                                    $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
-                                });
-                    
-                            });
-                    }); 
-
-                @endif
-
-                $('#txtequipo').select2(); 
-
-            });
-        },
+    
 
         //añadir talento al uso de infraestructura
 
@@ -875,14 +833,24 @@
                   });
 
             }else  if ($("#txttiempouso").val() == ""){
-              Swal.fire({
+                Swal.fire({
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'warning',
                     title: 'Debe ingresa el tiempo de uso'
-                  });
+                });
+            }else if($("#txttiempouso").val() <= 0){
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'el tiempo de uso debe ser mayor o igual a 1.'
+                });
+           
             }else if(usoInfraestructuraCreate.validateTiempoUso() != true){
                 Swal.fire({
                     toast: true,
@@ -924,7 +892,7 @@
             }
             $("#txtequipo option[value='']").attr("selected", true);
             $('#txtequipo').select2();
-            $("#txttiempouso").val('');
+            $("#txttiempouso").val(1);
             
         }
 
@@ -1080,9 +1048,7 @@
                       });
 
                     $("#txtgestorasesor").val();
-                    
-                }else if($("#txtasesoriadirecta").val() == '' || $("#txtasesoriadirecta").val() <= 0 || (!/^([0-9])*$/.test($("#txtasesoriadirecta").val()))
-      ){
+                }else if($("#txtasesoriadirecta").val() == '' ||  (!/^([0-9])*$/.test($("#txtasesoriadirecta").val()))){
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1091,9 +1057,23 @@
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria directa correcta'
                       });
-                    $("#txtasesoriadirecta").val(0);
+                    $("#txtasesoriadirecta").val(1);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                }else if($("#txtasesoriaindirecta").val() == '' || $("#txtasesoriaindirecta").val() <= 0 ||  (!/^([0-9])*$/.test($("#txtasesoriaindirecta").val()))){
+                }else if($("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() < 1 || $("#txtasesoriadirecta").val() < 1 && $("#txtasesoriaindirecta").val() == 0 || $("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() == 0){
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'error',
+                        title: 'Debe de haber al menos una asesoria con el valor de 1'
+                      });
+                    $("#txtasesoriadirecta").val(1);
+                    $("label[for='txtasesoriadirecta']").addClass('active');
+                    $("#txtasesoriaindirecta").val(1);
+                    $("label[for='txtasesoriadirecta']").addClass('active');
+                }
+                else if($("#txtasesoriaindirecta").val() == '' ||  (!/^([0-9])*$/.test($("#txtasesoriaindirecta").val()))){
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1102,7 +1082,7 @@
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria indirecta correcta.'
                       });
-                    $("#txtasesoriaindirecta").val(0);
+                    $("#txtasesoriaindirecta").val(1);
                     $("label[for='txtasesoriaindirecta']").addClass('active');
                 
                 }else{
@@ -1124,8 +1104,10 @@
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
 
-                    $("#txtasesoriadirecta").val(0);
-                    $("#txtasesoriaindirecta").val(0);
+                    $("#txtasesoriadirecta").val(1);
+                    $("label[for='txtasesoriadirecta']").addClass('active');
+                    $("#txtasesoriaindirecta").val(1);
+                    $("label[for='txtasesoriadirecta']").addClass('active');
 
                 }
             }
