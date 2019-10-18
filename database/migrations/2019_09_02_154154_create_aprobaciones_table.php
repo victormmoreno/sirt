@@ -16,6 +16,7 @@ class CreateAprobacionesTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('proyecto_id');
             $table->unsignedInteger('user_id');

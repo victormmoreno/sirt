@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-
+        $nodo = Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first();
         $role = Role::findByName(Role::findByName(config('laravelpermission.roles.roleAdministrador'))->first()->name);
         $role->givePermissionTo([
             Permission::findByName('Ver Administrador'),
@@ -66,24 +66,24 @@ class UsersTableSeeder extends Seeder
 
         $userAdmin->dinamizador()->create([
             'user_id' => $userAdmin->id,
-            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => $nodo->id,
         ]);
 
         $userAdmin->gestor()->create([
             'user_id'             => $userAdmin->id,
-            'nodo_id'             => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-            'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
+            'nodo_id'             => $nodo->id,
+            'lineatecnologica_id' => $nodo->lineas->first()->id,
             'honorarios'          => 4000000,
         ]);
 
         $userAdmin->infocenter()->create([
-            'nodo_id'   => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id'   => $nodo->id,
             'user_id'   => $userAdmin->id,
             'extension' => 413342,
         ]);
 
         $userAdmin->ingreso()->create([
-            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
+            'nodo_id' => $nodo->id,
             'user_id' => $userAdmin->id,
         ]);
 

@@ -135,10 +135,8 @@
                                                                         </h6>
                                                                         </li>
                                                                         @forelse($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                                                                            <li class="collection-item avatar">
-                                                                                <i class="material-icons circle teal darken-2">
-                                                                                    account_circle
-                                                                                </i>
+                                                                            <li class="collection-item ">
+                                        
                                                                                 <span class="title">
                                                                                    {{$talento->user->documento}} -  {{$talento->user->nombres}} {{$talento->user->apellidos}}
                                                                                 </span>
@@ -235,11 +233,9 @@
                                                         <div class="row">
                                                             <div class="col s12 m12 l12">
                                                                 <ul class="collection">
-                                                                    <li class="collection-item avatar">
-                                                                        <i class="material-icons circle teal darken-2">
-                                                                            date_range
-                                                                        </i>
-                                                                        <span class="title">
+                                                                    <li class="collection-item ">
+                                                                        
+                                                                        <span class="title cyan-text text-darken-3">
                                                                            Fecha
                                                                         </span>
                                                                         <p>
@@ -252,30 +248,27 @@
                                                         <div class="row">
                                                             <div class="col s12 m6 l6">
                                                                 <ul class="collection">
-                                                                    <li class="collection-item avatar">
-                                                                        <i class="material-icons circle teal darken-2">
-                                                                             book
-                                                                        </i>
-                                                                        <span class="title">
-                                                                           Asesoria Directa
+                                                                    <li class="collection-item ">
+                                                        
+                                                                        <span class="title cyan-text text-darken-3">
+                                                                           Asesoria Directa 
                                                                         </span>
                                                                         <p>
-                                                                       {{isset($usoinfraestructura->asesoria_directa) ? $usoinfraestructura->asesoria_directa.' horas' : 'No registra' }}
+                                                                            {{$usoinfraestructura->usogestores->sum('pivot.asesoria_directa')}}
+                                                                       
                                                                         </p>
                                                                     </li>
                                                                 </ul>
                                                             </div>
                                                             <div class="col s12 m6 l6">
                                                                 <ul class="collection">
-                                                                    <li class="collection-item avatar">
-                                                                        <i class="material-icons circle teal darken-2">
-                                                                            bookmark
-                                                                        </i>
-                                                                        <span class="title">
+                                                                    <li class="collection-item ">
+                                                                        <span class="title cyan-text text-darken-3">
                                                                            Asesoria Indirecta
                                                                         </span>
                                                                         <p>
-                                                                           {{isset($usoinfraestructura->asesoria_indirecta) ? $usoinfraestructura->asesoria_indirecta.' horas' : 'No registra'}}
+                                                                            {{$usoinfraestructura->usogestores->sum('pivot.asesoria_indirecta')}}
+                                                                       
                                                                         </p>
                                                                     </li>
                                                                 </ul>
@@ -284,11 +277,9 @@
                                                         <div class="row">
                                                             <div class="col s12 m12 l12">
                                                                 <ul class="collection">
-                                                                    <li class="collection-item avatar">
-                                                                        <i class="material-icons circle teal darken-2">
-                                                                            create
-                                                                        </i>
-                                                                        <span class="title">
+                                                                    <li class="collection-item ">
+                                                                    
+                                                                        <span class="title cyan-text text-darken-3">
                                                                            Descripción
                                                                         </span>
                                                                         <p>
@@ -298,8 +289,61 @@
                                                                 </ul>
                                                             </div>
                                                         </div>
+                                                        {{-- @if ($usoinfraestructura->usogestores->isEmpty()) --}}
+                                                            <div class="row">
+                                                                <div class="col s12 m6 l6 offset-l3 m3">
+                                                                    <div class="center">
+                                                                        <span class="mailbox-title ">
+                                                                            Asesores ({{$usoinfraestructura->usogestores->count()}})
+                                                                        </span> 
+                                                                    </div>
+                                                                    <div class="divider mailbox-divider"></div>
+                                                                    <ul class="collection">
+                                                                        
+                                                                        
+                                                                            @forelse ($usoinfraestructura->usogestores as $usogestor) 
+                                                                            <li class="collection-item ">
+                                                                                <span class="title cyan-text text-darken-3">
+                                                                                    {{$usogestor->user->documento}} - {{$usogestor->user->nombres}} {{$usogestor->user->apellidos}}
+                                                                                </span>
+                                                                                @if ($usogestor->pivot->asesoria_directa == 1) 
+                                                                                    <p class="title">
+                                                                                        <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  hora
+                                                                                    </p>
+                                                                                @elseif($usogestor->pivot->asesoria_directa == 0)
+                                                                                    <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>No registra
+                                                                                @else
+                                                                                    <p class="title">
+                                                                                         <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  horas
+                                                                                    </p> 
+                                                                                @endif
+                                                                                @if ($usogestor->pivot->asesoria_indirecta == 1) 
+                                                                                    <p class="title">
+                                                                                        <strong class="cyan-text text-darken-3">Horas Asesoria Indirecta: </strong>{{$usogestor->pivot->asesoria_indirecta}}  hora
+                                                                                    </p>
+                                                                                @elseif($usogestor->pivot->asesoria_indirecta == 0)
+                                                                                    <strong class="cyan-text text-darken-3">Horas Asesoria Indirecta: </strong>No registra
+                                                                                @else
+                                                                                    <p class="title">
+                                                                                         <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_indirecta}}  horas
+                                                                                    </p> 
+                                                                                @endif
+                                                                            </li>
+                                                                            @empty
+                                                                                <div class="center">
+                                                                                   <i class="large material-icons center">
+                                                                                        block
+                                                                                    </i>
+                                                                                    <p class="center-align">No se encontraron resultados</p> 
+                                                                                </div>
+                                                                            @endforelse
+                                                                        
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        {{-- @endif --}}
                                                         <div class="row">
-                                                            <div class="col s12 m6 l6">
+                                                            <div class="col s12 m6 l6 offset-l3 m3">
                                                                 <div class="center">
                                                                     <span class="mailbox-title ">
                                                                         Talentos ({{$usoinfraestructura->usotalentos->count()}})
@@ -308,10 +352,8 @@
                                                                 <div class="divider mailbox-divider"></div>
                                                                 <ul class="collection">
                                                                     @forelse($usoinfraestructura->usotalentos as $usotal)
-                                                                        <li class="collection-item avatar">
-                                                                            <i class="material-icons circle teal darken-2">
-                                                                                account_circle
-                                                                            </i>
+                                                                        <li class="collection-item ">
+                                                                            
                                                                             <span class="title">
                                                                                {{$usotal->user->documento}} - {{$usotal->user->nombres}} {{$usotal->user->apellidos}}
                                                                             </span>
@@ -327,24 +369,56 @@
                                                                     
                                                                 </ul>
                                                             </div>
+                                                        </div>
+                                                        <div class="divider"></div>
+                                                        <div class="row">
                                                             <div class="col s12 m6 l6">
                                                                 <div class="center">
                                                                     <span class="mailbox-title ">
-                                                                        Laboratorios ({{$usoinfraestructura->usolaboratorios->count()}})
+                                                                        Equipos ({{$usoinfraestructura->usoequipos->count()}})
                                                                     </span> 
                                                                 </div>
                                                                 <div class="divider mailbox-divider"></div>
                                                                 <ul class="collection">
-                                                                    @forelse($usoinfraestructura->usolaboratorios as $usolab)
-                                                                        <li class="collection-item avatar">
-                                                                            <i class="material-icons circle teal darken-2">
-                                                                                local_drink
-                                                                            </i>
+                                                                    @forelse($usoinfraestructura->usoequipos as $usoequipo)
+                                                                        <li class="collection-item ">
+                                                                            
+                                                                            <span class="cyan-text text-darken-3">
+                                                                               Nombre: 
+                                                                            </span>
+                                                                            {{$usoequipo->nombre}}
+                                                                            <p class="cyan-text text-darken-3">
+                                                                                Referencia: 
+                                                                            </p>
+                                                                            {{$usoequipo->referencia}}
+                                                                        </li>
+                                                                    @empty
+                                                                    <div class="center">
+                                                                       <i class="large material-icons center">
+                                                                            block
+                                                                        </i>
+                                                                        <p class="center-align">No se encontraron resultados</p> 
+                                                                    </div>
+                                                                    @endforelse
+                                                                    
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col s12 m6 l6">
+                                                                <div class="center">
+                                                                    <span class="mailbox-title ">
+                                                                        Materiales de Formación ({{$usoinfraestructura->usomateriales->count()}})
+                                                                    </span> 
+                                                                </div>
+                                                                <div class="divider mailbox-divider"></div>
+                                                                <ul class="collection">
+                                                                    @forelse($usoinfraestructura->usomateriales as $usomaterial)
+                                                                        <li class="collection-item ">
+                                                                            
                                                                             <span class="title">
-                                                                               <strong class="cyan-text text-darken-3">Laboratorio:</strong> {{$usolab->nombre}} 
+                                                                               <strong class="cyan-text text-darken-3">Material:</strong> {{$usomaterial->codigo_material}} {{$usomaterial->nombre}} 
                                                                             </span>
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Tiempo Uso:</strong> {{$usolab->pivot->tiempo}} horas 
+                                                                               <strong class="cyan-text text-darken-3">Cantidad:</strong> {{$usomaterial->pivot->unidad}}  
                                                                             </p>   
                                                                         </li>
                                                                     @empty

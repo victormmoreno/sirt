@@ -3,8 +3,10 @@
 namespace Repositories\Repository;
 
 use App\Models\Centro;
+use App\Models\CostoAdministrativo;
 use App\Models\Entidad;
 use App\Models\LineaTecnologica;
+use App\Models\LineaTecnologicaNodo;
 use App\Models\Nodo;
 use App\Models\Regional;
 use Carbon\Carbon;
@@ -95,7 +97,23 @@ class NodoRepository
                 'telefono'    => $request->input('txttelefono'),
             ]);
 
-            $nodo->lineas()->sync($request->get('txtlineas'), false);
+            $porcentaje = 100 / count($request->get('txtlineas'))  ;
+
+            $syncDataLinea = array();
+                foreach ($request->get('txtlineas') as $id => $value) {
+                    $syncDataLinea[$id] = array('linea_tecnologica_id' => $value,  'porcentaje_linea' =>$porcentaje);
+                }
+
+            $nodo->lineas()->sync($syncDataLinea);
+
+            $costo = CostoAdministrativo::all();
+            if (!$costo->isEmpty()) {
+                $syncData = array();
+                foreach ($costo as $id => $value) {
+                    $syncData[$id] = array('costo_administrativo_id' => $value->id,  'anho' =>Carbon::now()->year, 'valor' => 0);
+                }
+                $nodo->costoadministrativonodo()->attach($syncData);
+            }
 
             DB::commit();
             return true;
@@ -130,7 +148,19 @@ class NodoRepository
                 'telefono'  => $request->input('txttelefono'),
             ]);
 
-            $entidadNodo->nodo->lineas()->sync($request->get('txtlineas'));
+            $porcentaje =  100 / count($request->get('txtlineas'));
+
+           
+            $syncDataLinea = array();
+                foreach ($request->get('txtlineas') as $id => $value) {
+                        
+                    $syncDataLinea[$id] = array('linea_tecnologica_id' => $value,  'porcentaje_linea' =>$porcentaje);
+                    
+
+                }
+
+            $entidadNodo->nodo->lineas()->sync($syncDataLinea, true);
+            
 
             DB::commit();
             return true;

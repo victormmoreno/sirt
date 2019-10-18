@@ -4,9 +4,9 @@
   </a>
 </li>
 <li class="no-padding  ">
-  <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('nodo') !!} {!! setActiveRoutePadding('nodo')!!}">
+  <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('nodo')!!} {!! setActiveRoutePadding('nodo')!!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodos
-    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('nodo') }}">keyboard_arrow_right</i>
+    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('nodo'), setActiveRouteActiveIcon('costos-administrativos') }}">keyboard_arrow_right</i>
   </a>
   <div class="collapsible-body">
     <ul>
@@ -15,11 +15,17 @@
           <i class="material-icons {{setActiveRouteActiveIcon('nodo')}}">domain</i>
         Nodos</a>
       </li>
+      
       {{-- <li>
         <a href="">Mapa</a>
       </li> --}}
     </ul>
   </div>
+</li>
+<li class="no-padding {{setActiveRoute('costos-administrativos')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos-administrativos')}}" href="{{route('costoadministrativo.index')}}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('costos-administrativos') }}">settings_input_svideo</i>Costos Administrativos
+  </a>
 </li>
 <li class="no-padding {{setActiveRoute('lineas')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}">
@@ -46,6 +52,11 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('edt') }}">hearing</i>EDT's
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('materiales')}}">
+  <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('charla')}}">
   <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
@@ -56,12 +67,7 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a href="">
-    <i class="material-icons">settings_input_svideo</i>Costos Administrativos
-  </a>
-</li>
- --}}<li class="no-padding">
+<li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
     <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
@@ -97,14 +103,32 @@
     <i class="material-icons {{setActiveRouteActiveIcon('laboratorio')}}">local_drink</i>Laboratorios
   </a>
 </li>
+
+<li class="no-padding  ">
+  <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('equipo'), setActiveRouteActivePage('mantenimiento')!!} {!! setActiveRoutePadding('equipo'),  setActiveRoutePadding('mantenimiento')!!}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('equipo'),  setActiveRouteActiveIcon('mantenimiento')}}">account_balance_wallet</i>Equipos
+    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('equipo'), setActiveRouteActiveIcon('mantenimiento') }}">keyboard_arrow_right</i>
+  </a>
+  <div class="collapsible-body">
+    <ul>
+      <li>
+        <a href="{{route('equipo.index')}}" class="{{setActiveRouteActivePage('equipo') }}">
+          <i class="material-icons {{setActiveRouteActiveIcon('equipo')}}">account_balance_wallet</i>
+        Equipos</a>
+      </li>
+      <li>
+        <a href="{{route('mantenimiento.index')}}" class="{{setActiveRouteActivePage('mantenimiento')}}">
+          <i class="material-icons {{setActiveRouteActiveIcon('mantenimiento')}}">settings_applications</i>
+        Mantenimientos</a>
+      </li>
+      
+      
+    </ul>
+  </div>
+</li>
 {{-- <li class="no-padding">
   <a class="waves-effect waves-grey" href="">
     <i class="material-icons">filter_center_focus</i>Focos
-  </a>
-</li>
-<li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">local_drink</i>Laboratorios
   </a>
 </li> --}}
 <li class="no-padding {{setActiveRoute('grupo')}}">

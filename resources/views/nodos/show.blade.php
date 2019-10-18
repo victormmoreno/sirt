@@ -35,9 +35,8 @@
 
                                                     <div class="left">
                                                         <div class="left">
-                                                            <i class="material-icons left">
-                                                                location_city
-                                                            </i>
+                                                            
+                                                            <i class="material-icons fas fa-building"></i>
                                                         </div>
                                                         <div class="left">
                                                             <span class="mailbox-title">
@@ -69,16 +68,16 @@
                                                     <div class="col s12 m3 l3  push-l1 push-m1">
                                                         <div class="center">
                                                             <span class="mailbox-title">
+                                                                <i class="material-icons fas fa-th-list"></i>
                                                                 Lineas Tecnológicas ({{$nodo->lineas->count()}})
                                                             </span>
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
                                                         <ul class="collection">
                                                             @forelse($nodo->lineas as $linea)
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        linear_scale
-                                                                    </i>
+                                                                <li class="collection-item">
+                                                                    
+                                                                    
                                                                     <span class="title">
                                                                         {{$linea->nombre}}
                                                                     </span>
@@ -100,15 +99,16 @@
                                                         <div class="divider mailbox-divider"></div>
                                                         <div class="center">
                                                             <span class="mailbox-title">
+                                                                <i class="material-icons fas fa-flask"></i>
+
+                                                               
                                                                 Laboratorios ({{$nodo->laboratorios->count()}})
                                                             </span>
                                                         </div>
                                                         <ul class="collection">
                                                             @forelse($nodo->laboratorios as $laboratorios)
-                                                                <li class="collection-item avatar">
-                                                                    <i class="material-icons circle teal darken-2">
-                                                                        local_drink
-                                                                    </i>
+                                                                <li class="collection-item">
+                                                                    
                                                                     <span class="title">
                                                                         {{$laboratorios->nombre}}
                                                                     </span>
@@ -132,6 +132,8 @@
                                                     <div class="col s12 m8 l8 push-l1 push-m1 pull-l1 pull-m1">
                                                         <div class="center">
                                                             <span class="mailbox-title">
+                                                                {{-- <i class="material-icons fas fa- user-friends"></i> --}}
+                                                                <i class="material-icons    fas fa-user-friends"></i>
                                                                 Equipo Tecnoparque Nodo {{$nodo->entidad->nombre}}
                                                             </span>
                                                         </div>
@@ -143,10 +145,8 @@
                                                                 </div>
                                                                 <ul class="collection">
                                                                     @if(isset($nodo->dinamizador->user))
-                                                                        <li class="collection-item avatar">
-                                                                            <i class="material-icons circle teal darken-2">
-                                                                                supervised_user_circle
-                                                                            </i>
+                                                                        <li class="collection-item">
+                                                                            
                                                                             <span class="title">
                                                                                 {{$nodo->dinamizador->user->documento}} - {{$nodo->dinamizador->user->nombres}} {{$nodo->dinamizador->user->apellidos}} 
                                                                             </span>
@@ -174,10 +174,8 @@
                                                                 </div>
                                                                 <ul class="collection">
                                                                     @forelse($nodo->infocenter as $infocenter)
-                                                                        <li class="collection-item avatar">
-                                                                            <i class="material-icons circle teal darken-2">
-                                                                                supervised_user_circle
-                                                                            </i>
+                                                                        <li class="collection-item">
+                                                                            
                                                                             <span class="title">
                                                                                 {{$infocenter->user->documento}} - {{$infocenter->user->nombres}} {{$infocenter->user->apellidos}}
                                                                             </span>
@@ -211,10 +209,8 @@
                                                             @forelse($nodo->gestores as $gestor)
                                                                 <div class="col s12 m6 l6">
                                                                     <ul class="collection">
-                                                                        <li class="collection-item avatar">
-                                                                            <i class="material-icons circle teal darken-2">
-                                                                                supervised_user_circle
-                                                                            </i>
+                                                                        <li class="collection-item">
+                                                                            
                                                                             <span class="title">
                                                                                 {{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}}
                                                                             </span>
@@ -258,10 +254,8 @@
                                                             @forelse($nodo->ingresos as $ingreso)
                                                                 <div class="col s12 m6 l6">
                                                                     <ul class="collection">
-                                                                        <li class="collection-item avatar">
-                                                                            <i class="material-icons circle teal darken-2">
-                                                                                supervised_user_circle
-                                                                            </i>
+                                                                        <li class="collection-item ">
+                                                                            
                                                                             <span class="title">
                                                                                 {{$ingreso->user->documento}} - {{$ingreso->user->nombres}} {{$ingreso->user->apellidos}}
                                                                             </span>

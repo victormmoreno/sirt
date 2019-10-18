@@ -4289,13 +4289,25 @@ nav .input-field label.active {
   font-weight: 700;
 }
 
+@font-face {
+  font-family: "Hand of Sean";
+  src: url("/fonts/Hand_Of_Sean/Hand_Of_Sean.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Zurich BT";
+  src: url("/fonts/zurich/zurich-bt.ttf") format("truetype");
+  font-weight: 700;
+}
+
 a {
   text-decoration: none;
 }
 
 html {
   line-height: 1.5;
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto","Hand of Sean", "Zurich BT", sans-serif;
   font-weight: normal;
   color: rgba(0, 0, 0, 0.87);
 }

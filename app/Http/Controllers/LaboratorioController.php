@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Repositories\Repository\NodoRepository;
 
-
 class LaboratorioController extends Controller
 {
 
@@ -38,7 +37,7 @@ class LaboratorioController extends Controller
                 return datatables()->of($this->laboratorioRepository->findLaboratorioForNodo(auth()->user()->dinamizador->nodo->id))
                     ->addColumn('materiales', function ($data) {
 
-                        $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver materiales de formación" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                        $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver materiales de formación" href="#" onclick=""><i class="material-icons">info_outline</i></a>';
 
                         return $button;
                     })
@@ -213,28 +212,17 @@ class LaboratorioController extends Controller
             $request['txtnodo'] = auth()->user()->dinamizador->nodo->id;
             dd($request->all());
         }
-        
+
         $laboratorio = $this->laboratorioRepository->update($laboratorio, $request->all());
 
         if ($laboratorio == true) {
-            Alert::success('Modificación Exitosa',"El laboratorio ha sido  modificado exitosamente.","success");
-        }else{
-            Alert::error('Modificación Errónea',"El laboratorio no se ha modificado.", "error");
+            Alert::success('Modificación Exitosa', "El laboratorio ha sido  modificado exitosamente.", "success");
+        } else {
+            Alert::error('Modificación Errónea', "El laboratorio no se ha modificado.", "error");
         }
-        
-       return redirect()->route('laboratorio.index');
-        
-    }
 
-/**
- * Remove the specified resource from storage.
- *
- * @param  \App\Laboratorio  $laboratorio
- * @return \Illuminate\Http\Response
- */
-    public function destroy(Laboratorio $laboratorio)
-    {
-        //
+        return redirect()->route('laboratorio.index');
+
     }
 
     /**
@@ -250,7 +238,7 @@ class LaboratorioController extends Controller
             return datatables()->of($this->laboratorioRepository->findLaboratorioForNodo($nodo))
                 ->addColumn('materiales', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver materiales de formación" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver materiales de formación" href="#"><i class="material-icons">info_outline</i></a>';
 
                     return $button;
                 })
