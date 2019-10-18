@@ -16,7 +16,7 @@ $factory->define(Material::class, function (Faker $faker) {
         'categoria_material_id' => CategoriaMaterial::all()->random()->id,
         'presentacion_id' => Presentacion::all()->random()->id,
         'medida_id' => Medida::all()->random()->id,
-        'fecha' => $faker->date($format = 'Y-m-d', $max = 'now')
+        'fecha' => $faker->date($format = 'Y-m-d', $max = 'now'),
         'codigo_material' => $faker->unique()->numerify('MA-############'),
         'nombre' =>  $faker->unique()->sentence($nbWords = 2, $variableNbWords = true),
         'cantidad' => $faker->randomDigitNot(0),
