@@ -57,7 +57,7 @@ class ArchivoController extends Controller
   {
     $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaCharlaInformativaPorId($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
-    return Storage::download($path);
+    return Storage::response($path);
   }
 
   /**
@@ -172,7 +172,7 @@ class ArchivoController extends Controller
   {
     $ruta = RutaModel::find($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
-    return Storage::download($path);
+    return Storage::response($path);
   }
 
   /**
@@ -235,7 +235,7 @@ class ArchivoController extends Controller
   {
     $ruta = RutaModel::find($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
-    return Storage::download($path);
+    return Storage::response($path);
   }
 
   /**
@@ -384,7 +384,7 @@ class ArchivoController extends Controller
   {
     $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
-    return Storage::download($path);
+    return Storage::response($path);
   }
 
   // Descarga el archivo de la articulación
@@ -392,7 +392,7 @@ class ArchivoController extends Controller
   {
     $ruta = $this->archivoRepository->consultarRutaDeArchivoDeLaArticulacionPorId($idFile);
     $path = str_replace('storage', 'public', $ruta->ruta);
-    return Storage::download($path);
+    return Storage::response($path);
   }
 
   /**

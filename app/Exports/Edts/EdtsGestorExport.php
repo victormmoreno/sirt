@@ -17,8 +17,8 @@ class EdtsGestorExport extends FatherExport
   {
     $this->setQuery($query);
     $this->setCount($this->getQuery()->count() + 7);
-    $this->setRangeHeadingCell('A7:O7');
-    $this->setRangeBodyCell('A8:O'.$this->getCount());
+    $this->setRangeHeadingCell('A7:P7');
+    $this->setRangeBodyCell('A8:P'.$this->getCount());
   }
 
   /**
@@ -49,19 +49,19 @@ class EdtsGestorExport extends FatherExport
         $event->sheet->getStyle($this->getRangeBodyCell())->applyFromArray($this->styleArray());
 
         // $event->sheet->mergeCells('A1:B6');
-        $event->sheet->mergeCells('I6:L6');
-        $event->sheet->mergeCells('M6:O6');
+        $event->sheet->mergeCells('J6:M6');
+        $event->sheet->mergeCells('N6:P6');
 
         $event->sheet->mergeCells('A1:H6');
-        $event->sheet->mergeCells('I1:O5');
+        $event->sheet->mergeCells('I1:P5');
 
-        $event->sheet->getStyle('I6:O6')->applyFromArray($styles['pares'])->getFont()->setBold(1);
-        $event->sheet->getStyle('I6:O6')->applyFromArray($this->styleArray())->getFont()->setBold(1);
-        $event->sheet->setCellValue('I6', 'Asistentes')->getStyle('I6');
+        $event->sheet->getStyle('J6:M6')->applyFromArray($styles['pares'])->getFont()->setBold(1);
+        $event->sheet->getStyle('J6:M6')->applyFromArray($this->styleArray())->getFont()->setBold(1);
+        $event->sheet->setCellValue('J6', 'Asistentes')->getStyle('J6');
 
-        $event->sheet->setCellValue('M6', 'Entregables')->getStyle('M6');
-        $event->sheet->getStyle('M6:O6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-        $event->sheet->getStyle('I6:M6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $event->sheet->setCellValue('N6', 'Entregables')->getStyle('N6');
+        $event->sheet->getStyle('N6:P6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+        $event->sheet->getStyle('J6:P6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         $event->sheet->getStyle('A7:A'.$this->getCount())->applyFromArray($styles['pares']);
         $event->sheet->getStyle('B7:B'.$this->getCount())->applyFromArray($styles['impares']);
@@ -78,6 +78,7 @@ class EdtsGestorExport extends FatherExport
         $event->sheet->getStyle('M7:M'.$this->getCount())->applyFromArray($styles['pares']);
         $event->sheet->getStyle('N7:N'.$this->getCount())->applyFromArray($styles['impares']);
         $event->sheet->getStyle('O7:O'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('P7:P'.$this->getCount())->applyFromArray($styles['impares']);
         // $event->sheet->getStyle('P7:P8')->applyFromArray($styles['impares']);
       },
     ];

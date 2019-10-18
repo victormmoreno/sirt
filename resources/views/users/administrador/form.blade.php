@@ -161,13 +161,11 @@
 
     </div>
     <div class="col s12 m9 l9">
-        {{-- <div class="divider mailbox-divider"></div> --}}
+        <div class="divider mailbox-divider"></div>
         <div class="mailbox-text">
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    {{-- <i class="material-icons prefix">
-                         credit_card
-                    </i> --}}
+                 
                     <select class="" id="txttipo_documento" name="txttipo_documento" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione tipo documento</option>
                         @foreach($tiposdocumentos as $value)
@@ -184,9 +182,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6">
-                    {{-- <i class="material-icons prefix">
-                        assignment_ind
-                    </i> --}}
                     <input id="txtdocumento" name="txtdocumento" type="text" value="{{ isset($user->documento) ? $user->documento : old('txtdocumento')}}">
                     <label for="txtdocumento">Documento <span class="red-text">*</span></label>
                     @error('txtdocumento')
@@ -197,11 +192,10 @@
             <div class="row">
                 <div class="input-field col s12 m6 l6">
 
-                    {{-- <i class="material-icons prefix">
-                        details
-                    </i> --}}
                     @if(isset($user->ciudadexpedicion->departamento->id))
+
                     <select class="js-states browser-default select2 " id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserEdit.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudadexpedicion->departamento->id))
@@ -212,7 +206,7 @@
                         @endforeach
                     </select>
                     @else
-                    <select class="js-states browser-default select2 " id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2 " id="txtdepartamentoexpedicion" name="txtdepartamentoexpedicion" onchange="UserCreate.getCiudadExpedicion()" style="width: 100%" tabindex="-1">                    
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudadexpedicion->departamento->id))
@@ -230,21 +224,19 @@
                 </div>
 
                 <div class="input-field col s12 m6 l6">
-                    {{-- <i class="material-icons prefix">
-                        details
-                    </i> --}}
+                    
                     @if(isset($user->ciudad_expedicion_id))
-                    <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
 
                     </select>
                     @else
-                    <select class="" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudadexpedicion" name="txtciudadexpedicion" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
                     </select>
                     @endif
 
-                    <label for="txtciudadexpedicion">Ciudad de Expedición <span class="red-text">*</span></label>
+                    <label class="active" for="txtciudadexpedicion">Ciudad de Expedición <span class="red-text">*</span></label>
                     @error('txtciudadexpedicion')
                         <label id="txtciudadexpedicion-error" class="error" for="txtciudadexpedicion">{{ $message }}</label>
                     @enderror
@@ -252,9 +244,6 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    {{-- <i class="material-icons prefix">
-                        account_circle
-                    </i> --}}
                     <input class="validate" id="txtnombres" name="txtnombres" type="text"  value="{{ isset($user->nombres) ? $user->nombres : old('txtnombres')}}">
                     <label for="txtnombres">Nombres <span class="red-text">*</span></label>
                     @error('txtnombres')
@@ -262,9 +251,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6">
-                    {{-- <i class="material-icons prefix">
-                        account_circle
-                    </i> --}}
                     <input class="validate" id="txtapellidos" name="txtapellidos" type="text" value="{{ isset($user->apellidos) ? $user->apellidos : old('txtapellidos')}}">
                     <label for="txtapellidos">Apellidos <span class="red-text">*</span></label>
                     @error('txtapellidos')
@@ -274,9 +260,6 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    {{-- <i class="material-icons prefix">
-                        date_range
-                    </i> --}}
                     <input class="validate datepicker" id="txtfecha_nacimiento" name="txtfecha_nacimiento" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfecha_nacimiento')}}">
                     <label for="txtfecha_nacimiento">Fecha de Nacimiento <span class="red-text">*</span></label>
                     @error('txtfecha_nacimiento')
@@ -284,9 +267,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
-                        details
-                    </i>
                     <select class="" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1" >
                         <option value="">Seleccione grupo sanguíneo </option>
                         @foreach($gruposanguineos as $value)
@@ -305,10 +285,7 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6" >
-                    <i class="material-icons prefix">
-                        details
-                    </i>
-                    <select class="" id="txteps" name="txteps" style="width: 100%" tabindex="-1" onchange="eps.getOtraEsp(this)">
+                    <select class="js-states browser-default select2" id="txteps" name="txteps" style="width: 100%" tabindex="-1" onchange="eps.getOtraEsp(this)">
                         <option value="">Seleccione eps</option>
                         @foreach($eps as $value)
                             @if(isset($user->eps_id))
@@ -318,15 +295,13 @@
                             @endif
                         @endforeach
                     </select>
-                    <label for="txteps" >Esp <span class="red-text">*</span></label>
+                    <label class="active" for="txteps" >Esp <span class="red-text">*</span></label>
                     @error('txteps')
                         <label id="txteps-error" class="error" for="txteps">{{ $message }}</label>
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6" id="otraeps">
-                    <i class="material-icons prefix">
-                        details
-                    </i>
+                    
                     <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{ isset($user->otra_eps) ? $user->otra_eps : old('txtotraeps')}}">
                     <label for="txtotraeps" class="active">Otra Eps <span class="red-text">*</span></label>
                     @error('txtotraeps')
@@ -335,9 +310,7 @@
                 </div>
 
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
-                        details
-                    </i>
+                    
                     <select class="" id="txtestrato" name="txtestrato" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione estrato</option>
                         @for($i =1; $i <= 6; $i++)
@@ -356,12 +329,8 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-
-                    <i class="material-icons prefix">
-                        details
-                    </i>
                     @if(isset($user->ciudad->departamento->id))
-                    <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserEdit.getCiudad()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="UserEdit.getCiudad()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudad->departamento->id))
@@ -372,7 +341,7 @@
                         @endforeach
                     </select>
                     @else
-                    <select class="" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="UserCreate.getCiudad()" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione departamento</option>
                         @foreach($departamentos as $value)
                             @if(isset($user->ciudad->departamento->id))
@@ -383,28 +352,25 @@
                         @endforeach
                     </select>
                     @endif
-                    <label for="txtdepartamento">Departamento de Residencia <span class="red-text">*</span></label>
+                    <label class="active" for="txtdepartamento">Departamento de Residencia <span class="red-text">*</span></label>
                     @error('txtdepartamento')
                         <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
                     @enderror
                 </div>
 
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
-                        details
-                    </i>
                     @if(isset($user->ciudad_id))
-                    <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
 
                     </select>
                     @else
-                    <select class="" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
                     </select>
                     @endif
 
-                    <label for="txtciudad">Ciudad de Residencia <span class="red-text">*</span></label>
+                    <label class="active" for="txtciudad">Ciudad de Residencia <span class="red-text">*</span></label>
                     @error('txtciudad')
                         <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
                     @enderror
@@ -412,9 +378,7 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
-                        room
-                    </i>
+                    
                     <input class="validate" id="txtbarrio" name="txtbarrio" type="text"  value="{{ isset($user->barrio) ? $user->barrio : old('txtbarrio')}}">
                     <label for="txtbarrio">Barrio <span class="red-text">*</span></label>
                     @error('txtbarrio')
@@ -422,9 +386,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6">
-                    <i class="material-icons prefix">
-                        room
-                    </i>
                     <input class="validate" id="txtdireccion" name="txtdireccion" type="text"  value="{{ isset($user->direccion) ? $user->direccion : old('txtdireccion')}}">
                     <label for="txtdireccion">Dirección <span class="red-text">*</span></label>
                     @error('txtdireccion')
@@ -434,9 +395,6 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m4 l4">
-                    <i class="material-icons prefix">
-                        mail_outline
-                    </i>
                     <input class="validate" id="txtemail" name="txtemail" type="email" value="{{ isset($user->email) ? $user->email : old('txtemail')}}">
                     <label for="txtemail">Correo <span class="red-text">*</span></label>
                     @error('txtemail')
@@ -444,9 +402,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m4 l4">
-                    <i class="material-icons prefix">
-                        contact_phone
-                    </i>
                     <input class="validate" id="txttelefono" name="txttelefono" type="tel" value="{{ isset($user->telefono) ? $user->telefono : old('txttelefono')}}">
                     <label for="txttelefono">Telefono</label>
                     @error('txttelefono')
@@ -454,9 +409,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m4 l4">
-                    <i class="material-icons prefix">
-                        settings_cell
-                    </i>
                     <input class="validate" id="txtcelular" name="txtcelular" type="tel"  value="{{ isset($user->celular) ? $user->celular : old('txtcelular')}}">
                     <label for="txtcelular">Celular</label>
                     @error('txtcelular')
@@ -515,9 +467,6 @@
         <div class="divider mailbox-divider"></div>
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <i class="material-icons prefix">
-                    settings_cell
-                </i>
                 <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion')}}">
                 <label for="txtinstitucion">Institución <span class="red-text">*</span></label>
                 @error('txtinstitucion')
@@ -525,9 +474,6 @@
                 @enderror
             </div>
             <div class="input-field col s12 m6 l6 ">
-                <i class="material-icons prefix">
-                     details
-                </i>
                 <select class="" id="txtgrado_escolaridad" name="txtgrado_escolaridad" style="width: 100%" tabindex="-1">
                     <option value="">Seleccione grado de escolaridad</option>
                     @foreach($gradosescolaridad as $value)
@@ -547,9 +493,6 @@
         </div>
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <i class="material-icons prefix">
-                    settings_cell
-                </i>
                 <input class="validate" id="txttitulo" name="txttitulo" type="text"  value="{{ isset($user->titulo_obtenido) ? $user->titulo_obtenido : old('txttitulo')}}">
                 <label for="txttitulo">Titulo Obtenido <span class="red-text">*</span></label>
                 @error('txttitulo')
@@ -557,9 +500,6 @@
                 @enderror
             </div>
             <div class="input-field col s12 m6 l6">
-                <i class="material-icons prefix">
-                    date_range
-                </i>
                 <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfechaterminacion')}}">
                 <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
                 @error('txtfechaterminacion')
@@ -649,9 +589,6 @@
             <div class="divider mailbox-divider"></div>
             <div class="row">
                 <div class="input-field col s12 m4 l4 ">
-                    <i class="material-icons prefix">
-                         details
-                    </i>
                     <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1" onchange="TipoTalento.getSelectTipoTalento(this)">
                         @if(isset($user->talento->perfil->id))
                             <option value="{{$user->talento->perfil->id}}" selected>{{$user->talento->perfil->nombre}}</option>
@@ -673,9 +610,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m4 l4 aprendizSena" >
-                     <i class="material-icons prefix">
-                         details
-                    </i>
                     <select class="" id="txtregional" name="txtregional" style="width: 100%" tabindex="-1" onchange="regional.getCentroFormacion()">
                         @if(isset($user->talento->entidad->centro->regional->id))
                             <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
@@ -696,9 +630,7 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m4 l4  aprendizSena" >
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
+                    
                     <select class="" id="txtcentroformacion" name="txtcentroformacion" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero la regional</option>
                     </select>
@@ -708,9 +640,7 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6 offset-l3 m3 aprendizSena" >
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
+                    
                     <input class="validate" id="txtprogramaformacion" name="txtprogramaformacion" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                     <label for="txtprogramaformacion">Programa de Formación <span class="red-text">*</span></label>
                     @error('txtprogramaformacion')
@@ -719,9 +649,7 @@
                 </div>
 
                 <div class="input-field col s12 m8 l8 estudianteUniversitario">
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
+                    
                     <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad  : old('txtuniversidad')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                     <label for="txtuniversidad">Universidad</label>
                     @error('txtuniversidad')
@@ -729,9 +657,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m6 l6 offset-l3 m3 estudianteUniversitario">
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
                     <input class="validate" id="txtcarrerauniversitaria" name="txtcarrerauniversitaria" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrerauniversitaria')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                     <label for="txtcarrerauniversitaria">Carrera</label>
                     @error('txtcarrerauniversitaria')
@@ -739,9 +664,6 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m8 l8 " id="funcionarioEmpresa">
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
                     <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}" length="200" maxlength="200" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                     <label for="txtempresa">Empresa</label>
                     @error('txtempresa')
@@ -749,9 +671,7 @@
                     @enderror
                 </div>
                 <div class="input-field col s12 m8 l8 " id="otroTipoTalento">
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
+                    
                     <input class="validate" id="txtotrotipotalento" name="txtotrotipotalento" type="text"  value="{{ isset($user->talento->otro_tipo_talento) ? $user->talento->otro_tipo_talento : old('txtotrotipotalento')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                     <label for="txtotrotipotalento">¿Cuál?</label>
                     @error('txtotrotipotalento')
@@ -760,9 +680,6 @@
                 </div>
 
                 <div class="input-field col s12 m6 l6 investigador" >
-                    <i class="material-icons prefix">
-                    settings_cell
-                    </i>
                     <input class="validate" id="txtgrupoinvestigacion" name="txtgrupoinvestigacion"  type="text" readonly  value="{{ isset($user->talento->entidad->grupoinvestigacion->entidad->nombre) ?  : old('txtgrupoinvestigacion')}}">
 
                     <label class="active" for="txtgrupoinvestigacion">Grupo Investigación<span class="red-text">*</span></label>

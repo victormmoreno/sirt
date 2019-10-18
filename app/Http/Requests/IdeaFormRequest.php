@@ -38,6 +38,7 @@ class IdeaFormRequest extends FormRequest
             'txtobjetivo'        => 'required|min:1|max:2000',
             'txtalcance'         => 'required|min:1|max:2000',
             'txtservidorvideo'   => 'nullable',
+
             'txtlinkvideo'       => ['nullable', 'url', new CreateValidationForDomainRequest, 'max:1000'],
         ];
     }

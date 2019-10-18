@@ -21,11 +21,14 @@
                       </div>
                     </div>
                     <div class="col s12 m2 l2">
-                      <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                        <a href="{{route('proyecto.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="button" data-delay="50" data-tooltip="Nuevo Proyecto">
-                          <i class="material-icons">library_add</i>
-                        </a>
-                      </div>
+                      <a href="{{ route('proyecto.create') }}">
+                        <div class="card green">
+                          <div class="card-content center">
+                            <i class="left material-icons white-text">add</i>
+                            <span class="white-text">Nuevo Proyecto</span>
+                          </div>
+                        </div>
+                      </a>
                     </div>
                   </div>
                   <div class="divider"></div>
@@ -59,6 +62,15 @@
                         </a>
                       </div>
                       @include('proyectos.table')
+                      <div class="col s12 m2 l2">
+                        <a onclick="generarExcelDeProyectosDelGestorPorAnho()" href="javascript:void(0)">
+                          <div class="card green">
+                            <div class="card-content center">
+                              <span class="white-text">Descargar tabla</span>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
                     </div>
                   </div>
                   <div id="proyectos_pendientes">
@@ -70,12 +82,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <!--boton de abajo -->
-    <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-      <a href="{{route('proyecto.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nuevo Proyecto">
-        <i class="material-icons">library_add</i>
-      </a>
     </div>
     @include('proyectos.modals')
   </main>

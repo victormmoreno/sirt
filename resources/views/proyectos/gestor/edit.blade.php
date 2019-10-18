@@ -591,7 +591,7 @@
       let id = $("#txtestadoproyecto_id").val();
       let nombre = $("#txtestadoproyecto_id [value='"+id+"']").text();
 
-      if (nombre == "Cierre PF" || nombre == "Cierre PMV") {
+      if (nombre == "Cierre PF" || nombre == "Cierre PMV" || nombre == "Suspendido") {
         divFechaCierreProyecto.show();
       } else {
         divFechaCierreProyecto.hide();

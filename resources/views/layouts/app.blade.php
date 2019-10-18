@@ -12,8 +12,14 @@
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
-        @stack('style')
-    </head>
+        <style>
+        .tabs .tab .active {
+          color:#26a69a;
+          /*Custom Text Color While Active*/
+          background-color: rgba(89, 181, 72, 0.2);
+          /*Custom Background Color While Active*/
+        }
+        </style>
     <body>
         <div class="mn-content fixed-sidebar" id="app">
             @include('layouts.nav')

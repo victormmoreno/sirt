@@ -33,7 +33,7 @@
                       <a href="{{route('grafico.edt')}}">
                         <div class="card indigo lighten-4">
                           <div class="card-content center">
-                            <i class="left material-icons black-text">record_voice_over</i>
+                            <i class="left material-icons black-text">hearing</i>
                             <span class="black-text">Edt's</span>
                           </div>
                         </div>

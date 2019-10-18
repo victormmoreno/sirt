@@ -81,6 +81,22 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Excel que genera los proyecto que se cerraron en un nodo por año
+   * @param int $id id del nodo
+   * @param string $anho Año para realizar el filtro
+   * @return Response
+   * @author dum
+   */
+  public function consultarProyectosDeUnNodoFinalizadosPorAnho_Controller($id, $anho)
+  {
+    $idnodo = $this->idNodo($id);
+    $query = $this->getProyectoRepository()->consultarProyectos_Repository()->where('nodos.id', $idnodo)->whereYear('fecha_cierre', $anho)->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV'])->groupBy('proyectos.id')->get();
+    $this->setQuery($query);
+    // dd($this->getQuery());
+    return Excel::download(new ProyectosNodoAnhoExport($this->getQuery(), 0), 'Proyectos.xls');
+  }
+
+  /**
    * Excel para generar los proyectos que se inscriben en un año por nodo
    *
    * @param int $id Id del nodo

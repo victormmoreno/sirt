@@ -429,7 +429,7 @@ class ArticulacionController extends Controller
       }
       $update = $this->articulacionRepository->updateGestorArticulacion_Repository($request, $id);
       if ($update) {
-        Alert::success('Modificación Existosa!', 'El gestor de la articulación se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Modificación Exitosa!', 'El gestor de la articulación se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
         return redirect('articulacion');
       } else {
         Alert::error('Modificación Errónea!', 'El gestor de la articulación no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');

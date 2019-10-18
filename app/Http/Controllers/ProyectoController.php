@@ -73,7 +73,7 @@ class ProyectoController extends Controller
 
     $update = $this->getProyectoRepository()->updateAprobacionUsuario($request, $id);
     if ( $update ) {
-      Alert::success('Modificación Existosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Modificación Exitosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
       return redirect('proyecto');
     } else {
       Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto no ha sido cambiada!')->showConfirmButton('Ok', '#3085d6');
@@ -341,13 +341,10 @@ class ProyectoController extends Controller
   {
     if (Session::get('login_role') == User::IsGestor()) {
       $validator = Validator::make($request->all(), [
-      'txtservidorvideo' => Rule::requiredIf(isset($request->txtvideo_tutorial)),
-      'txturl_videotutorial' => [Rule::requiredIf(isset($request->txtvideo_tutorial)), 'url', new CreateValidationForDomainRequest, 'max:1000'],
+      'txturl_videotutorial' => ['url', 'max:1000', 'nullable'],
       ], [
-      'txturl_videotutorial.required' => 'La Url del Video es obligatoria.',
       'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.',
       'txturl_videotutorial.max' => 'La Url del Video debe ser máximo de 1000 carácteres.',
-      'txtservidorvideo.required' => 'El Servidor de Videos de obligatorio.'
       ]);
       if ($validator->fails()) {
         return back()->withErrors($validator)->withInput();
@@ -355,7 +352,7 @@ class ProyectoController extends Controller
 
       $update = $this->getProyectoRepository()->updateEntregablesProyectoRepository($request, $id);
       if ($update) {
-        Alert::success('Modificación Existosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Modificación Exitosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
         return redirect('proyecto');
       } else {
         Alert::error('Modificación Errónea!', 'Los entregables del proyecto no se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -369,7 +366,7 @@ class ProyectoController extends Controller
       } else {
         $update = $this->getProyectoRepository()->updateRevisadoFinalProyectoRepository($request, $id);
         if ($update) {
-          Alert::success('Modificación Existosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
+          Alert::success('Modificación Exitosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
           return redirect('proyecto');
         } else {
           Alert::error('Modificación Errónea!', 'El revisado final del proyecto no se modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -772,7 +769,7 @@ class ProyectoController extends Controller
 
       $update = $this->getProyectoRepository()->updateProyectoDinamizadorRepository($request, $id);
       if ($update) {
-        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Existosa!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
         return redirect('proyecto');
       } else {
         Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');

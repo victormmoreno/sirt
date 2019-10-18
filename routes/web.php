@@ -312,13 +312,8 @@ Route::group([
     Route::get('usoinfraestructura/edtforuser/{id}', 'UsoInfraestructuraController@edtForUser')
             ->name('usoinfraestructura.edtforuser');
 
-    Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
-        ->name('usoinfraestructura.edtsforuser');
-
     Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
         ->name('usoinfraestructura.usoinfraestructurapornodo');
-
-    
 
 });
 
@@ -361,7 +356,7 @@ Route::group([
 ],
     function () {
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
-        Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
+        // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
         Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
@@ -371,7 +366,7 @@ Route::group([
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/', 'IdeaController@store')->name('idea.store');
-        Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi')->middleware(['auth', 'role_session:Infocenter']);
+        // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/addIdeaDeProyectoAlComite', 'IdeaController@addIdeaDeProyectoCreate');
     }
 );
@@ -399,7 +394,7 @@ function () {
   Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea')->middleware('role_session:Infocenter');
   Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
   Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
-  Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
+  // Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
   Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Infocenter');
   Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Infocenter');
   Route::post('/addidea', 'EntrenamientoController@add_idea')->middleware('role_session:Infocenter');
@@ -540,30 +535,29 @@ Route::group(
 );
 
 /**
- * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
- */
+* Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
+*/
 Route::group([
-    'prefix'     => 'edt',
-    'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador'],
+  'prefix'     => 'edt',
+  'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador'],
 ],
-    function () {
-
-        //
-        Route::get('/', 'EdtController@index')->name('edt');
-        Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
-        Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor|Dinamizador');
-        Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
-        Route::get('/consultarEdtsDeUnGestor/{id}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
-        Route::get('/consultarEdtsDeUnNodo/{id}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
-        Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
-        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
-        Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Gestor|Dinamizador');
-        Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Gestor');
-        Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Gestor');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Gestor');
-    }
+  function () {
+    //
+    Route::get('/', 'EdtController@index')->name('edt');
+    Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
+    Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor|Dinamizador');
+    Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
+    Route::get('/consultarEdtsDeUnGestor/{id}/{anho}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
+    Route::get('/consultarEdtsDeUnNodo/{id}/{anho}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
+    Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
+    Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
+    Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Gestor|Dinamizador');
+    Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Gestor');
+    Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
+    Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Gestor');
+    Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Gestor');
+  }
 );
 
 /**
@@ -668,7 +662,7 @@ Route::group([
  function () {
    // Rutas para la generación de excel del módulo de edts
    Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Gestor|Dinamizador|Administrador');
-   Route::get('/excelEdtsDeUnGestor/{id}', 'Excel\EdtController@edtsDeUnGestor')->name('edt.excel.gestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   // Route::get('/excelEdtsDeUnGestor/{id}', 'Excel\EdtController@edtsDeUnGestor')->name('edt.excel.gestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
    Route::get('/excelEdtsDeUnNodo/{id}', 'Excel\EdtController@edtsDeUnNodo')->name('edt.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelEdtsFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYNodo')->name('edt.excel.nodo.fecha')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Gestor|Dinamizador|Administrador');
@@ -686,8 +680,27 @@ Route::group([
    Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
    Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelProyectosFinalizadosPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoFinalizadosPorAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
+   // Rutas para la generación de excel del módulo de seguimiento
+   Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+   Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
  }
 );
+
+/**
+ * Route group para el nódulo de seguimiento
+ */
+Route::group([
+    'prefix' => 'seguimiento',
+    'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor',]
+],
+  function () {
+    Route::get('/', 'SeguimientoController@index')->name('seguimiento');
+    Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
+    Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+  }
+);
+
 
 //-------------------Route group para todos los pdfs de la aplicacion
 Route::group([

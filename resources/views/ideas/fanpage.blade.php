@@ -192,7 +192,7 @@
                                         <div class="input-field col s12 m12 l12">
                                             <b>
                                                 <label>
-                                                    ¿En qué estado se encuentra su propuesta? 
+                                                    ¿En qué estado se encuentra su propuesta?
                                                     <span class="red-text">*</span>
                                                 </label>
                                             </b>
@@ -289,7 +289,7 @@
                                             <b>
                                                 <label>
                                                     ¿Cómo está conformado su equipo de trabajo? <span class="red-text">*</span>
-                                                </label> 
+                                                </label>
                                             </b>
                                         </div>
                                         <br><br>
@@ -460,14 +460,14 @@
                                                 @enderror
                                                 </div>
                                                 <div class="input-field col s12 m4 l4">
-                                                    <input placeholder="ingresa el link del video" class="validate" id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{ old('txtlinkvideo') }}">
-                                                    <small>la dirección de debe ser algo siminlar: <b>https://www.youtube.com/watch?v=J9LSfkVF2K4</b></small><br>
+                                                    <input placeholder="Ingresa el link del video" class="validate" id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{ old('txtlinkvideo') }}">
+                                                    <small>la dirección de debe ser algo similar: <b>https://www.youtube.com/watch?v=J9LSfkVF2K4</b></small><br>
                                                     @error('txtlinkvideo')
                                                         <label id="txtlinkvideo-error" class="error" for="txtlinkvideo">{{ $message }}</label>
                                                     @enderror
                                                 </div>
                                                 <label for="txtlinkvideo" class="active">
-                                                    link video <span class="red-text">*</span>
+                                                    Link del video <span class="red-text"></span>
                                                 </label>
 
                                             </div>

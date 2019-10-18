@@ -17,11 +17,14 @@
                     </div>
                   </div>
                   <div class="col s12 m2 l2">
-                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="{{route('csibt.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nuevo Comité">
-                        <i class="material-icons">gavel</i>
-                      </a>
-                    </div>
+                    <a class="red" href="{{ route('csibt.create') }}">
+                      <div class="card green">
+                        <div class="card-content center">
+                          <i class="left material-icons white-text">add</i>
+                          <span class="white-text">Nuevo Comité</span>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                 </div>
                 <center>

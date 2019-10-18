@@ -6,12 +6,12 @@
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
           <h5><a class="footer-text left-align" href="{{route('edt')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="left material-icons">arrow_back</i>
           </a> Edt </h5>
           <div class="card">
             <div class="card-content">
               <div class="row">
-                <center><span class="card-title center-align">Nueva Edt</span> <i class="small material-icons prefix">record_voice_over</i></center>
+                <center><span class="card-title center-align">Nueva Edt</span> <i class="small material-icons prefix">hearing</i></center>
                 <form method="post" id="formEdtCreate" action="{{route('edt.store')}}">
                   @include('edt.gestor.form', [
                     'btnText' => 'Registrar'

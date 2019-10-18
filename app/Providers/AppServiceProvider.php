@@ -16,7 +16,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if (app()->environment() == 'production') {
+          $this->app->bind('path.public', function () {
+            return '/home/gestionred/public_html';
+          });
+        }
     }
 
     /**

@@ -37,7 +37,7 @@ class EntrenamientoController extends Controller
   {
     $update = $this->entrenamientoRepository->updateEvidencias($request, $id);
     if ($update) {
-      Alert::success('Modificación Existosa!', 'Los entregables del entrenamiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Modificación Exitosa!', 'Los entregables del entrenamiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
       return redirect('entrenamientos');
     } else {
       Alert::error('Modificación Errónea!', 'Los entregables del entrenamiento no se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -93,7 +93,7 @@ class EntrenamientoController extends Controller
           ';
           return $evidencias;
         })->addColumn('edit', function ($data) {
-          $edit = '<a href="' . route("entrenamientos.edit", $data->id) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+          $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
           return $edit;
         })->rawColumns(['details', 'edit', 'update_state', 'evidencias'])->make(true);
       }

@@ -6,7 +6,7 @@
       <div class="row no-m-t no-m-b">
         <h5>
           <a class="footer-text left-align" href="{{route('entrenamientos')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="left material-icons">arrow_back</i>
           </a> Entrenamientos
         </h5>
         <div class="card">
@@ -37,19 +37,19 @@
                     <div class="col s4 m4 l4">
                       <p class="p-v-xs">
                         <input type="checkbox" name="txtcorreos" {{ $entrenamiento->correos == 'No' ? '' : 'checked' }} id="txtcorreos" value="1">
-                        <label for="txtcorreos">Correos <span class="red-text">*</span></label>
+                        <label for="txtcorreos">Correos</label>
                       </p>
                     </div>
                     <div class="col s4 m4 l4">
                       <p class="p-v-xs">
                         <input type="checkbox" name="txtfotos" {{ $entrenamiento->fotos == 'No' ? '' : 'checked' }} id="txtfotos" value="1">
-                        <label for="txtfotos">Fotos <span class="red-text">*</span></label>
+                        <label for="txtfotos">Fotos</label>
                       </p>
                     </div>
                     <div class="col s4 m4 l4">
                       <p class="p-v-xs">
                         <input type="checkbox" name="txtlistado_asistencia" {{ $entrenamiento->listado_asistencia == 'No' ? '' : 'checked' }} id="txtlistado_asistencia" value="1">
-                        <label for="txtlistado_asistencia">Listado de Asistencia <span class="red-text">*</span></label>
+                        <label for="txtlistado_asistencia">Listado de Asistencia</label>
                       </p>
                     </div>
                   </div>

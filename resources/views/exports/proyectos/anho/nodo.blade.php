@@ -13,6 +13,7 @@
         <th>Sector</th>
         <th>Línea Tecnológica</th>
         <th>Sublínea</th>
+        <th>Gestor a cargo</th>
         <th>Área de Conocimiento</th>
         <th>Estado del Proyecto</th>
         <th>Tipo de Proyecto</th>
@@ -50,6 +51,7 @@
           <td>{{ $value->nombre_sector }}</td>
           <td>{{ $value->nombre_linea }}</td>
           <td>{{ $value->nombre_sublinea }}</td>
+          <td>{{ $value->gestor }}</td>
           <td>{{ $value->nombre_areaconocimiento }}</td>
           <td>{{ $value->nombre_estadoproyecto }}</td>
           <td>{{ $value->nombre_tipoproyecto }}</td>

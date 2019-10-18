@@ -17,16 +17,16 @@
                     </div>
                   </div>
                   <div class="col s12 m2 l2">
-                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                      <a href="{{route('empresa.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="bottom" data-delay="50" data-tooltip="Nueva Empresa">
-                        <i class="material-icons">exposure_plus_1</i>
-                      </a>
-                    </div>
+                    <a href="{{ route('empresa.create') }}">
+                      <div class="card green">
+                        <div class="card-content center">
+                          <i class="left material-icons white-text">add</i>
+                          <span class="white-text">Nueva Empresa</span>
+                        </div>
+                      </div>
+                    </a>
                   </div>
                 </div>
-                {{-- <a class="btn orange lighten-3 m-b-xs modal-trigger" id="modalContactos2" href="#contactosDeUnaEntidad_modal"> --}}
-                <i class="material-icons">local_phone</i>
-                </a>
                 <div class="divider"></div>
                 <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
                   <thead>
@@ -49,11 +49,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-        <a href="{{route('empresa.create')}}" class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nueva Empresa">
-          <i class="material-icons">exposure_plus_1</i>
-        </a>
       </div>
     </div>
   </div>

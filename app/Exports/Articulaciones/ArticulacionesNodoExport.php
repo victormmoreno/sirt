@@ -7,6 +7,7 @@ use App\Exports\FatherExport;
 use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithTitle, WithEvents};
 use Maatwebsite\Excel\Events\{AfterSheet, BeforeSheet};
 use App\Repositories\Repository\ArticulacionRepository;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 
 // use Maatwebsite\Excel\Concerns\FromCollection;
@@ -22,7 +23,7 @@ class ArticulacionesNodoExport extends FatherExport implements FromView, ShouldA
     $this->articulacionRepository = $articulacionRepository;
     $this->id = $id;
     $this->query = $this->articulacionRepository->consultarArticulacionesDeUnNodo( $this->id );
-    $this->setCount($this->getQuery()->count() + 1);
+    $this->setCount($this->query->count() + 7);
     $this->setRangeHeadingCell('A1:P1');
     $this->setRangeBodyCell('A1:P'.$this->getCount());
   }
@@ -47,25 +48,26 @@ class ArticulacionesNodoExport extends FatherExport implements FromView, ShouldA
     $styles = array('pares' => $columnPar, 'impares' => $columnImPar);
     return [
       AfterSheet::class => function(AfterSheet $event) use ($styles) {
+        $event->sheet->mergeCells('A1:P6');
         $event->sheet->getStyle($this->getRangeHeadingCell())->applyFromArray($this->styleArray())->getFont()->setSize(14)->setBold(1);
         $event->sheet->getStyle($this->getRangeBodyCell())->applyFromArray($this->styleArray());
 
-        $event->sheet->getStyle('A1:A'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('B1:B'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('C1:C'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('D1:D'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('E1:E'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('F1:F'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('G1:G'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('H1:H'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('I1:I'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('J1:J'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('K1:K'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('L1:L'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('M1:M'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('N1:N'.$this->getCount())->applyFromArray($styles['impares']);
-        $event->sheet->getStyle('O1:O'.$this->getCount())->applyFromArray($styles['pares']);
-        $event->sheet->getStyle('P1:P'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('A7:A'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('B7:B'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('C7:C'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('D7:D'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('E7:E'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('F7:F'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('G7:G'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('H7:H'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('I7:I'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('J7:J'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('K7:K'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('L7:L'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('M7:M'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('N7:N'.$this->getCount())->applyFromArray($styles['impares']);
+        $event->sheet->getStyle('O7:O'.$this->getCount())->applyFromArray($styles['pares']);
+        $event->sheet->getStyle('P7:P'.$this->getCount())->applyFromArray($styles['impares']);
       },
       // BeforeSheet::class => function(BeforeSheet $event) use ($styles) {
       //   // $event->sheet->getStyle('A2:A'.$this->getCount(). ';C2:C'. $this->getCount())->applyFromArray($styles['pares']);
@@ -81,6 +83,32 @@ class ArticulacionesNodoExport extends FatherExport implements FromView, ShouldA
   public function title(): String
   {
     return 'Articulaciones';
+  }
+
+  /**
+  * Método para pinta imágenes en el archivo de Excel
+  * @return object
+  * @abstract
+  * @author dum
+  */
+  public function drawings()
+  {
+    $drawing = new Drawing();
+    $drawing->setName('Logo Tecnoparque');
+    $drawing->setPath(public_path('/img/logonacional_Negro.png'));
+    $drawing->setResizeProportional(false);
+    $drawing->setHeight(104);
+    $drawing->setWidth(120);
+    $drawing->setCoordinates('A1');
+
+    $drawing2 = new Drawing();
+    $drawing2->setName('Logo Sennova');
+    $drawing2->setPath(public_path('/img/sennova.png'));
+    $drawing2->setResizeProportional(false);
+    $drawing2->setHeight(104);
+    $drawing2->setWidth(180);
+    $drawing2->setCoordinates('F1');
+    return [$drawing, $drawing2];
   }
 
 }

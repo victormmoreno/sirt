@@ -619,13 +619,13 @@ function noSeEncontraronResultados() {
 }
 
 $(document).ready(function() {
-  $('#entrenamientos_nodo_table').DataTable({
+  $('#entrenamientos_nodo_table').dataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
     processing: true,
     serverSide: true,
-    paging: false,
+    paging: true,
     ajax:{
       url: "/entrenamientos",
       type: "get",
@@ -1095,8 +1095,6 @@ csibt_create = {
         type: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
-        // cancelButtonColor: '#d33',
-        // cancelButtonText: 'Cancelar',
         confirmButtonText: 'Entendido!'
       })
     } else {
@@ -1120,11 +1118,6 @@ csibt_create = {
         if ( $('#txtadmitido').is(":checked") ) {
           ideaAdmitida = 1;
         }
-        console.log('Asistencia');
-        console.log(asistenciaAlComite);
-        console.log('Admitido');
-        console.log(ideaAdmitida);
-
         let token = $("#formComiteCreate input[name=_token]").val();
 
         $.ajax({
@@ -1245,6 +1238,11 @@ $(document).ready(function() {
       {
         data: 'details',
         name: 'details',
+        orderable: false
+      },
+      {
+        data: 'evidencias',
+        name: 'evidencias',
         orderable: false
       },
 
@@ -4001,7 +3999,6 @@ divFechaCierreEdt = $('#divFechaCierreEdt');
 divFechaCierreEdt.hide();
 
 function actiarFechaFinDeLaEdt() {
-  console.log('hello');
   if ( $('#txtestado').is(':checked') ) {
     divFechaCierreEdt.show();
   } else {
@@ -4077,7 +4074,7 @@ $(document).ready(function() {
 // Ajax que muestra los proyectos de un gestor por año
 function consultarEdtsDeUnGestor(id) {
   // console.log('event');
-  // let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+  let anho = $('#txtanho_edts_Gestor').val();
   // let gestor = $('#txtgestor_id').val();
   $('#edtPorGestor_table').dataTable().fnDestroy();
   $('#edtPorGestor_table').DataTable({
@@ -4088,51 +4085,63 @@ function consultarEdtsDeUnGestor(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnGestor/"+id,
+      url: "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
       type: "get",
     },
     columns: [
       {
-        width: '15%',
+        width: '10%',
         data: 'codigo_edt',
         name: 'codigo_edt',
       },
       {
+        width: '15%',
         data: 'nombre',
         name: 'nombre',
       },
       {
+        width: '15%',
         data: 'gestor',
         name: 'gestor',
       },
       {
+        width: '6%',
         data: 'area_conocimiento',
         name: 'area_conocimiento',
       },
       {
+        width: '6%',
         data: 'tipo_edt',
         name: 'tipo_edt',
       },
       {
-        width: '8%',
+        data: 'fecha_inicio',
+        name: 'fecha_inicio',
+      },
+      {
+        data: 'estado',
+        name: 'estado',
+      },
+      {
+        width: '6%',
         data: 'business',
         name: 'business',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'edit',
         name: 'edit',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'entregables',
         name: 'entregables',
         orderable: false
@@ -4146,6 +4155,7 @@ $(document).ready(function() {
 });
 
 function datatableEdtsPorNodo(id) {
+  let anho = $('#txtanho_edts_Nodo').val();
   $('#edtPorNodo_table').dataTable().fnDestroy();
   $('#edtPorNodo_table').DataTable({
     language: {
@@ -4155,51 +4165,65 @@ function datatableEdtsPorNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnNodo/"+id,
+      url: "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
       type: "get",
     },
     columns: [
       {
-        width: '15%',
+        width: '10%',
         data: 'codigo_edt',
         name: 'codigo_edt',
       },
       {
+        width: '15%',
         data: 'nombre',
         name: 'nombre',
       },
       {
+        width: '15%',
         data: 'gestor',
         name: 'gestor',
       },
       {
+        width: '6%',
         data: 'area_conocimiento',
         name: 'area_conocimiento',
       },
       {
+        width: '6%',
         data: 'tipo_edt',
         name: 'tipo_edt',
       },
       {
         width: '8%',
+        data: 'fecha_inicio',
+        name: 'fecha_inicio',
+      },
+      {
+        width: '8%',
+        data: 'estado',
+        name: 'estado',
+      },
+      {
+        width: '6%',
         data: 'business',
         name: 'business',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'entregables',
         name: 'entregables',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'edit',
         name: 'edit',
         orderable: false
@@ -6883,4 +6907,207 @@ function consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(bandera) {
       })
     }
   }
+}
+
+var graficosSeguimiento = {
+  gestor: 'graficoSeguimientoPorGestorDeUnNodo_column',
+  nodo: 'graficoSeguimientoDeUnNodo_column'
+};
+
+function alertaLineaNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+};
+
+function alertaGestorNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un Gestor', 'warning');
+};
+
+function alertaFechasNoValidas() {
+  Swal.fire('Advertencia!', 'Seleccione fechas válidas', 'warning');
+};
+
+function alertaNodoNoValido() {
+  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+};
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el gestor consulta
+
+function consultarSeguimientoDeUnGestor(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
+  let fecha_fin = $('#txtfecha_fin_Gestor').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtgestor_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaGestorNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/seguimiento/seguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        success: function (data) {
+          graficoSeguimiento(data, graficosSeguimiento.gestor);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
+  }
+};
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Administrador consulta
+
+function consultarSeguimientoDeUnNodo(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
+  let fecha_fin = $('#txtfecha_fin_Nodo').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaNodoNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/seguimiento/seguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        success: function (data) {
+          graficoSeguimiento(data, graficosSeguimiento.nodo);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
+  }
+};
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Administrador consulta
+function generarExcelSeguimentoNodo(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
+  let fecha_fin = $('#txtfecha_fin_Nodo').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtnodo_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaNodoNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      location.href = '/excel/excelSeguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+}
+
+// 0 para cuando el Dinamizador consultar
+// 1 para cuando el Gestor consulta
+function generarExcelSeguimentoDeUnGestor(bandera) {
+  let id = 0;
+  let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
+  let fecha_fin = $('#txtfecha_fin_Gestor').val();
+
+  if ( bandera == 1 ) {
+    id = $('#txtgestor_id').val();
+  }
+
+  if ( id === "" ) {
+    alertaGestorNoValido();
+  } else {
+    if ( fecha_inicio > fecha_fin ) {
+      alertaFechasNoValidas();
+    } else {
+      location.href = '/excel/excelSeguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin;
+    }
+  }
+}
+
+function graficoSeguimiento(data, name) {
+  Highcharts.chart(name, {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: 'Seguimiento'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad'
+      }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    },
+    series: [
+      {
+        colorByPoint: true,
+        data: [
+          {
+            name: "Proyectos en Inicio",
+            y: data.datos.Inicio,
+          },
+          {
+            name: "Proyectos en Planeación",
+            y: data.datos.Planeacion,
+          },
+          {
+            name: "Proyectos en Ejecución",
+            y: data.datos.Ejecucion,
+          },
+          {
+            name: "Proyectos en Cierre PF",
+            y: data.datos.CierrePF,
+          },
+          {
+            name: "Proyectos en Cierre PMV",
+            y: data.datos.CierrePMV,
+          },
+          {
+            name: "Proyectos Suspendidos",
+            y: data.datos.Suspendido,
+          },
+          {
+            name: "Articulacion con G.I",
+            y: data.datos.ArticulacionesGI,
+          },
+          {
+            name: "Articulacion con Empresas",
+            y: data.datos.ArticulacionesEmp,
+          },
+          {
+            name: "Articulacion con Emprendedores",
+            y: data.datos.ArticulacionesEmprendedores,
+          },
+          {
+            name: "Edts",
+            y: data.datos.Edts,
+          }
+        ]
+      }
+    ],
+  });
 }
