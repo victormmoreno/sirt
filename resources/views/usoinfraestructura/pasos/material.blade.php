@@ -30,11 +30,24 @@
             <div class="divider"></div>
             <div class="row">
                 <div class="input-field col s12 m7 l7">
-
-                    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" >
-                        <option value="">Seleccione Material de  Formación</option>
-
-                    </select>
+                    @if(isset($usoinfraestructura->actividad->nodo->materiales))
+                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" >
+                            <option value="">Seleccione Material de  Formación</option>
+                            @foreach($usoinfraestructura->actividad->nodo->materiales as $material)
+                                
+                                <option value="{{$material->id}}">
+                                     {{$material->codigo_material}} - {{$material->nombre}}
+                                </option>
+                            
+                            @endforeach
+                        </select>
+                    @else
+                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" >
+                            <option value="">Seleccione Material de  Formación</option>
+                        </select>
+                
+                    @endif
+    
                     <label class="active" for="txtmaterial">
                         Matrerial de Formación
                     </label>
@@ -42,7 +55,7 @@
                 <div class="input-field col s12 m2 l2">
                     
                     @if(isset($usoinfraestructura->fecha))
-                        <input  id="txtcantidad" name="txtcantidad" type="number" value="{{$usoinfraestructura}}"/>
+                        <input  id="txtcantidad" name="txtcantidad" type="number" value="1"/>
                     @else
                         <input  id="txtcantidad" name="txtcantidad" type="number" value="1" />
                     @endif
@@ -77,19 +90,19 @@
                             </tr>
                         </thead>
                         <tbody id="detalleMaterialUso">
-                            @if(isset($usoinfraestructura->usoequipos))
-                                @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
+                            @if(isset($usoinfraestructura->usomateriales))
+                                @forelse ($usoinfraestructura->usomateriales as $key => $material)
                                         
-                                        <tr id="filaMaterial{{$equipo->id}}">
+                                        <tr id="filaMaterial{{$material->id}}">
                                             <td>
-                                                <input type="hidden" name="material[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
+                                                <input type="hidden" name="material[]" value="{{$material->id}}"/>{{$material->codigo_material}} - {{$material->nombre}}
                                             </td>
                                             <td>
-                                                <input type="hidden" name="cantidad[]" value="{{$equipo->pivot->tiempo}}"/>
-                                                {{$equipo->pivot->tiempo}}
+                                                <input type="hidden" name="cantidad[]" value="{{$material->pivot->unidad}}"/>
+                                                {{$material->pivot->unidad}}
                                             </td>
                                             <td>
-                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial({{$equipo->id}});">
+                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial({{$material->id}});">
                                                     <i class="material-icons">delete_sweep</i>
                                                 </a>
                                             </td>

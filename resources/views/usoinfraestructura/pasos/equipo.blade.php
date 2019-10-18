@@ -17,6 +17,8 @@
     </div>
 
     <div class="col s12 m9 l9">
+
+
         <fieldset>
             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                 <legend>Paso 4</legend>
@@ -31,34 +33,41 @@
             <div class="row">
                 <div class="input-field col s12 m4 l4">
 
-                    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraCreate.getEquipoPorLinea()">
-                        <option value="">Seleccione Linea Tecnológica</option>
-                        {{-- @forelse($lineastecnologicas as $id => $linea)
-                            @if(isset($equipo->lineatecnologicanodo->lineatecnologica->id))
-                                <option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologicanodo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
-                            @else
-                                <option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
-                            @endif
-                        @empty
-                            <option value="">No hay información disponible</option>
-                        @endforelse --}}
-                    </select>
+                        @if(isset($usoinfraestructura->actividad->nodo->equipos))
+                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraUpdate.getEquipoPorLinea()">
+                                <option value="">Seleccione Linea Tecnológica</option>
+                                @foreach($usoinfraestructura->actividad->nodo->lineas as $lineatecnologica)
+                                    
+                                    <option value="{{$lineatecnologica->id}}">
+                                         {{$lineatecnologica->abreviatura}} - {{$lineatecnologica->nombre}}
+                                    </option>
+                                
+                                @endforeach
+                            </select>
+                        @else
+                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraCreate.getEquipoPorLinea()">
+                                <option value="">Seleccione Linea Tecnológica</option>
+                            </select>
+                    
+                        @endif
+    
+                    
                     <label class="active" for="txtlineatecnologica">
                         Linea Tecnológica
                     </label>
                 </div>
                 <div class="input-field col s12 m4 l4">
                     <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
-                        @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica->lineastecnologicasnodos))
+                        @if(isset($usoinfraestructura->actividad->nodo->equipos))
                             <option value="">
                                 Seleccione el equipo
                             </option>
-                            @foreach($usoinfraestructura->actividad->gestor->lineatecnologica->lineastecnologicasnodos as $equipos)
-                                @foreach($equipos->equipos as $equipo)
+                            @foreach($usoinfraestructura->actividad->nodo->equipos as $equipo)
+                                
                                 <option value="{{$equipo->id}}">
                                     {{$equipo->nombre}}
                                 </option>
-                                @endforeach
+                                
                             @endforeach
                         @else
                             <option value="">
@@ -72,7 +81,7 @@
                 </div>
                 <div class="input-field col s12 m2 l2">
             
-                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number">
+                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number" value="1">
                         <label for="txttiempouso">
                             Tiempo Uso (Horas)
                         </label>

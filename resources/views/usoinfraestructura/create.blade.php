@@ -139,15 +139,17 @@
                     usoInfraestructuraCreate.limpiarInputsActividad();
                     usoInfraestructuraCreate.removeValueLineaGestor();
                     usoInfraestructuraCreate.eliminarContentTables();
-                    usoInfraestructuraCreate.removeDisableSelectButtons();
-                    usoInfraestructuraCreate.DatatableProjectsForUser();
                     usoInfraestructuraCreate.limpiarListaTalentos();
                     usoInfraestructuraCreate.limpiarListaEquipos();
+                    usoInfraestructuraCreate.limpiarListaMateriales();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
+                    usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.removeDisableSelectButtons();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
                     usoInfraestructuraCreate.removeDisableButtonEquipos();
                     usoInfraestructuraCreate.removeDisableButtonTalento();
                     usoInfraestructuraCreate.removeDisableButtonMaterial();
+                    usoInfraestructuraCreate.DatatableProjectsForUser();
                                    
                       
                 } else if ( $("#IsArticulacion").is(":checked") ) {
@@ -169,8 +171,9 @@
                     usoInfraestructuraCreate.dataTableArtculacionFindByUser();
                     usoInfraestructuraCreate.limpiarListaTalentos();
                     usoInfraestructuraCreate.limpiarListaEquipos();
+                    usoInfraestructuraCreate.limpiarListaMateriales();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
-                    // usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.limpiarListaGestorAsesores();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
                     usoInfraestructuraCreate.removeDisableButtonEquipos();
                     usoInfraestructuraCreate.removeDisableButtonTalento();
@@ -195,8 +198,9 @@
                     usoInfraestructuraCreate.dataTableEdtFindByUser();
                     usoInfraestructuraCreate.limpiarListaTalentos();
                     usoInfraestructuraCreate.limpiarListaEquipos();
+                    usoInfraestructuraCreate.limpiarListaMateriales();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
-                    // usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.limpiarListaGestorAsesores();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
                     usoInfraestructuraCreate.removeDisableButtonEquipos();
                     usoInfraestructuraCreate.removeDisableButtonMaterial();
@@ -598,8 +602,7 @@
                 type:'get',
                 url:'/usoinfraestructura/edtforuser/'+id
             }).done(function(response){
-                console.log(response);
-
+               
                 $('#txtequipo').empty();
                 $('#txtgestor').removeAttr('value');
                 $('#txtlinea').removeAttr('value');
@@ -623,6 +626,9 @@
                         $('#txtgestor').val(element.actividad.gestor.user.documento+ ' - '+ element.actividad.gestor.user.nombres + ' ' + element.actividad.gestor.user.apellidos);
                         $("label[for='txtgestor']").addClass('active');
                     @endif
+                    $('#txtlinea').attr('value');
+                    $('#txtlinea').val(element.actividad.gestor.lineatecnologica.abreviatura+ ' - '+ element.actividad.gestor.lineatecnologica.nombre);
+                    $("label[for='txtlinea']").addClass('active');
                 });
 
                 $.each(response.data, function(i, element) {
@@ -725,12 +731,12 @@
         eliminarContentTables: function () {
             $('#detalleTalento').children("tr").remove();
             $('#detallesUsoInfraestructura').children("tr").remove();
+            $('#detallesGestores').children("tr").remove();
             $('#detallesGestoresAsesores').children("tr").remove();
+            $('#detalleMaterialUso').children("tr").remove();
         },
         limpiarInputsActividad: function (){
-            $('#txtproyecto').removeAttr('value');
-            $('#txtarticulacion').removeAttr('value');
-            $('#txtedt').removeAttr('value');
+            $('#txtactividad').val();
         },
         limpiarListaTalentos: function (){
             $('#detalleTalento').empty();
@@ -738,46 +744,48 @@
         limpiarListaEquipos: function (){
             $('#detallesUsoInfraestructura').empty();
         },
+        limpiarListaMateriales: function (){
+            $('#detalleMaterialUso').empty();
+        },
         limpiarListaGestorACargo: function (){
             $('#detallesGestores').empty();
             $('#detallesGestores').children("tr").remove();
-            $
         },
         limpiarListaGestorAsesores: function (){
             $('#detallesGestoresAsesores').empty();
             $('#detallesGestoresAsesores').children("tr").remove();
         },
         getEquipoPorLinea:function(){
-                let lineatecnologica = $('#txtlineatecnologica').val();
+            let lineatecnologica = $('#txtlineatecnologica').val();
 
-                $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url:'/equipos/getequiposporlinea/'+lineatecnologica
-                }).done(function(response){
-            
-                    $('#txtequipo').empty();
-                    if (response.equipos == '' && response.equipos.length == 0) {
-                        $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
-                    }else{
-                        $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                        @if($errors->any())
-                            $.each(response.equipos, function(i, e) {
-                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-                            });
-                        @else
-                            $.each(response.equipos, function(i, e) {
-                                
-                                $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-                            });
-                        @endif
-                    }
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/equipos/getequiposporlinea/'+lineatecnologica
+            }).done(function(response){
+        
+                $('#txtequipo').empty();
+                if (response.equipos == '' && response.equipos.length == 0) {
+                    $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
+                }else{
+                    $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                     @if($errors->any())
-                        $('#txtequipo').val("{{old('txtequipo')}}");
+                        $.each(response.equipos, function(i, e) {
+                            $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+                        });
+                    @else
+                        $.each(response.equipos, function(i, e) {
+                            
+                            $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+                        });
                     @endif
-                    $('#txtequipo').select2();
-                });
-            },
+                }
+                @if($errors->any())
+                    $('#txtequipo').val("{{old('txtequipo')}}");
+                @endif
+                $('#txtequipo').select2();
+            });
+        },
     }
 
     function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
@@ -1247,28 +1255,28 @@
                     }
 
                     if (data.fail == false && data.redirect_url == false) {
-                          Swal.fire({
-                                title: 'El uso de infraestructua no se ha registrado, por favor inténtalo de nuevo',
-                                type: 'warning',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'Ok'
-                          });
+                        Swal.fire({
+                            title: 'El uso de infraestructua no se ha registrado, por favor inténtalo de nuevo',
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        });
                     }
 
                     if (data.fail == false && data.redirect_url != false) {
-                              Swal.fire({
-                                title: 'Registro Exitoso',
-                                text: "El uso de infraestructua ha sido creado satisfactoriamente",
-                                type: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'Ok'
-                              });
-                              setTimeout(function(){
-                                window.location.replace("{{route('usoinfraestructura.index')}}");
-                              }, 1000);
-                        }
+                          Swal.fire({
+                            title: 'Registro Exitoso',
+                            text: "El uso de infraestructua ha sido creado satisfactoriamente",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                          });
+                          setTimeout(function(){
+                            window.location.replace("{{route('usoinfraestructura.index')}}");
+                          }, 1000);
+                    }
                 }
             });
         });

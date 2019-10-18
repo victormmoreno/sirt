@@ -23,8 +23,6 @@ class MantenimientoRepository
                 'lineatecnologica_id'       => $request->input('txtlineatecnologica'),
                 'equipo_id'                 => $request->input('txtequipo'),
                 'ultimo_anio_mantenimiento' => $request->input('txtanio'),
-                'vida_util_mantenimiento'   => $request->input('txtvidautil'),
-                'horas_uso_anio'            => $request->get('txthorasuso'),
                 'valor_mantenimiento'       => $request->input('txtvalor'),
             ]);
             DB::commit();
@@ -67,8 +65,6 @@ class MantenimientoRepository
                 'lineatecnologica_id'       => $request->input('txtlineatecnologica'),
                 'equipo_id'                 => $request->input('txtequipo'),
                 'ultimo_anio_mantenimiento' => $request->input('txtanio'),
-                'vida_util_mantenimiento'   => $request->input('txtvidautil'),
-                'horas_uso_anio'            => $request->get('txthorasuso'),
                 'valor_mantenimiento'       => $request->input('txtvalor'),
             ]);
             DB::commit();

@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEquipoMantenimientoTable extends Migration
 {
@@ -19,9 +20,7 @@ class CreateEquipoMantenimientoTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('equipo_id');
-            $table->year('ultimo_anio_mantenimiento'); //ultimo año del matenimiento
-            $table->integer('vida_util_mantenimiento'); //numero de años de vida util del mantenimiento
-            $table->string('horas_uso_anio'); //estimado horas de uso al año
+            $table->year('ultimo_anio_mantenimiento')->default(Carbon::now()->year); //ultimo año del matenimiento
             $table->string('valor_mantenimiento', 45)->default(0);
             $table->timestamps();
 

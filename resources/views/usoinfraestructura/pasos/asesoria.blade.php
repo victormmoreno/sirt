@@ -69,6 +69,7 @@
                                             @endif
                     
                                         </tr>
+
                                 @empty
                                     <td>
                                         No se encontraron resultados
@@ -87,6 +88,11 @@
                             
                             
                         </tbody>
+                        <tfoot>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2"><small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small></td>
+                        </tfoot>
                     </table>
                 </div>
                 
@@ -135,6 +141,7 @@
                         Asesoria Directa (Horas)
                     </label>
                     <label class="error" for="txtasesoriadirecta" id="txtasesoriadirecta-error"></label>
+                    <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
                 <div class="input-field col s12 m2 l2">
                     
@@ -147,6 +154,7 @@
                         Asesoria Indirecta (Horas)
                     </label>
                     <label class="error" for="txtasesoriaindirecta" id="txtasesoriaindirecta-error"></label>
+                    <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
                 <div class="input-field col s2 m3 l3">
                     <a class="waves-effect waves-light btn blue m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">
@@ -185,7 +193,7 @@
                                                 <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}"></td>
                                                 <td><input type="number" name="asesoriaindirecta[]" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
                                                 <td>
-                                                    <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$gestor->id}});">
+                                                    <a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor({{$gestor->id}});">
                                                         <i class="material-icons">delete_sweep</i>
                                                     </a>
                                                 </td>

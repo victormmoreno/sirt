@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Mantenimientos | '. $mantenimiento->equipo->nombre)
+@section('meta-title', 'Mantenimientos | Equipo '. $mantenimiento->equipo->nombre)
 
 @section('content')
 
@@ -126,14 +126,6 @@
                                                                         </li>
                                                                         <li class="collection-item"> 
                                                                             <span class="title">
-                                                                                Vida util del mantenimiento (Años)
-                                                                            </span>
-                                                                            <p>
-                                                                              {{$mantenimiento->vida_util_mantenimiento}}
-                                                                            </p>  
-                                                                        </li>
-                                                                        <li class="collection-item"> 
-                                                                            <span class="title">
                                                                                 Año de Mantenimiento
                                                                             </span>
                                                                             <p>
@@ -154,14 +146,6 @@
                                                                         </li>
                                                                         <li class="collection-item"> 
                                                                             <span class="title">
-                                                                                Horas de uso al año
-                                                                            </span>
-                                                                            <p>
-                                                                              {{$mantenimiento->horas_uso_anio}}
-                                                                            </p>  
-                                                                        </li>
-                                                                        <li class="collection-item"> 
-                                                                            <span class="title">
                                                                                 Valor de Mantenimiento
                                                                             </span>
                                                                             <p>
@@ -172,9 +156,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    
                                                     </div>
-                                            
                                                 <div class="divider mailbox-divider">
                                                 </div>
                                         </div>

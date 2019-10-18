@@ -19,8 +19,6 @@ class EquipoMantenimiento extends Model
     protected $fillable = [
         'equipo_id',
         'ultimo_anio_mantenimiento',
-        'vida_util_mantenimiento',
-        'horas_uso_anio',
         'valor_mantenimiento',
     ];
 
@@ -31,8 +29,6 @@ class EquipoMantenimiento extends Model
     protected $casts = [
         'equipo_id'                 => 'integer',
         'ultimo_anio_mantenimiento' => 'year',
-        'vida_util_mantenimiento'   => 'integer',
-        'horas_uso_anio'            => 'string',
         'valor_mantenimiento'       => 'string',
     ];
 
