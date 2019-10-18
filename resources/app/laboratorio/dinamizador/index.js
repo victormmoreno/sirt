@@ -5,7 +5,6 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
-        order: false,
         ajax: {
             url: "/laboratorio",
             type: "get",

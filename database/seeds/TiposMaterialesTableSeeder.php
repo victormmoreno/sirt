@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\TipoMaterial;
 use Illuminate\Database\Seeder;
+use App\Models\TipoMaterial;
 
 class TiposMaterialesTableSeeder extends Seeder
 {
@@ -13,15 +13,13 @@ class TiposMaterialesTableSeeder extends Seeder
     public function run()
     {
         TipoMaterial::create([
-            'id'     => 1,
             'nombre' => 'Material Directo',
         ]);
 
         TipoMaterial::create([
-            'id'     => 2,
             'nombre' => 'Material Indirecto',
         ]);
 
-        // factory(TipoMaterial::class, 10)->create();
+        // factory(TipoMaterial::class, 2)->create();
     }
 }

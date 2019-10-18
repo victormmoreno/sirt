@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nodo;
+use App\Models\Dinamizador;
+use App\Models\Gestor;
+use App\Models\Talento;
 use App\User;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;
@@ -27,6 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         // $nodo = auth()->user()->dinamizador->nodo->id;
         // $user = User::whereHas('gestor.nodo', function ($query) use ($nodo) {
         //         $query->where('id', $nodo);
@@ -44,6 +48,30 @@ class HomeController extends Controller
         // dd($user);
 
       switch ( Session::get('login_role') ) {
+        case User::IsAdministrador() :
+
+            $dinamizadoresActivos = Dinamizador::with('user')
+            ->whereHas('user', function($query){
+                $query->where('estado', User::IsActive());
+            })->get()->count();
+            
+
+            $gestoresActivos = Gestor::with('user')->whereHas('user', function($query){
+                $query->where('estado', User::IsActive());
+            })->get()->count();
+
+            $talentosActivos = Talento::with('user')->get()->count();
+
+            return view('home.administrador',[
+              'countNodos' => Nodo::countNodos(),
+              'countDinamizadoresActivos' => $dinamizadoresActivos,
+              'totalDinamizadores' => Dinamizador::with('user')->get()->count(),
+              'countGestoresActivos' =>  $gestoresActivos,
+              'totalGestores' =>  Gestor::with('user')->get()->count(),
+              'countTalentosActivos' =>  $talentosActivos,
+              'totalTalentos' => Talento::with('user')->get()->count(),
+              'administradores' => User::role(User::IsAdministrador())->select('documento','nombres','apellidos')->get(),
+            ]);
         case 'Dinamizador':
           return view('home.dinamizador');
           break;

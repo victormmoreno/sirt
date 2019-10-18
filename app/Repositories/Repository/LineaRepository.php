@@ -42,4 +42,19 @@ class LineaRepository
 
     }
 
+    /**
+     * retorna consulta de lineas con relaciones
+     *
+     * @author julian londoño
+     * @param array $relations
+     */
+    
+    public function lineasWithRelations($relations)
+    {
+        return LineaTecnologica::with($relations);
+
+    }
+
+    
+
 }

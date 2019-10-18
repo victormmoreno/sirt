@@ -62,7 +62,9 @@ class NodoPolicy
      */
     public function edit(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        // return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        // 
+        return true;
     }
 
     /**
