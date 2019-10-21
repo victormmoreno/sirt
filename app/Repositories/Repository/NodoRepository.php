@@ -138,7 +138,7 @@ class NodoRepository
             $entidadNodo->update([
                 'ciudad_id'     => $request->input('txtciudad'),
                 'nombre'        => $request->input('txtnombre'),
-                'slug'          => str_slug('Tecnoparque nodo ' . $request->input('txtnombre'), '-'),
+                'slug'          => str_slug('tecnoparque nodo ' . $request->input('txtnombre'), '-'),
                 'email_entidad' => $request->input('txtemail_entidad'),
             ]);
 

@@ -147,10 +147,6 @@ class Nodo extends Model
 
     /*=====  End of scope para consultar la lista de nodos  ======*/
 
-
-
-
-
     /*====================================================================================================
     =            scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso            =
     ====================================================================================================*/
@@ -221,7 +217,6 @@ class Nodo extends Model
 
     public function getLaboratorioIds(): Collection
     {
-        // return $this->laboratorios->modelKeys();
         return $this->laboratorios->pluck('id');
     }
 

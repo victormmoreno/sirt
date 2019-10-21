@@ -29,10 +29,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('costoadministrativo:create')
-        //         ->yearly()->monthlyOn(1, '01:00');
         $schedule->command('costoadministrativo:create')
-                    ->everyMinute();    
+                ->yearly()->monthlyOn(1, '01:00');
+        // $schedule->command('costoadministrativo:create')
+        //             ->everyMinute();    
         $schedule->command('task:deletenotifications')
             ->environments(config('app.env'))
             ->monthly()

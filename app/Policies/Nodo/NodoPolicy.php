@@ -17,7 +17,8 @@ class NodoPolicy
      */
     public function index(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+    
+        return (bool) $user->hasAnyRole([User::IsAdministrador(),User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
 
     }
 
@@ -27,9 +28,9 @@ class NodoPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function create(User $authUser)
+    public function create(User $user)
     {
-        return (bool) collect($authUser->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role')&& session()->get('login_role') == User::IsAdministrador();
     }
 
     /**
@@ -38,9 +39,9 @@ class NodoPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function store(User $authUser)
+    public function store(User $user)
     {
-        return (bool) collect($authUser->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role')&& session()->get('login_role') == User::IsAdministrador();
     }
 
     /**
@@ -51,7 +52,7 @@ class NodoPolicy
      */
     public function show(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role')&& session()->get('login_role') == User::IsAdministrador();
     }
 
     /**
@@ -62,9 +63,7 @@ class NodoPolicy
      */
     public function edit(User $user)
     {
-        // return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
-        // 
-        return true;
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role')&& session()->get('login_role') == User::IsAdministrador();
     }
 
     /**
@@ -75,6 +74,6 @@ class NodoPolicy
      */
     public function update(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role')&& session()->get('login_role') == User::IsAdministrador();
     }
 }

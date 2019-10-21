@@ -44,7 +44,7 @@ class UsoInfraestructuraController extends Controller
         LineaRepository $lineaRepository,
         UsoInfraestructuraDatatables $UsoInfraestructuraDatatables
     ) {
-        $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
+        $this->middleware(['auth','role_session:Administrador|Dinamizador|Gestor|Talento']);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
         $this->setUsoIngraestructuraEdtRepository($UsoInfraestructuraEdtRepository);
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);

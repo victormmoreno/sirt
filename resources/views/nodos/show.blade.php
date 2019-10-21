@@ -27,63 +27,82 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    
                                     <div class="col s12 m12 l12">
-                                        
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
-
+                                                <div class="left">
                                                     <div class="left">
-                                                        <div class="left">
-                                                            
-                                                            <i class="material-icons fas fa-building"></i>
-                                                        </div>
-                                                        <div class="left">
-                                                            <span class="mailbox-title">
-                                                            Tecnoparque nodo {{$nodo->entidad->nombre}} - 
-                                                            {{$nodo->entidad->ciudad->nombre}} ({{$nodo->entidad->ciudad->departamento->nombre}})
-                                                        </span>
-                                                        <span class="mailbox-author">
-                                                            <b>Dirección: </b> {{$nodo->direccion}}<br/>
-                                                            <b>Correo Electrónco: </b> 
-                                                            {{isset($nodo->entidad->correo_entidad) ? $nodo->entidad->correo_entidad : 'No registra'}}<br/>
-                                                            <b>Teléfono: </b> 
-                                                            {{isset($nodo->telefono) ? $nodo->telefono : 'No registra'}}<br/>
-                                                        </span>
-                                                        </div>
                                                         
+                                                        <i class="material-icons fas fa-building"></i>
                                                     </div>
-                                                    <div class="right mailbox-buttons">
+                                                    <div class="left">
                                                         <span class="mailbox-title">
-                                                            <p class="center">Información Tecnoparque Nodo {{$nodo->entidad->nombre}}</p><br/>
-                                                            <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->centro->entidad->ciudad->nombre) ? $nodo->centro->entidad->ciudad->nombre : ''}} ({{ isset($nodo->centro->entidad->ciudad->departamento->nombre) ? $nodo->centro->entidad->ciudad->departamento->nombre : ''}})</p>
-                                                        </span>
+                                                        Tecnoparque nodo {{$nodo->entidad->nombre}} - 
+                                                        {{$nodo->entidad->ciudad->nombre}} ({{$nodo->entidad->ciudad->departamento->nombre}})
+                                                    </span>
+                                                    <span class="mailbox-author">
+                                                        <b>Dirección: </b> {{$nodo->direccion}}<br/>
+                                                        <b>Correo Electrónco: </b>
+                                                        {{isset($nodo->entidad->email_entidad) ? $nodo->entidad->email_entidad : 'No registra'}}<br/>
+                                                        <b>Teléfono: </b> 
+                                                        {{isset($nodo->telefono) ? $nodo->telefono : 'No registra'}}<br/>
+                                                    </span>
                                                     </div>
+                                                    
+                                                </div>
+                                                <div class="right mailbox-buttons">
+                                                    <span class="mailbox-title">
+                                                        <p class="center">Información Tecnoparque Nodo {{$nodo->entidad->nombre}}</p><br/>
+                                                        <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->centro->entidad->ciudad->nombre) ? $nodo->centro->entidad->ciudad->nombre : ''}} ({{ isset($nodo->centro->entidad->ciudad->departamento->nombre) ? $nodo->centro->entidad->ciudad->departamento->nombre : ''}})</p>
+                                                    </span>
+                                                </div>
                                             </div>
-                                            
-                                            <div class="divider mailbox-divider">
-                                            </div>
+                                            <div class="divider mailbox-divider"></div>
                                             <div class="mailbox-text">
                                                 <div class="row">
                                                     <div class="col s12 m3 l3  push-l1 push-m1">
-                                                        <div class="center">
-                                                            <span class="mailbox-title">
-                                                                <i class="material-icons fas fa-th-list"></i>
-                                                                Lineas Tecnológicas ({{$nodo->lineas->count()}})
-                                                            </span>
-                                                        </div>
-                                                        <div class="divider mailbox-divider"></div>
-                                                        <ul class="collection">
-                                                            @forelse($nodo->lineas as $linea)
+                                    
+                                                        <ul class="collection with-header">
+                                                            <li class="collection-header center">
+                                                                <h5><b>Lineas Tecnológicas ({{$nodo->lineas->count()}})</b></h5>
+                                                            </li>
+                                                          
+                                                            @forelse($lineatecnologicas as $value)
+                                                                <li class="collection-item">
+                                                                    <span class="title">
+                                                                        {{$value->abreviatura}} - {{$value->nombre}}
+                                                                    </span>
+                                                                    
+                                                                </li>   
+                                                            @empty
+                                                            <div class="center">
+                                                               <i class="large material-icons center">
+                                                                    block
+                                                                </i>
+                                                                <p class="center-align">No tienes lineas tecnológicas registradas aún.</p>
+                                                            </div>
+                                                            @endforelse                    
+                                                        </ul>
+                                                         @if(isset($lineatecnologicas))
+                                                            <div class="center">
+                                                                {{ $lineatecnologicas->links() }}
+                                                            </div>
+                                                        @endif
+                                                        
+                                    
+                                                        <ul class="collection with-header">
+                                                            <li class="collection-header center">
+                                                                <h5><b>Equipos ({{$nodo->equipos->count()}})</b></h5>
+                                                            </li>
+                                                          
+                                                            @forelse($equipos as $value)
                                                                 <li class="collection-item">
                                                                     
-                                                                    
                                                                     <span class="title">
-                                                                        {{$linea->nombre}}
+                                                                        {{$value->nombre}}
                                                                     </span>
-                                                                    <p>
-                                                                       {{$linea->abreviatura}}
-                                                                        
+                                                                    <p class="p-v-xs">
+                                                                        {{$value->lineatecnologica->abreviatura}} - {{$value->lineatecnologica->nombre}}
                                                                     </p>
                                                                 </li>
                                                             @empty
@@ -91,42 +110,16 @@
                                                                <i class="large material-icons center">
                                                                     block
                                                                 </i>
-                                                                <p class="center-align">Tecnoparque Nodo {{$nodo->entidad->nombre}} no tiene lineas tecnológicas aún</p> 
+                                                                <p class="center-align">No tienes equipos registrados aún.</p>
                                                             </div>
-                                                            @endforelse
-                                                            
+                                                            @endforelse                    
                                                         </ul>
-                                                        <div class="divider mailbox-divider"></div>
-                                                        <div class="center">
-                                                            <span class="mailbox-title">
-                                                                <i class="material-icons fas fa-flask"></i>
-
-                                                               
-                                                                Laboratorios ({{$nodo->laboratorios->count()}})
-                                                            </span>
-                                                        </div>
-                                                        <ul class="collection">
-                                                            @forelse($nodo->laboratorios as $laboratorios)
-                                                                <li class="collection-item">
-                                                                    
-                                                                    <span class="title">
-                                                                        {{$laboratorios->nombre}}
-                                                                    </span>
-                                                                    <p>
-                                                                       {{$laboratorios->lineatecnologica->abreviatura}} -  {{$laboratorios->lineatecnologica->nombre}}
-                                                                        
-                                                                    </p>
-                                                                </li>
-                                                            @empty
+                                                         @if(isset($equipos))
                                                             <div class="center">
-                                                               <i class="large material-icons center">
-                                                                    block
-                                                                </i>
-                                                                <p class="center-align">Tecnoparque Nodo {{$nodo->entidad->nombre}} no tiene laboratorios aún</p> 
+                                                                {{ $equipos->links() }}
                                                             </div>
-                                                            @endforelse
-                                                            
-                                                        </ul>
+                                                        @endif 
+                                                        
                                                         <div class="divider mailbox-divider"></div>
                                                     </div>
                                                     <div class="col s12 m8 l8 push-l1 push-m1 pull-l1 pull-m1">

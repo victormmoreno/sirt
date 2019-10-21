@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Nodo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NodoFormRequest;
 use App\Models\Nodo;
-use App\Models\Equipo;
+use App\Repositories\Datatables\NodoDatatables;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -14,22 +14,68 @@ use Repositories\Repository\NodoRepository;
 class NodoController extends Controller
 {
 
-    public $nodoRepository;
-    public $departamentoRepository;
+    private $nodoRepository;
+    private $departamentoRepository;
 
     public function __construct(NodoRepository $nodoRepository, DepartamentoRepository $departamentoRepository)
     {
         $this->middleware('auth');
-        $this->middleware('role_session:Administrador|Dinamizador|Gestor|Talento');
-        $this->nodoRepository         = $nodoRepository;
+        $this->middleware([
+            'auth',
+            'role_session:Administrador|Dinamizador|Gestor|Talento',
+        ]);
+        $this->setNodoRepository($nodoRepository);
+        $this->setDepartamentoRepository($departamentoRepository);
+    }
+
+    /**
+     * setter: Asigna un valor a $nodoRepository
+     * @param object $nodoRepository
+     * @return void
+     * @author devjul
+     */
+    private function setNodoRepository($nodoRepository)
+    {
+        $this->nodoRepository = $nodoRepository;
+    }
+
+    /**
+     * getter: Retorna el valor de $nodoRepository
+     * @return object
+     * @author devjul
+     */
+    private function getNodoRepository()
+    {
+        return $this->nodoRepository;
+    }
+
+    /**
+     * setter: Asigna un valor a $departamentoRepository
+     * @param object $departamentoRepository
+     * @return void
+     * @author devjul
+     */
+    private function setDepartamentoRepository($departamentoRepository)
+    {
         $this->departamentoRepository = $departamentoRepository;
     }
+
+    /**
+     * getter: Retorna el valor de $departamentoRepository
+     * @return object
+     * @author devjul
+     */
+    private function getDepartamentoRepository()
+    {
+        return $this->departamentoRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(NodoDatatables $nodoDatatables)
     {
 
         $this->authorize('index', Nodo::class);
@@ -37,44 +83,34 @@ class NodoController extends Controller
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 if (request()->ajax()) {
-                    return datatables()->of($this->nodoRepository->getAlltNodo())
-                        ->addColumn('detail', function ($data) {
-                            $button = '<a href="' . route("nodo.show", $data->slug) . '" class="waves-effect waves-light btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Nodo"  data-tooltip-id="b24478ad-402e-0583-7a3a-de01b3861e9a"><i class="material-icons">info_outline</i></a>';
-
-                            return $button;
-                        })
-                        ->addColumn('edit', function ($data) {
-                            $button = '<a href="' . route("nodo.edit", $data->slug) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-
-                            return $button;
-                        })
-                        ->rawColumns(['detail', 'edit'])
-                        ->make(true);
-
+                    return $nodoDatatables->indexDatatable($this->getNodoRepository()->getAlltNodo());
                 }
                 return view('nodos.index');
 
                 break;
             case User::IsDinamizador():
                 if (isset(auth()->user()->dinamizador)) {
-                    $nodo = auth()->user()->dinamizador->nodo->id;
+                    $nodoAuth = auth()->user()->dinamizador->nodo->id;
+                    $nodo = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
 
                     return view('nodos.show', [
-                        'nodo' => $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->first(),
+                        'nodo' => $nodo,
+                        'equipos' => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
                     ]);
-
                 }
                 abort('403');
-
                 break;
             case User::IsGestor():
 
                 if (isset(auth()->user()->gestor)) {
-                    $nodo = auth()->user()->gestor->nodo->id;
+                    $nodoAuth = auth()->user()->gestor->nodo->id;
+                    $nodo = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
                     return view('nodos.show', [
-                        'nodo' => $this->nodoRepository->getTeamTecnoparque()->where('id', $nodo)->first(),
+                        'nodo' => $nodo,
+                        'equipos' => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
                     ]);
-
                 }
                 abort('403');
                 break;
@@ -93,11 +129,10 @@ class NodoController extends Controller
     public function create()
     {
         $this->authorize('create', Nodo::class);
-
         return view('nodos.create', [
-            'lineas'        => $this->nodoRepository->getAllLineas(),
-            'regionales'    => $this->nodoRepository->getAllRegionales(),
-            'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
+            'lineas'        => $this->getNodoRepository()->getAllLineas(),
+            'regionales'    => $this->getNodoRepository()->getAllRegionales(),
+            'departamentos' => $this->getDepartamentoRepository()->getAllDepartamentos(),
         ]);
     }
 
@@ -110,13 +145,9 @@ class NodoController extends Controller
     public function store(NodoFormRequest $request)
     {
         $this->authorize('store', Nodo::class);
-
-        // return count($request->get('txtlineas'));
-        //metodo para guardad
-        $nodoCreate = $this->nodoRepository->storeNodo($request);
+        $nodoCreate = $this->getNodoRepository()->storeNodo($request);
 
         if ($nodoCreate === true) {
-
             alert()->success('Registro Exitoso.', 'El nodo ha sido creado satisfactoriamente');
         } else {
             alert()->error('Registro Erróneo.', 'El nodo no se ha creado.');
@@ -132,11 +163,13 @@ class NodoController extends Controller
      */
     public function show($nodo)
     {
-        $nodo = $this->nodoRepository->findNodoForShow($nodo);
+        $nodo = $this->getNodoRepository()->findNodoForShow($nodo);
         $this->authorize('show', $nodo);
 
         return view('nodos.show', [
             'nodo' => $nodo,
+            'equipos' => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+            'lineatecnologicas' => $nodo->lineas()->paginate(4),
         ]);
     }
 
@@ -148,13 +181,13 @@ class NodoController extends Controller
      */
     public function edit($nodo)
     {
-        $nodo = $this->nodoRepository->findNodoForShow($nodo);
-        $this->authorize('edit', $nodo);
+        $this->authorize('edit', Nodo::class);
+        $nodo = $this->getNodoRepository()->findNodoForShow($nodo);
         return view('nodos.edit', [
             'nodo'          => $nodo,
-            'lineas'        => $this->nodoRepository->getAllLineas(),
-            'regionales'    => $this->nodoRepository->getAllRegionales(),
-            'departamentos' => $this->departamentoRepository->getAllDepartamentos(),
+            'lineas'        => $this->getNodoRepository()->getAllLineas(),
+            'regionales'    => $this->getNodoRepository()->getAllRegionales(),
+            'departamentos' => $this->getDepartamentoRepository()->getAllDepartamentos(),
         ]);
     }
 
@@ -167,9 +200,11 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-        
-        $entidadNodo = $this->nodoRepository->findById($id);
-        $nodoUpdate   = $this->nodoRepository->update($request, $entidadNodo);
+
+        $this->authorize('update', Nodo::class);
+        $nodo = $this->getNodoRepository()->findById($id);
+
+        $nodoUpdate  = $this->getNodoRepository()->update($request, $nodo);
 
         if ($nodoUpdate == true) {
 
