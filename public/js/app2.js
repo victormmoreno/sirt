@@ -3920,31 +3920,58 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'revisado_final',
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'talentos',
         name: 'talentos',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'edit',
         name: 'edit',
         orderable: false
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'entregables',
         name: 'entregables',
         orderable: false
       },
+      {
+        width: '6%',
+        data: 'delete',
+        name: 'delete',
+        orderable: false
+      },
     ],
   });
+}
+
+function eliminarProyectoPorId_event(id, e) {
+  Swal.fire({
+    title: '¿Desea eliminar el Proyecto?',
+    text: "Al hacer esto, todo lo relacionado con este proyecto será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, eliminar!'
+  }).then((result) => {
+    if (result.value) {
+      eliminarProyectoPorId_moment(id);
+    }
+  })
+}
+
+function eliminarProyectoPorId_moment(id) {
+  location.href = '/proyecto/eliminarProyecto/'+id;
 }
 
 $(document).ready(function() {

@@ -47,11 +47,6 @@
                       </div>
                     </a>
                   </div>
-                  {{-- <div class="left material-icons">
-                    <a onclick="generarExcelDeProyectosDelNodoPorAnho()">
-                      <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                    </a>
-                  </div> --}}
                 </div>
               </div>
               <div id="proyectos_por_gestor">
@@ -243,6 +238,12 @@
             width: '8%',
             data: 'entregables',
             name: 'entregables',
+            orderable: false
+          },
+          {
+            width: '8%',
+            data: 'delete',
+            name: 'delete',
             orderable: false
           },
           ],

@@ -385,6 +385,7 @@ Route::group(
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
         Route::get('/archivosDeUnProyecto/{id}', 'ArchivoController@datatableArchivosDeUnProyecto')->name('proyecto.files');
         Route::get('/ajaxDetallesDeLosEntregablesDeUnProyecto/{id}', 'ProyectoController@detallesDeLosEntregablesDeUnProyecto')->name('proyecto.detalle.entregables');
+        Route::get('/eliminarProyecto/{id}', 'ProyectoController@eliminarProyecto_Controller')->name('proyecto.delete')->middleware('role_session:Dinamizador');
         Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateAprobacion/{id}', 'ProyectoController@updateAprobacion')->name('proyecto.update.aprobacion')->middleware('role_session:Gestor|Dinamizador|Talento');

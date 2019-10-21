@@ -37,6 +37,23 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Elimina un proyecto de la base de datos
+   * @param int $id Id del proyecto a eliminar
+   * @return Response
+   * @author dum
+   */
+  public function eliminarProyecto_Controller($id)
+  {
+
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $delete = $this->getProyectoRepository()->eliminarProyecto_Repository($id);
+    } else {
+      abort('403');
+    }
+
+  }
+
+  /**
    * Vista para msotrar los proyectos pendientes de aprobación de un usuario
    * @return Response
    * @author dum
@@ -44,9 +61,6 @@ class ProyectoController extends Controller
   public function aprobaciones()
   {
     return view('proyectos.dinamizador.pendientes');
-    // if ( Session::get('login_role') == User::IsDinamizador() ) {
-
-    // }
   }
 
   /**
@@ -186,6 +200,9 @@ class ProyectoController extends Controller
       </a>
       ';
       return $details;
+    })->addColumn('delete', function ($data) {
+      $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarProyectoPorId_event('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';
+      return $delete;
     })->addColumn('edit', function ($data) {
       if ($data->estado_nombre == 'Cierre PMV' || $data->estado_nombre == 'Cierre PF' || $data->estado_nombre == 'Suspendido') {
         $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
@@ -266,7 +283,7 @@ class ProyectoController extends Controller
           return false;
         });
       }
-    })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final'])->make(true);
+    })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final', 'delete'])->make(true);
   }
 
   /**
