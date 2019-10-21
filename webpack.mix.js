@@ -16,6 +16,7 @@ mix.js('resources/js/app.js', 'public/js');
 mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
+		'resources/assets/plugins/font-awesome/css/all.css',
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
 		'resources/assets/plugins/select2/css/select2.css',
 		'resources/assets/plugins/materialize-clockpicker-master/dist/css/materialize.clockpicker.css',
@@ -31,6 +32,8 @@ mix.scripts([
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
+		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
+		'resources/assets/plugins/font-awesome/js/all.js',
 		'resources/assets/plugins/select2/js/select2.min.js',
 		'resources/assets/plugins/select2/js/i18n/es.js',
 		'resources/assets/plugins/dropzone/dropzone.js',
@@ -47,6 +50,7 @@ mix.scripts([
 
 mix.scripts([
 		'resources/app/linea/administrador/index.js',
+		'resources/app/linea/dinamizador/index.js',
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
 		'resources/app/ideas/administrador/index.js',
@@ -83,6 +87,18 @@ mix.scripts([
 		'resources/app/edt/index.js',
 		'resources/app/laboratorio/administrador/index.js',
 		'resources/app/laboratorio/dinamizador/index.js',
+		'resources/app/costoadministrativo/dinamizador/index.js',
+		'resources/app/costoadministrativo/dinamizador/index.js',
+		'resources/app/equipos/administrador/index.js',
+		'resources/app/equipos/dinamizador/index.js',
+		'resources/app/equipos/gestor/index.js',
+		'resources/app/mantenimiento/administrador/index.js',
+		'resources/app/mantenimiento/dinamizador/index.js',
+		'resources/app/mantenimiento/gestor/index.js',
+		'resources/app/materiales/administrador/index.js',
+		'resources/app/materiales/dinamizador/index.js',
+		'resources/app/materiales/gestor/index.js',
+		'resources/app/costoadministrativo/administrador/index.js',
 		'resources/app/usoinfraestructura/administrador/index.js',
 		'resources/app/usoinfraestructura/dinamizador/index.js',
 		'resources/app/usoinfraestructura/index.js',
@@ -92,6 +108,7 @@ mix.scripts([
 		'resources/app/charla/index.js',
 		'resources/app/graficos/index.js',
 		'resources/app/seguimiento/index.js',
+		'resources/app/costos/index.js'
 	],'public/js/app2.js');
 
 

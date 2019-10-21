@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#linea_table').DataTable({
+    $('#linea_administrador_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -24,6 +24,33 @@ $(document).ready(function() {
             name: 'show',
             orderable: false
         },{
+            data: 'action',
+            name: 'action',
+            orderable: false
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#linea_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "lineas",
+        },
+        columns: [{
+            data: 'abreviatura',
+            name: 'abreviatura',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'descripcion',
+            name: 'descripcion',
+        }, {
             data: 'action',
             name: 'action',
             orderable: false
@@ -4494,7 +4521,6 @@ $(document).ready(function() {
         },
         processing: true,
         serverSide: true,
-        order: false,
         ajax: {
             url: "/laboratorio",
             type: "get",
@@ -4528,6 +4554,999 @@ $(document).ready(function() {
         }, ],
     });
 });
+$(document).ready(function() {
+    $('#costoadministrativo_dinamizador_table1').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+         retrieve: true,
+       	processing: true,
+        // serverSide: true,
+        ajax: {
+            url: "/costos-administrativos",
+            type: "get",
+        },
+        columns: [{
+            data: 'entidad',
+            name: 'entidad',
+            width: '30%'
+        }, {
+            data: 'costoadministrativo',
+            name: 'costoadministrativo',
+            width: '30%'
+        }, {
+            data: 'valor',
+            name: 'valor',
+            width: '15%'
+        }, {
+            data: 'costosadministrativospordia',
+            name: 'costosadministrativospordia',
+            width: '15%'
+        },
+        {
+            data: 'costosadministrativosporhora',
+            name: 'costosadministrativosporhora',
+            width: '15%'
+        },
+        {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+            width: '8%'
+        }, ],
+
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            totalCostosHora = api
+                .column( 4 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            totalCostosDia = api
+                .column( 3 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            totalCostosMes = api
+                .column( 2 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+            // Total over this page
+            pageTotalCostosHora = api
+                .column( 4, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            pageTotalCostosDia = api
+                .column( 3, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            pageTotalCostosMes = api
+                .column( 2, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+ 
+            // Update footer
+            $( api.column( 4 ).footer() ).html(
+                '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
+            );
+
+            $( api.column( 3 ).footer() ).html(
+                '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
+            );
+
+            $( api.column( 2 ).footer() ).html(
+                '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
+            );
+        }
+    });
+});
+$(document).ready(function() {
+    $('#costoadministrativo_dinamizador_table1').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+         retrieve: true,
+       	processing: true,
+        // serverSide: true,
+        ajax: {
+            url: "/costos-administrativos",
+            type: "get",
+        },
+        columns: [{
+            data: 'entidad',
+            name: 'entidad',
+            width: '30%'
+        }, {
+            data: 'costoadministrativo',
+            name: 'costoadministrativo',
+            width: '30%'
+        }, {
+            data: 'valor',
+            name: 'valor',
+            width: '15%'
+        }, {
+            data: 'costosadministrativospordia',
+            name: 'costosadministrativospordia',
+            width: '15%'
+        },
+        {
+            data: 'costosadministrativosporhora',
+            name: 'costosadministrativosporhora',
+            width: '15%'
+        },
+        {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+            width: '8%'
+        }, ],
+
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            totalCostosHora = api
+                .column( 4 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            totalCostosDia = api
+                .column( 3 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            totalCostosMes = api
+                .column( 2 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+            // Total over this page
+            pageTotalCostosHora = api
+                .column( 4, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            pageTotalCostosDia = api
+                .column( 3, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+
+            pageTotalCostosMes = api
+                .column( 2, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+ 
+ 
+            // Update footer
+            $( api.column( 4 ).footer() ).html(
+                '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
+            );
+
+            $( api.column( 3 ).footer() ).html(
+                '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
+            );
+
+            $( api.column( 2 ).footer() ).html(
+                '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
+            );
+        }
+    });
+});
+$(document).ready(function() {
+    $('#equipos_de_tecnoparque_administrador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "pagingType": "full_numbers",
+        "lengthChange": false,
+    });
+
+});
+
+var selectEquipoPorNodo = {
+    selectEquipoForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#equipos_de_tecnoparque_administrador_table').dataTable().fnDestroy();
+        if (nodo != '') {
+            
+            $('#equipos_de_tecnoparque_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                 fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: "/equipos/getequipospornodo/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'nombrelinea',
+                    name: 'nombrelinea',
+                    width: '30%'
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                    width: '30%'
+                }, {
+                    data: 'referencia',
+                    name: 'referencia',
+                    width: '15%'
+                }, {
+                    data: 'marca',
+                    name: 'marca',
+                    width: '15%'
+                },
+                {
+                    data: 'costo_adquisicion',
+                    name: 'costo_adquisicion',
+                    width: '15%'
+                },
+                {
+                    data: 'vida_util',
+                    name: 'vida_util',
+                    width: '15%'
+                },
+                {
+                    data: 'horas_uso_anio',
+                    name: 'horas_uso_anio',
+                    width: '15%'
+                },
+                {
+                    data: 'anio_compra',
+                    name: 'anio_compra',
+                    width: '15%'
+                },
+                
+                {
+                    data: 'anio_fin_depreciacion',
+                    name: 'anio_fin_depreciacion',
+                    width: '15%'
+                },
+                {
+                    data: 'depreciacion_por_anio',
+                    name: 'depreciacion_por_anio',
+                    width: '15%'
+                },],
+            });
+
+
+        }else{
+            $('#equipos_de_tecnoparque_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
+        }
+        
+    },
+}
+
+$(document).ready(function() {
+    $('#equipo_tecnoparque_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        retrieve: true,
+       	processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/equipos",
+            type: "get",
+        },
+        columns: [{
+            data: 'nombrelinea',
+            name: 'nombrelinea',
+            width: '30%'
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+            width: '30%'
+        }, {
+            data: 'referencia',
+            name: 'referencia',
+            width: '15%'
+        }, {
+            data: 'marca',
+            name: 'marca',
+            width: '15%'
+        },
+        {
+            data: 'costo_adquisicion',
+            name: 'costo_adquisicion',
+            width: '15%'
+        },
+        {
+            data: 'vida_util',
+            name: 'vida_util',
+            width: '15%'
+        },
+        {
+            data: 'horas_uso_anio',
+            name: 'horas_uso_anio',
+            width: '15%'
+        },
+        {
+            data: 'anio_compra',
+            name: 'anio_compra',
+            width: '15%'
+        },
+        
+        {
+            data: 'anio_fin_depreciacion',
+            name: 'anio_fin_depreciacion',
+            width: '15%'
+        },
+        {
+            data: 'depreciacion_por_anio',
+            name: 'depreciacion_por_anio',
+            width: '15%'
+        },
+        {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+            width: '8%'
+        }, ],
+
+    });
+});
+$(document).ready(function() {
+    $('#equipo_tecnoparque_gestor_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        retrieve: true,
+       	processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/equipos",
+            type: "get",
+        },
+        columns: [{
+            data: 'nombrelinea',
+            name: 'nombrelinea',
+            width: '30%'
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+            width: '30%'
+        }, {
+            data: 'referencia',
+            name: 'referencia',
+            width: '15%'
+        }, {
+            data: 'marca',
+            name: 'marca',
+            width: '15%'
+        },
+        {
+            data: 'costo_adquisicion',
+            name: 'costo_adquisicion',
+            width: '15%'
+        },
+        {
+            data: 'vida_util',
+            name: 'vida_util',
+            width: '15%'
+        },
+        {
+            data: 'horas_uso_anio',
+            name: 'horas_uso_anio',
+            width: '15%'
+        },
+        {
+            data: 'anio_compra',
+            name: 'anio_compra',
+            width: '15%'
+        },
+            
+        {
+            data: 'anio_fin_depreciacion',
+            name: 'anio_fin_depreciacion',
+            width: '15%'
+        },
+        {
+            data: 'depreciacion_por_anio',
+            name: 'depreciacion_por_anio',
+            width: '15%'
+        },
+         ],
+
+    });
+});
+$(document).ready(function() {
+    $('#mantenimientosequipos_administrador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "pagingType": "full_numbers",
+        "lengthChange": false,
+    });
+
+});
+
+var selectMantenimientosEquiposPorNodo = {
+    selectMantenimientosEquipoForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#mantenimientosequipos_administrador_table').dataTable().fnDestroy();
+        if (nodo != '') {
+            
+            $('#mantenimientosequipos_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                "lengthChange": false,
+                 fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'lineatecnologica',
+                    name: 'lineatecnologica',
+                    width: '30%'
+                }, {
+                    data: 'equipo',
+                    name: 'equipo',
+                    width: '30%'
+                }, {
+                    data: 'ultimo_anio_mantenimiento',
+                    name: 'ultimo_anio_mantenimiento',
+                    width: '15%'
+                }, {
+                    data: 'valor_mantenimiento',
+                    name: 'valor_mantenimiento',
+                    width: '15%'
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    width: '15%'
+                }, ],
+            });
+
+
+        }else{
+            $('#mantenimientosequipos_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
+        }
+        
+    },
+}
+$(document).ready(function() {
+    $('#mantenimientosequipos_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        retrieve: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/mantenimientos",
+            type: "get",
+        },
+        columns: [{
+            data: 'lineatecnologica',
+            name: 'lineatecnologica',
+            width: '30%'
+        }, {
+            data: 'equipo',
+            name: 'equipo',
+            width: '30%'
+        }, {
+            data: 'ultimo_anio_mantenimiento',
+            name: 'ultimo_anio_mantenimiento',
+            width: '15%'
+        }, {
+            data: 'valor_mantenimiento',
+            name: 'valor_mantenimiento',
+            width: '15%'
+        }, {
+            data: 'detail',
+            name: 'detail',
+            width: '15%'
+        }, {
+            data: 'edit',
+            name: 'edit',
+            orderable: false,
+            width: '8%'
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#mantenimientosequipos_gestor_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        retrieve: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/mantenimientos",
+            type: "get",
+        },
+        columns: [{
+            data: 'lineatecnologica',
+            name: 'lineatecnologica',
+            width: '30%'
+        }, {
+            data: 'equipo',
+            name: 'equipo',
+            width: '30%'
+        }, {
+            data: 'ultimo_anio_mantenimiento',
+            name: 'ultimo_anio_mantenimiento',
+            width: '15%'
+        }, {
+            data: 'valor_mantenimiento',
+            name: 'valor_mantenimiento',
+            width: '15%'
+        }, {
+            data: 'detail',
+            name: 'detail',
+            width: '15%'
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#materiales_administrador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "pagingType": "full_numbers",
+        "lengthChange": false,
+    });
+
+});
+
+var selectMaterialesPorNodo = {
+    selectMaterialesForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#materiales_administrador_table').dataTable().fnDestroy();
+        if (nodo != '') {
+            
+            $('#materiales_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                "lengthChange": false,
+                 fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: "/materiales/getmaterialespornodo/" + nodo,
+                    type: "get",
+                },
+                columns: [
+                {
+                    data: 'fecha',
+                    name: 'fecha',
+                    width: '20%'
+                },
+                {
+                    data: 'nombrelinea',
+                    name: 'nombrelinea',
+                    width: '30%'
+                },{
+                    data: 'codigo_material',
+                    name: 'codigo_material',
+                    width: '30%'
+                },
+                {
+                    data: 'nombre',
+                    name: 'nombre',
+                    width: '30%'
+                }, {
+                    data: 'presentacion',
+                    name: 'presentacion',
+                    width: '15%'
+                }, {
+                    data: 'medida',
+                    name: 'medida',
+                    width: '15%'
+                },
+                {
+                    data: 'cantidad',
+                    name: 'cantidad',
+                    width: '15%'
+                },
+                {
+                    data: 'valor_unitario',
+                    name: 'valor_unitario',
+                    width: '15%'
+                },
+                {
+                    data: 'valor_compra',
+                    name: 'valor_compra',
+                    width: '15%'
+                },
+
+                {
+                    data: 'detail',
+                    name: 'detail',
+                    width: '15%'
+                }, ],
+            });
+
+
+        }else{
+            $('#materiales_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
+        }
+        
+    },
+}
+$(document).ready(function() {
+    $('#materiales_dinamizador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        retrieve: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/materiales",
+            type: "get",
+        },
+        columns: [{
+            data: 'fecha',
+            name: 'fecha',
+            width: '20%'
+        }, {
+            data: 'nombrelinea',
+            name: 'nombrelinea',
+            width: '30%'
+        }, {
+            data: 'codigo_material',
+            name: 'codigo_material',
+            width: '30%'
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+            width: '30%'
+        }, {
+            data: 'presentacion',
+            name: 'presentacion',
+            width: '15%'
+        }, {
+            data: 'medida',
+            name: 'medida',
+            width: '15%'
+        }, {
+            data: 'cantidad',
+            name: 'cantidad',
+            width: '15%'
+        }, {
+            data: 'valor_unitario',
+            name: 'valor_unitario',
+            width: '15%'
+        }, {
+            data: 'valor_compra',
+            name: 'valor_compra',
+            width: '15%'
+        }, {
+            data: 'detail',
+            name: 'detail',
+            width: '15%'
+        },
+        {
+            data: 'edit',
+            name: 'edit',
+            width: '15%'
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#materiales_gestor_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+        retrieve: true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "/materiales",
+            type: "get",
+        },
+        columns: [{
+            data: 'fecha',
+            name: 'fecha',
+            width: '20%'
+        }, {
+            data: 'nombrelinea',
+            name: 'nombrelinea',
+            width: '30%'
+        }, {
+            data: 'codigo_material',
+            name: 'codigo_material',
+            width: '30%'
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+            width: '30%'
+        }, {
+            data: 'presentacion',
+            name: 'presentacion',
+            width: '15%'
+        }, {
+            data: 'medida',
+            name: 'medida',
+            width: '15%'
+        }, {
+            data: 'cantidad',
+            name: 'cantidad',
+            width: '15%'
+        }, {
+            data: 'valor_unitario',
+            name: 'valor_unitario',
+            width: '15%'
+        }, {
+            data: 'valor_compra',
+            name: 'valor_compra',
+            width: '15%'
+        }, {
+            data: 'detail',
+            name: 'detail',
+            width: '15%'
+        },
+        {
+            data: 'edit',
+            name: 'edit',
+            width: '15%'
+        }, ],
+    });
+});
+$(document).ready(function() {
+    $('#costoadministrativo_administrador_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "pagingType": "full_numbers",
+        // dom: 'Bfrtip',
+        // buttons: [
+        //     {
+        //         text:      '<i class="fa fa-files-o"></i>',
+        //         titleAttr: 'EXCEL',
+        //         className: 'waves-effect waves-light btn',
+        //         action: function ( e, dt, node, config ) {
+        //             alert( 'Button activated' );
+        //         }
+        //     },
+        //     {
+        //         text: 'PDF',
+        //         className: 'waves-effect waves-light btn red',
+        //         action: function ( e, dt, node, config ) {
+        //             alert( 'Button activated' );
+        //         }
+        //     }
+        // ],
+
+    });
+
+});
+
+var selectCostoAdministrativoNodo = {
+	selectCostoAdministrativoForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
+        if (nodo != '') {
+            
+            $('#costoadministrativo_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                "order": [[ 1, "asc" ]],
+                 fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                // "paging":   false,
+                // "ordering": false,
+                // "info":     false,
+                // "dom": '<"top"i>rt<"bottom"flp><"clear">',
+                // stateSave: true,
+                // "scrollY":        "200px",
+                // // "scrollCollapse": true,
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: "/costos-administrativos/costoadministrativo/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+			            data: 'entidad',
+			            name: 'entidad',
+			            width: '30%'
+			        }, {
+			            data: 'costoadministrativo',
+			            name: 'costoadministrativo',
+			            width: '30%'
+			        }, {
+			            data: 'valor',
+			            name: 'valor',
+			            width: '15%'
+			        },
+			        {
+			            data: 'costosadministrativospordia',
+			            name: 'costosadministrativospordia',
+			            width: '15%'
+			        },
+                    {
+                        data: 'costosadministrativosporhora',
+                        name: 'costosadministrativosporhora',
+                        width: '15%'
+                    },
+			    ],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+         
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+         
+                    // Total over all pages
+                    totalCostosHora = api
+                        .column( 4 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    totalCostosDia = api
+                        .column( 3 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    totalCostosMes = api
+                        .column( 2 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+         
+                    // Total over this page
+                    pageTotalCostosHora = api
+                        .column( 4, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageTotalCostosDia = api
+                        .column( 3, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageTotalCostosMes = api
+                        .column( 2, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+         
+         
+                    // Update footer
+                    $( api.column( 4 ).footer() ).html(
+                        '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
+                    );
+
+                    $( api.column( 3 ).footer() ).html(
+                        '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
+                    );
+
+                    $( api.column( 2 ).footer() ).html(
+                        '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
+                    );
+                }
+
+           	});
+
+
+        }else{
+            $('#costoadministrativo_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
+        }
+        
+    },
+}
 $(document).ready(function() {
     $('#usoinfraestructura_administrador_table').DataTable({
         language: {
@@ -6114,6 +7133,91 @@ function graficoSeguimiento(data, name) {
             name: "Edts",
             y: data.datos.Edts,
           }
+        ]
+      }
+    ],
+  });
+}
+
+var graficosCostos = {
+  actividad: 'costosDeUnProyecto_column'
+};
+
+function consultarCostoDeUnaActividad() {
+  // graficoCostos(0, graficosCostos.actividad);
+  let id = $('#txtactividad_id').val();
+  if (id === '') {
+    Swal.fire('Advertencia!', 'Seleccione una actividad', 'warning');
+  } else {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/costos/costosDeUnaActividad/'+id,
+      success: function (data) {
+        graficoCostos(data, graficosCostos.actividad);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+  }
+}
+
+function graficoCostos(data, name) {
+  Highcharts.chart(name, {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: 'Seguimiento'
+    },
+    yAxis: {
+      title: {
+        text: '$ Pesos'
+      },
+      labels: {
+        format: '$ {value}'
+      }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    legend: {
+        enabled: false,
+        floating: true,
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">Costos</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>$ {point.y}</b><br/>'
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
+        },
+        animationLimit: 1000
+      },
+    },
+    series: [
+      {
+        colorByPoint: true,
+        data: [
+          {
+            name: "Costos de Asesorias",
+            y: 25,
+          },
+          {
+            name: "Costos de Equipos",
+            y: 20,
+          },
+          {
+            name: "Costos Administrativos",
+            y: 30,
+          },
+          {
+            name: "Total de Costos",
+            y: 75,
+          },
         ]
       }
     ],

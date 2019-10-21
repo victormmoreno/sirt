@@ -58,7 +58,12 @@ class LineaTecnologica extends Model
     public function nodos()
     {
         return $this->belongsToMany(Nodo::class, 'lineastecnologicas_nodos')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot([
+                'porcentaje_linea',
+            ]);
+
+
     }
 
     public function gestores()
@@ -69,6 +74,17 @@ class LineaTecnologica extends Model
     public function laboratorios()
     {
         return $this->hasMany(Laboratorio::class, 'lineatecnologica_id', 'id');
+    }
+
+    
+    public function equipos()
+    {
+        return $this->hasMany(Equipo::class, 'lineatecnologica_id', 'id');
+    }
+
+    public function materiales()
+    {
+        return $this->hasMany(Material::class, 'lineatecnologica_id', 'id');
     }
 
     /*=====  End of relaciones elquent  ======*/
@@ -177,6 +193,17 @@ class LineaTecnologica extends Model
             abort('404');
         }
 
+    }
+
+    /**
+     * Devuelve el consulta con relaciones de la tabla lineastecnologicas
+     *
+     * @author julian londoño
+     * @return object
+     */
+    public static function scopeLineaTecnologicaWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
     }
 
 }

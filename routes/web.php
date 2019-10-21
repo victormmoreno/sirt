@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Nodo;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -15,12 +16,12 @@ DB::listen(function ($query) {
 =            ruta para revisar funcionaliddes de prueba          =
 ===========================================================*/
 
-Route::get('email', function () {
+// Route::get('email', function () {
     // return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
     // return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
     // return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
     // return new App\Mail\User\SendNotificationPassoword(App\User::first(), 'asdafasafasdf');
-});
+// });
 
 Route::get('excel', 'User\AdminController@exportAdminUser');
 
@@ -129,6 +130,122 @@ Route::group([
     }
 );
 
+
+/*========================================================================
+=            seccion para las rutas de costos administrativos            =
+========================================================================*/
+
+Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
+
+Route::resource('costos-administrativos', 'CostoAdministrativoController', [
+        'as' => 'costos-administrativos',
+        'except' => [
+            'create',
+            'store',
+            'destroy',
+            'show',
+        ]
+    ])->names([
+        'update'  => 'costoadministrativo.update',
+        'edit'    => 'costoadministrativo.edit',
+        'index'   => 'costoadministrativo.index',
+    ])
+    ->parameters([
+        'costos_administrativo' => 'id',
+    ]);
+
+Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
+
+/*=====  End of seccion para las rutas de costos administrativos  ======*/
+
+/*===============================================
+=            seccion para los equipo            =
+===============================================*/
+Route::get('/equipos/getequiposporlinea/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
+            ->name('equipo.getequiposporlinea');
+
+Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorNodo')
+            ->name('equipo.getequipospornodo');
+
+Route::resource('equipos', 'EquipoController', [
+        'as' => 'equipos',
+        'except' => [
+            'destroy',
+            'show',
+        ]
+    ])->names([
+        'index'   => 'equipo.index',
+        'create'  => 'equipo.create',
+        'store'   => 'equipo.store',
+        'show'    => 'equipo.show',
+        'update'  => 'equipo.update',
+        'edit'    => 'equipo.edit',
+        'destroy' => 'equipo.destroy',
+    ])
+    ->parameters([
+        'equipos' => 'id',
+    ]);
+
+/*=====  End of seccion para los equipo  ======*/
+
+/*===============================================
+=            seccion para los materiales            =
+===============================================*/
+
+Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMaterialesPorNodo')
+            ->name('material.getmaterialespornodo');
+
+Route::resource('materiales', 'MaterialController', [
+        'as' => 'materiales',
+        'except' => [
+            'destroy',
+            // 'show',
+        ]
+    ])->names([
+        'index'   => 'material.index',
+        'create'  => 'material.create',
+        'store'   => 'material.store',
+        'show'    => 'material.show',
+        'update'  => 'material.update',
+        'edit'    => 'material.edit',
+        'destroy' => 'material.destroy',
+    ])
+    ->parameters([
+        'materiales' => 'id',
+    ]);
+
+/*=====  End of seccion para los materiales  ======*/
+
+
+
+/*========================================================
+=            seccion para los mantenimientos             =
+========================================================*/
+Route::get('/mantenimientos/getmantenimientosequipospornodo/{nodo}', 'MantenimientoController@getMantenimientosEquiposPorNodo')
+            ->name('mantenimiento.getmantenimientosequipospornodo');
+
+Route::resource('mantenimientos', 'MantenimientoController', [
+        'as' => 'equipos',
+        'except' => [
+            'destroy',
+        ]
+    ])->names([
+        'index'   => 'mantenimiento.index',
+        'create'  => 'mantenimiento.create',
+        'store'   => 'mantenimiento.store',
+        'show'    => 'mantenimiento.show',
+        'update'  => 'mantenimiento.update',
+        'edit'    => 'mantenimiento.edit',
+        'destroy' => 'mantenimiento.destroy',
+    ])
+    ->parameters([
+        'mantenimientos' => 'id',
+    ]);
+
+
+/*=====  End of seccion para los mantenimientos   ======*/
+
+
 /*======================================================================
 =            seccion para las rutas de uso de infraestructa            =
 ======================================================================*/
@@ -155,26 +272,22 @@ Route::group([
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
             ->name('usoinfraestructura.projectsforuser');
 
+
     Route::get('usoinfraestructura/talentosporproyecto/{id}', 'UsoInfraestructuraController@talentosPorProyecto')->name('usoinfraestructura.talentosporproyecto');
 
     Route::get('usoinfraestructura/articulacionesforuser', 'UsoInfraestructuraController@articulacionesForUser')
         ->name('usoinfraestructura.articulacionesforuser');
 
+
+
     Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
         ->name('usoinfraestructura.talentosporarticulacion');
 
-
-
-    Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
-        ->name('usoinfraestructura.edtsforuser');
-
-    Route::get('usoinfraestructura/laboratorios', 'UsoInfraestructuraController@usoinfraestructuraLaboratorios')
-        ->name('usoinfraestructura.laboratorios');
+    Route::get('usoinfraestructura/edtforuser/{id}', 'UsoInfraestructuraController@edtForUser')
+            ->name('usoinfraestructura.edtforuser');
 
     Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
         ->name('usoinfraestructura.usoinfraestructurapornodo');
-
-
 
 });
 
@@ -560,6 +673,19 @@ Route::group([
     Route::get('/', 'SeguimientoController@index')->name('seguimiento');
     Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
     Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+  }
+);
+
+/**
+* Route group para el módulo de costos
+*/
+Route::group([
+  'prefix' => 'costos',
+  'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor']
+],
+  function() {
+    Route::get('/', 'CostoController@index')->name('costos');
+    Route::get('/costosDeUnaActividad/{id}', 'CostoController@costosDeUnaActividad');
   }
 );
 

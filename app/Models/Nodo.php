@@ -80,6 +80,27 @@ class Nodo extends Model
         return $this->hasMany(Laboratorio::class, 'nodo_id', 'id');
     }
 
+    public function equipos()
+    {
+        return $this->hasMany(Equipo::class, 'nodo_id', 'id');
+    }
+
+
+    public function costoadministrativonodo()
+    {
+        return $this->belongsToMany(CostoAdministrativo::class, 'nodo_costoadministrativo', 'nodo_id', 'costo_administrativo_id')
+            ->withTimestamps()
+            ->withPivot([
+                'anho',
+                'valor',
+            ]);
+    }
+
+    public function materiales()
+    {
+        return $this->hasMany(Material::class, 'nodo_id', 'id');
+    }
+
     /**
      * Devolver relacion entre actividades y nodo
      * @author julian londoño
@@ -94,7 +115,10 @@ class Nodo extends Model
     public function lineas()
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot([
+                'porcentaje_linea',
+            ]);
 
     }
 
@@ -122,6 +146,10 @@ class Nodo extends Model
     }
 
     /*=====  End of scope para consultar la lista de nodos  ======*/
+
+
+
+
 
     /*====================================================================================================
     =            scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso            =
@@ -280,5 +308,14 @@ class Nodo extends Model
             return $query->with($relations);
         }
         return $query;
+    }
+
+    /**
+     * Devolver cantidad de nodos
+     * @author julian londoño
+     */
+    public function scopeCountNodos($query)
+    {
+        return $query->count();
     }
 }

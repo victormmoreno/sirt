@@ -19,7 +19,7 @@ class NumberOneDecimal implements Rule
     {
         $number = preg_match('/^(?:d*.d{1,2}|d+)$', $value);
 
-        return dd($number);
+       
     }
 
     /**

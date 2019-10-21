@@ -68,6 +68,18 @@ class Gestor extends Model
       return $this->hasMany(Actividad::class, 'gestor_id', 'id');
     }
 
+
+    public function usoinfraestructuras()
+    {
+        return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id','gestor_id')
+            ->withTimestamps()
+            ->withPivot([
+                'asesoria_directa',
+                'asesoria_indirecta',
+                'costo_asesoria',
+            ]);
+    }
+
     /*=========================================
     =            asesores eloquent            =
     =========================================*/
@@ -87,4 +99,13 @@ class Gestor extends Model
     }
 
     /*=====  End of mutador eloquent  ======*/
+
+    /**
+     * Devolver cantidad de gestores
+     * @author julian londoño
+     */
+    public function scopeCountGestores($query)
+    {
+        return $query->with('user')->count();
+    }
 }

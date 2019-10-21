@@ -16,8 +16,9 @@ class CreateRutaModelTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->string('ruta', 1000);
+            $table->string('ruta', 1000)->nullable();
             $table->integer('model_id')->unsigned();
             $table->string('model_type');
             $table->timestamps();

@@ -14,9 +14,7 @@
               <div class="row">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    {{-- <li class="tab col s3"><a class="" href="#tecnoparque">Tecnoparque</a></li>  --}}
                     <li class="tab col s3"><a class="" href="#gestor">Gestor</a></li>
-                    {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
                   </ul>
                   <br>
                 </div>
