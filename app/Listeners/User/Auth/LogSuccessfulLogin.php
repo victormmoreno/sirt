@@ -2,6 +2,7 @@
 
 namespace App\Listeners\User\Auth;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ class LogSuccessfulLogin
         DB::beginTransaction();
 
         try {
-            $event->user->ultimo_login = date('Y-m-d H:i:s');
+            $event->user->ultimo_login = Carbon::now()->format('Y-m-d H:i:s');
             $event->user->save();
 
             DB::commit();

@@ -377,7 +377,7 @@ class UserRepository
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
             "genero"               => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
-            "estado"               => User::IsInactive(),
+            "estado"               => User::IsActive(),
             "institucion"          => $request->input('txtinstitucion'),
             "titulo_obtenido"      => $request->get('txttitulo'),
             "fecha_terminacion"    => $request->get('txtfechaterminacion'),

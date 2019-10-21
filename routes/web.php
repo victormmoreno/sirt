@@ -118,6 +118,7 @@ Route::group([
 
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
             'create'  => 'usuario.usuarios.create',
+            'store'  => 'usuario.usuarios.store',
             'update'  => 'usuario.usuarios.update',
             'edit'    => 'usuario.usuarios.edit',
             'destroy' => 'usuario.usuarios.destroy',

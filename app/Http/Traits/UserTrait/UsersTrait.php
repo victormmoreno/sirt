@@ -166,7 +166,7 @@ trait UsersTrait
     ================================================================*/
     public static function generatePasswordRamdom()
     {
-        return str_random(9);
+        return str_random(12);
     }
 
     /*=====  End of metodo para generar contraseña aleatoria  ======*/
