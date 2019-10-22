@@ -12,18 +12,10 @@
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
-        <style>
-        .tabs .tab .active {
-          color:#26a69a;
-          /*Custom Text Color While Active*/
-          background-color: rgba(89, 181, 72, 0.2);
-          /*Custom Background Color While Active*/
-        }
-        </style>
     <body>
         <div class="mn-content fixed-sidebar" id="app">
             @include('layouts.nav')
-        @yield('content')
+            @yield('content')
             <div class="modal valign-wrapper" id="loadingModal" style="width: 20%">
                 <div class="modal-content">
                     <center>
@@ -48,8 +40,7 @@
             </div>
             @include('layouts.footer')
         </div>
-        <div class="left-sidebar-hover">
-        </div>
+        <div class="left-sidebar-hover"></div>
         @include('sweetalert::alert')
         <script src="{{ asset('js/app.js') }}">
         </script>

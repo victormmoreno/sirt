@@ -48,11 +48,6 @@
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">filter_center_focus</i>Sublineas
-  </a>
-</li> --}}
 <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
@@ -78,11 +73,11 @@
     </ul>
   </div>
 </li>
-<li class="no-padding {{setActiveRoute('laboratorio')}}">
+{{-- <li class="no-padding {{setActiveRoute('laboratorio')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('laboratorio')}}" href="{{route('laboratorio.index')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('laboratorio')}}">local_drink</i>Laboratorios
   </a>
-</li>
+</li> --}}
 <li class="no-padding  ">
   <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('equipo'), setActiveRouteActivePage('mantenimiento')!!} {!! setActiveRoutePadding('equipo'),  setActiveRoutePadding('mantenimiento')!!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('equipo'),  setActiveRouteActiveIcon('mantenimiento')}}">account_balance_wallet</i>Equipos
@@ -118,87 +113,3 @@
     <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('visitante'), setActiveRouteActivePage('ingreso') }} {{ setActiveRoutePadding('visitante'), setActiveRoutePadding('ingreso') }}">
-    <i class="material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">directions_walk</i>Ingresos
-    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">keyboard_arrow_right</i>
-  </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="{{route('ingreso')}}" class="{{setActiveRouteActivePage('ingreso')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('ingreso')}}">transit_enterexit</i>Ingresos
-        </a>
-      </li>
-      <li>
-        <a href="{{route('visitante')}}" class="{{setActiveRouteActivePage('visitante')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('visitante')}}">accessibility</i>Visitantes
-        </a>
-      </li>
-    </ul>
-  </div>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">local_drink</i>Laboratorios
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">trending_down</i>Depreciación
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">build</i>Mantenimiento
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">local_library</i>Materiales de Formación
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">attach_money</i>Costos
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">show_chart</i>Indicadores
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">search</i>Seguimiento
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey">
-    <i class="material-icons">description</i> Reportes<i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
-  </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="">
-          Infocenter
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Ingresos
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Gestor
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Dinamizador
-        </a>
-      </li>
-    </ul>
-  </div>
-</li> --}}

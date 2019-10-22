@@ -176,7 +176,6 @@
                     usoInfraestructuraCreate.limpiarListaGestorAsesores();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
                     usoInfraestructuraCreate.removeDisableButtonEquipos();
-                    usoInfraestructuraCreate.removeDisableButtonTalento();
                     usoInfraestructuraCreate.removeDisableButtonMaterial();
 
                 } else if( $("#IsEdt").is(":checked")) {
@@ -258,7 +257,7 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
-
+                // console.log(response);
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();
@@ -273,48 +272,45 @@
                     $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
                     $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
                    
-                    $.each(response.data, function(i, element) {
+                    
+                        console.log(response.proyecto);
                         @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura + ' - ' + element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+element.articulacion_proyecto.actividad.gestor.id+'">'+element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" min="1" maxlength="6" value="1"></td><td><input type="number" name="asesoriaindirecta[]" min="1" maxlength="6" value="1"></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.lineatecnologica_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" min="1" maxlength="6" value="1"></td><td><input type="number" name="asesoriaindirecta[]" min="1" maxlength="6" value="1"></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
 
                         @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                            $('#txtgestor').val(element.articulacion_proyecto.actividad.gestor.user.documento+ ' - '+ element.articulacion_proyecto.actividad.gestor.user.nombres + ' ' + element.articulacion_proyecto.actividad.gestor.user.apellidos);
+                            $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
                             $("label[for='txtgestor']").addClass('active');
                         @endif
 
-                        $('#txtlinea').val(element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura+ ' - '+ element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre);
+                        $('#txtlinea').val(response.proyecto.abreviatura+ ' - '+ response.proyecto.lineatecnologica_nombre);
                         $("label[for='txtlinea']").addClass('active');
                             
 
                       
-                        $.each(element.articulacion_proyecto.talentos, function(e, talentos) {
+                        $.each(response.talentos, function(e, talento) {
                     
-                            $('#txttalento').append('<option value="'+talentos.id+'">'+ talentos.user.documento +' - '+talentos.user.nombres+' '+ talentos.user.apellidos + '</option>');
-                        });
-                    });
-
-
-                    $.each(response.data, function(i, element) {
-
-                        $.each(element.articulacion_proyecto.actividad.nodo.lineas, function(e, lineatecnologica) {        
-                            $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
-                        });
-       
-                        $.each(element.articulacion_proyecto.actividad.nodo.equipos, function(e, equipo) {        
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                            $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
                         });
 
-                        $.each(element.articulacion_proyecto.actividad.nodo.materiales, function(e, material) {
+                        $.each(response.lineastecnologicas, function(e, lineatecnologica) {        
+                            $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.abreviatura + ' ' + lineatecnologica.nombre + '</option>');
+                        });
+
+                        $.each(response.equipos, function(e, equipo) {
+                                   
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
+                        });
+
+                        $.each(response.materiales, function(e, material) {
                             $('#txtmaterial').append('<option  value="'+material.id+'">'+ material.codigo_material + ' - '+  material.nombre + '</option>');
                         });
-
-                    });
+                    
                     
 
                 }else{
@@ -467,7 +463,6 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
-                $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtgestor').removeAttr('value');
                 $('#txtlinea').removeAttr('value');
@@ -475,7 +470,6 @@
                 $('#txtmaterial').empty();
 
              
-                $('#txttalento').append('<option value="">Seleccione el talento</option>');
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
@@ -497,17 +491,10 @@
                     $('#txtlinea').val(element.articulacion_proyecto.actividad.gestor.lineatecnologica.abreviatura+ ' - '+ element.articulacion_proyecto.actividad.gestor.lineatecnologica.nombre);
                     $("label[for='txtlinea']").addClass('active');
 
-                    if (element.articulacion_proyecto.talentos.length != 0) {
-                        $('.btnAgregarTalento').attr('onclick', 'addTalentoAUso()'); 
-                        $('#txttalento').append('<option value="">Seleccione el talento</option>');
-                        $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-
+                    if (element.articulacion_proyecto.length != 0) {
                         
-
-                        $.each(element.articulacion_proyecto.talentos, function(i, talento) {
-                        $('#txttalento').append('<option  value="'+talento.id+'">'+ talento.user.documento +' - '+talento.user.nombres+' '+ talento.user.apellidos + '</option>');
-               
-                        }); 
+                        $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+ 
 
                         $.each(response.data, function(i, element) {
 
@@ -515,17 +502,18 @@
                                 $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
                             });
            
-                            $.each(element.articulacion_proyecto.actividad.nodo.equipos, function(e, equipo) {        
-                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos, function(e, equipo) { 
+                              
+                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                             });
 
-                            $.each(element.articulacion_proyecto.actividad.nodo.materiales, function(e, material) {
+                            $.each(element.articulacion_proyecto.actividad.gestor.lineatecnologica.materiales, function(e, material) {
                                 $('#txtmaterial').append('<option  value="'+material.id+'">'+ material.codigo_material + ' - '+  material.nombre + '</option>');
                             });
 
                         });
 
-                        $('#txttalento').attr("disabled", false).select2();
+                       
                         $('#txtlineatecnologica').attr("disabled", false).select2();
                         $('#txtmaterial').attr("disabled", false).select2();
 
@@ -533,14 +521,14 @@
                         $('#txtlineatecnologica').select2();
                         $('#txtmaterial').select2();
                     }else{
-                        $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                        
                         $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
                         $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
 
-                        $('#txttalento').attr("disabled", true).select2();
+                      
                         $('#txtlineatecnologica').attr("disabled", true).select2();
                         $('#txtmaterial').attr("disabled", true).select2();
-                        $('.btnAgregarTalento').attr("disabled", true).removeAttr("onclick");
+                        
 
                     }
 
@@ -637,11 +625,13 @@
                         $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
                     });
    
-                    $.each(element.actividad.nodo.equipos, function(e, equipo) {        
-                        $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '</option>');
+                    $.each(element.actividad.gestor.lineatecnologica.equipos, function(e, equipo) {
+
+                        $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                     });
 
-                    $.each(element.actividad.nodo.materiales, function(e, material) {
+
+                    $.each(element.actividad.gestor.lineatecnologica.equipos, function(e, material) {
                         $('#txtmaterial').append('<option  value="'+material.id+'">'+ material.codigo_material + ' - '+  material.nombre + '</option>');
                     });
 

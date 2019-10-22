@@ -31,10 +31,10 @@ class LineaFormRequest extends FormRequest
      */
     public function rules()
     {
-        
+
         return [
-            'txtabreviatura' => 'required|alpha|min:1|max:3|unique:lineastecnologicas,abreviatura,' . $this->route->parameter('linea'),
-            'txtnombre'      => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:1|max:45|unique:lineastecnologicas,nombre,' . $this->route->parameter('linea'),
+            'txtabreviatura' => 'required|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ&_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ&_-]*)*)+$/|min:1|max:3|unique:lineastecnologicas,abreviatura,' . $this->route->parameter('linea'),
+            'txtnombre'      => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ&_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ&_-]*)*)+$/|min:1|max:45|unique:lineastecnologicas,nombre,' . $this->route->parameter('linea'),
             'txtdescripcion' => 'nullable|max:2000',
         ];
     }
@@ -45,12 +45,12 @@ class LineaFormRequest extends FormRequest
             'txtabreviatura.required' => 'La abreviatura es obligatoria.',
             'txtabreviatura.min'      => 'La abreviatura debe ser minimo 1 caracter',
             'txtabreviatura.max'      => 'La abreviatura debe ser máximo 3 caracteres',
-            'txtabreviatura.alpha'    => 'El campo abreviatura sólo debe contener letras',
+            'txtabreviatura.regex'    => 'El campo abreviatura sólo debe contener letras o el carácter &',
             'txtabreviatura.unique'   => 'La abreviatura ingresada ya está en uso',
             'txtnombre.required'      => 'El nombre es obligatorio.',
             'txtnombre.min'           => 'El nombre debe ser minimo 1 caracter',
             'txtnombre.max'           => 'El nombre debe ser máximo 45 caracteres',
-            'txtnombre.regex'         => 'Ea formato del campo nombre es incorrecto',
+            'txtnombre.regex'         => 'El campo nombre sólo debe contener letras, números o el carácter &',
             'txtnombre.unique'        => 'El nombre ingresado ya está en uso',
             'txtdescripcion.max'      => 'La descripción debe ser máximo 2000 caracteres',
 

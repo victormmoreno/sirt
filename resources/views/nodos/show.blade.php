@@ -32,12 +32,11 @@
                                             <div class="mailbox-view-header">
                                                 <div class="left">
                                                     <div class="left">
-                                                        
                                                         <i class="material-icons fas fa-building"></i>
                                                     </div>
                                                     <div class="left">
                                                         <span class="mailbox-title">
-                                                        Tecnoparque nodo {{$nodo->entidad->nombre}} - 
+                                                         Tecnoparque nodo {{$nodo->entidad->nombre}} - 
                                                         {{$nodo->entidad->ciudad->nombre}} ({{$nodo->entidad->ciudad->departamento->nombre}})
                                                     </span>
                                                     <span class="mailbox-author">
@@ -57,6 +56,19 @@
                                                     </span>
                                                 </div>
                                             </div>
+                                            <div class="right">
+                                                <small class="green-text text-darken-2">
+                                                    <a class="waves-effect waves-red btn-flat">
+                                                        <i class="fas fa-file-excel   fa-lg"></i>Exportar a PDF 
+                                                    </a>
+                                                    
+                                                </small>
+                                                <small class="green-text text-darken-2">
+                                                    <a class="waves-effect waves-green btn-flat">
+                                                        <i class="material-icons left">cloud</i>Exportar a Excel  
+                                                    </a>
+                                                </small>
+                                            </div>
                                             <div class="divider mailbox-divider"></div>
                                             <div class="mailbox-text">
                                                 <div class="row">
@@ -72,6 +84,7 @@
                                                                     <span class="title">
                                                                         {{$value->abreviatura}} - {{$value->nombre}}
                                                                     </span>
+                                                                    <p>Porcentaje: {{$value->pivot->porcentaje_linea}} %</p>
                                                                     
                                                                 </li>   
                                                             @empty

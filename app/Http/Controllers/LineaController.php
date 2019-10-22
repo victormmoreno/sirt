@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Alert;
 use App\Http\Requests\LineaFormRequest;
 use App\Models\LineaTecnologica;
+use App\Repositories\Datatables\LineaTecnologicaDatatables;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
-use DataTables;
 use Illuminate\Http\Request;
 
 class LineaController extends Controller
@@ -16,9 +16,34 @@ class LineaController extends Controller
 
     public function __construct(LineaRepository $lineaRepository)
     {
-        $this->middleware(['auth']);
-        $this->middleware(['role_session:Administrador|Dinamizador|Gestor|Talento'])->except('getAllLineasForNodo');
+
+        $this->middleware([
+            'auth',
+            'role_session:Administrador|Dinamizador|Gestor|Talento',
+        ])->except('getAllLineasForNodo');
+        $this->setLineaRepository($lineaRepository);
+
+    }
+
+    /**
+     * Asigna un valor a $lineaRepository
+     * @param object $lineaRepository
+     * @return void
+     * @author devjul
+     */
+    private function setLineaRepository($lineaRepository)
+    {
         $this->lineaRepository = $lineaRepository;
+    }
+
+    /**
+     * Retorna el valor de $lineaRepository
+     * @return object
+     * @author devjul
+     */
+    private function getLineaRepository()
+    {
+        return $this->lineaRepository;
     }
 
     /*=====================================================================
@@ -29,7 +54,7 @@ class LineaController extends Controller
     {
         if (request()->ajax()) {
             return response()->json([
-                'lineasForNodo' => $this->lineaRepository->getAllLineaNodo($nodo),
+                'lineasForNodo' => $this->getLineaRepository()->getAllLineaNodo($nodo),
             ]);
         } else {
             abort('403');
@@ -43,58 +68,15 @@ class LineaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(LineaTecnologicaDatatables $lineaTecnologicaDatatables)
     {
-        if (request()->ajax()) {
-            return DataTables::eloquent(LineaTecnologica::select(['id', 'nombre', 'slug', 'abreviatura', 'descripcion']))
-                ->addColumn('action', function ($data) {
-                    $button = '<a href="' . route("lineas.edit", $data->slug) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    return $button;
-                })
-                ->addColumn('show', function ($data) {
-                    $button = '<a href="' . route("lineas.show", $data->slug) . '" class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="ver más"><i class="material-icons">info_outline</i></a>';
-                    return $button;
-                })
-                ->editColumn('descripcion', function ($data) {
-                    return !empty($data->descripcion) ? $data->descripcion : 'No registra';
-                })
-                ->rawColumns(['action', 'show', 'descripcion'])
-                ->toJson();
-        }
         $this->authorize('index', LineaTecnologica::class);
-        $relations = [
-                    'sublineas', 
-                    'gestores', 'gestores.user',
-                    'laboratorios'
-                ];
-        switch (session()->get('login_role')) {
-            case User::IsAdministrador():
-                return view('lineas.index');
-                break;
-            case User::IsDinamizador():
 
-                $nodo = auth()->user()->dinamizador->nodo->id;
-                $linea = $this->lineaRepository->lineasWithRelations($relations)->whereHas('nodos', function ($query) use ($nodo) {
-                    $query->where('nodos.id', $nodo);
-                })->get();
-
-                return view('lineas.index');
-                break;
-
-            case User::IsGestor():
-
-                $lineatecnologica = auth()->user()->gestor->lineatecnologica->id;
-                $linea            = $this->lineaRepository->lineasWithRelations($relations)->find($lineatecnologica);
-                return $linea;
-                break;
-            default:
-                abort('403');
-                break;
+        if (request()->ajax()) {
+            return $lineaTecnologicaDatatables->indexDatatable();
         }
-
+        return view('lineas.index');
     }
-
-
 
     /**
      * Show the form for creating a new resource.s
@@ -117,17 +99,12 @@ class LineaController extends Controller
     {
         $this->authorize('store', User::class);
 
-        $linea = LineaTecnologica::create([
-            "abreviatura" => $request->input('txtabreviatura'),
-            "nombre"      => $request->input('txtnombre'),
-            "slug"        => str_slug($request->input('txtnombre'), '-'),
-            "descripcion" => $request->input('txtdescripcion'),
-        ]);
+        $linea = $this->getLineaRepository()->store($request);
 
         if ($linea != null) {
-            Alert::success("La Linea {$linea->nombre} ha sido creado satisfactoriamente.", 'Registro Exitoso', "success");
+            Alert::success('Registro Exitoso', "La Linea {$linea->nombre} ha sido creado satisfactoriamente.", "success");
         } else {
-            Alert::error("La linea  no se ha creado.", 'Registro Erróneo', "error");
+            Alert::error('Registro Erróneo', "La linea  no se ha creado.", "error");
         }
         return redirect('lineas');
     }
@@ -140,10 +117,10 @@ class LineaController extends Controller
      */
     public function show($linea)
     {
-        $linea = $this->lineaRepository->findLineaForShow($linea);
+        $linea = $this->getLineaRepository()->findLineaForShow($linea);
 
         $this->authorize('show', $linea);
-        
+
         return view('lineas.show', ['linea' => $linea]);
     }
 
@@ -155,10 +132,12 @@ class LineaController extends Controller
      */
     public function edit($linea)
     {
-       $linea =  LineaTecnologica::with(['lineastecnologicasnodos'])->findOrFailLinea($linea);
-       
+        $linea = LineaTecnologica::with(['nodos'])->findOrFailLinea($linea);
+
         $this->authorize('edit', $linea);
-        return view('lineas.edit', compact('linea'));
+        return view('lineas.edit', [
+            'linea' => $linea,
+        ]);
     }
 
     /**
@@ -174,14 +153,10 @@ class LineaController extends Controller
 
         $this->authorize('update', $linea);
 
-        if ($linea != null) {
-            $linea->abreviatura = $request->input('txtabreviatura');
-            $linea->nombre      = $request->input('txtnombre');
-            $linea->slug        = str_slug($request->input('txtnombre'), '-');
-            $linea->descripcion = $request->input('txtdescripcion');
-            $linea->update();
+        $linea = $this->getLineaRepository()->update($linea, $request);
 
-            Alert::success("La Linea {$linea->nombre} ha sido  modificado exitosamente.", 'Modificación Exitosa', "success");
+        if ($linea != null) {
+            Alert::success('Modificación Exitosa', "La Linea {$linea->nombre} ha sido  modificado exitosamente.", "success");
 
         } else {
             Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");

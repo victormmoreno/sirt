@@ -8516,7 +8516,15 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .fa-lg {
   font-size: 1.33333em;
   line-height: 0.75em;
-  vertical-align: -.0667em; }
+  vertical-align: -.0667em;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased; }
 
 .fa-xs {
   font-size: .75em; }
@@ -18266,42 +18274,12 @@ h5.breadcrumbs-header {
   font-family: 'Zurich BT';
   font-weight: 400;
 }
-/* colores institucionales */
-/*
-.btn-flat-sena {
-    font-weight: 500;
-    font-size: 20px;
+
+/*color tabs personalizados vicmo*/
+.tabs .tab .active {
+  color:#26a69a;
+  /*Custom Text Color While Active*/
+  background-color: rgba(89, 181, 72, 0.2);
+  /*Custom Background Color While Active*/
 }
 
-.btn-flat.waves-orange-sena {
-    color: #fc7323;
-}
-
-.waves-effect.waves-orange-sena .waves-ripple {
-    background-color: #fc7323
-}
-
-.waves-effect.waves-light-sena-add .waves-ripple {
-    background-color: #59b548;
-}*/
-
-/* Waves */
-
-/*.waves-color-demo-sena-agregar .btn:not(.waves-light-sena-add ), .waves-color-demo-sena .btn-large-sena-agregar:not(.waves-light-sena-add ) {
-    background-color: #59b548;
-    color: #59b548;
-}
-
- .btn-large-sena-agregar {
-  text-decoration: none;
-  color: #fff;
-  background-color: #59b548;
-  text-align: center;
-  letter-spacing: .5px;
-  transition: .2s ease-out;
-  cursor: pointer;
-}*/
-
-/* .btn-large-sena-agregar:hover {
-  background-color: #59b548;
-}*/

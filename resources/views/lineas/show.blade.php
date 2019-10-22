@@ -39,7 +39,7 @@
 												    <div class="left">
 												        <span class="mailbox-title">
 												        	<i class="material-icons left">
-								                                dns
+								                                linear_scale
 								                            </i>
 								                            {{$linea->abreviatura}} - 
 												            {{$linea->nombre}}

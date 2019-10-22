@@ -160,13 +160,7 @@
                                                                             Cambiar Información
                                                                         </a>
                                                                     </li>
-                                                                    {{--
-                                                                    <li>
-                                                                        <a href="#!">
-                                                                            Mis Notificaciónes
-                                                                        </a>
-                                                                    </li>
-                                                                    --}}
+                                                                    
                                                                     @if(collect($user->getRoleNames())->contains(App\User::IsTalento()))
                                                                     <li class="divider">
                                                                     </li>

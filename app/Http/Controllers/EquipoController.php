@@ -31,8 +31,6 @@ class EquipoController extends Controller
     public function index()
     {
 
-        
-       
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
@@ -40,19 +38,19 @@ class EquipoController extends Controller
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo    = auth()->user()->dinamizador->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })->get();
+                        ->whereHas('nodo', function ($query) use ($nodo) {
+                            $query->where('id', $nodo);
+                        })->get();
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea   = auth()->user()->gestor->lineatecnologica->id;
                     $nodo    = auth()->user()->gestor->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })
-                                ->whereHas('lineatecnologica', function($query) use( $linea ){
-                                    $query->where('id', $linea);
-                                })->get();
+                        ->whereHas('nodo', function ($query) use ($nodo) {
+                            $query->where('id', $nodo);
+                        })
+                        ->whereHas('lineatecnologica', function ($query) use ($linea) {
+                            $query->where('id', $linea);
+                        })->get();
                 }
 
                 return datatables()->of($equipos)
@@ -115,9 +113,9 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })->get();
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
 
                 return datatables()->of($equipos)
                     ->addColumn('edit', function ($data) {
@@ -158,20 +156,36 @@ class EquipoController extends Controller
     public function getEquiposPorLinea($linea)
     {
         if (request()->ajax()) {
-        
-                $nodo    = auth()->user()->dinamizador->nodo->id;
-                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })
-                                ->whereHas('lineatecnologica', function($query) use( $linea ){
-                                    $query->where('id', $linea);
-                                })->get();
 
-                return response()->json([
-                    'equipos' => $equipos,
-                ]);
-        
+            if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo    = auth()->user()->dinamizador->nodo_id;
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })
+                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
+                        $query->where('id', $linea);
+                    })->get();
+            } elseif (session()->get('login_role') == User::IsGestor()) {
+                $nodo    = auth()->user()->gestor->nodo_id;
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })
+                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
+                        $query->where('id', $linea);
+                    })->get();
+            } else {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+
+                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
+                        $query->where('id', $linea);
+                    })->get();
+            }
+
+            return response()->json([
+                'equipos' => $equipos,
+            ]);
 
         } else {
             abort('403');
@@ -193,10 +207,9 @@ class EquipoController extends Controller
 
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
 
-
             return view('equipo.create', [
                 'lineastecnologicas' => $lineastecnologicas,
-                'year' =>  Carbon::now()->isoFormat('YYYY'),
+                'year'               => Carbon::now()->isoFormat('YYYY'),
             ]);
         } else {
             abort('403');
@@ -216,7 +229,7 @@ class EquipoController extends Controller
 
         //metodo para guardad
         $equipoCreate = $this->getEquipoRepository()->storeEquipo($request);
-       
+
         if ($equipoCreate === true) {
 
             alert()->success('Registro Exitoso.', 'El equipo ha sido creado satisfactoriamente');
@@ -225,7 +238,6 @@ class EquipoController extends Controller
         }
         return redirect()->route('equipo.index');
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -243,7 +255,7 @@ class EquipoController extends Controller
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
             // return $lineastecnologicas;
             return view('equipo.edit', [
-                'year' =>  Carbon::now()->isoFormat('YYYY'),
+                'year'               => Carbon::now()->isoFormat('YYYY'),
                 'lineastecnologicas' => $lineastecnologicas,
                 'equipo'             => $equipo,
             ]);

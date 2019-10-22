@@ -6,7 +6,8 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s8 m8 l10">
+                    <div class="col s8 m8 l9">
+
                         <h5 class="left-align">
 
                             <a class="footer-text left-align" href="{{route('laboratorio.index')}}">
@@ -20,7 +21,7 @@
                             </i>
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l3 rigth-align">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Costos Administrativos</li>
@@ -34,9 +35,9 @@
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l12">
-                                    <div class="center-align">
+                                    <div class="center">
                                         <span class="card-title center-align">
-                                            Costos Administrativos Fijos Mensuales {{config('app.name')}}
+                                            Costos Administrativos Fijos Mensuales {{config('app.name')}} {{Carbon\Carbon::now()->year}}
                                         </span>
                                         <i class="material-icons">
                                             settings_input_svideo
@@ -91,11 +92,14 @@
                                 <div class="col s12 m12 l12">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Costos Administrativos Fijos Mensuales Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                                            Costos Administrativos Fijos Mensuales Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}} {{Carbon\Carbon::now()->year}}
                                         </span>
                                         <i class="material-icons">
                                             settings_input_svideo
                                         </i>
+                                    </div>
+                                    <div class="rigth-align">
+                                        sfsafdf
                                     </div>
                                 </div>
                                
