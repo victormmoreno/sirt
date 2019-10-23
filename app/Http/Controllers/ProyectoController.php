@@ -46,7 +46,11 @@ class ProyectoController extends Controller
   {
 
     if ( Session::get('login_role') == User::IsDinamizador() ) {
+      // $this->getProyectoRepository()->eliminarProyecto_Repository($id);
       $delete = $this->getProyectoRepository()->eliminarProyecto_Repository($id);
+      return response()->json([
+        'retorno' => $delete
+      ]);
     } else {
       abort('403');
     }

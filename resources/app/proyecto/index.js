@@ -706,5 +706,20 @@ function eliminarProyectoPorId_event(id, e) {
 }
 
 function eliminarProyectoPorId_moment(id) {
-  location.href = '/proyecto/eliminarProyecto/'+id;
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/proyecto/eliminarProyecto/'+id,
+    success: function (data) {
+      if (data.retorno) {
+        Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
+        location.href = '/proyecto';
+      } else {
+        Swal.fire('Eliminación Errónea!', 'El proyecto no se ha eliminado!', 'error');
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 }
