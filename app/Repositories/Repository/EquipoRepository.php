@@ -57,13 +57,13 @@ class EquipoRepository
      */
     public function updateEquipo($request, $equipo)
     {
-        $lineatecnologica_nodo = $this->findLineaTecnologicaNodoByRequest($request);
+        
         DB::beginTransaction();
 
         try {
 
             $equipo->update([
-                'nodo_id' => $this->findLineaTecnologicaNodoByRequest($request),
+                'nodo_id' => $this->findLineaTecnologicaNodoByRequest(),
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
                 'nombre'               => $request->input('txtnombre'),
                 'referencia'           => $request->input('txtreferencia'),
@@ -87,9 +87,11 @@ class EquipoRepository
      * @return array
      * @author devjul
      */
-    private function findLineaTecnologicaNodoByRequest($request)
+    private function findLineaTecnologicaNodoByRequest()
     {
-        return session()->get('login_role') == User::IsDinamizador() ? auth()->user()->dinamizador->nodo->id : session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
+        if (session()->get('login_role') == User::IsDinamizador()) {
+            return auth()->user()->dinamizador->nodo_id;
+        }
         
     }
 }

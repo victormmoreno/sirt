@@ -33,7 +33,6 @@ class CreateMaterialesTable extends Migration
             $table->string('marca',45);
             $table->timestamps();
 
-
             $table->index(["nodo_id"], 'fk_nodo_materiales1_idx');
             $table->index(["lineatecnologica_id"], 'fk_lineatecnologica_materiales1_idx');
             $table->index(["tipomaterial_id"], 'fk_tipomaterial_materiales1_idx');
@@ -56,11 +55,11 @@ class CreateMaterialesTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-
-            $table->foreign('categoria_material_id', 'fk_categoria_material_materiales1_idx')
+             $table->foreign('categoria_material_id', 'fk_categoria_material_materiales1_idx')
                 ->references('id')->on('categoria_material')
                 ->onDelete('no action')
                 ->onUpdate('no action');
+
 
             $table->foreign('presentacion_id', 'fk_presentacion_materiales1_idx')
                 ->references('id')->on('presentaciones')

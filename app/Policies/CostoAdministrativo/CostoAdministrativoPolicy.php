@@ -21,6 +21,17 @@ class CostoAdministrativoPolicy
     }
 
     /**
+     * Determine whether the user can query for nodo the costo administrativo.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function getCostoAdministrativoPorNodo(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+    }
+
+    /**
      * Determine whether the user can edit the costo administrativo.
      *
      * @param  \App\User  $user

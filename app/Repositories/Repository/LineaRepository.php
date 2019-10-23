@@ -48,13 +48,44 @@ class LineaRepository
      * @author julian londoño
      * @param array $relations
      */
-    
+
     public function lineasWithRelations($relations)
     {
         return LineaTecnologica::with($relations);
 
     }
 
-    
+    /**
+     * metodo para guardar una nueva linea
+     * @param $request
+     * @author julian londoño
+     */
+    public function store($request)
+    {
+        return LineaTecnologica::create([
+            "abreviatura" => $request->input('txtabreviatura'),
+            "nombre"      => $request->input('txtnombre'),
+            "slug"        => str_slug($request->input('txtnombre'), '-'),
+            "descripcion" => $request->input('txtdescripcion'),
+        ]);
+    }
+
+    /**
+     * metodo para actualizar una nueva linea
+     * @param $lineatecnologica
+     * @param $request
+     * @author julian londoño
+     */
+    public function update($lineatecnologica, $request)
+    {
+        $lineatecnologica->update([
+            "abreviatura" => $request->input('txtabreviatura'),
+            "nombre"      => $request->input('txtnombre'),
+            "slug"        => str_slug($request->input('txtnombre'), '-'),
+            "descripcion" => $request->input('txtdescripcion'),
+        ]);
+
+        return $lineatecnologica;
+    }
 
 }

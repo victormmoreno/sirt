@@ -1,5 +1,5 @@
 @component('mail::message')
-# Contraseña de ingreso a {{config('app.name')}}
+# Credenciales de ingreso a {{config('app.name')}}
 
 Señor(a)<br>
 _<strong>{{$user->nombres}} {{$user->apellidos}}</strong>_<br>
@@ -7,7 +7,7 @@ _<strong>{{$user->nombres}} {{$user->apellidos}}</strong>_<br>
 
 Cordial Saludo.
 
-Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar al sistema {{config('app.name')}} luego de activada tu cuenta.
+Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar a la plataforma {{config('app.name')}}.
 @component('mail::panel')
      <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
 @endcomponent

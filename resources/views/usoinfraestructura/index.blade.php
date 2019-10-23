@@ -64,10 +64,6 @@
                                             <th>Asesoria Directa</th>
                                             <th>Asesoria Indirecta</th>
                                             <th>Detalles</th>
-                                            {{-- <th>Laboratorios</th>
-                                            <th>Talentos</th> --}}
-                                            {{-- <th>Editar</th> --}}
-                                            {{-- <th>Anular</th> --}}
                                         </thead>
                         
                                     </table>
@@ -96,10 +92,6 @@
                                             <th>Asesoria Directa</th>
                                             <th>Asesoria Indirecta</th>
                                             <th>Detalles</th>
-                                            {{-- <th>Laboratorios</th>
-                                            <th>Talentos</th> --}}
-                                            {{-- <th>Editar</th> --}}
-                                            {{-- <th>Anular</th> --}}
                                         </thead>
                         
                                     </table>
@@ -133,12 +125,8 @@
                                             <th>Asesoria Directa</th>
                                             <th>Asesoria Indirecta</th>
                                             <th>Detalles</th>
-                                            {{-- <th>Laboratorios</th>
-                                            <th>Talentos</th> --}}
                                             <th>Editar</th>
-                                            {{-- <th>Anular</th> --}}
                                         </thead>
-                        
                                     </table>
                                 </div>
                             @endif 

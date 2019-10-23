@@ -52,9 +52,6 @@ class LineaTecnologica extends Model
         return $this->hasMany(Sublinea::class, 'lineatecnologica_id', 'id');
     }
 
-    //relacion muchos a muchos con nodos
-    //
-
     public function nodos()
     {
         return $this->belongsToMany(Nodo::class, 'lineastecnologicas_nodos')
@@ -62,8 +59,6 @@ class LineaTecnologica extends Model
             ->withPivot([
                 'porcentaje_linea',
             ]);
-
-
     }
 
     public function gestores()

@@ -31,8 +31,6 @@ class EquipoController extends Controller
     public function index()
     {
 
-
-
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
@@ -40,19 +38,19 @@ class EquipoController extends Controller
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo    = auth()->user()->dinamizador->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })->get();
+                        ->whereHas('nodo', function ($query) use ($nodo) {
+                            $query->where('id', $nodo);
+                        })->get();
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea   = auth()->user()->gestor->lineatecnologica->id;
                     $nodo    = auth()->user()->gestor->nodo->id;
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })
-                                ->whereHas('lineatecnologica', function($query) use( $linea ){
-                                    $query->where('id', $linea);
-                                })->get();
+                        ->whereHas('nodo', function ($query) use ($nodo) {
+                            $query->where('id', $nodo);
+                        })
+                        ->whereHas('lineatecnologica', function ($query) use ($linea) {
+                            $query->where('id', $linea);
+                        })->get();
                 }
 
                 return datatables()->of($equipos)
@@ -115,9 +113,9 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })->get();
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
 
                 return datatables()->of($equipos)
                     ->addColumn('edit', function ($data) {
@@ -152,26 +150,32 @@ class EquipoController extends Controller
     /**
      * devolver consulta de equipos por linea Tecnologica.
      *
-     * @param  int linea
+     * @param  int lineatecnologica
+     * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getEquiposPorLinea($linea)
+    public function getEquiposPorLinea($nodo = 1, $lineatecnologica)
     {
         if (request()->ajax()) {
 
-                $nodo    = auth()->user()->dinamizador->nodo->id;
+            if (isset($nodo)) {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                                ->whereHas('nodo', function($query) use($nodo){
-                                    $query->where('id', $nodo);
-                                })
-                                ->whereHas('lineatecnologica', function($query) use( $linea ){
-                                    $query->where('id', $linea);
-                                })->get();
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })
+                    ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+                        $query->where('id', $lineatecnologica);
+                    })->get();
+            } else {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                    ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+                        $query->where('id', $lineatecnologica);
+                    })->get();
+            }
 
-                return response()->json([
-                    'equipos' => $equipos,
-                ]);
-
+            return response()->json([
+                'equipos' => $equipos,
+            ]);
 
         } else {
             abort('403');
@@ -193,10 +197,9 @@ class EquipoController extends Controller
 
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
 
-
             return view('equipo.create', [
                 'lineastecnologicas' => $lineastecnologicas,
-                'year' =>  Carbon::now()->isoFormat('YYYY'),
+                'year'               => Carbon::now()->isoFormat('YYYY'),
             ]);
         } else {
             abort('403');
@@ -226,7 +229,6 @@ class EquipoController extends Controller
         return redirect()->route('equipo.index');
     }
 
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -243,7 +245,7 @@ class EquipoController extends Controller
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
             // return $lineastecnologicas;
             return view('equipo.edit', [
-                'year' =>  Carbon::now()->isoFormat('YYYY'),
+                'year'               => Carbon::now()->isoFormat('YYYY'),
                 'lineastecnologicas' => $lineastecnologicas,
                 'equipo'             => $equipo,
             ]);
@@ -259,7 +261,7 @@ class EquipoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EquipoFormRequest $request, $id)
+        public function update(EquipoFormRequest $request, $id)
     {
         $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
         $this->authorize('update', $equipo);
@@ -277,23 +279,12 @@ class EquipoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
      * Asigna un valor a $equipoRepository
      * @param object $equipoRepository
      * @return void
      * @author devjul
      */
-    private function setEquipoRepository($equipoRepository)
+    public function setEquipoRepository($equipoRepository)
     {
         $this->equipoRepository = $equipoRepository;
     }
@@ -303,7 +294,7 @@ class EquipoController extends Controller
      * @return object
      * @author devjul
      */
-    private function getEquipoRepository()
+    public function getEquipoRepository()
     {
         return $this->equipoRepository;
     }
@@ -314,7 +305,7 @@ class EquipoController extends Controller
      * @return void
      * @author devjul
      */
-    private function setLineaTecnologicaRepository($lineaRepository)
+    public function setLineaTecnologicaRepository($lineaRepository)
     {
         $this->lineaRepository = $lineaRepository;
     }
@@ -324,7 +315,7 @@ class EquipoController extends Controller
      * @return object
      * @author devjul
      */
-    private function getLineaTecnologicaRepository()
+    public function getLineaTecnologicaRepository()
     {
         return $this->lineaRepository;
     }
@@ -335,7 +326,7 @@ class EquipoController extends Controller
      * @return void
      * @author devjul
      */
-    private function setNodoRepository($nodoRepository)
+    public function setNodoRepository($nodoRepository)
     {
         $this->nodoRepository = $nodoRepository;
     }
@@ -345,7 +336,7 @@ class EquipoController extends Controller
      * @return object
      * @author devjul
      */
-    private function getNodoRepository()
+    public function getNodoRepository()
     {
         return $this->nodoRepository;
     }

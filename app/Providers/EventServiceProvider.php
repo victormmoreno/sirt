@@ -19,14 +19,13 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],
         'Illuminate\Auth\Events\PasswordReset' => [
-
             'App\Listeners\User\Auth\ResetPassword\LogSuccessfulPasswordReset',
         ],
         'App\Events\Idea\IdeaHasReceived' => [
             'App\Listeners\Idea\IdeaHasBeenReceived'
         ],
         'App\Events\User\UserWasRegistered' => [
-            'App\Listeners\User\SendActivationLink',
+            // 'App\Listeners\User\SendActivationLink',
             'App\Listeners\User\SendNotificationPasswordEmail',
         ],
         'App\Events\Comite\ComiteWasRegistered' => [
