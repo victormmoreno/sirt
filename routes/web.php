@@ -138,7 +138,7 @@ Route::group([
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 
 Route::resource('costos-administrativos', 'CostoAdministrativoController', [
-        'as' => 'costos-administrativos', 
+        'as' => 'costos-administrativos',
         'except' => [
             'create',
             'store',
@@ -158,32 +158,6 @@ Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministra
 
 /*=====  End of seccion para las rutas de costos administrativos  ======*/
 
-/*======================================================================
-=            seccion para las rutas de los costos proyectos            =
-======================================================================*/
-
-Route::resource('costos', 'CostoController', [
-        'as' => 'costos', 
-        // 'except' => [
-        //     'create',
-        //     'store',
-        //     'destroy'
-        // ]
-    ])->names([
-        'create'  => 'costo.create',
-        'update'  => 'costo.update',
-        'edit'    => 'costo.edit',
-        'show'    => 'costo.show',
-        'index'   => 'costo.index',
-        'destroy'   => 'costo.destroy',
-
-    ]);
-    // ->parameters([
-    //     'costos_administrativo' => 'id',
-    // ]);
-
-/*=====  End of seccion para las rutas de los costos proyectos  ======*/
-
 /*===============================================
 =            seccion para los equipo            =
 ===============================================*/
@@ -194,7 +168,7 @@ Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorN
             ->name('equipo.getequipospornodo');
 
 Route::resource('equipos', 'EquipoController', [
-        'as' => 'equipos', 
+        'as' => 'equipos',
         'except' => [
             'destroy',
             'show',
@@ -222,7 +196,7 @@ Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMat
             ->name('material.getmaterialespornodo');
 
 Route::resource('materiales', 'MaterialController', [
-        'as' => 'materiales', 
+        'as' => 'materiales',
         'except' => [
             'destroy',
             // 'show',
@@ -251,7 +225,7 @@ Route::get('/mantenimientos/getmantenimientosequipospornodo/{nodo}', 'Mantenimie
             ->name('mantenimiento.getmantenimientosequipospornodo');
 
 Route::resource('mantenimientos', 'MantenimientoController', [
-        'as' => 'equipos', 
+        'as' => 'equipos',
         'except' => [
             'destroy',
         ]
@@ -524,6 +498,7 @@ Route::group(
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
         Route::get('/archivosDeUnProyecto/{id}', 'ArchivoController@datatableArchivosDeUnProyecto')->name('proyecto.files');
         Route::get('/ajaxDetallesDeLosEntregablesDeUnProyecto/{id}', 'ProyectoController@detallesDeLosEntregablesDeUnProyecto')->name('proyecto.detalle.entregables');
+        Route::get('/eliminarProyecto/{id}', 'ProyectoController@eliminarProyecto_Controller')->name('proyecto.delete')->middleware('role_session:Dinamizador');
         Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateAprobacion/{id}', 'ProyectoController@updateAprobacion')->name('proyecto.update.aprobacion')->middleware('role_session:Gestor|Dinamizador|Talento');
@@ -698,6 +673,20 @@ Route::group([
     Route::get('/', 'SeguimientoController@index')->name('seguimiento');
     Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
     Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+  }
+);
+
+/**
+* Route group para el módulo de costos
+*/
+Route::group([
+  'prefix' => 'costos',
+  'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor']
+],
+  function() {
+    Route::get('/', 'CostoController@index')->name('costos');
+    Route::get('/costosDeUnaActividad/{id}', 'CostoController@costosDeUnaActividad');
+    Route::get('/costosDeProyectos/{idnodo}/{tipos_proyecto}/{estado_proyecto}/{fecha_inicio}/{fecha_fin}', 'CostoController@costosDeProyectos')->middleware('role_session:Dinamizador|Administrador');
   }
 );
 

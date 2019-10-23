@@ -69,11 +69,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">attach_money</i>Costos
+<li class="no-padding {{setActiveRoute('costos')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
   </a>
-</li> --}}
+</li>
 <li class="no-padding">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.ideas')}}">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas

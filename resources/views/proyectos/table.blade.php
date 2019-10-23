@@ -56,6 +56,7 @@
       <th>Detalles</th>
       <th>Editar</th>
       <th>Entregables</th>
+      <th>Eliminar</th>
     </tr>
   </thead>
   <tfoot>
@@ -78,6 +79,7 @@
       <th>
         <input type="text" name="revisado_final" id="revisado_final_tblProyectosDelNodoPorAnho" placeholder="Buscar por Revisado Final">
       </th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>

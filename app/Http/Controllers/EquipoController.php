@@ -31,8 +31,8 @@ class EquipoController extends Controller
     public function index()
     {
 
-        
-       
+
+
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
@@ -158,7 +158,7 @@ class EquipoController extends Controller
     public function getEquiposPorLinea($linea)
     {
         if (request()->ajax()) {
-        
+
                 $nodo    = auth()->user()->dinamizador->nodo->id;
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                                 ->whereHas('nodo', function($query) use($nodo){
@@ -171,7 +171,7 @@ class EquipoController extends Controller
                 return response()->json([
                     'equipos' => $equipos,
                 ]);
-        
+
 
         } else {
             abort('403');
@@ -216,7 +216,7 @@ class EquipoController extends Controller
 
         //metodo para guardad
         $equipoCreate = $this->getEquipoRepository()->storeEquipo($request);
-       
+
         if ($equipoCreate === true) {
 
             alert()->success('Registro Exitoso.', 'El equipo ha sido creado satisfactoriamente');

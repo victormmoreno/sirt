@@ -38,6 +38,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('costos')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('grafico')}}">
   <a href="{{route('grafico')}}" class="{{setActiveRouteActivePage('grafico')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
@@ -133,70 +138,6 @@
       <li>
         <a href="{{route('visitante')}}" class="{{setActiveRouteActivePage('visitante')}}">
           <i class="material-icons {{setActiveRouteActiveIcon('visitante')}}">accessibility</i>Visitantes
-        </a>
-      </li>
-    </ul>
-  </div>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">local_drink</i>Laboratorios
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">trending_down</i>Depreciación
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">build</i>Mantenimiento
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">local_library</i>Materiales de Formación
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">attach_money</i>Costos
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">show_chart</i>Indicadores
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">search</i>Seguimiento
-  </a>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey">
-    <i class="material-icons">description</i> Reportes<i class="nav-drop-icon material-icons">keyboard_arrow_right</i>
-  </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="">
-          Infocenter
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Ingresos
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Gestor
-        </a>
-      </li>
-      <li>
-        <a href="">
-          Dinamizador
         </a>
       </li>
     </ul>
