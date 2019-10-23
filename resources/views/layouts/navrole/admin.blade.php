@@ -29,7 +29,7 @@
 </li>
 <li class="no-padding {{setActiveRoute('lineas')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}">
-    <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas
+    <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas Tecnológicas
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('sublineas')}}">
@@ -97,13 +97,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
   </a>
 </li>
-
-<li class="no-padding {{setActiveRoute('laboratorio')}}">
+{{-- <li class="no-padding {{setActiveRoute('laboratorio')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('laboratorio')}}" href="{{route('laboratorio.index')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('laboratorio')}}">local_drink</i>Laboratorios
   </a>
-</li>
-
+</li> --}}
 <li class="no-padding  ">
   <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('equipo'), setActiveRouteActivePage('mantenimiento')!!} {!! setActiveRoutePadding('equipo'),  setActiveRoutePadding('mantenimiento')!!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('equipo'),  setActiveRouteActiveIcon('mantenimiento')}}">account_balance_wallet</i>Equipos

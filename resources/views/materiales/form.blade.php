@@ -45,7 +45,7 @@
             @enderror
 		</div>
 		<div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtfecha" id="txtfecha" class="datepicker" value="{{ isset($material) ? $material->fecha: old('txtfecha')}}"/>
+	      	<input type="text" name="txtfecha" id="txtfecha" class="datepicker" value="{{ isset($material) ? $material->fecha->format('Y-m-d'): old('txtfecha')}}"/>
 	      	<label class="active" for="txtfecha">Fecha Adquisición<span class="red-text">*</span></label>
 	      	@error('txtfecha')
             <label class="error" for="txtfecha" id="txtfecha-error">
@@ -90,9 +90,9 @@
             @enderror
 		</div>
 		<div class="input-field col s12 m6 l6">
-		    <label class="active" for="txtcategoria">Categoria Material <span class="red-text">*</span></label>
+		    <label class="active" for="txtcategoria">TipoMaterial / Categoria Material <span class="red-text">*</span></label>
 		    <select class="js-states browser-default select2Tags " tabindex="-1" style="width: 100%" name="txtcategoria" id="txtcategoria" >
-	            <option value="">Seleccione Categoria Material</option>
+	            <option value="">Seleccione TipoMaterial / Categoria Material</option>
 	            @forelse($categoriasMateriales as $id => $categoriaMaterial)
 		            @if(isset($material->categoriamaterial->id))
 		            	<option value="{{$id}}" {{ old('txtcategoria', $material->categoriamaterial->id) == $id ? 'selected':'' }}>{{$categoriaMaterial}}</option>
@@ -185,16 +185,8 @@
 		 
 	</div>
 	<div class="row">
-		<div class="input-field col s12 m2 l2">
-	      	<input type="text" name="txthorasuso" id="txthorasuso" value="{{ isset($material) ? $material->horas_uso_anio: old('txthorasuso')}}"/>
-	      	<label class="active" for="txthorasuso">Horas de uso promedio al año <span class="red-text">*</span></label>
-	      	@error('txthorasuso')
-            <label class="error" for="txthorasuso" id="txthorasuso-error">
-                {{ $message }}
-            </label>
-            @enderror
-	    </div>
-		<div class="input-field col s12 m5 l5">
+		
+		<div class="input-field col s12 m6 l6">
 	      	<input type="text" name="txtmarca" id="txtmarca" value="{{ isset($material) ? $material->marca: old('txtmarca')}}"/>
 	      	<label class="active" for="txtmarca">Marca <span class="red-text">*</span></label>
 	      	@error('txtmarca')
@@ -203,7 +195,7 @@
             </label>
             @enderror
 	    </div>
-		<div class="input-field col s12 m5 l5">
+		<div class="input-field col s12 m6 l6">
 	      	<input type="text" name="txtproveedor" id="txtproveedor" value="{{ isset($material) ? $material->proveedor: old('txtproveedor')}}"/>
 	      	<label class="active" for="txtproveedor">Proveedor <span class="red-text">*</span></label>
 	      	@error('txtproveedor')
@@ -220,5 +212,3 @@
 	  	<a href="{{route('material.index')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
 	</center>
 </div>
-
-  	

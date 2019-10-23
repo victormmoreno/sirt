@@ -9,7 +9,7 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <i class="material-icons left">
-                                location_city
+                                domain
                             </i>
                             Nodos
         
@@ -35,11 +35,7 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Nodo" href="{{route('nodo.create')}}">
-                                            <i class="material-icons">
-                                                location_city
-                                            </i>
-                                        </a>
+                                        <a href="{{route('nodo.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Nodo</a>
                                     </div>
                                 </div>
                             </div>
@@ -58,6 +54,11 @@
                                 </table>
                         </div>
                     </div>
+                </div>
+                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                    <a href="{{route('nodo.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Nodo">
+                         <i class="material-icons">add_circle</i>
+                    </a>
                 </div>
             </div>
         </div>

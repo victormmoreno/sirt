@@ -62,7 +62,7 @@
                             <option value="">
                                 Seleccione el equipo
                             </option>
-                            @foreach($usoinfraestructura->actividad->nodo->equipos as $equipo)
+                            @foreach($usoinfraestructura->actividad->nodo->equipos->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $equipo)
                                 
                                 <option value="{{$equipo->id}}">
                                     {{$equipo->nombre}}
@@ -81,10 +81,12 @@
                 </div>
                 <div class="input-field col s12 m2 l2">
             
-                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number" value="1">
+                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1">
                         <label for="txttiempouso">
                             Tiempo Uso (Horas)
                         </label>
+                        </label>
+                    <label class="error" for="txttiempouso" id="txttiempouso-error"></label>
                     </input>
                 </div>
                 <div class="input-field col s2 m2 l2">

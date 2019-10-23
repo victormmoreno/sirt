@@ -76,7 +76,7 @@ class Entidad extends Model
 
     public function setSlugAttribute($nombre)
     {
-        $this->attributes['slug'] = str_slug($nombre.'-'. str_random(7), '-');
+        $this->attributes['slug'] = str_slug($nombre, '-');
     }
 
     /*===========================================

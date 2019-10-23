@@ -24,7 +24,7 @@
                             @if(isset($user))
                                 <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name !== App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)"> 
                             @else
-                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name !== App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} onchange="roles.getRoleSeleted(this)">  
+                                <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name !== App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} {{\Session::get('login_role') == App\User::IsGestor() ? 'checked' : '' }} onchange="roles.getRoleSeleted(this)">  
                             @endif
                         @break
                         @default

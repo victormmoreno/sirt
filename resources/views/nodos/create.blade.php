@@ -35,7 +35,7 @@
                                         Nuevo Nodo
                                     </span>
                                     <i class="Small material-icons prefix">
-                                        location_city
+                                        domain
                                     </i>
                                 </center>
                                 <div class="divider mailbox-divider"></div>

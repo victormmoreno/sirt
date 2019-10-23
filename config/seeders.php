@@ -51,6 +51,7 @@ return [
         ['name' => CategoriaMaterialTableSeeder::class, 'callable' => true],
         ['name' => TiposMaterialesTableSeeder::class, 'callable' => true],
         ['name' => MaterialesTableSeeder::class, 'callable' => true],
+        ['name' => CostosAdministrativosTableSeeder::class, 'callable' => true],
 
     ],
 ];

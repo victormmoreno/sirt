@@ -163,9 +163,14 @@ class UsoInfraestructuraRepository
         foreach ($request->get('material') as $id => $value) {
             //busqueda  del material por el id
             $material = Material::where('id', $value)->first();
-            //calculo de costos de materiales
-            $dataMateriales[$id] = round(($material->valor_compra / $material->cantidad) * (int) $request->get('cantidad')[$id]);
 
+            if(isset($material)){
+                $dataMateriales[$id] = round(($material->valor_compra / $material->cantidad) * (int) $request->get('cantidad')[$id]);
+            }else{
+                $dataMateriales[$id] = 0;
+            }
+            //calculo de costos de materiales
+            
             //array que almacena los datos en material_costos
             $syncData[$id] = [
                 'material_id'    => $value,
@@ -215,7 +220,12 @@ class UsoInfraestructuraRepository
             $equipo = Equipo::with(['equiposmantenimientos', 'lineatecnologica', 'nodo'])->where('id', $value)->first();
 
             if (($anioActual - $equipo->anio_compra) < $equipo->vida_util) {
-                $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
+                if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0) {
+                    $depreciacionEquipo[$id] = 0;
+                }else{
+                   $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]); 
+                }
+                
             } else {
                 $depreciacionEquipo[$id] = 0;
             }
@@ -243,8 +253,13 @@ class UsoInfraestructuraRepository
             $countlineas  = $nodolineas->lineas->count();
             $countequipos = $nodolineas->equipos->count();
 
-            $costoAdministracion[$id] = round((($costo->valor_costo_administrativo / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA / $countlineas / CostoAdministrativo::DEDICACION)
+            if ($costo->valor_costo_administrativo == 0) {
+                $costoAdministracion[$id] = 0;
+            }else{
+                $costoAdministracion[$id] = round((($costo->valor_costo_administrativo / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA / $countlineas / CostoAdministrativo::DEDICACION)
                  * (100 / ($countequipos) * (int) $request->get('tiempouso')[$id]) / 100));
+            }
+
 
             $syncData[$id] = array(
                 'equipo_id'            => $value,

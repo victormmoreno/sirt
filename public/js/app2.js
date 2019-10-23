@@ -5676,6 +5676,7 @@ $(document).ready(function() {
                     name: 'detail',
                     orderable: false,
                 },{
+                    width: '12%',
                     data: 'edit',
                     name: 'edit',
                     orderable: false,

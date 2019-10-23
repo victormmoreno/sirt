@@ -118,6 +118,7 @@ Route::group([
 
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index'])->names([
             'create'  => 'usuario.usuarios.create',
+            'store'  => 'usuario.usuarios.store',
             'update'  => 'usuario.usuarios.update',
             'edit'    => 'usuario.usuarios.edit',
             'destroy' => 'usuario.usuarios.destroy',
@@ -161,7 +162,7 @@ Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministra
 /*===============================================
 =            seccion para los equipo            =
 ===============================================*/
-Route::get('/equipos/getequiposporlinea/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
+Route::get('/equipos/getequiposporlinea/{nodo}/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
             ->name('equipo.getequiposporlinea');
 
 Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorNodo')
@@ -285,6 +286,9 @@ Route::group([
 
     Route::get('usoinfraestructura/edtforuser/{id}', 'UsoInfraestructuraController@edtForUser')
             ->name('usoinfraestructura.edtforuser');
+
+    Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
+            ->name('usoinfraestructura.edtsforuser');
 
     Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
         ->name('usoinfraestructura.usoinfraestructurapornodo');
@@ -714,16 +718,36 @@ Route::get('ideas', 'IdeaController@index')->name('ideas.index');
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
-Route::get('/notificaciones', 'NotificationsController@index')->name('notifications.index');
-Route::patch('/notificaciones/{notification}', 'NotificationsController@read')->name('notifications.read');
-Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy')->name('notifications.destroy');
+Route::get('/notificaciones', 'NotificationsController@index')
+        ->name('notifications.index')
+        ->middleware('disablepreventback');
+Route::patch('/notificaciones/{notification}', 'NotificationsController@read')
+        ->name('notifications.read')
+        ->middleware('disablepreventback');
+Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy')
+        ->name('notifications.destroy')
+        ->middleware('disablepreventback');;
 
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =
 ====================================================================*/
 
-Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-Route::resource('lineas', 'LineaController', ['except' => ['destroy']]);
+
+Route::group([
+    'middleware' => 'disablepreventback',
+], function () {
+    Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
+    Route::resource('lineas', 'LineaController', ['except' => ['destroy']])
+    ->names([
+        'create'  => 'lineas.create',
+        'update'  => 'lineas.update',
+        'edit'    => 'lineas.edit',
+        'destroy' => 'lineas.destroy',
+        'show'    => 'lineas.show',
+        'index'   => 'lineas.index',
+        'store'   => 'lineas.store',
+    ]);
+});
 
 /*=====  End of rutas para las funcionalidades de las lineas  ======*/
 
