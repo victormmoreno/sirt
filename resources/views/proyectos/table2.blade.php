@@ -10,7 +10,10 @@
       <th>Talentos</th>
       <th>Detalles</th>
       <th>Editar</th>
-      <th>Entregables</th>
+      @if (\Session::get('login_role') == App\User::IsDinamizador())
+        <th>Entregables</th>
+      @endif
+      <th>Eliminar</th>
     </tr>
   </thead>
   <tfoot>
@@ -36,6 +39,9 @@
       <th></th>
       <th></th>
       <th></th>
+      @if (\Session::get('login_role') == App\User::IsDinamizador())
+        <th></th>
+      @endif
       <th></th>
     </tr>
   </tfoot>
