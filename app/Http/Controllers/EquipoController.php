@@ -150,215 +150,206 @@ class EquipoController extends Controller
     /**
      * devolver consulta de equipos por linea Tecnologica.
      *
-     * @param  int linea
+     * @param  int lineatecnologica
+     * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getEquiposPorLinea($linea)
+    public function getEquiposPorLinea($nodo = 1, $lineatecnologica)
     {
         if (request()->ajax()) {
 
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo    = auth()->user()->dinamizador->nodo_id;
+            if (isset($nodo)) {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })
-                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
-                        $query->where('id', $linea);
-                    })->get();
-            } elseif (session()->get('login_role') == User::IsGestor()) {
-                $nodo    = auth()->user()->gestor->nodo_id;
-                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })
-                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
-                        $query->where('id', $linea);
-                    })->get();
-            } else {
+                ->whereHas('nodo', function ($query) use ($nodo) {
+                    $query->where('id', $nodo);
+                })
+                ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+                    $query->where('id', $lineatecnologica);
+                })->get();
+            }else{
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
 
-                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
-                        $query->where('id', $linea);
-                    })->get();
+                ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+                    $query->where('id', $lineatecnologica);
+                })->get();
             }
 
-            return response()->json([
-                'equipos' => $equipos,
-            ]);
+        return response()->json([
+            'equipos' => $equipos,
+        ]);
 
-        } else {
-            abort('403');
-        }
-
+    } else {
+        abort('403');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+}
 
-        $this->authorize('create', Equipo::class);
-        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-            $nodoDinamizador = auth()->user()->dinamizador->nodo->id;
+/**
+ * Show the form for creating a new resource.
+ *
+ * @return \Illuminate\Http\Response
+ */
+function create()
+{
 
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
+    $this->authorize('create', Equipo::class);
+    if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+        $nodoDinamizador = auth()->user()->dinamizador->nodo->id;
 
-            return view('equipo.create', [
-                'lineastecnologicas' => $lineastecnologicas,
-                'year'               => Carbon::now()->isoFormat('YYYY'),
-            ]);
-        } else {
-            abort('403');
-        }
+        $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
 
+        return view('equipo.create', [
+            'lineastecnologicas' => $lineastecnologicas,
+            'year'               => Carbon::now()->isoFormat('YYYY'),
+        ]);
+    } else {
+        abort('403');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(EquipoFormRequest $request)
-    {
-        $this->authorize('store', Equipo::class);
+}
 
-        //metodo para guardad
-        $equipoCreate = $this->getEquipoRepository()->storeEquipo($request);
+/**
+ * Store a newly created resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
+function store(EquipoFormRequest $request)
+{
+    $this->authorize('store', Equipo::class);
 
-        if ($equipoCreate === true) {
+    //metodo para guardad
+    $equipoCreate = $this->getEquipoRepository()->storeEquipo($request);
 
-            alert()->success('Registro Exitoso.', 'El equipo ha sido creado satisfactoriamente');
-        } else {
-            alert()->error('Registro Erróneo.', 'El equipo no se ha creado.');
-        }
-        return redirect()->route('equipo.index');
+    if ($equipoCreate === true) {
+
+        alert()->success('Registro Exitoso.', 'El equipo ha sido creado satisfactoriamente');
+    } else {
+        alert()->error('Registro Erróneo.', 'El equipo no se ha creado.');
     }
+    return redirect()->route('equipo.index');
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
+/**
+ * Show the form for editing the specified resource.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
+function edit($id)
+{
 
-        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-            $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
-            $this->authorize('edit', $equipo);
-            $nodo               = auth()->user()->dinamizador->nodo->id;
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-            // return $lineastecnologicas;
-            return view('equipo.edit', [
-                'year'               => Carbon::now()->isoFormat('YYYY'),
-                'lineastecnologicas' => $lineastecnologicas,
-                'equipo'             => $equipo,
-            ]);
-        } else {
-            abort('403');
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(EquipoFormRequest $request, $id)
-    {
+    if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
         $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
-        $this->authorize('update', $equipo);
+        $this->authorize('edit', $equipo);
+        $nodo               = auth()->user()->dinamizador->nodo->id;
+        $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+        // return $lineastecnologicas;
+        return view('equipo.edit', [
+            'year'               => Carbon::now()->isoFormat('YYYY'),
+            'lineastecnologicas' => $lineastecnologicas,
+            'equipo'             => $equipo,
+        ]);
+    } else {
+        abort('403');
+    }
+}
 
-        $equipoUpdate = $this->getEquipoRepository()->updateEquipo($request, $equipo);
-        if ($equipoUpdate == true) {
+/**
+ * Update the specified resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
+function update(EquipoFormRequest $request, $id)
+{
+    $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
+    $this->authorize('update', $equipo);
 
-            alert()->success("El equipo ha sido  modificado.", 'Modificación Exitosa', "success");
-        } else {
-            alert()->error("El equipo no ha sido  modificado.", 'Modificación Errónea', "error");
-        }
+    $equipoUpdate = $this->getEquipoRepository()->updateEquipo($request, $equipo);
+    if ($equipoUpdate == true) {
 
-        return redirect()->route('equipo.index');
-
+        alert()->success("El equipo ha sido  modificado.", 'Modificación Exitosa', "success");
+    } else {
+        alert()->error("El equipo no ha sido  modificado.", 'Modificación Errónea', "error");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    return redirect()->route('equipo.index');
 
-    /**
-     * Asigna un valor a $equipoRepository
-     * @param object $equipoRepository
-     * @return void
-     * @author devjul
-     */
-    private function setEquipoRepository($equipoRepository)
-    {
-        $this->equipoRepository = $equipoRepository;
-    }
+}
 
-    /**
-     * Retorna el valor de $equipoRepository
-     * @return object
-     * @author devjul
-     */
-    private function getEquipoRepository()
-    {
-        return $this->equipoRepository;
-    }
+/**
+ * Remove the specified resource from storage.
+ *
+ * @param  int  $id
+ * @return \Illuminate\Http\Response
+ */
+function destroy($id)
+{
+    //
+}
 
-    /**
-     * Asigna un valor a $lineaRepository
-     * @param object $lineaRepository
-     * @return void
-     * @author devjul
-     */
-    private function setLineaTecnologicaRepository($lineaRepository)
-    {
-        $this->lineaRepository = $lineaRepository;
-    }
+/**
+ * Asigna un valor a $equipoRepository
+ * @param object $equipoRepository
+ * @return void
+ * @author devjul
+ */
+function setEquipoRepository($equipoRepository)
+{
+    $this->equipoRepository = $equipoRepository;
+}
 
-    /**
-     * Retorna el valor de $lineaRepository
-     * @return object
-     * @author devjul
-     */
-    private function getLineaTecnologicaRepository()
-    {
-        return $this->lineaRepository;
-    }
+/**
+ * Retorna el valor de $equipoRepository
+ * @return object
+ * @author devjul
+ */
+function getEquipoRepository()
+{
+    return $this->equipoRepository;
+}
 
-    /**
-     * Asigna un valor a $nodoRepository
-     * @param object $nodoRepository
-     * @return void
-     * @author devjul
-     */
-    private function setNodoRepository($nodoRepository)
-    {
-        $this->nodoRepository = $nodoRepository;
-    }
+/**
+ * Asigna un valor a $lineaRepository
+ * @param object $lineaRepository
+ * @return void
+ * @author devjul
+ */
+function setLineaTecnologicaRepository($lineaRepository)
+{
+    $this->lineaRepository = $lineaRepository;
+}
 
-    /**
-     * Retorna el valor de $nodoRepository
-     * @return object
-     * @author devjul
-     */
-    private function getNodoRepository()
-    {
-        return $this->nodoRepository;
-    }
+/**
+ * Retorna el valor de $lineaRepository
+ * @return object
+ * @author devjul
+ */
+function getLineaTecnologicaRepository()
+{
+    return $this->lineaRepository;
+}
+
+/**
+ * Asigna un valor a $nodoRepository
+ * @param object $nodoRepository
+ * @return void
+ * @author devjul
+ */
+function setNodoRepository($nodoRepository)
+{
+    $this->nodoRepository = $nodoRepository;
+}
+
+/**
+ * Retorna el valor de $nodoRepository
+ * @return object
+ * @author devjul
+ */
+function getNodoRepository()
+{
+    return $this->nodoRepository;
+}
 }

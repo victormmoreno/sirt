@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\{Nodo, Material, TipoMaterial, CategoriaMaterial, Presentacion, Medida};
+use App\Models\{Nodo, Material, TipoMaterial,CategoriaMaterial, Presentacion, Medida};
 use Faker\Generator as Faker;
 
 $factory->define(Material::class, function (Faker $faker) {
@@ -21,7 +21,6 @@ $factory->define(Material::class, function (Faker $faker) {
         'nombre' =>  $faker->unique()->sentence($nbWords = 2, $variableNbWords = true),
         'cantidad' => $faker->randomDigitNot(0),
         'valor_compra' => $faker->numerify('########'),
-        'horas_uso_anio' => $faker->randomDigitNot(0),
         'proveedor' => $faker->company,
         'marca' =>$faker->word,
     ];

@@ -67,10 +67,11 @@
         var mantenimientoCreate = {
             getEquipoPorLinea:function(){
                 let lineatecnologica = $('#txtlineatecnologica').val();
+                let nodo = {{auth()->user()->dinamizador->nodo_id}};
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url:'/equipos/getequiposporlinea/'+lineatecnologica
+                    url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
                     console.log(response);
                     $('#txtequipo').empty();

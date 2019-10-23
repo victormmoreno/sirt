@@ -33,8 +33,10 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtdescripcion'            => 'nullable|max:2000',
             'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
             'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
-            // 'asesoriadirecta'           => 'required|numeric|min:0|max:99|between:0,99.9|min:0.5',
-            // 'asesoriaindirecta'         => 'required|numeric|min:0|max:99|between:0,99.9|min:0.5',
+
+            'txttiempouso'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
+            'txtcantidad'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
+            
 
         ];
     }
@@ -57,6 +59,16 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtasesoriaindirecta.min'           => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
             'txtasesoriaindirecta.max'           => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',
             'txtasesoriaindirecta.between'       => 'La asesoria directa debe ser un valor numérico entre 0 y 99.9',
+
+            'txttiempouso.numeric'         => 'El tiempo de uso debe ser un valor numérico',
+            'txttiempouso.min'             => 'El tiempo de uso debe ser un valor numérico igual o mayor a 0.',
+            'txttiempouso.max'             => 'El tiempo de uso debe ser un valor numérico igual o menor a 99.',
+            'txttiempouso.between'         => 'El tiempo de uso debe ser un valor numérico 0 y 99.9',
+
+            'txtcantidad.numeric'         => 'La cantidad debe ser un valor numérico',
+            'txtcantidad.min'             => 'La cantidad debe ser un valor numérico igual o mayor a 0.',
+            'txtcantidad.max'             => 'La cantidad debe ser un valor numérico igual o menor a 99.',
+            'txtcantidad.between'         => 'La cantidad debe ser un valor numérico 0 y 99.9',
         ];
     }
 }

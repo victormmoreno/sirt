@@ -725,7 +725,7 @@ class UsoInfraestructuraController extends Controller
     public function talentosPorProyecto(int $id)
     {
         if (request()->ajax()) {
-    
+
             $estado = [
                 'Inicio',
                 'Planeación',
@@ -734,60 +734,61 @@ class UsoInfraestructuraController extends Controller
 
             $proyectoNodo = Proyecto::findOrFail($id)->articulacion_proyecto->actividad->nodo_id;
 
-            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'actividades.gestor_id as actividad_gestor_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre','gestores.id as gestor_id', 'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.nombre as lineatecnologica_nombre')
-            ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
-            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-            ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'actividades.gestor_id as actividad_gestor_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id', 'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.nombre as lineatecnologica_nombre')
+                ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+                ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+                ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
+                ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+                ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
 
-            ->join('users', 'users.id', '=', 'gestores.user_id')
+                ->join('users', 'users.id', '=', 'gestores.user_id')
 
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-         
-            ->whereIn('estadosproyecto.nombre', $estado)
-            ->where('estado_aprobacion', Proyecto::IsAceptado())
-            ->findOrFail($id);
+                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+
+                ->whereIn('estadosproyecto.nombre', $estado)
+                ->where('estado_aprobacion', Proyecto::IsAceptado())
+                ->findOrFail($id);
 
             $lineastecnologicas = LineaTecnologica::
-            join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
-            ->where('lineastecnologicas_nodos.nodo_id', $proyectoNodo)
-            ->get();
+                join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
+                ->where('lineastecnologicas_nodos.nodo_id', $proyectoNodo)
+                ->get();
 
-            $gestores = Gestor::select('gestores.id','lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
-            ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
-            ->join('users', 'users.id', '=', 'gestores.user_id')
-            ->where('lineastecnologicas.id',$proyectoTalento->gestor_lineatecnologica_id)
-            ->where('users.id','!=',$proyectoTalento->user_id)
-            ->get();
+            $gestores = Gestor::select('gestores.id', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
+                ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
+                ->join('users', 'users.id', '=', 'gestores.user_id')
+                ->where('lineastecnologicas.id', $proyectoTalento->gestor_lineatecnologica_id)
+                ->where('users.id', '!=', $proyectoTalento->user_id)
+                ->get();
 
             $equipos = Equipo::
-            where('lineatecnologica_id',$proyectoTalento->gestor_lineatecnologica_id)
-            ->where('nodo_id',$proyectoNodo)
-            ->get();
+                where('lineatecnologica_id', $proyectoTalento->gestor_lineatecnologica_id)
+                ->where('nodo_id', $proyectoNodo)
+                ->get();
 
-            $materiales = Material::where('lineatecnologica_id',$proyectoTalento->gestor_lineatecnologica_id)
-            ->where('nodo_id',$proyectoNodo)
-            ->get();
+            $materiales = Material::select('materiales.id as material_id', 'materiales.codigo_material', 'materiales.nombre as material_nombre', 'materiales.marca as material_marca','presentaciones.nombre as presentacion_nombre', 'medidas.nombre as medida_nombre')
+                ->join('presentaciones', 'presentaciones.id', 'materiales.presentacion_id')
+                ->join('medidas', 'medidas.id', 'materiales.medida_id')
+                ->where('materiales.lineatecnologica_id', $proyectoTalento->gestor_lineatecnologica_id)
+                ->where('materiales.nodo_id', $proyectoNodo)
+                ->get();
 
-            $talentos = Talento::select('talentos.id','users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos')
-            ->join('users', 'users.id', '=', 'talentos.user_id')
-            ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
-            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id')
-            ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->where('proyectos.id', $proyectoTalento->id)
-             ->get();
-
-            
+            $talentos = Talento::select('talentos.id', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos')
+                ->join('users', 'users.id', '=', 'talentos.user_id')
+                ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
+                ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id')
+                ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+                ->where('proyectos.id', $proyectoTalento->id)
+                ->get();
 
             return response()->json([
-                'proyecto' => $proyectoTalento,
+                'proyecto'           => $proyectoTalento,
                 'lineastecnologicas' => $lineastecnologicas,
-                'gestores' => $gestores,
-                'equipos' => $equipos,
-                'materiales' => $materiales,
-                'talentos' => $talentos,
+                'gestores'           => $gestores,
+                'equipos'            => $equipos,
+                'materiales'         => $materiales,
+                'talentos'           => $talentos,
             ]);
         } else {
             abort('403');
@@ -808,24 +809,24 @@ class UsoInfraestructuraController extends Controller
             $articulacionNodo = Articulacion::findOrFail($id)->articulacion_proyecto->actividad->nodo_id;
 
             $estado = [
-                    Articulacion::IsInicio(),
-                    Articulacion::IsEjecucion(),
-                ];
+                Articulacion::IsInicio(),
+                Articulacion::IsEjecucion(),
+            ];
 
-            $articulacion = Articulacion::select('articulaciones.id as artculacion_id','articulaciones.articulacion_proyecto_id as articulacion.articulacion_proyecto_id','articulaciones.fecha_ejecucion as articulacion.fecha_ejecucion', 'articulaciones.estado', 'actividades.id as actividad_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividad_nombre', 'gestores.id as gestor_id', 'users.id as user_id', 'users.documento', 'users.nombres as user_nombres', 'users.apellidos as user_apellidos', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura as lineatecnologica_abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre')
-            ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'articulaciones.articulacion_proyecto_id')
-            ->join('actividades', 'actividades.id', 'articulacion_proyecto.actividad_id')
-            ->join('gestores', 'gestores.id', 'actividades.gestor_id')
-            ->join('users', 'users.id', 'gestores.user_id')
-            ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
-            ->whereIn('articulaciones.estado', $estado)
-            ->findOrFail($id);
+            $articulacion = Articulacion::select('articulaciones.id as artculacion_id', 'articulaciones.articulacion_proyecto_id as articulacion.articulacion_proyecto_id', 'articulaciones.fecha_ejecucion as articulacion.fecha_ejecucion', 'articulaciones.estado', 'actividades.id as actividad_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividad_nombre', 'gestores.id as gestor_id', 'users.id as user_id', 'users.documento', 'users.nombres as user_nombres', 'users.apellidos as user_apellidos', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura as lineatecnologica_abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre')
+                ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'articulaciones.articulacion_proyecto_id')
+                ->join('actividades', 'actividades.id', 'articulacion_proyecto.actividad_id')
+                ->join('gestores', 'gestores.id', 'actividades.gestor_id')
+                ->join('users', 'users.id', 'gestores.user_id')
+                ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
+                ->whereIn('articulaciones.estado', $estado)
+                ->findOrFail($id);
 
-            $gestores = Gestor::select('gestores.id','lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
+            $gestores = Gestor::select('gestores.id', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
                 ->join('users', 'users.id', '=', 'gestores.user_id')
-                ->where('lineastecnologicas.id',$articulacion->lineatecnologica_id)
-                ->where('users.id','!=',$articulacion->user_id)
+                ->where('lineastecnologicas.id', $articulacion->lineatecnologica_id)
+                ->where('users.id', '!=', $articulacion->user_id)
                 ->get();
 
             $lineastecnologicas = LineaTecnologica::
@@ -834,21 +835,23 @@ class UsoInfraestructuraController extends Controller
                 ->get();
 
             $equipos = Equipo::
-                where('lineatecnologica_id',$articulacion->lineatecnologica_id)
-                ->where('nodo_id',$articulacionNodo)
+                where('lineatecnologica_id', $articulacion->lineatecnologica_id)
+                ->where('nodo_id', $articulacionNodo)
                 ->get();
 
-            $materiales = Material::where('lineatecnologica_id',$articulacion->lineatecnologica_id)
-                ->where('nodo_id',$articulacionNodo)
+            $materiales = Material::select('materiales.id as material_id', 'materiales.codigo_material', 'materiales.nombre as material_nombre', 'materiales.marca as material_marca','presentaciones.nombre as presentacion_nombre', 'medidas.nombre as medida_nombre')
+                ->join('presentaciones', 'presentaciones.id', 'materiales.presentacion_id')
+                ->join('medidas', 'medidas.id', 'materiales.medida_id')
+                ->where('materiales.lineatecnologica_id', $articulacion->lineatecnologica_id)
+                ->where('materiales.nodo_id', $articulacionNodo)
                 ->get();
-                
 
             return response()->json([
-                'articulacion' => $articulacion,
+                'articulacion'       => $articulacion,
                 'lineastecnologicas' => $lineastecnologicas,
-                'gestores' => $gestores,
-                'equipos' => $equipos,
-                'materiales' => $materiales,
+                'gestores'           => $gestores,
+                'equipos'            => $equipos,
+                'materiales'         => $materiales,
             ]);
         } else {
             abort('403');
@@ -861,7 +864,7 @@ class UsoInfraestructuraController extends Controller
         if (request()->ajax()) {
 
             $edtNodo = Edt::findOrFail($id)->actividad->nodo_id;
-            $edt = Edt::select('edts.id as edt_id','edts.tipoedt_id', 'actividades.id as actividad_id', 'actividades.nodo_id as actividad_nodo_id','actividades.codigo_actividad', 'actividades.nombre as actividad_nombre', 'gestores.id as gestor_id', 'users.id as user_id', 'users.documento','users.nombres as user_nombres',   'users.apellidos as user_apellidos', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura as lineatecnologica_abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre' )
+            $edt     = Edt::select('edts.id as edt_id', 'edts.tipoedt_id', 'actividades.id as actividad_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividad_nombre', 'gestores.id as gestor_id', 'users.id as user_id', 'users.documento', 'users.nombres as user_nombres', 'users.apellidos as user_apellidos', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura as lineatecnologica_abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre')
                 ->join('actividades', 'actividades.id', 'edts.actividad_id')
                 ->join('gestores', 'gestores.id', 'actividades.gestor_id')
                 ->join('users', 'users.id', 'gestores.user_id')
@@ -869,11 +872,11 @@ class UsoInfraestructuraController extends Controller
                 ->where('edts.estado', Edt::IS_ACTIVE)
                 ->findOrFail($id);
 
-            $gestores = Gestor::select('gestores.id','lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
+            $gestores = Gestor::select('gestores.id', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
                 ->join('users', 'users.id', '=', 'gestores.user_id')
-                ->where('lineastecnologicas.id',$edt->lineatecnologica_id)
-                ->where('users.id','!=',$edt->user_id)
+                ->where('lineastecnologicas.id', $edt->lineatecnologica_id)
+                ->where('users.id', '!=', $edt->user_id)
                 ->get();
 
             $lineastecnologicas = LineaTecnologica::
@@ -882,20 +885,23 @@ class UsoInfraestructuraController extends Controller
                 ->get();
 
             $equipos = Equipo::
-                where('lineatecnologica_id',$edt->lineatecnologica_id)
-                ->where('nodo_id',$edtNodo)
+                where('lineatecnologica_id', $edt->lineatecnologica_id)
+                ->where('nodo_id', $edtNodo)
                 ->get();
 
-            $materiales = Material::where('lineatecnologica_id',$edt->lineatecnologica_id)
-                ->where('nodo_id',$edtNodo)
+            $materiales = Material::select('materiales.id as material_id', 'materiales.codigo_material', 'materiales.nombre as material_nombre', 'materiales.marca as material_marca','presentaciones.nombre as presentacion_nombre', 'medidas.nombre as medida_nombre')
+                ->join('presentaciones', 'presentaciones.id', 'materiales.presentacion_id')
+                ->join('medidas', 'medidas.id', 'materiales.medida_id')
+                ->where('materiales.lineatecnologica_id', $edt->lineatecnologica_id)
+                ->where('materiales.nodo_id', $edtNodo)
                 ->get();
-                       
+
             return response()->json([
-                'edt' => $edt,
+                'edt'                => $edt,
                 'lineastecnologicas' => $lineastecnologicas,
-                'gestores' => $gestores,
-                'equipos' => $equipos,
-                'materiales' => $materiales,
+                'gestores'           => $gestores,
+                'equipos'            => $equipos,
+                'materiales'         => $materiales,
             ]);
         } else {
             abort('403');

@@ -188,7 +188,7 @@ Route::resource('costos', 'CostoController', [
 /*===============================================
 =            seccion para los equipo            =
 ===============================================*/
-Route::get('/equipos/getequiposporlinea/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
+Route::get('/equipos/getequiposporlinea/{nodo}/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
             ->name('equipo.getequiposporlinea');
 
 Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorNodo')

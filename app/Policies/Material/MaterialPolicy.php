@@ -44,8 +44,8 @@ class MaterialPolicy
      */
     public function create(User $user)
     {
-        
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
+        // return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
     }
 
     /**
@@ -57,8 +57,7 @@ class MaterialPolicy
      */
     public function store(User $user)
     {
-        
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
+        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
     }
 
     /**

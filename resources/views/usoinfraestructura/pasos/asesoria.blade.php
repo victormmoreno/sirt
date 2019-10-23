@@ -62,9 +62,9 @@
                                             
                                                 <td>{{$gestor->lineatecnologica->abreviatura}} -  {{$gestor->lineatecnologica->nombre}}</td>
                                                 <td>
-                                                    <input type="hidden" name="gestor[]" value="{{$gestor->id}}"/>{{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo  
+                                                    <input type="hidden" name="gestor[]" value="{{$gestor->id}}" min="0" />{{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo  
                                                 </td>
-                                                <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}"></td>
+                                                <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}" min="0"></td>
                                                 <td><input type="number" name="asesoriaindirecta[]" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
                                             @endif
                     
