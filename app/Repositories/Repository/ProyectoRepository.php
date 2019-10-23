@@ -3,8 +3,8 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea};
-use Illuminate\Support\Facades\{DB, Session, Notification};
+use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea, ArchivoArticulacionProyecto};
+use Illuminate\Support\Facades\{DB, Session, Notification, Storage};
 use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
 use App\Http\Controllers\PDF\PdfProyectoController;
 use Carbon\Carbon;
@@ -50,6 +50,136 @@ class ProyectoRepository
   private function getIdeaRepository()
   {
     return $this->ideaRepository;
+  }
+
+  /**
+   * Método que retorna el directorio de los archivos que tiene un proyecto en el servidor
+   * @param int $id Id de la articulacion_proyecto
+   * @return mixed
+   * @author dum
+   */
+  private function returnDirectoryProyectoFiles($id)
+  {
+    // consulta los archivos de un proyecto (registro de la base de datos)
+    $tempo = ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $id)->first();
+
+    if ($tempo == null) {
+      return false;
+    } else {
+      // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
+      $route = preg_split("~/~", $tempo->ruta, 9);
+      // Extrae el último elemento del array
+      array_pop($route);
+      // Une el array en un string, dicho string se separa por /
+      $route = implode("/", $route);
+      // Reemplaza storage por public en la routa
+      $route = str_replace('storage', 'public', $route);
+      return $route;
+    }
+
+  }
+
+  /**
+   * Elimina los datos de un proyectos
+   * @param int $id id del proyecto que se va a eliminar
+   * @return boolean
+   * @author dum
+   */
+  public function eliminarProyecto_Repository($id)
+  {
+
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::find($id);
+      $padre = $proyecto->articulacion_proyecto->actividad;
+      // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
+      // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
+      $proyecto->articulacion_proyecto->talentos()->sync([]);
+      // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
+      $proyecto->users()->sync([]);
+      // Elimina el registro de la tabla de proyecto
+      $padre->articulacion_proyecto->proyecto()->delete();
+      // Directorio del proyecto
+      $directory = $this->returnDirectoryProyectoFiles($padre->articulacion_proyecto->id);
+      if ($directory != false) {
+        // Elimina los archivos del servidor
+        Storage::deleteDirectory($directory);
+        // Elimina los registros de la tabla de archivos_articulacion_proyecto
+        ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $padre->articulacion_proyecto->id)->delete();
+      }
+      // Elimina el registro de la tabla la tabla de articulacion_proyecto
+      $padre->articulacion_proyecto()->delete();
+      // Elimina los registros de la tabla material_uso
+      $this->deleteUsoMateriales($padre);
+      // Elimina los registros de la tabla uso_talentos
+      $this->deleteUsoTalentos($padre);
+      // Elimina los registros de la tabla gestor_uso
+      $this->deleteUsoGestores($padre);
+      // Elimina los registros de la tabla equipo_uso
+      $this->deleteUsoEquipos($padre);
+      // Elimina los registros de la tabla usoinfraestructuras
+      $padre->usoinfraestructuras()->delete();
+      // Elimina la tabla de actividades
+      $padre->delete();
+
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Elimina los datos de equipo_uso
+   *
+   * @param Collection $actividad
+   * @return void
+   */
+  private function deleteUsoEquipos($actividad)
+  {
+    foreach ($actividad->usoinfraestructuras as $key => $value) {
+      $value->usoequipos()->sync([]);
+    }
+  }
+
+  /**
+   * Elimina los datos de gestor_uso
+   *
+   * @param Collection $actividad
+   * @return void
+   */
+  private function deleteUsoGestores($actividad)
+  {
+    foreach ($actividad->usoinfraestructuras as $key => $value) {
+      $value->usogestores()->sync([]);
+    }
+  }
+
+  /**
+   * Elimina los datos de material_uso
+   *
+   * @param Collection $actividad
+   * @return void
+   */
+  private function deleteUsoMateriales($actividad)
+  {
+    foreach ($actividad->usoinfraestructuras as $key => $value) {
+      $value->usomateriales()->sync([]);
+    }
+  }
+
+  /**
+   * Elimina los datos de uso_talento
+   *
+   * @param Collection $actividad
+   * @return void
+   */
+  private function deleteUsoTalentos($actividad)
+  {
+    foreach ($actividad->usoinfraestructuras as $key => $value) {
+      $value->usotalentos()->sync([]);
+    }
   }
 
   /**
@@ -146,7 +276,7 @@ class ProyectoRepository
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
     ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
-    ->where('proyectos.estado_aprobacion', 1)
+    ->where('proyectos.estado_aprobacion', Proyecto::IsAceptado())
     ->where('estadosproyecto.nombre', $estadoProyecto);
   }
 

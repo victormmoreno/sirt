@@ -1218,7 +1218,7 @@
 
         //Enviar formulario
         $(document).on('submit', 'form#formUsoInfraestructuraUpdate', function (event) {
-            // $('button[type="submit"]').attr('disabled', 'disabled');
+            $('button[type="submit"]').attr('disabled', 'disabled');
             event.preventDefault();
             var form = $(this);
             let data = new FormData($(this)[0]);
@@ -1233,7 +1233,7 @@
                 processData: false,
                 success: function (data) {
                     $('button[type="submit"]').removeAttr('disabled');
-                    console.log(data);
+           
                     $('.error').hide();
                     if (data.fail) {
                         Swal.fire({

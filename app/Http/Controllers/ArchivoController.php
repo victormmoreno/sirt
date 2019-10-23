@@ -360,7 +360,6 @@ class ArchivoController extends Controller
       $fileUrl = $file->storeAs($route, $fileName);
       $id = $proyecto->articulacion_proyecto_id;
       $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
-      // exit($route);
     }
   }
 

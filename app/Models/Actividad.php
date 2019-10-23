@@ -38,6 +38,17 @@ class Actividad extends Model
         'fecha_cierre',
     ];
 
+    /**
+    * Consulta las actividades
+    * @param Collection $query Propia de los scopes de laravel
+    * @return Builder
+    */
+    public function scopeConsultarActividades($query)
+    {
+      return $query->select('id')
+      ->selectRaw('CONCAT(codigo_actividad, " / ", nombre) AS proyecto');
+    }
+
     public function articulacion_proyecto()
     {
         return $this->hasOne(ArticulacionProyecto::class, 'actividad_id', 'id');

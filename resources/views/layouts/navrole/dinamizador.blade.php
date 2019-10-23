@@ -38,6 +38,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('costos')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('grafico')}}">
   <a href="{{route('grafico')}}" class="{{setActiveRouteActivePage('grafico')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
@@ -113,3 +118,4 @@
     <i class="material-icons {{setActiveRouteActiveIcon('empresa')}} ">business_center</i>Empresas
   </a>
 </li>
+

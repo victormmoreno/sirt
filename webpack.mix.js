@@ -17,7 +17,6 @@ mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
 		'resources/assets/plugins/font-awesome/css/all.css',
-		
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
 		'resources/assets/plugins/select2/css/select2.css',
 		'resources/assets/plugins/materialize-clockpicker-master/dist/css/materialize.clockpicker.css',
@@ -109,6 +108,7 @@ mix.scripts([
 		'resources/app/charla/index.js',
 		'resources/app/graficos/index.js',
 		'resources/app/seguimiento/index.js',
+		'resources/app/costos/index.js'
 	],'public/js/app2.js');
 
 
