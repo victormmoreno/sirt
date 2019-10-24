@@ -236,13 +236,13 @@ class ArticulacionController extends Controller
   }
 
   // Datatable para mostrar las articulaciones POR NODO
-  public function datatableArticulacionesPorNodo(Request $request, $id)
+  public function datatableArticulacionesPorNodo(Request $request, $id, $anho)
   {
     if (request()->ajax()) {
       if (\Session::get('login_role') == User::IsDinamizador()) {
-        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo( auth()->user()->dinamizador->nodo_id );
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo(auth()->user()->dinamizador->nodo_id, $anho);
       } else {
-        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho);
       }
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
@@ -252,10 +252,11 @@ class ArticulacionController extends Controller
   * Consulta las articulaciones de un gestor
   * @param Request $request
   * @param int $id Id del gestor
+  * @param string $anho Año de inicio de las articulaciones
   * @return Response
   * @author Victor Manuel Moreno Vega
   */
-  public function datatableArticulacionesPorGestor(Request $request, $id)
+  public function datatableArticulacionesPorGestor(Request $request, $id, $anho)
   {
     if (request()->ajax()) {
       $idgestor = $id;
@@ -263,7 +264,7 @@ class ArticulacionController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
 
-      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( $idgestor );
+      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($idgestor, $anho);
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
   }

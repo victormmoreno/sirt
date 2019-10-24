@@ -373,10 +373,11 @@ class ArticulacionRepository
   /**
   * Consulta las articulaciones de un nodo
   * @param int $id Id del nodo
+  * @param string $anho Año para filtrar las articulaciones del nodo
   * @return Collection
   * @author dum
   */
-  public function consultarArticulacionesDeUnNodo($id)
+  public function consultarArticulacionesDeUnNodo($id, $anho)
   {
     return Articulacion::select('codigo_actividad AS codigo_articulacion',
     'actividades.nombre',
@@ -403,6 +404,7 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('nodos.id', $id)
+    ->whereYear('fecha_inicio', $anho)
     ->get();
   }
 
@@ -593,10 +595,11 @@ class ArticulacionRepository
   /**
   * Consulta las articulaciones de un gestor
   * @param int $id Id del gestor
+  * @param string $anho Año para realizar el filtro
   * @return Collection
   * @author dum
   */
-  public function consultarArticulacionesDeUnGestor($id)
+  public function consultarArticulacionesDeUnGestor($id, $anho)
   {
     return Articulacion::select('codigo_actividad AS codigo_articulacion',
     'actividades.nombre',
@@ -622,6 +625,7 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
+    ->whereYear('fecha_inicio', $anho)
     ->get();
   }
 
