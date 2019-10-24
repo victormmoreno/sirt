@@ -58,7 +58,9 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepr
 /*===================================================================
 =            rutas para las funcionalidades de los nodos            =
 ===================================================================*/
-
+Route::get('nodo/pdfequiponodo', 'Nodo\NodoController@pdfEquipoNodo')
+->name('activation')
+->middleware('disablepreventback');
 Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
 
 /*=====  End of rutas para las funcionalidades de los nodos  ======*/

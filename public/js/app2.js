@@ -4969,8 +4969,26 @@ $(document).ready(function() {
         },
         "lengthChange": false,
         retrieve: true,
-       	processing: true,
+        processing: true,
         serverSide: true,
+        "dom": 'Blfrtip',
+        buttons: [{
+            extend: 'csv',
+            text: 'exportar csv',
+            exportOptions: {
+                columns: ':visible'
+            }
+        }, {
+            extend: 'excel',
+            exportOptions: {
+                columns: ':visible'
+            }
+        }, {
+            extend: 'pdf',
+            exportOptions: {
+                columns: ':visible'
+            }
+        }, ],
         ajax: {
             url: "/equipos",
             type: "get",
@@ -4991,40 +5009,31 @@ $(document).ready(function() {
             data: 'marca',
             name: 'marca',
             width: '15%'
-        },
-        {
+        }, {
             data: 'costo_adquisicion',
             name: 'costo_adquisicion',
             width: '15%'
-        },
-        {
+        }, {
             data: 'vida_util',
             name: 'vida_util',
             width: '15%'
-        },
-        {
+        }, {
             data: 'horas_uso_anio',
             name: 'horas_uso_anio',
             width: '15%'
-        },
-        {
+        }, {
             data: 'anio_compra',
             name: 'anio_compra',
             width: '15%'
-        },
-            
-        {
+        }, {
             data: 'anio_fin_depreciacion',
             name: 'anio_fin_depreciacion',
             width: '15%'
-        },
-        {
+        }, {
             data: 'depreciacion_por_anio',
             name: 'depreciacion_por_anio',
             width: '15%'
-        },
-         ],
-
+        }, ],
     });
 });
 $(document).ready(function() {

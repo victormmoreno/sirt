@@ -1652,11 +1652,11 @@
 }
 
 .orange {
-  background-color: #ff9800 !important;
+  background-color: #fc7323 !important;
 }
 
 .orange-text {
-  color: #ff9800 !important;
+  color: #fc7323 !important;
 }
 
 .orange.lighten-5 {
@@ -18270,10 +18270,26 @@ h5.breadcrumbs-header {
   font-weight: 400;
 }
 
+
 .zurich-bt-fonts {
   font-family: 'Zurich BT';
   font-weight: 400;
 }
+
+
+.green-complement {
+  background-color: #59b548 !important;
+}
+
+.green-complement-text {
+  color: #59b548 !important;
+}
+
+.zurich-bt-fonts .green-complement-text {
+  font-weight: bolder;
+}
+
+
 
 /*color tabs personalizados vicmo*/
 .tabs .tab .active {
