@@ -49,6 +49,16 @@ class Articulacion extends Model
         'otros',
     ];
 
+    /**
+    * Relación con la tabla de articulacion_emprendedor
+    * @return Eloquent
+    * @author dum
+    */
+    public function emprendedores()
+    {
+      return $this->hasMany(ArticulacionEmprendedor::class, 'articulacion_id');
+    }
+
     // Relacion muchos a muchos con talentos
     public function talentos()
     {
@@ -127,8 +137,3 @@ class Articulacion extends Model
     /*=====  End of scope para consultar por estado de proyecto  ======*/
 
 }
-
-
-    
-
-

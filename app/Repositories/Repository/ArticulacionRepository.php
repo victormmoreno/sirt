@@ -496,17 +496,16 @@ class ArticulacionRepository
       'fecha_cierre' => $fechaCierre,
       ]);
 
+      $articulacionConsultaId->emprendedores()->delete();
+      // Registrar los emprendedores
       if (request()->group1 == Articulacion::IsEmprendedor()) {
         $syncData = array();
-        foreach ($request->get('talentos') as $id => $value) {
-          if ($value == request()->get('radioTalentoLider')) {
-            $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
-          } else {
-            $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
-          }
+        foreach ($request->get('documento') as $id => $value) {
+          $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);
         }
-        $articulacionConsultaId->articulacion_proyecto->talentos()->sync($syncData, true);
+        $articulacionConsultaId->emprendedores()->createMany($syncData);
       }
+
       DB::commit();
       return true;
     } catch (Exception $e) {
@@ -528,16 +527,16 @@ class ArticulacionRepository
     try {
       $articulacion = Articulacion::findOrFail($id);
       $articulacion->update([
-      "acc"           => $request['entregable_acuerdo_confidencialidad_compromiso'],
+      "acc" => $request['entregable_acuerdo_confidencialidad_compromiso'],
       "informe_final" => $request['entregable_informe_final'],
-      "pantallazo"    => $request['entregable_encuesta_satisfaccion'],
+      "pantallazo" => $request['entregable_encuesta_satisfaccion'],
       // "otros" => $request['entregable_otros']
       ]);
 
       $articulacion->articulacion_proyecto()->update([
-      "acta_inicio"       => $request['entregable_acta_inicio'],
+      "acta_inicio" => $request['entregable_acta_inicio'],
       "actas_seguimiento" => $request['entregable_acta_seguimiento'],
-      "acta_cierre"       => $request['entregable_acta_cierre'],
+      "acta_cierre" => $request['entregable_acta_cierre'],
       ]);
 
       DB::commit();
@@ -637,14 +636,14 @@ class ArticulacionRepository
 
     DB::beginTransaction();
     try {
-      $anho                                               = Carbon::now()->isoFormat('YYYY');
-      $tecnoparque                                        = sprintf("%02d", auth()->user()->gestor->nodo_id);
-      $linea                                              = auth()->user()->gestor->lineatecnologica_id;
-      $gestor                                             = sprintf("%03d", auth()->user()->gestor->id);
-      $idArticulacion                                     = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
+      $anho = Carbon::now()->isoFormat('YYYY');
+      $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
+      $linea = auth()->user()->gestor->lineatecnologica_id;
+      $gestor = sprintf("%03d", auth()->user()->gestor->id);
+      $idArticulacion = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
       $idArticulacion->max == null ? $idArticulacion->max = 1 : $idArticulacion->max = $idArticulacion->max;
-      $idArticulacion->max                                = sprintf("%04d", $idArticulacion->max);
-      $fechaEjecucion                                     = request()->txtfecha_inicio;
+      $idArticulacion->max = sprintf("%04d", $idArticulacion->max);
+      $fechaEjecucion = request()->txtfecha_inicio;
 
       // dd($anho);
       $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
@@ -669,11 +668,11 @@ class ArticulacionRepository
       }
 
       $actividad = Actividad::create([
-      'gestor_id'        => auth()->user()->gestor->id,
-      'nodo_id'          => auth()->user()->gestor->nodo_id,
+      'gestor_id' => auth()->user()->gestor->id,
+      'nodo_id' => auth()->user()->gestor->nodo_id,
       'codigo_actividad' => $codigo,
-      'nombre'           => request()->txtnombre,
-      'fecha_inicio'     => request()->txtfecha_inicio,
+      'nombre' => request()->txtnombre,
+      'fecha_inicio' => request()->txtfecha_inicio,
       ]);
 
       $articulacion_proyecto = ArticulacionProyecto::create([
@@ -683,23 +682,20 @@ class ArticulacionRepository
 
       $articulacion = Articulacion::create([
       'articulacion_proyecto_id' => $articulacion_proyecto->id,
-      'tipoarticulacion_id'      => request()->txttipoarticulacion_id,
-      'tipo_articulacion'        => request()->group1,
-      'fecha_ejecucion'          => $fechaEjecucion,
-      'observaciones'            => request()->txtobservaciones,
-      'estado'                   => request()->txtestado,
+      'tipoarticulacion_id' => request()->txttipoarticulacion_id,
+      'tipo_articulacion' => request()->group1,
+      'fecha_ejecucion' => $fechaEjecucion,
+      'observaciones' => request()->txtobservaciones,
+      'estado' => request()->txtestado,
       ]);
 
+      // Registrar los emprendedores
       if (request()->group1 == Articulacion::IsEmprendedor()) {
         $syncData = array();
-        foreach ($request->get('talentos') as $id => $value) {
-          if ($value == request()->get('radioTalentoLider')) {
-            $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
-          } else {
-            $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
-          }
+        foreach ($request->get('documento') as $id => $value) {
+          $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);
         }
-        $articulacion_proyecto->talentos()->sync($syncData, false);
+        $articulacion->emprendedores()->createMany($syncData);
       }
 
       DB::commit();

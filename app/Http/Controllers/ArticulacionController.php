@@ -369,8 +369,9 @@ class ArticulacionController extends Controller
     } else {
       $pivot = array();
       if (Articulacion::find($id)->tipo_articulacion == Articulacion::IsEmprendedor()) {
-        $pivot = $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository($articulacion->articulacion_proyecto_id);
+        $pivot = $articulacion->emprendedores;
       }
+      // dd($pivot);
       if (\Session::get('login_role') == User::IsGestor()) {
         return view('articulaciones.gestor.edit', [
           'articulacion' => $articulacion,
