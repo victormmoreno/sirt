@@ -39,6 +39,25 @@ class EdtController extends Controller
   }
 
   /**
+   * Elimina una edt de la base de datos
+   *
+   * @param int $id Id de la edt
+   * @return Response
+   * @author dum
+   */
+  public function eliminarEdt(int $id)
+  {
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $delete = $this->edtRepository->eliminarEdt_Repository($id);
+      return response()->json([
+        'retorno' => $delete
+      ]);
+    } else {
+      abort('403');
+    }
+  }
+
+  /**
   * función para consultar las entidades (empresas) de una edt
   * @param int id Id de la edt
   * @param boolean tipo Tipo de petición que se hace (si es 1, se consultará para mostrar la entidades, si es 0 se consultará para mostrar información de la edt)
@@ -128,7 +147,18 @@ class EdtController extends Controller
       </a>
       ';
       return $empresas;
-    })->rawColumns(['details', 'edit', 'business', 'entregables'])->make(true);
+    })->addColumn('delete', function ($data) {
+      $disabled = 'disabled';
+      if (Session::get('login_role') == User::IsDinamizador()) {
+        $disabled = '';
+      }
+      $delete = '
+      <a class="btn red lighten-3 m-b-xs" '.$disabled.' onclick="eliminarEdtPorId_event(' . $data->id . ', event)">
+        <i class="material-icons">delete_sweep</i>
+      </a>
+      ';
+      return $delete;
+    })->rawColumns(['details', 'edit', 'business', 'entregables', 'delete'])->make(true);
   }
 
   /**

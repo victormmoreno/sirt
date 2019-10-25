@@ -4,7 +4,7 @@
   <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">
       <div class="row no-m-t no-m-b">
-        <div class="col s12 m3 l3 ">
+        {{-- <div class="col s12 m3 l3 ">
           <a href="{{ route('proyecto.pendientes') }}" class="black-text">
             <div class="card green lighten-3 stats-card">
               <div class="card-content">
@@ -15,7 +15,7 @@
               </div>
             </div>
           </a>
-        </div>
+        </div> --}}
         {{-- <div class="col s12 m3 l3">
           <div class="card stats-card">
             <div class="card-content">

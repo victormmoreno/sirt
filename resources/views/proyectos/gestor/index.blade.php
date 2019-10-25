@@ -36,7 +36,7 @@
                     <div class="col s12 m12 l12">
                       <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                         <li class="tab col s3"><a href="#proyectos" class="active">Proyectos</a></li>
-                        <li class="tab col s3"><a class="" href="#proyectos_pendientes">Pendiente de Aprobación</a></li>
+                        {{-- <li class="tab col s3"><a class="" href="#proyectos_pendientes">Pendiente de Aprobación</a></li> --}}
                         <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                       </ul>
                       <br>
@@ -73,9 +73,9 @@
                       </div>
                     </div>
                   </div>
-                  <div id="proyectos_pendientes">
+                  {{-- <div id="proyectos_pendientes">
                     @include('proyectos.table_pendientes')
-                  </div>
+                  </div> --}}
                 </div>
               </div>
             </div>
