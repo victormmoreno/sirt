@@ -2852,7 +2852,8 @@ $(document).ready(function() {
         ],
     });
 });
-$(document).ready(function() {
+function consultarArticulacionesDelGestor(anho) {
+  $('#articulacionesGestor_table').dataTable().fnDestroy();
   $('#articulacionesGestor_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -2861,7 +2862,7 @@ $(document).ready(function() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/articulacion/datatableArticulacionesDelGestor/"+0,
+      url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
       // type: "get",
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
@@ -2909,7 +2910,7 @@ $(document).ready(function() {
       },
     ],
   });
-});
+}
 
 $("#codigo_articulacion_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();
@@ -3288,6 +3289,42 @@ function verDetallesDeLosEntregablesDeUnaArticulacion(id) {
     $("#detalleArticulacion_modal").openModal();
     }
   });
+}
+
+function eliminarArticulacionPorId_event(id, e) {
+  Swal.fire({
+    title: '¿Desea eliminar la articulación?',
+    text: "Al hacer esto, todo lo relacionado con esta articulación será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, eliminar!'
+  }).then((result) => {
+    if (result.value) {
+      eliminarArticulacionPorId_moment(id);
+    }
+  })
+}
+
+function eliminarArticulacionPorId_moment(id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/articulacion/eliminarArticulacion/'+id,
+    success: function (data) {
+      if (data.retorno) {
+        Swal.fire('Eliminación Exitosa!', 'La articulación se ha eliminado completamente!', 'success');
+        location.href = '/articulacion';
+      } else {
+        Swal.fire('Eliminación Errónea!', 'La articulación no se ha eliminado!', 'error');
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 }
 
 $(document).ready(function() {
@@ -3720,56 +3757,56 @@ function verTalentosDeUnProyecto(id){
   });
 }
 
-function consultarProyectosPendientesPorAprobacion() {
-  // let id = 0;
-  // if (bandera == 1) {
-  //   id = $('#txtnodo_id').val();
-  // }
-
-  $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
-  $('#tblproyectosPendienteDeAprobacion').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    ajax:{
-      url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
-      type: "get",
-    },
-    columns: [
-      {
-        width: '15%',
-        data: 'nombre_idea',
-        name: 'nombre_idea',
-      },
-      {
-        data: 'nombre_nodo',
-        name: 'nombre_nodo',
-      },
-      {
-        data: 'nombre_gestor',
-        name: 'nombre_gestor',
-      },
-      {
-        data: 'estado_aprobacion',
-        name: 'estado_aprobacion',
-      },
-      {
-        width: '8%',
-        data: 'aprobar',
-        name: 'aprobar',
-        orderable: false
-      },
-    ],
-  });
-  // if (id === '') {
-  //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
-  // } else {
-  //
-  // }
-}
+// function consultarProyectosPendientesPorAprobacion() {
+//   // let id = 0;
+//   // if (bandera == 1) {
+//   //   id = $('#txtnodo_id').val();
+//   // }
+//
+//   $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
+//   $('#tblproyectosPendienteDeAprobacion').DataTable({
+//     language: {
+//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//     },
+//     processing: true,
+//     serverSide: true,
+//     order: [ 0, 'desc' ],
+//     ajax:{
+//       url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
+//       type: "get",
+//     },
+//     columns: [
+//       {
+//         width: '15%',
+//         data: 'nombre_idea',
+//         name: 'nombre_idea',
+//       },
+//       {
+//         data: 'nombre_nodo',
+//         name: 'nombre_nodo',
+//       },
+//       {
+//         data: 'nombre_gestor',
+//         name: 'nombre_gestor',
+//       },
+//       {
+//         data: 'estado_aprobacion',
+//         name: 'estado_aprobacion',
+//       },
+//       {
+//         width: '8%',
+//         data: 'aprobar',
+//         name: 'aprobar',
+//         orderable: false
+//       },
+//     ],
+//   });
+//   // if (id === '') {
+//   //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
+//   // } else {
+//   //
+//   // }
+// }
 
 
 // Ajax que muestra los proyectos de un gestor por año
@@ -4196,6 +4233,42 @@ $(document).ready(function() {
   datatableEdtsPorNodo(0);
 });
 
+function eliminarEdtPorId_event(id, event) {
+  Swal.fire({
+    title: '¿Desea eliminar la edt?',
+    text: "Al hacer esto, todo lo relacionado con esta edt será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, eliminar!'
+  }).then((result) => {
+    if (result.value) {
+      eliminarEdtPorId_moment(id);
+    }
+  })
+}
+
+function eliminarEdtPorId_moment(id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/edt/eliminarEdt/'+id,
+    success: function (data) {
+      if (data.retorno) {
+        Swal.fire('Eliminación Exitosa!', 'La edt se ha eliminado completamente!', 'success');
+        location.href = '/edt';
+      } else {
+        Swal.fire('Eliminación Errónea!', 'La edt no se ha eliminado!', 'error');
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+}
+
 function datatableEdtsPorNodo(id) {
   let anho = $('#txtanho_edts_Nodo').val();
   $('#edtPorNodo_table').dataTable().fnDestroy();
@@ -4247,27 +4320,33 @@ function datatableEdtsPorNodo(id) {
         name: 'estado',
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'business',
         name: 'business',
         orderable: false
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'entregables',
         name: 'entregables',
         orderable: false
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'edit',
         name: 'edit',
+        orderable: false
+      },
+      {
+        width: '5%',
+        data: 'delete',
+        name: 'delete',
         orderable: false
       },
     ],

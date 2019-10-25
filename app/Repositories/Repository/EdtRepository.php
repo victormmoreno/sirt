@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Actividad, Edt, TipoEdt};
-use Illuminate\Support\Facades\DB;
+use App\Models\{Actividad, Edt, TipoEdt, UsoInfraestructura, RutaModel};
+use Illuminate\Support\Facades\{DB, Storage};
 use Carbon\Carbon;
 
 class EdtRepository
@@ -12,6 +12,75 @@ class EdtRepository
   public function consultarArchivosDeUnaEdt($id)
   {
     return Edt::find($id)->rutamodel;
+  }
+
+  /**
+   * Método que retorna el directorio de los archivos que tiene una articulación en el servidor
+   * @param int $id Id de la articulacion_proyecto
+   * @return mixed
+   * @author dum
+   */
+  private function returnDirectoryEdtFiles($id)
+  {
+    // consulta los archivos de una articulacion_proyecto (registro de la base de datos)
+    $tempo = $this->consultarArchivosDeUnaEdt($id)->first();
+    if ($tempo == null) {
+      return false;
+    } else {
+      // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
+      $route = preg_split("~/~", $tempo->ruta, 8);
+      // Extrae el último elemento del array
+      array_pop($route);
+      // Une el array en un string, dicho string se separa por /
+      $route = implode("/", $route);
+      // Reemplaza storage por public en la routa
+      $route = str_replace('storage', 'public', $route);
+      // Retorna el directorio de los archivos de la articulación
+      return $route;
+    }
+
+  }
+
+
+  public function eliminarEdt_Repository($id)
+  {
+    DB::beginTransaction();
+    try {
+      $edt = Edt::find($id);
+      $padre = $edt->actividad;
+      // dd($padre);
+      // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
+      // Elimina los datos de la tabla edt_entidad relacionados con la articulacion
+      $edt->entidades()->sync([]);
+      // Directorio del proyecto
+      $directory = $this->returnDirectoryEdtFiles($edt->id);
+      if ($directory != false) {
+        // Elimina los archivos del servidor
+        Storage::deleteDirectory($directory);
+        // Elimina los registros de la tabla de ruta_model relacionado con los edts
+        Edt::find($id)->rutamodel()->delete();
+      }
+      // Elimina el registro de la tabla edts
+      $edt->delete();
+      // Elimina los registros de la tabla material_uso
+      UsoInfraestructura::deleteUsoMateriales($padre);
+      // Elimina los registros de la tabla uso_talentos
+      UsoInfraestructura::deleteUsoTalentos($padre);
+      // Elimina los registros de la tabla gestor_uso
+      UsoInfraestructura::deleteUsoGestores($padre);
+      // Elimina los registros de la tabla equipo_uso
+      UsoInfraestructura::deleteUsoEquipos($padre);
+      // Elimina los registros de la tabla usoinfraestructuras
+      $padre->usoinfraestructuras()->delete();
+      // Elimina la tabla de actividades
+      // exit();
+      $padre->delete();
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
   }
 
   /**

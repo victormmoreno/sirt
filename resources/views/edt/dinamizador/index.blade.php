@@ -44,17 +44,9 @@
                   <th>Detalles</th>
                   <th>Entregables</th>
                   <th>Editar</th>
+                  <th>Eliminar</th>
                 </thead>
               </table>
-              {{-- <div class="col s12 m2 l2">
-                <a href="{{route('edt.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
-                  <div class="card green">
-                    <div class="card-content center">
-                      <span class="white-text">Descargar tabla</span>
-                    </div>
-                  </div>
-                </a>
-              </div> --}}
             </div>
           </div>
         </div>

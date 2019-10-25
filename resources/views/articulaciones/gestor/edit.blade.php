@@ -127,37 +127,38 @@
                       </div>
                     </div>
                     <div id="divEmprendedor">
-                      <div class="row">
-                        <div class="col s12 m8 l8">
-                          <table style="width: 100%;" id="talentosDeTecnoparque_ArticulacionCreate_table" class="display responsive-table datatable-example dataTable">
-                            <thead>
-                              <tr>
-                                <th>Documento de Identidad</th>
-                                <th>Talento</th>
-                                <th>Agregar</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                          </table>
+                      <div class="row col s12 m12 l12">
+                        <div class="input-field col s12 m2 l2">
+                          <input type="text" id="txtdocumento_emprendedor" name="txtdocumento_emprendedor"/>
+                          <label for="txtdocumento_emprendedor">Documento del emprendedor<span class="red-text">*</span></label>
+                          <small id="txtdocumento_emprendedor-error" class="error red-text"></small>
                         </div>
-                        <div class="col s12 m4 l4">
-                          <div class="row">
-                            <blockquote>
-                              <ul class="collection">
-                                <li class="collection-item">Para agregar un talento a la articulación solo debe buscarlo y seleccionar el ícono <i class="material-icons">done</i>.</li>
-                                <li class="collection-item">Para buscar un talento, lo puedes hacer por su documento de identidad ó nombre en el campo <b><u>Buscar</u></b>.</li>
-                                <li class="collection-item">Los talentos agregados a la articulación se mostrarán en la siguiente tabla.</li>
-                              </ul>
-                            </blockquote>
-                          </div>
-                          <div class="row">
-                            <div id="talentos-error" class="error red-text"></div>
-                          </div>
+                        <div class="input-field col s12 m2 l2">
+                          <input type="text" id="txtnombres_emprendedor" name="txtnombres_emprendedor"/>
+                          <label for="txtnombres_emprendedor">Nombres del emprendedor<span class="red-text">*</span></label>
+                          <small id="txtnombres_emprendedor-error" class="error red-text"></small>
+                        </div>
+                        <div class="input-field col s12 m2 l2">
+                          <input type="email" name="txtemail_emprendedor" id="txtemail_emprendedor">
+                          <label for="txtemail_emprendedor">Email del emprendedor</label>
+                          <small id="txtemail_emprendedor-error" class="error red-text"></small>
+                        </div>
+                        <div class="input-field col s12 m2 l2">
+                          <input type="number" name="txttelefono_emprendedor" id="txttelefono_emprendedor">
+                          <label for="txttelefono_emprendedor">Número de contacto</label>
+                          <small id="txttelefono_emprendedor-error" class="error red-text"></small>
+                        </div>
+                        <div class="col s12 m3 l3">
+                          <a href="javascript:void(0)" onclick="addTalentoArticulacion()">
+                            <div class="card green">
+                              <div class="card-content center">
+                                <i class="left material-icons white-text">add</i>
+                                <span class="white-text">Agregar emprendedor</span>
+                              </div>
+                            </div>
+                          </a>
                         </div>
                       </div>
-
                       <div class="row">
                         <div class="col s10 m8 l8">
                           <div class="card blue-grey lighten-5">
@@ -165,22 +166,28 @@
                               <table id="detalleTalentosDeUnaArticulacion" style="width: 100%">
                                 <thead>
                                   <tr>
-                                    <th style="width: 20%">Talento Líder</th>
-                                    <th style="width: 60%">Talento</th>
-                                    <th style="width: 60%">Eliminar</th>
+                                    <th style="width: 20%">Número de documento del emprendedor</th>
+                                    <th style="width: 20%">Nombres del emprendedor</th>
+                                    <th style="width: 20%">Email del emprendedor</th>
+                                    <th style="width: 20%">Número de contacto</th>
+                                    <th style="width: 20%">Eliminar emprendedor</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   @foreach ($pivot as $key => $value)
-                                    {{-- {{$value}} --}}
-                                    <tr id="{{$value->talento_id}}">
-                                      <td><input type="radio" class="with-gap" {{$value->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->talento_id}}'" value="{{$value->talento_id}}"/><label for ="radioButton'{{$value->talento_id}}'"></label></td>
-                                      <td><input type="hidden" name="talentos[]" value="{{$value->talento_id}}">{{$value->talento}}</td>
-                                      <td><a class="waves-effect red lighten-3 btn" onclick="eliminar({{$value->talento_id}});"><i class="material-icons">delete_sweep</i></a></td>
+                                    <tr id="{{$value->documento}}">
+                                      <td><input type="hidden" name="documento[]" value="{{$value->documento}}">{{$value->documento}}</td>
+                                      <td><input type="hidden" name="nombres[]" value="{{$value->nombres}}">{{$value->nombres}}</td>
+                                      <td><input type="hidden" name="email[]" value="{{$value->email}}">{{$value->email}}</td>
+                                      <td><input type="hidden" name="contacto[]" value="{{$value->contacto}}">{{$value->contacto}}</td>
+                                      <td><a class="waves-effect red lighten-3 btn" onclick="eliminar({{$value->documento}});"><i class="material-icons">delete_sweep</i></a></td>
                                     </tr>
                                   @endforeach
                                 </tbody>
                               </table>
+                              <div class="row">
+                                <div id="documento-error" class="error red-text"></div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -188,13 +195,11 @@
                           <div class="row">
                             <blockquote>
                               <ul class="collection">
-                                <li class="collection-item">Para seleccionar un talento como talento líder, presione la casilla "Talento Líder" del talento que será el talento líder.</li>
-                                <li class="collection-item">Para quitar a un talento de la articulación, debes presionar el botón con el ícono <i class="material-icons">delete</i>.</li>
+                                <li class="collection-item">Para añadir un emprendedor a la articulación, debes ingresar sus datos en los respectivos campos de: número de documento, nombres,
+                                  email y número  de contacto (teléfono o celular) y luego presionar el botón de "Agregar emprendedor"</li>
+                                <li class="collection-item">Para quitar a un emprendedor de la articulación, debes presionar el botón con el ícono <i class="material-icons">delete</i>.</li>
                               </ul>
                             </blockquote>
-                          </div>
-                          <div class="row">
-                            <div id="radioTalentoLider-error" class="error red-text"></div>
                           </div>
                         </div>
                       </div>
@@ -340,34 +345,34 @@
         ],
       });
 
-      $('#talentosDeTecnoparque_ArticulacionCreate_table').DataTable({
-        // "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        // order: false,
-        ajax:{
-          url: "/usuario/talento/getTalentosDeTecnoparque/",
-          type: "get",
-        },
-        columns: [
-        {
-          data: 'documento',
-          name: 'documento',
-        },
-        {
-          data: 'talento',
-          name: 'talento',
-        },
-        {
-          data: 'add_articulacion',
-          name: 'add_articulacion',
-          orderable: false,
-        },
-        ],
-      });
+      // $('#talentosDeTecnoparque_ArticulacionCreate_table').DataTable({
+      //   // "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
+      //   language: {
+      //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      //   },
+      //   processing: true,
+      //   serverSide: true,
+      //   // order: false,
+      //   ajax:{
+      //     url: "/usuario/talento/getTalentosDeTecnoparque/",
+      //     type: "get",
+      //   },
+      //   columns: [
+      //   {
+      //     data: 'documento',
+      //     name: 'documento',
+      //   },
+      //   {
+      //     data: 'talento',
+      //     name: 'talento',
+      //   },
+      //   {
+      //     data: 'add_articulacion',
+      //     name: 'add_articulacion',
+      //     orderable: false,
+      //   },
+      //   ],
+      // });
       contenedores();
       $('#txtestado').val({{$articulacion->estado}});
       $('#txtestado').material_select();
@@ -412,10 +417,27 @@
           // $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
+            let errores = "";
             for (control in data.errors) {
+              // -1 si no encuentra la cadena
+              // if (control.indexOf('documento') != -1 ) {
+              //   errores += ' </br><b> - Uno de los emprendedores tiene los datos erróneos</b> ';
+              // } else {
+              //   errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+              // }
+              errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
+            Swal.fire({
+              title: 'Advertencia!',
+              html: 'Estas ingresando mal los datos.' + errores,
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
+            // Swal.fire('Advertencia!', 'Estas ingresando mal los datos', 'warning');
           } else if (data.fail == false && data.redirect_url == false) {
             Swal.fire({
               title: 'Modificación Errónea',
@@ -514,12 +536,11 @@
     }
 
 
-    function noRepeat(id) {
-      let idTalento = id;
+    function noRepeat(documento) {
       let retorno = true;
-      let a = document.getElementsByName("talentos[]");
+      let a = document.getElementsByName("documento[]");
       for (x=0;x<a.length;x++){
-        if (a[x].value == idTalento) {
+        if (a[x].value == documento) {
           retorno = false;
           break;
         }
@@ -527,9 +548,13 @@
       return retorno;
     }
 
-    // Método para agregar talentos a una articulación
+    // Método para agregar emprendedores a una articulación
     function addTalentoArticulacion(id) {
-      if (noRepeat(id) == false) {
+      let documento = $('#txtdocumento_emprendedor').val();
+      let nombres = $('#txtnombres_emprendedor').val();
+      let email = $('#txtemail_emprendedor').val();
+      let contacto = $('#txttelefono_emprendedor').val();
+      if (noRepeat(documento) == false) {
         Swal.fire({
           toast: true,
           position: 'top-end',
@@ -539,30 +564,87 @@
           title: 'El talento ya está asociado a la articulación!'
         });
       } else {
-        // let talentos = document.getElementsByName("talentos[]");
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url:'/usuario/talento/consultarTalentoPorId/'+id,
-        }).done(function(ajax){
-          // El ajax.talento.id es el id del TALENTO, no del usuario
-          let idTalento = ajax.talento.id;
-          let fila = '<tr class="selected" id='+idTalento+'>'
-          +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'"/><label for ="radioButton'+idTalento+'"></label></td>'
-          +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.documento+' - '+ajax.talento.talento+'</td>'
-          +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
-          +'</tr>';
-          $('#detalleTalentosDeUnaArticulacion').append(fila);
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            type: 'success',
-            title: 'El talento se ha asociado a la articulación!'
-          });
-        });
+
+        if (documento === '') {
+          Swal.fire('Advertencia!', 'El número de documento del emprendedor debe ser obligatorio', 'warning');
+        } else {
+          if (nombres === '') {
+            Swal.fire('Advertencia!', 'El nombre del emprendedor debe ser obligatorio', 'warning');
+          } else {
+            if (email === '') {
+              email = 'No registra';
+            }
+
+            if (contacto === '') {
+              contacto = 'No registra';
+            }
+
+            let fila = '<tr class="selected" id='+documento+'>'
+            +'<td><input type="hidden" name="documento[]" value="'+documento+'">'+ documento +'</td>'
+            +'<td><input type="hidden" name="nombres[]" value="'+nombres+'">'+ nombres +'</td>'
+            +'<td><input type="hidden" name="email[]" value="'+email+'">'+ email +'</td>'
+            +'<td><input type="hidden" name="contacto[]" value="'+contacto+'">'+ contacto +'</td>'
+            +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+documento+');"><i class="material-icons">delete_sweep</i></a></td>'
+            +'</tr>';
+            $('#detalleTalentosDeUnaArticulacion').append(fila);
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500,
+              type: 'success',
+              title: 'El emprendedor se ha asociado a la articulación!'
+            });
+            resetValueInputEmprendedores();
+          }
         }
+
+      }
+      // if (noRepeat(id) == false) {
+      //   Swal.fire({
+      //     toast: true,
+      //     position: 'top-end',
+      //     showConfirmButton: false,
+      //     timer: 1500,
+      //     type: 'warning',
+      //     title: 'El talento ya está asociado a la articulación!'
+      //   });
+      // } else {
+      //   // let talentos = document.getElementsByName("talentos[]");
+      //   $.ajax({
+      //     dataType:'json',
+      //     type:'get',
+      //     url:'/usuario/talento/consultarTalentoPorId/'+id,
+      //   }).done(function(ajax){
+      //     // El ajax.talento.id es el id del TALENTO, no del usuario
+      //     let idTalento = ajax.talento.id;
+      //     let fila = '<tr class="selected" id='+idTalento+'>'
+      //     +'<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton'+id+'" value="'+idTalento+'"/><label for ="radioButton'+idTalento+'"></label></td>'
+      //     +'<td><input type="hidden" name="talentos[]" value="'+idTalento+'">'+ajax.talento.documento+' - '+ajax.talento.talento+'</td>'
+      //     +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+idTalento+');"><i class="material-icons">delete_sweep</i></a></td>'
+      //     +'</tr>';
+      //     $('#detalleTalentosDeUnaArticulacion').append(fila);
+      //     Swal.fire({
+      //       toast: true,
+      //       position: 'top-end',
+      //       showConfirmButton: false,
+      //       timer: 1500,
+      //       type: 'success',
+      //       title: 'El talento se ha asociado a la articulación!'
+      //     });
+      //   });
+      //   }
+      }
+
+      function resetValueInputEmprendedores() {
+        $('#txtdocumento_emprendedor').val(null);
+        $("label[for='txtdocumento_emprendedor']").removeClass("active", false);
+        $('#txtnombres_emprendedor').val(null);
+        $("label[for='txtnombres_emprendedor']").removeClass("active", false);
+        $('#txtemail_emprendedor').val(null);
+        $("label[for='txtemail_emprendedor']").removeClass("active", false);
+        $('#txttelefono_emprendedor').val(null);
+        $("label[for='txttelefono_emprendedor']").removeClass("active", false);
       }
 
       function eliminar(index){

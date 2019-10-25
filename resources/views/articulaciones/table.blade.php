@@ -10,6 +10,9 @@
       <th>Detalles</th>
       <th>Entregables</th>
       <th>Editar</th>
+      @if ( \Session::get('login_role') == App\User::IsDinamizador() )
+        <th>Eliminar</th>
+      @endif
     </tr>
   </thead>
   <tfoot>
@@ -23,6 +26,9 @@
       <th></th>
       <th></th>
       <th></th>
+      @if ( \Session::get('login_role') == App\User::IsDinamizador() )
+        <th></th>
+      @endif
     </tr>
   </tfoot>
 </table>

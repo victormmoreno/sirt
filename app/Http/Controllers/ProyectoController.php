@@ -57,47 +57,47 @@ class ProyectoController extends Controller
 
   }
 
-  /**
-   * Vista para msotrar los proyectos pendientes de aprobación de un usuario
-   * @return Response
-   * @author dum
-   */
-  public function aprobaciones()
-  {
-    return view('proyectos.dinamizador.pendientes');
-  }
+  // /**
+  //  * Vista para msotrar los proyectos pendientes de aprobación de un usuario
+  //  * @return Response
+  //  * @author dum
+  //  */
+  // public function aprobaciones()
+  // {
+  //   return view('proyectos.dinamizador.pendientes');
+  // }
 
-  /**
-  * Modifica el estado de una usuario de la aprobación del proyecto
-  *
-  * @param Request $request
-  * @param int $id Id del proyecto
-  * @return Response
-  * @author dum
-  */
-  public function updateAprobacion(Request $request, $id)
-  {
-
-    $validator = Validator::make($request->all(), [
-    'txtaprobacion' => 'required',
-    ], [
-    'txtaprobacion.required' => 'La aprobación del proyecto es obligatoria.'
-    ]);
-    if ($validator->fails()) {
-      Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto debe ser obligatoria!')->showConfirmButton('Ok', '#3085d6');
-      return back();
-    }
-
-
-    $update = $this->getProyectoRepository()->updateAprobacionUsuario($request, $id);
-    if ( $update ) {
-      Alert::success('Modificación Exitosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
-      return redirect('proyecto');
-    } else {
-      Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto no ha sido cambiada!')->showConfirmButton('Ok', '#3085d6');
-      return back();
-    }
-  }
+  // /**
+  // * Modifica el estado de una usuario de la aprobación del proyecto
+  // *
+  // * @param Request $request
+  // * @param int $id Id del proyecto
+  // * @return Response
+  // * @author dum
+  // */
+  // public function updateAprobacion(Request $request, $id)
+  // {
+  //
+  //   $validator = Validator::make($request->all(), [
+  //   'txtaprobacion' => 'required',
+  //   ], [
+  //   'txtaprobacion.required' => 'La aprobación del proyecto es obligatoria.'
+  //   ]);
+  //   if ($validator->fails()) {
+  //     Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto debe ser obligatoria!')->showConfirmButton('Ok', '#3085d6');
+  //     return back();
+  //   }
+  //
+  //
+  //   $update = $this->getProyectoRepository()->updateAprobacionUsuario($request, $id);
+  //   if ( $update ) {
+  //     Alert::success('Modificación Exitosa!', 'El estado de la aprobación del proyecto ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+  //     return redirect('proyecto');
+  //   } else {
+  //     Alert::error('Modificación Errónea!', 'El estado de la aprobación del proyecto no ha sido cambiada!')->showConfirmButton('Ok', '#3085d6');
+  //     return back();
+  //   }
+  // }
 
   /**
   * Vista para la aprobación del proyecto

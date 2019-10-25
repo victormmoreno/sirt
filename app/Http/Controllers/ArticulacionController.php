@@ -31,6 +31,25 @@ class ArticulacionController extends Controller
   }
 
   /**
+   * Elimina una articulación de la base de datos
+   *
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   */
+  public function eliminarArticulación(int $id)
+  {
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $delete = $this->articulacionRepository->eliminarArticulacion_Repository($id);
+      return response()->json([
+        'retorno' => $delete
+      ]);
+    } else {
+      abort('403');
+    }
+  }
+
+  /**
    * Función para mostrar las datatables de las articulaciones
    * @param Collection $query Consulta
    * @return Reponse
@@ -99,6 +118,13 @@ class ArticulacionController extends Controller
       </a>
       ';
       return $button;
+    })->addColumn('delete', function ($data) {
+      $delete = '
+      <a class="btn red lighten-3 m-b-xs" onclick="eliminarArticulacionPorId_event('.$data->id.', event)">
+      <i class="material-icons">delete_sweep</i>
+      </a>
+      ';
+      return $delete;
     })->editColumn('estado', function($data){
       if ($data->estado == 'Inicio') {
         return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate red" style="width: 33%"></div></div>';
@@ -116,7 +142,7 @@ class ArticulacionController extends Controller
         return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
       }
       return '<span class="red-text">'.$data->revisado_final.'</span>';
-    })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
+    })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado', 'delete'])->make(true);
   }
 
   /**
@@ -236,13 +262,13 @@ class ArticulacionController extends Controller
   }
 
   // Datatable para mostrar las articulaciones POR NODO
-  public function datatableArticulacionesPorNodo(Request $request, $id)
+  public function datatableArticulacionesPorNodo(Request $request, $id, $anho)
   {
     if (request()->ajax()) {
       if (\Session::get('login_role') == User::IsDinamizador()) {
-        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo( auth()->user()->dinamizador->nodo_id );
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo(auth()->user()->dinamizador->nodo_id, $anho);
       } else {
-        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo( $id );
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho);
       }
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
@@ -252,10 +278,11 @@ class ArticulacionController extends Controller
   * Consulta las articulaciones de un gestor
   * @param Request $request
   * @param int $id Id del gestor
+  * @param string $anho Año de inicio de las articulaciones
   * @return Response
   * @author Victor Manuel Moreno Vega
   */
-  public function datatableArticulacionesPorGestor(Request $request, $id)
+  public function datatableArticulacionesPorGestor(Request $request, $id, $anho)
   {
     if (request()->ajax()) {
       $idgestor = $id;
@@ -263,7 +290,7 @@ class ArticulacionController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
 
-      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor( $idgestor );
+      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($idgestor, $anho);
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
   }
@@ -369,8 +396,9 @@ class ArticulacionController extends Controller
     } else {
       $pivot = array();
       if (Articulacion::find($id)->tipo_articulacion == Articulacion::IsEmprendedor()) {
-        $pivot = $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository($articulacion->articulacion_proyecto_id);
+        $pivot = $articulacion->emprendedores;
       }
+      // dd($pivot);
       if (\Session::get('login_role') == User::IsGestor()) {
         return view('articulaciones.gestor.edit', [
           'articulacion' => $articulacion,

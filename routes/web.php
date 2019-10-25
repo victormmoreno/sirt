@@ -454,9 +454,10 @@ Route::group([
     function () {
 
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
+        Route::get('/eliminarArticulacion/{id}', 'ArticulacionController@eliminarArticulación')->name('articulacion.delete')->middleware('role_session:Dinamizador');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create')->middleware('role_session:Gestor');
-        Route::get('/datatableArticulacionesDelGestor/{id}', 'ArticulacionController@datatableArticulacionesPorGestor')->name('articulacion.datatable');
-        Route::get('/datatableArticulacionesDelNodo/{id}', 'ArticulacionController@datatableArticulacionesPorNodo')->name('articulacion.datatable.nodo')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/datatableArticulacionesDelGestor/{id}/{anho}', 'ArticulacionController@datatableArticulacionesPorGestor')->name('articulacion.datatable');
+        Route::get('/datatableArticulacionesDelNodo/{id}/{anho}', 'ArticulacionController@datatableArticulacionesPorNodo')->name('articulacion.datatable.nodo')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit')->middleware('role_session:Gestor|Dinamizador');
         Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
         Route::get('/ajaxDetallesDeLosEntregablesDeUnaArticulacion/{id}', 'ArticulacionController@detallesDeLosEntregablesDeUnaArticulacion')->name('articulacion.detalle.entregables');
@@ -484,7 +485,7 @@ Route::group(
 
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
-        Route::get('/pendientes', 'ProyectoController@aprobaciones')->name('proyecto.pendientes')->middleware('role_session:Talento|Gestor|Dinamizador');
+        // Route::get('/pendientes', 'ProyectoController@aprobaciones')->name('proyecto.pendientes')->middleware('role_session:Talento|Gestor|Dinamizador');
         Route::get('/aprobacion/{id}', 'ProyectoController@aprobacion')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento|Gestor');
         Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
         Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas');
@@ -507,7 +508,7 @@ Route::group(
         Route::get('/eliminarProyecto/{id}', 'ProyectoController@eliminarProyecto_Controller')->name('proyecto.delete')->middleware('role_session:Dinamizador');
         Route::put('/{id}', 'ProyectoController@update')->name('proyecto.update')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables')->middleware('role_session:Gestor|Dinamizador');
-        Route::put('/updateAprobacion/{id}', 'ProyectoController@updateAprobacion')->name('proyecto.update.aprobacion')->middleware('role_session:Gestor|Dinamizador|Talento');
+        // Route::put('/updateAprobacion/{id}', 'ProyectoController@updateAprobacion')->name('proyecto.update.aprobacion')->middleware('role_session:Gestor|Dinamizador|Talento');
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
@@ -525,6 +526,7 @@ Route::group([
   function () {
     //
     Route::get('/', 'EdtController@index')->name('edt');
+    Route::get('/eliminarEdt/{id}', 'EdtController@eliminarEdt')->name('edt.delete')->middleware('role_session:Dinamizador');
     Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
     Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor|Dinamizador');
     Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
