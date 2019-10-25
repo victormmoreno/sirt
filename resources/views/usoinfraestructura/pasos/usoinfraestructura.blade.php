@@ -35,6 +35,7 @@
             <div class="row">
                 <div class="input-field col s12 m12 l12">
                     <p class="center p-v-xs">
+
                         @if(isset($usoinfraestructura->tipo_usoinfraestructura))
                             <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsProyecto() ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
                             <label for="IsProyecto">
@@ -74,6 +75,14 @@
                         </small>
                     </center>
                 </div>
+            </div>
+        
+            <div class="row">
+                @if(isset($usoinfraestructura->actividad->nodo_id))
+                    <input type="hidden" name="txtnodo" id="txtnodo" value="{{$usoinfraestructura->actividad->nodo_id}}">
+                @else
+                    <input type="hidden" name="txtnodo" id="txtnodo">
+                @endif
             </div>
             <div class="row">
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())

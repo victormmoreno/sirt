@@ -32,6 +32,7 @@ class MaterialRepository
             'categoriamaterial' => function ($query) {
                 $query->select('id', 'nombre');
             },
+
         ]);
     }
 
@@ -41,7 +42,7 @@ class MaterialRepository
         DB::beginTransaction();
 
         Material::create([
-            'nodo_id'               => $this->findNodoBySession($request),
+            'nodo_id'               => $this->findNodoBySession(),
             'lineatecnologica_id'   => $this->findLineaBySession($request),
             'tipomaterial_id'       => $request->input('txttipomaterial'),
             'categoria_material_id' => $request->input('txtcategoria'),
@@ -52,7 +53,6 @@ class MaterialRepository
             'nombre'                => $request->input('txtnombre'),
             'cantidad'              => $request->input('txtcantidad'),
             'valor_compra'          => $request->input('txtvalorcompra'),
-            'horas_uso_anio'        => $request->input('txthorasuso'),
             'proveedor'             => $request->input('txtproveedor'),
             'marca'                 => $request->input('txtmarca'),
         ]);
@@ -82,7 +82,7 @@ class MaterialRepository
         try {
 
             $material->update([
-                'nodo_id'               => $this->findNodoBySession($request),
+                'nodo_id'               => $this->findNodoBySession(),
                 'lineatecnologica_id'   => $this->findLineaBySession($request),
                 'tipomaterial_id'       => $request->input('txttipomaterial'),
                 'categoria_material_id' => $request->input('txtcategoria'),
@@ -92,7 +92,6 @@ class MaterialRepository
                 'nombre'                => $request->input('txtnombre'),
                 'cantidad'              => $request->input('txtcantidad'),
                 'valor_compra'          => $request->input('txtvalorcompra'),
-                'horas_uso_anio'        => $request->input('txthorasuso'),
                 'proveedor'             => $request->input('txtproveedor'),
                 'marca'                 => $request->input('txtmarca'),
             ]);
@@ -132,7 +131,12 @@ class MaterialRepository
      */
     private function findNodoBySession()
     {
-        return session()->get('login_role') == User::IsDinamizador() ? auth()->user()->dinamizador->nodo->id : session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            return auth()->user()->dinamizador->nodo_id;
+        }elseif(session()->has('login_role') && session()->get('login_role') == User::IsGestor()){
+            return auth()->user()->gestor->nodo_id ;
+        }
+        
 
     }
 

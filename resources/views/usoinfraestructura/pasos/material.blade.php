@@ -28,15 +28,16 @@
                <b> Materiales de Formación</b> 
             </p>
             <div class="divider"></div>
-            <div class="row">
+            <div class="row"> 
                 <div class="input-field col s12 m7 l7">
+                  
                     @if(isset($usoinfraestructura->actividad->nodo->materiales))
                         <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" >
                             <option value="">Seleccione Material de  Formación</option>
-                            @foreach($usoinfraestructura->actividad->nodo->materiales as $material)
+                            @foreach($usoinfraestructura->actividad->nodo->materiales->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $material)
                                 
                                 <option value="{{$material->id}}">
-                                     {{$material->codigo_material}} - {{$material->nombre}}
+                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{$material->nombre}} x {{$material->medida->nombre}}
                                 </option>
                             
                             @endforeach
@@ -53,12 +54,7 @@
                     </label>
                 </div>
                 <div class="input-field col s12 m2 l2">
-                    
-                    @if(isset($usoinfraestructura->fecha))
-                        <input  id="txtcantidad" name="txtcantidad" type="number" value="1"/>
-                    @else
-                        <input  id="txtcantidad" name="txtcantidad" type="number" value="1" />
-                    @endif
+                    <input  id="txtcantidad" name="txtcantidad" type="number" value="1"  />
                     <label for="txtcantidad">
                         Cantidad
                         <span class="red-text">
@@ -89,13 +85,14 @@
                                 </th>
                             </tr>
                         </thead>
+
                         <tbody id="detalleMaterialUso">
                             @if(isset($usoinfraestructura->usomateriales))
                                 @forelse ($usoinfraestructura->usomateriales as $key => $material)
                                         
                                         <tr id="filaMaterial{{$material->id}}">
                                             <td>
-                                                <input type="hidden" name="material[]" value="{{$material->id}}"/>{{$material->codigo_material}} - {{$material->nombre}}
+                                                <input type="hidden" name="material[]" value="{{$material->id}}"/>{{$material->codigo_material}} - {{$material->presentacion->nombre}} {{$material->nombre}} x {{$material->medida->nombre}} 
                                             </td>
                                             <td>
                                                 <input type="hidden" name="cantidad[]" value="{{$material->pivot->unidad}}"/>

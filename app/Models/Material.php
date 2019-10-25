@@ -28,7 +28,6 @@ class Material extends Model
         'nombre',
         'cantidad',
         'valor_compra',
-        'horas_uso_anio',
         'proveedor',
         'marca',
     ];
@@ -54,7 +53,6 @@ class Material extends Model
         'nombre'                => 'string',
         'cantidad'              => 'float',
         'valor_compra'          => 'float',
-        'horas_uso_anio'        => 'integer',
         'proveedor'             => 'sgtring',
         'marca'                 => 'string',
     ];
@@ -78,6 +76,7 @@ class Material extends Model
     {
         return $this->belongsTo(CategoriaMaterial::class, 'categoria_material_id', 'id');
     }
+
 
     public function presentacion()
     {
@@ -142,16 +141,6 @@ class Material extends Model
     public function setCantidadAttribute($cantidad)
     {
         $this->attributes['cantidad'] = trim($cantidad);
-    }
-
-    public function getHorasUsoAnioAttribute($horas_uso_anio)
-    {
-        return trim($horas_uso_anio);
-    }
-
-    public function setHorasUsoAnioAttribute($horas_uso_anio)
-    {
-        $this->attributes['horas_uso_anio'] = trim($horas_uso_anio);
     }
 
     public function getProveedorAttribute($proveedor)

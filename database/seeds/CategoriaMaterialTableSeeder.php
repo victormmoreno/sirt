@@ -14,5 +14,18 @@ class CategoriaMaterialTableSeeder extends Seeder
     {
 
         factory(CategoriaMaterial::class, 20)->create();
+
+        // CategoriaMaterial::create([
+        //     'nombre' => 'Fab de PCB Acabado Precisión',
+        // ]);
+
+        // CategoriaMaterial::create([
+        //     'nombre' => 'Fab de PCB Acabado Básico',
+        // ]);
+
+        // CategoriaMaterial::create([
+        //     'nombre' => 'Montaje de PCB',
+        // ]);
+
     }
 }

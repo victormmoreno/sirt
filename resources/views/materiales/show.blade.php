@@ -171,14 +171,7 @@
                                                                                {{$material->nombre}}
                                                                             </p>    
                                                                         </li>
-                                                                        <li class="collection-item"> 
-                                                                            <span class="title cyan-text text-darken-3">
-                                                                                Horas de Uso promedio al año
-                                                                            </span>
-                                                                            <p>
-                                                                               {{$material->horas_uso_anio}}
-                                                                            </p>    
-                                                                        </li>
+                                                                        
                                                                         <li class="collection-item"> 
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Proveedor
