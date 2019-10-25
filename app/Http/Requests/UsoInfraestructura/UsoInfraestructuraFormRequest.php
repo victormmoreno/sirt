@@ -14,7 +14,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,6 +27,8 @@ class UsoInfraestructuraFormRequest extends FormRequest
         return [
             'txtfecha'                  => 'required|date_format:"Y-m-d"',
             'txtlinea'                  => 'required',
+            'asesoriadirecta'           => 'required|array',
+            'asesoriaindirecta'         => 'required|array',
 
             'txttipousoinfraestructura' => 'required',
             'txtactividad'              => 'required',
@@ -34,9 +36,8 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
             'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
 
-            'txttiempouso'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
-            'txtcantidad'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
-            
+            'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
+            'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
 
         ];
     }
@@ -60,15 +61,15 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtasesoriaindirecta.max'           => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',
             'txtasesoriaindirecta.between'       => 'La asesoria directa debe ser un valor numérico entre 0 y 99.9',
 
-            'txttiempouso.numeric'         => 'El tiempo de uso debe ser un valor numérico',
-            'txttiempouso.min'             => 'El tiempo de uso debe ser un valor numérico igual o mayor a 0.',
-            'txttiempouso.max'             => 'El tiempo de uso debe ser un valor numérico igual o menor a 99.',
-            'txttiempouso.between'         => 'El tiempo de uso debe ser un valor numérico 0 y 99.9',
+            'txttiempouso.numeric'               => 'El tiempo de uso debe ser un valor numérico',
+            'txttiempouso.min'                   => 'El tiempo de uso debe ser un valor numérico igual o mayor a 0.',
+            'txttiempouso.max'                   => 'El tiempo de uso debe ser un valor numérico igual o menor a 99.',
+            'txttiempouso.between'               => 'El tiempo de uso debe ser un valor numérico 0 y 99.9',
 
-            'txtcantidad.numeric'         => 'La cantidad debe ser un valor numérico',
-            'txtcantidad.min'             => 'La cantidad debe ser un valor numérico igual o mayor a 0.',
-            'txtcantidad.max'             => 'La cantidad debe ser un valor numérico igual o menor a 99.',
-            'txtcantidad.between'         => 'La cantidad debe ser un valor numérico 0 y 99.9',
+            'txtcantidad.numeric'                => 'La cantidad debe ser un valor numérico',
+            'txtcantidad.min'                    => 'La cantidad debe ser un valor numérico igual o mayor a 0.',
+            'txtcantidad.max'                    => 'La cantidad debe ser un valor numérico igual o menor a 99.',
+            'txtcantidad.between'                => 'La cantidad debe ser un valor numérico 0 y 99.9',
         ];
     }
 }

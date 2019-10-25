@@ -368,7 +368,7 @@ class UsoInfraestructuraController extends Controller
         }
 
         $result = $this->getUsoInfraestructuraRepository()->store($request);
-
+       
         if ($result == 'false') {
             return response()->json([
                 'fail'         => false,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Nodo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NodoFormRequest;
 use App\Models\Nodo;
+use App\Pdf\Nodo\NodoPdf;
 use App\Repositories\Datatables\NodoDatatables;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
@@ -213,6 +214,11 @@ class NodoController extends Controller
             alert()->error('Modificación Erróneo.', 'El nodo no se ha modificado.');
         }
         return redirect()->route('nodo.index');
+    }
+
+    public function pdfEquipoNodo(NodoPdf $nodoPdf)
+    {
+        return $nodoPdf->downloadPdfEquipoNodo();
     }
 
 }
