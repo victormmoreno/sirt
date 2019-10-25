@@ -31,6 +31,25 @@ class ArticulacionController extends Controller
   }
 
   /**
+   * Elimina una articulación de la base de datos
+   *
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   */
+  public function eliminarArticulación(int $id)
+  {
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $delete = $this->articulacionRepository->eliminarArticulacion_Repository($id);
+      return response()->json([
+        'retorno' => $delete
+      ]);
+    } else {
+      abort('403');
+    }
+  }
+
+  /**
    * Función para mostrar las datatables de las articulaciones
    * @param Collection $query Consulta
    * @return Reponse
@@ -99,6 +118,13 @@ class ArticulacionController extends Controller
       </a>
       ';
       return $button;
+    })->addColumn('delete', function ($data) {
+      $delete = '
+      <a class="btn red lighten-3 m-b-xs" onclick="eliminarArticulacionPorId_event('.$data->id.', event)">
+      <i class="material-icons">delete_sweep</i>
+      </a>
+      ';
+      return $delete;
     })->editColumn('estado', function($data){
       if ($data->estado == 'Inicio') {
         return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate red" style="width: 33%"></div></div>';
@@ -116,7 +142,7 @@ class ArticulacionController extends Controller
         return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
       }
       return '<span class="red-text">'.$data->revisado_final.'</span>';
-    })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado'])->make(true);
+    })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado', 'delete'])->make(true);
   }
 
   /**

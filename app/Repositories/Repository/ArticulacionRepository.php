@@ -2,12 +2,90 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad};
+use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
+
+  /**
+   * Método que retorna el directorio de los archivos que tiene una articulación en el servidor
+   * @param int $id Id de la articulacion_proyecto
+   * @return mixed
+   * @author dum
+   */
+  private function returnDirectoryArticulacionFiles($id)
+  {
+    // consulta los archivos de una articulacion_proyecto (registro de la base de datos)
+    $tempo = ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $id)->first();
+    if ($tempo == null) {
+      return false;
+    } else {
+      // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
+      $route = preg_split("~/~", $tempo->ruta, 9);
+      // Extrae el último elemento del array
+      array_pop($route);
+      // Une el array en un string, dicho string se separa por /
+      $route = implode("/", $route);
+      // Reemplaza storage por public en la routa
+      $route = str_replace('storage', 'public', $route);
+      // Retorna el directorio de los archivos de la articulación
+      return $route;
+    }
+
+  }
+
+  /**
+   * Elimina una articulación de la base de datos y sus anexo
+   *
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   */
+  public function eliminarArticulacion_Repository(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::find($id);
+      $padre = $articulacion->articulacion_proyecto->actividad;
+      // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
+      // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con la articulacion
+      $articulacion->articulacion_proyecto->talentos()->sync([]);
+      // Elimina los emprendedores de la articulación
+      $articulacion->emprendedores()->delete();
+      // Elimina el registro de la tabla de proyecto
+      $padre->articulacion_proyecto->articulacion()->delete();
+      // Directorio del proyecto
+      $directory = $this->returnDirectoryArticulacionFiles($padre->articulacion_proyecto->id);
+      if ($directory != false) {
+        // Elimina los archivos del servidor
+        Storage::deleteDirectory($directory);
+        // Elimina los registros de la tabla de archivos_articulacion_proyecto
+        ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $padre->articulacion_proyecto->id)->delete();
+      }
+      // Elimina el registro de la tabla la tabla de articulacion_proyecto
+      $padre->articulacion_proyecto()->delete();
+      // Elimina los registros de la tabla material_uso
+      UsoInfraestructura::deleteUsoMateriales($padre);
+      // Elimina los registros de la tabla uso_talentos
+      UsoInfraestructura::deleteUsoTalentos($padre);
+      // Elimina los registros de la tabla gestor_uso
+      UsoInfraestructura::deleteUsoGestores($padre);
+      // Elimina los registros de la tabla equipo_uso
+      UsoInfraestructura::deleteUsoEquipos($padre);
+      // Elimina los registros de la tabla usoinfraestructuras
+      $padre->usoinfraestructuras()->delete();
+      // Elimina la tabla de actividades
+      $padre->delete();
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
 
   /**
    * Consulta las articulaciones finalizadas entre dos fechas

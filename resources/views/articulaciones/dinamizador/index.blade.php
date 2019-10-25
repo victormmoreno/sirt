@@ -148,18 +148,27 @@
           name: 'revisado_final',
         },
         {
+          width: '5%',
           data: 'details',
           name: 'details',
           orderable: false
         },
         {
+          width: '5%',
           data: 'entregables',
           name: 'entregables',
           orderable: false
         },
         {
+          width: '5%',
           data: 'edit',
           name: 'edit',
+          orderable: false
+        },
+        {
+          width: '5%',
+          data: 'delete',
+          name: 'delete',
           orderable: false
         },
         ],
@@ -248,6 +257,11 @@
         {
           data: 'edit',
           name: 'edit',
+          orderable: false
+        },
+        {
+          data: 'delete',
+          name: 'delete',
           orderable: false
         },
         ],

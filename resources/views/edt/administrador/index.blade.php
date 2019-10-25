@@ -64,6 +64,7 @@
                     <th>Detalles</th>
                     <th>Entregables</th>
                     <th>Editar</th>
+                    <th>Eliminar</th>
                   </thead>
 
                 </table>

@@ -57,6 +57,58 @@ class UsoInfraestructura extends Model
         return self::IS_EDT;
     }
 
+    /**
+     * Elimina los datos de material_uso
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoMateriales($actividad)
+    {
+      foreach ($actividad->usoinfraestructuras as $key => $value) {
+        $value->usomateriales()->sync([]);
+      }
+    }
+
+    /**
+     * Elimina los datos de uso_talento
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoTalentos($actividad)
+    {
+      foreach ($actividad->usoinfraestructuras as $key => $value) {
+        $value->usotalentos()->sync([]);
+      }
+    }
+
+    /**
+     * Elimina los datos de equipo_uso
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoEquipos($actividad)
+    {
+      foreach ($actividad->usoinfraestructuras as $key => $value) {
+        $value->usoequipos()->sync([]);
+      }
+    }
+
+    /**
+     * Elimina los datos de gestor_uso
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoGestores($actividad)
+    {
+      foreach ($actividad->usoinfraestructuras as $key => $value) {
+        $value->usogestores()->sync([]);
+      }
+    }
+
     public function actividad()
     {
         return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
