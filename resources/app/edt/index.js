@@ -2,6 +2,42 @@ $(document).ready(function() {
   datatableEdtsPorNodo(0);
 });
 
+function eliminarEdtPorId_event(id, event) {
+  Swal.fire({
+    title: '¿Desea eliminar la edt?',
+    text: "Al hacer esto, todo lo relacionado con esta edt será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, eliminar!'
+  }).then((result) => {
+    if (result.value) {
+      eliminarEdtPorId_moment(id);
+    }
+  })
+}
+
+function eliminarEdtPorId_moment(id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/edt/eliminarEdt/'+id,
+    success: function (data) {
+      if (data.retorno) {
+        Swal.fire('Eliminación Exitosa!', 'La edt se ha eliminado completamente!', 'success');
+        location.href = '/edt';
+      } else {
+        Swal.fire('Eliminación Errónea!', 'La edt no se ha eliminado!', 'error');
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+}
+
 function datatableEdtsPorNodo(id) {
   let anho = $('#txtanho_edts_Nodo').val();
   $('#edtPorNodo_table').dataTable().fnDestroy();
@@ -53,27 +89,33 @@ function datatableEdtsPorNodo(id) {
         name: 'estado',
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'business',
         name: 'business',
         orderable: false
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'details',
         name: 'details',
         orderable: false
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'entregables',
         name: 'entregables',
         orderable: false
       },
       {
-        width: '6%',
+        width: '5%',
         data: 'edit',
         name: 'edit',
+        orderable: false
+      },
+      {
+        width: '5%',
+        data: 'delete',
+        name: 'delete',
         orderable: false
       },
     ],

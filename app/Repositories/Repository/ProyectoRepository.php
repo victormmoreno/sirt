@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea, ArchivoArticulacionProyecto};
+use App\Models\{Proyecto, Entidad, EstadoPrototipo, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, Talento, Role, Nodo, Idea, ArchivoArticulacionProyecto, UsoInfraestructura};
 use Illuminate\Support\Facades\{DB, Session, Notification, Storage};
 use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
 use App\Http\Controllers\PDF\PdfProyectoController;
@@ -110,13 +110,14 @@ class ProyectoRepository
       // Elimina el registro de la tabla la tabla de articulacion_proyecto
       $padre->articulacion_proyecto()->delete();
       // Elimina los registros de la tabla material_uso
-      $this->deleteUsoMateriales($padre);
+      UsoInfraestructura::deleteUsoMateriales($padre);
+      // $this->deleteUsoMateriales($padre);
       // Elimina los registros de la tabla uso_talentos
-      $this->deleteUsoTalentos($padre);
+      UsoInfraestructura::deleteUsoTalentos($padre);
       // Elimina los registros de la tabla gestor_uso
-      $this->deleteUsoGestores($padre);
+      UsoInfraestructura::deleteUsoGestores($padre);
       // Elimina los registros de la tabla equipo_uso
-      $this->deleteUsoEquipos($padre);
+      UsoInfraestructura::deleteUsoEquipos($padre);
       // Elimina los registros de la tabla usoinfraestructuras
       $padre->usoinfraestructuras()->delete();
       // Elimina la tabla de actividades
@@ -127,58 +128,6 @@ class ProyectoRepository
     } catch (\Exception $e) {
       DB::rollback();
       return false;
-    }
-  }
-
-  /**
-   * Elimina los datos de equipo_uso
-   *
-   * @param Collection $actividad
-   * @return void
-   */
-  private function deleteUsoEquipos($actividad)
-  {
-    foreach ($actividad->usoinfraestructuras as $key => $value) {
-      $value->usoequipos()->sync([]);
-    }
-  }
-
-  /**
-   * Elimina los datos de gestor_uso
-   *
-   * @param Collection $actividad
-   * @return void
-   */
-  private function deleteUsoGestores($actividad)
-  {
-    foreach ($actividad->usoinfraestructuras as $key => $value) {
-      $value->usogestores()->sync([]);
-    }
-  }
-
-  /**
-   * Elimina los datos de material_uso
-   *
-   * @param Collection $actividad
-   * @return void
-   */
-  private function deleteUsoMateriales($actividad)
-  {
-    foreach ($actividad->usoinfraestructuras as $key => $value) {
-      $value->usomateriales()->sync([]);
-    }
-  }
-
-  /**
-   * Elimina los datos de uso_talento
-   *
-   * @param Collection $actividad
-   * @return void
-   */
-  private function deleteUsoTalentos($actividad)
-  {
-    foreach ($actividad->usoinfraestructuras as $key => $value) {
-      $value->usotalentos()->sync([]);
     }
   }
 
@@ -198,7 +147,7 @@ class ProyectoRepository
     ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
     ->join('gestores AS g', 'g.id', '=', 'a.gestor_id')
     ->join('nodos', 'nodos.id', '=', 'a.nodo_id')
-    ->where('proyectos.estado_aprobacion', 1)
+    ->where('proyectos.estado_aprobacion', Proyecto::IsAceptado())
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
     ->whereIn('ep.nombre', ['Inicio', 'Planeacion', 'En ejecución'])
     ->groupBy('ep.nombre');
@@ -428,80 +377,80 @@ class ProyectoRepository
     ->where('proyectos.id', $id);
   }
 
-  /**
-  * Cambia el estado de la aprobacion de un proyecto de un usuario y rol
-  * @param Request
-  * @param int $id Id del proyecto
-  * @return boolean
-  * @author dum
-  */
-  public function updateAprobacionUsuario($request, $id)
-  {
-
-    DB::beginTransaction();
-    try {
-      if ( $request->txtaprobacion != Proyecto::IsAceptado() && $request->txtaprobacion != Proyecto::IsNoAceptado() ) {
-        DB::rollback();
-        return false;
-      }
-      $user = auth()->user()->id;
-      $role = Session::get('login_role');
-      $role = $this->pivotAprobacionesUnica($id, $user, $role)->role_id;
-      $update = DB::update("UPDATE aprobaciones SET aprobacion = $request->txtaprobacion WHERE proyecto_id = $id AND user_id = $user AND role_id = $role");
-      $some = $this->pivotAprobaciones($id)->where('aprobacion', 0)->get();
-      if ( count($some) == 0 ) {
-        $aprobados = $this->pivotAprobaciones($id)->where('aprobacion', 1)->get();
-        $proyecto = Proyecto::find($id);
-        if ( count($aprobados) == 3 ) {
-          // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
-
-          // Instancia de la clase ArchivoRepository
-          $archivoRepo = new ArchivoRepository();
-
-          // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
-          $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
-
-          // Guarda la ruta de los archivos en la base de datos
-          $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
-
-          // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
-          $proyecto->update([
-            'estado_aprobacion' => Proyecto::IsAceptado(),
-            'acc' => 1
-          ]);
-        } else {
-          // En caso de que UNO SOLO no haya aprobado el proyecto
-
-          //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
-          $idea = $proyecto->idea;
-          if ( $idea->tipo_idea == Idea::IsEmpresa() || $idea->tipo_idea == Idea::IsGrupoInvestigacion() ) {
-            $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Inicio');
-          } else {
-            $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Admitido');
-          }
-          $padre = $proyecto->articulacion_proyecto->actividad;
-          // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
-          // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
-          $proyecto->articulacion_proyecto->talentos()->sync([]);
-          // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
-          $proyecto->users()->sync([]);
-          // Elimina el registro de la tabla de proyecto
-          $padre->articulacion_proyecto->proyecto()->delete();
-          // Elimina el registro de la tabla la tabla de articulacion_proyecto
-          $padre->articulacion_proyecto()->delete();
-          // Elimina la tabla de actividades
-          $padre->delete();
-
-        }
-      }
-      DB::commit();
-      return true;
-    } catch (\Exception $e) {
-      DB::rollback();
-      return false;
-    }
-
-  }
+  // /**
+  // * Cambia el estado de la aprobacion de un proyecto de un usuario y rol
+  // * @param Request
+  // * @param int $id Id del proyecto
+  // * @return boolean
+  // * @author dum
+  // */
+  // public function updateAprobacionUsuario($request, $id)
+  // {
+  //
+  //   DB::beginTransaction();
+  //   try {
+  //     if ( $request->txtaprobacion != Proyecto::IsAceptado() && $request->txtaprobacion != Proyecto::IsNoAceptado() ) {
+  //       DB::rollback();
+  //       return false;
+  //     }
+  //     $user = auth()->user()->id;
+  //     $role = Session::get('login_role');
+  //     $role = $this->pivotAprobacionesUnica($id, $user, $role)->role_id;
+  //     $update = DB::update("UPDATE aprobaciones SET aprobacion = $request->txtaprobacion WHERE proyecto_id = $id AND user_id = $user AND role_id = $role");
+  //     $some = $this->pivotAprobaciones($id)->where('aprobacion', 0)->get();
+  //     if ( count($some) == 0 ) {
+  //       $aprobados = $this->pivotAprobaciones($id)->where('aprobacion', 1)->get();
+  //       $proyecto = Proyecto::find($id);
+  //       if ( count($aprobados) == 3 ) {
+  //         // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
+  //
+  //         // Instancia de la clase ArchivoRepository
+  //         $archivoRepo = new ArchivoRepository();
+  //
+  //         // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
+  //         $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
+  //
+  //         // Guarda la ruta de los archivos en la base de datos
+  //         $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
+  //
+  //         // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
+  //         $proyecto->update([
+  //           'estado_aprobacion' => Proyecto::IsAceptado(),
+  //           'acc' => 1
+  //         ]);
+  //       } else {
+  //         // En caso de que UNO SOLO no haya aprobado el proyecto
+  //
+  //         //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
+  //         $idea = $proyecto->idea;
+  //         if ( $idea->tipo_idea == Idea::IsEmpresa() || $idea->tipo_idea == Idea::IsGrupoInvestigacion() ) {
+  //           $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Inicio');
+  //         } else {
+  //           $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Admitido');
+  //         }
+  //         $padre = $proyecto->articulacion_proyecto->actividad;
+  //         // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
+  //         // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
+  //         $proyecto->articulacion_proyecto->talentos()->sync([]);
+  //         // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
+  //         $proyecto->users()->sync([]);
+  //         // Elimina el registro de la tabla de proyecto
+  //         $padre->articulacion_proyecto->proyecto()->delete();
+  //         // Elimina el registro de la tabla la tabla de articulacion_proyecto
+  //         $padre->articulacion_proyecto()->delete();
+  //         // Elimina la tabla de actividades
+  //         $padre->delete();
+  //
+  //       }
+  //     }
+  //     DB::commit();
+  //     return true;
+  //   } catch (\Exception $e) {
+  //     DB::rollback();
+  //     return false;
+  //   }
+  //
+  // }
 
   /**
    * Consulta un único registro de la tabla pivot (aprobaciones)
@@ -1428,47 +1377,49 @@ class ProyectoRepository
       'reci_ar_emp' => $reci_ar_emp,
       'dine_reg' => $dine_reg,
       'aporte_sena' => 0,
-      'aporte_talento' => 0
+      'aporte_talento' => 0,
+      'estado_aprobacion' => Proyecto::IsAceptado()
       ]);
 
       $syncData = array();
-      $dataAprobacion = array();
+      // $dataAprobacion = array();
 
       // Array con el gestor del proyecto
-      $dataAprobacion[0] = array('user_id' => auth()->user()->id,
-      'role_id' => Role::findByName('Gestor')->id,
-      'aprobacion' => 0);
+      // $dataAprobacion[0] = array('user_id' => auth()->user()->id,
+      // 'role_id' => Role::findByName('Gestor')->id,
+      // 'aprobacion' => 0);
 
       // Array con el talento líder del proyecto
-      $dataAprobacion[1] = array('user_id' => Talento::find(request()->get('radioTalentoLider'))->user->id,
-      'role_id' => Role::findByName('Talento')->id,
-      'aprobacion' => 0);
+      // $dataAprobacion[1] = array('user_id' => Talento::find(request()->get('radioTalentoLider'))->user->id,
+      // 'role_id' => Role::findByName('Talento')->id,
+      // 'aprobacion' => 0);
 
       // Array con el dinamizador del nodo
-      $dataAprobacion[2] = array('user_id' => Nodo::find( auth()->user()->gestor->nodo_id )->dinamizador->user->id,
-      'role_id' => Role::findByName('Dinamizador')->id,
-      'aprobacion' => 0);
+      // $dataAprobacion[2] = array('user_id' => Nodo::find( auth()->user()->gestor->nodo_id )->dinamizador->user->id,
+      // 'role_id' => Role::findByName('Dinamizador')->id,
+      // 'aprobacion' => 0);
 
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
 
-      $proyecto->users()->sync($dataAprobacion, false);
+      // $proyecto->users()->sync($dataAprobacion, false);
       $articulacion_proyecto->talentos()->sync($syncData, false);
 
-      $idUsers = array();
+      // Código para generar las aprobaciones de un proyecto
+      // $idUsers = array();
       // $auxiliar = array();
-      for ($i=0; $i < 3 ; $i++) {
-        $idUsers[$i] = $dataAprobacion[$i]['user_id'];
-      }
+      // for ($i=0; $i < 3 ; $i++) {
+      //   $idUsers[$i] = $dataAprobacion[$i]['user_id'];
+      // }
 
-      $idUsers = array_unique($idUsers);
-      $idUsers = array_values($idUsers);
+      // $idUsers = array_unique($idUsers);
+      // $idUsers = array_values($idUsers);
       // $auxiliar = $idUsers;
 
       // dd($idUsers);
 
-      for ($i=0; $i < count($idUsers) ; $i++) {
-        Notification::send(User::find($idUsers[$i]), new ProyectoPendiente($proyecto));
-      }
+      // for ($i=0; $i < count($idUsers) ; $i++) {
+      //   Notification::send(User::find($idUsers[$i]), new ProyectoPendiente($proyecto));
+      // }
 
       DB::commit();
       return true;

@@ -30,8 +30,8 @@ class ArticulacionFormRequest extends FormRequest
       'group1' => 'required',
       'txtgrupo_id' => Rule::requiredIf(request()->group1 == Articulacion::IsGrupo()),
       'txtempresa_id' => Rule::requiredIf(request()->group1 == Articulacion::IsEmpresa()),
-      'talentos' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
-      'radioTalentoLider' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
+      'documento.*' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()) . '|numeric|digits_between:6,11',
+      // 'radioTalentoLider' => Rule::requiredIf(request()->group1 == Articulacion::IsEmprendedor()),
       'txtnombre' => 'required|min:4|max:200',
       'txttipoarticulacion_id' => 'required',
       'txtestado' => 'required',
@@ -50,15 +50,17 @@ class ArticulacionFormRequest extends FormRequest
 
       'txtempresa_id.required' => 'La Empresa es obligatoria.',
 
-      'talentos.required' => 'Debe haber por lo menos un Talento en la articulación.',
+      'documento.required' => 'Debe haber por lo menos un emprendedor en la articulación.',
+      'documento.*.numeric' => 'El número de documente debe ser numérico.',
+      'documento.*.digits_between' => 'La cantidad de carácteres del número de documento debe ser entre 6 y 11.',
 
-      'radioTalentoLider.required' => 'Se debe elegir un Talento Líder.',
+      // 'radioTalentoLider.required' => 'Se debe elegir un Talento Líder.',
 
       'txtnombre.required' => 'El Nombre de la Articulación es obligatorio.',
       'txtnombre.max' => 'El Nombre de la Articulación debe ser máximo 1000 caracteres.',
       'txtnombre.min' => 'El Nombre de la Articulación debe ser mínimo 4 caracteres.',
 
-      'txttipoarticulacion_id.required' => 'La Actividad debe ser obligatoria.',
+      'txttipoarticulacion_id.required' => 'El tipo de articulación debe ser obligatoria.',
 
       'txtestado.required' => 'El Estado de la Articulación debe ser obligatorio.',
 
@@ -79,8 +81,8 @@ class ArticulacionFormRequest extends FormRequest
       'group1' => 'Tipo de Articulación',
       'txtgrupo_id' => 'Grupo de Investigación',
       'txtempresa_id' => 'Empresa',
-      'talentos' => 'Talento',
-      'radioTalentoLider' => 'Talento Líder',
+      // 'documento' => 'Talento',
+      // 'radioTalentoLider' => 'Talento Líder',
       'txtnombre' => 'Nombre de la Articulación',
       'txttipoarticulacion_id' => 'Actividad',
       'txtestado' => 'Estado de la Articulación',

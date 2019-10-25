@@ -360,3 +360,39 @@ function verDetallesDeLosEntregablesDeUnaArticulacion(id) {
     }
   });
 }
+
+function eliminarArticulacionPorId_event(id, e) {
+  Swal.fire({
+    title: '¿Desea eliminar la articulación?',
+    text: "Al hacer esto, todo lo relacionado con esta articulación será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, eliminar!'
+  }).then((result) => {
+    if (result.value) {
+      eliminarArticulacionPorId_moment(id);
+    }
+  })
+}
+
+function eliminarArticulacionPorId_moment(id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/articulacion/eliminarArticulacion/'+id,
+    success: function (data) {
+      if (data.retorno) {
+        Swal.fire('Eliminación Exitosa!', 'La articulación se ha eliminado completamente!', 'success');
+        location.href = '/articulacion';
+      } else {
+        Swal.fire('Eliminación Errónea!', 'La articulación no se ha eliminado!', 'error');
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+}

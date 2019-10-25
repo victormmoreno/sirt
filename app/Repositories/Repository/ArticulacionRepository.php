@@ -2,12 +2,90 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad};
+use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
+
+  /**
+   * Método que retorna el directorio de los archivos que tiene una articulación en el servidor
+   * @param int $id Id de la articulacion_proyecto
+   * @return mixed
+   * @author dum
+   */
+  private function returnDirectoryArticulacionFiles($id)
+  {
+    // consulta los archivos de una articulacion_proyecto (registro de la base de datos)
+    $tempo = ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $id)->first();
+    if ($tempo == null) {
+      return false;
+    } else {
+      // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
+      $route = preg_split("~/~", $tempo->ruta, 9);
+      // Extrae el último elemento del array
+      array_pop($route);
+      // Une el array en un string, dicho string se separa por /
+      $route = implode("/", $route);
+      // Reemplaza storage por public en la routa
+      $route = str_replace('storage', 'public', $route);
+      // Retorna el directorio de los archivos de la articulación
+      return $route;
+    }
+
+  }
+
+  /**
+   * Elimina una articulación de la base de datos y sus anexo
+   *
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   */
+  public function eliminarArticulacion_Repository(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::find($id);
+      $padre = $articulacion->articulacion_proyecto->actividad;
+      // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
+      // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con la articulacion
+      $articulacion->articulacion_proyecto->talentos()->sync([]);
+      // Elimina los emprendedores de la articulación
+      $articulacion->emprendedores()->delete();
+      // Elimina el registro de la tabla de proyecto
+      $padre->articulacion_proyecto->articulacion()->delete();
+      // Directorio del proyecto
+      $directory = $this->returnDirectoryArticulacionFiles($padre->articulacion_proyecto->id);
+      if ($directory != false) {
+        // Elimina los archivos del servidor
+        Storage::deleteDirectory($directory);
+        // Elimina los registros de la tabla de archivos_articulacion_proyecto
+        ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $padre->articulacion_proyecto->id)->delete();
+      }
+      // Elimina el registro de la tabla la tabla de articulacion_proyecto
+      $padre->articulacion_proyecto()->delete();
+      // Elimina los registros de la tabla material_uso
+      UsoInfraestructura::deleteUsoMateriales($padre);
+      // Elimina los registros de la tabla uso_talentos
+      UsoInfraestructura::deleteUsoTalentos($padre);
+      // Elimina los registros de la tabla gestor_uso
+      UsoInfraestructura::deleteUsoGestores($padre);
+      // Elimina los registros de la tabla equipo_uso
+      UsoInfraestructura::deleteUsoEquipos($padre);
+      // Elimina los registros de la tabla usoinfraestructuras
+      $padre->usoinfraestructuras()->delete();
+      // Elimina la tabla de actividades
+      $padre->delete();
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
 
   /**
    * Consulta las articulaciones finalizadas entre dos fechas
@@ -373,10 +451,11 @@ class ArticulacionRepository
   /**
   * Consulta las articulaciones de un nodo
   * @param int $id Id del nodo
+  * @param string $anho Año para filtrar las articulaciones del nodo
   * @return Collection
   * @author dum
   */
-  public function consultarArticulacionesDeUnNodo($id)
+  public function consultarArticulacionesDeUnNodo($id, $anho)
   {
     return Articulacion::select('codigo_actividad AS codigo_articulacion',
     'actividades.nombre',
@@ -403,6 +482,7 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('nodos.id', $id)
+    ->whereYear('fecha_inicio', $anho)
     ->get();
   }
 
@@ -496,17 +576,16 @@ class ArticulacionRepository
       'fecha_cierre' => $fechaCierre,
       ]);
 
+      $articulacionConsultaId->emprendedores()->delete();
+      // Registrar los emprendedores
       if (request()->group1 == Articulacion::IsEmprendedor()) {
         $syncData = array();
-        foreach ($request->get('talentos') as $id => $value) {
-          if ($value == request()->get('radioTalentoLider')) {
-            $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
-          } else {
-            $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
-          }
+        foreach ($request->get('documento') as $id => $value) {
+          $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);
         }
-        $articulacionConsultaId->articulacion_proyecto->talentos()->sync($syncData, true);
+        $articulacionConsultaId->emprendedores()->createMany($syncData);
       }
+
       DB::commit();
       return true;
     } catch (Exception $e) {
@@ -528,16 +607,16 @@ class ArticulacionRepository
     try {
       $articulacion = Articulacion::findOrFail($id);
       $articulacion->update([
-      "acc"           => $request['entregable_acuerdo_confidencialidad_compromiso'],
+      "acc" => $request['entregable_acuerdo_confidencialidad_compromiso'],
       "informe_final" => $request['entregable_informe_final'],
-      "pantallazo"    => $request['entregable_encuesta_satisfaccion'],
+      "pantallazo" => $request['entregable_encuesta_satisfaccion'],
       // "otros" => $request['entregable_otros']
       ]);
 
       $articulacion->articulacion_proyecto()->update([
-      "acta_inicio"       => $request['entregable_acta_inicio'],
+      "acta_inicio" => $request['entregable_acta_inicio'],
       "actas_seguimiento" => $request['entregable_acta_seguimiento'],
-      "acta_cierre"       => $request['entregable_acta_cierre'],
+      "acta_cierre" => $request['entregable_acta_cierre'],
       ]);
 
       DB::commit();
@@ -594,10 +673,11 @@ class ArticulacionRepository
   /**
   * Consulta las articulaciones de un gestor
   * @param int $id Id del gestor
+  * @param string $anho Año para realizar el filtro
   * @return Collection
   * @author dum
   */
-  public function consultarArticulacionesDeUnGestor($id)
+  public function consultarArticulacionesDeUnGestor($id, $anho)
   {
     return Articulacion::select('codigo_actividad AS codigo_articulacion',
     'actividades.nombre',
@@ -623,6 +703,7 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
+    ->whereYear('fecha_inicio', $anho)
     ->get();
   }
 
@@ -637,14 +718,14 @@ class ArticulacionRepository
 
     DB::beginTransaction();
     try {
-      $anho                                               = Carbon::now()->isoFormat('YYYY');
-      $tecnoparque                                        = sprintf("%02d", auth()->user()->gestor->nodo_id);
-      $linea                                              = auth()->user()->gestor->lineatecnologica_id;
-      $gestor                                             = sprintf("%03d", auth()->user()->gestor->id);
-      $idArticulacion                                     = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
+      $anho = Carbon::now()->isoFormat('YYYY');
+      $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
+      $linea = auth()->user()->gestor->lineatecnologica_id;
+      $gestor = sprintf("%03d", auth()->user()->gestor->id);
+      $idArticulacion = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
       $idArticulacion->max == null ? $idArticulacion->max = 1 : $idArticulacion->max = $idArticulacion->max;
-      $idArticulacion->max                                = sprintf("%04d", $idArticulacion->max);
-      $fechaEjecucion                                     = request()->txtfecha_inicio;
+      $idArticulacion->max = sprintf("%04d", $idArticulacion->max);
+      $fechaEjecucion = request()->txtfecha_inicio;
 
       // dd($anho);
       $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
@@ -669,11 +750,11 @@ class ArticulacionRepository
       }
 
       $actividad = Actividad::create([
-      'gestor_id'        => auth()->user()->gestor->id,
-      'nodo_id'          => auth()->user()->gestor->nodo_id,
+      'gestor_id' => auth()->user()->gestor->id,
+      'nodo_id' => auth()->user()->gestor->nodo_id,
       'codigo_actividad' => $codigo,
-      'nombre'           => request()->txtnombre,
-      'fecha_inicio'     => request()->txtfecha_inicio,
+      'nombre' => request()->txtnombre,
+      'fecha_inicio' => request()->txtfecha_inicio,
       ]);
 
       $articulacion_proyecto = ArticulacionProyecto::create([
@@ -683,23 +764,20 @@ class ArticulacionRepository
 
       $articulacion = Articulacion::create([
       'articulacion_proyecto_id' => $articulacion_proyecto->id,
-      'tipoarticulacion_id'      => request()->txttipoarticulacion_id,
-      'tipo_articulacion'        => request()->group1,
-      'fecha_ejecucion'          => $fechaEjecucion,
-      'observaciones'            => request()->txtobservaciones,
-      'estado'                   => request()->txtestado,
+      'tipoarticulacion_id' => request()->txttipoarticulacion_id,
+      'tipo_articulacion' => request()->group1,
+      'fecha_ejecucion' => $fechaEjecucion,
+      'observaciones' => request()->txtobservaciones,
+      'estado' => request()->txtestado,
       ]);
 
+      // Registrar los emprendedores
       if (request()->group1 == Articulacion::IsEmprendedor()) {
         $syncData = array();
-        foreach ($request->get('talentos') as $id => $value) {
-          if ($value == request()->get('radioTalentoLider')) {
-            $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
-          } else {
-            $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
-          }
+        foreach ($request->get('documento') as $id => $value) {
+          $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);
         }
-        $articulacion_proyecto->talentos()->sync($syncData, false);
+        $articulacion->emprendedores()->createMany($syncData);
       }
 
       DB::commit();
