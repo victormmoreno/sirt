@@ -34,7 +34,7 @@ class UsoInfraestructuraRepository
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
-            $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
+             $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
 
@@ -111,6 +111,7 @@ class UsoInfraestructuraRepository
         $syncData            = [];
         $honorario           = [];
         $horasAsesoriaGestor = [];
+       
         foreach ($request->get('gestor') as $id => $value) {
 
             //calculo de costo de horas de asesoria
@@ -124,8 +125,8 @@ class UsoInfraestructuraRepository
             //array que almacena los datos a guardar
             $syncData[$id] = [
                 'gestor_id'          => $value,
-                'asesoria_directa'   => $request->get('asesoriadirecta')[$id],
-                'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id],
+                'asesoria_directa'   => $request->get('asesoriadirecta')[$id] != null ? $request->get('asesoriadirecta')[$id] : 0 ,
+                'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id] != null ? $request->get('asesoriaindirecta')[$id] : 0 ,
                 'costo_asesoria'     => $honorario[$id],
             ];
 

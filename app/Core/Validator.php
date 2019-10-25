@@ -11,5 +11,4 @@ class Validator extends LaravelValidator {
     {
         return Hash::check($value, Auth::user()->password);
     }
-
 }

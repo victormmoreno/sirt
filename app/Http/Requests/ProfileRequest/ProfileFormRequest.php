@@ -130,7 +130,7 @@ class ProfileFormRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    public function attributes():array
     {
         return [
             'txttipo_documento'    => 'tipo de documento',
