@@ -52,8 +52,17 @@
                                         <th >Editar</th>
                                     </thead>
                                 </table>
+                                <div class="col s12 m2 l2">
+                                    <a  href="{{route('excel.excelnodo')}}">
+                                      <div class="card green">
+                                        <div class="card-content center">
+                                          <span class="white-text">Descargar tabla</span>
+                                        </div>
+                                      </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                     <a href="{{route('nodo.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Nodo">

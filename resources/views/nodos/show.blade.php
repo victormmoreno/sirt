@@ -56,19 +56,22 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="right hide-on-med-and-down">
-                                                <small class="green-text text-darken-2">
+                                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsAdministrador())
+                                            
+                                            <div class="right hide-on-med-and-down">
+                                                {{-- <small class="green-text text-darken-2">
                                                     <a class="waves-effect waves-red btn-flat">
                                                         <i class="fas fa-file-pdf   fa-lg"></i>Exportar a PDF 
                                                     </a>
                                                     
-                                                </small>
+                                                </small> --}}
                                                 <small class="green-text text-darken-2">
-                                                    <a class="waves-effect waves-green btn-flat">
+                                                    <a class="waves-effect waves-green btn-flat" href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
                                                         <i class="fas fa-file-excel   fa-lg"></i>Exportar a Excel  
                                                     </a>
                                                 </small>
-                                            </div> --}}
+                                            </div>
+                                            @endif
                                             <div class="divider mailbox-divider"></div>
                                             <div class="mailbox-text">
                                                 <div class="row">

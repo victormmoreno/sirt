@@ -58,9 +58,9 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepr
 /*===================================================================
 =            rutas para las funcionalidades de los nodos            =
 ===================================================================*/
-Route::get('nodo/pdfequiponodo', 'Nodo\NodoController@pdfEquipoNodo')
-->name('activation')
-->middleware('disablepreventback');
+// Route::get('nodo/pdfequiponodo', 'Nodo\NodoController@pdfEquipoNodo')
+// ->name('activation')
+// ->middleware('disablepreventback');
 Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
 
 /*=====  End of rutas para las funcionalidades de los nodos  ======*/
@@ -665,6 +665,15 @@ Route::group([
    // Rutas para la generación de excel del módulo de seguimiento
    Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
+
+   //Rutas para la generación de excel del módulo de nodo
+   Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
+   ->middleware('role_session:Administrador')
+   ->name('excel.excelnodo');
+
+   Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
+   ->middleware('role_session:Administrador|Dinamizador')
+   ->name('excel.exportexcelfornodo');
  }
 );
 

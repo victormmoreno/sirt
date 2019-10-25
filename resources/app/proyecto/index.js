@@ -429,11 +429,7 @@ function verTalentosDeUnProyecto(id){
 }
 
 function consultarProyectosPendientesPorAprobacion() {
-  // let id = 0;
-  // if (bandera == 1) {
-  //   id = $('#txtnodo_id').val();
-  // }
-
+  
   $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
   $('#tblproyectosPendienteDeAprobacion').DataTable({
     language: {
