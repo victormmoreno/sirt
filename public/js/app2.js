@@ -3757,56 +3757,52 @@ function verTalentosDeUnProyecto(id){
   });
 }
 
-// function consultarProyectosPendientesPorAprobacion() {
-//   // let id = 0;
-//   // if (bandera == 1) {
-//   //   id = $('#txtnodo_id').val();
-//   // }
-//
-//   $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
-//   $('#tblproyectosPendienteDeAprobacion').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     processing: true,
-//     serverSide: true,
-//     order: [ 0, 'desc' ],
-//     ajax:{
-//       url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
-//       type: "get",
-//     },
-//     columns: [
-//       {
-//         width: '15%',
-//         data: 'nombre_idea',
-//         name: 'nombre_idea',
-//       },
-//       {
-//         data: 'nombre_nodo',
-//         name: 'nombre_nodo',
-//       },
-//       {
-//         data: 'nombre_gestor',
-//         name: 'nombre_gestor',
-//       },
-//       {
-//         data: 'estado_aprobacion',
-//         name: 'estado_aprobacion',
-//       },
-//       {
-//         width: '8%',
-//         data: 'aprobar',
-//         name: 'aprobar',
-//         orderable: false
-//       },
-//     ],
-//   });
-//   // if (id === '') {
-//   //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
-//   // } else {
-//   //
-//   // }
-// }
+function consultarProyectosPendientesPorAprobacion() {
+  
+  $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
+  $('#tblproyectosPendienteDeAprobacion').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+      {
+        data: 'nombre_nodo',
+        name: 'nombre_nodo',
+      },
+      {
+        data: 'nombre_gestor',
+        name: 'nombre_gestor',
+      },
+      {
+        data: 'estado_aprobacion',
+        name: 'estado_aprobacion',
+      },
+      {
+        width: '8%',
+        data: 'aprobar',
+        name: 'aprobar',
+        orderable: false
+      },
+    ],
+  });
+  // if (id === '') {
+  //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
+  // } else {
+  //
+  // }
+}
 
 
 // Ajax que muestra los proyectos de un gestor por año
@@ -7245,7 +7241,8 @@ function graficoSeguimiento(data, name) {
 
 var graficosCostos = {
   actividad: 'costosDeUnProyecto_column',
-  proyectos: 'costosDeProyectos_column'
+  proyectos: 'costosDeProyectos_column',
+  proyectos_ipe: 'costosDeProyectos_ipe_column'
 };
 
   function setValueInput(data, chart) {
@@ -7265,20 +7262,43 @@ var graficosCostos = {
   $("label[for='txthoras_uso"+chart+"']").addClass("active", true);
 }
 
-function consultarCostosDeProyectos(bandera) {
+function consultarCostosDeProyectos(bandera, tipo) {
   let idnodo = 0;
   let tipos = [];
-  let estado = $("input[name='estado']:checked").val();
-  let fecha_inicio = $('#txtfecha_inicio_costosProyectos').val();
-  let fecha_fin = $('#txtfecha_fin_costosProyectos').val();
+  let estado;
+  let fecha_inicio;
+  let fecha_fin;
+  // let estado = $("input[name='estado']:checked").val();
+  // let fecha_inicio = $('#txtfecha_inicio_costosProyectos').val();
+  // let fecha_fin = $('#txtfecha_fin_costosProyectos').val();
+  let chart = '';
+
+  if (tipo == 1) {
+    chart = '_proyectos';
+    estado = $("input[name='estado']:checked").val();
+    fecha_inicio = $('#txtfecha_inicio_costosProyectos').val();
+    fecha_fin = $('#txtfecha_fin_costosProyectos').val();
+    $("input[name='tipoProyecto[]']:checked").each(function (index, obj) {
+      tipos.push($(this).val());
+    });
+  } else {
+    chart = '_proyectos_ipe';
+    estado = $("input[name='estado_ipe']:checked").val();
+    fecha_inicio = $('#txtfecha_inicio_costosProyectos_ipe').val();
+    fecha_fin = $('#txtfecha_fin_costosProyectos_ipe').val();
+    $("input[name='tipoProyecto_ipe[]']:checked").each(function (index, obj) {
+      tipos.push($(this).val());
+    });
+  }
+
   // En caso de que sea el Administrador el que consulta los costos
   if (bandera == 1) {
     idnodo = $('#txtnodo_id').val();
   }
 
-  $("input[name='tipoProyecto[]']:checked").each(function (index, obj) {
-    tipos.push($(this).val());
-  });
+  // $("input[name='tipoProyecto[]']:checked").each(function (index, obj) {
+  //   tipos.push($(this).val());
+  // });
 
   // console.log(tipos);
 
@@ -7298,11 +7318,10 @@ function consultarCostosDeProyectos(bandera) {
           $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin,
+            url: '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
             success: function (data) {
-              let chart = '_proyectos';
               setValueInput(data, chart);
-              graficoCostos(data, graficosCostos.proyectos, 'Proyectos');
+              graficoCostos(data, tipo == 1 ? graficosCostos.proyectos : graficosCostos.proyectos_ipe, 'Proyectos');
             },
             error: function (xhr, textStatus, errorThrown) {
               alert("Error: " + errorThrown);
