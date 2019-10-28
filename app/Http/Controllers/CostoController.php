@@ -46,10 +46,12 @@ class CostoController extends Controller
       $actividades = Actividad::ConsultarActividades()->where('nodo_id', auth()->user()->dinamizador->nodo_id)->get()->pluck('proyecto', 'id');
       $tipos = TipoArticulacionProyecto::orderBy('nombre')->get();
       $estado = EstadoProyecto::whereIn('nombre', ['Cierre PF', 'Cierre PMV'])->orderBy('nombre')->get();
+      $estado_ipe = EstadoProyecto::whereIn('nombre', ['Inicio', 'Planeacion', 'En ejecucion'])->orderBy('nombre')->get();
       return view('costos.dinamizador.index', [
         'actividades' => $actividades,
         'tipos_proyecto' => $tipos,
-        'estados' => $estado
+        'estados' => $estado,
+        'estados_ipe' => $estado_ipe
       ]);
     } else {
       abort('403');
@@ -64,10 +66,11 @@ class CostoController extends Controller
    * @param string $estado_proyecto Estado del proyecto
    * @param string $fecha_inicio Primera fecha para realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @param int $tipo Indica que tipo de consulta se va a ejecutar (1 si es con proyectos cerrados, 2 si es con proyectos en inicio, planeación o ejecución)
    * @return Response
    * @author dum
    */
-  public function costosDeProyectos(int $idnodo, string $tipos_proyecto, string $estado_proyecto, string $fecha_inicio, string $fecha_fin)
+  public function costosDeProyectos(int $idnodo, string $tipos_proyecto, string $estado_proyecto, string $fecha_inicio, string $fecha_fin, int $type)
   {
     $id = $idnodo;
     if ( Session::get('login_role') == User::IsDinamizador() ) {
@@ -86,7 +89,13 @@ class CostoController extends Controller
     // Convierte el string a un array con los tipos de proyecto
     $tipos_proyecto = json_decode($tipos_proyecto);
 
-    $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle($estado_proyecto)->select('actividades.id')->where('nodos.id', $id)->whereIn('tiposarticulacionesproyectos.nombre', $tipos_proyecto)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->get();
+    $proyectos = '';
+
+    if ($type == 1) {
+      $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle($estado_proyecto)->select('actividades.id')->where('nodos.id', $id)->whereIn('tiposarticulacionesproyectos.nombre', $tipos_proyecto)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->get();
+    } else {
+      $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle($estado_proyecto)->select('actividades.id')->where('nodos.id', $id)->whereIn('tiposarticulacionesproyectos.nombre', $tipos_proyecto)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->get();
+    }
 
     foreach ($proyectos as $key => $proyecto) {
       $actividad = $this->getActividadRepository()->getActividad_Repository($proyecto->id);

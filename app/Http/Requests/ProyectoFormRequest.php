@@ -44,9 +44,11 @@ class ProyectoFormRequest extends FormRequest
       'txtuniversidad_proyecto' => Rule::requiredIf(request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id) . '|max:50',
       'txtfecha_inicio' => 'required|date_format:"Y-m-d"',
       'txtidea_id' => 'required',
-      'txtfecha_fin' => Rule::requiredIf(request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id). '|date_format:"Y-m-d"|nullable',
+      'txtfecha_fin' => Rule::requiredIf(request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id ||
+      request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Suspendido')->first()->id). '|date_format:"Y-m-d"|nullable',
       'txtestadoprototipo_id' => Rule::requiredIf(request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id),
-      'txtresultado_proyecto' => Rule::requiredIf(request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id) .'|max:1000',
+      'txtresultado_proyecto' => Rule::requiredIf(request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id ||
+      request()->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Suspendido')->first()->id) .'|max:1000',
       'txtotro_estadoprototipo' => Rule::requiredIf(request()->txtestadoprototipo_id == EstadoPrototipo::where('nombre', 'Otro.')->first()->id) . '|min:5|max:50|nullable',
       'txtnom_act_cti' => Rule::requiredIf(request()->txtarti_cti == 1). '|min:5|max:50|nullable',
       'txtimpacto_proyecto' => 'max:1000',

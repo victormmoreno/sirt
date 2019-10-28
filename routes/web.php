@@ -692,7 +692,7 @@ Route::group([
   function() {
     Route::get('/', 'CostoController@index')->name('costos');
     Route::get('/costosDeUnaActividad/{id}', 'CostoController@costosDeUnaActividad');
-    Route::get('/costosDeProyectos/{idnodo}/{tipos_proyecto}/{estado_proyecto}/{fecha_inicio}/{fecha_fin}', 'CostoController@costosDeProyectos')->middleware('role_session:Dinamizador|Administrador');
+    Route::get('/costosDeProyectos/{idnodo}/{tipos_proyecto}/{estado_proyecto}/{fecha_inicio}/{fecha_fin}/{type}', 'CostoController@costosDeProyectos')->middleware('role_session:Dinamizador|Administrador');
   }
 );
 
