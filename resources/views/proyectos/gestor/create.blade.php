@@ -444,6 +444,8 @@
               confirmButtonText: 'Ok'
             })
           for (control in data.errors) {
+            $errores = "";
+            errores += '<br><b>'+ data.errors[control] + '</b></br>';
             $('#' + control + '-error').html(data.errors[control]);
             $('#' + control + '-error').show();
           }
