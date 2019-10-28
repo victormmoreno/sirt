@@ -387,6 +387,7 @@
         type: form.attr('method'),
         url: url,
         data: data,
+        dataType: 'json',
         cache: false,
         contentType: false,
         processData: false,

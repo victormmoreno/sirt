@@ -460,6 +460,7 @@
         type: form.attr('method'),
         url: url,
         data: data,
+        dataType: 'json',
         cache: false,
         contentType: false,
         processData: false,
@@ -468,18 +469,20 @@
           // $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
-              Swal.fire({
-                title: 'Registro Erróneo',
-                text: "Estas ingresando mal los datos!",
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok'
-              })
+            let errores = "";
             for (control in data.errors) {
+              errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
+            Swal.fire({
+              title: 'Advertencia!',
+              html: 'Estas ingresando mal los datos.' + errores,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
           }
           if (data.revisado_final == 'Por Evaluar') {
             Swal.fire({

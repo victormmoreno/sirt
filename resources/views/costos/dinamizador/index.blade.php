@@ -15,7 +15,8 @@
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                     <li class="tab col s3"><a class="active" href="#actividades">Actividades</a></li>
-                    <li class="tab col s3"><a class="" href="#proyectos">Proyectos</a></li>
+                    <li class="tab col s3"><a class="" href="#proyectos">Proyectos Cerrados</a></li>
+                    <li class="tab col s3"><a class="" href="#proyectos_ipe">Proyectos en Inicio, Planeación o Ejecución</a></li>
                   </ul>
                   <br>
                 </div>
@@ -91,6 +92,12 @@
                   <div class="row">
                     <div class="col s12 m5 l5">
                       <div class="row">
+                        <span>
+                          Aquí podrás consulta los costos de proyectos finalizados (En PF ó PMV), según el tipo de proyecto y entre fechas (estas fechas corresponden a
+                          las fechas de cierre de los proyectos)
+                        </span>
+                      </div>
+                      <div class="row">
                         <div class="input-field col s12 m6 l6">
                           <input type="text" id="txtfecha_inicio_costosProyectos" name="txtfecha_inicio_costosProyectos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
                           <label for="txtfecha_inicio_costosProyectos">Fecha Inicio</label>
@@ -123,7 +130,7 @@
                       <div class="divider"></div>
                       <div class="row">
                         <div class="center col s12 m12 l12">
-                          <button onclick="consultarCostosDeProyectos()" class="btn">Consultar</button>
+                          <button onclick="consultarCostosDeProyectos(0, 1)" class="btn">Consultar</button>
                         </div>
                       </div>
                     </div>
@@ -172,6 +179,104 @@
                           <div class="row card-panel">
                             <h5 class="center">
                               Para consultar los costos de proyectos, debes seleccionar por lo menos un tipo de proyeto, un cierre y fechas.
+                            </h5>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="proyectos_ipe">
+                  <div class="row">
+                    <div class="col s12 m5 l5">
+                      <div class="row">
+                        <span>
+                          Aquí podrás consulta los costos de proyectos en inicio, plaenación o ejecución según el tipo de proyecto y entre dos fechas (estas fechas corresponden a
+                          las fechas de inicio de los proyectos)
+                        </span>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12 m6 l6">
+                          <input type="text" id="txtfecha_inicio_costosProyectos_ipe" name="txtfecha_inicio_costosProyectos_ipe" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                          <label for="txtfecha_inicio_costosProyectos_ipe">Fecha Inicio</label>
+                        </div>
+                        <div class="input-field col s12 m6 l6">
+                          <input type="text" id="txtfecha_fin_costosProyectos_ipe" name="txtfecha_fin_costosProyectos_ipe" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                          <label for="txtfecha_fin_costosProyectos_ipe">Fecha Fin</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col s12 m6 l6">
+                          <h5>Tipos de Proyecto</h5>
+                          @foreach ($tipos_proyecto as $key => $value)
+                            <p class="p-v-xs">
+                              <input type="checkbox" name="tipoProyecto_ipe[]" id="tipoProyecto_ipe_{{ $value->id }}" value="{{ $value->nombre }}">
+                              <label for="tipoProyecto_ipe_{{ $value->id }}">{{ $value->nombre }}</label>
+                            </p>
+                          @endforeach
+                        </div>
+                        <div class="col s12 m6 l6">
+                          <h5>Estados de Proyecto</h5>
+                          @foreach ($estados_ipe as $key => $value)
+                            <p class="p-v-xs">
+                              <input type="radio" name="estado_ipe" id="estado_ipe_{{ $value->id }}" value="{{ $value->nombre }}">
+                              <label for="estado_ipe_{{ $value->id }}">{{ $value->nombre }}</label>
+                            </p>
+                          @endforeach
+                        </div>
+                      </div>
+                      <div class="divider"></div>
+                      <div class="row">
+                        <div class="center col s12 m12 l12">
+                          <button onclick="consultarCostosDeProyectos(0, 2)" class="btn">Consultar</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col s12 m7 l7">
+                      <div class="row">
+                        <ul class="collapsible">
+                          <li>
+                            <div class="collapsible-header blue-grey"><i class="material-icons">search</i>Ver mas información</div>
+                            <div class="collapsible-body">
+                              <div class="row">
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" name="txthoras_asesoria_proyectos_ipe" id="txthoras_asesoria_proyectos_ipe" disabled>
+                                  <label for="txthoras_asesoria_proyectos_ipe">Horas de Asesoria en Proyecto</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" name="txthoras_uso_proyectos_ipe" id="txthoras_uso_proyectos_ipe" disabled>
+                                  <label for="txthoras_uso_proyectos_ipe">Horas de Uso de Equipos en Proyecto</label>
+                                </div>
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" name="txtcosto_asesorias_proyectos_ipe" id="txtcosto_asesorias_proyectos_ipe" disabled>
+                                  <label for="txtcosto_asesorias_proyectos_ipe">Costo de Asesoría en Proyecto</label>
+                                </div>
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" name="txtcostos_equipos_proyectos_ipe" id="txtcostos_equipos_proyectos_ipe" disabled>
+                                  <label for="txtcostos_equipos_proyectos_ipe">Costo de Equipos en Proyecto</label>
+                                </div>
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" name="txtcostos_materiales_proyectos_ipe" id="txtcostos_materiales_proyectos_ipe" disabled>
+                                  <label for="txtcostos_materiales_proyectos_ipe">Costos de Materiales en Proyecto</label>
+                                </div>
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" name="txtcostos_administrativos_proyectos_ipe" id="txtcostos_administrativos_proyectos_ipe" disabled>
+                                  <label for="txtcostos_administrativos_proyectos_ipe">Costos Administrativos en Proyecto</label>
+                                </div>
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" name="txtcosto_total_proyectos_ipe" id="txtcosto_total_proyectos_ipe" disabled>
+                                  <label for="txtcosto_total_proyectos_ipe">Total Costos</label>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="row">
+                        <div id="costosDeProyectos_ipe_column" class="green lighten-3">
+                          <div class="row card-panel">
+                            <h5 class="center">
+                              Para consultar los costos de proyectos, debes seleccionar por lo menos un tipo de proyeto, un estado (inicio, planeación o ejecución) y dos fechas.
                             </h5>
                           </div>
                         </div>
