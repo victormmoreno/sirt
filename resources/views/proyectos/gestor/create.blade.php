@@ -428,6 +428,7 @@
       data: data,
       cache: false,
       contentType: false,
+      dataType: 'json',
       processData: false,
       success: function (data) {
         $('button[type="submit"]').removeAttr('disabled');
