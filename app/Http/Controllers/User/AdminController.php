@@ -154,8 +154,6 @@ class AdminController extends Controller
 
         $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
 
-        // $pdf->setEncryption($user->documento);
-
         return $pdf->stream("certificado  " . config('app.name') . $extennsion);
     }
 

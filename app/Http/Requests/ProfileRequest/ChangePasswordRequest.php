@@ -13,7 +13,7 @@ class ChangePasswordRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -23,15 +23,15 @@ class ChangePasswordRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'txtpassword'    => 'required|min:8|max:100|current_password',
-            'txtnewpassword' => ['required','confirmed','min:8','max:100', new StrongPassword],
+            'txtnewpassword' => ['required', 'confirmed', 'min:8', 'max:100', new StrongPassword],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'txtpassword.required'         => 'La contraseña es obligatoria.',
@@ -46,7 +46,7 @@ class ChangePasswordRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'txtpassword'    => 'contraseña',
@@ -59,7 +59,7 @@ class ChangePasswordRequest extends FormRequest
      *
      * @return array
      */
-    public function sanitize()
+    public function sanitize(): array
     {
         return $this->only('txtnewpassword');
     }
