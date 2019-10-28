@@ -195,11 +195,11 @@ class MaterialController extends Controller
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
 
         return view('materiales.create', [
-            'lineastecnologicas' => $lineastecnologicas,
+            'lineastecnologicas'   => $lineastecnologicas,
             'categoriasMateriales' => CategoriaMaterial::selectAllCategoriasMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'tiposmateriales'    => TipoMaterial::selectAllTiposMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'medidas'            => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'presentaciones'     => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'tiposmateriales'      => TipoMaterial::selectAllTiposMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
         ]);
 
     }
@@ -261,12 +261,12 @@ class MaterialController extends Controller
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
 
         return view('materiales.edit', [
-            'material'           => $materiales,
-            'lineastecnologicas' => $lineastecnologicas,
+            'material'             => $materiales,
+            'lineastecnologicas'   => $lineastecnologicas,
             'categoriasMateriales' => CategoriaMaterial::selectAllCategoriasMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'tiposmateriales'    => TipoMaterial::selectAllTiposMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'medidas'            => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'presentaciones'     => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'tiposmateriales'      => TipoMaterial::selectAllTiposMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
         ]);
 
     }

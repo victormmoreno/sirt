@@ -3757,56 +3757,52 @@ function verTalentosDeUnProyecto(id){
   });
 }
 
-// function consultarProyectosPendientesPorAprobacion() {
-//   // let id = 0;
-//   // if (bandera == 1) {
-//   //   id = $('#txtnodo_id').val();
-//   // }
-//
-//   $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
-//   $('#tblproyectosPendienteDeAprobacion').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     processing: true,
-//     serverSide: true,
-//     order: [ 0, 'desc' ],
-//     ajax:{
-//       url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
-//       type: "get",
-//     },
-//     columns: [
-//       {
-//         width: '15%',
-//         data: 'nombre_idea',
-//         name: 'nombre_idea',
-//       },
-//       {
-//         data: 'nombre_nodo',
-//         name: 'nombre_nodo',
-//       },
-//       {
-//         data: 'nombre_gestor',
-//         name: 'nombre_gestor',
-//       },
-//       {
-//         data: 'estado_aprobacion',
-//         name: 'estado_aprobacion',
-//       },
-//       {
-//         width: '8%',
-//         data: 'aprobar',
-//         name: 'aprobar',
-//         orderable: false
-//       },
-//     ],
-//   });
-//   // if (id === '') {
-//   //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
-//   // } else {
-//   //
-//   // }
-// }
+function consultarProyectosPendientesPorAprobacion() {
+  
+  $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
+  $('#tblproyectosPendienteDeAprobacion').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'nombre_idea',
+        name: 'nombre_idea',
+      },
+      {
+        data: 'nombre_nodo',
+        name: 'nombre_nodo',
+      },
+      {
+        data: 'nombre_gestor',
+        name: 'nombre_gestor',
+      },
+      {
+        data: 'estado_aprobacion',
+        name: 'estado_aprobacion',
+      },
+      {
+        width: '8%',
+        data: 'aprobar',
+        name: 'aprobar',
+        orderable: false
+      },
+    ],
+  });
+  // if (id === '') {
+  //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
+  // } else {
+  //
+  // }
+}
 
 
 // Ajax que muestra los proyectos de un gestor por año
