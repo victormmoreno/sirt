@@ -58,7 +58,7 @@
                     </div>
                 </a>
             </li>
-            @if(auth()->user()->unreadNotifications->isNotEmpty())
+            {{-- @if(auth()->user()->unreadNotifications->isNotEmpty())
             <li class="notification-drop-title">
                 <a href="{{route('notifications.index')}}" onclick="event.preventDefault(); document.getElementById('markasread-all-notifications').submit();">
                     <form action="{{route('notifications.markallnotificationsasread')}}" id="markasread-all-notifications" method="POST">
@@ -99,7 +99,7 @@
                     </form>
                 </a>
             </li>
-            @endif
+            @endif --}}
         </ul>
     </li>
 </ul>
