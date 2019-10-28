@@ -1297,7 +1297,6 @@
                         }
                         Swal.fire({
                           title: 'Registro Erróneo',
-                    
                           html: 'Estas ingresando mal los datos. ' + errores,
                           type: 'error',
                           showCancelButton: false,
@@ -1310,7 +1309,6 @@
                     if (data.fail == false && data.redirect_url == false) {
                         Swal.fire({
                             title: 'El uso de infraestructua no se ha registrado, por favor inténtalo de nuevo',
-                            
                             type: 'warning',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
