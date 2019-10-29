@@ -1268,8 +1268,8 @@
 
         //Enviar formulario
         $(document).on('submit', 'form#formUsoInfraestructuraCreate', function (event) {
-            $('button[type="submit"]').attr('disabled', 'disabled');
             event.preventDefault();
+            $('button[type="submit"]').attr('disabled', 'disabled');
             var form = $(this);
             let data = new FormData($(this)[0]);
 
@@ -1281,13 +1281,19 @@
                 data: data,
                 dataType: 'json',
                 cache: false,
+                dataType: 'json',
                 contentType: false,
                 processData: false,
                 success: function (data) {
                      
                     $('button[type="submit"]').removeAttr('disabled');
-
                     $('.error').hide();
+                    let errores = "";
+                    for (control in data.errors) {
+                        errores += '<br/><b>'+data.errors[control]+'</b>';
+                        $('#' + control + '-error').html(data.errors[control]);
+                        $('#' + control + '-error').show();
+                    }
                     if (data.fail) {
                         let errores = "";
                         for (control in data.errors) {
@@ -1297,13 +1303,12 @@
                         }
                         Swal.fire({
                           title: 'Registro Erróneo',
-                          html: 'Estas ingresando mal los datos. ' + errores,
+                          html: "Estas ingresando mal los datos. " + errores,
                           type: 'error',
                           showCancelButton: false,
                           confirmButtonColor: '#3085d6',
                           confirmButtonText: 'Ok'
                         });
-                        
                     }
 
                     if (data.fail == false && data.redirect_url == false) {
