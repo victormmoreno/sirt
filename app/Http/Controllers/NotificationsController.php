@@ -37,4 +37,17 @@ class NotificationsController extends Controller
 
         return back();
     }
+
+
+    // public function removeAllNotificationsUserAuth()
+    // {
+    //     $user = auth()->user()->notifications()->delete();
+    //     return back();
+    // }
+
+    // public function markAsReadAllNotificationsUserAuth()
+    // {
+    //    auth()->user()->unreadNotifications->markAsRead();
+    //    return back();
+    // }
 }

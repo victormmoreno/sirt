@@ -1279,6 +1279,7 @@
                 type: form.attr('method'),
                 url: url,
                 data: data,
+                dataType: 'json',
                 cache: false,
                 dataType: 'json',
                 contentType: false,
@@ -1294,6 +1295,12 @@
                         $('#' + control + '-error').show();
                     }
                     if (data.fail) {
+                        let errores = "";
+                        for (control in data.errors) {
+                            errores += '<br/><b>'+ data.errors[control]+'</b>';
+                            $('#' + control + '-error').html(data.errors[control]);
+                            $('#' + control + '-error').show();
+                        }
                         Swal.fire({
                           title: 'Registro Erróneo',
                           html: "Estas ingresando mal los datos. " + errores,
@@ -1302,7 +1309,6 @@
                           confirmButtonColor: '#3085d6',
                           confirmButtonText: 'Ok'
                         });
-                      
                     }
 
                     if (data.fail == false && data.redirect_url == false) {

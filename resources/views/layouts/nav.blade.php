@@ -262,7 +262,7 @@
                   <p>No tienes roles asignados</p>
                 @endforelse
             </select>
-            {{-- <small>Seleccione Su rol</small> --}}
+
           </div>
         </div>
       <li class="no-padding {{setActiveRoute('home')}}">
@@ -273,9 +273,6 @@
           Inicio
         </a>
       </li>
-
-
-
 
     @switch( \Session::get('login_role'))
     @case(App\User::IsInfocenter())

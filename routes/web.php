@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use App\Models\Nodo;
 use Illuminate\Support\Facades\Auth;
@@ -739,7 +739,15 @@ Route::patch('/notificaciones/{notification}', 'NotificationsController@read')
         ->middleware('disablepreventback');
 Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy')
         ->name('notifications.destroy')
-        ->middleware('disablepreventback');;
+        ->middleware('disablepreventback');
+
+// Route::delete('/notificaciones', 'NotificationsController@removeAllNotificationsUserAuth')
+//         ->name('notifications.removeallnotifications')
+//         ->middleware('disablepreventback');
+
+// Route::patch('/notificaciones', 'NotificationsController@markAsReadAllNotificationsUserAuth')
+//         ->name('notifications.markallnotificationsasread')
+//         ->middleware('disablepreventback');
 
 /*====================================================================
 =            rutas para las funcionalidades de las lineas            =

@@ -26,6 +26,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
     public function rules()
     {
         if (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+
             return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',
                 'txtlinea'                  => 'required',
@@ -53,12 +54,10 @@ class UsoInfraestructuraFormRequest extends FormRequest
 
                 'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
-
             ];
         } else {
             return ['no tienes permisos'];
         }
-
     }
 
     public function messages()
