@@ -26,7 +26,8 @@ class UsoInfraestructuraFormRequest extends FormRequest
     public function rules()
     {
         if (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
-             return [
+
+            return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',
                 'txtlinea'                  => 'required',
                 'asesoriadirecta'           => 'required|array',
@@ -40,22 +41,23 @@ class UsoInfraestructuraFormRequest extends FormRequest
 
                 'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
+
             ];
-        }else if (session()->has('login_role') && session()->get('login_role') == User::IsTalento()) {
-             return [
+        } else if (session()->has('login_role') && session()->get('login_role') == User::IsTalento()) {
+            return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',
                 'txtlinea'                  => 'required',
+
                 'txttipousoinfraestructura' => 'required',
                 'txtactividad'              => 'required',
                 'txtdescripcion'            => 'nullable|max:2000',
-                'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
-                'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
 
                 'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
             ];
+        } else {
+            return ['no tienes permisos'];
         }
-       
     }
 
     public function messages()
@@ -86,6 +88,9 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtcantidad.min'                    => 'La cantidad debe ser un valor numérico igual o mayor a 0.',
             'txtcantidad.max'                    => 'La cantidad debe ser un valor numérico igual o menor a 99.',
             'txtcantidad.between'                => 'La cantidad debe ser un valor numérico 0 y 99.9',
+
+            'asesoriadirecta.required'           => 'La asesoria directa es obligatoria.',
+            'asesoriaindirecta.required'         => 'La asesoria indirecta es obligatoria.',
         ];
     }
 }

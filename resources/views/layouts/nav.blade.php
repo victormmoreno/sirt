@@ -110,7 +110,83 @@
       </ul>
     </li>
   </ul>
-  @include('layouts.notifications')
+  <ul id="dropdown1" class="dropdown-content notifications-dropdown">
+    <li class="notificatoins-dropdown-container">
+        <ul>
+            <li class="notification-drop-title center">
+              <div class="center">
+                Notificaciones
+              </div>
+            </li>
+            
+            <li class="divider" tabindex="-1"></li>
+            
+              @forelse (Auth::user()->unreadNotifications as $notification)
+                <li>
+                  <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle {{ $notification->data['color'] }}">
+                        <i class="material-icons">{{ $notification->data["icon"] }}</i>
+                      </div>
+                      <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
+                        <span>{{$notification->created_at->diffForHumans()}}</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              @empty
+                  <li class="notification-drop-title">
+                    <div class="center">
+                       <i class="large material-icons  teal-text lighten-2 center ">
+                            notifications_off
+                        </i>
+                        <p class="center-align">No tienes notificationes</p> 
+                    </div>
+                  </li>
+              @endforelse
+              <li class="divider" tabindex="-1"></li>
+              <li class="notification-drop-title">
+                <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle cyan">
+                        <i class="material-icons">add_alert</i>
+                      </div>
+                      <div class="notification-text"><p> Ver más notificationes</p>
+                        
+                      </div>
+                    </div>
+                  </a>
+              </li>
+              {{-- <li class="notification-drop-title">
+                <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle cyan">
+                        <i class="material-icons">domain</i>
+                      </div>
+                      <div class="notification-text"><p>Marcar todo como leído </p>
+                         
+                      </div>
+                    </div>
+                  </a>
+              </li>
+              <li class="notification-drop-title">
+                <a href="{{route('notifications.index')}}">
+                    <div class="notification">
+                      <div class="notification-icon circle cyan">
+                        <i class="material-icons">domain</i>
+                      </div>
+                      <div class="notification-text"><p>Borrar todas las notificaciones </p>
+                         
+                      </div>
+                    </div>
+                  </a>
+              </li> --}}
+        </ul>
+    </li>
+    
+             
+</ul>
+
 </div>
 </nav>
 </header>
@@ -129,27 +205,16 @@
           <span>
             @guest
             @else
-              {{-- @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento())) --}}
               @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
-
-                {{ \NodoHelper::returnNodoUsuario() }}
-                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsAdministrador())->name}} Red Tecnoparque --}}
-                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsTalento())->name}} --}}
+                {{ \NodoHelper::returnNodoUsuario() }}  
               @else
                 @if (\Session::get('login_role') == App\User::IsTalento())
                   Talento de Tecnoparque
                 @else
                   Administrador de Tecnoparque
                 @endif
-                {{-- {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }} --}}
-                {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
+              
               @endif
-
-              {{-- @hasrole('Administrador')
-                  {{ auth()->user()->getRoleNames()-> }} Tecnoparques
-
-                  @endhasrol --}}
-
             <i class="material-icons right">
               arrow_drop_down
             </i>
@@ -197,7 +262,7 @@
                   <p>No tienes roles asignados</p>
                 @endforelse
             </select>
-            {{-- <small>Seleccione Su rol</small> --}}
+
           </div>
         </div>
       <li class="no-padding {{setActiveRoute('home')}}">
@@ -208,9 +273,6 @@
           Inicio
         </a>
       </li>
-
-
-
 
     @switch( \Session::get('login_role'))
     @case(App\User::IsInfocenter())

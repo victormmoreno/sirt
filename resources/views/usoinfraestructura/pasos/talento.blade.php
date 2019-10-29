@@ -32,7 +32,7 @@
                     
                 <div class="row">
                         <div class="input-field col s10 m8 l8">
-                            <select class="js-states browser-default select2" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
+                            <select class="js-states browser-default select2" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
 
                                 @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
                                     <option value="">
@@ -44,7 +44,7 @@
                                     </option>
                                     @endforeach
                                 @else
-                                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt())
+                                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()))
                                         <option value="">
                                             No se encontraron resultados
                                         </option>
