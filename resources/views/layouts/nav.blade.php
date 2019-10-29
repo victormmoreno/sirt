@@ -149,7 +149,7 @@
                 <a href="{{route('notifications.index')}}">
                     <div class="notification">
                       <div class="notification-icon circle cyan">
-                        <i class="material-icons">domain</i>
+                        <i class="material-icons">add_alert</i>
                       </div>
                       <div class="notification-text"><p> Ver más notificationes</p>
                         
@@ -157,7 +157,7 @@
                     </div>
                   </a>
               </li>
-              <li class="notification-drop-title">
+              {{-- <li class="notification-drop-title">
                 <a href="{{route('notifications.index')}}">
                     <div class="notification">
                       <div class="notification-icon circle cyan">
@@ -180,7 +180,7 @@
                       </div>
                     </div>
                   </a>
-              </li>
+              </li> --}}
         </ul>
     </li>
     
@@ -205,27 +205,16 @@
           <span>
             @guest
             @else
-              {{-- @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento())) --}}
               @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
-
-                {{ \NodoHelper::returnNodoUsuario() }}
-                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsAdministrador())->name}} Red Tecnoparque --}}
-                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsTalento())->name}} --}}
+                {{ \NodoHelper::returnNodoUsuario() }}  
               @else
                 @if (\Session::get('login_role') == App\User::IsTalento())
                   Talento de Tecnoparque
                 @else
                   Administrador de Tecnoparque
                 @endif
-                {{-- {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }} --}}
-                {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
+              
               @endif
-
-              {{-- @hasrole('Administrador')
-                  {{ auth()->user()->getRoleNames()-> }} Tecnoparques
-
-                  @endhasrol --}}
-
             <i class="material-icons right">
               arrow_drop_down
             </i>
