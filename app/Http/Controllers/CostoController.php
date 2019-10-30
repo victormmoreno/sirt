@@ -249,7 +249,7 @@ class CostoController extends Controller
   * @return double
   * @author dum
   */
-  private function calcularCostosTotales($equipos, $asesorias, $administrativos, $materiales)
+  public function calcularCostosTotales($equipos, $asesorias, $administrativos, $materiales)
   {
     $totales = 0;
     $totales = $equipos + $asesorias + $administrativos + $materiales;
@@ -263,7 +263,7 @@ class CostoController extends Controller
   * @return double
   * @author dum
   */
-  private function calcularCostosDeMateriales($datos)
+  public function calcularCostosDeMateriales($datos)
   {
     $materiales = 0;
 
@@ -282,7 +282,7 @@ class CostoController extends Controller
   * @return double
   * @author dum
   */
-  private function calcularCostosAdministrativos($datos)
+  public function calcularCostosAdministrativos($datos)
   {
     $administrativos = 0;
 
@@ -300,7 +300,7 @@ class CostoController extends Controller
   * @return double
   * @author dum
   */
-  private function calcularCostosDeEquipos($datos) {
+  public function calcularCostosDeEquipos($datos) {
     $equipos = 0;
     foreach ($datos as $key => $uso) {
       $equipos += $uso->usoequipos->sum('pivot.costo_equipo');
@@ -316,7 +316,7 @@ class CostoController extends Controller
   * @return double
   * @author dum
   */
-  private function calcularCostosDeAsesorias($datos)
+  public function calcularCostosDeAsesorias($datos)
   {
     $asesorias = 0;
     foreach ($datos as $key => $uso) {
