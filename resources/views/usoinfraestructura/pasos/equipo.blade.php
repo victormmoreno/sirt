@@ -34,7 +34,7 @@
                 <div class="input-field col s12 m4 l4">
 
                         @if(isset($usoinfraestructura->actividad->nodo->equipos))
-                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraUpdate.getEquipoPorLinea()">
+                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraUpdate.getEquipoPorLinea()" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}>
                                 <option value="">Seleccione Linea Tecnológica</option>
                                 @foreach($usoinfraestructura->actividad->nodo->lineas as $lineatecnologica)
                                     
@@ -57,7 +57,7 @@
                     </label>
                 </div>
                 <div class="input-field col s12 m4 l4">
-                    <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
+                    <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}>
                         @if(isset($usoinfraestructura->actividad->nodo->equipos))
                             <option value="">
                                 Seleccione el equipo
@@ -81,7 +81,7 @@
                 </div>
                 <div class="input-field col s12 m2 l2">
             
-                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1">
+                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}/>
                         <label for="txttiempouso">
                             Tiempo Uso (Horas)
                         </label>
@@ -90,9 +90,16 @@
                     </input>
                 </div>
                 <div class="input-field col s2 m2 l2">
-                    <a class="waves-effect waves-light btn blue m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">
-                        Agregar Equipo
-                    </a>
+                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()))
+                        <a class="waves-effect waves-light btn blue m-b-xs btnAgregarEquipo"  disabled>
+                            Agregar Equipo
+                        </a>
+                    @else
+                        <a class="waves-effect waves-light btn blue m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">
+                            Agregar Equipo
+                        </a>
+                    @endif
+                    
                 </div>
                 <table class="striped centered responsive-table" id="tbldetallelineas">
                     <thead>

@@ -849,3 +849,4 @@ Route::group([
 });
 
 /*=====  End of rutas para la documentación del proyecto  ======*/
+
