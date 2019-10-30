@@ -72,9 +72,9 @@ class ProyectoFormRequest extends FormRequest
       // Mensajes para el input txtsector_id
       'txtsector_id.required' => 'El Sector es obligatorio.',
       // Mensajes para el input txtareaconocimiento_id
-      'txtareaconocimiento_id.required' => 'La Área de Conocimiento es obligatoria.',
+      'txtareaconocimiento_id.required' => 'El Área de Conocimiento es obligatoria.',
       // Mensajes para el input txtestadoproyecto_id
-      'txtestadoproyecto_id.required' => 'El Estaodo del Proyecto es obligatorio.',
+      'txtestadoproyecto_id.required' => 'El Estado del Proyecto es obligatorio.',
       // Mensajes para el input txtnombre
       'txtnombre.required' => 'El Nombre del Proyecto es obligatorio.',
       'txtnombre.min' => 'El Nombre del Proyecto debe ser mínimo 4 carácteres.',

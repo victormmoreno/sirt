@@ -132,6 +132,22 @@ class ProyectoRepository
   }
 
   /**
+   * Consulta cantidades de proyectos
+   *
+   * @return Builder
+   * @author dum
+   */
+  public function consultarTotalProyectos()
+  {
+  return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
+  ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+  ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
+  ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+  ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+  ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id');
+  }
+
+  /**
    * Consulta la cantidad de proyectos por fecha de inicio y estados diferente a los de cierre
    * @param string $fecha_inicio Primera fecha para realizar el fitro
    * @param string $fecha_fin Segunda fecha para realizar el filtro

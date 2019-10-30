@@ -108,7 +108,8 @@ mix.scripts([
 		'resources/app/charla/index.js',
 		'resources/app/graficos/index.js',
 		'resources/app/seguimiento/index.js',
-		'resources/app/costos/index.js'
+		'resources/app/costos/index.js',
+		'resources/app/indicadores/index.js'
 	],'public/js/app2.js');
 
 
