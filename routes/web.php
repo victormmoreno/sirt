@@ -694,6 +694,42 @@ Route::group([
 );
 
 /**
+  * Route group para el módulo de indicadores
+  */
+  Route::group([
+    'prefix' => 'indicadores',
+    'middleware' => ['auth', 'role_session:Administrador|Dinamizador',]
+  ],
+  function () {
+    Route::get('/', 'IndicadorController@index')->name('indicadores');
+    Route::get('/totalProyectosInscritos/{idnodo}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalProyectosInscritos');
+    Route::get('/totalProyectosEnEjecucion/{id}', 'IndicadorController@totalProyectosEjecucion');
+    Route::get('/totalPFFfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPFFfinalizados');
+    Route::get('/totalInscritosSena/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalInscritosSena');
+    Route::get('/totalProyectosEnEjecucionSena/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionSena');
+    Route::get('/totalPFFSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFSena');
+    Route::get('/totalCostoPFFFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoSena');
+    Route::get('/totalInscritosEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalInscritosEmpresas');
+    Route::get('/totalProyectosEnEjecucionEmpresas/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmpresas');
+    Route::get('/totalPFFfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFfinalizadosConEmpresas');
+    Route::get('/totalCostoPFFFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmpresas');
+    Route::get('/totalTalentosConProyectosEnAsocioConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConProyectosEnAsocioConEmpresas');
+    Route::get('/totalProyectosInscritosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectosInscritosEmprendedoresInvetoresOtro');
+    Route::get('/totalPFFFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFFinalizadosEmprendedoresInvetoresOtro');
+    Route::get('/totalProyectosEnEjecucionEmprendedoresInventoresOtros/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmprendedoresInventoresOtros');
+    Route::get('/totalCostoPFFFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmprendedoresOtros');
+    Route::get('/totalPMVfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPMVfinalizados');
+    Route::get('/totalPMVSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVSena');
+    Route::get('/totalCostoPMVFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoSena');
+    Route::get('/totalPMVfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVfinalizadosConEmpresas');
+    Route::get('/totalCostoPMVFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmpresas');
+    Route::get('/totalPMVFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVFinalizadosEmprendedoresInvetoresOtro');
+    Route::get('/totalCostoPMVFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmprendedoresOtros');
+  }
+);
+
+
+/**
 * Route group para el módulo de costos
 */
 Route::group([
