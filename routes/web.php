@@ -725,6 +725,12 @@ Route::group([
     Route::get('/totalCostoPMVFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmpresas');
     Route::get('/totalPMVFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVFinalizadosEmprendedoresInvetoresOtro');
     Route::get('/totalCostoPMVFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmprendedoresOtros');
+    Route::get('/totalProyectoConGruposInternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternos');
+    Route::get('/totalProyectoConGruposInternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternosFinalizados');
+    Route::get('/totalProyectoConGruposExternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternos');
+    Route::get('/totalProyectoConGruposExternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternosFinalizados');
+    Route::get('/totalTalentosConApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConApoyoYProyectosAsociados');
+    Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
   }
 );
 
@@ -849,4 +855,3 @@ Route::group([
 });
 
 /*=====  End of rutas para la documentación del proyecto  ======*/
-

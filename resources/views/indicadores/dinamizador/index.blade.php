@@ -223,7 +223,7 @@
                           <div class="collapsible-body">
                             <div class="row">
                               <p>
-                                Aquí podrás consultar el costo total de los PFF finalizados.
+                                Aquí podrás consultar el costo total de los PFF finalizados con SENA.
                                 <br>
                                 Para consultar el costo total de PFF finalizados con SENA (aprendiz, instructor), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
                               </p>
@@ -411,10 +411,6 @@
                             </div>
                           </div>
                         </li>
-                      </ul>
-                    </div>
-                    <div class="col s12 m6 l6">
-                      <ul class="collapsible">
                         <li id="indicador13">
                           <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos inscritos con emprendedores y otros.</div>
                           <div class="collapsible-body">
@@ -506,6 +502,10 @@
                             </div>
                           </div>
                         </li>
+                      </ul>
+                    </div>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
                         <li id="indicador16">
                           <div class="collapsible-header"><i class="material-icons">library_books</i>Valor total de costos estimados de los PFF finalizados con emprendedores y otros.</div>
                           <div class="collapsible-body">
@@ -541,7 +541,7 @@
                           </div>
                         </li>
                         <li id="indicador17">
-                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número total de PFF finalizados.</div>
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número total de PMV finalizados.</div>
                           <div class="collapsible-body">
                             <div class="row">
                               <p>
@@ -773,6 +773,210 @@
                                 <div class="input-field col s12 m12 l12">
                                   <input type="text" id="txt_total_ind23" name="txt_total_ind23" value="" disabled>
                                   <label for="txt_total_ind23" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador24">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Internos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación internos (SENA).
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación internos (SENA), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind24" name="txtfecha_inicio_ind24" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind24">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind24" name="txtfecha_fin_ind24" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind24">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposInternos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind24" name="txt_total_ind24" value="" disabled>
+                                  <label for="txt_total_ind24" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador25">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Internos finalizados.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación internos (SENA) finalizados.
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación internos (SENA) finalizados, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind25" name="txtfecha_inicio_ind25" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind25">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind25" name="txtfecha_fin_ind25" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind25">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposInternosFinalizados_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind25" name="txt_total_ind25" value="" disabled>
+                                  <label for="txt_total_ind25" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador26">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Externos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación externos.
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación externos, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind26" name="txtfecha_inicio_ind26" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind26">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind26" name="txtfecha_fin_ind26" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind26">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposExternos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind26" name="txt_total_ind26" value="" disabled>
+                                  <label for="txt_total_ind26" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador27">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Externos finalizados.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación externos finalizados.
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación externos finalizados, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind27" name="txtfecha_inicio_ind27" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind27">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind27" name="txtfecha_fin_ind27" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind27">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposExternosFinalizados_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind27" name="txt_total_ind27" value="" disabled>
+                                  <label for="txt_total_ind27" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador28">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de Aprendices articulados con proyectos del Nodo y CON Apoyo de Sostenimiento activos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de aprendices articulacion con proyectos y con apoyo de sostenimiento.
+                                <br>
+                                Para consultar el número de aprendices articulacion con proyectos y con apoyo de sostenimiento, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind28" name="txtfecha_inicio_ind28" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind28">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind28" name="txtfecha_fin_ind28" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind28">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTalentosConApoyoYProyectos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind28" name="txt_total_ind28" value="" disabled>
+                                  <label for="txt_total_ind28" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador29">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de Aprendices articulados con proyectos del Nodo y SIN Apoyo de Sostenimiento activos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de aprendices articulacion con proyectos y sin apoyo de sostenimiento.
+                                <br>
+                                Para consultar el número de aprendices articulacion con proyectos y sin apoyo de sostenimiento, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind29" name="txtfecha_inicio_ind29" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind29">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind29" name="txtfecha_fin_ind29" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind29">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTalentosSinApoyoYProyectos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind29" name="txt_total_ind29" value="" disabled>
+                                  <label for="txt_total_ind29" class="active">Total</label>
                                 </div>
                               </div>
                             </div>

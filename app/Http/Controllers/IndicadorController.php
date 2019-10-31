@@ -44,6 +44,140 @@ class IndicadorController extends Controller
 
   }
 
+
+  /**
+  * Retorna la cantidad total de talentos con proyectos del nodo y sin apoyo de sostenimiento
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  */
+  public function totalTalentosSinApoyoYProyectosAsociados(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->select(DB::raw('talentos.id'))
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
+    ->where('nodos.id', $idnodo)
+    ->where('perfiles.nombre', 'Aprendiz SENA sin apoyo de sostenimiento')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->groupBy('talentos.id')
+    ->get()
+    ->count();
+    return response()->json($total);
+  }
+
+
+  /**
+  * Retorna la cantidad total de talentos con proyectos del nodo y con apoyo de sostenimiento
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  */
+  public function totalTalentosConApoyoYProyectosAsociados(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->select(DB::raw('talentos.id'))
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
+    ->where('nodos.id', $idnodo)
+    ->where('perfiles.nombre', 'Aprendiz SENA con apoyo de sostenimiento')
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->groupBy('talentos.id')
+    ->get()
+    ->count();
+    return response()->json($total);
+  }
+
+  /**
+  * Retorna la cantidad de proyectos inscritos con grupos de investigación externos finalizados
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  * @author dum
+  */
+  public function totalProyectoConGruposExternosFinalizados(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros Externos')
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+  * Retorna la cantidad de proyectos inscritos con grupos de investigación externos
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  * @author dum
+  */
+  public function totalProyectoConGruposExternos(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros Externos')
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+  * Retorna la cantidad de proyectos inscritos con grupos de investigación internos finalizados
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  * @author dum
+  */
+  public function totalProyectoConGruposInternosFinalizados(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros del SENA')
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+  * Retorna la cantidad de proyectos inscritos con grupos de investigación internos
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  * @author dum
+  */
+  public function totalProyectoConGruposInternos(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros del SENA')
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
   /**
    * Retorna el costos total de proyectos con cierre PF con Emprendedores u Otros
    *
