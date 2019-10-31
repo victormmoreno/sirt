@@ -91,9 +91,6 @@
                             <p>
                                 Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el gestor asesor.
                             </p>
-                            <p>
-                                Aún no tienes articulaciones en fase de inicio o en fase de ejecución. Por favor consulta con el gestor asesor.
-                            </p>
                             @endif
                         </div>
                         @endif

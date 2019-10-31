@@ -31,8 +31,6 @@
                 </span>
               @endif
             @endif
-
-
           </a>
         </li>
         <li>             
@@ -149,38 +147,15 @@
                 <a href="{{route('notifications.index')}}">
                     <div class="notification">
                       <div class="notification-icon circle cyan">
-                        <i class="material-icons">domain</i>
+                        <i class="material-icons">add_alert</i>
                       </div>
-                      <div class="notification-text"><p> Ver más notificationes</p>
-                        
-                      </div>
-                    </div>
-                  </a>
-              </li>
-              <li class="notification-drop-title">
-                <a href="{{route('notifications.index')}}">
-                    <div class="notification">
-                      <div class="notification-icon circle cyan">
-                        <i class="material-icons">domain</i>
-                      </div>
-                      <div class="notification-text"><p>Marcar todo como leído </p>
-                         
+                      <div class="notification-text">
+                        <p> Ver más notificationes</p>
                       </div>
                     </div>
                   </a>
               </li>
-              <li class="notification-drop-title">
-                <a href="{{route('notifications.index')}}">
-                    <div class="notification">
-                      <div class="notification-icon circle cyan">
-                        <i class="material-icons">domain</i>
-                      </div>
-                      <div class="notification-text"><p>Borrar todas las notificaciones </p>
-                         
-                      </div>
-                    </div>
-                  </a>
-              </li>
+
         </ul>
     </li>
     
