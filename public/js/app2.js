@@ -68,31 +68,23 @@ $(document).ready(function() {
         "responsive": true,
         "bSort": false,
         dom: 'Bfrtip',
-        buttons: [
-        
-        {
+        buttons: [{
             extend: 'csv',
             text: 'exportar csv',
             exportOptions: {
                 columns: ':visible'
             }
-        },
-        {
+        }, {
             extend: 'excel',
-        
             exportOptions: {
                 columns: ':visible'
             }
-        },
-        {
+        }, {
             extend: 'pdf',
-        
             exportOptions: {
                 columns: ':visible'
             }
-        },
-        
-    ],
+        }, ],
         ajax: {
             url: "/nodo",
         },
@@ -116,9 +108,58 @@ $(document).ready(function() {
             data: 'edit',
             name: 'edit',
             orderable: false
-        }, ],
+        }, 
+        // {
+        //     width: '8%',
+        //     data: 'delete',
+        //     name: 'delete',
+        //     orderable: false
+        // }, 
+        ],
     });
 });
+
+// function eliminarNodoPorId(id, e) {
+//     Swal.fire({
+//         title: '¿Desea eliminar el nodo?',
+//         text: "Al hacer esto, todo lo relacionado con este proyecto será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+//         type: 'warning',
+//         showCancelButton: true,
+//         confirmButtonColor: '#d33',
+//         cancelButtonColor: '#3085d6',
+//         cancelButtonText: 'No',
+//         confirmButtonText: 'Sí, eliminar!'
+//     }).then((result) => {
+//         if (result.value) {
+//             eliminarNodoId_moment(id);
+//         }
+//     })
+// };
+
+// function eliminarNodoId_moment(id) {
+    
+//     $.ajax({
+//         dataType: "JSON",
+//         type: 'POST',
+//         data: {
+//             '_token': $('meta[name=csrf-token]').attr("content"),
+//             '_method': 'DELETE',
+//             "id": id
+//         },
+//         success: function(data) {
+//             console.log(data);
+//             // if (data.retorno) {
+//             //     Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
+//             //     location.href = '/nodo';
+//             // } else {
+//             //     Swal.fire('Eliminación Errónea!', 'El proyecto no se ha eliminado!', 'error');
+//             // }
+//         },
+//         error: function(xhr, textStatus, errorThrown) {
+//             alert("Error: " + errorThrown);
+//         },
+//     });
+// }
 $(document).ready(function() {
 
   $('#ideas_emprendedores_table').DataTable({
