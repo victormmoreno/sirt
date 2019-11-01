@@ -326,3 +326,174 @@ function consultarTalentosSinApoyoYProyectos_total(bandera) {
   let input = 'txt_total_ind29';
   dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
 }
+
+// Indicador 30
+function consultarAsesoriasIDiEmp_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind30').val();
+  let fecha_fin = $('#txtfecha_fin_ind30').val();
+  let url = '/indicadores/totalAsesoriasIDiEmpresasYEmprendedores/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind30';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 31
+function consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind31').val();
+  let fecha_fin = $('#txtfecha_fin_ind31').val();
+  let url = '/indicadores/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind31';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 32
+function consultarAsesoriasIDiEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind32').val();
+  let fecha_fin = $('#txtfecha_fin_ind32').val();
+  let url = '/indicadores/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind32';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 33
+function consultarVigilanciaEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Vigilancia Tecnológica.';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind33').val();
+  let fecha_fin = $('#txtfecha_fin_ind33').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind33';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 34
+function consultarAnalisisEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Análisis de Prospectiva.';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind34').val();
+  let fecha_fin = $('#txtfecha_fin_ind34').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind34';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 35
+function consultarReestructuracionEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Reestructuración y diseño de planta.';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind35').val();
+  let fecha_fin = $('#txtfecha_fin_ind35').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind35';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 36
+function consultarEstrategiasPosicionamientoEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Estrategias de creación y posicionamiento de marca.';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind36').val();
+  let fecha_fin = $('#txtfecha_fin_ind36').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind36';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 37
+function consultarPropiedadIntelectualEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Acompañamiento y gestión en el desarrollo de productos de propiedad intelectual';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind37').val();
+  let fecha_fin = $('#txtfecha_fin_ind37').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind37';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 38
+function consultarFormulacionProyectosEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Formular proyectos I+D+i para convocatorias.';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind38').val();
+  let fecha_fin = $('#txtfecha_fin_ind38').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind38';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 39
+function consultarAsesoriaEmpresasEmprendedoresFinalizadas_total(bandera) {
+  let tipo_articulacion_nombre = 'Asesoría a empresa o emprendedor.';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind39').val();
+  let fecha_fin = $('#txtfecha_fin_ind39').val();
+  let url = '/indicadores/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo_articulacion_nombre;
+  let input = 'txt_total_ind39';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 40
+function consultarEdts_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind40').val();
+  let fecha_fin = $('#txtfecha_fin_ind40').val();
+  let url = '/indicadores/totalEdts/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind40';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 41
+function consultarTotalPersonasEnEdts_total(bandera) {
+  let campos = 'empleados+instructores+aprendices+publico';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind41').val();
+  let fecha_fin = $('#txtfecha_fin_ind41').val();
+  let url = '/indicadores/totalAtendidosEnEdts/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+campos;
+  let input = 'txt_total_ind41';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 42
+function consultarTotalPersonasSenaEnEdts_total(bandera) {
+  let campos = 'instructores+aprendices';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind42').val();
+  let fecha_fin = $('#txtfecha_fin_ind42').val();
+  let url = '/indicadores/totalAtendidosEnEdts/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+campos;
+  let input = 'txt_total_ind42';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 43
+function consultarTotalPersonasEmpleadosEnEdts_total(bandera) {
+  let campos = 'empleados';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind43').val();
+  let fecha_fin = $('#txtfecha_fin_ind43').val();
+  let url = '/indicadores/totalAtendidosEnEdts/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+campos;
+  let input = 'txt_total_ind43';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 44
+function consultarTotalPublicoGeneralEnEdts_total(bandera) {
+  let campos = 'publico';
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind44').val();
+  let fecha_fin = $('#txtfecha_fin_ind44').val();
+  let url = '/indicadores/totalAtendidosEnEdts/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+campos;
+  let input = 'txt_total_ind44';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 45
+function consultarTotalTalentosEnProyecto_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind45').val();
+  let fecha_fin = $('#txtfecha_fin_ind45').val();
+  let url = '/indicadores/totalTalentosEnProyecto/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind45';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}

@@ -3,6 +3,7 @@
 namespace App\Repositories\Repository\UserRepository;
 
 use App\User;
+use App\Models\Talento;
 
 class TalentoRepository
 {
@@ -54,6 +55,24 @@ class TalentoRepository
 			});
 		})
 		->orderBy('nombres');
+	}
+
+	/**
+	 * Consulta los talentos
+	 *
+	 * @return Builder
+	 * @author dum
+	 */
+	public function totalTalentosEnProyectos()
+	{
+		return Talento::select('talentos.id')
+		->join('users', 'users.id', '=', 'talentos.user_id')
+		->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
+		->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id')
+		->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+		->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+		->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+		->groupBy('talentos.id');
 	}
 
 }

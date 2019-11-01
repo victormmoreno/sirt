@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, DB};
-use App\Repositories\Repository\{ProyectoRepository, ActividadRepository};
+use App\Repositories\Repository\{ProyectoRepository, ActividadRepository, ArticulacionRepository, EdtRepository, UserRepository\TalentoRepository};
 use App\User;
 
 class IndicadorController extends Controller
@@ -23,10 +23,41 @@ class IndicadorController extends Controller
    */
   private $costoController;
 
-  public function __construct(ProyectoRepository $proyectoRepository, CostoController $costoController, ActividadRepository $actividadRepository) {
+  /**
+   * ActividadRepository
+   *
+   * @var ActividadRepository
+   */
+  private $actividadRepository;
+
+  /**
+   * ArticulacionRepository
+   *
+   * @var ArticulacionRepository
+   */
+  private $articulacionRepository;
+
+  /**
+   * EdtRepository
+   *
+   * @var EdtRepository
+   */
+  private $edtRepository;
+
+  /**
+   * UserRepository
+   *
+   * @var TalentoRepository
+   */
+  private $talentoRepository;
+
+  public function __construct(ProyectoRepository $proyectoRepository, CostoController $costoController, ActividadRepository $actividadRepository, ArticulacionRepository $articulacionRepository, EdtRepository $edtRepository, TalentoRepository $talentoRepository) {
     $this->setProyectoRepository($proyectoRepository);
     $this->setCostoController($costoController);
     $this->setActividadRepository($actividadRepository);
+    $this->setArticulacionRepository($articulacionRepository);
+    $this->setEdtRepository($edtRepository);
+    $this->setTalentoRepository($talentoRepository);
   }
   /**
    * Index para los indicadores
@@ -42,6 +73,152 @@ class IndicadorController extends Controller
       abort('403');
     }
 
+  }
+
+  /**
+   * Retorna el total de talentos en proyecto
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalTalentosEnProyecto(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getTalentoRepository()->totalTalentosEnProyectos()
+    ->where('nodos.id', $idnodo)
+    ->where(function($q) use ($fecha_inicio, $fecha_fin) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+      });
+    })
+    ->dd()
+    ->count();
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de personas atendidas en edts
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @param string $campos_suma CAmpos que se van a sumar
+   * @return Resposne
+   * @author dum
+   */
+  public function totalAtendidosEnEdts(int $idnodo, string $fecha_inicio, string $fecha_fin, string $campos_suma)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->select(DB::raw('sum('.$campos_suma.') AS total'))->where('nodos.id', $idnodo)->first()->total;
+    // $total = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->select(DB::raw('sum(empleados+instructores+aprendices+publico) AS total'))->where('nodos.id', $idnodo)->first()->total;
+    return response()->json($total == null ? 0 : $total);
+  }
+
+  /**
+   * Retorna el total de edts
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalEdts(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de asesorias I+D+i con empresas y emprendedores finalizadas según el tipo de articulación
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @param string $nombre_tipo_articulacion Nombre del tipo de articulación por el cuál se va a filtrar
+   * @return Resposne
+   * @author dum
+   */
+  public function totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas(int $idnodo, string $fecha_inicio, string $fecha_fin, string $nombre_tipo_articulacion)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getArticulacionRepository()->consultarTotalDeArticulacionesEmpresasEmprendedores()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulaciones.nombre', $nombre_tipo_articulacion)
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de asesorias I+D+i con empresas y emprendedores finalizadas
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalAsesoriasIDiEmpresasEmprendedoresFinalizadas(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getArticulacionRepository()->consultarTotalDeArticulacionesEmpresasEmprendedores()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de asesorias I+D+i con empresas y emprendedores en ejecución (que hayan cerrado o iniciado entre las fechas)
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getArticulacionRepository()->consultarTotalDeArticulacionesEmpresasEmprendedores()
+    ->where('nodos.id', $idnodo)
+    ->where(function($q) use ($fecha_inicio, $fecha_fin) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+      });
+    })
+    ->first()
+    ->cantidad;
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de asesorias I+D+i con empresas y emprendedores inscritas
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalAsesoriasIDiEmpresasYEmprendedores(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getArticulacionRepository()->consultarTotalDeArticulacionesEmpresasEmprendedores()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->first()->cantidad;
+    return response()->json($total);
   }
 
 
@@ -828,4 +1005,73 @@ class IndicadorController extends Controller
   {
     return $this->actividadRepository;
   }
+
+  /**
+   * Asigna un valor a $articulacionRepository
+   *
+   * @param ArticulacionRepository $articulacionRepository
+   * @return void
+   * @author dum
+   */
+  private function setArticulacionRepository(ArticulacionRepository $articulacionRepository)
+  {
+    $this->articulacionRepository = $articulacionRepository;
+  }
+
+  /**
+   * Retorna el valor de $articulacionRepository
+   *
+   * @return ArticulacionRepository
+   * @author dum
+   */
+  private function getArticulacionRepository()
+  {
+    return $this->articulacionRepository;
+  }
+
+  /**
+   * Asigna un valor a $edtRepository
+   *
+   * @param EdtRepository $edtRepository
+   * @return void
+   * @author dum
+   */
+  private function setEdtRepository(EdtRepository $edtRepository)
+  {
+    $this->edtRepository = $edtRepository;
+  }
+
+  /**
+   * Retorna el valor de $edtRepository
+   * @return EdtRepository
+   * @author dum
+   */
+  private function getEdtRepository()
+  {
+    return $this->edtRepository;
+  }
+
+  /**
+   * Asigna un valor a $talentoRepository
+   *
+   * @param TalentoRepository $talentoRepository
+   * @return void
+   * @author dum
+   */
+  private function setTalentoRepository(TalentoRepository $talentoRepository)
+  {
+    $this->talentoRepository = $talentoRepository;
+  }
+
+  /**
+   * Retorna el valor de $talentoRepository
+   *
+   * @return TalentoRepository
+   * @author dum
+   */
+  private function getTalentoRepository()
+  {
+    return $this->talentoRepository;
+  }
+
 }

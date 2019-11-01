@@ -702,6 +702,7 @@ Route::group([
   ],
   function () {
     Route::get('/', 'IndicadorController@index')->name('indicadores');
+    // Relacionado a proyectos
     Route::get('/totalProyectosInscritos/{idnodo}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalProyectosInscritos');
     Route::get('/totalProyectosEnEjecucion/{id}', 'IndicadorController@totalProyectosEjecucion');
     Route::get('/totalPFFfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPFFfinalizados');
@@ -731,6 +732,16 @@ Route::group([
     Route::get('/totalProyectoConGruposExternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternosFinalizados');
     Route::get('/totalTalentosConApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConApoyoYProyectosAsociados');
     Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
+    // Relacionado a articulaciones
+    Route::get('/totalAsesoriasIDiEmpresasYEmprendedores/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasYEmprendedores');
+    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
+    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresFinalizadas');
+    Route::get('/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}/{nombre_tipo_articulacion}', 'IndicadorController@totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas');
+    // Relacionado a edts
+    Route::get('/totalEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalEdts');
+    Route::get('/totalAtendidosEnEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}/{campos}', 'IndicadorController@totalAtendidosEnEdts');
+    // Relacionado a talento
+    Route::get('/totalTalentosEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEnProyecto');
   }
 );
 
