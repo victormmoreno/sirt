@@ -27,8 +27,9 @@
                   <div class="row">
                     <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                       <li class="tab col s3"><a class="active" href="#indicadores_proyectos">Proyectos</a></li>
-                      <li class="tab col s3"><a class="" href="#indicadores_articulaciones">Articulaciones</a></li>
-                      {{-- <li class="tab col s3"><a class="" href="#proyectos_ipe">Proyectos en Inicio, Planeación o Ejecución</a></li> --}}
+                      <li class="tab col s3"><a class="" href="#indicadores_articulaciones">Articulaciones con empresas y emprendedores</a></li>
+                      <li class="tab col s3"><a class="" href="#indicadores_edts">EDT's</a></li>
+                      <li class="tab col s3"><a class="" href="#indicadores_talentos">Talentos</a></li>
                     </ul>
                     <br>
                   </div>
@@ -223,7 +224,7 @@
                           <div class="collapsible-body">
                             <div class="row">
                               <p>
-                                Aquí podrás consultar el costo total de los PFF finalizados.
+                                Aquí podrás consultar el costo total de los PFF finalizados con SENA.
                                 <br>
                                 Para consultar el costo total de PFF finalizados con SENA (aprendiz, instructor), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
                               </p>
@@ -411,10 +412,6 @@
                             </div>
                           </div>
                         </li>
-                      </ul>
-                    </div>
-                    <div class="col s12 m6 l6">
-                      <ul class="collapsible">
                         <li id="indicador13">
                           <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos inscritos con emprendedores y otros.</div>
                           <div class="collapsible-body">
@@ -506,6 +503,10 @@
                             </div>
                           </div>
                         </li>
+                      </ul>
+                    </div>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
                         <li id="indicador16">
                           <div class="collapsible-header"><i class="material-icons">library_books</i>Valor total de costos estimados de los PFF finalizados con emprendedores y otros.</div>
                           <div class="collapsible-body">
@@ -541,7 +542,7 @@
                           </div>
                         </li>
                         <li id="indicador17">
-                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número total de PFF finalizados.</div>
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número total de PMV finalizados.</div>
                           <div class="collapsible-body">
                             <div class="row">
                               <p>
@@ -778,11 +779,888 @@
                             </div>
                           </div>
                         </li>
+                        <li id="indicador24">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Internos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación internos (SENA).
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación internos (SENA), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind24" name="txtfecha_inicio_ind24" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind24">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind24" name="txtfecha_fin_ind24" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind24">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposInternos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind24" name="txt_total_ind24" value="" disabled>
+                                  <label for="txt_total_ind24" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador25">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Internos finalizados.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación internos (SENA) finalizados.
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación internos (SENA) finalizados, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind25" name="txtfecha_inicio_ind25" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind25">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind25" name="txtfecha_fin_ind25" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind25">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposInternosFinalizados_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind25" name="txt_total_ind25" value="" disabled>
+                                  <label for="txt_total_ind25" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador26">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Externos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación externos.
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación externos, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind26" name="txtfecha_inicio_ind26" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind26">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind26" name="txtfecha_fin_ind26" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind26">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposExternos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind26" name="txt_total_ind26" value="" disabled>
+                                  <label for="txt_total_ind26" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador27">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de proyectos articulados con Grupos de Investigación Externos finalizados.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de proyectos articulados con grupo de investigación externos finalizados.
+                                <br>
+                                Para consultar el número de proyectos articulados con grupo de investigación externos finalizados, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind27" name="txtfecha_inicio_ind27" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind27">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind27" name="txtfecha_fin_ind27" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind27">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarProyectoConGruposExternosFinalizados_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind27" name="txt_total_ind27" value="" disabled>
+                                  <label for="txt_total_ind27" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador28">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de Aprendices articulados con proyectos del Nodo y CON Apoyo de Sostenimiento activos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de aprendices articulacion con proyectos y con apoyo de sostenimiento.
+                                <br>
+                                Para consultar el número de aprendices articulacion con proyectos y con apoyo de sostenimiento, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind28" name="txtfecha_inicio_ind28" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind28">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind28" name="txtfecha_fin_ind28" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind28">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTalentosConApoyoYProyectos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind28" name="txt_total_ind28" value="" disabled>
+                                  <label for="txt_total_ind28" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador29">
+                          <div class="collapsible-header"><i class="material-icons">library_books</i>Número de Aprendices articulados con proyectos del Nodo y SIN Apoyo de Sostenimiento activos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de aprendices articulacion con proyectos y sin apoyo de sostenimiento.
+                                <br>
+                                Para consultar el número de aprendices articulacion con proyectos y sin apoyo de sostenimiento, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind29" name="txtfecha_inicio_ind29" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind29">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind29" name="txtfecha_fin_ind29" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind29">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTalentosSinApoyoYProyectos_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind29" name="txt_total_ind29" value="" disabled>
+                                  <label for="txt_total_ind29" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
                       </ul>
                     </div>
                   </div>
                   <div id="indicadores_articulaciones" class="row">
-                    <p>Something</p>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador30">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Asesoría I+D+i inscritas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de asesorías I+D+i inscritas con empresas y emprendedores.
+                                <br>
+                                Para consultar el número de asesorías I+D+i inscritas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind30" name="txtfecha_inicio_ind30" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind30">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind30" name="txtfecha_fin_ind30" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind30">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarAsesoriasIDiEmp_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind30" name="txt_total_ind30" value="" disabled>
+                                  <label for="txt_total_ind30" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador31">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Asesoría I+D+i en ejecución con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de asesorías I+D+i con empresas y emprendedores (Articulaciones con empresas y emprendedores) en ejecución.
+                                <br>
+                                Para consultar el total de asesorías I+D+i con empresas y emprendedores en ejecución, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind31" name="txtfecha_inicio_ind31" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind31">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind31" name="txtfecha_fin_ind31" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind31">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind31" name="txt_total_ind31" value="" disabled>
+                                  <label for="txt_total_ind31" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador32">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Asesoría I+D+i finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de asesorías I+D+i con empresas y emprendedores (Articulaciones con empresas y emprendedores) finalizadas.
+                                <br>
+                                Para consultar el total de asesorías I+D+i con empresas y emprendedores finalizadas, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind32" name="txtfecha_inicio_ind32" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind32">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind32" name="txtfecha_fin_ind32" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind32">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind32" name="txt_total_ind32" value="" disabled>
+                                  <label for="txt_total_ind32" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador33">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Vigilancías Tecnológicas finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de vigilancías tecnológicas finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de vigilancías tecnológicas finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind33" name="txtfecha_inicio_ind33" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind33">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind33" name="txtfecha_fin_ind33" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind33">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarVigilanciaEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind33" name="txt_total_ind33" value="" disabled>
+                                  <label for="txt_total_ind33" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador34">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Análisis de Prospectiva finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de análisis de prospectiva finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de análisis de prospectiva finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind34" name="txtfecha_inicio_ind34" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind34">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind34" name="txtfecha_fin_ind34" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind34">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarAnalisisEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind34" name="txt_total_ind34" value="" disabled>
+                                  <label for="txt_total_ind34" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador35">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Reestructuración y diseño de planta finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de reestructuración y diseño de planta finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de reestructuración y diseño de planta finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind35" name="txtfecha_inicio_ind35" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind35">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind35" name="txtfecha_fin_ind35" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind35">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarReestructuracionEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind35" name="txt_total_ind35" value="" disabled>
+                                  <label for="txt_total_ind35" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador36">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Estrategias de creación y posicionamiento de marca finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de estrategias de creación y posicionamiento de marca finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de estrategias de creación y posicionamiento de marca finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind36" name="txtfecha_inicio_ind36" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind36">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind36" name="txtfecha_fin_ind36" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind36">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarEstrategiasPosicionamientoEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind36" name="txt_total_ind36" value="" disabled>
+                                  <label for="txt_total_ind36" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador37">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Acompañamiento y gestión en el desarrollo de productos de propiedad intelectual finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de acompañamiento y gestión en el desarrollo de productos de propiedad intelectual finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de acompañamiento y gestión en el desarrollo de productos de propiedad intelectual finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind37" name="txtfecha_inicio_ind37" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind37">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind37" name="txtfecha_fin_ind37" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind37">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarPropiedadIntelectualEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind37" name="txt_total_ind37" value="" disabled>
+                                  <label for="txt_total_ind37" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador38">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Formular proyectos I+D+i para convocatorias finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de formulación de proyectos I+D+i para convocatorias finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de formulación de proyectos I+D+i para convocatorias finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind38" name="txtfecha_inicio_ind38" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind38">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind38" name="txtfecha_fin_ind38" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind38">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarFormulacionProyectosEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind38" name="txt_total_ind38" value="" disabled>
+                                  <label for="txt_total_ind38" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador39">
+                          <div class="collapsible-header"><i class="material-icons">autorenew</i>Asesoría a empresa o emprendedor finalizadas con empresas y emprendedores.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de asesorías a empresa o emprendedor finalizadas con empresas y emprendedores.
+                                <br>
+                                Para consultar el total de asesorías a empresa o emprendedor finalizadas con empresas y emprendedores, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind39" name="txtfecha_inicio_ind39" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind39">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind39" name="txtfecha_fin_ind39" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind39">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarAsesoriaEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind39" name="txt_total_ind39" value="" disabled>
+                                  <label for="txt_total_ind39" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div id="indicadores_edts" class="row">
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador40">
+                          <div class="collapsible-header"><i class="material-icons">hearing</i>Número de Eventos de Divulgación	Tecnológica (EDTs).</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar la cantidad de EDTs.
+                                <br>
+                                Para consultar el total de EDT's, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind40" name="txtfecha_inicio_ind40" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind40">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind40" name="txtfecha_fin_ind40" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind40">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarEdts_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind40" name="txt_total_ind40" value="" disabled>
+                                  <label for="txt_total_ind40" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador41">
+                          <div class="collapsible-header"><i class="material-icons">hearing</i>Número de total de personas atendidas en EDT's.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de personas atendidas en EDT's.
+                                <br>
+                                Para consultar el total de personas atendidas en EDT's, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind41" name="txtfecha_inicio_ind41" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind41">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind41" name="txtfecha_fin_ind41" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind41">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalPersonasEnEdts_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind41" name="txt_total_ind41" value="" disabled>
+                                  <label for="txt_total_ind41" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador42">
+                          <div class="collapsible-header"><i class="material-icons">hearing</i>Número de total de personas SENA atendidas en EDT's.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de personas SENA atendidas en EDT's.
+                                <br>
+                                Para consultar el total de personas SENA atendidas en EDT's, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind42" name="txtfecha_inicio_ind42" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind42">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind42" name="txtfecha_fin_ind42" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind42">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalPersonasSenaEnEdts_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind42" name="txt_total_ind42" value="" disabled>
+                                  <label for="txt_total_ind42" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador43">
+                          <div class="collapsible-header"><i class="material-icons">hearing</i>Número de total de empresarios/empleados atendidas en EDT's.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de empresarios/empleados atendidas en EDT's.
+                                <br>
+                                Para consultar el total de empresarios/empleados atendidas en EDT's, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind43" name="txtfecha_inicio_ind43" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind43">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind43" name="txtfecha_fin_ind43" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind43">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalPersonasEmpleadosEnEdts_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind43" name="txt_total_ind43" value="" disabled>
+                                  <label for="txt_total_ind43" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador44">
+                          <div class="collapsible-header"><i class="material-icons">hearing</i>Número de total de público general atendido en EDT's.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de público general atendido en EDT's.
+                                <br>
+                                Para consultar el total de público general atendido en EDT's, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind44" name="txtfecha_inicio_ind44" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind44">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind44" name="txtfecha_fin_ind44" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind44">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalPublicoGeneralEnEdts_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind44" name="txt_total_ind44" value="" disabled>
+                                  <label for="txt_total_ind44" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div id="indicadores_talentos" class="row">
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador45">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total de talentos.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos, los cuales hayan iniciado o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos activos, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind45" name="txtfecha_inicio_ind45" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind45">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind45" name="txtfecha_fin_ind45" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind45">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind45" name="txt_total_ind45" value="" disabled>
+                                  <label for="txt_total_ind45" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador46">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total talentos SENA (aprendices).</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos de talentos SENA (aprendices), los cuales hayan inicio o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos SENA (aprendices), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind46" name="txtfecha_inicio_ind46" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind46">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind46" name="txtfecha_fin_ind46" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind46">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind46" name="txt_total_ind46" value="" disabled>
+                                  <label for="txt_total_ind46" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador47">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total talentos mujeres SENA (aprendices).</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos de talentos mujeres SENA (aprendices), los cuales hayan inicio o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos mujeres SENA (aprendices), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind47" name="txtfecha_inicio_ind47" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind47">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind47" name="txtfecha_fin_ind47" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind47">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosMujerSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind47" name="txt_total_ind47" value="" disabled>
+                                  <label for="txt_total_ind47" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador48">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total talentos egresados SENA.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos de talentos egresados SENA, los cuales hayan inicio o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos egresados SENA, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind48" name="txtfecha_inicio_ind48" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind48">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind48" name="txtfecha_fin_ind48" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind48">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosEgresadosSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind48" name="txt_total_ind48" value="" disabled>
+                                  <label for="txt_total_ind48" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -793,6 +1671,3 @@
     </div>
   </main>
 @endsection
-@push('script')
-
-@endpush
