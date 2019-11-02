@@ -742,6 +742,9 @@ Route::group([
     Route::get('/totalAtendidosEnEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}/{campos}', 'IndicadorController@totalAtendidosEnEdts');
     // Relacionado a talento
     Route::get('/totalTalentosEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEnProyecto');
+    Route::get('/totalTalentosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSenaEnProyecto');
+    Route::get('/totalTalentosMujeresSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosMujeresSenaEnProyecto');
+    Route::get('/totalTalentosEgresadosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEgresadosSenaEnProyecto');
   }
 );
 

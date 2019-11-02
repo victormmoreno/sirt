@@ -497,3 +497,33 @@ function consultarTotalTalentosEnProyecto_total(bandera) {
   let input = 'txt_total_ind45';
   dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
 }
+
+// Indicador 46
+function consultarTotalTalentosSenaEnProyecto_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind46').val();
+  let fecha_fin = $('#txtfecha_fin_ind46').val();
+  let url = '/indicadores/totalTalentosSenaEnProyecto/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind46';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 47
+function consultarTotalTalentosMujerSenaEnProyecto_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind47').val();
+  let fecha_fin = $('#txtfecha_fin_ind47').val();
+  let url = '/indicadores/totalTalentosMujeresSenaEnProyecto/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind47';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}
+
+// Indicador 48
+function consultarTotalTalentosEgresadosSenaEnProyecto_total(bandera) {
+  let idnodo = setIdNodo_Indicadores(bandera);
+  let fecha_inicio = $('#txtfecha_inicio_ind48').val();
+  let fecha_fin = $('#txtfecha_fin_ind48').val();
+  let url = '/indicadores/totalTalentosEgresadosSenaEnProyecto/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let input = 'txt_total_ind48';
+  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+}

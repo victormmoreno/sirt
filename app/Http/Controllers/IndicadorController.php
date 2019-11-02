@@ -76,6 +76,91 @@ class IndicadorController extends Controller
   }
 
   /**
+   * Retorna el total de talentos egresados SENA en proyecto
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalTalentosEgresadosSenaEnProyecto(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getTalentoRepository()->totalTalentosEnProyectos()
+    ->where('nodos.id', $idnodo)
+    ->where(function($q) use ($fecha_inicio, $fecha_fin) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+      });
+    })
+    ->where('perfiles.nombre', 'Egresado SENA')
+    ->get()
+    ->count();
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de talentos mujeres SENA en proyecto
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalTalentosMujeresSenaEnProyecto(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getTalentoRepository()->totalTalentosEnProyectos()
+    ->where('nodos.id', $idnodo)
+    ->where(function($q) use ($fecha_inicio, $fecha_fin) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+      });
+    })
+    ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('users.genero', User::IsFemenino())
+    ->get()
+    ->count();
+    return response()->json($total);
+  }
+
+  /**
+   * Retorna el total de talentos SENA en proyecto
+   *
+   * @param int $id Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Resposne
+   * @author dum
+   */
+  public function totalTalentosSenaEnProyecto(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getTalentoRepository()->totalTalentosEnProyectos()
+    ->where('nodos.id', $idnodo)
+    ->where(function($q) use ($fecha_inicio, $fecha_fin) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+      });
+    })
+    ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->get()
+    ->count();
+    return response()->json($total);
+  }
+
+  /**
    * Retorna el total de talentos en proyecto
    *
    * @param int $id Id del nodo
@@ -97,7 +182,7 @@ class IndicadorController extends Controller
         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
       });
     })
-    ->dd()
+    ->get()
     ->count();
     return response()->json($total);
   }

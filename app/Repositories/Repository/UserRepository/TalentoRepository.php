@@ -72,6 +72,7 @@ class TalentoRepository
 		->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
 		->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
 		->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+		->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
 		->groupBy('talentos.id');
 	}
 

@@ -30,7 +30,6 @@
                       <li class="tab col s3"><a class="" href="#indicadores_articulaciones">Articulaciones con empresas y emprendedores</a></li>
                       <li class="tab col s3"><a class="" href="#indicadores_edts">EDT's</a></li>
                       <li class="tab col s3"><a class="" href="#indicadores_talentos">Talentos</a></li>
-                      {{-- <li class="tab col s3"><a class="" href="#proyectos_ipe">Proyectos en Inicio, Planeación o Ejecución</a></li> --}}
                     </ul>
                     <br>
                   </div>
@@ -1521,13 +1520,13 @@
                     <div class="col s12 m6 l6">
                       <ul class="collapsible">
                         <li id="indicador45">
-                          <div class="collapsible-header"><i class="material-icons">hearing</i>Número de total talento.</div>
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total de talentos.</div>
                           <div class="collapsible-body">
                             <div class="row">
                               <p>
-                                Aquí podrás consultar el número de talentos.
+                                Aquí podrás consultar el número de talentos, los cuales hayan iniciado o cerrado proyectos entre dos fechas.
                                 <br>
-                                Para consultar el total de talentos, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                                Para consultar el total de talentos activos, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
                               </p>
                             </div>
                             <div class="row">
@@ -1549,6 +1548,112 @@
                                 <div class="input-field col s12 m12 l12">
                                   <input type="text" id="txt_total_ind45" name="txt_total_ind45" value="" disabled>
                                   <label for="txt_total_ind45" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador46">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total talentos SENA (aprendices).</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos de talentos SENA (aprendices), los cuales hayan inicio o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos SENA (aprendices), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind46" name="txtfecha_inicio_ind46" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind46">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind46" name="txtfecha_fin_ind46" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind46">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind46" name="txt_total_ind46" value="" disabled>
+                                  <label for="txt_total_ind46" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col s12 m6 l6">
+                      <ul class="collapsible">
+                        <li id="indicador47">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total talentos mujeres SENA (aprendices).</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos de talentos mujeres SENA (aprendices), los cuales hayan inicio o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos mujeres SENA (aprendices), debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind47" name="txtfecha_inicio_ind47" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind47">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind47" name="txtfecha_fin_ind47" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind47">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosMujerSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind47" name="txt_total_ind47" value="" disabled>
+                                  <label for="txt_total_ind47" class="active">Total</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li id="indicador48">
+                          <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Número de total talentos egresados SENA.</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <p>
+                                Aquí podrás consultar el número de talentos de talentos egresados SENA, los cuales hayan inicio o cerrado proyectos entre dos fechas.
+                                <br>
+                                Para consultar el total de talentos egresados SENA, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                              </p>
+                            </div>
+                            <div class="row">
+                              <div class="input-field col s12 m8 l8">
+                                {{-- <br> --}}
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_inicio_ind48" name="txtfecha_inicio_ind48" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
+                                  <label for="txtfecha_inicio_ind48">Fecha Inicio</label>
+                                </div>
+                                <div class="input-field col s12 m6 l6">
+                                  <input type="text" id="txtfecha_fin_ind48" name="txtfecha_fin_ind48" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                                  <label for="txtfecha_fin_ind48">Fecha Fin</label>
+                                </div>
+                                <div class="center">
+                                  <button onclick="consultarTotalTalentosEgresadosSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                </div>
+                              </div>
+                              <div class="input-field col s12 m4 l4">
+                                <div class="input-field col s12 m12 l12">
+                                  <input type="text" id="txt_total_ind48" name="txt_total_ind48" value="" disabled>
+                                  <label for="txt_total_ind48" class="active">Total</label>
                                 </div>
                               </div>
                             </div>
