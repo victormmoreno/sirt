@@ -10,6 +10,24 @@ class ArticulacionRepository
 {
 
   /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   *
+   * @param type var Description
+   * @return return type
+   */
+  public function consultarTotalDeArticulacionesEmpresasEmprendedores()
+  {
+    return Articulacion::selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereIn('tipo_articulacion', [Articulacion::IsEmpresa(), Articulacion::IsEmprendedor()]);
+  }
+
+  /**
    * Método que retorna el directorio de los archivos que tiene una articulación en el servidor
    * @param int $id Id de la articulacion_proyecto
    * @return mixed
