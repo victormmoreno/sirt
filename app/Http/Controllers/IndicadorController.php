@@ -451,13 +451,17 @@ class IndicadorController extends Controller
    */
   public function totalCostoPMVFinalizadoEmprendedoresOtros(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
-    // dd($this->getCostoController());
     $idnodo = $this->setIdNodo($idnodo);
 
     $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PMV')->select('actividades.id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-    ->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otros'])
+    ->where('tiposarticulacionesproyectos.nombre', '!=', 'Empresas')
+    ->whereNotIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
     ->groupBy('actividades.id')
     ->get();
 
@@ -495,7 +499,19 @@ class IndicadorController extends Controller
   public function totalPMVFinalizadosEmprendedoresInvetoresOtro(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otro'])->where('estadosproyecto.nombre', 'Cierre PMV')->first()->cantidad;
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->select('proyectos.id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulacionesproyectos.nombre', '!=', 'Empresas')
+    ->where('estadosproyecto.nombre', 'Cierre PMV')
+    ->whereNotIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
+    ->groupBy('proyectos.id')
+    ->get()
+    ->count();
     return response()->json($total);
   }
 
@@ -510,7 +526,6 @@ class IndicadorController extends Controller
   */
   public function totalCostoPMVFinalizadoEmpresas(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
-    // dd($this->getCostoController());
     $idnodo = $this->setIdNodo($idnodo);
 
     $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PMV')->select('actividades.id')
@@ -568,7 +583,6 @@ class IndicadorController extends Controller
   */
   public function totalCostoPMVFinalizadoSena(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
-    // dd($this->getCostoController());
     $idnodo = $this->setIdNodo($idnodo);
 
     $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PMV')->select('actividades.id')
@@ -578,10 +592,10 @@ class IndicadorController extends Controller
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
     ->groupBy('actividades.id')
     ->get();
 
-    // dd($proyectos);
 
     $costosEquipos = 0;
     $costosAsesorias = 0;
@@ -625,6 +639,7 @@ class IndicadorController extends Controller
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
     ->where('estadosproyecto.nombre', 'Cierre PMV')
+    ->where('talento_lider', 1)
     ->groupBy('proyectos.id')
     ->get()
     ->count();
@@ -648,7 +663,7 @@ class IndicadorController extends Controller
   }
 
   /**
-   * Retorna el costos total de proyectos con cierre PF con Emprendedores u Otros
+   * Retorna el costos total de proyectos con cierre PF con Emprendedores u Otros, (El Talento líder no puede ser un talento SENA)
    *
    * @param int $idnodo Id del nodo
    * @param string $fecha_inicion Primera fecha para realizar el filtro
@@ -658,13 +673,17 @@ class IndicadorController extends Controller
    */
   public function totalCostoPFFFinalizadoEmprendedoresOtros(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
-    // dd($this->getCostoController());
     $idnodo = $this->setIdNodo($idnodo);
 
     $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PF')->select('actividades.id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-    ->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otros'])
+    ->where('tiposarticulacionesproyectos.nombre', '!=', 'Empresas')
+    ->whereNotIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
     ->groupBy('actividades.id')
     ->get();
 
@@ -715,7 +734,19 @@ class IndicadorController extends Controller
   public function totalPFFFinalizadosEmprendedoresInvetoresOtro(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otro'])->where('estadosproyecto.nombre', 'Cierre PF')->first()->cantidad;
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->select('proyectos.id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tiposarticulacionesproyectos.nombre', '!=', 'Empresas')
+    ->where('estadosproyecto.nombre', 'Cierre PF')
+    ->whereNotIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
+    ->groupBy('proyectos.id')
+    ->get()
+    ->count();
     return response()->json($total);
   }
 
@@ -778,7 +809,6 @@ class IndicadorController extends Controller
    */
   public function totalCostoPFFFinalizadoSena(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
-    // dd($this->getCostoController());
     $idnodo = $this->setIdNodo($idnodo);
 
     $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PF')->select('actividades.id')
@@ -788,6 +818,7 @@ class IndicadorController extends Controller
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
     ->groupBy('actividades.id')
     ->get();
 
@@ -824,7 +855,6 @@ class IndicadorController extends Controller
    */
   public function totalCostoPFFFinalizadoEmpresas(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
-    // dd($this->getCostoController());
     $idnodo = $this->setIdNodo($idnodo);
 
     $proyectos = $this->getProyectoRepository()->consultarProyectosPorEstados_Detalle('Cierre PF')->select('actividades.id')
@@ -893,6 +923,7 @@ class IndicadorController extends Controller
     ->where('nodos.id', $idnodo)
     ->where('estadosproyecto.nombre', 'En ejecución')
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
     ->groupBy('proyectos.id')
     ->get()
     ->count();
@@ -944,6 +975,7 @@ class IndicadorController extends Controller
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
     ->groupBy('proyectos.id')
     ->get()
     ->count();
@@ -970,6 +1002,7 @@ class IndicadorController extends Controller
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
     ->where('estadosproyecto.nombre', 'Cierre PF')
+    ->where('talento_lider', 1)
     ->groupBy('proyectos.id')
     ->get()
     ->count();
