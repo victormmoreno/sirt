@@ -76,6 +76,110 @@ class IndicadorController extends Controller
   }
 
   /**
+   * Retorna el valor de la consulta
+   *
+   * @param int total
+   * @return void
+   * @author dum
+   */
+  public function retornarValor($total)
+  {
+    if (request()->ajax()) {
+      return response()->json($total);
+    } else {
+      return $total;
+    }
+  }
+
+  /**
+   * Retorna el costo de la consulta
+   *
+   * @param int $costosTotales
+   * @return void
+   * @author dum
+   */
+  public function retornarCosto($costosTotales)
+  {
+    if (request()->ajax()) {
+      return response()->json($costosTotales);
+    } else {
+      return $costosTotales;
+    }
+  }
+
+  /**
+   * Retorna la cantidad de proyectos inscritos entre dos fechas
+   *
+   * @param int $idnodo Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Response|Int
+   * @author dum
+   */
+  public function totalProyectosInscritos(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->first()->cantidad;
+
+    return $this->retornarValor($total);
+  }
+
+  /**
+   * Retorna la cantidad total de proyectos en ejecución
+   *
+   * @param int $idnodo Id del nodo
+   * @return Response
+   */
+  public function totalProyectosEjecucion(int $idnodo)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->where('estadosproyecto.nombre', 'En ejecución')->first()->cantidad;
+    return $this->retornarValor($total);
+  }
+
+  /**
+   * Retorna la cantidad de proyectos inscritos con SENA
+   *
+   * @param int $idnodo Id del nodo
+   * @param string $fecha_inicio Primera fecha para realizar el filtro
+   * @param string $fecha_fin Segunda fecha para realizar el filtro
+   * @return Response
+   * @author dum
+   */
+  public function totalInscritosSena(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->select('proyectos.id')
+    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
+    ->where('talento_lider', 1)
+    ->groupBy('proyectos.id')
+    ->get()
+    ->count();
+    return $this->retornarValor($total);
+  }
+
+  /**
+  * Retorna la cantidad de proyectos con emprendedores u otros inscritos
+  *
+  * @param int $idnodo Id del nodo
+  * @param string $fecha_inicio Primera fecha para realizar el filtro
+  * @param string $fecha_fin Segunda fecha para realizar el filtro
+  * @return Response
+  * @author dum
+  */
+  public function totalProyectosInscritosEmprendedoresInvetoresOtro(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  {
+    $idnodo = $this->setIdNodo($idnodo);
+    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otro'])->first()->cantidad;
+    return $this->retornarValor($total);
+  }
+
+  /**
    * Retorna el total de talentos egresados SENA en proyecto
    *
    * @param int $id Id del nodo
@@ -100,7 +204,7 @@ class IndicadorController extends Controller
     ->where('perfiles.nombre', 'Egresado SENA')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -129,7 +233,7 @@ class IndicadorController extends Controller
     ->where('users.genero', User::IsFemenino())
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -157,7 +261,7 @@ class IndicadorController extends Controller
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -184,7 +288,7 @@ class IndicadorController extends Controller
     })
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -202,7 +306,11 @@ class IndicadorController extends Controller
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->select(DB::raw('sum('.$campos_suma.') AS total'))->where('nodos.id', $idnodo)->first()->total;
     // $total = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->select(DB::raw('sum(empleados+instructores+aprendices+publico) AS total'))->where('nodos.id', $idnodo)->first()->total;
-    return response()->json($total == null ? 0 : $total);
+    if (request()->ajax()) {
+      return response()->json($total == null ? 0 : $total);
+    } else {
+      return $total == null ? 0 : $total;
+    }
   }
 
   /**
@@ -218,7 +326,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getEdtRepository()->consultaEdtsPorFechas_Respository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -240,7 +348,7 @@ class IndicadorController extends Controller
     ->where('tiposarticulaciones.nombre', $nombre_tipo_articulacion)
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -260,7 +368,7 @@ class IndicadorController extends Controller
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -287,7 +395,7 @@ class IndicadorController extends Controller
     })
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -303,7 +411,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getArticulacionRepository()->consultarTotalDeArticulacionesEmpresasEmprendedores()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
 
@@ -328,7 +436,7 @@ class IndicadorController extends Controller
     ->groupBy('talentos.id')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
 
@@ -353,7 +461,7 @@ class IndicadorController extends Controller
     ->groupBy('talentos.id')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -374,7 +482,7 @@ class IndicadorController extends Controller
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros Externos')
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -395,7 +503,7 @@ class IndicadorController extends Controller
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros Externos')
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -416,7 +524,7 @@ class IndicadorController extends Controller
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros del SENA')
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -437,7 +545,7 @@ class IndicadorController extends Controller
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros del SENA')
     ->first()
     ->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -483,7 +591,7 @@ class IndicadorController extends Controller
 
     // Suma de la sumatoria de todos los costos
     $costosTotales = $this->getCostoController()->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    return response()->json($costosTotales);
+    return $this->retornarCosto($costosTotales);
 
   }
 
@@ -512,7 +620,7 @@ class IndicadorController extends Controller
     ->groupBy('proyectos.id')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -552,7 +660,7 @@ class IndicadorController extends Controller
 
     // Suma de la sumatoria de todos los costos
     $costosTotales = $this->getCostoController()->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    return response()->json($costosTotales);
+    return $this->retornarCosto($costosTotales);
 
   }
 
@@ -569,7 +677,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('tiposarticulacionesproyectos.nombre', 'Empresas')->where('estadosproyecto.nombre', 'Cierre PMV')->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -615,7 +723,7 @@ class IndicadorController extends Controller
 
     // Suma de la sumatoria de todos los costos
     $costosTotales = $this->getCostoController()->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    return response()->json($costosTotales);
+    return $this->retornarCosto($costosTotales);
 
   }
 
@@ -643,7 +751,7 @@ class IndicadorController extends Controller
     ->groupBy('proyectos.id')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -659,7 +767,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('estadosproyecto.nombre', 'Cierre PMV')->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -705,7 +813,7 @@ class IndicadorController extends Controller
 
     // Suma de la sumatoria de todos los costos
     $costosTotales = $this->getCostoController()->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    return response()->json($costosTotales);
+    return $this->retornarCosto($costosTotales);
 
   }
 
@@ -719,7 +827,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->where('estadosproyecto.nombre', 'En ejecución')->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otros'])->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -747,23 +855,7 @@ class IndicadorController extends Controller
     ->groupBy('proyectos.id')
     ->get()
     ->count();
-    return response()->json($total);
-  }
-
-  /**
-  * Retorna la cantidad de proyectos con emprendedores u otros inscritos
-  *
-  * @param int $idnodo Id del nodo
-  * @param string $fecha_inicio Primera fecha para realizar el filtro
-  * @param string $fecha_fin Segunda fecha para realizar el filtro
-  * @return Response
-  * @author dum
-  */
-  public function totalProyectosInscritosEmprendedoresInvetoresOtro(int $idnodo, string $fecha_inicio, string $fecha_fin)
-  {
-    $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->whereIn('tiposarticulacionesproyectos.nombre', ['Emprendedor', 'Otro'])->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -779,7 +871,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('tiposarticulacionesproyectos.nombre', 'Empresas')->where('estadosproyecto.nombre', 'Cierre PF')->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -795,7 +887,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('tiposarticulacionesproyectos.nombre', 'Empresas')->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -840,7 +932,7 @@ class IndicadorController extends Controller
 
     // Suma de la sumatoria de todos los costos
     $costosTotales = $this->getCostoController()->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    return response()->json($costosTotales);
+    return $this->retornarCosto($costosTotales);
 
   }
 
@@ -881,7 +973,7 @@ class IndicadorController extends Controller
 
     // Suma de la sumatoria de todos los costos
     $costosTotales = $this->getCostoController()->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    return response()->json($costosTotales);
+    return $this->retornarCosto($costosTotales);
 
   }
 
@@ -904,7 +996,7 @@ class IndicadorController extends Controller
     ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
     ->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -927,7 +1019,7 @@ class IndicadorController extends Controller
     ->groupBy('proyectos.id')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -940,46 +1032,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->where('estadosproyecto.nombre', 'En ejecución')->where('tiposarticulacionesproyectos.nombre', 'Empresas')->first()->cantidad;
-    return response()->json($total);
-  }
-
-  /**
-   * Retorna la cantidad total de proyectos en ejecución
-   *
-   * @param int $idnodo Id del nodo
-   * @return Response
-   */
-  public function totalProyectosEjecucion(int $idnodo)
-  {
-    $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->where('estadosproyecto.nombre', 'En ejecución')->first()->cantidad;
-    return response()->json($total);
-  }
-
-  /**
-   * Retorna la cantidad de proyectos inscritos con SENA
-   *
-   * @param int $idnodo Id del nodo
-   * @param string $fecha_inicio Primera fecha para realizar el filtro
-   * @param string $fecha_fin Segunda fecha para realizar el filtro
-   * @return Response
-   * @author dum
-   */
-  public function totalInscritosSena(int $idnodo, string $fecha_inicio, string $fecha_fin)
-  {
-    $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()->select('proyectos.id')
-    ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-    ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
-    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
-    ->where('nodos.id', $idnodo)
-    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
-    ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
-    ->where('talento_lider', 1)
-    ->groupBy('proyectos.id')
-    ->get()
-    ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -1006,7 +1059,7 @@ class IndicadorController extends Controller
     ->groupBy('proyectos.id')
     ->get()
     ->count();
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**
@@ -1022,23 +1075,7 @@ class IndicadorController extends Controller
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])->where('estadosproyecto.nombre', 'Cierre PF')->first()->cantidad;
-    return response()->json($total);
-  }
-
-  /**
-   * Retorna la cantidad de proyectos inscritos entre dos fechas
-   *
-   * @param int $idnodo Id del nodo
-   * @param string $fecha_inicio Primera fecha para realizar el filtro
-   * @param string $fecha_fin Segunda fecha para realizar el filtro
-   * @return Response
-   * @author dum
-   */
-  public function totalProyectosInscritos(int $idnodo, string $fecha_inicio, string $fecha_fin)
-  {
-    $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()->where('nodos.id', $idnodo)->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->first()->cantidad;
-    return response()->json($total);
+    return $this->retornarValor($total);
   }
 
   /**

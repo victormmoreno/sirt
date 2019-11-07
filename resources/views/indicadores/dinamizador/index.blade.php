@@ -25,6 +25,19 @@
                     </div>
                   </div>
                   <div class="row">
+                    <div class="input-field col s12 m5 l5">
+                      <input type="text" id="txtfecha_inicio_todos" name="txtfecha_inicio_todos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                      <label for="txtfecha_inicio_todos">Fecha Inicio</label>
+                    </div>
+                    <div class="input-field col s12 m5 l5">
+                      <input type="text" id="txtfecha_fin_todos" name="txtfecha_fin_todos" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
+                      <label for="txtfecha_fin_todos">Fecha Fin</label>
+                    </div>
+                    <div class="input-field col s12 m2 l2">
+                      <a onclick="generarExcelConTodosLosIndicadores(0);" class="btn"><i class="material-icons">file_download</i></a>
+                    </div>
+                  </div>
+                  <div class="row">
                     <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                       <li class="tab col s3"><a class="active" href="#indicadores_proyectos">Proyectos</a></li>
                       <li class="tab col s3"><a class="" href="#indicadores_articulaciones">Articulaciones con empresas y emprendedores</a></li>
@@ -1671,3 +1684,28 @@
     </div>
   </main>
 @endsection
+@push('script')
+  <script>
+    function generarExcelConTodosLosIndicadores(bandera) {
+      console.log('metodo');
+      let idnodo = 0;
+      let fecha_inicio = $('#txtfecha_inicio_todos').val();
+      let fecha_fin = $('#txtfecha_fin_todos').val();
+      if (bandera == 1) {
+        idnodo = $('#txtnodo_id').val();
+      }
+
+      if (idnodo === '') {
+        Swal.fire('Error!', 'Seleccione un nodo', 'error');
+      } else {
+        if (fecha_inicio > fecha_fin) {
+          Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+        } else {
+          location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+        }
+      }
+
+
+    }
+  </script>
+@endpush
