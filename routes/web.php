@@ -667,6 +667,8 @@ Route::group([
    // Rutas para la generación de excel del módulo de seguimiento
    Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   // Rutas para la generación de excel del módulo de indicadores
+   Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@export')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
 
    //Rutas para la generación de excel del módulo de nodo
    Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
