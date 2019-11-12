@@ -6,8 +6,8 @@
         <a class="footer-text">
           <span class="direction">Derechos Reservados</span>
           <div>
-            <img  width="170px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title">
-            <img src="{{ asset('img/logos.png') }}" >
+            <img  width="170px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title" alt="sena|tecnoparque">
+            <img src="{{ asset('img/logos.png') }}" alt="sennova">
             <span class="direction"> {{date("Y")}}</span>
           </div>
         </a>

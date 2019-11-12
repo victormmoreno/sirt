@@ -11,9 +11,24 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         <link href="{{ asset('vendor/themify-icons/themify-icons.css') }}" rel="stylesheet">   
-        <!-- Fonts -->
-        {{-- <link rel="stylesheet" href="https://rawgit.com/lykmapipo/themify-icons/master/css/themify-icons.css"> --}}
         <link rel="stylesheet" href="{{ asset('vendor/themify-icons/themify-icons.css') }}">
+
+        <meta name="title" content="@yield('meta-title',   config('app.name') )" />
+        <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
+        <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
+        <meta name="author" content="SENA" />
+        <meta name="copyright" content="© 2019 redtecnoparquecolombia" />
+        <meta http-equiv="Content-Language" content="{{config('app.locale')}}"/>
+        <meta name="distribution" content="global"/>
+        <meta name="robots" content="index"/>
+        <meta name="Keywords" content="@yield('meta-keywords', 'Tecnoparque, SENA, Innovacion, desarrollo' )"/>
+        <meta content="{{ csrf_token()}}" name="csrf-token"/>
+
+        <meta property="og:locale" content="es_ES" />
+        <meta property="og:title" content="{{config('app.name')}}" />
+        <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
+        <meta property="og:url" content="{{config('app.url')}}" />
+        <meta property="og:site_name" content="{{config('app.name')}}" /> 
 
         <!-- Styles -->
         <style>

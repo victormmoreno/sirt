@@ -1,5 +1,7 @@
 @extends('layouts.app')
-@section('meta-title', 'Laboratorio Tecnopaque nodo ')
+@section('meta-title', 'Costo Administrativo ')
+@section('meta-content', 'Costo Administrativo')
+@section('meta-keywords', 'Costo Administrativo')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">

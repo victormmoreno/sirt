@@ -13,6 +13,9 @@ const JavaScriptObfuscator = require('webpack-obfuscator');
 
 mix.js('resources/js/app.js', 'public/js');
 
+mix.minify('public/js/app.js')
+    mix.version();
+
 mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
@@ -27,10 +30,15 @@ mix.styles([
 		'resources/assets/css/custom.css',
 	],'public/css/libs.css');
 
+mix.minify('public/css/libs.css')
+    mix.version();
+
 mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
+		'resources/assets/plugins/jquery-validation/jquery.validate.min.js',
+		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
 		'resources/assets/plugins/font-awesome/js/all.js',
@@ -46,6 +54,9 @@ mix.scripts([
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');
+
+mix.minify('public/js/libs.js')
+    mix.version();
 
 
 mix.scripts([
@@ -110,6 +121,9 @@ mix.scripts([
 		'resources/app/seguimiento/index.js',
 		'resources/app/costos/index.js'
 	],'public/js/app2.js');
+
+mix.minify('public/js/app2.js')
+    mix.version();
 
 
 // mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');

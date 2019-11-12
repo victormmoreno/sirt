@@ -4,6 +4,8 @@
 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
     @section('meta-title', 'Equipos' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
 @endif
+@section('meta-content', 'Equipos')
+@section('meta-keywords', 'Equipos')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">

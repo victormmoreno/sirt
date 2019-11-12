@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('meta-title', 'Costo Administrativo | ' . $costoadministrativo->costoadministrativo)
+@section('meta-content', 'Costo Administrativo')
+@section('meta-keywords', 'Costo Administrativo')
 
 @section('content')
 

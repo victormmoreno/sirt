@@ -8,8 +8,8 @@
         </a>
       </section>
       <div class="header-title col s2 m2 l2">
-        <a href="">
-          <img class="chapter-title " height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" width="200px"/>
+        <a href="{{route('home')}}">
+          <img class="chapter-title " height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px"/>
         </a>
       </div>
       <ul class="right col s10 m10 l10 nav-right-menu">
@@ -71,7 +71,7 @@
           </center>
         </li>
         <li>
-          <a href="{{ route('perfil.index')}}">
+          <a href="{{ route('perfil.index')}}" rel="canonical" title="Mi perfil">
             <div class="notification">
               <div class="notification-icon circle teal lighten-4">
                 <i class="material-icons">
@@ -87,7 +87,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
+          <a href="{{ route('logout') }}" rel="canonical" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
             <div class="notification">
               <div class="notification-icon circle teal lighten-2">
                 <i class="material-icons">
@@ -144,7 +144,7 @@
               @endforelse
               <li class="divider" tabindex="-1"></li>
               <li class="notification-drop-title">
-                <a href="{{route('notifications.index')}}">
+                <a href="{{route('notifications.index')}}" rel="canonical">
                     <div class="notification">
                       <div class="notification-icon circle cyan">
                         <i class="material-icons">add_alert</i>
@@ -180,26 +180,21 @@
           <span>
             @guest
             @else
-              {{-- @if(auth()->user()->hasRole(App\User::IsAdministrador()) || auth()->user()->hasRole(App\User::IsTalento())) --}}
+      
               @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
 
                 {{ \NodoHelper::returnNodoUsuario() }}
-                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsAdministrador())->name}} Red Tecnoparque --}}
-                {{-- {{collect(auth()->user()->roles)->firstWhere('name', App\User::IsTalento())->name}} --}}
+                
               @else
                 @if (\Session::get('login_role') == App\User::IsTalento())
                   Talento de Tecnoparque
                 @else
                   Administrador de Tecnoparque
                 @endif
-                {{-- {{ auth()->user()->rol->nombre }} nodo {{ \NodoHelper::returnNodoUsuario() }} --}}
-                {{-- {{ auth()->user()->roles->first()->name }} Tecnoparques --}}
+               
               @endif
 
-              {{-- @hasrole('Administrador')
-                  {{ auth()->user()->getRoleNames()-> }} Tecnoparques
-
-                  @endhasrol --}}
+  
 
             <i class="material-icons right">
               arrow_drop_down
@@ -213,7 +208,7 @@
 
       <ul>
         <li class="no-padding">
-          <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}">
+          <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}" rel="canonical" title="Mi Perfil">
             <i class="material-icons">
               perm_contact_calendar
             </i>
@@ -223,7 +218,7 @@
         <li class="divider">
         </li>
         <li class="no-padding">
-          <a class="waves-effect waves-grey" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+          <a class="waves-effect waves-grey" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" rel="canonical">
             <i class="material-icons">
               power_settings_new
             </i>
@@ -252,7 +247,7 @@
           </div>
         </div>
       <li class="no-padding {{setActiveRoute('home')}}">
-        <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}">
+        <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}" rel="canonical" title="Inicio">
           <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">
             home
           </i>
@@ -288,21 +283,12 @@
     @case('Dinamizador')
 
       @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
-
           @include('layouts.navrole.dinamizador')
-
-
       @endif
-
     @break
-
     @case(App\User::IsAdministrador())
-
       @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
-
           @include('layouts.navrole.admin')
-
-
       @endif
     @break
 

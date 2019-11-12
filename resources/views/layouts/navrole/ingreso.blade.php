@@ -6,12 +6,12 @@
   <div class="collapsible-body">
     <ul>
       <li>
-        <a href="{{route('ingreso')}}" class="{{setActiveRouteActivePage('ingreso')}}">
+        <a href="{{route('ingreso')}}" class="{{setActiveRouteActivePage('ingreso')}}" rel="canonical" title="Ingresos">
           <i class="material-icons {{setActiveRouteActiveIcon('ingreso')}}">transit_enterexit</i>Ingresos
         </a>
       </li>
       <li>
-        <a href="{{route('visitante')}}" class="{{setActiveRouteActivePage('visitante')}}">
+        <a href="{{route('visitante')}}" class="{{setActiveRouteActivePage('visitante')}}" rel="canonical" title="Visitantes">
           <i class="material-icons {{setActiveRouteActiveIcon('visitante')}}">accessibility</i>Visitantes
         </a>
       </li>

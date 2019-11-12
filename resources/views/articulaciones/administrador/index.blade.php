@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('meta-title', 'Articulaciones')
+@section('meta-content', 'Articulaciones')
+@section('meta-keywords', 'Articulaciones')
+
 @section('content')
   @php
   $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');

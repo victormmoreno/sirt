@@ -5,19 +5,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
-       
+        
+        <link href="{{config('app.url')}}" rel="canonical"/>
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         
 
-        <!-- CSRF Token -->
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')">
+       <meta name="title" content="@yield('meta-title',   config('app.name') )" />
+        <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
+        <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
+        <meta name="author" content="SENA" />
+        <meta name="copyright" content="© {{date("Y") }} redtecnoparquecolombia" />
+        <meta http-equiv="Content-Language" content="{{config('app.locale')}}"/>
+        <meta name="distribution" content="global"/>
+        <meta name="robots" content="index"/>
+        <meta name="Keywords" content="@yield('meta-keywords', 'Tecnoparque, SENA, Innovacion, desarrollo' )"/>
+        <meta content="{{ csrf_token()}}" name="csrf-token"/>
 
-        <!-- Fonts -->
-        {{-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> --}}
-        <script src="{{ asset('js/app.js') }}" defer></script>
-        <script src="{{ asset('js/libs.js') }}" defer></script>
+        <meta property="og:locale" content="es_ES" />
+        <meta property="og:title" content="{{config('app.name')}}" />
+        <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
+        <meta property="og:url" content="{{config('app.url')}}" />
+        <meta property="og:site_name" content="{{config('app.name')}}" /> 
+       
     </head>
     <body class="signin-page">
         @if(session()->has('info'))
@@ -34,8 +44,8 @@
                 </div>
             </div>
         @endif
-        
         @yield('content-auth')
-        
+        <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="{{ asset('js/libs.js') }}" defer></script>
     </body>
 </html>
