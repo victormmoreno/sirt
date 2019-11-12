@@ -736,7 +736,7 @@ Route::group([
     Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
     // Relacionado a articulaciones
     Route::get('/totalAsesoriasIDiEmpresasYEmprendedores/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasYEmprendedores');
-    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
+    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
     Route::get('/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresFinalizadas');
     Route::get('/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}/{nombre_tipo_articulacion}', 'IndicadorController@totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas');
     // Relacionado a edts

@@ -10,12 +10,28 @@ class ArticulacionRepository
 {
 
   /**
-   * undocumented function summary
+   * Cantidad de articulaciones con grupos de investigación
    *
-   * Undocumented function long description
+   * @return Builder
+   * @author dum
+   */
+  public function consultarTotalDeArticulacionesGrupos()
+  {
+    return Articulacion::selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades', 'entidades.id', '=', 'articulacion_proyecto.entidad_id')
+    ->join('gruposinvestigacion', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+    ->where('tipo_articulacion', Articulacion::IsGrupo());
+  }
+
+  /**
+   * Cantidad de articulaciones con empresas y emprendedores
    *
-   * @param type var Description
-   * @return return type
+   * @return Builder
+   * @author dum
    */
   public function consultarTotalDeArticulacionesEmpresasEmprendedores()
   {

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, DB};
 use App\Repositories\Repository\{ProyectoRepository, ActividadRepository, ArticulacionRepository, EdtRepository, UserRepository\TalentoRepository};
-use App\User;
+use App\{User, Models\Articulacion, Models\GrupoInvestigacion};
 
 class IndicadorController extends Controller
 {
@@ -372,27 +372,26 @@ class IndicadorController extends Controller
   }
 
   /**
-   * Retorna el total de asesorias I+D+i con empresas y emprendedores en ejecución (que hayan cerrado o iniciado entre las fechas)
+   * Retorna el total de asesorias I+D+i con empresas y emprendedores en ejecución
    *
    * @param int $id Id del nodo
-   * @param string $fecha_inicio Primera fecha para realizar el filtro
-   * @param string $fecha_fin Segunda fecha para realizar el filtro
    * @return Resposne
    * @author dum
    */
-  public function totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion(int $idnodo, string $fecha_inicio, string $fecha_fin)
+  public function totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion(int $idnodo)
   {
     $idnodo = $this->setIdNodo($idnodo);
     $total = $this->getArticulacionRepository()->consultarTotalDeArticulacionesEmpresasEmprendedores()
     ->where('nodos.id', $idnodo)
-    ->where(function($q) use ($fecha_inicio, $fecha_fin) {
-      $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
-        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-      })
-      ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
-        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-      });
-    })
+    ->where('estado', Articulacion::IsEjecucion())
+    // ->where(function($q) use ($fecha_inicio, $fecha_fin) {
+    //   $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
+    //     $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+    //   })
+    //   ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
+    //     $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+    //   });
+    // })
     ->first()
     ->cantidad;
     return $this->retornarValor($total);
@@ -476,12 +475,21 @@ class IndicadorController extends Controller
   public function totalProyectoConGruposExternosFinalizados(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    $totalProyectos = $this->getProyectoRepository()->consultarTotalProyectos()
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros Externos')
     ->first()
     ->cantidad;
+
+    $totalArticulaciones = $this->getArticulacionRepository()->consultarTotalDeArticulacionesGrupos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tipogrupo', GrupoInvestigacion::IsExterno())
+    ->first()
+    ->cantidad;
+
+    $total = $this->sumarValoresConGrupos($totalProyectos, $totalArticulaciones);
     return $this->retornarValor($total);
   }
 
@@ -497,12 +505,22 @@ class IndicadorController extends Controller
   public function totalProyectoConGruposExternos(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+
+    $totalProyectos = $this->getProyectoRepository()->consultarTotalProyectos()
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros Externos')
     ->first()
     ->cantidad;
+
+    $totalArticulaciones = $this->getArticulacionRepository()->consultarTotalDeArticulacionesGrupos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->where('tipogrupo', GrupoInvestigacion::IsExterno())
+    ->first()
+    ->cantidad;
+
+    $total = $this->sumarValoresConGrupos($totalProyectos, $totalArticulaciones);
     return $this->retornarValor($total);
   }
 
@@ -518,17 +536,26 @@ class IndicadorController extends Controller
   public function totalProyectoConGruposInternosFinalizados(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    $totalProyectos = $this->getProyectoRepository()->consultarTotalProyectos()
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros del SENA')
     ->first()
     ->cantidad;
+
+    $totalArticulaciones = $this->getArticulacionRepository()->consultarTotalDeArticulacionesGrupos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
+    ->where('tipogrupo', GrupoInvestigacion::IsInterno())
+    ->first()
+    ->cantidad;
+
+    $total = $this->sumarValoresConGrupos($totalProyectos, $totalArticulaciones);
     return $this->retornarValor($total);
   }
 
   /**
-  * Retorna la cantidad de proyectos inscritos con grupos de investigación internos
+  * Retorna la cantidad de proyectos inscritos con grupos de investigación internos y las articulaciones con grupos de investigación
   *
   * @param int $idnodo Id del nodo
   * @param string $fecha_inicio Primera fecha para realizar el filtro
@@ -539,13 +566,28 @@ class IndicadorController extends Controller
   public function totalProyectoConGruposInternos(int $idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $idnodo = $this->setIdNodo($idnodo);
-    $total = $this->getProyectoRepository()->consultarTotalProyectos()
+    $totalProyectos = $this->getProyectoRepository()->consultarTotalProyectos()
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
     ->where('tiposarticulacionesproyectos.nombre', 'Grupos y Semilleros del SENA')
     ->first()
     ->cantidad;
+
+    $totalArticulaciones = $this->getArticulacionRepository()->consultarTotalDeArticulacionesGrupos()
+    ->where('nodos.id', $idnodo)
+    ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
+    ->where('tipogrupo', GrupoInvestigacion::IsInterno())
+    ->first()
+    ->cantidad;
+
+    $total = $this->sumarValoresConGrupos($totalProyectos, $totalArticulaciones);
     return $this->retornarValor($total);
+  }
+
+
+  private function sumarValoresConGrupos($valorA, $valorB) {
+    $total = $valorA + $valorB;
+    return $total;
   }
 
   /**
