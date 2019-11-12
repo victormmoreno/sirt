@@ -98,7 +98,7 @@
                           <option value="{{$value->id}}"{{ $grupo->entidad->ciudad->departamento->id == $value->id ? 'selected' : '' }} {{ old('txtdepartamento') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
                         @endforeach
                       </select>
-                      <label for="txtdepartamento">Departamento de la Empresa <span class="red-text">*</span></label>
+                      <label for="txtdepartamento">Departamento del Grupo de Investigación <span class="red-text">*</span></label>
                       @error('txtdepartamento')
                         <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
                       @enderror
@@ -107,7 +107,7 @@
                       <select class="" id="txtciudad_id" name="txtciudad_id" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Primero el Departamento</option>
                       </select>
-                      <label for="txtciudad_id">Ciudad de la Empresa <span class="red-text">*</span></label>
+                      <label for="txtciudad_id">Ciudad del Grupo de Investigación <span class="red-text">*</span></label>
                       @error('txtciudad_id')
                           <label id="txtciudad_id-error" class="error" for="txtciudad_id">{{ $message }}</label>
                       @enderror
