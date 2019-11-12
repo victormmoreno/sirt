@@ -154,7 +154,7 @@ class ProyectoRepository
    * @return Collection
    * @author dum
    */
-  public function consultarProyectoEnEstadoDeInicioPlaneacionEjecucionEntreFecha($fecha_inicio, $fecha_fin)
+  public function consultarProyectoEnEstadoDeInicioPlaneacionEntreFecha($fecha_inicio, $fecha_fin)
   {
     return Proyecto::select('ep.nombre')
     ->selectRaw('count(proyectos.id) AS cantidad')
@@ -165,7 +165,7 @@ class ProyectoRepository
     ->join('nodos', 'nodos.id', '=', 'a.nodo_id')
     ->where('proyectos.estado_aprobacion', Proyecto::IsAceptado())
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
-    ->whereIn('ep.nombre', ['Inicio', 'Planeacion', 'En ejecución'])
+    ->whereIn('ep.nombre', ['Inicio', 'Planeacion'])
     ->groupBy('ep.nombre');
   }
 
