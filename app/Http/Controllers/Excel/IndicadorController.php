@@ -56,7 +56,7 @@ class IndicadorController extends Controller
     ['Número de Aprendices articulados con proyectos del Nodo y CON Apoyo de Sostenimiento activos.', $this->getIndicadorController()->totalTalentosConApoyoYProyectosAsociados($idnodo, $fecha_inicio, $fecha_fin)],
     ['Número de Aprendices articulados con proyectos del Nodo y SIN Apoyo de Sostenimiento activos.', $this->getIndicadorController()->totalTalentosSinApoyoYProyectosAsociados($idnodo, $fecha_inicio, $fecha_fin)],
     ['Asesoría I+D+i inscritas con empresas y emprendedores.', $this->getIndicadorController()->totalAsesoriasIDiEmpresasYEmprendedores($idnodo, $fecha_inicio, $fecha_fin)],
-    ['Asesoría I+D+i en ejecución con empresas y emprendedores.', $this->getIndicadorController()->totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion($idnodo, $fecha_inicio, $fecha_fin)],
+    ['Asesoría I+D+i en ejecución con empresas y emprendedores.', $this->getIndicadorController()->totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion($idnodo)],
     ['Asesoría I+D+i finalizadas con empresas y emprendedores.', $this->getIndicadorController()->totalAsesoriasIDiEmpresasEmprendedoresFinalizadas($idnodo, $fecha_inicio, $fecha_fin)],
     ['Vigilancías Tecnológicas finalizadas con empresas y emprendedores.', $this->getIndicadorController()->totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas($idnodo, $fecha_inicio, $fecha_fin, 'Vigilancia Tecnológica.')],
     ['Análisis de Prospectiva finalizadas con empresas y emprendedores.', $this->getIndicadorController()->totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas($idnodo, $fecha_inicio, $fecha_fin, 'Análisis de Prospectiva.')],

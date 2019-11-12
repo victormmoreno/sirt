@@ -1044,28 +1044,17 @@
                               <p>
                                 Aquí podrás consultar la cantidad de asesorías I+D+i con empresas y emprendedores (Articulaciones con empresas y emprendedores) en ejecución.
                                 <br>
-                                Para consultar el total de asesorías I+D+i con empresas y emprendedores en ejecución, debes seleccionar dos fechas válidas y luego presionar el botón de "<b>Consultar</b>".
+                                Para consultar el total de asesorías I+D+i con empresas y emprendedores en ejecución debes presionar el botón de "<b>Consultar</b>".
                               </p>
                             </div>
                             <div class="row">
-                              <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
-                                <div class="input-field col s12 m6 l6">
-                                  <input type="text" id="txtfecha_inicio_ind31" name="txtfecha_inicio_ind31" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
-                                  <label for="txtfecha_inicio_ind31">Fecha Inicio</label>
-                                </div>
-                                <div class="input-field col s12 m6 l6">
-                                  <input type="text" id="txtfecha_fin_ind31" name="txtfecha_fin_ind31" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                                  <label for="txtfecha_fin_ind31">Fecha Fin</label>
-                                </div>
-                                <div class="center">
-                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(0)" class="btn">Consultar</button>
-                                </div>
-                              </div>
-                              <div class="input-field col s12 m4 l4">
-                                <div class="input-field col s12 m12 l12">
+                              <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
+                                {{-- <div class="input-field col s12 m12 l12"> --}}
                                   <input type="text" id="txt_total_ind31" name="txt_total_ind31" value="" disabled>
                                   <label for="txt_total_ind31" class="active">Total</label>
+                                {{-- </div> --}}
+                                <div class="center">
+                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(0)" class="btn">Consultar</button>
                                 </div>
                               </div>
                             </div>

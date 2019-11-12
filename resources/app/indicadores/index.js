@@ -340,11 +340,10 @@ function consultarAsesoriasIDiEmp_total(bandera) {
 // Indicador 31
 function consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(bandera) {
   let idnodo = setIdNodo_Indicadores(bandera);
-  let fecha_inicio = $('#txtfecha_inicio_ind31').val();
-  let fecha_fin = $('#txtfecha_fin_ind31').val();
-  let url = '/indicadores/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+  let url = '/indicadores/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/'+idnodo;
   let input = 'txt_total_ind31';
-  dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
+  dispararAjax_NoFechas(idnodo, url, input);
+  // dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
 }
 
 // Indicador 32
