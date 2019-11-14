@@ -391,7 +391,7 @@ Route::group([
     function () {
         Route::get('/', 'ComiteController@index')->name('csibt');
         Route::get('/create', 'ComiteController@create')->name('csibt.create');
-        Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit');
+        Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
@@ -400,6 +400,7 @@ Route::group([
         Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
         Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
         Route::put('/updateEvidencias/{id}', 'ComiteController@updateEvidencias')->name('csibt.update.evidencias');
+        Route::put('/{id}', 'ComiteController@update')->name('csibt.update')->middleware('role_session:Infocenter');
         Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store');
         Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');

@@ -82,6 +82,13 @@ class Comite extends Model
     return $this->morphMany(RutaModel::class, 'model');
   }
 
+  public function ideas()
+  {
+    return $this->belongsToMany(Idea::class, 'comite_idea')
+    ->withTimestamps()
+    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones']);
+  }
+
   /*=====  End of relaciones eloquent  ======*/
 
 
