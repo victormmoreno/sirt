@@ -1,6 +1,6 @@
 <li class="no-padding {{setActiveRoute('usuario')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
-    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>
+    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
   </a>
 </li>
 <li class="no-padding  ">
