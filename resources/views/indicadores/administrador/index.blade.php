@@ -26,24 +26,24 @@
                   </div>
                   <div class="row card-panel teal lighten-5">
                     <h6>Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
-                    <div class="input-field col s12 m2 l2">
+                    <div class="input-field col s12 m4 l4">
                       <select class="js-states select2 browser-default" name="txtnodo_id" id="txtnodo_id" style="width: 100%">
                         @foreach($nodos as $nodo)
                           <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                         @endforeach
                       </select>
-                      <label for="txtnodo_id">Seleccione el Nodo</label>
+                      <label for="txtnodo_id" class="active">Seleccione el Nodo</label>
                     </div>
-                    <div class="input-field col s12 m4 l4">
+                    <div class="input-field col s12 m3 l3">
                       <input type="text" id="txtfecha_inicio_todos" name="txtfecha_inicio_todos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                       <label for="txtfecha_inicio_todos">Fecha Inicio</label>
                     </div>
-                    <div class="input-field col s12 m4 l4">
+                    <div class="input-field col s12 m3 l3">
                       <input type="text" id="txtfecha_fin_todos" name="txtfecha_fin_todos" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
                       <label for="txtfecha_fin_todos">Fecha Fin</label>
                     </div>
                     <div class="center input-field col s12 m2 l2">
-                      <a onclick="generarExcelConTodosLosIndicadores(0);" class="btn"><i class="material-icons">file_download</i></a>
+                      <a onclick="generarExcelConTodosLosIndicadores(1);" class="btn"><i class="material-icons">file_download</i></a>
                     </div>
                   </div>
                   <div class="row">
@@ -81,7 +81,7 @@
                                   <label for="txtfecha_fin_ind1">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosInscritos_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosInscritos_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -110,7 +110,7 @@
                                   <label for="txt_total_ind2" class="active">Total</label>
                                 {{-- </div> --}}
                                 <div class="center">
-                                  <button onclick="consultarProyectosEnEjecucion_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosEnEjecucion_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                             </div>
@@ -138,7 +138,7 @@
                                   <label for="txtfecha_fin_ind3">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarPFFfinalizados_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarPFFfinalizados_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -172,7 +172,7 @@
                                   <label for="txtfecha_fin_ind4">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosInscritosAprendizInstructor_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosInscritosAprendizInstructor_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -201,7 +201,7 @@
                                   <label for="txt_total_ind5" class="active">Total</label>
                                 {{-- </div> --}}
                                 <div class="center">
-                                  <button onclick="consultarProyectosEnEjecucionConSena_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosEnEjecucionConSena_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                             </div>
@@ -229,7 +229,7 @@
                                   <label for="txtfecha_fin_ind6">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosPFFFinalizadosAprendizInstructor_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosPFFFinalizadosAprendizInstructor_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -263,7 +263,7 @@
                                   <label for="txtfecha_fin_ind7">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarCostosPFFfinalizadosSena_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarCostosPFFfinalizadosSena_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -297,7 +297,7 @@
                                   <label for="txtfecha_fin_ind8">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosInscritosEmpresas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosInscritosEmpresas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -326,7 +326,7 @@
                                   <label for="txt_total_ind9" class="active">Total</label>
                                 {{-- </div> --}}
                                 <div class="center">
-                                  <button onclick="consultarProyectosEnEjecucionConEmpresas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosEnEjecucionConEmpresas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                             </div>
@@ -354,7 +354,7 @@
                                   <label for="txtfecha_fin_ind10">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosPFFFinalizadosEmpresas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosPFFFinalizadosEmpresas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -388,7 +388,7 @@
                                   <label for="txtfecha_fin_ind11">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarCostosPFFfinalizadosEmpresas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarCostosPFFfinalizadosEmpresas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -422,7 +422,7 @@
                                   <label for="txtfecha_fin_ind12">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTalentoEnAsocioProyectosConEmpresa_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTalentoEnAsocioProyectosConEmpresa_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -456,7 +456,7 @@
                                   <label for="txtfecha_fin_ind13">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosInscritosEmprendedoresInvetoresOtros_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosInscritosEmprendedoresInvetoresOtros_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -485,7 +485,7 @@
                                   <label for="txt_total_ind14" class="active">Total</label>
                                 {{-- </div> --}}
                                 <div class="center">
-                                  <button onclick="consultarProyectosEnEjecucionConEmprendedoresInventoresOtros_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosEnEjecucionConEmprendedoresInventoresOtros_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                             </div>
@@ -513,7 +513,7 @@
                                   <label for="txtfecha_fin_ind15">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarPFFFinalizadosEmprendedoresInvetoresOtros_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarPFFFinalizadosEmprendedoresInvetoresOtros_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -551,7 +551,7 @@
                                   <label for="txtfecha_fin_ind16">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarCostosPFFfinalizadosEmprendedoresOtros_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarCostosPFFfinalizadosEmprendedoresOtros_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -585,7 +585,7 @@
                                   <label for="txtfecha_fin_ind17">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarPMVfinalizados_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarPMVfinalizados_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -619,7 +619,7 @@
                                   <label for="txtfecha_fin_ind18">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosPMVFinalizadosAprendizInstructor_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosPMVFinalizadosAprendizInstructor_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -653,7 +653,7 @@
                                   <label for="txtfecha_fin_ind19">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarCostosPMVfinalizadosSena_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarCostosPMVfinalizadosSena_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -687,7 +687,7 @@
                                   <label for="txtfecha_fin_ind20">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectosPMVFinalizadosEmpresas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectosPMVFinalizadosEmpresas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -721,7 +721,7 @@
                                   <label for="txtfecha_fin_ind21">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarCostosPMVfinalizadosEmpresas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarCostosPMVfinalizadosEmpresas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -755,7 +755,7 @@
                                   <label for="txtfecha_fin_ind22">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarPMVFinalizadosEmprendedoresInvetoresOtros_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarPMVFinalizadosEmprendedoresInvetoresOtros_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -789,7 +789,7 @@
                                   <label for="txtfecha_fin_ind23">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarCostosPMVfinalizadosEmprendedoresOtros_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarCostosPMVfinalizadosEmprendedoresOtros_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -823,7 +823,7 @@
                                   <label for="txtfecha_fin_ind24">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectoConGruposInternos_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectoConGruposInternos_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -857,7 +857,7 @@
                                   <label for="txtfecha_fin_ind25">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectoConGruposInternosFinalizados_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectoConGruposInternosFinalizados_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -891,7 +891,7 @@
                                   <label for="txtfecha_fin_ind26">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectoConGruposExternos_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectoConGruposExternos_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -925,7 +925,7 @@
                                   <label for="txtfecha_fin_ind27">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarProyectoConGruposExternosFinalizados_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarProyectoConGruposExternosFinalizados_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -959,7 +959,7 @@
                                   <label for="txtfecha_fin_ind28">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTalentosConApoyoYProyectos_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTalentosConApoyoYProyectos_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -993,7 +993,7 @@
                                   <label for="txtfecha_fin_ind29">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTalentosSinApoyoYProyectos_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTalentosSinApoyoYProyectos_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1033,7 +1033,7 @@
                                   <label for="txtfecha_fin_ind30">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarAsesoriasIDiEmp_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarAsesoriasIDiEmp_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1062,7 +1062,7 @@
                                   <label for="txt_total_ind31" class="active">Total</label>
                                 {{-- </div> --}}
                                 <div class="center">
-                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                             </div>
@@ -1090,7 +1090,7 @@
                                   <label for="txtfecha_fin_ind32">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1124,7 +1124,7 @@
                                   <label for="txtfecha_fin_ind33">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarVigilanciaEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarVigilanciaEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1158,7 +1158,7 @@
                                   <label for="txtfecha_fin_ind34">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarAnalisisEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarAnalisisEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1196,7 +1196,7 @@
                                   <label for="txtfecha_fin_ind35">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarReestructuracionEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarReestructuracionEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1230,7 +1230,7 @@
                                   <label for="txtfecha_fin_ind36">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarEstrategiasPosicionamientoEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarEstrategiasPosicionamientoEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1264,7 +1264,7 @@
                                   <label for="txtfecha_fin_ind37">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarPropiedadIntelectualEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarPropiedadIntelectualEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1298,7 +1298,7 @@
                                   <label for="txtfecha_fin_ind38">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarFormulacionProyectosEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarFormulacionProyectosEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1332,7 +1332,7 @@
                                   <label for="txtfecha_fin_ind39">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarAsesoriaEmpresasEmprendedoresFinalizadas_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarAsesoriaEmpresasEmprendedoresFinalizadas_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1372,7 +1372,7 @@
                                   <label for="txtfecha_fin_ind40">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarEdts_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarEdts_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1406,7 +1406,7 @@
                                   <label for="txtfecha_fin_ind41">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalPersonasEnEdts_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalPersonasEnEdts_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1440,7 +1440,7 @@
                                   <label for="txtfecha_fin_ind42">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalPersonasSenaEnEdts_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalPersonasSenaEnEdts_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1478,7 +1478,7 @@
                                   <label for="txtfecha_fin_ind43">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalPersonasEmpleadosEnEdts_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalPersonasEmpleadosEnEdts_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1512,7 +1512,7 @@
                                   <label for="txtfecha_fin_ind44">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalPublicoGeneralEnEdts_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalPublicoGeneralEnEdts_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1552,7 +1552,7 @@
                                   <label for="txtfecha_fin_ind45">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalTalentosEnProyecto_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalTalentosEnProyecto_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1586,7 +1586,7 @@
                                   <label for="txtfecha_fin_ind46">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalTalentosSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalTalentosSenaEnProyecto_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1624,7 +1624,7 @@
                                   <label for="txtfecha_fin_ind47">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalTalentosMujerSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalTalentosMujerSenaEnProyecto_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1658,7 +1658,7 @@
                                   <label for="txtfecha_fin_ind48">Fecha Fin</label>
                                 </div>
                                 <div class="center">
-                                  <button onclick="consultarTotalTalentosEgresadosSenaEnProyecto_total(0)" class="btn">Consultar</button>
+                                  <button onclick="consultarTotalTalentosEgresadosSenaEnProyecto_total(1)" class="btn">Consultar</button>
                                 </div>
                               </div>
                               <div class="input-field col s12 m4 l4">
@@ -1691,7 +1691,6 @@
       if (bandera == 1) {
         idnodo = $('#txtnodo_id').val();
       }
-
       if (idnodo === '') {
         Swal.fire('Error!', 'Seleccione un nodo', 'error');
       } else {

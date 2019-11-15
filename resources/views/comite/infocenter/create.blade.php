@@ -151,30 +151,6 @@
                   </div>
                 </div>
                 <div class="divider"></div>
-               {{-- <div class="row">
-                 <h5>Entregables Fase Inicio</h5>
-                 <div class="input-field col s6 m3 l3">
-                   <p class="p-v-xs">
-                     <input type="checkbox" id="txtcorreos" name="txtcorreos" value="1">
-                     <label for="txtcorreos">Correos <span class="red-text">*</span></label>
-                   </p>
-                 </div>
-                 <div class="input-field col s6 m3 l3">
-                   <p class="p-v-xs">
-                     <input type="checkbox" id="txtlistado_asistencia" name="txtlistado_asistencia" value="1">
-                     <label for="txtlistado_asistencia">Listado de Asistencia <span class="red-text">*</span></label>
-                   </p>
-                 </div>
-                 <div class="input-field col s6 m3 l3">
-                   <p class="p-v-xs">
-                     <input type="checkbox" id="txtotros" name="txtotros" value="1">
-                     <label for="txtotros">Otros <span class="red-text">*</span></label>
-                   </p>
-                 </div>
-               </div>
-               <div class="divider"></div>
-               <div class="dropzone"></div>
-               <div class="divider"></div> --}}
                <div class="row">
                  <center>
                    <button type="submit" class="btn waves-effect cyan darken-1 center-aling"><i class="material-icons right">done_all</i>Registrar</button>

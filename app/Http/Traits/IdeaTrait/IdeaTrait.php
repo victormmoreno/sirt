@@ -41,6 +41,13 @@ trait IdeaTrait
     return $this->belongsTo(EstadoIdea::class, 'estadoidea_id', 'id');
   }
 
+  public function comites()
+  {
+    return $this->belongsToMany(Comite::class, 'comite_idea')
+    ->withTimestamps()
+    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones']);
+  }
+
   public function nodo()
   {
     return $this->belongsTo(Nodo::class, 'nodo_id', 'id');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, DB};
 use App\Repositories\Repository\{ProyectoRepository, ActividadRepository, ArticulacionRepository, EdtRepository, UserRepository\TalentoRepository};
-use App\{User, Models\Articulacion, Models\GrupoInvestigacion};
+use App\{User, Models\Articulacion, Models\GrupoInvestigacion, Models\Nodo};
 
 class IndicadorController extends Controller
 {
@@ -70,9 +70,9 @@ class IndicadorController extends Controller
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('indicadores.dinamizador.index');
     } else {
-      // return view('indicadores.administrador.index', [
-      //   'nodos' => Nodos::
-      // ]);
+      return view('indicadores.administrador.index', [
+        'nodos' => Nodo::SelectNodo()->get()
+      ]);
     }
 
   }
