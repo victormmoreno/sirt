@@ -403,14 +403,20 @@ function verTalentosDeUnProyecto(id){
       $("#talentosAsociadosAUnProyecto_titulo").append("<span class='cyan-text text-darken-3'>Código de Proyecto: </span>"+respuesta.proyecto+"");
       $.each(respuesta.talentos, function(i, item) {
         let icon = "";
+        let celular = item.celular;
         if (item.rol == 'Talento Líder') {
           icon = '<i class="material-icons green-text left">face</i>'
+        }
+        if (item.celular == null) {
+          celular = "";
         }
         // let talento = '<a class="waves-effect waves-light btn tooltipped cyan m-b-xs modal-trigger" onclick="talento('+item.idpersona+')" data-position="bottom" data-delay="50" data-tooltip="Información del Talento"><i class="material-icons">assignment_ind</i> Información del Talento</a>'
         $("#talentosAsociadosAUnProyecto_table").append(
           '<tr>'
           +'<td>'+icon+' '+item.rol+'</td>'
           +'<td>'+item.talento+'</td>'
+          +'<td>'+item.email+'</td>'
+          +'<td>'+celular+'</td>'
           +'</tr>'
         );
       });
@@ -429,7 +435,7 @@ function verTalentosDeUnProyecto(id){
 }
 
 function consultarProyectosPendientesPorAprobacion() {
-  
+
   $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
   $('#tblproyectosPendienteDeAprobacion').DataTable({
     language: {
