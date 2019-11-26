@@ -104,9 +104,9 @@ class LoginController extends Controller
      */
     protected function credentials(Request $request)
     {
-        // $request['estado'] = true;
-        // return $request->only($this->username(), $this->password(), 'estado');
-        return $request->only($this->username(), $this->password());
+        $request['estado'] = true;
+        return $request->only($this->username(), $this->password(), 'estado');
+        // return $request->only($this->username(), $this->password());
     }
 
     private function password()

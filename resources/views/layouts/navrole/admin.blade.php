@@ -15,7 +15,7 @@
           <i class="material-icons {{setActiveRouteActiveIcon('nodo')}}">domain</i>
         Nodos</a>
       </li>
-      
+
       {{-- <li>
         <a href="">Mapa</a>
       </li> --}}
@@ -60,6 +60,11 @@
 <li class="no-padding {{setActiveRoute('charla')}}">
   <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}" rel="canonical" title="Charlas Informativas">
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
+  </a>
+</li>
+<li class="no-padding {{setActiveRoute('indicadores')}}">
+  <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('grafico')}}">

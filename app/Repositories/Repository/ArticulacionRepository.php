@@ -10,6 +10,40 @@ class ArticulacionRepository
 {
 
   /**
+   * Cantidad de articulaciones con grupos de investigación
+   *
+   * @return Builder
+   * @author dum
+   */
+  public function consultarTotalDeArticulacionesGrupos()
+  {
+    return Articulacion::selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades', 'entidades.id', '=', 'articulacion_proyecto.entidad_id')
+    ->join('gruposinvestigacion', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+    ->where('tipo_articulacion', Articulacion::IsGrupo());
+  }
+
+  /**
+   * Cantidad de articulaciones con empresas y emprendedores
+   *
+   * @return Builder
+   * @author dum
+   */
+  public function consultarTotalDeArticulacionesEmpresasEmprendedores()
+  {
+    return Articulacion::selectRaw('count(articulaciones.id) AS cantidad')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereIn('tipo_articulacion', [Articulacion::IsEmpresa(), Articulacion::IsEmprendedor()]);
+  }
+
+  /**
    * Método que retorna el directorio de los archivos que tiene una articulación en el servidor
    * @param int $id Id de la articulacion_proyecto
    * @return mixed

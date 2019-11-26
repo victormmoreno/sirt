@@ -159,9 +159,9 @@
           <tr>
             <th>Rol del Talento</th>
             <th>Talento</th>
-            {{-- <th>Correo</th>
+            <th>Correo</th>
             <th>Contacto</th>
-            <th>Información del Talento</th> --}}
+            {{-- <th>Información del Talento</th> --}}
           </tr>
         </thead>
         <tbody id="talentosAsociadosAUnProyecto_table">

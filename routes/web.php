@@ -391,7 +391,7 @@ Route::group([
     function () {
         Route::get('/', 'ComiteController@index')->name('csibt');
         Route::get('/create', 'ComiteController@create')->name('csibt.create');
-        Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit');
+        Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
@@ -400,6 +400,7 @@ Route::group([
         Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
         Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
         Route::put('/updateEvidencias/{id}', 'ComiteController@updateEvidencias')->name('csibt.update.evidencias');
+        Route::put('/{id}', 'ComiteController@update')->name('csibt.update')->middleware('role_session:Infocenter');
         Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store');
         Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
@@ -667,6 +668,8 @@ Route::group([
    // Rutas para la generación de excel del módulo de seguimiento
    Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
    Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
+   // Rutas para la generación de excel del módulo de indicadores
+   Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@export')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
 
    //Rutas para la generación de excel del módulo de nodo
    Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
@@ -692,6 +695,62 @@ Route::group([
     Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
   }
 );
+
+/**
+  * Route group para el módulo de indicadores
+  */
+  Route::group([
+    'prefix' => 'indicadores',
+    'middleware' => ['auth', 'role_session:Administrador|Dinamizador',]
+  ],
+  function () {
+    Route::get('/', 'IndicadorController@index')->name('indicadores');
+    // Relacionado a proyectos
+    Route::get('/totalProyectosInscritos/{idnodo}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalProyectosInscritos');
+    Route::get('/totalProyectosEnEjecucion/{id}', 'IndicadorController@totalProyectosEjecucion');
+    Route::get('/totalPFFfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPFFfinalizados');
+    Route::get('/totalInscritosSena/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalInscritosSena');
+    Route::get('/totalProyectosEnEjecucionSena/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionSena');
+    Route::get('/totalPFFSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFSena');
+    Route::get('/totalCostoPFFFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoSena');
+    Route::get('/totalInscritosEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalInscritosEmpresas');
+    Route::get('/totalProyectosEnEjecucionEmpresas/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmpresas');
+    Route::get('/totalPFFfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFfinalizadosConEmpresas');
+    Route::get('/totalCostoPFFFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmpresas');
+    Route::get('/totalTalentosConProyectosEnAsocioConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConProyectosEnAsocioConEmpresas');
+    Route::get('/totalProyectosInscritosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectosInscritosEmprendedoresInvetoresOtro');
+    Route::get('/totalPFFFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFFinalizadosEmprendedoresInvetoresOtro');
+    Route::get('/totalProyectosEnEjecucionEmprendedoresInventoresOtros/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmprendedoresInventoresOtros');
+    Route::get('/totalCostoPFFFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmprendedoresOtros');
+    Route::get('/totalPMVfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPMVfinalizados');
+    Route::get('/totalPMVSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVSena');
+    Route::get('/totalCostoPMVFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoSena');
+    Route::get('/totalPMVfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVfinalizadosConEmpresas');
+    Route::get('/totalCostoPMVFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmpresas');
+    Route::get('/totalPMVFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVFinalizadosEmprendedoresInvetoresOtro');
+    Route::get('/totalCostoPMVFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmprendedoresOtros');
+    Route::get('/totalProyectoConGruposInternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternos');
+    Route::get('/totalProyectoConGruposInternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternosFinalizados');
+    Route::get('/totalProyectoConGruposExternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternos');
+    Route::get('/totalProyectoConGruposExternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternosFinalizados');
+    Route::get('/totalTalentosConApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConApoyoYProyectosAsociados');
+    Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
+    // Relacionado a articulaciones
+    Route::get('/totalAsesoriasIDiEmpresasYEmprendedores/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasYEmprendedores');
+    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
+    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresFinalizadas');
+    Route::get('/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}/{nombre_tipo_articulacion}', 'IndicadorController@totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas');
+    // Relacionado a edts
+    Route::get('/totalEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalEdts');
+    Route::get('/totalAtendidosEnEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}/{campos}', 'IndicadorController@totalAtendidosEnEdts');
+    // Relacionado a talento
+    Route::get('/totalTalentosEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEnProyecto');
+    Route::get('/totalTalentosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSenaEnProyecto');
+    Route::get('/totalTalentosMujeresSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosMujeresSenaEnProyecto');
+    Route::get('/totalTalentosEgresadosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEgresadosSenaEnProyecto');
+  }
+);
+
 
 /**
 * Route group para el módulo de costos
@@ -813,4 +872,3 @@ Route::group([
 });
 
 /*=====  End of rutas para la documentación del proyecto  ======*/
-

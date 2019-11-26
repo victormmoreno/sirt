@@ -25,7 +25,7 @@ class GrupoInvestigacionFormRequest extends FormRequest
   {
     return [
       'txtcodigo_grupo' => 'required|min:4|max:15|regex:/([a-zA-ZñÑáéíóúÁÉÍÓÚ]){1,3}([0-9])/|unique:gruposinvestigacion,codigo_grupo,'.$this->route('id'),
-      'txtnombre' => 'required|min:1|max:300|regex:/^([,;0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)$/',
+      'txtnombre' => 'required|min:1|max:300',
       'txtemail_entidad' => 'email|nullable|min:7|max:200',
       'txtclasificacionclociencias_id' => 'required',
       'txttipogrupo' => 'required',

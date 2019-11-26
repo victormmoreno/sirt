@@ -19,7 +19,7 @@ class DeleteNotifications extends Command
      *
      * @var string
      */
-    protected $description = 'delete all notifications of notifications table';
+    protected $description = 'Elimina las notificaciones que tienen al menos un mes de haberse creado';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,7 @@ class DeleteNotifications extends Command
      */
     public function handle()
     {
-        DB::table('notifications')->truncate();
-        $this->info('Table notifications truncated.');
+        DB::table('notifications')->whereRaw('DATEDIFF(DATE_FORMAT(created_at, "%Y-%m-%d"), NOW()) <= -31')->delete();
+        $this->info('Registros eliminados.');
     }
 }

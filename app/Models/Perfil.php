@@ -14,7 +14,7 @@ class Perfil extends Model
 	const IS_EGRESADO_SENA = 'Egresado SENA';
 	const IS_APRENDIZ_SENA_CON_APOYO = 'Aprendiz SENA con apoyo de sostenimiento';
     const IS_APRENDIZ_SENA_SIN_APOYO = 'Aprendiz SENA sin apoyo de sostenimiento';
-    const IS_FUNCIONARIO_EMPRESA_PUBLICA  = 'Funcionario empresa púbilca';
+    const IS_FUNCIONARIO_EMPRESA_PUBLICA  = 'Funcionario empresa pública';
     const IS_EST_UNIVERSITARIO_PREGRADO  = 'Estudiante Universitario de Pregrado';
     const IS_EST_UNIVERSITARIO_POSTGRADO  = 'Estudiante Universitario de Postgrado';
     const IS_FUNCIONARIO_MICROEMPRESA  = 'Funcionario microempresa';
@@ -33,14 +33,14 @@ class Perfil extends Model
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
-    
+
     public function talentos()
     {
       return $this->hasMany(Talento::class, 'perfil_id', 'id');
     }
-    
+
     /*=====  End of relaciones eloquent  ======*/
-    
+
 
     /*===========================================================================
     =            scope para consultar todos los perfiles del talento            =
@@ -50,8 +50,8 @@ class Perfil extends Model
 
         return $query;
     }
-    
-    
+
+
     /*=====  End of scope para consultar todos los perfiles del talento  ======*/
-    
+
 }
