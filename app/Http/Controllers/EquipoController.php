@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EquipoFormRequest;
 use App\Models\Equipo;
 use App\Models\Nodo;
+use App\Repositories\Datatables\EquipoDatatables;
 use App\Repositories\Repository\EquipoRepository;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
@@ -18,17 +19,81 @@ class EquipoController extends Controller
 
     public function __construct(EquipoRepository $equipoRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
-        $this->equipoRepository = $equipoRepository;
-        $this->lineaRepository  = $lineaRepository;
-        $this->nodoRepository   = $nodoRepository;
+        $this->setEquipoRepository($equipoRepository);
+        $this->setLineaTecnologicaRepository($lineaRepository);
+        $this->setNodoRepository($nodoRepository);
         $this->middleware('auth');
     }
-    /**equiposmantenimientos
+
+    /**
+     * Asigna un valor a $equipoRepository
+     * @param object $equipoRepository
+     * @return void
+     * @author devjul
+     */
+    public function setEquipoRepository($equipoRepository)
+    {
+        $this->equipoRepository = $equipoRepository;
+    }
+
+    /**
+     * Retorna el valor de $equipoRepository
+     * @return object
+     * @author devjul
+     */
+    public function getEquipoRepository()
+    {
+        return $this->equipoRepository;
+    }
+
+    /**
+     * Asigna un valor a $lineaRepository
+     * @param object $lineaRepository
+     * @return void
+     * @author devjul
+     */
+    public function setLineaTecnologicaRepository($lineaRepository)
+    {
+        $this->lineaRepository = $lineaRepository;
+    }
+
+    /**
+     * Retorna el valor de $lineaRepository
+     * @return object
+     * @author devjul
+     */
+    public function getLineaTecnologicaRepository()
+    {
+        return $this->lineaRepository;
+    }
+
+    /**
+     * Asigna un valor a $nodoRepository
+     * @param object $nodoRepository
+     * @return void
+     * @author devjul
+     */
+    public function setNodoRepository($nodoRepository)
+    {
+        $this->nodoRepository = $nodoRepository;
+    }
+
+    /**
+     * Retorna el valor de $nodoRepository
+     * @return object
+     * @author devjul
+     */
+    public function getNodoRepository()
+    {
+        return $this->nodoRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(EquipoDatatables $equipoDatatables)
     {
 
         if (request()->ajax()) {
@@ -36,11 +101,13 @@ class EquipoController extends Controller
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
 
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-                    $nodo    = auth()->user()->dinamizador->nodo->id;
+                    $nodo = auth()->user()->dinamizador->nodo->id;
+
                     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                         ->whereHas('nodo', function ($query) use ($nodo) {
                             $query->where('id', $nodo);
                         })->get();
+
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea   = auth()->user()->gestor->lineatecnologica->id;
                     $nodo    = auth()->user()->gestor->nodo->id;
@@ -53,27 +120,7 @@ class EquipoController extends Controller
                         })->get();
                 }
 
-                return datatables()->of($equipos)
-                    ->addColumn('edit', function ($data) {
-                        $button = '<a href="' . route("equipo.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-
-                        return $button;
-                    })
-                    ->addColumn('anio_fin_depreciacion', function ($data) {
-                        return $data->vida_util + $data->anio_compra;
-                    })
-                    ->addColumn('depreciacion_por_anio', function ($data) {
-                        return '$ ' . number_format(round($data->costo_adquisicion / $data->vida_util, 2));
-                    })
-                    ->editColumn('costo_adquisicion', function ($data) {
-                        return '$ ' . number_format($data->costo_adquisicion);
-                    })
-                    ->editColumn('nombrelinea', function ($data) {
-                        return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
-                    })
-
-                    ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
-                    ->make(true);
+                return $equipoDatatables->indexDatatable($equipos);
             } else {
                 abort('403');
             }
@@ -105,7 +152,7 @@ class EquipoController extends Controller
      * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getEquiposPorNodo($nodo)
+    public function getEquiposPorNodo(EquipoDatatables $equipoDatatables,$nodo)
     {
 
         if (request()->ajax()) {
@@ -117,27 +164,7 @@ class EquipoController extends Controller
                         $query->where('id', $nodo);
                     })->get();
 
-                return datatables()->of($equipos)
-                    ->addColumn('edit', function ($data) {
-                        $button = '<a href="' . route("equipo.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-
-                        return $button;
-                    })
-                    ->addColumn('anio_fin_depreciacion', function ($data) {
-                        return $data->vida_util + $data->anio_compra;
-                    })
-                    ->addColumn('depreciacion_por_anio', function ($data) {
-                        return '$ ' . number_format(round($data->costo_adquisicion / $data->vida_util, 2));
-                    })
-                    ->editColumn('costo_adquisicion', function ($data) {
-                        return '$ ' . number_format($data->costo_adquisicion);
-                    })
-                    ->editColumn('nombrelinea', function ($data) {
-                        return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
-                    })
-
-                    ->rawColumns(['edit', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
-                    ->make(true);
+                return $equipoDatatables->getEquiposPorNodoDatatables($equipos);
             } else {
                 return response()->json(['data' => 'no response']);
             }
@@ -261,7 +288,7 @@ class EquipoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-        public function update(EquipoFormRequest $request, $id)
+    public function update(EquipoFormRequest $request, $id)
     {
         $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
         $this->authorize('update', $equipo);
@@ -278,66 +305,4 @@ class EquipoController extends Controller
 
     }
 
-    /**
-     * Asigna un valor a $equipoRepository
-     * @param object $equipoRepository
-     * @return void
-     * @author devjul
-     */
-    public function setEquipoRepository($equipoRepository)
-    {
-        $this->equipoRepository = $equipoRepository;
-    }
-
-    /**
-     * Retorna el valor de $equipoRepository
-     * @return object
-     * @author devjul
-     */
-    public function getEquipoRepository()
-    {
-        return $this->equipoRepository;
-    }
-
-    /**
-     * Asigna un valor a $lineaRepository
-     * @param object $lineaRepository
-     * @return void
-     * @author devjul
-     */
-    public function setLineaTecnologicaRepository($lineaRepository)
-    {
-        $this->lineaRepository = $lineaRepository;
-    }
-
-    /**
-     * Retorna el valor de $lineaRepository
-     * @return object
-     * @author devjul
-     */
-    public function getLineaTecnologicaRepository()
-    {
-        return $this->lineaRepository;
-    }
-
-    /**
-     * Asigna un valor a $nodoRepository
-     * @param object $nodoRepository
-     * @return void
-     * @author devjul
-     */
-    public function setNodoRepository($nodoRepository)
-    {
-        $this->nodoRepository = $nodoRepository;
-    }
-
-    /**
-     * Retorna el valor de $nodoRepository
-     * @return object
-     * @author devjul
-     */
-    public function getNodoRepository()
-    {
-        return $this->nodoRepository;
-    }
 }

@@ -92,11 +92,11 @@ class NodoController extends Controller
             case User::IsDinamizador():
                 if (isset(auth()->user()->dinamizador)) {
                     $nodoAuth = auth()->user()->dinamizador->nodo->id;
-                    $nodo = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
+                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
 
                     return view('nodos.show', [
-                        'nodo' => $nodo,
-                        'equipos' => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                        'nodo'              => $nodo,
+                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
                         'lineatecnologicas' => $nodo->lineas()->paginate(4),
                     ]);
                 }
@@ -106,10 +106,10 @@ class NodoController extends Controller
 
                 if (isset(auth()->user()->gestor)) {
                     $nodoAuth = auth()->user()->gestor->nodo->id;
-                    $nodo = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
+                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
                     return view('nodos.show', [
-                        'nodo' => $nodo,
-                        'equipos' => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                        'nodo'              => $nodo,
+                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
                         'lineatecnologicas' => $nodo->lineas()->paginate(4),
                     ]);
                 }
@@ -168,8 +168,8 @@ class NodoController extends Controller
         $this->authorize('show', $nodo);
 
         return view('nodos.show', [
-            'nodo' => $nodo,
-            'equipos' => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+            'nodo'              => $nodo,
+            'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
             'lineatecnologicas' => $nodo->lineas()->paginate(4),
         ]);
     }
@@ -205,7 +205,7 @@ class NodoController extends Controller
         $this->authorize('update', Nodo::class);
         $nodo = $this->getNodoRepository()->findById($id);
 
-        $nodoUpdate  = $this->getNodoRepository()->update($request, $nodo);
+        $nodoUpdate = $this->getNodoRepository()->update($request, $nodo);
 
         if ($nodoUpdate == true) {
 
@@ -214,6 +214,17 @@ class NodoController extends Controller
             alert()->error('Modificación Erróneo.', 'El nodo no se ha modificado.');
         }
         return redirect()->route('nodo.index');
+    }
+
+    /**
+     * destroy the specified resource in storage.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request,$id)
+    {
+        $nodo = Nodo::find($id)->delete();
+        return $nodo;
     }
 
     public function pdfEquipoNodo(NodoPdf $nodoPdf)

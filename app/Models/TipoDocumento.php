@@ -41,4 +41,9 @@ class TipoDocumento extends Model
         return $this->hasMany(Visitante::class, 'tipodocumento_id', 'id');
     }
 
+    public function scopeGetTiposDocumentos($query)
+    {
+        return $query->pluck('nombre','id');
+    }
+
 }

@@ -91,9 +91,6 @@
                             <p>
                                 Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el gestor asesor.
                             </p>
-                            <p>
-                                Aún no tienes articulaciones en fase de inicio o en fase de ejecución. Por favor consulta con el gestor asesor.
-                            </p>
                             @endif
                         </div>
                         @endif
@@ -377,7 +374,7 @@
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" min="0" maxlength="6" value="1"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" name="asesoriaindirecta[]" min="0" maxlength="6" value="1"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
 
@@ -1125,9 +1122,9 @@
                         type: 'error',
                         title: 'Debe de haber al menos una asesoria con el valor de 1'
                       });
-                    $("#txtasesoriadirecta").val(1);
+                    $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                    $("#txtasesoriaindirecta").val(1);
+                    $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
                 }
                 else if($("#txtasesoriaindirecta").val() == '' ||  (!/^([0-9])*$/.test($("#txtasesoriaindirecta").val()))){
@@ -1139,7 +1136,7 @@
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria indirecta correcta.'
                       });
-                    $("#txtasesoriaindirecta").val(1);
+                    $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriaindirecta']").addClass('active');
 
                 }else{
@@ -1161,9 +1158,9 @@
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
 
-                    $("#txtasesoriadirecta").val(1);
+                    $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                    $("#txtasesoriaindirecta").val(1);
+                    $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
 
                 }

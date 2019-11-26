@@ -1,6 +1,8 @@
 @extends('auth.layouts.app')
 
 @section('meta-tittle', 'Inicio Sesión')
+@section('meta-content', 'Inicio Sesión')
+@section('meta-keywords', 'Inicio Sesión')
 
 @section('content-auth')
 <div class="mn-content valign-wrapper" id="app">

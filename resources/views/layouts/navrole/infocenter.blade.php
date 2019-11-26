@@ -6,17 +6,17 @@
   <div class="collapsible-body">
     <ul>
       <li>
-        <a href="{{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}">
+        <a href="{{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
           <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
         </a>
       </li>
       <li>
-        <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}">
+        <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}" rel="canonical" title="Entrenamientos">
           <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Entrenamientos
         </a>
       </li>
       <li>
-        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}">
+        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}" rel="canonical" title="CSIBT's">
           <i class="material-icons {{setActiveRouteActiveIcon('csibt')}}">gavel</i>CSIBT's
         </a>
       </li>
@@ -24,7 +24,7 @@
   </div>
 </li>
 <li class="no-padding {{setActiveRoute('charla')}}">
-  <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}">
+  <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}" rel="canonical" title="Charlas Informativas">
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>

@@ -113,6 +113,7 @@ class LoginController extends Controller
     {
         return 'password';
     }
+    
 
     public function logout(Request $request)
     {

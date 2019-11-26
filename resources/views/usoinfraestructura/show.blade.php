@@ -88,7 +88,7 @@
                                                                     </p>
                                                                     @if(isset($usoinfraestructura->actividad->fecha_cierre) && $usoinfraestructura->actividad->fecha_cierre != null)
                                                                         <p>
-                                                                       <strong>Fecha de Inicio :</strong>
+                                                                       <strong class="cyan-text text-darken-3">Fecha de Cierre :</strong>
                                                                         {{$usoinfraestructura->actividad->fecha_cierre->isoformat('LL')}}
                                                                     </p>
                                                                     @endif
@@ -128,28 +128,7 @@
                                                                                 </p>
                                                                             @endif
                                                                             
-                                                                        <li class="collection-header center">
-                                                                            <h6>
-                                                                                <b>Talentos asociados a {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}} 
-                                                                            ({{$usoinfraestructura->actividad->articulacion_proyecto->talentos->count()}})</b>
-                                                                        </h6>
-                                                                        </li>
-                                                                        @forelse($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                                                                            <li class="collection-item ">
-                                        
-                                                                                <span class="title">
-                                                                                   {{$talento->user->documento}} -  {{$talento->user->nombres}} {{$talento->user->apellidos}}
-                                                                                </span>
-                                                                                   
-                                                                            </li>
-                                                                        @empty
-                                                                        <div class="center">
-                                                                           <i class="large material-icons center">
-                                                                                block
-                                                                            </i>
-                                                                            <p class="center-align">No se encontraron resultados</p> 
-                                                                        </div>
-                                                                        @endforelse
+                                                                        
                                                                     @endif
 
                                                                     @elseif(isset($usoinfraestructura->actividad->edt) && $usoinfraestructura->actividad->edt != null)
