@@ -775,6 +775,7 @@ Route::group([
 
 function () {
   Route::get('/', 'PdfComiteController@printPDF')->name('print');
+  Route::get('/usos_proyecto/{id}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.proyecto.usos');
   Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
 }
 
