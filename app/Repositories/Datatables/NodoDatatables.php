@@ -23,7 +23,11 @@ class NodoDatatables
 
                 return $button;
             })
-            ->rawColumns(['detail', 'edit'])
+            ->addColumn('delete', function ($data) {
+                $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarNodoPorId(' . $data->id . ', event)"><i class="material-icons">delete_sweep</i></a>';
+                return $delete;
+            })
+            ->rawColumns(['detail', 'edit', 'delete'])
             ->make(true);
     }
 

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('meta-title', 'Eventos de Divulgación Tecnológica')
+@section('meta-content', 'Eventos de Divulgación Tecnológica')
+@section('meta-keywords', 'Eventos de Divulgación Tecnológica')
 @section('content')
   @php
     $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');

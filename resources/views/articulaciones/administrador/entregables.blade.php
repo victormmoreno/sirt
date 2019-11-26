@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('meta-title', 'Articulaciones')
+@section('meta-content', 'Articulaciones')
+@section('meta-keywords', 'Articulaciones')
 @section('content')
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
         <h5>
-          <a class="footer-text left-align" href="{{route('articulacion')}}">
+          <a class="footer-text left-align" href="{{route('articulacion')}}" rel="nofollow">
             <i class="material-icons arrow-l">arrow_back</i>
           </a> CSIBT
         </h5>
@@ -15,7 +17,7 @@
               <div class="col s12 m12 l12">
                 @include('articulaciones.form_entregables')
                 <center>
-                  <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                  <a href="{{route('articulacion')}}" rel="nofollow" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
                 <div class="row">
                   <div class="col s12 m12 l12">

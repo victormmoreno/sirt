@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Exceptions\Nodo\NodoDoesNotExist;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Nodo extends Model
 {
+    // use SoftDeletes;
     protected $table = 'nodos';
 
     /**
@@ -36,6 +38,8 @@ class Nodo extends Model
         'telefono'    => 'string',
         'anho_inicio' => 'year',
     ];
+
+    // protected $dates = ['deleted_at'];
 
     /*===========================================
     =            relaciones eloquent            =

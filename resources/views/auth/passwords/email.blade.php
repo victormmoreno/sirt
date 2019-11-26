@@ -1,5 +1,9 @@
 @extends('auth.layouts.app')
 
+@section('meta-tittle', 'Reestablecer Contraseña')
+@section('meta-content', 'Reestablecer Contraseña')
+@section('meta-keywords', 'Reestablecer Contraseña')
+
 @section('content-auth')
 
 <div class="mn-content valign-wrapper" id="app">

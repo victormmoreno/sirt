@@ -1,12 +1,14 @@
 @extends('layouts.app')
 @section('meta-title', 'Articulaciones')
+@section('meta-content', 'Articulaciones')
+@section('meta-keywords', 'Articulaciones')
 @section('content')
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
           <h5>
-            <a class="footer-text left-align" href="{{route('articulacion')}}">
+            <a class="footer-text left-align" href="{{route('articulacion')}}" rel="nofollow">
               <i class="material-icons arrow-l">arrow_back</i>
             </a> Articulaciones
           </h5>

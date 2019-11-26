@@ -50,6 +50,7 @@
                                         <th >Ubicación</th>
                                         <th >Detalle</th>
                                         <th >Editar</th>
+                                        {{-- <th >Eliminar</th> --}}
                                     </thead>
                                 </table>
                                 <div class="col s12 m2 l2">

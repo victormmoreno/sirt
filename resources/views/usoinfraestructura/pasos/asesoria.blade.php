@@ -133,9 +133,9 @@
                 <div class="input-field col s12 m2 l2">
                     
                     @if(isset($usoinfraestructura->asesoria_directa))
-                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="1" />
+                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="0" />
                     @else
-                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="1" readonly />
+                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="0" readonly />
                     @endif
                     <label class="active" for="txtasesoriadirecta">
                         Asesoria Directa (Horas)
@@ -146,9 +146,9 @@
                 <div class="input-field col s12 m2 l2">
                     
                     @if(isset($usoinfraestructura->asesoria_indirecta))
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="1"  /> 
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0"  /> 
                     @else
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="1" readonly />
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="0" readonly />
                     @endif
                     <label class="active" for="txtasesoriaindirecta">
                         Asesoria Indirecta (Horas)

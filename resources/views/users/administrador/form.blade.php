@@ -590,7 +590,7 @@
             <div class="row">
                 <div class="input-field col s12 m4 l4 ">
                     <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1" onchange="TipoTalento.getSelectTipoTalento(this)">
-                        @if(isset($user->talento->perfil->id))
+                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
                             <option value="{{$user->talento->perfil->id}}" selected>{{$user->talento->perfil->nombre}}</option>
                         @else
                             <option value="">Seleccione tipo de talento</option>
@@ -611,8 +611,12 @@
                 </div>
                 <div class="input-field col s12 m4 l4 aprendizSena" >
                     <select class="" id="txtregional" name="txtregional" style="width: 100%" tabindex="-1" onchange="regional.getCentroFormacion()">
-                        @if(isset($user->talento->entidad->centro->regional->id))
-                            <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
+                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                            @if(isset($user->talento->entidad->centro->regional->id))
+                                <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
+                            @else
+                                <option value="">No se encontraron resultados</option>
+                            @endif
                         @else
                             <option value="">Seleccione regional</option>
                             @foreach($regionales as $id => $nombre)
@@ -622,7 +626,10 @@
                                     <option value="{{$id}}" {{old('txtregional') ==$id ? 'selected':''}}>{{$nombre}}</option>
                                 @endif
                             @endforeach
+                        
                         @endif
+                        
+                            
                     </select>
                     <label for="txtregional">Regional <span class="red-text">*</span></label>
                     @error('txtregional')

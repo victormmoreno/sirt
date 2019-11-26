@@ -1,6 +1,10 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/libs.css": "/css/libs.css",
-    "/js/libs.js": "/js/libs.js",
-    "/js/app2.js": "/js/app2.js"
+    "/js/app.js": "/js/app.js?id=78ea04565f7050685ba6",
+    "/js/app.min.js": "/js/app.min.js?id=78ea04565f7050685ba6",
+    "/css/libs.css": "/css/libs.css?id=a8ae4a8e8d9b37d95954",
+    "/css/libs.min.css": "/css/libs.min.css?id=a8ae4a8e8d9b37d95954",
+    "/js/libs.js": "/js/libs.js?id=75297d7b36c8d22fea89",
+    "/js/libs.min.js": "/js/libs.min.js?id=75297d7b36c8d22fea89",
+    "/js/app2.js": "/js/app2.js?id=36d80becc013e0e5d0be",
+    "/js/app2.min.js": "/js/app2.min.js?id=36d80becc013e0e5d0be"
 }
