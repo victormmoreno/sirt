@@ -228,9 +228,78 @@ class UsoInfraestructuraController extends Controller
 
             case User::IsGestor():
 
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                    $query->where('id', $user);
-                })->get();
+                $usoinfraestructura1 = UsoInfraestructura::select('usoinfraestructuras.id as iduso', 'usoinfraestructuras.actividad_id', 'usoinfraestructuras.tipo_usoinfraestructura', 'fecha', 'gestor_uso.asesoria_directa','gestor_uso.asesoria_indirecta', 'descripcion', 'usoinfraestructuras.estado as estadouso')
+                ->join('gestor_uso', 'gestor_uso.usoinfraestructura_id', 'usoinfraestructuras.id')
+                ->join('actividades', 'actividades.id', 'usoinfraestructuras.actividad_id')
+                ->join('nodos', 'nodos.id', 'actividades.nodo_id')
+                ->join('gestores', 'gestores.id', 'actividades.gestor_id')
+                ->join('articulacion_proyecto', 'articulacion_proyecto.actividad_id', 'actividades.id')
+                ->join('proyectos', 'proyectos.articulacion_proyecto_id', 'articulacion_proyecto.id')
+                ->join('estadosproyecto', 'estadosproyecto.id', 'proyectos.estadoproyecto_id')
+                ->get();
+
+                $usoinfraestructura2 = UsoInfraestructura::select('usoinfraestructuras.id as iduso', 'usoinfraestructuras.actividad_id', 'usoinfraestructuras.tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'usoinfraestructuras.estado as estadouso')
+                ->join('actividades', 'actividades.id', 'usoinfraestructuras.actividad_id')
+                ->join('nodos', 'nodos.id', 'actividades.nodo_id')
+                ->join('gestores', 'gestores.id', 'actividades.gestor_id')
+                ->join('articulacion_proyecto', 'articulacion_proyecto.actividad_id', 'actividades.id')
+                ->join('articulaciones', 'articulaciones.articulacion_proyecto_id', 'articulacion_proyecto.id')
+                ->get()->count();
+
+                $usoinfraestructura3 = UsoInfraestructura::select('usoinfraestructuras.id as iduso', 'usoinfraestructuras.actividad_id', 'usoinfraestructuras.tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'usoinfraestructuras.estado as estadouso')
+                ->join('actividades', 'actividades.id', 'usoinfraestructuras.actividad_id')
+                ->join('nodos', 'nodos.id', 'actividades.nodo_id')
+                ->join('gestores', 'gestores.id', 'actividades.gestor_id')
+                ->join('edts', 'edts.actividad_id', 'actividades.id')
+                ->get()->count();
+
+                // $usoinfraestructura = $usoinfraestructura1->union($usoinfraestructura2)->count();
+
+
+                $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                            $query->where('id', $user);
+                        // $query->whereHas('gestor.user', function ($query) use ($user) {
+                        // });
+                })->whereHas('actividad', function($query){
+                        $query->whereHas('articulacion_proyecto.proyecto.estadoproyecto', function ($query)  {
+                            $query->whereYear('fecha_cierre', Carbon::now()->year)
+                                ->orWhereIn('nombre', ['Inicio','Planeacion', 'En ejecución']);
+                        });
+                })->orWhereHas('actividad', function($query){
+                    $query->whereHas('articulacion_proyecto.articulacion', function ($query) {
+                        $query->whereIn('estado',[0,1])->orWhereYear('fecha_inicio', Carbon::now()->year);             
+                    });
+                })->orWhereHas('actividad', function($query){
+                    $query->whereHas('edt', function ($query)  {
+                        $query->
+                            whereYear('fecha_cierre', Carbon::now()->year)->orWhere('estado', 1);
+                                  
+                    });
+                })
+                ->get();
+
+
+                // ->whereHas('actividad', function ($query)  {
+                //     $query->orWhereHas('articulacion_proyecto', function ($query) {
+                        
+                //                 $query->whereHas('proyecto.estadoproyecto', function($query){
+                //                     $query->whereYear('fecha_cierre', Carbon::now()->year)
+                //                     ->whereIn('nombre', ['Inicio','Planeacion', 'En ejecución']);
+                //                 });
+                        
+                //     })
+                //     ->orWhereHas('articulacion_proyecto.articulacion', function ($query)  {
+                //         $query->whereIn('estado',[0,1])->where('fecha_inicio', Carbon::now()->year);
+                //     });
+                // })
+                // ;
+                // ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                //     $query->where('id', $user);
+                // })
+                // ->whereHas('actividad.articulacion_proyecto.proyecto.estadoproyecto', function ($query) {
+                //     $query->whereIn('nombre', ['Inicio','Planeacion', 'En ejecución']);
+                // })->get();
                 break;
             case User::IsTalento():
                 $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.articulacion_proyecto.talentos.user', function ($query) use ($user) {
@@ -244,6 +313,8 @@ class UsoInfraestructuraController extends Controller
                 return abort('403');
                 break;
         }
+
+        // return $usoinfraestructura3;
 
         if (request()->ajax()) {
             return $this->getUsoInfraestructuraDatatables()->indexDatatable($usoinfraestructura);

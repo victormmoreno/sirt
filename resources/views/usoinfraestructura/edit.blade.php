@@ -1064,7 +1064,7 @@
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria directa correcta'
                       });
-                    $("#txtasesoriadirecta").val(1);
+                    $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
                 }else if($("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() < 1 || $("#txtasesoriadirecta").val() < 1 && $("#txtasesoriaindirecta").val() == 0 || $("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() == 0){
                     Swal.fire({
@@ -1075,9 +1075,9 @@
                         type: 'error',
                         title: 'Debe de haber al menos una asesoria con el valor de 1'
                       });
-                    $("#txtasesoriadirecta").val(1);
+                    $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                    $("#txtasesoriaindirecta").val(1);
+                    $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
                 }
                 else if($("#txtasesoriaindirecta").val() == '' ||  (!/^([0-9])*$/.test($("#txtasesoriaindirecta").val()))){
@@ -1089,7 +1089,7 @@
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria indirecta correcta.'
                       });
-                    $("#txtasesoriaindirecta").val(1);
+                    $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriaindirecta']").addClass('active');
                 
                 }else{
@@ -1111,9 +1111,9 @@
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
 
-                    $("#txtasesoriadirecta").val(1);
+                    $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                    $("#txtasesoriaindirecta").val(1);
+                    $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
 
                 }
