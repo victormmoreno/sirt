@@ -205,7 +205,7 @@ class ProyectoController extends Controller
       ';
       return $details;
     })->addColumn('download_seguimiento', function ($data) {
-      $delete = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.proyecto.usos', $data->id) . '><i class="far fa-file-pdf"></i></a>';
+      $delete = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.proyecto.usos', $data->id) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
       return $delete;
     })->addColumn('delete', function ($data) {
       $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarProyectoPorId_event('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';

@@ -30,12 +30,17 @@ class UsoInfraestructuraController extends Controller
   public function downloadPDFUsosInfraestructura(int $idProyecto)
   {
     $proyecto = $this->getProyectoController()->consultarDetallesDeUnProyecto($idProyecto);
-    // dd($proyecto);
+    $usos = Proyecto::with('articulacion_proyecto.actividad.usoinfraestructuras')->find($idProyecto);
+    $talentos = Proyecto::with('articulacion_proyecto.talentos.user')->find($idProyecto);
+    // dd($talentos);
+
     $pdf = PDF::loadView('pdf.usos.seguimiento', [
-      'proyecto' => $proyecto
+      'proyecto' => $proyecto,
+      'usos' => $usos,
+      'talentos' => $talentos
     ]);
     $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-    return $pdf->stream("seguimiento.pdf");
+    return $pdf->stream('Seguimiento_Proyecto_' . $proyecto['codigo_proyecto'] . '.pdf');
   }
 
   /**

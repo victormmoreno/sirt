@@ -83,6 +83,9 @@
 @endsection
 @push('script')
   <script type="text/javascript">
+  $( document ).ready(function() {
+    consultarProyectosSeguimiento_Gestor();
+  });
   function consultarProyectosSeguimiento_Gestor() {
     let anho = $('#txtanho_proyecto_Seguimiento').val();
     $('#tblproyecto_Seguimiento').dataTable().fnDestroy();
