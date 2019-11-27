@@ -204,6 +204,9 @@ class ProyectoController extends Controller
       </a>
       ';
       return $details;
+    })->addColumn('download_seguimiento', function ($data) {
+      $delete = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.proyecto.usos', $data->id) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
+      return $delete;
     })->addColumn('delete', function ($data) {
       $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarProyectoPorId_event('.$data->id.', event)"><i class="material-icons">delete_sweep</i></a>';
       return $delete;
@@ -287,7 +290,7 @@ class ProyectoController extends Controller
           return false;
         });
       }
-    })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final', 'delete'])->make(true);
+    })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final', 'delete', 'download_seguimiento'])->make(true);
   }
 
   /**
@@ -319,11 +322,13 @@ class ProyectoController extends Controller
   */
   public function consultarDetallesDeUnProyecto($id)
   {
+    $proyecto = ArrayHelper::validarDatoNullDeUnArray($this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id)->toArray());
     if (request()->ajax()) {
-      $proyecto = ArrayHelper::validarDatoNullDeUnArray($this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id)->toArray());
       return response()->json([
       'proyecto' => $proyecto,
       ]);
+    } else {
+      return $proyecto;
     }
   }
 
@@ -446,6 +451,7 @@ class ProyectoController extends Controller
       if ( Session::get('login_role') == User::IsGestor() ) {
         $idgestor = auth()->user()->gestor->id;
       }
+      // dd('z wardo');
       $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
       return $this->datatableProyectos($request, $proyectos);
     }

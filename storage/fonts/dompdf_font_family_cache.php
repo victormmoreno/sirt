@@ -82,7 +82,7 @@
     'bold' => $fontDir . '/fcd332cb8d4c83cb44e3b454e1dce3e1',
   ),
   'roboto' => array(
-    'normal' => $fontDir . '/6f5456cf384b558217ba16e3660e4d90',
+    'normal' => $fontDir . '/cf99a9d56c411ce3fa8a2fc49c520e74',
   ),
   'calibri-bold' => array(
     'normal' => $fontDir . '/7eb53039045bb2faf6a12eff57ca5a85',
@@ -93,10 +93,16 @@
   'ylee' => array(
     'normal' => $fontDir . '/e0baf87134b1361bd20d1a28485272f1',
   ),
-  'material icons' => array(
-    'normal' => $fontDir . '/a83785ccbfc5713b63b97bbf71e6fa23',
+  'hand of sean' => array(
+    'normal' => $fontDir . '\0a4faea5beaf0df88e73871c144f3f8b',
   ),
-  'roboto' => array(
-    'normal' => $fontDir . '/cf99a9d56c411ce3fa8a2fc49c520e74',
+  'zurich bt' => array(
+    'normal' => $fontDir . '\9ccd3127b6ac1f0ee7830469619e9888',
+  ),
+  'font awesome 5 brands' => array(
+    'normal' => $fontDir . '\ab66de829cbb8968719ec08e2f3309c2',
+  ),
+  'font awesome 5 free' => array(
+    'normal' => $fontDir . '\18cf78f31fe716460a0cd3bcbb086541',
   ),
 ) ?>

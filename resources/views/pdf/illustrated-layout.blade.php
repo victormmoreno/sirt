@@ -15,7 +15,7 @@
             <img alt="{{ config('app.name') }}" class="img-header" src="{{asset('img/logonacional_Negro.png')}}"/>
             <h1>
                 @yield('title-file',config('app.name'))
-                
+
             </h1>
         </div>
         <div class="footer">
