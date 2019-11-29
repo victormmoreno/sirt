@@ -26,6 +26,7 @@ mix.styles([
 		'resources/assets/plugins/bootstrap-datapicker/css/bootstrap-material-datetimepicker.css',
 		'resources/assets/plugins/dropzone/dropzone.css',
 		'resources/assets/plugins/dropzone/basic.min.css',
+		'resources/assets/plugins/summernote/dist/summernote-lite.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
 	],'public/css/libs.css');
@@ -51,6 +52,8 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
 		'resources/assets/plugins/highcharts/modules/variable-pie.js',
+    'resources/assets/plugins/summernote/dist/summernote-lite.js',
+    'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js',
 	],'public/js/libs.js');

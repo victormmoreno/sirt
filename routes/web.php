@@ -781,6 +781,16 @@ function () {
 
 );
 
+//------------------------------ Route group para el módulo de publicacion
+Route::group([
+  'prefix' => 'publicacion',
+  'middleware' => ['auth']
+], function () {
+  Route::get('/', 'PublicacionController@index')->name('publicacion.index');
+  Route::get('/create', 'PublicacionController@create')->name('publicacion.create');
+});
+
+
 /*===================================================================
 =            rutas para las funcionalidades de las ideas            =
 ===================================================================*/

@@ -23,7 +23,7 @@
             @if($count = auth()->user()->unreadNotifications->count())
               @if($count <= 9)
                 <span class="badge">
-                     {{$count}} 
+                     {{$count}}
                 </span>
               @else
                 <span class="badge">
@@ -33,7 +33,7 @@
             @endif
           </a>
         </li>
-        <li>             
+        <li>
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
             @else
@@ -116,9 +116,9 @@
                 Notificaciones
               </div>
             </li>
-            
+
             <li class="divider" tabindex="-1"></li>
-            
+
               @forelse (Auth::user()->unreadNotifications as $notification)
                 <li>
                   <a href="{{route('notifications.index')}}">
@@ -138,7 +138,7 @@
                        <i class="large material-icons  teal-text lighten-2 center ">
                             notifications_off
                         </i>
-                        <p class="center-align">No tienes notificationes</p> 
+                        <p class="center-align">No tienes notificationes</p>
                     </div>
                   </li>
               @endforelse
@@ -158,8 +158,8 @@
 
         </ul>
     </li>
-    
-             
+
+
 </ul>
 
 </div>
@@ -180,21 +180,23 @@
           <span>
             @guest
             @else
-      
-              @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
+
+              @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
 
                 {{ \NodoHelper::returnNodoUsuario() }}
-                
+
               @else
                 @if (\Session::get('login_role') == App\User::IsTalento())
                   Talento de Tecnoparque
-                @else
+                @elseif (\Session::get('login_role') == App\User::IsAdministrador())
                   Administrador de Tecnoparque
+                @else
+                  Desarrollador de Tecnoparque
                 @endif
-               
+
               @endif
 
-  
+
 
             <i class="material-icons right">
               arrow_drop_down
@@ -232,7 +234,7 @@
     </div>
 
   <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-      
+
       <div class="row">
           <div class="input-field col s12 m12 offset-m0">
 
@@ -290,6 +292,12 @@
       @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
           @include('layouts.navrole.admin')
       @endif
+    @break
+
+    @case(App\User::IsDesarrollador())
+
+    @include('layouts.navrole.desarrollador')
+
     @break
 
     @default

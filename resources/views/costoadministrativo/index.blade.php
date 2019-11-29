@@ -31,7 +31,7 @@
                       </div>
                 </div>
                 <div class="card ">
-                    
+
                     <div class="card-content">
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                         <div class="row">
@@ -45,7 +45,7 @@
                                             settings_input_svideo
                                         </i>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                             <div class="divider">
                             </div>
@@ -58,11 +58,11 @@
                                               <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                                             @endforeach
                                         </select>
-                                        
+
                                     </div>
                                 </div>
                                 <br>
-                                
+
                                 <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_administrador_table"  style="width:100%">
 
                                     <thead>
@@ -71,11 +71,11 @@
                                             <th rowspan="2">Nombre</th>
                                             <th colspan="3">Costos</th>
                                         </tr>
-                                        <tr>   
-                                            <th>Costos Administrativos por mes</th>                                  
+                                        <tr>
+                                            <th>Costos Administrativos por mes</th>
                                             <th>Costos Administrativos por día</th>
                                             <th>Costos Administrativos por hora</th>
-                                        </tr>                                     
+                                        </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
@@ -83,7 +83,7 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        
+
                                     </tr>
                                 </tfoot>
                                 </table>
@@ -100,14 +100,11 @@
                                             settings_input_svideo
                                         </i>
                                     </div>
-                                    <div class="rigth-align">
-                                        sfsafdf
-                                    </div>
                                 </div>
-                               
+
                             </div>
                             <div class="divider">
-                            </div>                      
+                            </div>
                             <br>
                             <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_dinamizador_table1">
                                 <thead>
@@ -117,11 +114,11 @@
                                         <th colspan="3">Costos</th>
                                         <th rowspan="2">Editar</th>
                                     </tr>
-                                    <tr>   
-                                        <th>Costos Administrativos por mes</th>                                  
+                                    <tr>
+                                        <th>Costos Administrativos por mes</th>
                                         <th>Costos Administrativos por día</th>
                                         <th>Costos Administrativos por hora</th>
-                                       
+
                                     </tr>
                                 </thead>
                                 <tfoot>
