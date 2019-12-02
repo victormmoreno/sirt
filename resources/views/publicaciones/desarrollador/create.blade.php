@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('meta-title', 'Articulaciones')
-@section('meta-content', 'Articulaciones')
-@section('meta-keywords', 'Articulaciones')
+@section('meta-title', 'Publicaciones')
+@section('meta-content', 'Publicaciones')
+@section('meta-keywords', 'Publicaciones')
 @section('content')
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -34,36 +34,8 @@
                       </div>
                     </div>
                   </div>
-                  <form id="frmPublicacionesCreate" method="POST" action="">
-                    {!! csrf_field() !!}
-                    <div class="divider"></div>
-                    <div class="row">
-                      <div class="input-field col s12 m12 l12">
-                        <label for="txtnombre">Título de la Publicación <span class="red-text">*</span></label>
-                        <input type="text" id="txttitulo" name="txttitulo"/>
-                        <small id="txttitulo-error" class="error red-text"></small>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_inicio" href="javascript:void(0)" name="txtfecha_inicio" class="datepicker __pickerinput"/>
-                        <label for="txtfecha_inicio">Fecha de inicio de la publicación<span class="red-text">*</span></label>
-                        <small id="txtfecha_inicio-error" class="error red-text"></small>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_fin" href="javascript:void(0)" name="txtfecha_fin" class="datepicker __pickerinput"/>
-                        <label for="txtfecha_fin">Fecha de terminación de la publicación <span class="red-text">*</span></label>
-                        <small id="txtfecha_fin-error" class="error red-text"></small>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m12 l8 offset-l2">
-                        <textarea id="txtcontenido" name="txtcontenido" class="materialize-textarea"></textarea>
-                        <label for="txtcontenido">Contenido</label>
-                        <small id="txtcontenido-error" class="error red-text"></small>
-                      </div>
-                    </div>
-                    <div class="divider"></div>
+                  <form id="frmPublicacionesCreate" method="POST" action="{{ route('publicacion.store') }}">
+                    @include('publicaciones.desarrollador.form')
                     <center>
                       <button type="submit" class="cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
                       <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
@@ -81,9 +53,100 @@
 @push('script')
   {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> --}}
   <script>
+    //Enviar formulario
+    $(document).on('submit', 'form#frmPublicacionesCreate', function (event) {
+      // $('button[type="submit"]').prop("disabled", true);
+      $('button[type="submit"]').attr('disabled', 'disabled');
+      event.preventDefault();
+      let form = $(this);
+      let data = new FormData($(this)[0]);
+      let url = form.attr("action");
+      ajaxPublicacionCreate(form, data, url);
+    });
+
+    function ajaxPublicacionCreate(form, data, url) {
+      $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+          $('button[type="submit"]').removeAttr('disabled');
+          // $('button[type="submit"]').prop("disabled", false);
+          $('.error').hide();
+          if (data.fail) {
+            let errores = "";
+            for (control in data.errors) {
+              errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+              $('#' + control + '-error').html(data.errors[control]);
+              $('#' + control + '-error').show();
+            }
+            Swal.fire({
+              title: 'Advertencia!',
+              html: 'Estas ingresando mal los datos.' + errores,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
+          }
+          if (data.fail == false && data.redirect_url == false) {
+            Swal.fire({
+              title: 'La publicación no se ha registrado, por favor inténtalo de nuevo.',
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            })
+          }
+          if (data.fail == false && data.redirect_url != false) {
+            Swal.fire({
+              title: 'Registro Exitoso',
+              text: "La publicación ha sido creada satisfactoriamente",
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok'
+            });
+            setTimeout(function(){
+              window.location.replace("{{route('publicacion.index')}}");
+            }, 1000);
+          }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      });
+    };
+
     $('#txtcontenido').summernote({
       lang: 'es-ES',
       height: 300
+    });
+
+    $('#txtfecha_inicio').bootstrapMaterialDatePicker({
+      time:false,
+      date:true,
+      shortTime:true,
+      format: 'YYYY-MM-DD',
+      // minDate : new Date(),
+      language: 'es',
+      weekStart : 1, cancelText : 'Cancelar',
+      okText: 'Guardar'
+    });
+
+    $('#txtfecha_fin').bootstrapMaterialDatePicker({
+      time:false,
+      date:true,
+      shortTime:true,
+      format: 'YYYY-MM-DD',
+      // minDate : new Date(),
+      language: 'es',
+      weekStart : 1, cancelText : 'Cancelar',
+      okText: 'Guardar'
     });
   </script>
 @endpush

@@ -29,6 +29,10 @@
                   </div>
                   <div class="divider"></div>
                   <div class="row">
+                    @include('publicaciones.table', [
+                      'id' => 'tblnovedades_Desarrollador',
+                      'rol' => \Session::get('login_role')
+                    ])
                     {{-- <div class="right material-icons">
                       <a onclick="generarExcelDeProyectosDelGestorPorAnho()">
                         <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">

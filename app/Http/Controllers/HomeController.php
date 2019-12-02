@@ -74,7 +74,7 @@ class HomeController extends Controller
             ]);
         case 'Dinamizador':
         // $datos = array('actualizacion' => 114215, 'spot' => 123);
-          return view('home.dinamizador');
+          return view('home.home');
           break;
 
         case 'Gestor':

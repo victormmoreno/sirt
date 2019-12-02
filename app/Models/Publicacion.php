@@ -9,8 +9,8 @@ class Publicacion extends Model
   protected $table = 'publicaciones';
 
   protected $casts = [
-    'fecha_inicio' => 'date:Y-m-d',
-    'fecha_fin' => 'date:Y-m-d',
+    'fecha_inicio' => 'date_format:"Y-m-d"',
+    'fecha_fin' => 'date_format:"Y-m-d"',
   ];
 
   /**
@@ -20,7 +20,8 @@ class Publicacion extends Model
   */
   protected $fillable = [
     'user_id', // Llave foranea
-    'publicacion_id', // Llave foranea
+    'role_id', // Llave foranea
+    'codigo_publicacion',
     'titulo',
     'contenido',
     'fecha_inicio',

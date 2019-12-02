@@ -788,6 +788,9 @@ Route::group([
 ], function () {
   Route::get('/', 'PublicacionController@index')->name('publicacion.index');
   Route::get('/create', 'PublicacionController@create')->name('publicacion.create');
+  Route::get('/show/{codigo}', 'PublicacionController@show')->name('publicacion.show');
+  Route::get('/datatablePublicaciones', 'PublicacionController@datatablePublicaciones');
+  Route::post('/store', 'PublicacionController@store')->name('publicacion.store');
 });
 
 
