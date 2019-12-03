@@ -4,7 +4,7 @@ function modalUser(respuesta) {
     let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
     let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
     let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
-    console.log(respuesta.data.user);
+ 
     $(".titulo_users").append(`<div class="row">
                  <div class="col s12 m12 l12">
                     <div class="card mailbox-content">
@@ -19,13 +19,13 @@ function modalUser(respuesta) {
                                                 
                                                 <div class="left">
                                                     <span class="mailbox-title ">
-                                                        ` + respuesta.data.user.nombres + " " + respuesta.data.user.apellidos + `
+                                                        ` + (respuesta.data.user.nombres != null ? respuesta.data.user.nombres : 'No registra') + " " + (respuesta.data.user.apellidos != null ? respuesta.data.user.apellidos : 'No registra') + `
                                                     </span>
 
                                                     <span class="mailbox-author black-text text-darken-2">
                                                         
-                                                        ` + respuesta.data.role + `<br>
-                                                        Miembro desde ` + moment(respuesta.data.user.created_at).format('LL') + ` <br>
+                                                        ` + (respuesta.data.role != null ? respuesta.data.role  : 'No registra' ) + `<br>
+                                                        Miembro desde ` + (respuesta.data.user.created_at != null ? moment(respuesta.data.user.created_at).format('LL') : 'No registra') + ` <br>
                                                     </span>
                                                 </div>
                                             </div>
@@ -52,7 +52,7 @@ function modalUser(respuesta) {
                                                                 Tipo Documento
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.tipodocumento.nombre + `   
+                                                                ` + (respuesta.data.user.tipodocumento.nombre != null ? respuesta.data.user.tipodocumento.nombre : 'No registra') + `   
                                                             </p>
                                                         </li>
                                                         <li class="collection-item avatar">
@@ -63,7 +63,7 @@ function modalUser(respuesta) {
                                                                 Fecha de Nacimiento
                                                             </span>
                                                             <p>
-                                                                ` + moment(respuesta.data.user.fechanacimiento).format('LL') + `
+                                                                ` + (respuesta.data.user.fechanacimiento != null ? moment(respuesta.data.user.fechanacimiento).format('LL') : 'No registra') + `
                                                             </p>
                                                             
                                                         </li>
@@ -75,7 +75,7 @@ function modalUser(respuesta) {
                                                                 Ciudad Expedición documento de identidad
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.ciudadexpedicion.nombre + `   
+                                                                ` + (respuesta.data.user.ciudadexpedicion.nombre != null ? respuesta.data.user.ciudadexpedicion.nombre : 'No registra') + `   
                                                             </p>
                                                         </li>
                                                         
@@ -89,7 +89,7 @@ function modalUser(respuesta) {
                                                                     Eps
                                                                 </span>
                                                                 <p>
-                                                                   ` + respuesta.data.user.eps.nombre + `   
+                                                                   ` + (respuesta.data.user.eps.nombre != null ? respuesta.data.user.eps.nombre : 'No registra') + `   
                                                                 </p> 
                                                             </div>
                                                            
@@ -112,7 +112,7 @@ function modalUser(respuesta) {
                                                                    Dirección
                                                                 </span>
                                                                 <p>
-                                                                    ` + respuesta.data.user.direccion + `
+                                                                    ` + (respuesta.data.user.direccion != null ? respuesta.data.user.direccion : 'No registra') + `
                                                                 </p>
                                                             </div>
                                                             <div class="right">
@@ -120,7 +120,7 @@ function modalUser(respuesta) {
                                                                    Barrio
                                                                 </span>
                                                                 <p>
-                                                                    ` + respuesta.data.user.barrio + ` 
+                                                                    ` + (respuesta.data.user.barrio != null || respuesta.data.user.barrio != ' '   ? respuesta.data.user.barrio : 'No registra') + ` 
                                                                 </p>
                                                             </div>
                                                         </li>
@@ -132,7 +132,7 @@ function modalUser(respuesta) {
                                                                Correo Electrónico
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.email + `
+                                                                ` + (respuesta.data.user.email != null ? respuesta.data.user.email : 'No registra') + `
                                                             </p>
                                                         </li>
                                                     </ul>
@@ -147,7 +147,7 @@ function modalUser(respuesta) {
                                                                 Documento
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.documento + ` 
+                                                                ` + (respuesta.data.user.documento != null ? respuesta.data.user.documento : 'No registra') + ` 
                                                             </p>
                                                             
                                                         </li>
@@ -159,7 +159,7 @@ function modalUser(respuesta) {
                                                                 Grupo Sanguineo
                                                             </span>
                                                             <p>
-                                                               ` + respuesta.data.user.gruposanguineo.nombre + `   
+                                                               ` + (respuesta.data.user.gruposanguineo.nombre != null ? respuesta.data.user.gruposanguineo.nombre : 'No registra') + `   
                                                             </p>
                                                         </li>
                                                         <li class="collection-item avatar">
@@ -170,7 +170,7 @@ function modalUser(respuesta) {
                                                                 Deparamento Expedición documento de identidad
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.ciudadexpedicion.departamento.nombre + `
+                                                                ` + (respuesta.data.user.ciudadexpedicion.departamento.nombre != null ? respuesta.data.user.ciudadexpedicion.departamento.nombre : 'No registra') + `
                                                             </p>
                                                             
                                                         </li>
@@ -182,7 +182,7 @@ function modalUser(respuesta) {
                                                                 Estrato Social
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.estrato + `                                                                    
+                                                                ` + (respuesta.data.user.estrato != null ? respuesta.data.user.estrato : 'No registra') + `                                                                    
                                                             </p>
                                                             
                                                         </li>
@@ -194,7 +194,7 @@ function modalUser(respuesta) {
                                                                 Lugar de Residencia
                                                             </span>
                                                             <p>
-                                                                ` + respuesta.data.user.ciudad.nombre + ` - ` + respuesta.data.user.ciudad.departamento.nombre + `
+                                                                ` + ( respuesta.data.user.ciudad.nombre != null &&  respuesta.data.user.ciudad.departamento.nombre != null ?  respuesta.data.user.ciudad.nombre + ` - ` + respuesta.data.user.ciudad.departamento.nombre : 'No registra') + `
                                                             </p>
                                                         </li>
                                                         <li class="collection-item avatar">
@@ -245,7 +245,7 @@ function modalUser(respuesta) {
                                                                     Institución
                                                                 </span>
                                                                 <p>
-                                                                    ` + respuesta.data.user.institucion + `
+                                                                    ` + (respuesta.data.user.institucion != null ? respuesta.data.user.institucion : 'No registra') + `
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -256,7 +256,7 @@ function modalUser(respuesta) {
                                                                     Titulo obtenido
                                                                 </span>
                                                                 <p>
-                                                                     ` + respuesta.data.user.titulo_obtenido + `
+                                                                     ` + (respuesta.data.user.titulo_obtenido != null ? respuesta.data.user.titulo_obtenido : 'No registra') + `
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -271,7 +271,7 @@ function modalUser(respuesta) {
                                                                     Grado de escolaridad
                                                                 </span>
                                                                 <p>
-                                                                     ` + respuesta.data.user.gradoescolaridad.nombre + `
+                                                                     ` + (respuesta.data.user.gradoescolaridad.nombre != null ? respuesta.data.user.gradoescolaridad.nombre : 'No registra') + `
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -282,7 +282,7 @@ function modalUser(respuesta) {
                                                                     Fecha de terminación
                                                                 </span>
                                                                 <p>
-                                                                     ` + moment(respuesta.data.user.fecha_terminacion).format('LL') + `
+                                                                     ` + (respuesta.data.user.fecha_terminacion != null ? moment(respuesta.data.user.fecha_terminacion).format('LL') : 'No registra') + `
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -331,11 +331,11 @@ function modalUser(respuesta) {
                                                                     Nodo
                                                                 </span>
                                                                 <p>
-                                                                    Tecnoparque nodo ` + respuesta.data.user.dinamizador.nodo.entidad.nombre + `
+                                                                    Tecnoparque nodo ` + (respuesta.data.user.dinamizador.nodo.entidad.nombre != null ? respuesta.data.user.dinamizador.nodo.entidad.nombre : 'No registra') + `
                                                                     <br>
                                                                         <small>
                                                                             <b>Dirección:</b>
-                                                                            ` + respuesta.data.user.dinamizador.nodo.direccion + `
+                                                                            ` + (respuesta.data.user.dinamizador.nodo.direccion != null ? respuesta.data.user.dinamizador.nodo.direccion : 'No registra') + `
                                                                         </small> 
                                                                     <br>
                                                                 </p>    
@@ -387,17 +387,17 @@ function modalUser(respuesta) {
                                                                     <b class="teal-text darken-2">
                                                                         Nodo del Gestor:
                                                                     </b>
-                                                                    Tecnoparque Nodo ` + respuesta.data.user.gestor.nodo.entidad.nombre + `
+                                                                    Tecnoparque Nodo ` + (respuesta.data.user.gestor.nodo.entidad.nombre != null ? respuesta.data.user.gestor.nodo.entidad.nombre : 'No registra') + `
                                                                     <br> 
                                                                     <b class="teal-text darken-2">
                                                                         Linea del Gestor:
                                                                     </b>
-                                                                     ` + respuesta.data.user.gestor.lineatecnologica.nombre + `
+                                                                     ` + (respuesta.data.user.gestor.lineatecnologica.nombre != null ? respuesta.data.user.gestor.lineatecnologica.nombre : 'No registra') + `
                                                                     <br> 
                                                                     <b class="teal-text darken-2">
                                                                         Honorario del Gestor:
                                                                     </b>
-                                                                    $ ` + respuesta.data.user.gestor.honorarios + `
+                                                                    $ ` + (respuesta.data.user.gestor.honorarios != null ? respuesta.data.user.gestor.honorarios : null) + `
                                                                 </span>
                                                                                                                                                
                                                             </li>
@@ -448,12 +448,12 @@ function modalUser(respuesta) {
                                                                     <b class="teal-text darken-2">
                                                                         Nodo del Infocenter:
                                                                     </b>
-                                                                    Tecnoparque Nodo ` + respuesta.data.user.infocenter.nodo.entidad.nombre + `
+                                                                    ` + (respuesta.data.user.infocenter.nodo.entidad.nombre != null ? 'Tecnoparque Nodo ' + respuesta.data.user.infocenter.nodo.entidad.nombre : 'No registra') + `
                                                                     <br> 
                                                                     <b class="teal-text darken-2">
                                                                         Extensión del Infocenter:
                                                                     </b>
-                                                                     ` + respuesta.data.user.infocenter.extension + `
+                                                                     ` + (respuesta.data.user.infocenter.extension != null ? respuesta.data.user.infocenter.extension : 'No registra') + `
                                                                     
                                                                 </span>
                                                                                                                                                
@@ -513,7 +513,7 @@ function modalUser(respuesta) {
                                                                             <br>                                                                                        
                                                                         </span>
                                                                         <p>
-                                                                        ` + respuesta.data.user.talento.perfil.nombre + `
+                                                                        ` + (respuesta.data.user.talento.perfil.nombre != null ? respuesta.data.user.talento.perfil.nombre : null) + `
                                                                         </p>
                                                                     </div>
                                                                     <div class="col s12 m6 l6">
@@ -576,11 +576,11 @@ function modalUser(respuesta) {
                                                                     Nodo
                                                                 </span>
                                                                 <p>
-                                                                    Tecnoparque nodo ` + respuesta.data.user.ingreso.nodo.entidad.nombre + `
+                                                                     ` + (respuesta.data.user.ingreso.nodo.entidad.nombre != null ? 'Tecnoparque nodo' + respuesta.data.user.ingreso.nodo.entidad.nombre : 'No registra') + `
                                                                     <br>
                                                                         <small>
                                                                             <b>Dirección:</b>
-                                                                            ` + respuesta.data.user.ingreso.nodo.direccion + `
+                                                                            ` + (respuesta.data.user.ingreso.nodo.direccion != null ? respuesta.data.user.ingreso.nodo.direccion : 'No registra') + `
                                                                         </small> 
                                                                     <br>
                                                                 </p>    
