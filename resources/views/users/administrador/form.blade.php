@@ -590,7 +590,7 @@
             <div class="row">
                 <div class="input-field col s12 m4 l4 ">
                     <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1" onchange="TipoTalento.getSelectTipoTalento(this)">
-                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                        @if(isset($user->talento->perfil->id) && (session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()))
                             <option value="{{$user->talento->perfil->id}}" selected>{{$user->talento->perfil->nombre}}</option>
                         @else
                             <option value="">Seleccione tipo de talento</option>
