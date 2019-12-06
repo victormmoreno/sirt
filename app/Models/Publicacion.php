@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Publicacion extends Model
 {
@@ -46,5 +47,15 @@ class Publicacion extends Model
   public static function IsInactiva()
   {
     return self::IS_INACTIVA;
+  }
+
+  public function role()
+  {
+      return $this->belongsTo(Role::class, 'role_id', 'id');
+  }
+
+  public function user()
+  {
+      return $this->belongsTo(User::class, 'user_id', 'id');
   }
 }

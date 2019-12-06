@@ -786,10 +786,13 @@ Route::group([
   'prefix' => 'publicacion',
   'middleware' => ['auth']
 ], function () {
-  Route::get('/', 'PublicacionController@index')->name('publicacion.index');
+  Route::get('/', 'PublicacionController@index')->name('publicacion.index')->middleware('role_session:Desarrollador');
+  Route::get('/updateEstado/{id}/{estado}', 'PublicacionController@updateEstado')->name('publicacion.update.estado')->middleware('role_session:Desarrollador');
   Route::get('/create', 'PublicacionController@create')->name('publicacion.create');
   Route::get('/show/{codigo}', 'PublicacionController@show')->name('publicacion.show');
+  Route::get('/edit/{codigo}', 'PublicacionController@edit')->name('publicacion.edit')->middleware('role_session:Desarrollador');
   Route::get('/datatablePublicaciones', 'PublicacionController@datatablePublicaciones');
+  Route::put('/{id}', 'PublicacionController@update')->name('publicacion.update')->middleware('role_session:Desarrollador');
   Route::post('/store', 'PublicacionController@store')->name('publicacion.store');
 });
 

@@ -51,6 +51,59 @@
 @endsection
 @push('script')
   <script>
+  function updateEstadoPublicacion(id, estado, e) {
+    let msg = '';
+    if (estado == 1) {
+      msg = '¿Estás seguro de habilitar esta publicación?';
+    } else {
+      msg = '¿Estás seguro de inhabilitar esta publicación?';
+    }
 
+    Swal.fire({
+      title: msg,
+      // text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        modificarPublicacion(id, estado, e);
+      }
+    })
+
+  }
+
+  function modificarPublicacion(id, estado, e) {
+    $.ajax({
+      dataType:'json',
+      type:'get',
+      url:"/publicacion/updateEstado/"+id+"/"+estado,
+      success: function (data) {
+        console.log(data);
+        let msg = '';
+        let type = '';
+        if (data) {
+          msg = 'El estado de la publicación se ha cambiado!';
+          type = 'success';
+        } else {
+          msg = 'El estado de la publicación no se ha cambiado!';
+          type = 'error';
+        }
+        Swal.fire({
+          title: msg,
+          type: type,
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        })
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      }
+    })
+  }
   </script>
 @endpush

@@ -18,7 +18,17 @@
             <div class="col s12 m12 l12">
               <div class="card mailbox-content">
                 <div class="card-content">
-
+                  <div class="mailbox-view">
+                    <small class="grey-text">Publicado el: {{ $publicacion->fecha_inicio }} por {{ $publicacion->user->nombres }} {{ $publicacion->user->apellidos }}</small>
+                    <div class="divider"></div>
+                    <div class="row">
+                      {!! $publicacion->contenido !!}
+                    </div>
+                    <div class="divider"></div>
+                    <div class="row center">
+                      <a href="{{ \Session::get('login_role') == App\User::IsDesarrollador() ? route('publicacion.index') : route('home') }}" class="btn"><i class="material-icons left">arrow_back</i>Volver</a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

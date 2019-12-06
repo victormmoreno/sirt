@@ -8,7 +8,7 @@
           <div class="card stats-card">
             <div class="card-content">
               <span class="card-title">Novedades</span>
-              <span class="stats-counter"><span class="counter"></span><small>Aquí podrá ver las últimas novedades del aplicativo.</small></span>
+              <span class="stats-counter"><span class="counter"></span><small>Aquí podrá ver los últimos anuncios o novedades del aplicativo.</small></span>
               @include('publicaciones.table', [
                 'id' => 'tblnovedades_Otros',
                 'rol' => \Session::get('login_role')

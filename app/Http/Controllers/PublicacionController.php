@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\{Session, Validator};
-use App\Http\Requests\PublicacionFormRequest;
 use App\Repositories\Repository\PublicacionRepository;
+use Illuminate\Support\Facades\{Session, Validator};
+use App\{User, Models\Role, Models\Publicacion};
+use App\Http\Requests\PublicacionFormRequest;
 use Illuminate\Http\Request;
-use App\{User, Models\Role};
 use Carbon\Carbon;
 
 class PublicacionController extends Controller
@@ -20,6 +20,25 @@ class PublicacionController extends Controller
   }
 
   /**
+   * Vista para editar un publicación
+   *
+   * @param string $codigo
+   * @return Response
+   */
+  public function edit(string $codigo)
+  {
+    if ( Session::get('login_role') == User::IsDesarrollador() ) {
+      $publicacion = $this->getPublicacionRepository()->buscarPublicacionPorCodigo($codigo)->first();
+      return view('publicaciones.desarrollador.edit', [
+        'publicacion' => $publicacion,
+        'roles' => Role::all()->pluck('name', 'id')
+      ]);
+    } else {
+      abort('403');
+    }
+  }
+
+  /**
    * Datatable que muestra las publicaciones/novedades
    *
    * @author dum
@@ -30,7 +49,7 @@ class PublicacionController extends Controller
     if ( Session::get('login_role') == User::IsDesarrollador() ) {
       $publicaciones = $this->getPublicacionRepository()->consultarPublicaciones()->get();
     } else {
-      $publicaciones = $this->getPublicacionRepository()->consultarPublicaciones()->limit(5)->where('roles.name', Session::get('login_role'))->get();
+      $publicaciones = $this->getPublicacionRepository()->consultarPublicaciones()->where('publicaciones.estado', Publicacion::IsActiva())->limit(5)->orderBy('fecha_inicio')->where('roles.name', Session::get('login_role'))->get();
     }
     $now = Carbon::now()->isoFormat('YYYY-MM-DD');
     return $this->printDatatablePublicaciones($publicaciones, $now);
@@ -44,8 +63,11 @@ class PublicacionController extends Controller
    */
   public function show(string $codigo)
   {
-    // $publicacion =
-    return view('publicaciones.show');
+    $publicacion = $this->getPublicacionRepository()->buscarPublicacionPorCodigo($codigo)->first();
+    // dd($publicacion->role);
+    return view('publicaciones.show', [
+      'publicacion' => $publicacion
+    ]);
   }
 
   /**
@@ -108,6 +130,60 @@ class PublicacionController extends Controller
   }
 
   /**
+   * Modifica una publicación
+   *
+   * @param Request $request
+   * @param int $id Id de la publicación
+   * @return Response
+   * @author dum
+   */
+  public function update(Request $request, int $id)
+  {
+    $req = new PublicacionFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+      'fail'   => true,
+      'errors' => $validator->errors(),
+      ]);
+    }
+    $result = $this->getPublicacionRepository()->update($request, $id);
+    if ($result == false) {
+      return response()->json([
+      'fail' => false,
+      'redirect_url' => false,
+      ]);
+    } else {
+      return response()->json([
+      'fail' => false,
+      'redirect_url' => url(route('publicacion.index')),
+      ]);
+    }
+  }
+
+  /**
+   * Cambia el estado de una publicación
+   *
+   * @param int $id Id de la publicacion
+   * @param int $estado Estado al cual se va a cambiar el estado
+   * @return boolean
+   * @author dum
+   */
+  public function updateEstado($id, $estado)
+  {
+    if ( Session::get('login_role') == User::IsDesarrollador() ) {
+      $update = $this->getPublicacionRepository()->updateEstado($id, $estado);
+      if ( $update ) {
+        return response()->json(true);
+      } else {
+        return response()->json(false);
+      }
+    } else {
+      abort('403');
+    }
+  }
+
+  /**
   * Método que pinta la datatable de las publicaciones
   *
   * @param Collection $proyecto Proyectos
@@ -120,32 +196,36 @@ class PublicacionController extends Controller
     return datatables()->of($publicaciones)
     ->addColumn('detalle', function ($data) {
       $detalle = '
-      <a class="btn light-blue m-b-xs" href="'.route('publicacion.show', $data->id).'">
+      <a class="btn light-blue m-b-xs" href="'.route('publicacion.show', $data->codigo_publicacion).'">
         <i class="material-icons">info</i>
       </a>
       ';
       return $detalle;
     })->addColumn('edit', function ($data) {
       $edit = '
-      <a class="btn light-blue m-b-xs">
-        <i class="material-icons">info</i>
+      <a class="btn m-b-xs" href=' . route('publicacion.edit', $data->codigo_publicacion) . '>
+        <i class="material-icons">edit</i>
       </a>
       ';
       return $edit;
     })->addColumn('update', function ($data) {
-      $update = '
-      <a class="btn light-blue m-b-xs">
-        <i class="material-icons">info</i>
-      </a>
-      ';
-      return $update;
-    })->editColumn('fecha_inicio', function ($data) use ($now) {
-      if ($data->fecha_inicio <= $now && $data->fecha_fin >= $now) {
-        return $data->fecha_inicio;
+      if ( $data->estado == Publicacion::IsActiva() ) {
+        $update = '
+        <a class="btn red lighten-3 m-b-xs" onclick="updateEstadoPublicacion(' . $data->id . ', ' . Publicacion::IsInactiva() . ', event)"><i class="material-icons">close</i></a>
+        ';
       } else {
-        return $data->fecha_inicio;
+        $update = '
+        <a class="btn blue lighten-3 m-b-xs" onclick="updateEstadoPublicacion(' . $data->id . ', ' . Publicacion::IsActiva() . ', event)"><i class="material-icons">add</i></a>
+        ';
       }
-    })->rawColumns(['detalle', 'fecha_inicio', 'edit', 'update'])->make(true);
+      return $update;
+    })->editColumn('titulo', function ($data) use ($now) {
+      if ($data->fecha_inicio <= $now && $data->fecha_fin >= $now) {
+        return $data->titulo . '<i class="material-icons left amber-text">new_releases</i>';
+      } else {
+        return $data->titulo;
+      }
+    })->rawColumns(['detalle', 'titulo', 'edit', 'update'])->make(true);
   }
 
   /**

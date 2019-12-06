@@ -124,7 +124,8 @@ mix.scripts([
 		'resources/app/seguimiento/index.js',
 		'resources/app/costos/index.js',
 		'resources/app/indicadores/index.js',
-    'resources/app/publicacion/index.js'
+    'resources/app/publicacion/index.js',
+    'resources/app/publicacion/form.js'
 	],'public/js/app2.js');
 
 mix.minify('public/js/app2.js')

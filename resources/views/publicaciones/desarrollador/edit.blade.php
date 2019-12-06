@@ -18,7 +18,7 @@
                 <div class="col s12 m12 l12">
                   <br>
                   <center>
-                    <span class="card-title center-align">Nueva Publicación</span>
+                    <span class="card-title center-align">Modificar Publicación - <b>{{$publicacion->codigo_publicacion}}</b></span>
                   </center>
                   <div class="divider"></div>
                   <div class="row">
@@ -34,10 +34,11 @@
                       </div>
                     </div>
                   </div>
-                  <form id="frmPublicacionesCreate" method="POST" action="{{ route('publicacion.store') }}">
+                  <form id="frmPublicacionesEdit" method="POST" action="{{ route('publicacion.update', $publicacion->id) }}">
+                    {!! method_field('PUT')!!}
                     @include('publicaciones.desarrollador.form')
                     <center>
-                      <button type="submit" class="cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
+                      <button type="submit" class="cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                       <a href="{{route('publicacion.index')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                     </center>
                   </form>
@@ -54,17 +55,17 @@
   {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> --}}
   <script>
     //Enviar formulario
-    $(document).on('submit', 'form#frmPublicacionesCreate', function (event) {
+    $(document).on('submit', 'form#frmPublicacionesEdit', function (event) {
       // $('button[type="submit"]').prop("disabled", true);
       $('button[type="submit"]').attr('disabled', 'disabled');
       event.preventDefault();
       let form = $(this);
       let data = new FormData($(this)[0]);
       let url = form.attr("action");
-      ajaxPublicacionCreate(form, data, url);
+      ajaxPublicacionEdit(form, data, url);
     });
 
-    function ajaxPublicacionCreate(form, data, url) {
+    function ajaxPublicacionEdit(form, data, url) {
       $.ajax({
         type: form.attr('method'),
         url: url,
@@ -95,7 +96,7 @@
           }
           if (data.fail == false && data.redirect_url == false) {
             Swal.fire({
-              title: 'La publicación no se ha registrado, por favor inténtalo de nuevo.',
+              title: 'La publicación no se ha modificado, por favor inténtalo de nuevo.',
               type: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
@@ -105,7 +106,7 @@
           if (data.fail == false && data.redirect_url != false) {
             Swal.fire({
               title: 'Registro Exitoso',
-              text: "La publicación ha sido creada satisfactoriamente",
+              text: "La publicación ha sido modificado satisfactoriamente",
               type: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',

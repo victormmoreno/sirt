@@ -1,4 +1,4 @@
-<table id="{{$id}}">
+<table id="{{$id}}" style="width: 100%">
   <thead>
     @if ($rol == 'Desarrollador')
       <th>Código</th>

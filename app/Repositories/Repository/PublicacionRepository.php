@@ -10,6 +10,68 @@ class PublicacionRepository
 {
 
   /**
+   * Modifica los datos de un publicación
+   *
+   * @param Request $request
+   * @param int $id Id de la publicación
+   * @return boolean
+   * @author dum
+   */
+  public function update($request, int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $publicacion = Publicacion::find($id);
+      $publicacion->update([
+        'role_id' => $request->txtrole_id,
+        'titulo' => $request->txttitulo,
+        'contenido' => $request->txtcontenido,
+        'fecha_inicio' => $request->txtfecha_inicio,
+        'fecha_fin' => $request->txtfecha_fin
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Cambia el estado de la publicación
+   *
+   * @param int $id Id de la publicación
+   * @param int $estado Estado
+   * @return boolean
+   * @author dum
+   */
+  public function updateEstado($id, $estado)
+  {
+    DB::beginTransaction();
+    try {
+      $publicacion = Publicacion::find($id);
+      $publicacion->update(['estado' => $estado]);
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+
+  }
+
+  /**
+   * Consulta una publicacion por el código
+   *
+   * @param string $codigo Código de la publicación
+   * @return Builder
+   */
+  public function buscarPublicacionPorCodigo($codigo)
+  {
+    return Publicacion::where('codigo_publicacion', $codigo);
+  }
+
+  /**
    * Query generico para de las publicaciones
    *
    * @return Builder
@@ -17,7 +79,7 @@ class PublicacionRepository
    */
   public function consultarPublicaciones()
   {
-    return Publicacion::select('codigo_publicacion', 'fecha_inicio', 'fecha_fin', 'titulo', 'contenido', 'publicaciones.estado', 'roles.name AS role', 'publicaciones.id')
+    return Publicacion::select('codigo_publicacion', 'fecha_inicio', 'fecha_fin', 'titulo', 'contenido', 'publicaciones.estado', 'roles.name AS role', 'publicaciones.id', 'role_id')
     ->join('users', 'users.id', '=', 'publicaciones.user_id')
     ->join('roles', 'roles.id', '=', 'publicaciones.role_id');
   }
