@@ -1,20 +1,4 @@
 {!! csrf_field() !!}
-
-<div class="row">
-    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
-        <i class="material-icons prefix">
-            dns
-        </i>
-        <input id="txtnombre" name="txtnombre" type="text" value="{{ isset($sublinea->nombre) ? $sublinea->nombre : old('txtnombre')}}">
-            <label for="txtnombre">
-                Nombre *
-            </label>
-            @error('txtnombre')
-                <label id="txtnombre-error" class="error" for="txtnombre">{{ $message }}</label>
-            @enderror
-        </input>
-    </div>
-</div>
 <div class="row">
     <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
         <i class="material-icons prefix">
@@ -38,6 +22,22 @@
         @enderror
     </div>
 </div>
+<div class="row">
+    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+        <i class="material-icons prefix">
+            dns
+        </i>
+        <input id="txtnombre" name="txtnombre" type="text" value="{{ isset($sublinea->nombre) ? $sublinea->nombre : old('txtnombre')}}">
+            <label for="txtnombre">
+                Nombre *
+            </label>
+            @error('txtnombre')
+                <label id="txtnombre-error" class="error" for="txtnombre">{{ $message }}</label>
+            @enderror
+        </input>
+    </div>
+</div>
+
 <center>
    
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 

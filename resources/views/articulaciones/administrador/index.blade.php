@@ -11,7 +11,22 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons">autorenew</i>Articulaciones</h5>
+          <div class="row">
+              <div class="col s8 m8 l10">
+                  <h5 class="left-align">
+                      <i class="material-icons left">
+                          autorenew
+                      </i>
+                      Articulaciones
+                  </h5>
+              </div>
+              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                  <ol class="breadcrumbs">
+                      <li><a href="{{route('home')}}">Inicio</a></li>
+                      <li class="active">Articulaciones</li>
+                  </ol>
+              </div>
+          </div>
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -21,6 +36,7 @@
                   </div>
                 </div>
               </div>
+              <div class="divider"></div><br>
               <div class="row">
                 <div class="input-field col s12 m6 l6">
                   <select class="js-states"  tabindex="-1" style="width: 100%" id="txtanho_articulaciones_Nodo" name="txtanho_articulaciones_Nodo">

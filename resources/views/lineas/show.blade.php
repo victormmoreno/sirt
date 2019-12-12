@@ -18,7 +18,7 @@
                             Linea Tecnologica | {{$linea->nombre}}
                         </h5>
                     </div>
-                    <div class="col s12 m4 l4 offset-l2 m-2 rigth-align">
+                    <div class="col s12 m4 l4 offset-l2 m-2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('lineas.index')}}">Lineas</a></li>

@@ -10,15 +10,32 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons">hearing</i>Edt</h5>
+          <div class="row">
+              <div class="col s8 m8 l10">
+                  <h5 class="left-align">
+                      <i class="material-icons left">
+                          hearing
+                      </i>
+                      Edt
+                  </h5>
+              </div>
+              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                  <ol class="breadcrumbs">
+                      <li><a href="{{route('home')}}">Inicio</a></li>
+                      <li class="active">Edt</li>
+                  </ol>
+              </div>
+          </div>
           <div class="card stats-card">
             <div class="card-content">
               <div class="row">
-                <div class="col s12 m10 l10">
+                <div class="col s12 m12 l12">
                   <div class="center-align">
                     <span class="card-title center-align"> Edts de Red Tecnoparque</span>
+                     <div class="divider"></div>
                   </div>
                 </div>
+
                 <div class="row">
                   <div class="input-field col s12 m6 l6">
                     <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">

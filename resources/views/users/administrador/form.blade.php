@@ -23,7 +23,7 @@
 @endif
 {!! csrf_field() !!}
 <div class="row">
-    <div class="col s12 m3 l3">
+    <div class="col s12 m4 l3">
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
@@ -160,7 +160,7 @@
         </div>
 
     </div>
-    <div class="col s12 m9 l9">
+    <div class="col s12 m8 l9">
         <div class="divider mailbox-divider"></div>
         <div class="mailbox-text">
             <div class="row">
@@ -590,7 +590,7 @@
             <div class="row">
                 <div class="input-field col s12 m4 l4 ">
                     <select class="" id="txtperfil" name="txtperfil" style="width: 100%" tabindex="-1" onchange="TipoTalento.getSelectTipoTalento(this)">
-                        @if(isset($user->talento->perfil->id) && (session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()))
+                        @if(isset($user->talento->perfil->id) && ((session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())))
                             <option value="{{$user->talento->perfil->id}}" selected>{{$user->talento->perfil->nombre}}</option>
                         @else
                             <option value="">Seleccione tipo de talento</option>
@@ -702,7 +702,7 @@
         </div>
         <center>
             <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button>
-            <a class="waves-effect red lighten-2 btn center-aling" href="{{route('usuario.index')}}">
+            <a class="waves-effect red lighten-2 btn center-aling " href="{{route('usuario.index')}}">
                 <i class="material-icons right">
                     backspace
                 </i>
