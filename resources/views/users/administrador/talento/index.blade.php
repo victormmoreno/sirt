@@ -58,7 +58,7 @@
                                 <table class="display responsive-table" id="talento_history_table">
                                 <thead>
                                     <th>Tipo Documento</th>
-                                    <th>Docuemento</th>
+                                    <th>Documento</th>
                                     <th>Usuario</th>
                                     <th>Correo</th>
                                     <th>Telefono</th>

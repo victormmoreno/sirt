@@ -14,7 +14,7 @@
                             Tecnoparque Nodo {{$nodo->entidad->nombre}}
                         </h5>
                     </div>
-                    <div class="col s4 m4 l3 rigth-align rigth-align show-on-large hide-on-med-and-down">
+                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('nodo.index')}}">Nodos</a></li>

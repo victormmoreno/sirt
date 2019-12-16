@@ -16,7 +16,7 @@
                             Materiales de Formación
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l2 rigth-align  show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Materiales</li>
@@ -52,35 +52,33 @@
                                         </div>
                                     </div>
                                             
-                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor())
-                                    <div class="col s12 m12 l10">
-                                        <div class="center-align">
-                                            <span class="card-title center-align">
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                                Materiales Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
-                                                @elseif(session()->get('login_role') == App\User::IsGestor())
-                                                    Materiales {{ isset(auth()->user()->gestor->lineatecnologica->abreviatura) ? auth()->user()->gestor->lineatecnologica->abreviatura : '' }} - {{ isset(auth()->user()->gestor->lineatecnologica->nombre) ? auth()->user()->gestor->lineatecnologica->nombre : '' }} | Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
-                                                @endif
-                                            </span>
+                                @elseif(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
+                                    <div class="row">
+                                        <div class="col s12 m12 l10">
+                                            <div class="center-align">
+                                                <span class="card-title center-align">
+                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                                    Materiales Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                    @elseif(session()->get('login_role') == App\User::IsGestor())
+                                                        Materiales {{ isset(auth()->user()->gestor->lineatecnologica->abreviatura) ? auth()->user()->gestor->lineatecnologica->abreviatura : '' }} - {{ isset(auth()->user()->gestor->lineatecnologica->nombre) ? auth()->user()->gestor->lineatecnologica->nombre : '' }} | Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>                          
+                                        <div class="col s12 l2">
+                                            <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                                                <a href="{{route('material.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Material</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                            <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Material de Formación" href="{{route('material.create')}}">
-                                                <i class="material-icons">
-                                                    local_library
-                                                </i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="divider">
-                                    </div>   
+                                    
+                                    <div class="divider"></div>
                                 @endif
                             
                              
                             <br>
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
-                                <table class="display responsive-table" id="materiales_administrador_table">
+                                <table class="display responsive-table" id="materiales_administrador_table"  style="width: 100%">
                                     <thead>
                                         <th width="20%">Fecha Adquisición</th>
                                         <th width="20%">Linea Tecnológica</th>
@@ -95,7 +93,7 @@
                                     </thead>
                                 </table>
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                <table class="display responsive-table" id="materiales_dinamizador_table">
+                                <table class="display responsive-table" id="materiales_dinamizador_table"  style="width: 100%">
                                     <thead>
                                         <th width="20%">Fecha Adquisición</th>
                                         <th width="20%">Linea Tecnológica</th>
@@ -112,7 +110,7 @@
                                     </thead>
                                 </table>
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                <table class="display responsive-table" id="materiales_gestor_table">
+                                <table class="display responsive-table" id="materiales_gestor_table"  style="width: 100%">
                                     <thead>
                                         <th width="20%">Fecha Adquisición</th>
                                         <th width="20%">Linea Tecnológica</th>
@@ -132,6 +130,13 @@
                         </div>
                     </div>
                 </div>
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
+                    <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                        <a href="{{route('material.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Material">
+                             <i class="material-icons">add_circle</i>
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

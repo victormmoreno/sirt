@@ -12,14 +12,14 @@
                   <h5>
                     <a class="footer-text left-align" href="{{route('articulacion')}}" rel="nofollow">
                       <i class="material-icons arrow-l">arrow_back</i>
-                    </a> CSIBT
+                    </a> Articulaciones
                   </h5>
               </div>
               <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
                       <li><a href="{{route('articulacion')}}">Articulaciones</a></li>
-                      <li class="active">Modificar Articulación</li>
+                      <li class="active">Modificar</li>
                   </ol>
               </div>
           </div>
@@ -29,7 +29,7 @@
                 <div class="col s12 m12 l12">
                   <br>
                   <center>
-                    <span class="card-title center-align">Modificar Articulación - <b>{{ $articulacion->codigo_articulacion }}</b></span>
+                    <span class="card-title center-align">Modificar Articulación - <b>{{ $articulacion->articulacion_proyecto->actividad->codigo_actividad }}</b></span>
                   </center>
                   <div class="divider"></div>
                   <div class="row">

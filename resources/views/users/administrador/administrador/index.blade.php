@@ -52,7 +52,7 @@
                                 <table class="display responsive-table" id="administrador_table">
                                     <thead>
                                         <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
+                                        <th>Documento</th>
                                         <th>Administrador</th>
                                         <th>Correo</th>
                                         <th>Telefono</th>

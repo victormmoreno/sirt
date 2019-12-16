@@ -16,7 +16,7 @@
               <ol class="breadcrumbs">
                   <li><a href="{{route('home')}}">Inicio</a></li>
                   <li><a href="{{route('proyecto')}}">Proyectos</a></li>
-                  <li class="active">Entregables</li>
+                  <li class="active">Editar</li>
               </ol>
           </div>
           </div>

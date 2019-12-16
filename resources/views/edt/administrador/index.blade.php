@@ -70,7 +70,7 @@
                   </div>
                 </div>
                 <div class="divider"></div>
-                <table class="display responsive-table datatable-example" id="edtPorNodo_table" >
+                <table class="display responsive-table datatable-example" id="edtPorNodo_table" style="width: 100%">
                   <thead>
                     <th>Código de la Edt</th>
                     <th>Nombre</th>

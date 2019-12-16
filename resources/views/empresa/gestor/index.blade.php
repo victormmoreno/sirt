@@ -45,7 +45,7 @@
                   </div>
                 </div>
                 <div class="divider"></div>
-                <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
+                <table  id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
                   <thead>
                     <tr>
                       <th>Nit</th>

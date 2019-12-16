@@ -61,7 +61,7 @@
                             <table class="display responsive-table" id="dinamizador_table">
                                 <thead>
                                     <th>Tipo Documento</th>
-                                    <th>Docuemento</th>
+                                    <th>Documento</th>
                                     <th>Usuario</th>
                                     <th>Correo</th>
                                     <th>Telefono</th>

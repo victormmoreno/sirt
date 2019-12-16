@@ -8,16 +8,17 @@
         		<div class="row">
                     <div class="col s8 m8 l9">
                         <h5 class="left-align hand-of-Sean-fonts">
+                                <form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
                             <a class="footer-text left-align " href="{{route('equipo.index')}}">
-				              	<i class="fas fa-box"></i>
+				              	<i class="left material-icons white-text">arrow_back</i>
 				            </a> Mantenimientos de Equipos | Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
-                    <div class="col s4 m4 l3 rigth-align">
+                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li><a href="{{route('mantenimiento.index')}}">Equipos</a></li>
-                            <li class="active">Nuevo Equipo</li>
+                            <li><a href="{{route('mantenimiento.index')}}">Mantenimientos</a></li>
+                            <li class="active">Nuevo Mantenimiento</li>
                         </ol>
                     </div>
                 </div>

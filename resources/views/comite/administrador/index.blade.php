@@ -41,7 +41,7 @@
                   </select>
                 </div>
                 <div class="divider"></div>
-                <table class="display responsive-table datatable-example dataTable" id="comitesDelNodoAdministrador_table">
+                <table class="display responsive-table datatable-example dataTable" id="comitesDelNodoAdministrador_table" style="width: 100%">
                   <thead>
                     <tr>
                       <th>Código del Comité</th>

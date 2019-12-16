@@ -105,15 +105,17 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                            <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Uso de Infraestructura" href="{{route('usoinfraestructura.create')}}">
-                                                <i class="material-icons">
-                                                    domain
-                                                </i>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    
+                                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                        <a class="red" href="{{ route('usoinfraestructura.create') }}">
+                                          <div class="card green">
+                                            <div class="card-content center">
+                                              <i class="left material-icons white-text">add</i>
+                                              <span class="white-text">Nuevo Uso de Infraestructura</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </div>
                                 </div>
                                 <div class="divider"></div>
                                 <br>
@@ -139,7 +141,7 @@
         <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
 
             <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Uso de Infraestructura">
-                 <i class="material-icons">domain</i>
+                 <i class="material-icons">add</i>
             </a>
         </div>
         @endif

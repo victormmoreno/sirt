@@ -62,7 +62,7 @@
                             <table class="display responsive-table" id="gestor_table">
                                 <thead>
                                     <th>Tipo Documento</th>
-                                    <th>Docuemento</th>
+                                    <th>Documento</th>
                                     <th>Gestor</th>
                                     <th>Correo</th>
                                     <th>Telefono</th>

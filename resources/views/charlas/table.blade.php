@@ -9,7 +9,7 @@
       <th>Detalles</th>
       @if ( \Session::get('login_role') == App\User::IsInfocenter() )
         <th>Editar</th>
-        <th>Inhabilitar</th>
+        {{-- <th>Inhabilitar</th> --}}
       @endif
       <th>Evidencias</th>
     </tr>

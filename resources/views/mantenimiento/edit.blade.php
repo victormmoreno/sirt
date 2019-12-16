@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col s8 m8 l8">
                         <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('costoadministrativo.index')}}">
+                            <a class="footer-text left-align" href="{{route('mantenimiento.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
                                   </i>
@@ -19,7 +19,7 @@
                             Mantenimientos Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
-                    <div class="col s4 m4 l4 rigth-align">
+                    <div class="col s4 m4 l4 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('mantenimiento.index')}}">Mantenimientos</a></li>
