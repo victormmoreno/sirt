@@ -516,7 +516,15 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('nodos.id', $id)
-    ->whereYear('fecha_inicio', $anho)
+    // ->whereYear('fecha_inicio', $anho)
+    ->where(function($q) use ($anho) {
+      $q->where(function($query) use ($anho) {
+        $query->whereYear('fecha_inicio', '=', $anho);
+      })
+      ->orWhere(function($query) use ($anho) {
+        $query->whereYear('fecha_cierre', '=', $anho);
+      });
+    })
     ->get();
   }
 
