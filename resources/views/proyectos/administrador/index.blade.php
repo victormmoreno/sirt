@@ -5,7 +5,22 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="material-icons">library_books</i>Proyectos</h5>
+          <div class="row">
+              <div class="col s8 m8 l10">
+                  <h5 class="left-align">
+                      <i class="material-icons left">
+                          library_books
+                      </i>
+                      Proyectos
+                  </h5>
+              </div>
+              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                  <ol class="breadcrumbs">
+                      <li><a href="{{route('home')}}">Inicio</a></li>
+                      <li class="active">Proyectos</li>
+                  </ol>
+              </div>
+          </div>
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -46,9 +61,20 @@
                         <label for="nodo_proyectoPorNodoYAnho">Seleccione el Nodo</label>
                       </div>
                     </div>
+                    
                     <div class="row center">
-                      <a class="btn-floating blue" onclick="consultarProyectosDelNodoPorAnho_Administrador();"><i class="material-icons">search</i></a>
+                      <div class="col s12 m4 l4 offset-l4">
+                        <a onclick="consultarProyectosDelNodoPorAnho_Administrador();" href="javascript:void(0)">
+                          <div class="card blue">
+                            <div class="card-content center flow-text">
+                              <i class="left material-icons white-text small">search</i>
+                              <span class="white-text">Consultar Proyectos</span>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
                     </div>
+                    <div class="divider"></div>
                     <div class="row">
                       @include('proyectos.table')
                     </div>

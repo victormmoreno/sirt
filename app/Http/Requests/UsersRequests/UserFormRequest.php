@@ -93,15 +93,51 @@ class UserFormRequest extends FormRequest
             'txtextension'              => Rule::requiredIf(collect($this->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',
             'txtperfil'                 => Rule::requiredIf(collect($this->role)->contains(User::IsTalento())) . '|nullable',
             'txtnodoingreso'            => Rule::requiredIf(collect($this->role)->contains(User::IsIngreso())) . '|nullable',
-            'txtregional'               => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaSinApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaConApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEgresadoSena())->first()->id) . '|nullable',
-            'txtcentroformacion'        => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaSinApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaConApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEgresadoSena())->first()->id) . '|nullable',
-            'txtprogramaformacion'      => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaSinApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaConApoyo())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEgresadoSena())->first()->id) . '|nullable|min:1|max:100',
-            'txtuniversidad'            => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPregrado())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPostgrado())->first()->id) . '|nullable|min:1|max:200',
-            'txtcarrerauniversitaria'   => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPregrado())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPostgrado())->first()->id) . '|nullable|min:1|max:100',
-            'txtempresa'                => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioEmpresaPublica())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioMicroempresa())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioMedianaEmpresa())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioGrandeEmpresa())->first()->id) . '|nullable|min:1|max:200',
-            'txtotrotipotalento'        => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsOtro())->first()->id) . '|nullable',
+            'txtregional'               => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaSinApoyo())->first()->id || 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaConApoyo())->first()->id || 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsEgresadoSena())->first()->id)) . '|nullable',
 
-            'txtgrupoinvestigacion'     => Rule::requiredIf($this->txtperfil == Perfil::where('nombre', Perfil::IsInvestigador())->first()->id) . '|nullable|exists:entidades,nombre',
+
+
+
+
+
+            'txtcentroformacion'        => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaSinApoyo())->first()->id || 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaConApoyo())->first()->id || 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsEgresadoSena())->first()->id)) . '|nullable',
+
+
+
+
+            'txtprogramaformacion'      => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaSinApoyo())->first()->id || 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsAprendizSenaConApoyo())->first()->id || 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsEgresadoSena())->first()->id)) . '|nullable|min:1|max:100',
+
+
+
+            'txtuniversidad'            => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPregrado())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPostgrado())->first()->id)) . '|nullable|min:1|max:200',
+
+
+
+            'txtcarrerauniversitaria'   => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPregrado())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsEstudianteUniversitarioPostgrado())->first()->id)) . '|nullable|min:1|max:100',
+
+
+            'txtempresa'                => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioEmpresaPublica())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioMicroempresa())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioMedianaEmpresa())->first()->id || $this->txtperfil == Perfil::where('nombre', Perfil::IsFuncionarioGrandeEmpresa())->first()->id)) . '|nullable|min:1|max:200',
+
+
+            'txtotrotipotalento'        => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                ($this->txtperfil == Perfil::where('nombre', Perfil::IsOtro())->first()->id)) . '|nullable',
+
+
+
+            'txtgrupoinvestigacion'     => Rule::requiredIf(collect($this->role)->contains(User::IsTalento()) && 
+                $this->txtperfil == Perfil::where('nombre', Perfil::IsInvestigador())->first()->id) . '|nullable|exists:entidades,nombre',
 
         ];
     }

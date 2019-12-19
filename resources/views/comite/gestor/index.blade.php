@@ -7,7 +7,22 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5><i class="left material-icons">gavel</i>Comité de Selección de Ideas</h5>
+        <div class="row">
+              <div class="col s8 m8 l10">
+                  <h5 class="left-align">
+                      <i class="material-icons left">
+                          gavel
+                      </i>
+                      Comité de Selección de Ideas
+                  </h5>
+              </div>
+              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                  <ol class="breadcrumbs">
+                      <li><a href="{{route('home')}}">Inicio</a></li>
+                      <li class="active">Comité de Selección de Ideas</li>
+                  </ol>
+              </div>
+          </div>
         <div class="card">
           <div class="card-content">
             <div class="row">
@@ -16,7 +31,7 @@
                   <span class="card-title center-align">CSIBT de Tecnoparque nodo {{ \NodoHelper::returnNodoUsuario() }}</span>
                 </center>
                 <div class="divider"></div>
-                <table class="display responsive-table datatable-example dataTable" id="comitesDelNodoGestor_table">
+                <table class="display responsive-table datatable-example dataTable" id="comitesDelNodoGestor_table" style="width: 100%">
                   <thead>
                     <tr>
                       <th>Código del Comité</th>
@@ -53,7 +68,7 @@
     <center><h4 id="fechaComiteModal" class="center-aling"></h4></center>
     <div class="divider"></div>
     <div>
-      <table class="striped">
+      <table class="striped" style="width: 100%"> 
         <thead>
           <tr>
             <th>Idea de Proyecto</th>

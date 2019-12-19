@@ -8,13 +8,13 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s12 m6 l6">
+                    <div class="col s8 m8 l9">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             
                             Tecnoparque Nodo {{$nodo->entidad->nombre}}
                         </h5>
                     </div>
-                    <div class="col s12 m4 l4 offset-l2 m-2 rigth-align hide-on-med-and-down">
+                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('nodo.index')}}">Nodos</a></li>

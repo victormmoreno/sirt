@@ -18,7 +18,7 @@
                             Material {{$material->nombre}}
                         </h5>
                     </div>
-                    <div class="col s12 m4 l4 ">
+                    <div class="col s12 m4 l4 rigth-align  show-on-large hide-on-med-and-down ">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('material.index')}}">Materiales</a></li>

@@ -43,7 +43,7 @@
                   </div>
                 </div>
               </div>
-              <table class="display responsive-table datatable-example" id="edtPorGestor_table" >
+              <table class="display responsive-table datatable-example" id="edtPorGestor_table" style="width: 100%">
                 <thead>
                   <th>Código de la Edt</th>
                   <th>Nombre</th>
@@ -59,15 +59,7 @@
                 </thead>
 
               </table>
-              {{-- <div class="col s12 m2 l2">
-                <a href="{{route('edt.excel.gestor', auth()->user()->gestor->id)}}">
-                  <div class="card green">
-                    <div class="card-content center">
-                      <span class="white-text">Descargar tabla</span>
-                    </div>
-                  </div>
-                </a>
-              </div> --}}
+              
             </div>
           </div>
         </div>

@@ -7,7 +7,6 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
@@ -17,14 +16,13 @@
                             Uso Infraestructura
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Uso Infraestructura </li>
                         </ol>
                     </div>
                 </div>
-                    
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
@@ -36,6 +34,7 @@
                                         <div class="center-align">
                                             <span class="card-title center-align">
                                                 Usos de Infraestructura {{ config('app.name')}}
+                                                <div class="divider"></div>
                                             </span>
                                         </div>
                                     </div>
@@ -75,6 +74,7 @@
                                         <div class="center-align">
                                             <span class="card-title center-align">
                                                 Usos de Infraestructura  Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                <div class="divider"></div>
                                             </span>
                                         </div>
                                     </div>
@@ -105,15 +105,17 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                            <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Uso de Infraestructura" href="{{route('usoinfraestructura.create')}}">
-                                                <i class="material-icons">
-                                                    domain
-                                                </i>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    
+                                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                        <a class="red" href="{{ route('usoinfraestructura.create') }}">
+                                          <div class="card green">
+                                            <div class="card-content center">
+                                              <i class="left material-icons white-text">add</i>
+                                              <span class="white-text">Nuevo Uso de Infraestructura</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </div>
                                 </div>
                                 <div class="divider"></div>
                                 <br>
@@ -139,7 +141,7 @@
         <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
 
             <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Uso de Infraestructura">
-                 <i class="material-icons">domain</i>
+                 <i class="material-icons">add</i>
             </a>
         </div>
         @endif

@@ -209,7 +209,7 @@ class UserRepository
 
     public function getAllRoles()
     {
-        return Role::all()->pluck('name', 'id');
+        return Role::whereNotIn('name',[User::IsDesarrollador()])->pluck('name', 'id');
     }
 
     /*=====  End of metodo para obtener todos los roles laravel permision  ======*/
