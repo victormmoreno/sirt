@@ -319,11 +319,11 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="right">
+                                                            {{-- <div class="right">
                                                                 <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
                                                                     Solicitar actualización del genero
                                                                 </a>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
                                                          
                                                     </div>

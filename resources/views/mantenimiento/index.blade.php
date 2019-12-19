@@ -17,7 +17,7 @@
                             Mantenimientos
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Mantenimientos</li>
@@ -73,15 +73,16 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                            <a class="btnregister waves-effect waves-light-sena btn" href="{{route('mantenimiento.create')}}">
-                                                <i class="material-icons">add_circle_outline</i>
-                                                 Nuevo Mantenimiento
-                                            </a>
-                                            
-                                        </div>
-                                    </div>
+                                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                        <a href="{{ route('mantenimiento.create') }}">
+                                          <div class="card green">
+                                            <div class="card-content center">
+                                              <i class="left material-icons white-text">add_circle_outline</i>
+                                              <span class="white-text">Nuevo Mantenimiento</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </div>
                                 </div>
                                 <div class="divider">
                                 </div>  
@@ -132,8 +133,8 @@
         </div>
         @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
             <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                <a href="{{route('equipo.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Mantenimiento">
-                     <i class="material-icons">straighten</i>
+                <a href="{{route('mantenimiento.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Mantenimiento">
+                     <i class="material-icons">add_circle_outline</i>
                 </a>
             </div>
         @endif

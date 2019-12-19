@@ -7,7 +7,23 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons left">record_voice_over</i>Charlas Informativas</h5>
+          <div class="row">
+              <div class="col s8 m8 l10">
+                  <h5 class="left-align">
+                      <i class="material-icons left">
+                          record_voice_over
+                      </i>
+                      Charlas Informativas
+  
+                  </h5>
+              </div>
+              <div class="col s4 m4 l2 rigth-align rigth-align show-on-large hide-on-med-and-down">
+                  <ol class="breadcrumbs">
+                      <li><a href="{{route('home')}}">Inicio</a></li>
+                      <li class="active">Charlas Informativas</li>
+                  </ol>
+              </div>
+          </div>
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -18,7 +34,7 @@
                         <span class="card-title center-align">Charlas Informativas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                       </div>
                     </div>
-                    <div class="col s12 m2 l2">
+                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
                       <a href="{{ route('charla.create') }}">
                         <div class="card green">
                           <div class="card-content center">
@@ -72,7 +88,7 @@
         { data: 'nro_asistentes', name: 'nro_asistentes' },
         { width: '8%', data: 'details', name: 'details', orderable: false },
         { width: '8%', data: 'edit', name: 'edit', orderable: false },
-        { width: '8%', data: 'delete', name: 'delete', orderable: false },
+        // { width: '8%', data: 'delete', name: 'delete', orderable: false },
         { width: '8%', data: 'evidencias', name: 'evidencias', orderable: false }
       ],
     });

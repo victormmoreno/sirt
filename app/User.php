@@ -38,6 +38,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_TALENTO       = "Talento";
     const IS_INGRESO       = "Ingreso";
     const IS_PROVEEDOR     = "Proveedor";
+    const IS_DESARROLLADOR = "Desarrollador";
 
     protected $appends = ['nombre_completo'];
 

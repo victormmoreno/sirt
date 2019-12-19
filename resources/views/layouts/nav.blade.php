@@ -33,7 +33,7 @@
             @endif
           </a>
         </li>
-        <li>             
+        <li class="show-on-large hide-on-med-and-down">             
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
             @else
@@ -41,7 +41,7 @@
             @endguest
           </a>
         </li>
-        <li class="hide-on-med-and-down show-on-large">
+        <li class="hide-on-small-only">
           <clock>
           </clock>
         </li>
@@ -59,7 +59,7 @@
                 <b>
                   Último login:
                 </b>
-                {{ optional(auth()->user()->ultimo_login)->isoFormat('LLLL') }}
+                {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
                 <br>
                 <b>
                   Edad:

@@ -49,6 +49,11 @@ trait UsersTrait
         return self::IS_GESTOR;
     }
 
+    public static function IsDesarrollador()
+    {
+        return self::IS_DESARROLLADOR;
+    }
+
     public static function IsInfocenter()
     {
         return self::IS_INFOCENTER;

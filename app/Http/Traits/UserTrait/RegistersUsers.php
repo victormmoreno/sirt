@@ -30,7 +30,7 @@ trait RegistersUsers
 
             case User::IsDinamizador():
 
-                $roles = $this->userRepository->getRoleWhereNotInRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento()]);
+                $roles = $this->userRepository->getRoleWhereNotInRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento(),User::IsDesarrollador()]);
                 $nodo  = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
 
                 break;
