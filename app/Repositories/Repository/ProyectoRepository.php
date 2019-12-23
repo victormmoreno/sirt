@@ -1129,7 +1129,7 @@ class ProyectoRepository
       });
     })
     ->groupBy('proyectos.id')
-    ->get();
+    ->dd();
   }
 
   /**
