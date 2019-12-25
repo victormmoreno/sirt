@@ -18300,3 +18300,7 @@ h5.breadcrumbs-header {
   /*Custom Background Color While Active*/
 }
 
+.dataTable {
+  width: 100%,
+}
+

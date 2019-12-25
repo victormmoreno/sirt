@@ -27,7 +27,7 @@ class PerfilesTableSeeder extends Seeder
 
         Perfil::create([
             
-            'nombre' => 'Funcionario empresa púbilca',
+            'nombre' => 'Funcionario empresa pública',
         ]);
 
         Perfil::create([

@@ -8,13 +8,19 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s10 m10 l10">
+                    <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <i class="material-icons left">
-                                supervised_user_circle
+                                linear_scale
                             </i>
                             Sublineas {{config('app.name')}} 
                         </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li class="active">Sublineas</li>
+                        </ol>
                     </div>
                 </div>
                 <div class="card ">
@@ -30,40 +36,30 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nueva Sublinea" href="{{route('sublineas.create')}}">
-                                            <i class="material-icons">
-                                                how_to_reg
-                                            </i>
-                                        </a>
+                                        <a href="{{route('sublineas.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nueva Sublinea</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="divider">
-                            </div>
+                            <div class="divider"></div> 
                             <br>
-                                <table class="display responsive-table" id="sublineas_table" width="100%">
-                                    <thead>
-                                        <th>Nombre Sublinea</th>
-                                        <th>Lineas</th>
-                                        <th>editar</th>
-                                        
-                                    </thead>
-                                </table>
+                            <table class="display responsive-table" id="sublineas_table" width="100%">
+                                <thead>
+                                    <th>Nombre Sublinea</th>
+                                    <th>Lineas</th>
+                                    <th>Editar</th> 
+                                </thead>
+                            </table>
                         </div>
                     </div>
+                </div>
+                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                    <a href="{{route('sublineas.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nueva Sublinea">
+                         <i class="material-icons">add_circle</i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </main>
-<div id="sublineas" class="modal">
-  <div class="modal-content">
-    <center><h4 id="titulo_administrador" class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div id="detalle_administrador"></div>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
+
 @endsection

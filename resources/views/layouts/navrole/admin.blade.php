@@ -3,24 +3,10 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
   </a>
 </li>
-<li class="no-padding  ">
-  <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('nodo')!!} {!! setActiveRoutePadding('nodo')!!}">
-    <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodos
-    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('nodo'), setActiveRouteActiveIcon('costos-administrativos') }}">keyboard_arrow_right</i>
+<li class="no-padding {{setActiveRoute('nodo')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
+    <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
   </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="{{route('nodo.index')}}" class="{{setActiveRouteActivePage('nodo')}}" rel="canonical" title="Nodos">
-          <i class="material-icons {{setActiveRouteActiveIcon('nodo')}}">domain</i>
-        Nodos</a>
-      </li>
-
-      {{-- <li>
-        <a href="">Mapa</a>
-      </li> --}}
-    </ul>
-  </div>
 </li>
 <li class="no-padding {{setActiveRoute('costos-administrativos')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos-administrativos')}}" href="{{route('costoadministrativo.index')}}" rel="canonical" title="Costos Administrativos">

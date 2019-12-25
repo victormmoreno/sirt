@@ -18,7 +18,7 @@
                             Usuarios | Administradores
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l2 rigth-align rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
@@ -33,32 +33,26 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-
                                             Administradores {{ config('app.name')}}
                                         </span>
                                         <i class="material-icons ">
-                                supervised_user_circle
-                            </i>
+                                            supervised_user_circle
+                                        </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a class="btnregister btn btn-floating btn-large tooltipped green" data-delay="50" data-position="button" data-tooltip="Nuevo Usuario" href="{{route('usuario.usuarios.create')}}">
-                                            <i class="material-icons">
-                                                how_to_reg
-                                            </i>
-                                        </a>
+                                        <a href="{{route('usuario.usuarios.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="divider">
                             </div>
-                            <div class="right material-icons"><a href=""><img src="https://img.icons8.com/color/48/000000/ms-excel.png" class="btn btn-flat"></a></div>
                             <br>
                                 <table class="display responsive-table" id="administrador_table">
                                     <thead>
                                         <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
+                                        <th>Documento</th>
                                         <th>Administrador</th>
                                         <th>Correo</th>
                                         <th>Telefono</th>
@@ -70,6 +64,11 @@
                                 </table>
                         </div>
                     </div>
+                </div>
+                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                    <a href="{{route('usuario.usuarios.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
+                         <i class="material-icons">add_circle</i>
+                    </a>
                 </div>
             </div>
         </div>

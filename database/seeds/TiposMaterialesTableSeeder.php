@@ -20,6 +20,5 @@ class TiposMaterialesTableSeeder extends Seeder
             'nombre' => 'Material Indirecto',
         ]);
 
-        // factory(TipoMaterial::class, 2)->create();
     }
 }

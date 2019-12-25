@@ -5,12 +5,12 @@
 <main class="mn-inner inner-active-sidebar">
   <div class="middle-content">
     <div class="row no-m-t no-m-b">
-      <div class="col s12 m3 l3 ">
+      <div class="col s12 m6 l3 ">
         <div class="card stats-card">
           <div class="card-content">
             <div class="card-options">
-              <ul>
-                <li class="red-text"><span class="badge cyan lighten-1">Colombia</span></li>
+              <ul class="hide-on-med-only">
+                <li class="red-text "><span class="badge cyan lighten-1">Colombia</span></li>
               </ul>
             </div>
             <span class="card-title">Nodos</span>
@@ -19,10 +19,10 @@
         </div>
       </div>
 
-      <div class="col s12 m3 l3">
+      <div class="col s12 m6 l3">
         <div class="card stats-card">
           <div class="card-options">
-              <ul>
+              <ul class="hide-on-med-only">
                 <li class="red-text"><span class="badge cyan lighten-1">{{$countDinamizadoresActivos}} Dinamizadores Activos</span></li>
               </ul>
           </div>
@@ -33,10 +33,10 @@
         </div>
       </div>
 
-      <div class="col s12 m3 l3">
+      <div class="col s12 m6 l3">
         <div class="card stats-card">
           <div class="card-options">
-              <ul>
+              <ul class="hide-on-med-only">
                 <li class="red-text"><span class="badge cyan lighten-1">{{$countGestoresActivos}} Gestores Activos</span></li>
               </ul>
           </div>
@@ -46,10 +46,10 @@
           </div>
         </div>
       </div>
-      <div class="col s12 m3 l3">
+      <div class="col s12 m6 l3">
         <div class="card stats-card">
           <div class="card-options">
-              <ul>
+              <ul class="hide-on-med-only">
                 <li class="red-text"><span class="badge cyan lighten-1">{{$countTalentosActivos}} Talentos Activos</span></li>
               </ul>
           </div>

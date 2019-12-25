@@ -4,16 +4,27 @@
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
-        <h5>
-          <a class="footer-text left-align" href="{{ route('proyecto') }}">
-            <i class="material-icons arrow-l">arrow_back</i>
-          </a> Proyectos
-        </h5>
+        <div class="row">
+          <div class="col s8 m8 l10">
+              <h5 class="left-align">
+                  <a class="footer-text left-align" href="{{ route('proyecto') }}">
+                    <i class="material-icons arrow-l">arrow_back</i>
+                  </a> Proyectos
+              </h5>
+          </div>
+          <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+              <ol class="breadcrumbs">
+                  <li><a href="{{route('home')}}">Inicio</a></li>
+                  <li><a href="{{route('proyecto')}}">Proyectos</a></li>
+                  <li class="active">Editar</li>
+              </ol>
+          </div>
+          </div>
         <div class="card">
           <div class="card-content">
             <br>
             <center>
-              <span class="card-title center-align">Modificar Proyecto - </span>
+              <span class="card-title center-align">Modificar Proyecto - {{$proyecto->codigo_proyecto}}</span>
             </center>
             <div class="divider"></div>
             <form action="{{route('proyecto.update', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">

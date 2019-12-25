@@ -9,21 +9,16 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l9">
-
                         <h5 class="left-align">
-
                             <a class="footer-text left-align" href="{{route('laboratorio.index')}}">
                                 <i class="material-icons arrow-l">
                                     arrow_back
                                 </i>
                             </a>
                             Costos Administrativos
-                            <i class="material-icons">
-                                settings_input_svideo
-                            </i>
                         </h5>
                     </div>
-                    <div class="col s4 m4 l3 rigth-align">
+                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Costos Administrativos</li>
@@ -106,7 +101,7 @@
                             <div class="divider">
                             </div>
                             <br>
-                            <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_dinamizador_table1">
+                            <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_dinamizador_table1" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th rowspan="2">Nodo</th>

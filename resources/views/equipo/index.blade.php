@@ -19,7 +19,7 @@
                             Equipos
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Equipos</li>
@@ -80,20 +80,22 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                            <a class="btnregister waves-effect waves-light-sena btn" href="{{route('equipo.create')}}">
-                                                <i class="material-icons">add_circle</i>
-                                                 Nuevo Equipo
-                                            </a>
-                                            
-                                        </div>
-                                    </div>
+
+                                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                        <a href="{{ route('equipo.create') }}">
+                                          <div class="card green">
+                                            <div class="card-content center">
+                                              <i class="left material-icons white-text">add</i>
+                                              <span class="white-text">Nuevo Equipo</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </div>
                                 </div>
                                 <div class="divider">
                                 </div>  
                                 <br>
-                                    <table class="display responsive-table" id="equipo_tecnoparque_dinamizador_table">
+                                    <table class="display responsive-table" id="equipo_tecnoparque_dinamizador_table" style="width: 100%">
                                         <thead>
                                             <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
@@ -124,7 +126,7 @@
                                 <div class="divider">
                                 </div>  
                                 <br>
-                                    <table class="display responsive-table" id="equipo_tecnoparque_gestor_table">
+                                    <table class="display responsive-table" id="equipo_tecnoparque_gestor_table" style="width: 100%">
                                         <thead>
                                             <th width="15%">Linea Tecnológica</th>
                                             <th width="15%">Equipo</th>
@@ -148,7 +150,7 @@
         @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
             <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                 <a href="{{route('equipo.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo equipo">
-                     <i class="material-icons">straighten</i>
+                     <i class="material-icons">add</i>
                 </a>
             </div>
         @endif

@@ -16,7 +16,7 @@
                             Lineas
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align">
+                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Lineas</li>
@@ -53,6 +53,11 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                    <a href="{{route('lineas.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nueva Linea Tecnológica">
+                         <i class="material-icons">add_circle</i>
+                    </a>
                 </div>
             </div>
         </div>
