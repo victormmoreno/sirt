@@ -3,12 +3,10 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Carbon\Carbon;
 
-class AddFechaToMaterialesTable extends Migration
+class AddObjetivoGeneralToActividadesTable extends Migration
 {
-
-    public $tableName = 'materiales';
+    public $tableName = 'actividades';
     /**
      * Run the migrations.
      *
@@ -17,7 +15,7 @@ class AddFechaToMaterialesTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->date('fecha')->default(Carbon::now()->format('Y-m-d'))->after('medida_id');
+            $table->string('objetivo_general', 500)->default(null)->after('nombre');
         });
     }
 
@@ -29,7 +27,7 @@ class AddFechaToMaterialesTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['fecha']);
+            $table->dropColumn(['objetivo_general']);
         });
     }
 }

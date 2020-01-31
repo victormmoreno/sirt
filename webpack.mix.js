@@ -96,6 +96,7 @@ mix.scripts([
 		'resources/app/articulaciones/gestor/index.js',
 		'resources/app/articulaciones/index.js',
 		'resources/app/proyecto/index.js',
+		'resources/app/proyecto/gestor/form.js',
 		'resources/app/edt/gestor/form.js',
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
@@ -137,7 +138,7 @@ mix.minify('public/js/app2.js')
 
 mix.browserSync({
 
-        proxy: 'http://gestion2019.test',
+        proxy: 'http://gestion2020.test',
         files: [
             'app/**/*',
             'resources/views/**/*',
