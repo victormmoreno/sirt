@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('spa');
+    // $proyecto = App\Models\Proyecto::find(455);
+    // $proyecto->users_propietarios()->attach([7]);
 })->name('/');
 
 DB::listen(function ($query) {

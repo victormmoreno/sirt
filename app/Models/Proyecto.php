@@ -94,6 +94,16 @@ class Proyecto extends Model
   //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
   // }
 
+  public function entidades()
+  {
+    return $this->morphedByMany(Entidad::class, 'propietario');
+  }
+
+  public function users_propietarios()
+  {
+    return $this->morphedByMany(User::class, 'propietario');
+  }
+
   public function sector()
   {
       return $this->belongsTo(Sector::class, 'sector_id', 'id');

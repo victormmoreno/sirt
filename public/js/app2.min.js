@@ -4267,6 +4267,40 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table() {
     ],
   });
 }
+
+function selectAreaConocimiento_Proyecto_FaseInicio() {
+  let id = $("#txtareaconocimiento_id").val();
+  let nombre = $("#txtareaconocimiento_id [value='" + id + "']").text();
+  if (nombre == 'Otro') {
+    divOtroAreaConocmiento.show();
+  } else {
+    divOtroAreaConocmiento.hide();
+  }
+}
+
+function showInput_EconomiaNaranja() {
+  if ($('#txteconomia_naranja').is(':checked')) {
+    divEconomiaNaranja.show();
+  } else {
+    divEconomiaNaranja.hide();
+  }
+}
+
+function showInput_Discapacidad() {
+  if ($('#txtdirigido_discapacitados').is(':checked')) {
+    divDiscapacidad.show();
+  } else {
+    divDiscapacidad.hide();
+  }
+}
+
+function showInput_ActorCTi() {
+  if ($('#txtarti_cti').is(':checked')) {
+    divNombreActorCTi.show();
+  } else {
+    divNombreActorCTi.hide();
+  }
+}
 $(document).ready(function() {
   $('#empresasDeTecnoparque_modEdt_table').DataTable({
     language: {

@@ -646,11 +646,11 @@ class ProyectoController extends Controller
 
     if (Session::get('login_role') == User::IsGestor()) {
       return view('proyectos.gestor.create', [
-        'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
+        // 'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
         'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
-        'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
+        // 'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
         'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-        'estadosproyecto' => EstadoProyecto::ConsultarEstadosDeProyectoNoCierre()->pluck('nombre', 'id'),
+        // 'estadosproyecto' => EstadoProyecto::ConsultarEstadosDeProyectoNoCierre()->pluck('nombre', 'id'),
       ]);
     }
   }

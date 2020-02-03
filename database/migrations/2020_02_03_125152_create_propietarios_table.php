@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateObjetivosEspecificosTable extends Migration
+class CreatePropietariosTable extends Migration
 {
-    public $tableName = 'objetivos_especificos';
+
+    public $tableName = 'propietarios';
     /**
      * Run the migrations.
      *
@@ -15,18 +16,11 @@ class CreateObjetivosEspecificosTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->unsignedInteger('actividad_id');
-            $table->string('objetivo', 500);
+            $table->integer('proyecto_id')->unsigned();
+            $table->integer('propietario_id')->unsigned();
+            $table->string('propietario_type');
             $table->timestamps();
-
-            $table->index(["actividad_id"], 'fk_objetivos_especificos_actividades1_idx');
-
-            $table->foreign('actividad_id', 'fk_objetivos_especificos_actividades1_idx')
-            ->references('id')->on('actividades')
-            ->onDelete('no action')
-            ->onUpdate('no action');
         });
     }
 

@@ -40,6 +40,16 @@
 <script>
   $(document).ready(function() {
     consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table();
+    // Contenedores
+    divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
+    divEconomiaNaranja = $('#economiaNaranja_content');
+    divDiscapacidad = $('#discapacidad_content');
+    divNombreActorCTi = $('#nombreActorCTi_content');
+    // Ocultar contenedores
+    divOtroAreaConocmiento.hide();
+    divEconomiaNaranja.hide();
+    divDiscapacidad.hide();
+    divNombreActorCTi.hide();
   })
 </script>
 @endpush
