@@ -6,14 +6,13 @@ use App\Models\{AreaConocimiento, Centro, Entidad, Gestor, EstadoPrototipo, Esta
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ArticulacionProyectoRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Rules\CreateValidationForDomainRequest;
-use App\Http\Requests\ProyectoFormRequest;
+use App\Http\Requests\ProyectoFaseInicioFormRequest;
 use App\Http\Controllers\PDF\PdfProyectoController;
 use Illuminate\Validation\Rule;
 use App\Helpers\ArrayHelper;
 use Illuminate\Http\Request;
 use App\User;
 use Alert;
-use App;
 
 class ProyectoController extends Controller
 {
@@ -646,11 +645,8 @@ class ProyectoController extends Controller
 
     if (Session::get('login_role') == User::IsGestor()) {
       return view('proyectos.gestor.create', [
-        // 'tipoarticulacion' => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
         'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
-        // 'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
         'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-        // 'estadosproyecto' => EstadoProyecto::ConsultarEstadosDeProyectoNoCierre()->pluck('nombre', 'id'),
       ]);
     }
   }
@@ -663,25 +659,22 @@ class ProyectoController extends Controller
    */
   public function store(Request $request)
   {
-    $req       = new ProyectoFormRequest;
+    // dd($request);
+    // return response()->json(['fail' => true]);
+    $req       = new ProyectoFaseInicioFormRequest;
     $validator = Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
       return response()->json([
-        'fail'   => true,
+        'state'   => 'error_form',
         'errors' => $validator->errors(),
       ]);
-    }
-    $result = $this->getProyectoRepository()->store($request);
-    if ($result == false) {
-      return response()->json([
-        'fail'         => false,
-        'redirect_url' => false,
-      ]);
     } else {
-      return response()->json([
-        'fail'         => false,
-        'redirect_url' => url(route('proyecto')),
-      ]);
+      $result = $this->getProyectoRepository()->store($request);
+      if ($result) {
+        return response()->json(['state' => 'registro']);
+      } else {
+        return response()->json(['state' => 'no_registro']);
+      }
     }
   }
 

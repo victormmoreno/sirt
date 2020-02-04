@@ -25,7 +25,8 @@
                 </div>
               </div>
               <br />
-              @include('proyectos.gestor.form_inicio')
+              @include('proyectos.gestor.form_inicio', [
+              'btnText' => 'Guardar'])
             </div>
           </div>
         </div>
@@ -39,7 +40,7 @@
 @push('script')
 <script>
   $(document).ready(function() {
-    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table();
+    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
     // Contenedores
     divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
     divEconomiaNaranja = $('#economiaNaranja_content');
@@ -50,6 +51,6 @@
     divEconomiaNaranja.hide();
     divDiscapacidad.hide();
     divNombreActorCTi.hide();
-  })
+  });
 </script>
 @endpush

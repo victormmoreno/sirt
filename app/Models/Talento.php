@@ -60,7 +60,7 @@ class Talento extends Model
     // Consulta los talentos de tecnoparque
     public function scopeConsultarTalentosDeTecnoparque($query)
     {
-        return $query->select('users.documento', 'talentos.id')
+        return $query->select('users.documento', 'talentos.id', 'users.id AS user_id')
             ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
             ->join('users', 'users.id', '=', 'talentos.user_id');
     }

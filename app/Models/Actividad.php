@@ -36,6 +36,7 @@ class Actividad extends Model
         'nombre',
         'fecha_inicio',
         'fecha_cierre',
+        'objetivo_general',
     ];
 
     /**
@@ -76,6 +77,11 @@ class Actividad extends Model
     public function usoinfraestructuras()
     {
         return $this->hasMany(UsoInfraestructura::class, 'actividad_id', 'id');
+    }
+
+    public function objetivos_especificos()
+    {
+      return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
     }
 
 }

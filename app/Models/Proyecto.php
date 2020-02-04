@@ -15,10 +15,10 @@ class Proyecto extends Model
   ];
 
   /**
-  * The attributes that are mass assignable.
-  *
-  * @var array
-  */
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
   protected $fillable = [
     'articulacion_proyecto_id', // Llave foranea
     'idea_id', // Llave foranea
@@ -56,11 +56,19 @@ class Proyecto extends Model
     'ficha_caracterizacion',
     'lecciones_aprendidas',
     'encuesta',
+    'alcance_proyecto',
+    'tipo_economianaranja',
+    'dirigido_discapacitados',
+    'tipo_discapacitados',
+    'otro_areaconocimiento',
+    'trl_esperado',
+    'trl_obtenido',
+    'fase_id',
   ];
 
   /**
-  * Constantes para el campo de estado_aprobacion
-  */
+   * Constantes para el campo de estado_aprobacion
+   */
   // Estado que indica que el proyectos está pendiente de aprobación
   const IS_PENDIENTE = 0;
   // Estado que indica que el proyecto fue aprobado por los tres (dinamizador, gestor y talento líder)
@@ -106,22 +114,22 @@ class Proyecto extends Model
 
   public function sector()
   {
-      return $this->belongsTo(Sector::class, 'sector_id', 'id');
+    return $this->belongsTo(Sector::class, 'sector_id', 'id');
   }
 
   public function tipoproyecto()
   {
-      return $this->belongsTo(TipoArticulacionProyecto::class, 'tipoarticulacionproyecto_id', 'id');
+    return $this->belongsTo(TipoArticulacionProyecto::class, 'tipoarticulacionproyecto_id', 'id');
   }
 
   public function areaconocimiento()
   {
-      return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
+    return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
   }
 
   public function sublinea()
   {
-      return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
+    return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
   }
 
   /**
@@ -132,8 +140,8 @@ class Proyecto extends Model
   public function users()
   {
     return $this->belongsToMany(User::class, 'aprobaciones')
-    ->withTimestamps()
-    ->withPivot('aprobacion');
+      ->withTimestamps()
+      ->withPivot('aprobacion');
   }
 
   /**
@@ -152,8 +160,8 @@ class Proyecto extends Model
   public function roles()
   {
     return $this->belongsToMany(Role::class, 'aprobaciones')
-    ->withTimestamps()
-    ->withPivot('aprobacion');
+      ->withTimestamps()
+      ->withPivot('aprobacion');
   }
 
   /* relacion a la tabla estadosproyecto */
@@ -175,36 +183,34 @@ class Proyecto extends Model
 
   public function scopeInfoProjects($query, array $relations = [], array $estado = [])
   {
-    if(empty($relations)) {
+    if (empty($relations)) {
       return $query;
     }
 
     return $query->with($relations)->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
-
   }
 
 
-    /*=====  End of scope para consultar los proyectos por estado  ======*/
+  /*=====  End of scope para consultar los proyectos por estado  ======*/
 
-/*======================================================================================
+  /*======================================================================================
 =            scope para consultar el nombre y el id del proyecto por estado            =
 ======================================================================================*/
 
-    public function scopePluckNameProjects($query, array $estado = [])
-    {
-        return $query->with([
-            'estadoproyecto'                  => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'articulacion_proyecto'           => function ($query) {
-                $query->select('id', 'actividad_id');
-            },
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre');
-            },
-        ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
-
-    }
+  public function scopePluckNameProjects($query, array $estado = [])
+  {
+    return $query->with([
+      'estadoproyecto'                  => function ($query) {
+        $query->select('id', 'nombre');
+      },
+      'articulacion_proyecto'           => function ($query) {
+        $query->select('id', 'actividad_id');
+      },
+      'articulacion_proyecto.actividad' => function ($query) {
+        $query->select('id', 'codigo_actividad', 'nombre');
+      },
+    ])->select('id', 'estadoproyecto_id', 'articulacion_proyecto_id');
+  }
 
   /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
 
@@ -212,20 +218,15 @@ class Proyecto extends Model
     =            scope para consultar por estado de proyecto            =
     ===================================================================*/
 
-    public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
-    {
-        return $query->with($relations)->whereHas(
-            'estadoproyecto', function ($query) use ($estado) {
-                $query->whereIn('nombre', $estado);
-            }
-        );
-
-    }
-
-    /*=====  End of scope para consultar por estado de proyecto  ======*/
-
+  public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
+  {
+    return $query->with($relations)->whereHas(
+      'estadoproyecto',
+      function ($query) use ($estado) {
+        $query->whereIn('nombre', $estado);
+      }
+    );
   }
 
-
-    
-
+  /*=====  End of scope para consultar por estado de proyecto  ======*/
+}

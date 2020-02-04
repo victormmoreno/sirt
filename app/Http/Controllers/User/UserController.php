@@ -23,6 +23,13 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    public function findUserById(int $id)
+    {
+        return response()->json([
+            'user' => User::find($id),
+        ]);
+    }
+
     /**
      * metodo para mostrar el index o listado de usarios.
      *

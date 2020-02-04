@@ -110,7 +110,8 @@ Route::group([
         Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
 
         Route::get('usuarios/allusuarios', 'UserController@getAllUsersInDatatable')->name('usuario.allusers');
-
+        Route::get('consultarUserPorId/{id}', 'UserController@findUserById');
+        
         Route::get('/', [
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',

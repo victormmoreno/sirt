@@ -30,9 +30,9 @@ class TalentoController extends Controller
      */
     public function getEdad($id)
     {
-      $talento = Talento::find($id);
-      $edad = $talento->user->fechanacimiento->age;
-      return $edad;
+        $talento = Talento::find($id);
+        $edad = $talento->user->fechanacimiento->age;
+        return $edad;
     }
 
     public function datatableTalentosDeTecnoparque()
@@ -44,9 +44,12 @@ class TalentoController extends Controller
                     $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })->addColumn('add_proyecto', function ($data) {
-                $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-                return $add;
-            })->rawColumns(['add_articulacion', 'add_proyecto'])->make(true);
+                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    return $add;
+                })->addColumn('add_propiedad', function ($data) {
+                    $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    return $propiedad;
+                })->rawColumns(['add_articulacion', 'add_proyecto', 'add_propiedad'])->make(true);
         }
         abort('404');
     }
@@ -73,20 +76,20 @@ class TalentoController extends Controller
 
                     return $button;
                 })->editColumn('estado', function ($data) {
-                if ($data->estado == User::IsActive()) {
+                    if ($data->estado == User::IsActive()) {
 
-                    return $data->estado = 'Habilitado';
-                } else {
-                    return $data->estado = 'Inhabilitado ';
-                }
-            })->addColumn('edit', function ($data) {
-                if ($data->id != auth()->user()->id) {
-                    $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                } else {
-                    $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                }
-                return $button;
-            })
+                        return $data->estado = 'Habilitado';
+                    } else {
+                        return $data->estado = 'Inhabilitado ';
+                    }
+                })->addColumn('edit', function ($data) {
+                    if ($data->id != auth()->user()->id) {
+                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    } else {
+                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
+                    }
+                    return $button;
+                })
                 ->rawColumns(['detail', 'edit', 'estado'])
                 ->make(true);
         }
@@ -105,7 +108,6 @@ class TalentoController extends Controller
                 abort('403');
                 break;
         }
-
     }
 
     /*============================================================================
@@ -115,31 +117,30 @@ class TalentoController extends Controller
     public function getUsersTalentosForDatatables()
     {
         // if (request()->ajax()) {
-            return datatables()->of($this->talentoRepository->getAllTalentos())
-                ->addColumn('detail', function ($data) {
+        return datatables()->of($this->talentoRepository->getAllTalentos())
+            ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
+                $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
 
-                    return $button;
-                })
+                return $button;
+            })
 
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        if ($data->id == auth()->user()->id) {
-                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
-                        }
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
+            ->editColumn('estado', function ($data) {
+                if ($data->estado == User::IsActive()) {
+                    if ($data->id == auth()->user()->id) {
+                        return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
                     }
-                })
-                ->rawColumns(['detail', 'estado'])
-                ->make(true);
+                    return $data->estado = 'Habilitado';
+                } else {
+                    return $data->estado = 'Inhabilitado ';
+                }
+            })
+            ->rawColumns(['detail', 'estado'])
+            ->make(true);
         // }
         // abort('404');
 
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
-
 }
