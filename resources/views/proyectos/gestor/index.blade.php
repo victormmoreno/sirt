@@ -56,26 +56,9 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="right material-icons">
-                        <a onclick="generarExcelDeProyectosDelGestorPorAnho()">
-                          <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                        </a>
-                      </div>
                       @include('proyectos.table')
-                      <div class="col s12 m2 l2">
-                        <a onclick="generarExcelDeProyectosDelGestorPorAnho()" href="javascript:void(0)">
-                          <div class="card green">
-                            <div class="card-content center">
-                              <span class="white-text">Descargar tabla</span>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
                     </div>
                   </div>
-                  {{-- <div id="proyectos_pendientes">
-                    @include('proyectos.table_pendientes')
-                  </div> --}}
                 </div>
               </div>
             </div>

@@ -67,6 +67,14 @@ class Proyecto extends Model
   ];
 
   /**
+   * Constante para el campo trl_esperado
+   */
+  // Estado que indica que el trl esperado es 6
+  const IS_TRL6_ESPERADO = 0;
+  // Estado que indica que el trl esperado es 7 u 8
+  const IS_TRL7_8_ESPERADO = 1;
+
+  /**
    * Constantes para el campo de estado_aprobacion
    */
   // Estado que indica que el proyectos está pendiente de aprobación
@@ -75,6 +83,17 @@ class Proyecto extends Model
   const IS_ACEPTADO = 1;
   // Estado que indica que el proyecto no fue aprobado por al menos uno de los tres (dinamizador, gestor o talento líder)
   const IS_NOACEPTADO = 2;
+
+  // Retorna para las constantes del campo trl_esperado
+  public static function IsTrl6Esperado()
+  {
+    return self::IS_TRL6_ESPERADO;
+  }
+
+  public static function IsTrl78Esperado()
+  {
+    return self::IS_TRL7_8_ESPERADO;
+  }
 
   // Retorno para las constantes del campo estado_aprobacion
   public static function IsPendiente()

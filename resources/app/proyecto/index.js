@@ -501,9 +501,7 @@ function consultarProyectosDelGestorPorAnho() {
       data: function (d) {
         d.codigo_proyecto = $('.codigo_proyecto').val(),
         d.nombre = $('.nombre').val(),
-        d.sublinea_nombre = $('.sublinea_nombre').val(),
-        d.estado_nombre = $('.estado_nombre').val(),
-        d.revisado_final = $('.revisado_final').val(),
+        d.nombre_fase = $('.nombre_fase').val(),
         d.search = $('input[type="search"]').val()
       }
     },
@@ -518,22 +516,8 @@ function consultarProyectosDelGestorPorAnho() {
         name: 'nombre',
       },
       {
-        data: 'sublinea_nombre',
-        name: 'sublinea_nombre',
-      },
-      {
-        data: 'estado_nombre',
-        name: 'estado_nombre',
-      },
-      {
-        data: 'revisado_final',
-        name: 'revisado_final',
-      },
-      {
-        width: '8%',
-        data: 'talentos',
-        name: 'talentos',
-        orderable: false
+        data: 'nombre_fase',
+        name: 'nombre_fase',
       },
       {
         width: '8%',
@@ -547,12 +531,6 @@ function consultarProyectosDelGestorPorAnho() {
         name: 'edit',
         orderable: false
       },
-      {
-        width: '8%',
-        data: 'entregables',
-        name: 'entregables',
-        orderable: false
-      },
     ],
   });
 }
@@ -564,15 +542,7 @@ $(".nombre").keyup(function(){
   $('#tblproyectosGestorPorAnho').DataTable().draw();
 });
 
-$(".sublinea_nombre").keyup(function(){
-  $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
-
-$(".estado_nombre").keyup(function(){
-  $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
-
-$(".revisado_final").keyup(function(){
+$(".nombre_fase").keyup(function(){
   $('#tblproyectosGestorPorAnho').DataTable().draw();
 });
 

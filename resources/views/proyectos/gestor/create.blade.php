@@ -25,8 +25,10 @@
                 </div>
               </div>
               <br />
+              <form id="frmProyectos_FaseInicio" action="{{route('proyecto.store')}}" method="POST">
               @include('proyectos.gestor.form_inicio', [
               'btnText' => 'Guardar'])
+              </form>
             </div>
           </div>
         </div>

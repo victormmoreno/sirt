@@ -214,22 +214,6 @@ class ProyectoController extends Controller
           $edit = '<a class="btn m-b-xs" href=' . route('proyecto.edit', $data->id) . '><i class="material-icons">edit</i></a>';
         }
         return $edit;
-      })->addColumn('entregables', function ($data) {
-        $entregables = '
-      <a class="btn blue-grey m-b-xs" href=' . route('proyecto.entregables', $data->id) . '>
-        <i class="material-icons">library_books</i>
-      </a>
-      ';
-        return $entregables;
-      })->editColumn('revisado_final', function ($data) {
-        if ($data->revisado_final == 'Por Evaluar') {
-          return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>' . $data->revisado_final . '</span></div>';
-        } else if ($data->revisado_final == 'Aprobado') {
-          return '<div class="card-panel green lighten-4"><span><i class="material-icons left">done_all</i>' . $data->revisado_final . '</span></div>';
-        } else {
-          return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>' . $data->revisado_final . '</span></div>';
-        }
-        return '<span class="red-text">' . $data->revisado_final . '</span>';
       })->addColumn('talentos', function ($data) {
         $talentos = '
       <a class="btn cyan m-b-xs" onclick="verTalentosDeUnProyecto(' . $data->articulacion_proyecto_id . ')">
@@ -249,19 +233,9 @@ class ProyectoController extends Controller
             return Str::contains($row['nombre'], $request->get('nombre')) ? true : false;
           });
         }
-        if (!empty($request->get('sublinea_nombre'))) {
+        if (!empty($request->get('nombre_fase'))) {
           $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-            return Str::contains($row['sublinea_nombre'], $request->get('sublinea_nombre')) ? true : false;
-          });
-        }
-        if (!empty($request->get('estado_nombre'))) {
-          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-            return Str::contains($row['estado_nombre'], $request->get('estado_nombre')) ? true : false;
-          });
-        }
-        if (!empty($request->get('revisado_final'))) {
-          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-            return Str::contains($row['revisado_final'], $request->get('revisado_final')) ? true : false;
+            return Str::contains($row['nombre_fase'], $request->get('nombre_fase')) ? true : false;
           });
         }
         if (!empty($request->get('gestor'))) {
@@ -275,11 +249,7 @@ class ProyectoController extends Controller
               return true;
             } else if (Str::contains(Str::lower($row['nombre']), Str::lower($request->get('search')))) {
               return true;
-            } else if (Str::contains(Str::lower($row['sublinea_nombre']), Str::lower($request->get('search')))) {
-              return true;
-            } else if (Str::contains(Str::lower($row['estado_nombre']), Str::lower($request->get('search')))) {
-              return true;
-            } else if (Str::contains(Str::lower($row['revisado_final']), Str::lower($request->get('search')))) {
+            } else if (Str::contains(Str::lower($row['nombre_fase']), Str::lower($request->get('search')))) {
               return true;
             } else if (Str::contains(Str::lower($row['gestor']), Str::lower($request->get('search')))) {
               return true;
@@ -287,7 +257,7 @@ class ProyectoController extends Controller
             return false;
           });
         }
-      })->rawColumns(['details', 'edit', 'entregables', 'talentos', 'revisado_final', 'delete', 'download_seguimiento'])->make(true);
+      })->rawColumns(['details', 'edit', 'talentos', 'delete', 'download_seguimiento'])->make(true);
   }
 
   /**
@@ -689,66 +659,27 @@ class ProyectoController extends Controller
   {
     $proyecto = $this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id);
 
-    if ($proyecto->estado_aprobacion != 1) {
-      Alert::error('Error!', 'El proyecto aún no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
-      return back();
-    } else {
-      if ($proyecto->nombre_estadoproyecto == 'Cierre PMV' || $proyecto->nombre_estadoproyecto == 'Cierre PF' || $proyecto->nombre_estadoproyecto == 'Suspendido') {
-        Alert::error('Error!', 'Este proyecto ya se ha cerrado, no puede realizar esta acción!')->showConfirmButton('Ok', '#3085d6');
-        return back();
-      } else {
-        switch (Session::get('login_role')) {
-          case User::IsGestor():
-            $entidad = "";
-            $articulacion_repository = "";
-            /**
-             * Consulta cual es la entidad asociada para consultar su información y mostrarla en la vista
-             */
-            if ($proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros del SENA' || $proyecto->nombre_tipoarticulacion == 'Grupos y Semilleros Externos') {
-              $entidad = $this->getEntidadRepository()->consultarGrupoInvestigacionEntidadRepository($proyecto->entidad_id);
-            }
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('proyectos.gestor.fase_inicio', [
+          'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+          'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+          'proyecto' => $proyecto,
+          'pivot' => $this->getArticulacionProyectoRepository()->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
+        ]);
+        break;
 
-            if ($proyecto->nombre_tipoarticulacion == 'Tecnoacademias') {
-              $entidad = $this->getEntidadRepository()->consultarTecnoacademiaEntidadRepository($proyecto->entidad_id);
-            }
+      case User::IsDinamizador():
+        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+        return view('proyectos.dinamizador.edit', [
+          'proyecto' => $proyecto,
+          'gestores' => $gestores,
+        ]);
+        break;
 
-            if ($proyecto->nombre_tipoarticulacion == 'Empresas') {
-              $entidad = $this->getEntidadRepository()->consultarEmpresaEntidadRepository($proyecto->entidad_id);
-            }
-
-            if ($proyecto->nombre_tipoarticulacion == 'Tecnoparques') {
-              $entidad = $this->getEntidadRepository()->consultarNodoEntidadRepository($proyecto->entidad_id);
-            }
-
-            if ($proyecto->nombre_tipoarticulacion == 'Centros de Formación') {
-              $entidad = $this->getEntidadRepository()->consultarCentroFormacionEntidadRepository($proyecto->entidad_id);
-            }
-            return view('proyectos.gestor.edit', [
-              'tipoarticulacion'  => TipoArticulacionProyecto::all()->pluck('nombre', 'id'),
-              'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
-              'sectores' => Sector::SelectAllSectors()->get()->pluck('nombre', 'id'),
-              'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-              'estadosproyecto' => EstadoProyecto::ConsultarTodosEstadosDeProyecto()->pluck('nombre', 'id'),
-              'proyecto' => $proyecto,
-              'pivot' => $this->getArticulacionProyectoRepository()->consultarTalentosDeUnaArticulacionProyectoRepository(Proyecto::find($id)->articulacion_proyecto_id),
-              'entidad' => $entidad,
-              'estadosprototipos' => EstadoPrototipo::all()->pluck('nombre', 'id'),
-            ]);
-            break;
-
-          case User::IsDinamizador():
-            $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
-            return view('proyectos.dinamizador.edit', [
-              'proyecto' => $proyecto,
-              'gestores' => $gestores,
-            ]);
-            break;
-
-          default:
-            // code...
-            break;
-        }
-      }
+      default:
+        // code...
+        break;
     }
   }
 

@@ -32,6 +32,10 @@ class EmpresaFormRequest extends FormRequest
       'txtdepartamento' => 'required',
       'txtciudad_id' => 'required',
       'txtsector' => 'required',
+      'txttamanhoempresa_id' => 'required',
+      'txttipoempresa_id' => 'required',
+      'fecha_creacion' => 'date_format:Y-m-d|nullable',
+      'codigo_ciiu' => 'max:15|nullable',
     ];
   }
 
@@ -58,7 +62,15 @@ class EmpresaFormRequest extends FormRequest
 
       'txtciudad_id' => 'La Ciudad de la Empresa es obligatoria.',
 
-      'txtsector' => 'El Sector de la Empresa es obligatorio.',
+      'txtsector.required' => 'El Sector de la Empresa es obligatorio.',
+
+      'txttamanhoempresa_id.required' => 'El Tamaño de la Empresa es obligatorio.',
+
+      'txttipoempresa_id.required' => 'El Tipo de la Empresa es obligatorio.',
+
+      'date_format.date_format' => 'La fecha de creación no tiene un formato válido (Y-m-d).',
+
+      'codigo_ciiu.max' => 'El código CIIU de la empresa debe ser máximo de 15 carácteres.',
       ];
     }
 

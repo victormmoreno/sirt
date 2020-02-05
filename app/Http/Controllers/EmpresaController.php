@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
-use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion, ContactoEntidad};
+use App\Models\{Empresa, Sector, TamanhoEmpresa, TipoEmpresa};
 use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository, EntidadRepository};
 use Illuminate\Support\Facades\{DB, Validator};
 use App\Helpers\ArrayHelper;
@@ -189,6 +189,8 @@ class EmpresaController extends Controller
       return view('empresa.gestor.create', [
       'departamentos' => $this->userRepository->getAllDepartamentos(),
       'sectores' => Sector::SelectAllSectors()->get(),
+      'tamanhos' => TamanhoEmpresa::all(),
+      'tipos' => TipoEmpresa::all()
       ]);
     }
   }
@@ -224,6 +226,8 @@ class EmpresaController extends Controller
       'empresa' => Empresa::find($id),
       'departamentos' => $this->userRepository->getAllDepartamentos(),
       'sectores' => Sector::SelectAllSectors()->get(),
+      'tamanhos' => TamanhoEmpresa::all(),
+      'tipos' => TipoEmpresa::all()
       ]);
     }
   }

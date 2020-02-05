@@ -4,13 +4,9 @@
     <tr>
       <th>Código de Proyecto</th>
       <th>Nombre</th>
-      <th>Sublínea</th>
-      <th>Estado</th>
-      <th>Revisado Final</th>
-      <th>Talentos</th>
+      <th>Fase</th>
       <th>Detalles</th>
       <th>Editar</th>
-      <th>Entregables</th>
     </tr>
   </thead>
   <tfoot>
@@ -22,16 +18,8 @@
         <input type="text" name="nombre" class="nombre" placeholder="Buscar por Nombre">
       </th>
       <th>
-        <input type="text" name="sublinea_nombre" class="sublinea_nombre" placeholder="Buscar por Sublinea">
+        <input type="text" name="nombre_fase" class="sublinea_nombre" placeholder="Buscar por Fase">
       </th>
-      <th>
-        <input type="text" name="estado_nombre" class="estado_nombre" placeholder="Buscar por Estado">
-      </th>
-      <th>
-        <input type="text" name="revisado_final" class="revisado_final" placeholder="Buscar por Revisado Final">
-      </th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
     </tr>
