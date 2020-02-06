@@ -12,12 +12,15 @@
       <div class="card">
         <div class="card-content">
           <div class="row">
+            <h5>Entregables de la fase de inicio.</h5>
+          </div>
+          <div class="row">
             <div class="col s12 m12 l12">
-              <form action="{{route('proyecto.update.entregables', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
-                @include('proyectos.form_entregables')
+              <form action="{{route('proyecto.update.entregables.inicio', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
+                @include('proyectos.form_entregables_inicio')
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                  <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                  <a href="{{ route('proyecto.fase.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
               </form>
               @include('proyectos.archivos_table')

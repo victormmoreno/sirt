@@ -63,6 +63,11 @@ class Empresa extends Model
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
     }
 
+    public function proyectos()
+    {
+        return $this->morphToMany(Proyecto::class, 'propietario');
+    }
+
     // Relación a la tabla de sectores
     public function sector()
     {

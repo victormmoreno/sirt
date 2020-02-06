@@ -24,7 +24,7 @@
                   <span>Los elementos con (*) son obligatorios</span>
                 </div>
               </div>
-              <br />
+              <br/>
               <form id="frmProyectos_FaseInicio" action="{{route('proyecto.store')}}" method="POST">
               @include('proyectos.gestor.form_inicio', [
               'btnText' => 'Guardar'])
@@ -39,20 +39,3 @@
 </main>
 @include('proyectos.modals')
 @endsection
-@push('script')
-<script>
-  $(document).ready(function() {
-    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
-    // Contenedores
-    divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
-    divEconomiaNaranja = $('#economiaNaranja_content');
-    divDiscapacidad = $('#discapacidad_content');
-    divNombreActorCTi = $('#nombreActorCTi_content');
-    // Ocultar contenedores
-    divOtroAreaConocmiento.hide();
-    divEconomiaNaranja.hide();
-    divDiscapacidad.hide();
-    divNombreActorCTi.hide();
-  });
-</script>
-@endpush

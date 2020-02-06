@@ -92,11 +92,6 @@ class Entidad extends Model
         return $this->belongsToMany(Edt::class, 'edt_entidad')->withTimestamps();
     }
 
-    public function proyectos()
-    {
-        return $this->morphToMany(Proyecto::class, 'propietario');
-    }
-
     public function centro()
     {
         return $this->hasOne(Centro::class, 'entidad_id', 'id');

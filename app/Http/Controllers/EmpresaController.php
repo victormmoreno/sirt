@@ -134,7 +134,7 @@ class EmpresaController extends Controller
           $add = '<a onclick="addEmpresaArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add;
         })->addColumn('add_propietario', function ($data) {
-          $add_propietario = '<a onclick="addEntidadPropietario(' . $data->id_entidad . ', ' . $data->id . ', 0)" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+          $add_propietario = '<a onclick="addEntidadEmpresa(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add_propietario;
         })->addColumn('add_empresa_a_edt', function ($data) {
           return '<a class="btn blue m-b-xs" onclick="addEmpresaAEdt('.$data->id_entidad.')"><i class="material-icons">done_all</i></a>';

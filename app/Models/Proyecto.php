@@ -64,6 +64,7 @@ class Proyecto extends Model
     'trl_esperado',
     'trl_obtenido',
     'fase_id',
+    'fabrica_productividad'
   ];
 
   /**
@@ -121,9 +122,14 @@ class Proyecto extends Model
   //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
   // }
 
-  public function entidades()
+  public function empresas()
   {
-    return $this->morphedByMany(Entidad::class, 'propietario');
+    return $this->morphedByMany(Empresa::class, 'propietario');
+  }
+
+  public function gruposinvestigacion()
+  {
+    return $this->morphedByMany(GrupoInvestigacion::class, 'propietario');
   }
 
   public function users_propietarios()

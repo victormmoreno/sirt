@@ -42,8 +42,9 @@ class ProyectoFaseInicioFormRequest extends FormRequest
             'txtobjetivo_especifico2' => 'required|max:500',
             'txtobjetivo_especifico3' => 'required|max:500',
             'txtobjetivo_especifico4' => 'required|max:500',
-            'propietarios_user' => Rule::requiredIf(!isset(request()->propietarios_entidad)),
-            'propietarios_entidad' => Rule::requiredIf(!isset(request()->propietarios_user)),
+            'propietarios_user' => Rule::requiredIf(!isset(request()->propietarios_empresas) && !isset(request()->propietarios_grupos)),
+            'propietarios_empresas' => Rule::requiredIf(!isset(request()->propietarios_user) && !isset(request()->propietarios_grupos)),
+            'propietarios_grupos' => Rule::requiredIf(!isset(request()->propietarios_empresas) && !isset(request()->propietarios_user)),
         ];
     }
 
@@ -99,8 +100,10 @@ class ProyectoFaseInicioFormRequest extends FormRequest
             'txtobjetivo_especifico4.max' => 'El cuarto objetivo específico del proyecto debe ser máximo de 500 carácteres.',
             // Mensajes para el input propietarios_user
             'propietarios_user.required' => 'Debe haber por lo menos un dueño de la propiedad intelectual.',
-            // Mensajes para el input propietarios_entidad
-            'propietarios_entidad.required' => 'Debe haber por lo menos un dueño de la propiedad intelectual.',
+            // Mensajes para el input propietarios_empresas
+            'propietarios_empresas.required' => 'Debe haber por lo menos un dueño de la propiedad intelectual.',
+            // Mensajes para el input propietarios_grupos
+            'propietarios_grupos.required' => 'Debe haber por lo menos un dueño de la propiedad intelectual.',
         ];
     }
 }

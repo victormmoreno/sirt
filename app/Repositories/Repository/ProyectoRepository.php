@@ -1146,53 +1146,10 @@ class ProyectoRepository
       ->get();
   }
 
-  /**
-   * Consulta los detalle de un proyecto por su id
-   * @param int $id Id del proyecto
-   * @return Collection
-   * @author dum
-   */
-  public function consultarDetallesDeUnProyectoRepository($id)
-  {
-    return Proyecto::select(
-      'areasconocimiento.nombre AS nombre_areaconocimiento',
-      'actividades.nombre',
-      'actividades.codigo_actividad AS codigo_proyecto',
-      'proyectos.observaciones_proyecto',
-      'proyectos.id',
-      'proyectos.impacto_proyecto',
-      'proyectos.resultado_proyecto',
-      'actividades.fecha_inicio',
-      'proyectos.sublinea_id',
-      'proyectos.areaconocimiento_id',
-      'proyectos.articulacion_proyecto_id',
-      'actividades.gestor_id',
-      'lineastecnologicas.nombre AS nombre_linea',
-      'proyectos.idea_id',
-      'sublineas.lineatecnologica_id',
-      'proyectos.estado_aprobacion',
-      'otro_areaconocimiento'
-    )
-      ->selectRaw('CONCAT(lineastecnologicas.abreviatura, " - ", sublineas.nombre) AS nombre_sublinea')
-      ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
-      ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS nombre_gestor')
-      ->selectRaw('IF(economia_naranja = 1, "Si", "No") AS economia_naranja')
-      ->selectRaw('IF(art_cti = 1, "Si", "No") AS art_cti')
-      ->selectRaw('IF(art_cti = 1, nom_act_cti, "") AS nom_act_cti')
-      ->selectRaw('IF(reci_ar_emp = 1, "Si", "No") AS reci_ar_emp')
-      ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-      ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-      ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
-      ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-      ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-      ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-      ->join('users', 'users.id', '=', 'gestores.user_id')
-      ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-      ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
-      ->where('proyectos.id', $id)
-      ->get()
-      ->last();
-  }
+  // public function consultarDea(int $id)
+  // {
+  //   return Proyecto::find($id);
+  // }
 
   /**
    * Consulta los proyectos que tiene un gestor por año
@@ -1332,7 +1289,8 @@ class ProyectoRepository
         'tipo_discapacitados' => request()->txttipo_discapacitados,
         'art_cti' => $art_cti,
         'nom_act_cti' => request()->txtnom_act_cti,
-        'alcance_proyecto' => request()->txtalcance_proyecto
+        'alcance_proyecto' => request()->txtalcance_proyecto,
+        'fabrica_productividad' => request()->txtfabrica_productividad
       ]);
 
 
@@ -1357,7 +1315,8 @@ class ProyectoRepository
       ]);
 
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
-      $proyecto->entidades()->attach(request()->propietarios_entidad);
+      $proyecto->empresas()->attach(request()->propietarios_empresas);
+      $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
 
       // for ($i=0; $i < count($idUsers) ; $i++) {
       //   Notification::send(User::find($idUsers[$i]), new ProyectoPendiente($proyecto));

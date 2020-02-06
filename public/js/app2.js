@@ -4066,69 +4066,83 @@ function eliminarProyectoPorId_moment(id) {
   })
 }
 
-  //Enviar formulario
-  $(document).on('submit', 'form#frmProyectos_FaseInicio', function(event) {
-    // $('button[type="submit"]').prop("disabled", true);
+$(document).ready(function() {
+    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
+    // Contenedores
+    divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
+    divEconomiaNaranja = $('#economiaNaranja_content');
+    divDiscapacidad = $('#discapacidad_content');
+    divNombreActorCTi = $('#nombreActorCTi_content');
+    // Ocultar contenedores
+    divOtroAreaConocmiento.hide();
+    divEconomiaNaranja.hide();
+    divDiscapacidad.hide();
+    divNombreActorCTi.hide();
+});
+
+
+// Enviar formulario
+$(document).on('submit', 'form#frmProyectos_FaseInicio', function (event) { // $('button[type="submit"]').prop("disabled", true);
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
     $.ajax({
-      type: form.attr('method'),
-      url: url,
-      data: data,
-      cache: false,
-      contentType: false,
-      dataType: 'json',
-      processData: false,
-      success: function(data) {
-        $('button[type="submit"]').removeAttr('disabled');
-        // $('button[type="submit"]').prop("disabled", false);
-        $('.error').hide();
-        if (data.state == 'error_form') {
-          Swal.fire({
-            title: 'Registro Erróneo',
-            text: "Estas ingresando mal los datos!",
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-          })
-          for (control in data.errors) {
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-          }
-        } 
-        if (data.state == 'registro') {
-            Swal.fire({
-              title: 'Registro Exitoso',
-              text: "El proyecto ha sido registrado satisfactoriamente",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Ok'
-            });
-            setTimeout(function() {
-                window.location.replace("/proyecto");
-              }, 1000);
-        } 
-        if (data.state == 'no_registro') {
-            Swal.fire({
-              title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
-              // text: "You won't be able to revert this!",
-              type: 'warning',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Ok'
-            })
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            // $('button[type="submit"]').prop("disabled", false);
+            $('.error').hide();
+            if (data.state == 'error_form') {
+                Swal.fire({
+                    title: 'Registro Erróneo',
+                    text: "Estas ingresando mal los datos!",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                })
+                for (control in data.errors) {
+                    $('#' + control + '-error').html(data.errors[control]);
+                    $('#' + control + '-error').show();
+                }
+            }
+            if (data.state == 'registro') {
+                Swal.fire({
+                    title: 'Registro Exitoso',
+                    text: "El proyecto ha sido registrado satisfactoriamente",
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+                setTimeout(function () {
+                    window.location.replace("/proyecto");
+                }, 1000);
+            }
+            if (data.state == 'no_registro') {
+                Swal.fire({
+                    title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
+                    // text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                })
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
         }
-      },
-      error: function(xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      }
     });
-  });
+});
 
 // Alerta que indica que el talento ya se encuentra asociado al proyecto
 function talentoYaSeEncuentraAsociado() {
@@ -4155,14 +4169,14 @@ function usuarioYaSeEncuentraAsociado_Propietario() {
 }
 
 // Alerta que indica que la entidad ya se encuentra asociado al proyecto como dueña de la propiedad intelectual
-function entidadYaSeEncuentraAsociado_Propietario() {
+function empresaYaSeEncuentraAsociado_Propietario() {
     Swal.fire({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
         type: 'warning',
-        title: 'Esta entidad ya se encuentra asociada como dueño de la propiedad intelectual!'
+        title: 'Esta empresa ya se encuentra asociada como dueño de la propiedad intelectual!'
     });
 }
 
@@ -4218,7 +4232,7 @@ function ideaProyectoAsociadaConExito(codigo, nombre) {
 // Prepara un string con la fila que se va a pintar en la tabla de los talentos que participaran en el proyecto
 function prepararFilaEnLaTablaDeTalentos(ajax) { // El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" onclick="edadTalentoLider(' + idTalento + ')" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -4231,27 +4245,22 @@ function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es
 
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (empresas) que son dueños de la propiedad intelectual
-function prepararFilaEnLaTablaDePropietarios_Entidades(ajax, sw) { // El ajax.user.id es el id del USER
-    let idEntidad = ajax.detalles.entidad_id;
-    let nombre = '';
-    let codigo = '';
-    if (sw == 0) {
-        codigo = ajax.detalles.nit;
-        nombre = ajax.detalles.nombre_empresa;
-    } else {
-        codigo = ajax.detalles.codigo_grupo;
-        nombre = ajax.detalles.entidad.nombre;
-    }
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Entidad' + idEntidad + '>' + '<td><input type="hidden" name="propietarios_entidad[]" value="' + idEntidad + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Entidad(' + idEntidad + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
+    let idEmpresa = ajax.detalles.id;
+    let codigo = ajax.detalles.nit;
+    let nombre = ajax.detalles.nombre_empresa;
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idEmpresa + '>' + '<td><input type="hidden" name="propietarios_empresas[]" value="' + idEmpresa + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idEmpresa + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (grupos de investigación) que son dueños de la propiedad intelectual
-// function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id es el id del USER
-//     let idEntidad = ajax.detalles.entidad_id;
-//     let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Entidad' + idEntidad + '>' + '<td><input type="hidden" name="propietarios_entidad[]" value="' + idEntidad + '">' + ajax.detalles.nit + ' - ' + ajax.detalles.nombre_empresa + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Entidad(' + idEntidad + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
-//     return fila;
-// }
+function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id es el id del USER
+    let idGrupo = ajax.detalles.id;
+    let codigo = ajax.detalles.codigo_grupo;
+    let nombre = ajax.detalles.entidad.nombre;
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    return fila;
+}
 
 // Pinta el talento en la tabla de los talentos que participarán en el proyecto
 function pintarTalentoEnTabla_Fase_Inicio(id) {
@@ -4287,7 +4296,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(id) {
         type: 'get',
         url: '/empresa/ajaxDetallesDeUnaEmpresa/' + id
     }).done(function (ajax) {
-        let fila = prepararFilaEnLaTablaDePropietarios_Entidades(ajax, 0);
+        let fila = prepararFilaEnLaTablaDePropietarios_Empresa(ajax);
         $('#propiedadIntelectual_Empresas').append(fila);
         empresaSeAsocioAlProyecto_Propietario();
     });
@@ -4300,7 +4309,8 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
         type: 'get',
         url: '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
     }).done(function (ajax) {
-        let fila = prepararFilaEnLaTablaDePropietarios_Entidades(ajax, 1);
+        let fila = prepararFilaEnLaTablaDePropietarios_Grupos(ajax);
+        // let fila = Grupos);
         $('#propiedadIntelectual_Grupos').append(fila);
         grupoSeAsocioAlProyecto_Propietario();
     });
@@ -4334,11 +4344,25 @@ function noRepeat_Propiedad(id) {
     return retorno;
 }
 
-// Valida que la entidad no se encuentre asociado al proyecto como dueño de la propiedad intelectual
-function noRepeat_Entidad(id) {
+// Valida que la empresa no se encuentre asociado al proyecto como dueño de la propiedad intelectual
+function noRepeat_Empresa(id) {
     let idEntidad = id;
     let retorno = true;
-    let a = document.getElementsByName("propietarios_entidad[]");
+    let a = document.getElementsByName("propietarios_empresas[]");
+    for (x = 0; x < a.length; x ++) {
+        if (a[x].value == idEntidad) {
+            retorno = false;
+            break;
+        }
+    }
+    return retorno;
+}
+
+// Valida que el grupo de investigación no se encuentre asociado al proyecto como dueño de la propiedad intelectual
+function noRepeat_Grupo(id) {
+    let idEntidad = id;
+    let retorno = true;
+    let a = document.getElementsByName("propietarios_grupos[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == idEntidad) {
             retorno = false;
@@ -4358,9 +4382,14 @@ function eliminarPropietarioDeUnProyecto_FaseInicio_Persona(index) {
     $('#propietarioAsociadoAlProyecto_Persona' + index).remove();
 }
 
-// Elimina una persona que se encuentre asociado a un proyecto como propietario
-function eliminarPropietarioDeUnProyecto_FaseInicio_Entidad(index) {
-    $('#propietarioAsociadoAlProyecto_Entidad' + index).remove();
+// Elimina una empresa que se encuentre asociado a un proyecto como propietario
+function eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(index) {
+    $('#propietarioAsociadoAlProyecto_Empresa' + index).remove();
+}
+
+// Elimina una empresa que se encuentre asociado a un proyecto como propietario
+function eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(index) {
+    $('#propietarioAsociadoAlProyecto_Grupo' + index).remove();
 }
 
 // Método para agregar talentos a un proyecto
@@ -4383,19 +4412,23 @@ function addPersonaPropiedad(user_id) {
     }
 }
 
-// Método para agregar una empresa/grupo de investigación como dueño de una propiedad intelectual
+// Método para agregar una empresa como dueño de una propiedad intelectual
 // El id recibido es el id de la tabla empresas
-// id_entidad es el id de la tabla de entidades
-// tipo se refiere a que tipo de entidad se está asociando (Grupo de Investigación o empresa)
-function addEntidadPropietario(id_entidad, id, tipo) {
-    if (noRepeat_Entidad(id_entidad) == false) {
-        entidadYaSeEncuentraAsociado_Propietario();
+function addEntidadEmpresa(id) {
+    if (noRepeat_Empresa(id) == false) {
+        empresaYaSeEncuentraAsociado_Propietario();
     } else {
-        if (tipo == '0') {
-            pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(id, 0);
-        } else {
-            pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id, 1);
-        }
+        pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(id);
+    }
+}
+
+// Método para agregar un grupo de investigación como dueño de una propiedad intelectual
+// El id recibido es el id de la tabla gruposinvestigacion
+function addGrupoPropietario(id) {
+    if (noRepeat_Grupo(id) == false) {
+        empresaYaSeEncuentraAsociado_Propietario();
+    } else {
+        pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id);
     }
 }
 

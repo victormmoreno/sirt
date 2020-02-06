@@ -21,8 +21,7 @@
             <div class="card-panel grey lighten-3">
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
-                        <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto"
-                            readonly>
+                        <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" value="{{ $btnText == 'Guardar' ? '' : $proyecto->idea->codigo_idea . ' - ' . $proyecto->idea->nombre_proyecto }}" readonly>
                         <label for="txtnombreIdeaProyecto_Proyecto">Idea de Proyecto</label>
                         <small id="txtidea_id-error" class="error red-text"></small>
                     </div>
@@ -34,7 +33,7 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
-                        <input type="text" id="txtnombre" name="txtnombre">
+                        <input type="text" id="txtnombre" name="txtnombre" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->nombre }}">
                         <label for="txtnombre">Nombre de Proyecto <span class="red-text">*</span></label>
                         <small id="txtnombre-error" class="error red-text"></small>
                     </div>
@@ -42,7 +41,7 @@
             </div>
         </center>
         <input type="hidden" name="txtidea_id" id="txtidea_id"
-            value="{{ $btnText == 'Guardar' ? '' : $proyecto->idea_id }}">
+            value="{{ $btnText == 'Guardar' ? '' : $proyecto->idea->id }}">
     </div>
 </div>
 <div class="divider"></div>
@@ -84,24 +83,34 @@
     </div>
 </div>
 <div class="row">
-    <div class="col s6 m6 l6">
-        <span class="black-text text-black">TRL que se pretende realizar <span class="red-text">*</span></span>
+    <div class="col s12 m4 l4">
+        <span class="black-text text-black">TRL que se pretende realizar</span>
         <div class="switch m-b-md">
             <label>
                 TRL 6
-                <input type="checkbox" name="trl_esperado" id="trl_esperado" value="1">
+                <input type="checkbox" name="trl_esperado" id="trl_esperado" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->trl_esperado == 0 ? '' : 'checked') }}>
                 <span class="lever"></span>
                 TRL 7 - TRL 8
             </label>
         </div>
     </div>
-    <div class="col s6 m6 l6">
-        <span class="black-text text-black">¿Recibido a través del área de emprendimiento SENA? <span
-                class="red-text">*</span></span>
+    <div class="col s12 m4 l4">
+        <span class="black-text text-black">¿Recibido a través de fábrica de productividad?</span>
         <div class="switch m-b-md">
             <label>
                 No
-                <input type="checkbox" name="txtreci_ar_emp" id="txtreci_ar_emp" value="1">
+                <input type="checkbox" name="txtfabrica_productividad" id="txtfabrica_productividad" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->fabrica_productividad == 0 ? '' : 'checked') }}>
+                <span class="lever"></span>
+                Si
+            </label>
+        </div>
+    </div>
+    <div class="col s12 m4 l4">
+        <span class="black-text text-black">¿Recibido a través del área de emprendimiento SENA?</span>
+        <div class="switch m-b-md">
+            <label>
+                No
+                <input type="checkbox" name="txtreci_ar_emp" id="txtreci_ar_emp" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->reci_ar_emp == 0 ? '' : 'checked') }}>
                 <span class="lever"></span>
                 Si
             </label>
@@ -111,13 +120,11 @@
 <div class="row">
     <div class="col s12 m4 l4">
         <div class="row">
-            <span class="black-text text-black">¿El proyecto pertenece a la economía naranja? <span
-                    class="red-text">*</span></span>
+            <span class="black-text text-black">¿El proyecto pertenece a la economía naranja?</span>
             <div class="switch m-b-md">
                 <label>
                     No
-                    <input type="checkbox" name="txteconomia_naranja" id="txteconomia_naranja" value="1"
-                        onchange="showInput_EconomiaNaranja()">
+                    <input type="checkbox" name="txteconomia_naranja" id="txteconomia_naranja" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->economia_naranja == 0 ? '' : 'checked') }} onchange="showInput_EconomiaNaranja()">
                     <span class="lever"></span>
                     Si
                 </label>
@@ -125,22 +132,19 @@
         </div>
         <div class="row" id="economiaNaranja_content">
             <div class="input-field col s12 m12 l12">
-                <input type="text" id="txttipo_economianaranja" name="txttipo_economianaranja">
-                <label for="txttipo_economianaranja">Tipo de Proyecto de Economía Naranja. <span
-                        class="red-text">*</span></label>
+                <input type="text" id="txttipo_economianaranja" name="txttipo_economianaranja" value="{{ $btnText == 'Guardar' ? '' : $proyecto->tipo_economianaranja }}">
+                <label for="txttipo_economianaranja">Tipo de Proyecto de Economía Naranja. <span class="red-text">*</span></label>
                 <small id="txttipo_economianaranja-error" class="error red-text"></small>
             </div>
         </div>
     </div>
     <div class="col s12 m4 l4">
         <div class="row">
-            <span class="black-text text-black">¿El proyecto está dirigido a discapacitados? <span
-                    class="red-text">*</span></span>
+            <span class="black-text text-black">¿El proyecto está dirigido a discapacitados?</span>
             <div class="switch m-b-md">
                 <label>
                     No
-                    <input type="checkbox" name="txtdirigido_discapacitados" id="txtdirigido_discapacitados" value="1"
-                        onchange="showInput_Discapacidad()">
+                    <input type="checkbox" name="txtdirigido_discapacitados" id="txtdirigido_discapacitados" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->dirigido_discapacitados == 0 ? '' : 'checked') }} onchange="showInput_Discapacidad()">
                     <span class="lever"></span>
                     Si
                 </label>
@@ -148,7 +152,7 @@
         </div>
         <div class="row" id="discapacidad_content">
             <div class="input-field col s12 m12 l12">
-                <input type="text" id="txttipo_discapacitados" name="txttipo_discapacitados">
+                <input type="text" id="txttipo_discapacitados" name="txttipo_discapacitados" value="{{ $btnText == 'Guardar' ? '' : $proyecto->tipo_discapacitados }}">
                 <label for="txttipo_discapacitados">Tipo de Discapacitados. <span class="red-text">*</span></label>
                 <small id="txttipo_discapacitados-error" class="error red-text"></small>
             </div>
@@ -156,12 +160,11 @@
     </div>
     <div class="col s12 m4 l4">
         <div class="row">
-            <span class="black-text text-black">Articulado con CT+i <span class="red-text">*</span></span>
+            <span class="black-text text-black">Articulado con CT+i</span>
             <div class="switch m-b-md">
                 <label>
                     No
-                    <input type="checkbox" name="txtarti_cti" id="txtarti_cti" value="1"
-                        onchange="showInput_ActorCTi()">
+                    <input type="checkbox" name="txtarti_cti" id="txtarti_cti" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->art_cti == 0 ? '' : 'checked') }} onchange="showInput_ActorCTi()">
                     <span class="lever"></span>
                     Si
                 </label>
@@ -169,7 +172,7 @@
         </div>
         <div class="row" id="nombreActorCTi_content">
             <div class="input-field col s12 m12 l12">
-                <input type="text" name="txtnom_act_cti" id="txtnom_act_cti">
+                <input type="text" name="txtnom_act_cti" id="txtnom_act_cti" value="{{ $btnText == 'Guardar' ? '' : $proyecto->nom_act_cti }}">
                 <label for="txtnom_act_cti">Nombre del Actor CT+i <span class="red-text">*</span></label>
                 <small id="txtnom_act_cti-error" class="error red-text"></small>
             </div>
@@ -185,26 +188,28 @@
         <div class="card-content">
             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                 <li>
-                    <div class="collapsible-header active blue-grey lighten-1"><i class="material-icons">people</i>Pulse
-                        aquí para ver la información de los talentos.</div>
+                    <div class="collapsible-header active blue-grey lighten-1"><i class="material-icons">people</i>
+                        Pulse aquí para ver la información de los talentos.
+                    </div>
                     <div class="collapsible-body">
                         <div class="card-content">
                             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                                 <li>
-                                    <div class="collapsible-header cyan lighten-1"><i
-                                            class="material-icons">group_add</i>Pulse aquí para ver los talentos y
-                                        asociarlos al proyecto.</div>
+                                    <div class="collapsible-header cyan lighten-1"><i class="material-icons">group_add</i>
+                                        Pulse aquí para ver los talentos y asociarlos al proyecto.</div>
                                     <div class="collapsible-body">
                                         {{-- Collapsible 1 --}}
                                         <div class="card-content">
                                             <div class="row">
-                                                <table id="talentosDeTecnoparque_Proyecto_FaseInicio_table"
-                                                    style="width: 100%">
+                                                <table id="talentosDeTecnoparque_Proyecto_FaseInicio_table" style="width: 100%">
                                                     <thead>
                                                         <th>Documento de Identidad</th>
                                                         <th>Nombres del Talento</th>
                                                         <th>Asociar al Proyecto</th>
                                                     </thead>
+                                                    <tbody>
+
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
@@ -213,9 +218,9 @@
                             </ul>
                             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                                 <li>
-                                    <div class="collapsible-header active green lighten-1"><i
-                                            class="material-icons">how_to_reg</i>Pulse aquí para la información de los
-                                        talentos asociados al proyecto.</div>
+                                    <div class="collapsible-header active green lighten-1"><i class="material-icons">how_to_reg</i>
+                                        Pulse aquí para la información de los talentos asociados al proyecto.
+                                    </div>
                                     <div class="collapsible-body">
                                         {{-- Collapsible 2 --}}
                                         <div class="card-content">
@@ -229,7 +234,15 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-
+                                                        @if ($btnText == 'Modificar')
+                                                            @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
+                                                                <tr id="talentoAsociadoAProyecto{{$value->id}}">
+                                                                <td><input type="radio" class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
+                                                                <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user->documento}} - {{$value->user->nombres}} {{$value->user->apellidos}}</td>
+                                                                <td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -253,16 +266,14 @@
 <div class="row">
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
-            <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500"
-                id="txtobjetivo"></textarea>
+            <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo">{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivo_general }}</textarea>
             <label for="txtobjetivo">Objetivo General del Proyecto <span class="red-text">*</span></label>
             <small id="txtobjetivo-error" class="error red-text"></small>
         </div>
     </div>
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
-            <textarea name="txtalcance_proyecto" class="materialize-textarea" length="1000" maxlength="1000"
-                id="txtalcance_proyecto"></textarea>
+            <textarea name="txtalcance_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_proyecto">{{ $btnText == 'Guardar' ? '' : $proyecto->alcance_proyecto }}</textarea>
             <label for="txtalcance_proyecto">Alcance del proyecto <span class="red-text">*</span></label>
             <small id="txtalcance_proyecto-error" class="error red-text"></small>
         </div>
@@ -271,22 +282,22 @@
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="input-field col s12 m12 l12">
-            <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1">
+            <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo }}">
             <label for="txtobjetivo_especifico1">Primer Objetivo Específico <span class="red-text">*</span></label>
             <small id="txtobjetivo_especifico1-error" class="error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
-            <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2">
+            <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo }}">
             <label for="txtobjetivo_especifico2">Segundo Objetivo Específico <span class="red-text">*</span></label>
             <small id="txtobjetivo_especifico2-error" class="error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
-            <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3">
+            <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo }}">
             <label for="txtobjetivo_especifico3">Tercer Objetivo Específico <span class="red-text">*</span></label>
             <small id="txtobjetivo_especifico3-error" class="error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
-            <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4">
+            <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo }}">
             <label for="txtobjetivo_especifico4">Cuarto Objetivo Específico <span class="red-text">*</span></label>
             <small id="txtobjetivo_especifico4-error" class="error red-text"></small>
         </div>
@@ -314,10 +325,16 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    @if ($btnText == 'Modificar')
+                        @foreach ($proyecto->users_propietarios as $key => $value)
+                            <tr id="propietarioAsociadoAlProyecto_Persona{{$value->id}}">
+                            <td><input type="hidden" name="propietarios_user[]" value="{{$value->id}}">{{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}</td>
+                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
-
         </div>
     </div>
     <div class="col s12 m4 l4">
@@ -337,7 +354,14 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    @if ($btnText == 'Modificar')
+                        @foreach ($proyecto->empresas as $key => $value)
+                            <tr id="propietarioAsociadoAlProyecto_Empresa{{$value->id}}">
+                            <td><input type="hidden" name="propietarios_empresas[]" value="{{$value->id}}">{{$value->nit}} - {{ $value->entidad->nombre }}</td>
+                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
             <!-- <small id="propietarios_entidad-error" class="error red-text"></small> -->
@@ -360,7 +384,14 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    @if ($btnText == 'Modificar')
+                        @foreach ($proyecto->gruposinvestigacion as $key => $value)
+                            <tr id="propietarioAsociadoAlProyecto_Grupo{{$value->id}}">
+                            <td><input type="hidden" name="propietarios_grupos[]" value="{{$value->id}}">{{$value->codigo_grupo}} - {{ $value->entidad->nombre }}</td>
+                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
             <!-- <small id="propietarios_entidad-error" class="error red-text"></small> -->
@@ -369,7 +400,8 @@
 </div>
 <div class="row center">
     <small id="propietarios_user-error" class="error red-text"></small>
-    <small id="propietarios_entidad-error" class="error red-text"></small>
+    <small id="propietarios_empresas-error" class="error red-text"></small>
+    <small id="propietarios_grupos-error" class="error red-text"></small>
 </div>
 <div class="divider"></div>
 <center>

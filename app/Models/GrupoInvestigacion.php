@@ -31,6 +31,11 @@ class GrupoInvestigacion extends Model
         // 'telefono_contacto',
     ];
 
+    public function proyectos()
+    {
+        return $this->morphToMany(Proyecto::class, 'propietario');
+    }
+
 
     // Retorno de las constantes del mdoelo de grupos de investigacion
     public static function IsInterno()
