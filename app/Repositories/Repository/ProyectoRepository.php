@@ -757,140 +757,91 @@ class ProyectoRepository
 
     DB::beginTransaction();
     try {
+      $proyecto = Proyecto::find($id);
 
-      $entidad_id = "";
-      $otro_tipoarticulacion = "";
-      $universidad_proyecto = "";
-      $economia_naranja = 1;
-      $art_cti = 1;
-      $diri_ar_emp = 1;
+      $trl_esperado = 1;
       $reci_ar_emp = 1;
-      $dine_reg = 1;
-      $nom_act_cti = "";
+      $economia_naranja = 1;
+      $dirigido_discapacitados = 1;
+      $art_cti = 1;
 
-      if (
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id ||
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Proyecto financiado por SENNOVA')->first()->id ||
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Emprendedor')->first()->id ||
-        request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id
-      ) {
-        $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
-      } else {
-        $entidad_id = request()->txtentidad_proyecto_id;
-      }
-
-      if (request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Otro')->first()->id) {
-        $otro_tipoarticulacion = request()->txtotro_tipoarticulacion;
-      }
-
-      if (request()->txttipoarticulacionproyecto_id == TipoArticulacionProyecto::where('nombre', 'Universidades')->first()->id) {
-        $universidad_proyecto = request()->txtuniversidad_proyecto;
-      }
-
-      if (!isset(request()->txteconomia_naranja)) {
-        $economia_naranja = 0;
-      }
-
-      if (!isset(request()->txtarti_cti)) {
-        $art_cti = 0;
-      }
-
-      if (!isset(request()->txtdiri_ar_emp)) {
-        $diri_ar_emp = 0;
+      if (!isset(request()->trl_esperado)) {
+        $trl_esperado = 0;
       }
 
       if (!isset(request()->txtreci_ar_emp)) {
         $reci_ar_emp = 0;
       }
 
-      if (!isset(request()->txtdine_rega)) {
-        $dine_reg = 0;
+      if (!isset(request()->txteconomia_naranja)) {
+        $economia_naranja = 0;
       }
 
-      if ($art_cti == 1) {
-        $nom_act_cti = request()->txtnom_act_cti;
+      if (!isset(request()->txtdirigido_discapacitados)) {
+        $dirigido_discapacitados = 0;
       }
 
+      if (!isset(request()->txtarti_cti)) {
+        $art_cti = 0;
+      }
 
-      /**
-       * Array con los datos que se van a modificar de un proyecto, aplica para todos los estado de proyecto
-       */
-      $dataUpdateProyecto = array();
-      $dataActividad2 = array();
-      $dataProyecto2 = array();
-      $data2 = array();
-      /**
-       * Array con los datos que se modifican de la tabla de actividades
-       */
-      $dataActividad = array('nombre' => request()->txtnombre, 'fecha_inicio' => request()->txtfecha_inicio);
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'nombre' => request()->txtnombre,
+        'objetivo_general' => request()->txtobjetivo
+      ]);
 
-      /**
-       * Array con los datos que se modifican de la tabla articulacion_proyecto
-       */
-      $dataUpdateArticulacionProyecto = array('entidad_id' => $entidad_id);
-
-      /**
-       * Array con los datos que se modifican de la tabla proyectos
-       */
-      $dataProyecto = array(
-        'sector_id' => request()->txtsector_id,
-        'sublinea_id' => request()->txtsublinea_id,
+      $proyecto->update([
         'areaconocimiento_id' => request()->txtareaconocimiento_id,
-        'estadoproyecto_id' => request()->txtestadoproyecto_id,
-        'tipoarticulacionproyecto_id' => request()->txttipoarticulacionproyecto_id,
-        'otro_tipoarticulacion' => $otro_tipoarticulacion,
-        'universidad_proyecto' => $universidad_proyecto,
-        'observaciones_proyecto' => request()->txtobservaciones_proyecto,
-        'impacto_proyecto' => request()->txtimpacto_proyecto,
-        'economia_naranja' => $economia_naranja,
-        'art_cti' => $art_cti,
-        'nom_act_cti' => $nom_act_cti,
-        'diri_ar_emp' => $diri_ar_emp,
+        'otro_areaconocimiento' => request()->txtotro_areaconocimiento,
+        'sublinea_id' => request()->txtsublinea_id,
+        'trl_esperado' => $trl_esperado,
         'reci_ar_emp' => $reci_ar_emp,
-        'dine_reg' => $dine_reg
-      );
+        'economia_naranja' => $economia_naranja,
+        'tipo_economianaranja' => request()->txttipo_economianaranja,
+        'dirigido_discapacitados' => $dirigido_discapacitados,
+        'tipo_discapacitados' => request()->txttipo_discapacitados,
+        'art_cti' => $art_cti,
+        'nom_act_cti' => request()->txtnom_act_cti,
+        'alcance_proyecto' => request()->txtalcance_proyecto,
+        'fabrica_productividad' => request()->txtfabrica_productividad
+      ]);
 
-      if ($request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id || $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Suspendido')->first()->id) {
-        /**
-         * Se añaden al array los campos que se van a modificar si el proyecto se va a cerrar
-         */
-        $dataActividad2 = array('fecha_cierre' => request()->txtfecha_fin);
-        $dataProyecto2 = array(
-          'estadoprototipo_id' => request()->txtestadoprototipo_id,
-          'otro_estadoprototipo' => request()->txtotro_estadoprototipo,
-          'resultado_proyecto' => request()->txtresultado_proyecto
-        );
-      }
 
-      $dataUpdateActividad = array_merge($dataActividad, $dataActividad2);
-
-      $dataUpdateProyecto = array_merge($dataProyecto, $dataProyecto2);
-
-      $proyecto = Proyecto::find($id);
-      /**
-       * Update para la tabla de actividades
-       */
-      $proyecto->articulacion_proyecto->actividad()->update($dataUpdateActividad);
-
-      /**
-       * Update para la tabla de articulacion_proyecto
-       */
-      $proyecto->articulacion_proyecto()->update(['entidad_id' => $entidad_id]);
-
-      /**
-       * Update para la tabla de proyectos
-       */
-      $proyecto->update($dataUpdateProyecto);
-
+      $syncData = array();
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
-
       $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
+
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+        'objetivo' => request()->txtobjetivo_especifico1
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+        'objetivo' => request()->txtobjetivo_especifico2
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+        'objetivo' => request()->txtobjetivo_especifico3
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+        'objetivo' => request()->txtobjetivo_especifico4
+      ]);
+
+      $proyecto->users_propietarios()->detach();
+      $proyecto->empresas()->detach();
+      $proyecto->gruposinvestigacion()->detach();
+
+      $proyecto->users_propietarios()->attach(request()->propietarios_user);
+      $proyecto->empresas()->attach(request()->propietarios_empresas);
+      $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
+
       DB::commit();
       return true;
     } catch (\Exception $e) {
       DB::rollback();
       return false;
     }
+
   }
 
   /**
@@ -1068,84 +1019,6 @@ class ProyectoRepository
     }
   }
 
-  /**
-   * Consulta los proyectos que tiene un nodo por años
-   * @param int $idnodo Id del nodo
-   * @param string $anho Año para fitrar la búsqueda
-   * @return Collection
-   * @author dum
-   */
-  public function ConsultarProyectosPorNodoYPorAnho($idnodo, $anho)
-  {
-    return Proyecto::select(
-      'actividades.codigo_actividad AS codigo_proyecto',
-      'actividades.nombre',
-      'sublineas.nombre AS sublinea_nombre',
-      'estadosproyecto.nombre AS estado_nombre',
-      'areasconocimiento.nombre AS nombre_areaconocimiento',
-      'tiposarticulacionesproyectos.nombre AS nombre_tipoarticulacion',
-      'actividades.fecha_cierre AS fecha_fin',
-      'articulacion_proyecto.id AS articulacion_proyecto_id',
-      'lineastecnologicas.nombre AS nombre_linea',
-      'sectores.nombre AS nombre_sector',
-      'fecha_inicio',
-      'fecha_cierre',
-      'observaciones_proyecto',
-      'impacto_proyecto',
-      'resultado_proyecto',
-      'economia_naranja',
-      'art_cti',
-      'diri_ar_emp',
-      'reci_ar_emp',
-      'dine_reg',
-      'acc',
-      'manual_uso_inf',
-      'acta_inicio',
-      'estado_arte',
-      'actas_seguimiento',
-      'video_tutorial',
-      'url_videotutorial',
-      'ficha_caracterizacion',
-      'acta_cierre',
-      'estado_aprobacion',
-      'encuesta',
-      'proyectos.id'
-    )
-      ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
-      ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
-      ->selectRaw('CONCAT(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
-      // ->selectRaw('GROUP_CONCAT(user_talento.documento, " - ", user_talento.nombres, " ", user_talento.apellidos SEPARATOR "; ") AS talentos')
-      ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
-      ->join('articulacion_proyecto', 'articulacion_proyecto.id', 'proyectos.articulacion_proyecto_id')
-      ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-      ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-      ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
-      ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-      ->join('users', 'users.id', '=', 'gestores.user_id')
-      ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-      ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-      ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
-      ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
-      // ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-      // ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
-      // ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
-      ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
-      ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
-      ->where('nodos.id', $idnodo)
-      ->where('estado_aprobacion', Proyecto::IsAceptado())
-      ->where(function ($q) use ($anho) {
-        $q->where(function ($query) use ($anho) {
-          $query->whereYear('actividades.fecha_cierre', '=', $anho)
-            ->whereIn('estadosproyecto.nombre', ['Cierre PF', 'Cierre PMV', 'Suspendido']);
-        })
-          ->orWhere(function ($query) {
-            $query->whereIn('estadosproyecto.nombre', ['Inicio', 'Planeacion', 'En ejecución']);
-          });
-      })
-      ->groupBy('proyectos.id')
-      ->get();
-  }
-
   // public function consultarDea(int $id)
   // {
   //   return Proyecto::find($id);
@@ -1158,7 +1031,7 @@ class ProyectoRepository
    * @return Collection
    * @author dum
    */
-  public function ConsultarProyectosPorGestorYPorAnho($idgestor, $anho)
+  public function ConsultarProyectosPorAnho($anho)
   {
     return Proyecto::select(
       'actividades.codigo_actividad AS codigo_proyecto',
@@ -1185,17 +1058,17 @@ class ProyectoRepository
       ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
       ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
       ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-      ->where('gestores.id', $idgestor)
+      ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
       ->where(function ($q) use ($anho) {
         $q->where(function ($query) use ($anho) {
-          $query->whereYear('actividades.fecha_cierre', '=', $anho);
+          $query->whereYear('actividades.fecha_cierre', '=', $anho)
+          ->where('fases.nombre', 'Cierre');
         })
-          ->orWhere(function ($query) use ($anho) {
-            $query->whereYear('actividades.fecha_inicio', '=', $anho);
+          ->orWhere(function ($query) {
+            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
           });
       })
-      ->groupBy('proyectos.id')
-      ->get();
+      ->groupBy('proyectos.id');
   }
 
   /**
@@ -1224,10 +1097,8 @@ class ProyectoRepository
    */
   public function store($request)
   {
-
     DB::beginTransaction();
     try {
-
       $codigo_actividad = $this->generarCodigoDeProyecto();
       $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
 

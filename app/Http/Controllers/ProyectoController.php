@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, Gestor, EstadoProyecto, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, ArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, ArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\ProyectoFaseInicioFormRequest;
@@ -61,7 +61,7 @@ class ProyectoController extends Controller
   public function aprobacion($id)
   {
     // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
-    $proyecto = Proyecto::find($id);
+    $proyecto = Proyecto::findOrFail($id);
     $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
     $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
 
@@ -116,17 +116,6 @@ class ProyectoController extends Controller
       })->rawColumns(['aprobar'])->make(true);
   }
 
-  public function detallesDeLosEntregablesDeUnProyecto($id)
-  {
-    if (request()->ajax()) {
-      $entregables = $this->consultarEntregablesDeUnProyectoController($id)->original['entregables'];
-      return response()->json([
-        'entregables' => $entregables,
-        'proyecto'    => $this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id),
-      ]);
-    }
-  }
-
   /**
    * @param Collection $proyecto Proyectos
    * @param Request $request
@@ -152,15 +141,7 @@ class ProyectoController extends Controller
       })->addColumn('edit', function ($data) {
         $edit = '<a class="btn m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">edit</i></a>';
         return $edit;
-      })->addColumn('talentos', function ($data) {
-        $talentos = '
-      <a class="btn cyan m-b-xs" onclick="verTalentosDeUnProyecto(' . $data->articulacion_proyecto_id . ')">
-        <i class="material-icons">assignment_ind</i>
-      </a>
-      ';
-        return $talentos;
-      })
-      ->filter(function ($instance) use ($request) {
+      })->filter(function ($instance) use ($request) {
         if (!empty($request->get('codigo_proyecto'))) {
           $instance->collection = $instance->collection->filter(function ($row) use ($request) {
             return Str::contains($row['codigo_proyecto'], $request->get('codigo_proyecto')) ? true : false;
@@ -195,7 +176,7 @@ class ProyectoController extends Controller
             return false;
           });
         }
-      })->rawColumns(['details', 'edit', 'talentos', 'delete', 'download_seguimiento'])->make(true);
+      })->rawColumns(['details', 'edit', 'delete', 'download_seguimiento'])->make(true);
   }
 
   /**
@@ -214,26 +195,8 @@ class ProyectoController extends Controller
       } else {
         $id = $idnodo;
       }
-      $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorNodoYPorAnho($id, $anho);
+      $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
       return $this->datatableProyectos($request, $proyectos);
-    }
-  }
-
-  /**
-   * Consulta los detalle de un proyecto
-   * @param int $id Id del proyecto
-   * @return Response
-   * @author Victor Manuel Moreno Vega
-   */
-  public function consultarDetallesDeUnProyecto($id)
-  {
-    $proyecto = ArrayHelper::validarDatoNullDeUnArray($this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id)->toArray());
-    if (request()->ajax()) {
-      return response()->json([
-        'proyecto' => $proyecto,
-      ]);
-    } else {
-      return $proyecto;
     }
   }
 
@@ -293,7 +256,7 @@ class ProyectoController extends Controller
    */
   public function entregables_inicio($id)
   {
-    $proyecto = Proyecto::find($id);
+    $proyecto = Proyecto::findOrFail($id);
     if (Session::get('login_role') == User::IsGestor()) {
       return view('proyectos.gestor.entregables_inicio', [
         'proyecto' => $proyecto
@@ -324,8 +287,7 @@ class ProyectoController extends Controller
       if (Session::get('login_role') == User::IsGestor()) {
         $idgestor = auth()->user()->gestor->id;
       }
-      // dd('z wardo');
-      $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorGestorYPorAnho($idgestor, $anho);
+      $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', $idgestor)->get();
       return $this->datatableProyectos($request, $proyectos);
     }
   }
@@ -535,9 +497,7 @@ class ProyectoController extends Controller
    */
   public function store(Request $request)
   {
-    // dd($request);
-    // return response()->json(['fail' => true]);
-    $req       = new ProyectoFaseInicioFormRequest;
+    $req = new ProyectoFaseInicioFormRequest;
     $validator = Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
       return response()->json([
@@ -563,7 +523,7 @@ class ProyectoController extends Controller
    */
   public function edit($id)
   {
-    $proyecto = Proyecto::find($id);
+    $proyecto = Proyecto::findOrFail($id);
 
     switch (Session::get('login_role')) {
       case User::IsGestor():
@@ -589,67 +549,27 @@ class ProyectoController extends Controller
   }
 
   /**
-   * Update the specified resource in storage.
+   * Modifica los datos de la fase de inicio de un proyecto.
    *
    * @param  \Illuminate\Http\Request  $request
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function updateInicio(Request $request, $id)
   {
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $messages = [
-        'txtgestor_id.required' => 'El Gestor es obligatorio.',
-      ];
-
-      $validator = Validator::make($request->all(), [
-        'txtgestor_id' => 'required',
-      ], $messages);
-
-      if ($validator->fails()) {
-        return back()
-          ->withErrors($validator)
-          ->withInput();
-      }
-
-      $update = $this->getProyectoRepository()->updateProyectoDinamizadorRepository($request, $id);
-      if ($update) {
-        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
-        return redirect('proyecto');
-      } else {
-        Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
-        return back();
-      }
+    $req = new ProyectoFaseInicioFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'state'   => 'error_form',
+        'errors' => $validator->errors(),
+      ]);
     } else {
-      $proyecto = $this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id);
-      $req = new ProyectoFormRequest;
-      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-      if ($validator->fails()) {
-        return response()->json([
-          'fail' => true,
-          'errors' => $validator->errors(),
-        ]);
-      }
-      /**
-       * Para poder cerrar el proyecto se debe haber aprobado/no aprobado por el dinamizado anteriormente
-       */
-      if ($request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PMV')->first()->id || $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Cierre PF')->first()->id || $request->txtestadoproyecto_id == EstadoProyecto::where('nombre', 'Suspendido')->first()->id) {
-        if ($proyecto->revisado_final != 'Aprobado' && $proyecto->revisado_final != 'No Aprobado') {
-          return response()->json([
-            'revisado_final' => 'Por Evaluar',
-          ]);
-        }
-      }
-
       $result = $this->getProyectoRepository()->update($request, $id);
       if ($result) {
-        return response()->json([
-          'result' => true,
-        ]);
+        return response()->json(['state' => 'update']);
       } else {
-        return response()->json([
-          'result' => false,
-        ]);
+        return response()->json(['state' => 'no_update']);
       }
     }
   }

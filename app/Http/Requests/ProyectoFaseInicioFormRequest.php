@@ -93,7 +93,7 @@ class ProyectoFaseInicioFormRequest extends FormRequest
             'txtobjetivo_especifico2.required' => 'El segundo objetivo específico del proyecto es obligatorio.',
             'txtobjetivo_especifico2.max' => 'El segundo objetivo específico del proyecto debe ser máximo de 500 carácteres.',
             // Mensajes para el input txtobjetivo_especifico3
-            'txtobjetivo_especifico3.required' => 'El tercero objetivo específico del proyecto es obligatorio.',
+            'txtobjetivo_especifico3.required' => 'El tercer objetivo específico del proyecto es obligatorio.',
             'txtobjetivo_especifico3.max' => 'El tercero objetivo específico del proyecto debe ser máximo de 500 carácteres.',
             // Mensajes para el input txtobjetivo_especifico4
             'txtobjetivo_especifico4.required' => 'El cuarto objetivo específico del proyecto es obligatorio.',

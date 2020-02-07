@@ -38,12 +38,6 @@
     </div>
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
-            <input type="checkbox" {{ $disabled }} {{ $proyecto->manual_uso_inf == 'Si' ? 'checked' : '' }} id="txtmanual_uso_inf" name="txtmanual_uso_inf" value="1">
-            <label for="txtmanual_uso_inf">Manual de uso de Infraestructura.</label>
-        </p>
-    </div>
-    <div class="col s6 m3 l3">
-        <p class="p-v-xs">
             <input type="checkbox" {{ $disabled }} {{ $proyecto->doc_titular == 'Si' ? 'checked' : '' }} id="txtdoc_titular" name="txtdoc_titular" value="1">
             <label for="txtdoc_titular">Documento del Titular.</label>
         </p>

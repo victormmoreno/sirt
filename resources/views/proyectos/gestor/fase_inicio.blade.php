@@ -15,8 +15,7 @@
             <div class="row">
               <br>
               <center>
-                <span class="card-title center-align"><b>Proyecto -
-                    {{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</b></span>
+                <span class="card-title center-align"><b>Proyecto - {{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</b></span>
               </center>
               <div class="divider"></div>
               <div class="card-panel red lighten-3">
@@ -57,13 +56,21 @@
                   </ul>
                 </div>
               </div>
-              <div class="row center">
-                <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
-                  <i class="material-icons left">library_books</i>
-                  Entregables de la Fase de Inicio
-                </a>
+              <div class="row">
+                <div class="col s12 m6 l6 center">
+                  <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
+                    <i class="material-icons left">file_download</i>
+                    Descargar formulario.
+                  </a>
+                </div>
+                <div class="col s12 m6 l6 center">
+                  <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
+                    <i class="material-icons left">library_books</i>
+                    Entregables de la Fase de Inicio.
+                  </a>
+                </div>
               </div>
-              <form id="frmProyectosCreate" action="{{route('proyecto.update', $proyecto->id)}}" method="POST">
+              <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
                 {!! method_field('PUT')!!}
                 @include('proyectos.gestor.form_inicio', [
                 'btnText' => 'Modificar'])
@@ -81,7 +88,7 @@
 @push('script')
 <script>
   $( document ).ready(function() {
-  @if($proyecto->nombre_areaconocimiento == 'Otro')
+  @if($proyecto->areaconocimiento->nombre == 'Otro')
     divOtroAreaConocmiento.show();
   @endif
   @if($proyecto->economia_naranja == 1)
@@ -94,76 +101,6 @@
   divNombreActorCTi.show();
   @endif
   });
-
-    // function ajaxUpdateProyecto(form, data, url) {
-    //   $('button[type="submit"]').attr('disabled', 'disabled');
-    //   $.ajax({
-    //     type: form.attr('method'),
-    //     url: url,
-    //     data: data,
-    //     dataType: 'json',
-    //     cache: false,
-    //     contentType: false,
-    //     processData: false,
-    //     success: function (data) {
-    //       $('button[type="submit"]').removeAttr('disabled');
-    //       // $('button[type="submit"]').prop("disabled", false);
-    //       $('.error').hide();
-    //       if (data.fail) {
-    //         let errores = "";
-    //         for (control in data.errors) {
-    //           errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-    //           $('#' + control + '-error').html(data.errors[control]);
-    //           $('#' + control + '-error').show();
-    //         }
-    //         Swal.fire({
-    //           title: 'Advertencia!',
-    //           html: 'Estas ingresando mal los datos.' + errores,
-    //           type: 'error',
-    //           showCancelButton: false,
-    //           confirmButtonColor: '#3085d6',
-    //           confirmButtonText: 'Ok'
-    //         });
-    //       }
-    //       if (data.revisado_final == 'Por Evaluar') {
-    //         Swal.fire({
-    //           title: 'Error!',
-    //           text: "Para poder cerrar el proyecto, debe estar Aprobado o No Aprobado por el Dinamizador!",
-    //           type: 'error',
-    //           showCancelButton: false,
-    //           confirmButtonColor: '#3085d6',
-    //           confirmButtonText: 'Ok'
-    //         })
-    //       }
-    //       if ( data.result ) {
-    //         Swal.fire({
-    //           title: 'Modificación Exitosa',
-    //           text: "El proyecto se modificado satisfactoriamente",
-    //           type: 'success',
-    //           showCancelButton: false,
-    //           confirmButtonColor: '#3085d6',
-    //           confirmButtonText: 'Ok'
-    //         });
-    //         setTimeout(function(){
-    //           window.location.replace("{{route('proyecto')}}");
-    //         }, 1000);
-    //       }
-    //       if ( data.resulta == false ) {
-    //         Swal.fire({
-    //           title: 'Modificación Errónea!',
-    //           text: "El proyecto no se ha modificado.",
-    //           type: 'error',
-    //           showCancelButton: false,
-    //           confirmButtonColor: '#3085d6',
-    //           confirmButtonText: 'Ok'
-    //         });
-    //       }
-    //     },
-    //     error: function (xhr, textStatus, errorThrown) {
-    //       alert("Error: " + errorThrown);
-    //     }
-    //   });
-    // }
 
 
 </script>

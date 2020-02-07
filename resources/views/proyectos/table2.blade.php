@@ -5,14 +5,8 @@
       <th>Gestor</th>
       <th>Nombre</th>
       <th>Sublínea</th>
-      <th>Estado</th>
-      <th>Revisado Final</th>
-      <th>Talentos</th>
       <th>Detalles</th>
       <th>Editar</th>
-      @if (\Session::get('login_role') == App\User::IsDinamizador())
-        <th>Entregables</th>
-      @endif
       <th>Eliminar</th>
     </tr>
   </thead>
@@ -30,18 +24,8 @@
       <th>
         <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por Sublinea">
       </th>
-      <th>
-        <input type="text" name="estado_nombre" id="estado_nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por Estado">
-      </th>
-      <th>
-        <input type="text" name="revisado_final" id="revisado_final_tblproyectosDelGestorPorAnho" placeholder="Buscar por Revisado Final">
-      </th>
       <th></th>
       <th></th>
-      <th></th>
-      @if (\Session::get('login_role') == App\User::IsDinamizador())
-        <th></th>
-      @endif
       <th></th>
     </tr>
   </tfoot>

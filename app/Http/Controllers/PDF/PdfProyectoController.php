@@ -14,6 +14,13 @@ use App;
 class PdfProyectoController extends Controller
 {
 
+
+  public function printFormularioAcuerdoDeInicio($id)
+  {
+    $pdf = PDF::loadView('pdf.proyecto.form_inicio', [$id]);
+    return $pdf->stream();
+  }
+
   /**
    * Genera el archivo pdf del acuerdo de confidencial y compromiso
    *

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
     // Contenedores
     divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
@@ -13,13 +13,28 @@ $(document).ready(function() {
 });
 
 
-// Enviar formulario
+// Enviar formulario para registrar proyecto
 $(document).on('submit', 'form#frmProyectos_FaseInicio', function (event) { // $('button[type="submit"]').prop("disabled", true);
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
+    ajaxSendFormProyecto(form, data, url, 'create');
+});
+
+
+// Enviar formulario para modificar datos del proyecto (Fase de Inicio)
+$(document).on('submit', 'form#frmProyectos_FaseInicio_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormProyecto(form, data, url, 'update');
+});
+
+function ajaxSendFormProyecto(form, data, url, fase) {
     $.ajax({
         type: form.attr('method'),
         url: url,
@@ -30,51 +45,88 @@ $(document).on('submit', 'form#frmProyectos_FaseInicio', function (event) { // $
         processData: false,
         success: function (data) {
             $('button[type="submit"]').removeAttr('disabled');
-            // $('button[type="submit"]').prop("disabled", false);
             $('.error').hide();
-            if (data.state == 'error_form') {
-                Swal.fire({
-                    title: 'Registro Erróneo',
-                    text: "Estas ingresando mal los datos!",
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok'
-                })
-                for (control in data.errors) {
-                    $('#' + control + '-error').html(data.errors[control]);
-                    $('#' + control + '-error').show();
-                }
-            }
-            if (data.state == 'registro') {
-                Swal.fire({
-                    title: 'Registro Exitoso',
-                    text: "El proyecto ha sido registrado satisfactoriamente",
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok'
-                });
-                setTimeout(function () {
-                    window.location.replace("/proyecto");
-                }, 1000);
-            }
-            if (data.state == 'no_registro') {
-                Swal.fire({
-                    title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
-                    // text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok'
-                })
+            printErroresFormulario(data);
+            if (fase == 'create') {
+                mensajesProyectoCreate(data);
+            } else {
+                mensajesProyectoUpdate(data);
             }
         },
         error: function (xhr, textStatus, errorThrown) {
             alert("Error: " + errorThrown);
         }
     });
-});
+};
+
+function printErroresFormulario(data) {
+    if (data.state == 'error_form') {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+        Swal.fire({
+            title: 'Advertencia!',
+            html: 'Estas ingresando mal los datos.' + errores,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
+}
+
+function mensajesProyectoCreate(data) {
+    if (data.state == 'registro') {
+        Swal.fire({
+            title: 'Registro Exitoso',
+            text: "El proyecto ha sido registrado satisfactoriamente",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+        setTimeout(function () {
+            window.location.replace("/proyecto");
+        }, 1000);
+    }
+    if (data.state == 'no_registro') {
+        Swal.fire({
+            title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        })
+    }
+};
+
+function mensajesProyectoUpdate(data) {
+    if (data.state == 'update') {
+        Swal.fire({
+            title: 'Modificación Exitosa',
+            text: "El proyecto ha sido registrado satisfactoriamente",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+        setTimeout(function () {
+            window.location.replace("/proyecto");
+        }, 1000);
+    }
+    if (data.state == 'no_update') {
+        Swal.fire({
+            title: 'El proyecto no se ha modificado, por favor inténtalo de nuevo',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        })
+    }
+};
 
 // Alerta que indica que el talento ya se encuentra asociado al proyecto
 function talentoYaSeEncuentraAsociado() {

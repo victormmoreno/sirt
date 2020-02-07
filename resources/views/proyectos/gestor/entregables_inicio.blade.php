@@ -7,12 +7,12 @@
       <h5>
         <a class="footer-text left-align" href="{{ route('proyecto.inicio', $proyecto->id) }}">
           <i class="left material-icons">arrow_back</i>
-        </a> Proyectos
+        </a> Proyectos de Desarrollo Tecnológico
       </h5>
       <div class="card">
         <div class="card-content">
           <div class="row">
-            <h5>Entregables de la fase de inicio.</h5>
+            <h5 class="center">Entregables de la fase de inicio.</h5>
           </div>
           <div class="row">
             <div class="col s12 m12 l12">
