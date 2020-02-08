@@ -17,7 +17,8 @@ class PdfProyectoController extends Controller
 
   public function printFormularioAcuerdoDeInicio($id)
   {
-    $pdf = PDF::loadView('pdf.proyecto.form_inicio', [$id]);
+    $proyecto = Proyecto::findOrFail($id);
+    $pdf = PDF::loadView('pdf.proyecto.form_inicio', ['proyecto' => $proyecto]);
     return $pdf->stream();
   }
 
