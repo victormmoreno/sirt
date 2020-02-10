@@ -1,5 +1,8 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
+@php
+  \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
+@endphp
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_proyecto" disabled
@@ -33,22 +36,10 @@
             <label for="txtacc">Formato de confidencialidad y compromiso firmado.</label>
         </p>
     </div>
-    <div class="col s6 m3 l3">
-        <p class="p-v-xs">
-            <input type="checkbox" {{ $disabled }} {{ $proyecto->doc_titular == 1 ? 'checked' : '' }} id="txtdoc_titular" name="txtdoc_titular" value="1">
-            <label for="txtdoc_titular">Documento del Titular.</label>
-        </p>
-    </div>
-    <div class="col s6 m3 l3">
-        <p class="p-v-xs">
-            <input type="checkbox" {{ $disabled }} {{ $proyecto->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
-            <label for="txtformulario_inicio">Formularios con firmas del gestor y talentos.</label>
-        </p>
-    </div>
 </div>
 <div class="row">
     <div class="card-panel teal">
-        <div class="dropzone" id="fase_inicio_proyecto"></div>
+        <div class="dropzone" id="fase_planeacion_proyecto"></div>
     </div>
 </div>
 <div class="divider"></div>

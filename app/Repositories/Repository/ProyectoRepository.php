@@ -3,10 +3,9 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, TipoArticulacionProyecto, EstadoProyecto, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
+use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
 use Illuminate\Support\Facades\{DB, Session, Notification, Storage};
 use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
-use App\Http\Controllers\PDF\PdfProyectoController;
 use Carbon\Carbon;
 use App\User;
 
@@ -845,55 +844,20 @@ class ProyectoRepository
   }
 
   /**
-   * Modifica el revisado final de un proyecto (Lo hace el dinamizador)
-   * @param Request $request
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   */
-  public function updateRevisadoFinalProyectoRepository($request, $id)
-  {
-    DB::beginTransaction();
-    try {
-      $proyectoFindById = Proyecto::find($id);
-
-      if ($proyectoFindById->articulacion_proyecto->revisado_final != $request->txtrevisado_final) {
-        Notification::send(User::find($proyectoFindById->articulacion_proyecto->actividad->gestor->user_id), new ProyectoRevisadoFinal($proyectoFindById));
-      }
-
-      $proyectoFindById->articulacion_proyecto()->update([
-        'revisado_final' => $request->txtrevisado_final
-      ]);
-
-      DB::commit();
-      return true;
-    } catch (Exception $e) {
-      DB::rollback();
-      return false;
-    }
-  }
-
-  /**
    * Modifica los entregables de un proyecto
    * @param Request $request
    * @param int $id Id del proyecto
    * @return boolean
    * @author dum
    */
-  public function updateEntregablesProyectoRepository($request, $id)
+  public function updateEntregablesInicioProyectoRepository($request, $id)
   {
     DB::beginTransaction();
     try {
       $acc = 1;
       $manual_uso_inf = 1;
-      $acta_inicio = 1;
-      $estado_arte = 1;
-      $actas_seguimiento = 1;
-      $video_tutorial = 1;
-      $url_videotutorial = "";
-      $ficha_caracterizacion = 1;
-      $acta_cierre = 1;
-      $encuesta = 1;
+      $doc_titular = 1;
+      $formulario_inicio = 1;
 
       if (!isset($request->txtacc)) {
         $acc = 0;
@@ -903,126 +867,52 @@ class ProyectoRepository
         $manual_uso_inf = 0;
       }
 
-      if (!isset($request->txtacta_inicio)) {
-        $acta_inicio = 0;
+      if (!isset($request->txtdoc_titular)) {
+        $doc_titular = 0;
       }
 
-      if (!isset($request->txtestado_arte)) {
-        $estado_arte = 0;
+      if (!isset($request->txtformulario_inicio)) {
+        $formulario_inicio = 0;
       }
 
-      if (!isset($request->txtactas_seguimiento)) {
-        $actas_seguimiento = 0;
-      }
-
-      if (!isset($request->txtvideo_tutorial)) {
-        $video_tutorial = 0;
-      }
-
-      if (!isset($request->txtficha_caracterizacion)) {
-        $ficha_caracterizacion = 0;
-      }
-
-      if (!isset($request->txtacta_cierre)) {
-        $acta_cierre = 0;
-      }
-
-      if (!isset($request->txtencuesta)) {
-        $encuesta = 0;
-      }
-
-      if ($video_tutorial == 1) {
-        $url_videotutorial = $request->txturl_videotutorial;
-      }
-
-      $proyectoFindById = Proyecto::find($id);
-
-      /**
-       * Modifica los datos de la tabla articulacion_proyecto
-       */
-      $proyectoFindById->articulacion_proyecto()->update([
-        'acta_inicio' => $acta_inicio,
-        'actas_seguimiento' => $actas_seguimiento,
-        'acta_cierre' => $acta_cierre
-      ]);
+      $proyecto = Proyecto::find($id);
 
       /**
        * Modifica los datos de la tabla proyectos
        */
-      $proyectoFindById->update([
+      $proyecto->update([
         'acc' => $acc,
         'manual_uso_inf' => $manual_uso_inf,
-        'estado_arte' => $estado_arte,
-        'video_tutorial' => $video_tutorial,
-        'url_videotutorial' => $url_videotutorial,
-        'ficha_caracterizacion' => $ficha_caracterizacion,
-        'encuesta' => $encuesta
+        'doc_titular' => $doc_titular
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'formulario_inicio' => $formulario_inicio
       ]);
 
       DB::commit();
       return true;
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       DB::rollback();
       return false;
     }
   }
 
-  /**
-   * Consulta los entregables de un proyecto
-   * @param int $id Id del proyecto
-   * @return Collection
-   * @author dum
-   */
-  public function consultarEntregablesDeUnProyectoRepository($id)
-  {
-    return Proyecto::select(
-      'acc',
-      'manual_uso_inf',
-      // Fase de planeación
-      'acta_inicio',
-      'estado_arte',
-      // Fase de ejecución
-      'actas_seguimiento',
-      'video_tutorial',
-      // Fase de Cierre
-      'ficha_caracterizacion',
-      'acta_cierre',
-      'encuesta',
-      'lecciones_aprendidas'
-    )
-      ->where('proyectos.id', $id)
-      ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-      ->get()
-      ->last();
-  }
-
-  /**
-   * Modifica el gestor a cargo de un proyecto (Lo hace el dinamizador)
-   * @param Request $request
-   * @param int $id Id del Proyectos
-   * @return boolean
-   * @author dum
-   */
-  public function updateProyectoDinamizadorRepository($request, $id)
+  public function updateFaseProyecto($id, $fase)
   {
     DB::beginTransaction();
     try {
-      $proyectoFindById = Proyecto::find($id);
-      $proyectoFindById->articulacion_proyecto->actividad()->update([
-        'gestor_id' => request()->txtgestor_id,
+      $proyecto = Proyecto::findOrFail($id);
+      $proyecto->update([
+        'fase_id' => Fase::where('nombre', $fase)->first()->id
       ]);
       DB::commit();
       return true;
-    } catch (Exception $e) {
-      DB::rollback();
+    } catch (\Exception $e) {
+      DB::rollBack();
       return false;
     }
   }
-
-  // public function consultarDea(int $id)
-  // {
-  //   return Proyecto::find($id);
-  // }
 
   /**
    * Consulta los proyectos que tiene un gestor por año

@@ -64,7 +64,8 @@ class Proyecto extends Model
     'trl_esperado',
     'trl_obtenido',
     'fase_id',
-    'fabrica_productividad'
+    'fabrica_productividad',
+    'doc_titular'
   ];
 
   /**
@@ -150,6 +151,11 @@ class Proyecto extends Model
   public function areaconocimiento()
   {
     return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
+  }
+
+  public function fase()
+  {
+    return $this->belongsTo(Fase::class, 'fase_id', 'id');
   }
 
   public function sublinea()

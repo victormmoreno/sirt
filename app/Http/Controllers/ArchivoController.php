@@ -346,12 +346,12 @@ class ArchivoController extends Controller
       $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
       $fileName = $idArchivoArtulacionProyecto->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
-      $proyecto = $this->proyectoRepository->consultarDetallesDeUnProyectoRepository($id);
+      $proyecto = Proyecto::findOrFail($id);
       $route = "";
       $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
       $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
-      $linea = $proyecto->lineatecnologica_id;
-      $gestor = sprintf("%03d", $proyecto->gestor_id);
+      $linea = $proyecto->sublinea->lineatecnologica_id;
+      $gestor = sprintf("%03d", $proyecto->articulacion_proyecto->actividad->gestor_id);
       $idproyecto = $proyecto->id;
       $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
       $fase_id = $fase->id;
@@ -442,14 +442,15 @@ class ArchivoController extends Controller
   /**
   * Muestra la datatable de los arcivos de un proyecto
   * @param int $id Id del proyecto
+  * @param string $fase Nombre de la fase
   * @return Datatable
   * @author Victor Manuel Moreno Vega
   */
-  public function datatableArchivosDeUnProyecto($id)
+  public function datatableArchivosDeUnProyecto($id, $fase)
   {
     if (request()->ajax()) {
       $proyecto = Proyecto::findOrFail($id);
-      $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id);
+      $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id, $fase)->get();
       return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto);
     }
   }

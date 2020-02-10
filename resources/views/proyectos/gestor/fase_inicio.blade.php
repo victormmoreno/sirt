@@ -13,66 +13,24 @@
         <div class="card">
           <div class="card-content">
             <div class="row">
-              <br>
-              <center>
-                <span class="card-title center-align"><b>Proyecto - {{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</b></span>
-              </center>
-              <div class="divider"></div>
-              <div class="card-panel red lighten-3">
-                <div class="card-content white-text">
-                  <a class="btn-floating red"><i class="material-icons left">info_outline</i></a>
-                  <span>Los elementos con (*) son obligatorios</span>
-                </div>
-              </div>
-              <br />
-              <div class="row">
-                <div class="steps clearfix">
-                  <ul role="tablist" class="tabs z-depth-1" style="width: 100%;">
-                    <li role="tab" class="first current tab" aria-disabled="false" aria-selected="true">
-                      <a href="{{ route('proyecto.inicio', $proyecto->id) }}" aria-controls="steps-uid-0-p-0" class="active">
-                        <span class="number">1.</span>
-                        Inicio
-                      </a>
-                    </li>
-                    <li role="tab" class="tab" aria-disabled="true">
-                      <a id="steps-uid-0-t-1" href="#steps-uid-0-h-1" aria-controls="steps-uid-0-p-1">
-                        <span class="number">2.</span>
-                        Planeación
-                      </a>
-                    </li>
-                    <li role="tab" class="tab" aria-disabled="true">
-                      <a id="steps-uid-0-t-2" href="#steps-uid-0-h-2" aria-controls="steps-uid-0-p-2">
-                        <span class="number">3.</span>
-                        Ejecución
-                      </a>
-                      </li>
-                    <li role="tab" class="last tab" aria-disabled="true">
-                      <a id="steps-uid-0-t-3" href="#steps-uid-0-h-3" aria-controls="steps-uid-0-p-3">
-                        <span class="number">4.</span>
-                        Cierre
-                      </a>
-                    </li>
-                    <div class="indicator" style="right: 1179px; left: 0px;"></div>
-                  </ul>
-                </div>
-              </div>
+              @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m6 l6 center">
-                  <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
-                    <i class="material-icons left">file_download</i>
-                    Descargar formulario.
-                  </a>
+                    <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
+                        <i class="material-icons left">file_download</i>
+                        Descargar formulario.
+                    </a>
                 </div>
                 <div class="col s12 m6 l6 center">
-                  <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
-                    <i class="material-icons left">library_books</i>
-                    Entregables de la Fase de Inicio.
-                  </a>
+                    <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
+                        <i class="material-icons left">library_books</i>
+                        Entregables de la Fase de Inicio.
+                    </a>
                 </div>
-              </div>
+            </div>
               <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
                 {!! method_field('PUT')!!}
-                @include('proyectos.gestor.form_inicio', [
+                @include('proyectos.form_inicio', [
                 'btnText' => 'Modificar'])
               </form>
             </div>
@@ -101,7 +59,12 @@
   divNombreActorCTi.show();
   @endif
   });
+  function changeToPlaneacion() {
+    window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
+  }
 
-
+  function changeToInicio() {
+    window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
+  }
 </script>
 @endpush

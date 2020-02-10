@@ -13,5 +13,9 @@ class Fase extends Model
     'nombre',
   ];
 
+  public function proyectos()
+  {
+      return $this->hasMany(Proyecto::class, 'fase_id', 'id');
+  }
 
 }

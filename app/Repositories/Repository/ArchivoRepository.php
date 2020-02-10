@@ -76,16 +76,17 @@ class ArchivoRepository
   /**
    * Consuta los archivos de una articulacion_proyecto
    * @param int $id Id de la articulacion_proyecto
+   * @param string $fase Nombre de la fase
    * @return Collection
    * @author dum
    */
-  public function consultarRutasArchivosDeUnaArticulacionProyecto($id)
+  public function consultarRutasArchivosDeUnaArticulacionProyecto($id, $fase)
   {
     return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
     ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
     ->where('articulacion_proyecto.id', $id)
-    ->get();
+    ->where('fases.nombre', $fase);
   }
 
   /**

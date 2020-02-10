@@ -211,38 +211,13 @@ class ProyectoController extends Controller
   public function updateEntregables(Request $request, $id)
   {
     if (Session::get('login_role') == User::IsGestor()) {
-      $validator = Validator::make($request->all(), [
-        'txturl_videotutorial' => ['url', 'max:1000', 'nullable'],
-      ], [
-        'txturl_videotutorial.url' => 'El formato de la Url del Video no es válido.',
-        'txturl_videotutorial.max' => 'La Url del Video debe ser máximo de 1000 carácteres.',
-      ]);
-      if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput();
-      }
-
-      $update = $this->getProyectoRepository()->updateEntregablesProyectoRepository($request, $id);
+      $update = $this->getProyectoRepository()->updateEntregablesInicioProyectoRepository($request, $id);
       if ($update) {
         Alert::success('Modificación Exitosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
         return redirect('proyecto');
       } else {
         Alert::error('Modificación Errónea!', 'Los entregables del proyecto no se han modificado!')->showConfirmButton('Ok', '#3085d6');
         return back();
-      }
-    } else {
-      $proyecto = $this->getProyectoRepository()->consultarDetallesDeUnProyectoRepository($id);
-      if ($proyecto->nombre_estadoproyecto != 'En ejecución' && $request->txtrevisado_final != ArticulacionProyecto::IsPorEvaluar()) {
-        Alert::html('Advertencia!', 'Para realizar esta acción, el estado del proyecto debe ser "<b>En ejecución</b>"', 'warning')->showConfirmButton('Ok', '#3085d6');
-        return back();
-      } else {
-        $update = $this->getProyectoRepository()->updateRevisadoFinalProyectoRepository($request, $id);
-        if ($update) {
-          Alert::success('Modificación Exitosa!', 'El revisado final del proyecto se ha modificado!')->showConfirmButton('Ok', '#3085d6');
-          return redirect('proyecto');
-        } else {
-          Alert::error('Modificación Errónea!', 'El revisado final del proyecto no se modificado!')->showConfirmButton('Ok', '#3085d6');
-          return back();
-        }
       }
     }
   }
@@ -535,10 +510,33 @@ class ProyectoController extends Controller
         break;
 
       case User::IsDinamizador():
-        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
-        return view('proyectos.dinamizador.edit', [
-          'proyecto' => $proyecto,
-          'gestores' => $gestores,
+        return view('proyectos.dinamizador.fase_inicio', [
+          'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->articulacion_proyecto->actividad->gestor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
+          'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+          'proyecto' => $proyecto
+        ]);
+        break;
+
+      default:
+        // code...
+        break;
+    }
+  }
+
+  public function planeacion($id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('proyectos.gestor.fase_planeacion', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
+      case User::IsDinamizador():
+        return view('proyectos.dinamizador.fase_planeacion', [
+          'proyecto' => $proyecto
         ]);
         break;
 
@@ -557,19 +555,30 @@ class ProyectoController extends Controller
    */
   public function updateInicio(Request $request, $id)
   {
-    $req = new ProyectoFaseInicioFormRequest;
-    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-    if ($validator->fails()) {
-      return response()->json([
-        'state'   => 'error_form',
-        'errors' => $validator->errors(),
-      ]);
-    } else {
-      $result = $this->getProyectoRepository()->update($request, $id);
-      if ($result) {
-        return response()->json(['state' => 'update']);
+    if (Session::get('login_role') == User::IsGestor()) {
+      $req = new ProyectoFaseInicioFormRequest;
+      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+      if ($validator->fails()) {
+        return response()->json([
+          'state'   => 'error_form',
+          'errors' => $validator->errors(),
+        ]);
       } else {
-        return response()->json(['state' => 'no_update']);
+        $result = $this->getProyectoRepository()->update($request, $id);
+        if ($result) {
+          return response()->json(['state' => 'update']);
+        } else {
+          return response()->json(['state' => 'no_update']);
+        }
+      }
+    } else {
+      $update = $this->getProyectoRepository()->updateFaseProyecto($id, 'Planeación');
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de planeación!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'El proyecto no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
+        return back();
       }
     }
   }

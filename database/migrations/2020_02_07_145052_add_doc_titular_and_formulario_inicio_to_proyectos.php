@@ -16,7 +16,6 @@ class AddDocTitularAndFormularioInicioToProyectos extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->tinyInteger('doc_titular')->default(0)->after('fabrica_productividad');
-            $table->tinyInteger('formulario_inicio')->default(0)->after('doc_titular');
         });
     }
 
@@ -28,7 +27,7 @@ class AddDocTitularAndFormularioInicioToProyectos extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['doc_titular', 'formulario_inicio']);
+            $table->dropColumn(['doc_titular']);
         });
     }
 }

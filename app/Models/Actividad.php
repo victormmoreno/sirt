@@ -37,6 +37,12 @@ class Actividad extends Model
         'fecha_inicio',
         'fecha_cierre',
         'objetivo_general',
+        'formulario_inicio',
+        'cronograma',
+        'seguimiento',
+        'evidencia_final',
+        'formulario_final'
+
     ];
 
     /**
