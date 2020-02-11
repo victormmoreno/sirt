@@ -1,7 +1,55 @@
 $(document).ready(function() {
   consultarProyectosDelGestorPorAnho();
   consultarProyectosDelNodoPorAnho();
-})
+});
+
+function consultarProyectosDeTalentos () {
+  
+  $('#tblProyectoDelTalento').dataTable().fnDestroy();
+  $('#tblProyectoDelTalento').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/proyecto/datatableProyectosDelTalento/",
+      // type: "get",
+      data: function (d) {
+        d.codigo_proyecto = $('.codigo_proyecto').val(),
+        d.nombre = $('.nombre').val(),
+        d.nombre_fase = $('.nombre_fase').val(),
+        d.search = $('input[type="search"]').val()
+      }
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+      },
+      {
+        data: 'nombre_gestor',
+        name: 'nombre_gestor',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'nombre_fase',
+        name: 'nombre_fase',
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+    ],
+  });
+}
 
 /**
 * Consulta los talentos que tiene un proyecto
@@ -48,54 +96,6 @@ function verTalentosDeUnProyecto(id){
     }
   });
 }
-
-function consultarProyectosPendientesPorAprobacion() {
-
-  $('#tblproyectosPendienteDeAprobacion').dataTable().fnDestroy();
-  $('#tblproyectosPendienteDeAprobacion').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    ajax:{
-      url: "/proyecto/datatableProyectosPendienteDeAprobacion/",
-      type: "get",
-    },
-    columns: [
-      {
-        width: '15%',
-        data: 'nombre_idea',
-        name: 'nombre_idea',
-      },
-      {
-        data: 'nombre_nodo',
-        name: 'nombre_nodo',
-      },
-      {
-        data: 'nombre_gestor',
-        name: 'nombre_gestor',
-      },
-      {
-        data: 'estado_aprobacion',
-        name: 'estado_aprobacion',
-      },
-      {
-        width: '8%',
-        data: 'aprobar',
-        name: 'aprobar',
-        orderable: false
-      },
-    ],
-  });
-  // if (id === '') {
-  //   swal('Advertencia!', 'Seleccione un nodo válido', 'error');
-  // } else {
-  //
-  // }
-}
-
 
 // Ajax que muestra los proyectos de un gestor por año
 function consultarProyectosDelGestorPorAnho() {

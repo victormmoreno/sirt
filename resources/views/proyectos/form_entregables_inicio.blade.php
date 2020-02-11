@@ -1,5 +1,8 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
+@php
+  \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
+@endphp
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_proyecto" disabled

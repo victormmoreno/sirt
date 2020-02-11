@@ -509,32 +509,28 @@ class ProyectoRepository
       ->where('proyectos.id', $id);
   }
   /**
-   * Consulta los proyectos pendientes de aprobación de un usuario (Dinamizador, Gestor, Talento)
+   * Consulta los proyectos del talento
    *
    * @param int $id Id del usuario
    * @return Collection
    * @author dum
    */
-  public function proyectosPendientesDeAprobacion_Repository($id)
+  public function proyectosDelTalento($id)
   {
-    return Proyecto::select('proyectos.id')
+    return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase')
       ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
-      ->selectRaw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre_nodo')
-      ->selectRaw('IF(estado_aprobacion = ' . Proyecto::IsPendiente() . ', "Pendiente", IF(estado_aprobacion = ' . Proyecto::IsAceptado() . ', "Aprobado", "No Aprobado")) AS estado_aprobacion')
-      ->selectRaw('concat(gestor_user.nombres, " ", gestor_user.apellidos) AS nombre_gestor')
+      ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
       ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
       ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
       ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-      ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-      ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
       ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-      ->join('users AS gestor_user', 'gestor_user.id', '=', 'gestores.user_id')
-      ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
-      ->join('users', 'users.id', '=', 'aprobaciones.user_id')
-      ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
-      ->where('users.id', $id)
-      ->where('roles.name', Session::get('login_role'))
-      ->where('estado_aprobacion', '!=', Proyecto::IsAceptado())
+      ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+      ->join('users', 'users.id', '=', 'gestores.user_id')
+      ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+      ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+      ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+      ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.id')
+      ->where('talentos.id', $id)
       ->get();
   }
 
@@ -753,7 +749,6 @@ class ProyectoRepository
    */
   public function update($request, $id)
   {
-
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::find($id);
@@ -763,6 +758,7 @@ class ProyectoRepository
       $economia_naranja = 1;
       $dirigido_discapacitados = 1;
       $art_cti = 1;
+      $fabrica_productividad = 1;
 
       if (!isset(request()->trl_esperado)) {
         $trl_esperado = 0;
@@ -784,6 +780,10 @@ class ProyectoRepository
         $art_cti = 0;
       }
 
+      if (!isset(request()->txtfabrica_productividad)) {
+        $fabrica_productividad = 0;
+      }
+
       $proyecto->articulacion_proyecto->actividad()->update([
         'nombre' => request()->txtnombre,
         'objetivo_general' => request()->txtobjetivo
@@ -802,7 +802,7 @@ class ProyectoRepository
         'art_cti' => $art_cti,
         'nom_act_cti' => request()->txtnom_act_cti,
         'alcance_proyecto' => request()->txtalcance_proyecto,
-        'fabrica_productividad' => request()->txtfabrica_productividad
+        'fabrica_productividad' => $fabrica_productividad
       ]);
 
 
@@ -898,6 +898,15 @@ class ProyectoRepository
     }
   }
 
+
+  /** 
+   * Cambia un proyecto de fase
+   * 
+   * @param int $id Id del proyecto
+   * @param string $fase nombre de la fase a la que se va a cambiar el proyecto
+   * @return boolean
+   * @author dum
+   */
   public function updateFaseProyecto($id, $fase)
   {
     DB::beginTransaction();
@@ -909,6 +918,74 @@ class ProyectoRepository
       DB::commit();
       return true;
     } catch (\Exception $e) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
+   * Modifica los entregables de la fase de planeación de un proyecto
+   * @param int $id Id del proyecto
+   * @author dum
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregablesPlaneacionProyectoRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+
+      $cronograma = 1;
+      $estado_arte = 1;
+
+      if (!isset($request->txtcronograma)) {
+        $cronograma = 0;
+      }
+
+      if (!isset($request->txtestado_arte)) {
+        $estado_arte = 0;
+      }
+
+      $proyecto = Proyecto::findOrFail($id);
+      $proyecto->update([
+        'estado_arte' => $estado_arte
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'cronograma' => $cronograma
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+  
+  /**
+   * Modifica los entregables de un proyecto en la fase de ejecución
+   * 
+   * @param Request $request
+   * @param int $id Id de proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregablesEjecucionProyectoRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+      $seguimiento = 1;
+      if (!isset($request->txtseguimiento)) {
+        $seguimiento = 0;
+      }
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'seguimiento' => $seguimiento
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
       DB::rollBack();
       return false;
     }
@@ -997,6 +1074,7 @@ class ProyectoRepository
       $economia_naranja = 1;
       $dirigido_discapacitados = 1;
       $art_cti = 1;
+      $fabrica_productividad = 1;
 
 
       $this->getIdeaRepository()->updateEstadoIdea(request()->txtidea_id, 'En Proyecto');
@@ -1019,6 +1097,10 @@ class ProyectoRepository
 
       if (!isset(request()->txtarti_cti)) {
         $art_cti = 0;
+      }
+
+      if (!isset(request()->txtfabrica_productividad)) {
+        $fabrica_productividad = 0;
       }
 
       $actividad = Actividad::create([
@@ -1051,7 +1133,7 @@ class ProyectoRepository
         'art_cti' => $art_cti,
         'nom_act_cti' => request()->txtnom_act_cti,
         'alcance_proyecto' => request()->txtalcance_proyecto,
-        'fabrica_productividad' => request()->txtfabrica_productividad
+        'fabrica_productividad' => $fabrica_productividad
       ]);
 
 

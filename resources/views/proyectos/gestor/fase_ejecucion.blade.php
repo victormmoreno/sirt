@@ -14,9 +14,9 @@
           <div class="card-content">
             <div class="row">
               @include('proyectos.navegacion_fases')
-              <form method="POST" action="{{route('proyecto.update.planeacion', $proyecto->id)}}">
+              <form method="POST" action="{{route('proyecto.update.ejecucion', $proyecto->id)}}">
                 {!! method_field('PUT')!!}
-                @include('proyectos.form_planeacion', [
+                @include('proyectos.form_ejecucion', [
                 'btnText' => 'Modificar'])
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
@@ -59,7 +59,7 @@
 
   Dropzone.on('success', function (res) {
     $('#archivosDeUnProyecto').dataTable().fnDestroy();
-    // datatableArchivosDeUnProyecto();
+    // datatableArchivosDeUnProyecto_ejecucion();
     Swal.fire({
       toast: true,
       position: 'top-end',

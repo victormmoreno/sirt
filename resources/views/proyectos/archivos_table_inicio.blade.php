@@ -1,4 +1,4 @@
-<table class="display responsive-table datatable-example dataTable" style="width: 100%" id="archivosDeUnProyecto_inicio">
+<table class="display responsive-table datatable-example dataTable" style="width: 100%" id="archivosDeUnProyecto">
     <thead>
       <tr>
         <th>Archivo</th>

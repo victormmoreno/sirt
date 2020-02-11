@@ -16,17 +16,12 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
+              <form action="{{route('proyecto.update.planeacion', $proyecto->id)}}" method="POST">
                 {!! method_field('PUT')!!}
                 @csrf
-                @include('proyectos.detalle_fase_inicio')
+                @include('proyectos.detalle_fase_planeacion')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" {{$proyecto->fase->nombre == 'Planeación' ? 'disabled' : ''}}
-                    class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Planeación' ? 'El Proyecto se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
-                  </button>
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
@@ -36,7 +31,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </main>
@@ -45,20 +39,7 @@
 @push('script')
 <script>
   $( document ).ready(function() {
-  @if($proyecto->areaconocimiento->nombre == 'Otro')
-    divOtroAreaConocmiento.show();
-  @endif
-  @if($proyecto->economia_naranja == 1)
-  divEconomiaNaranja.show();
-  @endif
-  @if($proyecto->dirigido_discapacitados == 1)
-  divDiscapacidad.show();
-  @endif
-  @if($proyecto->art_cti == 1)
-  divNombreActorCTi.show();
-  @endif
-
-  datatableArchivosDeUnProyecto_inicio();
+    datatableArchivosDeUnProyecto_planeacion();
   });
 
   function changeToPlaneacion() {
@@ -69,7 +50,7 @@
     window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
   }
 
-  function datatableArchivosDeUnProyecto_inicio() {
+  function datatableArchivosDeUnProyecto_planeacion() {
   $('#archivosDeUnProyecto').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -78,7 +59,7 @@
     serverSide: true,
     order: false,
     ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
+      url: "{{route('proyecto.files', [$proyecto->id, 'Planeación'])}}",
       type: "get",
     },
     columns: [

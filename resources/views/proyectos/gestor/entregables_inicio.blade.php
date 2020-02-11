@@ -33,8 +33,8 @@
 @endsection
 @push('script')
   <script>
-  var DropzoneProyectoInicio = new Dropzone('#fase_inicio_proyecto', {
-    url: '{{ route('proyecto.files.inicio.upload', $proyecto->id) }}',
+  var Dropzone = new Dropzone('#fase_inicio_proyecto', {
+    url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
@@ -45,9 +45,9 @@
     paramName: 'nombreArchivo'
   });
 
-  DropzoneProyectoInicio.on('success', function (res) {
+  Dropzone.on('success', function (res) {
     $('#archivosDeUnProyecto_FaseInicio').dataTable().fnDestroy();
-    datatableArchivosDeUnProyecto();
+    // datatableArchivosDeUnProyecto();
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -58,7 +58,7 @@
     });
   })
 
-  DropzoneProyectoInicio.on('error', function (file, res) {
+  Dropzone.on('error', function (file, res) {
     var msg = res.errors.nombreArchivo[0];
     $('.dz-error-message:last > span').text(msg);
     Swal.fire({

@@ -17,10 +17,10 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{ $proyecto['codigo_proyecto'] }}</td>
-        <td>{{ $proyecto['nombre'] }}</td>
-        <td>{{ $proyecto['nombre_gestor'] }}</td>
-        <td>{{ $proyecto['nombre_linea'] }}</td>
+        <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
+        <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
+        <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
+        <td>{{ $proyecto->sublinea->nombre }}</td>
       </tr>
     </tbody>
   </table>

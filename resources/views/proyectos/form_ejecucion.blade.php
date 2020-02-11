@@ -4,7 +4,7 @@
   \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
 @endphp
 <div class="row">
-    <h5 class="center">Entregables de la fase de planeación</h5>
+    <h5 class="center">Entregables de la fase de ejecución</h5>
 </div>
 <div class="row">
     <div class="input-field col s12 m6 l6">
@@ -34,25 +34,17 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" {{$disabled}} {{ $proyecto->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }}
-                id="txtcronograma" name="txtcronograma" value="1">
-            <label for="txtcronograma">
-                Cronograma de trabajo.
+            <input type="checkbox" {{$disabled}} {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
+                id="txtseguimiento" name="txtseguimiento" value="1">
+            <label for="txtseguimiento">
+                Seguimiento y usos de infraestructura.
             </label>
-        </p>
-    </div>
-    <div class="col s6 m6 l6">
-        <p class="p-v-xs">
-            <input type="checkbox" {{$disabled}}
-                {{ $proyecto->estado_arte == 1 ? 'checked' : '' }} id="txtestado_arte"
-                name="txtestado_arte" value="1">
-            <label for="txtestado_arte">Estado del arte y/o Canvas</label>
         </p>
     </div>
 </div>
 <div class="row">
     <div class="card-panel teal">
-        <div class="dropzone" id="fase_planeacion_proyecto"></div>
+        <div class="dropzone" id="fase_ejecucion_proyecto"></div>
     </div>
 </div>
 <div class="divider"></div>

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, ArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\ProyectoFaseInicioFormRequest;
-use App\Helpers\ArrayHelper;
 use Illuminate\Http\Request;
 use App\User;
 use Alert;
@@ -18,7 +17,6 @@ class ProyectoController extends Controller
   private $proyectoRepository;
   private $gestorRepository;
   private $entidadRepository;
-  private $articulacionProyectoRepository;
   private $servidorVideoRepository;
 
   public function __construct(ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository)
@@ -52,68 +50,15 @@ class ProyectoController extends Controller
   }
 
   /**
-   * Vista para la aprobación del proyecto
-   *
-   * @param int $id Id del proyecto
-   * @return Response*
+   * Datatable para el rol de talento
+   * @return Datatables
    * @author dum
    */
-  public function aprobacion($id)
+  public function datatableProyectoTalento(Request $request)
   {
-    // return PdfProyectoController::printAcuerdoConfidencialidadCompromiso();
-    $proyecto = Proyecto::findOrFail($id);
-    $pivot = $this->getProyectoRepository()->pivotAprobaciones($id)->get();
-    $aprobado = $this->getProyectoRepository()->pivotAprobacionesUnica($id, auth()->user()->id, Session::get('login_role'));
-
-    if (Session::get('login_role') == User::IsGestor()) {
-      return view('proyectos.gestor.aprobacion', [
-        'proyecto' => $proyecto,
-        'pivot' => $pivot,
-        'aprobado' => $aprobado
-      ]);
-    } else if (Session::get('login_role') == User::IsDinamizador()) {
-      return view('proyectos.dinamizador.aprobacion', [
-        'proyecto' => $proyecto,
-        'pivot' => $pivot,
-        'aprobado' => $aprobado
-      ]);
-    } else {
-      return view('proyectos.talento.aprobacion', [
-        'proyecto' => $proyecto,
-        'pivot' => $pivot,
-        'aprobado' => $aprobado
-      ]);
-    }
-  }
-
-  /**
-   * Datatable que muestra los proyectos que están pendiente de aprobación de un usuario (dinamizador, talento, gestor)
-   *
-   * @return Response
-   * @author dum
-   */
-  public function datatableProyectosPendientes()
-  {
-    $id = "";
-
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $id = auth()->user()->dinamizador->user->id;
-    } else if (Session::get('login_role') == User::IsGestor()) {
-      $id = auth()->user()->gestor->user->id;
-    } else {
-      $id = auth()->user()->talento->user->id;
-    }
-
-    $proyectos = $this->getProyectoRepository()->proyectosPendientesDeAprobacion_Repository($id);
-    return datatables()->of($proyectos)
-      ->addColumn('aprobar', function ($data) {
-        $aprobar = '
-      <a class="btn light-blue m-b-xs" href="' . route('proyecto.aprobacion', $data->id) . '">
-        <i class="material-icons">remove_red_eye</i>
-      </a>
-      ';
-        return $aprobar;
-      })->rawColumns(['aprobar'])->make(true);
+    $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
+    // dd($proyectos);
+    return $this->datatableProyectos($request, $proyectos);
   }
 
   /**
@@ -234,14 +179,6 @@ class ProyectoController extends Controller
     $proyecto = Proyecto::findOrFail($id);
     if (Session::get('login_role') == User::IsGestor()) {
       return view('proyectos.gestor.entregables_inicio', [
-        'proyecto' => $proyecto
-      ]);
-    } else if (Session::get('login_role') == User::IsDinamizador()) {
-      return view('proyectos.dinamizador.entregables', [
-        'proyecto' => $proyecto
-      ]);
-    } else {
-      return view('proyectos.administrador.entregables', [
         'proyecto' => $proyecto
       ]);
     }
@@ -517,6 +454,14 @@ class ProyectoController extends Controller
         ]);
         break;
 
+      case User::IsTalento():
+        return view('proyectos.talento.fase_inicio', [
+          'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->articulacion_proyecto->actividad->gestor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
+          'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+          'proyecto' => $proyecto
+        ]);
+        break;
+
       default:
         // code...
         break;
@@ -526,6 +471,7 @@ class ProyectoController extends Controller
   public function planeacion($id)
   {
     $proyecto = Proyecto::findOrFail($id);
+    // if ($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Ejecución' || $proyecto->fase->nombre == 'Cierre' ) {
 
     switch (Session::get('login_role')) {
       case User::IsGestor():
@@ -540,8 +486,54 @@ class ProyectoController extends Controller
         ]);
         break;
 
+      case User::IsTalento():
+        return view('proyectos.talento.fase_planeacion', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
       default:
-        // code...
+        abort('403');
+        break;
+    }
+
+    // } else {
+    //   Alert::warning('Advertencia!', 'El proyecto no se encuentra en esta fase!')->showConfirmButton('Ok', '#3085d6');
+    //   return back();
+    // }
+
+  }
+
+  /**
+   * Vista para el formulario de la fase de ejecución del proyecto
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function ejecucion(int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('proyectos.gestor.fase_ejecucion', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
+      case User::IsDinamizador():
+        return view('proyectos.dinamizador.fase_ejecucion', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
+      case User::IsTalento():
+        return view('proyectos.talento.fase_ejecucion', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
+      default:
+        abort('403');
         break;
     }
   }
@@ -580,6 +572,60 @@ class ProyectoController extends Controller
         Alert::error('Modificación Errónea!', 'El proyecto no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
         return back();
       }
+    }
+  }
+
+  /**
+   * Modifica los datos de un proyecto en el estado de planeación
+   * 
+   * @param \Illuminate\Http\Request $request
+   * @param int $id Id del proyecto
+   * @return \Illuminate\Http\Response
+   * @author dum
+   */
+  public function updatePlaneacion(Request $request, $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $update = $this->getProyectoRepository()->updateEntregablesPlaneacionProyectoRepository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    } else {
+      $aprobar = $this->getProyectoRepository()->updateFaseProyecto($id, 'Ejecución');
+      if ($aprobar) {
+        Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    }
+  }
+
+  /**
+   * Modifica los cambios de la fase de ejecución
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   **/
+  public function updateEjecucion(Request $request, $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $update = $this->getProyectoRepository()->updateEntregablesEjecucionProyectoRepository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    } else {
+
     }
   }
 

@@ -7,32 +7,22 @@
       <div class="col s12 m12 l12">
         <h5>
           <a class="footer-text left-align" href="{{route('proyecto')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
+            <i class="material-icons arrow-l left">arrow_back</i>
           </a> Proyectos
         </h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
               @include('proyectos.navegacion_fases')
-              <div class="row">
-                <div class="col s12 m6 l6 center">
-                    <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
-                        <i class="material-icons left">file_download</i>
-                        Descargar formulario.
-                    </a>
-                </div>
-                <div class="col s12 m6 l6 center">
-                    <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
-                        <i class="material-icons left">library_books</i>
-                        Entregables de la Fase de Inicio.
-                    </a>
-                </div>
-            </div>
-              <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
-                {!! method_field('PUT')!!}
-                @include('proyectos.form_inicio', [
-                'btnText' => 'Modificar'])
-              </form>
+              <div class="divider"></div>
+              <br />
+                @include('proyectos.detalle_fase_inicio')
+                <div class="divider"></div>
+                <center>
+                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                    <i class="material-icons right">backspace</i>Cancelar
+                  </a>
+                </center>
             </div>
           </div>
         </div>
@@ -58,7 +48,10 @@
   @if($proyecto->art_cti == 1)
   divNombreActorCTi.show();
   @endif
+
+  datatableArchivosDeUnProyecto_inicio();
   });
+
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
   }
@@ -67,8 +60,31 @@
     window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
   }
 
-  function changeToEjecucion() {
-    window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-  }
+  function datatableArchivosDeUnProyecto_inicio() {
+  $('#archivosDeUnProyecto').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: false,
+    ajax:{
+      url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'file',
+        name: 'file',
+        orderable: false,
+      },
+      {
+        data: 'download',
+        name: 'download',
+        orderable: false,
+      },
+    ],
+  });
+}
 </script>
 @endpush
