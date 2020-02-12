@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Proyectos de Base Tecnológica')
+@section('meta-title', 'Proyectos de Desarrollo Tecnológico')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
   <div class="content">
@@ -16,21 +16,23 @@
               @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m6 l6 center">
-                    <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
-                        <i class="material-icons left">file_download</i>
-                        Descargar formulario.
-                    </a>
+                  <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}"
+                    target="_blank">
+                    <i class="material-icons left">file_download</i>
+                    Descargar formulario.
+                  </a>
                 </div>
                 <div class="col s12 m6 l6 center">
-                    <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
-                        <i class="material-icons left">library_books</i>
-                        Entregables de la Fase de Inicio.
-                    </a>
+                  <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
+                    <i class="material-icons left">library_books</i>
+                    Entregables de la Fase de Cierre.
+                  </a>
                 </div>
-            </div>
-              <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
+              </div>
+              <form id="frmProyectos_FaseCierre_Update" action="{{route('proyecto.update.cierre', $proyecto->id)}}"
+                method="POST">
                 {!! method_field('PUT')!!}
-                @include('proyectos.gestor.form_inicio', [
+                @include('proyectos.gestor.form_cierre', [
                 'btnText' => 'Modificar'])
               </form>
             </div>
@@ -41,24 +43,9 @@
     </div>
   </div>
 </main>
-@include('proyectos.modals')
 @endsection
 @push('script')
 <script>
-  $( document ).ready(function() {
-  @if($proyecto->areaconocimiento->nombre == 'Otro')
-    divOtroAreaConocmiento.show();
-  @endif
-  @if($proyecto->economia_naranja == 1)
-  divEconomiaNaranja.show();
-  @endif
-  @if($proyecto->dirigido_discapacitados == 1)
-  divDiscapacidad.show();
-  @endif
-  @if($proyecto->art_cti == 1)
-  divNombreActorCTi.show();
-  @endif
-  });
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
   }

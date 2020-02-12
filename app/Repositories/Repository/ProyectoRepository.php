@@ -749,6 +749,8 @@ class ProyectoRepository
    */
   public function update($request, $id)
   {
+    $proyecto = Proyecto::find($id);
+    // dd($proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update(['objetivo' => 'biribiri']));
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::find($id);
@@ -810,19 +812,19 @@ class ProyectoRepository
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
       $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
         'objetivo' => request()->txtobjetivo_especifico1
       ]);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update([
         'objetivo' => request()->txtobjetivo_especifico2
       ]);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(2)->update([
         'objetivo' => request()->txtobjetivo_especifico3
       ]);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos()->update([
+      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(3)->update([
         'objetivo' => request()->txtobjetivo_especifico4
       ]);
 
@@ -894,6 +896,22 @@ class ProyectoRepository
       return true;
     } catch (\Exception $e) {
       DB::rollback();
+      return false;
+    }
+  }
+
+  public function setPostCierreProyectoRepository(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+      $proyecto->articulacion_proyecto()->update([
+        'aprobacion_talento' => 1
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
       return false;
     }
   }

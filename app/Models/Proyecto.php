@@ -65,7 +65,11 @@ class Proyecto extends Model
     'trl_obtenido',
     'fase_id',
     'fabrica_productividad',
-    'doc_titular'
+    'doc_titular',
+    'trl_prototipo',
+    'trl_pruebas',
+    'trl_modelo',
+    'trl_normatividad'
   ];
 
   /**

@@ -45,6 +45,10 @@
   function changeToEjecucion() {
     window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
   }
+
+  function changeToCierre() {
+    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+  }
   var Dropzone = new Dropzone('#fase_ejecucion_proyecto', {
     url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {

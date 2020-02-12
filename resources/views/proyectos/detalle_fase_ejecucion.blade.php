@@ -56,7 +56,7 @@
                                 <div class="center">
                                     <span class="mailbox-title">
                                         <i class="material-icons">attach_file</i>
-                                        Evidencias de la fase de planeación.
+                                        Evidencias de la fase de ejecución.
                                     </span>
                                 </div>
                                 <div class="divider mailbox-divider"></div>

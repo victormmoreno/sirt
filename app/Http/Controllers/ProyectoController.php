@@ -9,6 +9,7 @@ use App\Http\Requests\ProyectoFaseInicioFormRequest;
 use Illuminate\Http\Request;
 use App\User;
 use Alert;
+use App\Http\Controllers\CostoController;
 
 class ProyectoController extends Controller
 {
@@ -18,14 +19,16 @@ class ProyectoController extends Controller
   private $gestorRepository;
   private $entidadRepository;
   private $servidorVideoRepository;
+  private $costoController;
 
-  public function __construct(ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository)
+  public function __construct(CostoController $costoController, ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository)
   {
     $this->setEmpresaRepository($empresaRepository);
     $this->setProyectoRepository($proyectoRepository);
     $this->setGestorRepository($gestorRepository);
     $this->setEntidadRepository($entidadRepository);
     $this->setServidorVideoRepository($servidorVideoRepository);
+    $this->costoController = $costoController;
     $this->middleware(['auth']);
   }
 
@@ -539,6 +542,30 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Vista para el formulario de la fase de cierre
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function cierre(int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('proyectos.gestor.fase_cierre', [
+          'proyecto' => $proyecto,
+          'costo' => $costo
+        ]);
+        break;
+      
+      default:
+        # code...
+        break;
+    }
+  }
+
+  /**
    * Modifica los datos de la fase de inicio de un proyecto.
    *
    * @param  \Illuminate\Http\Request  $request
@@ -625,7 +652,29 @@ class ProyectoController extends Controller
         return back();
       }
     } else {
+      // dd('something');
+      $update = $this->getProyectoRepository()->setPostCierreProyectoRepository($id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'La fase de ejecución del proyecto se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'La fase de ejecución del proyecto no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    }
+  }
 
+  /**
+   * Cambia los datos del proyecto en estado de cierre
+   * 
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @author dum
+   */
+  public function updateCierre(Request $request, int $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      
     }
   }
 

@@ -11,6 +11,7 @@ class ObjetivoEspecifico extends Model
     protected $fillable = [
         'actividad_id',
         'objetivo',
+        'cumplido'
     ];
 
 

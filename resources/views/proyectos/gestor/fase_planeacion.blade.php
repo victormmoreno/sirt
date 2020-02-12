@@ -45,14 +45,18 @@
   function changeToEjecucion() {
     window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
   }
-  var Dropzone = new Dropzone('#fase_ejecucion_proyecto', {
+
+  function changeToCierre() {
+    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+  }
+  var Dropzone = new Dropzone('#fase_planeacion_proyecto', {
     url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
     dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
     params: {
-      fase: 'Ejecución'
+      fase: 'Planeación'
     },
     paramName: 'nombreArchivo'
   });

@@ -22,10 +22,10 @@
                 @include('proyectos.detalle_fase_ejecucion')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" {{$proyecto->fase->nombre == 'Ejecución' ? '' : 'disabled'}}
+                  <button type="submit" value="send" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? '' : 'disabled'}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Ejecución' ? 'Aprobar fase de ejecución' : 'El Proyecto no se encuentra en fase de Ejecución'}}
+                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? 'Aprobar fase de ejecución' : 'El Proyecto no se encuentra en fase de Ejecución'}}
                   </button>
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
