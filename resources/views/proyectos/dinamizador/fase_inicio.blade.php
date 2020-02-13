@@ -40,7 +40,6 @@
     </div>
   </div>
 </main>
-@include('proyectos.modals')
 @endsection
 @push('script')
 <script>
@@ -71,6 +70,10 @@
 
   function changeToEjecucion() {
     window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+  }
+
+  function changeToCierre() {
+    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
   }
 
   function datatableArchivosDeUnProyecto_inicio() {

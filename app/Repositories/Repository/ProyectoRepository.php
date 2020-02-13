@@ -846,6 +846,78 @@ class ProyectoRepository
   }
 
   /**
+   * Modifica los datos de cierre de un proyecto
+   * 
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function updateCierreProyectoRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $objetivo1_alcanzado = 1;
+      $objetivo2_alcanzado = 1;
+      $objetivo3_alcanzado = 1;
+      $objetivo4_alcanzado = 1;
+      $proyecto = Proyecto::findOrFail($id);
+
+      if (!isset($request->txtobjetivo1_alcanzado)) {
+        $objetivo1_alcanzado = 0;
+      }
+
+      if (!isset($request->txtobjetivo2_alcanzado)) {
+        $objetivo2_alcanzado = 0;
+      }
+
+      if (!isset($request->txtobjetivo3_alcanzado)) {
+        $objetivo3_alcanzado = 0;
+      }
+
+      if (!isset($request->txtobjetivo4_alcanzado)) {
+        $objetivo4_alcanzado = 0;
+      }
+
+      $proyecto->update([
+        'trl_obtenido' => $request->trl_obtenido,
+        'diri_ar_emp' => $request->txtdiri_ar_emp,
+        'trl_prototipo' => $request->txttrl_prototipo,
+        'trl_pruebas' => $request->txttrl_pruebas,
+        'trl_modelo' => $request->txttrl_modelo,
+        'trl_normatividad' => $request->txttrl_normatividad
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'conclusiones' => $request->txtconclusiones
+      ]);
+      
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
+        'cumplido' => $objetivo1_alcanzado
+      ]);
+
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update([
+        'cumplido' => $objetivo2_alcanzado
+      ]);
+
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(2)->update([
+        'cumplido' => $objetivo3_alcanzado
+      ]);
+
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(3)->update([
+        'cumplido' => $objetivo4_alcanzado
+      ]);
+ 
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+  /**
    * Modifica los entregables de un proyecto
    * @param Request $request
    * @param int $id Id del proyecto
@@ -911,7 +983,7 @@ class ProyectoRepository
       DB::commit();
       return true;
     } catch (\Throwable $th) {
-      DB::rollBack();
+      DB::rollback();
       return false;
     }
   }
@@ -936,7 +1008,7 @@ class ProyectoRepository
       DB::commit();
       return true;
     } catch (\Exception $e) {
-      DB::rollBack();
+      DB::rollback();
       return false;
     }
   }
@@ -976,7 +1048,66 @@ class ProyectoRepository
       DB::commit();
       return true;
     } catch (\Throwable $th) {
-      DB::rollBack();
+      DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Modifica los entregables de la fase de cierre
+   * 
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregableCierreProyectoRepository($request, $id)
+  {
+    $evidencia_trl = 1;
+    $formulario_final = 1;
+    $proyecto = Proyecto::findOrFail($id);
+
+    if (!isset($request->txtevidencia_trl)) {
+      $evidencia_trl = 0;
+    }
+
+    if (!isset($request->txtformulario_final)) {
+      $formulario_final = 0;
+    }
+
+    
+    $proyecto->update([
+      'evidencia_trl' => $evidencia_trl
+    ]);
+
+    $proyecto->articulacion_proyecto->actividad()->update([
+      'formulario_final' => $formulario_final
+    ]);
+    DB::beginTransaction();
+    try {
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+  
+  /**
+   * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
+   */
+  public function updateAprobacionDinamizador(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'aprobacion_dinamizador' => 1
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
       return false;
     }
   }
@@ -1004,7 +1135,7 @@ class ProyectoRepository
       DB::commit();
       return true;
     } catch (\Throwable $th) {
-      DB::rollBack();
+      DB::rollback();
       return false;
     }
   }

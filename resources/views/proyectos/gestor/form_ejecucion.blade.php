@@ -41,6 +41,10 @@
             </label>
         </p>
     </div>
+    <div class="col s6 m6 l6">
+        <h6>Para descargar el seguimiento y usos de infraestructura del proyecto, presiona el botón con el ícono <i class="far fa-file-pdf"></i></h6>
+        <a class="btn green lighten-1 m-b-xs" href="{{route('pdf.proyecto.usos', $proyecto->id)}}" target="_blank"><i class="far fa-file-pdf"></i></a>
+    </div>
 </div>
 <div class="row">
     <div class="card-panel teal">

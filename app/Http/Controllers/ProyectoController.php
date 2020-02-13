@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
-use App\Http\Requests\ProyectoFaseInicioFormRequest;
+use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\Request;
 use App\User;
 use Alert;
@@ -182,6 +182,23 @@ class ProyectoController extends Controller
     $proyecto = Proyecto::findOrFail($id);
     if (Session::get('login_role') == User::IsGestor()) {
       return view('proyectos.gestor.entregables_inicio', [
+        'proyecto' => $proyecto
+      ]);
+    }
+  }
+
+  /**
+   * Vista para subir las entregables de un proyecto en la fase de cierre
+   * 
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function entregables_cierre(int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    if (Session::get('login_role') == User::IsGestor()) {
+      return view('proyectos.gestor.entregables_cierre' ,[
         'proyecto' => $proyecto
       ]);
     }
@@ -557,6 +574,13 @@ class ProyectoController extends Controller
           'proyecto' => $proyecto,
           'costo' => $costo
         ]);
+      break;
+      
+      case User::IsDinamizador():
+        return view('proyectos.dinamizador.fase_cierre', [
+          'proyecto' => $proyecto,
+          'costo' => $costo
+        ]);
         break;
       
       default:
@@ -664,6 +688,27 @@ class ProyectoController extends Controller
     }
   }
 
+  public function updateEntregables_Cierre(Request $request, $id)
+  {
+    $proyecto = Proyecto::findOFail($id);
+    if ($proyecto->articulacion_proyecto->aprobacion_talento == 1) {
+      if (Session::get('login_role') == User::IsGestor()) {
+        $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);
+        if ($update) {
+          Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de cierre se han modificado!')->showConfirmButton('Ok', '#3085d6');
+          return redirect('proyecto');
+        } else {
+          Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de cierre no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+          return back();
+        }
+      }
+    } else {
+      Alert::error('Error!', 'El talento aún no ha aprobado la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+
+    }
+  }
+
   /**
    * Cambia los datos del proyecto en estado de cierre
    * 
@@ -674,7 +719,30 @@ class ProyectoController extends Controller
   public function updateCierre(Request $request, int $id)
   {
     if (Session::get('login_role') == User::IsGestor()) {
-      
+      $req = new ProyectoFaseCierreFormRequest;
+      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+      if ($validator->fails()) {
+        return response()->json([
+          'state'   => 'error_form',
+          'errors' => $validator->errors(),
+        ]);
+      } else {
+        $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
+        if ($result) {
+          return response()->json(['state' => 'update']);
+        } else {
+          return response()->json(['state' => 'no_update']);
+        }
+      }
+    } else {
+      $update = $this->getProyectoRepository()->updateAprobacionDinamizador($id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'La fase de cierre se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
     }
   }
 
@@ -687,7 +755,6 @@ class ProyectoController extends Controller
   {
 
     $projects = $this->getProyectoRepository()->getProjectsForGestor($id, ['Inicio', 'Planeacion', 'En ejecución']);
-
 
     return response()->json([
       'projects' => $projects,

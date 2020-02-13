@@ -19,7 +19,7 @@
                                 <div class="right mailbox-buttons">
                                     <span class="mailbox-title">
                                         <p class="center">
-                                            Información de Proyecto en la fase de inicio - {{$proyecto->articulacion_proyecto->actividad->nombre}} 
+                                            Información de Proyecto en la fase de cierre - {{$proyecto->articulacion_proyecto->actividad->nombre}} 
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:
@@ -104,50 +104,40 @@
                                                 <ul class="collection">
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            TRL que se pretende realizar
+                                                            ¿TRL obtenido?
                                                         </span>
                                                         <p>
-                                                            {{$proyecto->trl_esperado == 0 ? 'TRL 6' : 'TRL 7 - TRL 8'}}
+                                                            @if ($proyecto->trl_obtenido == 0)
+                                                                TRL 6
+                                                            @elseif ($proyecto->trl_obtenido == 1)
+                                                                TRL 7
+                                                            @else
+                                                                TRL 8
+                                                            @endif
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            ¿Recibido a través de fábrica de productividad?
+                                                            ¿Dirigido a área de emprendimiento SENA?
                                                         </span>
                                                         <p>
-                                                            {{$proyecto->fabrica_productividad == 0 ? 'NO' : 'SI'}}
+                                                            {{$proyecto->diri_ar_emp == 0 ? 'NO' : 'SI'}}
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            ¿Recibido a través del área de emprendimiento SENA?
+                                                            Costo Aproximado del Proyecto
                                                         </span>
                                                         <p>
-                                                            {{$proyecto->reci_ar_emp == 0 ? 'NO' : 'SI'}}
+                                                            $ {{$costo->getData()->costosTotales}}
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            ¿El proyecto pertenece a la economía naranja?
+                                                            Conclusiones y siguiente paso del proyecto
                                                         </span>
                                                         <p>
-                                                            {{$proyecto->economia_naranja == 0 ? 'NO' : 'SI'}} {{$proyecto->economia_naranja == 1 ? '(' . $proyecto->tipo_economianaranja .')' : ''}}
-                                                        </p>
-                                                    </li>
-                                                    <li class="collection-item">
-                                                        <span class="title cyan-text text-darken-3">
-                                                            ¿El proyecto está dirigido a discapacitados?
-                                                        </span>
-                                                        <p>
-                                                            {{$proyecto->dirigido_discapacitados == 0 ? 'NO' : 'SI'}} {{$proyecto->dirigido_discapacitados == 1 ? '(' . $proyecto->tipo_discapacitados .')' : ''}}
-                                                        </p>
-                                                    </li>
-                                                    <li class="collection-item">
-                                                        <span class="title cyan-text text-darken-3">
-                                                            ¿Articulado con CT+i?
-                                                        </span>
-                                                        <p>
-                                                            {{$proyecto->art_cti == 0 ? 'NO' : 'SI'}} {{$proyecto->art_cti == 1 ? '(' . $proyecto->nom_act_cti .')' : ''}}
+                                                            {{$proyecto->articulacion_proyecto->actividad->conclusiones}}
                                                         </p>
                                                     </li>
                                                 </ul>
@@ -156,26 +146,16 @@
                                                 <ul class="collection">
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            Alcance del Proyecto
-                                                        </span>
-                                                        <p>
-                                                            {{$proyecto->alcance_proyecto}}
-                                                        </p>
-                                                    </li>
-                                                    <li class="collection-item">
-                                                        <span class="title cyan-text text-darken-3">
-                                                            Objetivo General del Proyecto
-                                                        </span>
-                                                        <p>
-                                                            {{$proyecto->articulacion_proyecto->actividad->objetivo_general}}
-                                                        </p>
-                                                    </li>
-                                                    <li class="collection-item">
-                                                        <span class="title cyan-text text-darken-3">
                                                             Primer objetivo específico
                                                         </span>
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}
+                                                        </p>
+                                                        <span class="title cyan-text text-darken-3">
+                                                            ¿Se cumplió?
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->cumplido == 0 ? 'NO' : 'SI'}}
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
@@ -185,6 +165,12 @@
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}
                                                         </p>
+                                                        <span class="title cyan-text text-darken-3">
+                                                            ¿Se cumplió?
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->cumplido == 0 ? 'NO' : 'SI'}}
+                                                        </p>
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
@@ -192,6 +178,12 @@
                                                         </span>
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}
+                                                        </p>
+                                                        <span class="title cyan-text text-darken-3">
+                                                            ¿Se cumplió?
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->cumplido == 0 ? 'NO' : 'SI'}}
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
@@ -201,95 +193,57 @@
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}
                                                         </p>
+                                                        <span class="title cyan-text text-darken-3">
+                                                            ¿Se cumplió?
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->cumplido == 0 ? 'NO' : 'SI'}}
+                                                        </p>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="divider mailbox-divider"></div>
-                                <div class="center">
-                                    <span class="mailbox-title">
-                                        <i class="material-icons">group</i>
-                                        Talentos que participan en el proyecto y dueño(s) de la propiedad intelectual.
-                                    </span>
-                                </div>
-                                <div class="divider mailbox-divider"></div>
-                                <div class="row">
-                                    <div class="col s12 m3 l3">
-                                        <div class="card-panel blue lighten-5">
-                                            <h5 class="center">Talentos que participan en el proyecto</h5>
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th style="width: 10%">Talento Interlocutor</th>
-                                                        <th style="width: 90%">Talento</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
-                                                        <tr>
-                                                        <td>{{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}</td>
-                                                        <td>{{$value->user->documento}} - {{$value->user->nombres}} {{$value->user->apellidos}}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="card-panel green lighten-5 col s12 m9 l9">
-                                        <h5 class="center">Dueño(s) de la propiedad intelectual</h5>
-                                        <div class="col s12 m4 l4">
-                                            <div class="card-panel">
-                                                <ul class="collection with-header">
-                                                    <li class="collection-header"><h5>Empresas</h5></li>
-                                                    @if ($proyecto->empresas->count() > 0)
-                                                    @foreach ($proyecto->empresas as $key => $value)
+                                        <div class="row">
+                                            <div class="col s12 m6 l6">
+                                                <ul class="collection">
                                                     <li class="collection-item">
-                                                        {{$value->nit}} - {{ $value->entidad->nombre }}
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Evidencias Prototipo producto
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->trl_prototipo}}
+
+
+                                                        </p>
                                                     </li>
-                                                    @endforeach
-                                                    @else
                                                     <li class="collection-item">
-                                                        No se han encontrado empresas dueña(s) de la propiedad intelectual.
-                                                    </li>                                       
-                                                    @endif
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Evidencias Pruebas documentadas
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->trl_pruebas}}
+                                                        </p>
+                                                    </li>
                                                 </ul>
                                             </div>
-                                        </div>
-                                        <div class="col s12 m4 l4">
-                                            <div class="card-panel">
-                                                <ul class="collection with-header">
-                                                    <li class="collection-header"><h5>Personas (Talentos)</h5></li>
-                                                    @if ($proyecto->users_propietarios->count() > 0)
-                                                    @foreach ($proyecto->users_propietarios as $key => $value)
+                                            <div class="col s12 m6 l6">
+                                                <ul class="collection">
                                                     <li class="collection-item">
-                                                        {{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Evidencias Modelo de negocio
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->trl_modelo}}
+                                                        </p>
                                                     </li>
-                                                    @endforeach
-                                                    @else
                                                     <li class="collection-item">
-                                                        No se han encontrado talento(s) dueño(s) de la propiedad intelectual.
-                                                    </li>                                       
-                                                    @endif
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m4 l4">
-                                            <div class="card-panel">
-                                                <ul class="collection with-header">
-                                                    <li class="collection-header"><h5>Grupos de Investigación</h5></li>
-                                                    @if ($proyecto->gruposinvestigacion->count() > 0)
-                                                    @foreach ($proyecto->gruposinvestigacion as $key => $value)
-                                                    <li class="collection-item">
-                                                        {{$value->codigo_grupo}} - {{ $value->entidad->nombre }}
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Evidencias Normatividad
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->trl_normatividad}}
+                                                        </p>
                                                     </li>
-                                                    @endforeach
-                                                    @else
-                                                    <li class="collection-item">
-                                                        No se han encontrado grupo(s) de investigación dueño(s) de la propiedad intelectual.
-                                                    </li>                                       
-                                                    @endif
                                                 </ul>
                                             </div>
                                         </div>
@@ -299,27 +253,21 @@
                                 <div class="center">
                                     <span class="mailbox-title">
                                         <i class="material-icons">attach_file</i>
-                                        Evidencias de la fase de inicio.
+                                        Evidencias de la fase de cierre.
                                     </span>
                                 </div>
                                 <div class="divider mailbox-divider"></div>
                                 <div class="row">
                                     <div class="col s6 m3 l3">
                                         <p class="p-v-xs">
-                                            <input type="checkbox" disabled {{ $proyecto->acc == 1 ? 'checked' : '' }} id="txtacc" name="txtacc" value="1">
-                                            <label for="txtacc">Formato de confidencialidad y compromiso firmado.</label>
+                                            <input type="checkbox" disabled {{ $proyecto->evidencia_trl == 1 ? 'checked' : '' }} id="txtevidencia_trl" name="txtevidencia_trl" value="1">
+                                            <label for="txtevidencia_trl">Evidencias según el trl.</label>
                                         </p>
                                     </div>
                                     <div class="col s6 m3 l3">
                                         <p class="p-v-xs">
-                                            <input type="checkbox" disabled {{ $proyecto->doc_titular == 1 ? 'checked' : '' }} id="txtdoc_titular" name="txtdoc_titular" value="1">
-                                            <label for="txtdoc_titular">Documento del Titular.</label>
-                                        </p>
-                                    </div>
-                                    <div class="col s6 m3 l3">
-                                        <p class="p-v-xs">
-                                            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
-                                            <label for="txtformulario_inicio">Formularios con firmas del gestor y talentos.</label>
+                                            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->formulario_final == 1 ? 'checked' : '' }} id="txtformulario_final" name="txtformulario_final" value="1">
+                                            <label for="txtformulario_final">Formularios con firmas del gestor y talentos.</label>
                                         </p>
                                     </div>
                                 </div>

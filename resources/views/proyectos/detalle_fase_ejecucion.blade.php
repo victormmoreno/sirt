@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    @include('proyectos.archivos_table_inicio')
+                                    @include('proyectos.archivos_table_fase')
                                 </div>
                             </div>
                         </div>

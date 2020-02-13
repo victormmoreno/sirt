@@ -54,6 +54,10 @@
     window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
   }
 
+  function changeToCierre() {
+    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+  }
+
   function datatableArchivosDeUnProyecto_planeacion() {
   $('#archivosDeUnProyecto').DataTable({
     language: {

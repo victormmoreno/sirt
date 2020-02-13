@@ -12,12 +12,12 @@
       <div class="card">
         <div class="card-content">
           <div class="row">
-            <h5 class="center">Entregables de la fase de inicio.</h5>
+            <h5 class="center">Entregables de la fase de cierre.</h5>
           </div>
           <div class="row">
             <div class="col s12 m12 l12">
-              <form action="{{route('proyecto.update.entregables.inicio', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
-                @include('proyectos.gestor.form_entregables_inicio')
+              <form action="{{route('proyecto.update.entregables.cierre', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
+                @include('proyectos.gestor.form_entregables_cierre')
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                   <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
@@ -33,14 +33,14 @@
 @endsection
 @push('script')
   <script>
-  var Dropzone = new Dropzone('#fase_inicio_proyecto', {
+  var Dropzone = new Dropzone('#fase_cierre_proyecto', {
     url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
     dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
     params: {
-      fase: 'Inicio'
+      fase: 'Cierre'
     },
     paramName: 'nombreArchivo'
   });

@@ -17,19 +17,19 @@
         <h5>¿TRL obtenido?</h5>
         <div class="input-field col s12 m6 l6">
             <p class="p-v-xs">
-                <input id="trl_6" name="trl_obtenido" type="radio" value="0" />
+                <input id="trl_6" name="trl_obtenido" type="radio" value="0" {{$proyecto->trl_obtenido == 0 ? 'checked' : ''}}/>
                 <label for="trl_6">
                     TRL 6
                 </label>
             </p>
             <p class="p-v-xs">
-                <input id="trl_7" name="trl_obtenido" type="radio" value="1" />
+                <input id="trl_7" name="trl_obtenido" type="radio" value="1" {{$proyecto->trl_obtenido == 1 ? 'checked' : ''}}/>
                 <label for="trl_7">
                     TRL 7
                 </label>
             </p>
             <p class="p-v-xs">
-                <input id="trl_8" name="trl_obtenido" type="radio" value="2" />
+                <input id="trl_8" name="trl_obtenido" type="radio" value="2" {{$proyecto->trl_obtenido == 2 ? 'checked' : ''}}/>
                 <label for="trl_8">
                     TRL 8
                 </label>
@@ -69,19 +69,19 @@
     <div class="col s12 m6 l6">
         <h5 class="center">Objetivos cumplidos.</h5>
         <p class="p-v-xs">
-            <input type="checkbox" name="objetivosAlcanzados[]" id="txtobjetivo1_alcanzado" value="1">
+            <input type="checkbox" name="txtobjetivo1_alcanzado" id="txtobjetivo1_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->cumplido == 1 ? 'checked' : '' }}>
             <label for="txtobjetivo1_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo }}</label>
         </p>
         <p class="p-v-xs">
-            <input type="checkbox" name="objetivosAlcanzados[]" id="txtobjetivo2_alcanzado" value="1">
+            <input type="checkbox" name="txtobjetivo2_alcanzado" id="txtobjetivo2_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->cumplido == 1 ? 'checked' : '' }}>
             <label for="txtobjetivo2_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo }}</label>
         </p>
         <p class="p-v-xs">
-            <input type="checkbox" name="objetivosAlcanzados[]" id="txtobjetivo3_alcanzado" value="1">
+            <input type="checkbox" name="txtobjetivo3_alcanzado" id="txtobjetivo3_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->cumplido == 1 ? 'checked' : '' }}>
             <label for="txtobjetivo3_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo }}</label>
         </p>
         <p class="p-v-xs">
-            <input type="checkbox" name="objetivosAlcanzados[]" id="txtobjetivo4_alcanzado" value="1">
+            <input type="checkbox" name="txtobjetivo4_alcanzado" id="txtobjetivo4_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->cumplido == 1 ? 'checked' : '' }}>
             <label for="txtobjetivo4_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo }}</label>
         </p>
     </div>

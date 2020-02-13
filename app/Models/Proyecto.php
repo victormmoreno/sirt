@@ -69,7 +69,8 @@ class Proyecto extends Model
     'trl_prototipo',
     'trl_pruebas',
     'trl_modelo',
-    'trl_normatividad'
+    'trl_normatividad',
+    'evidencia_trl'
   ];
 
   /**

@@ -15,7 +15,8 @@ class AddConclusionesToActividadesTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('conclusiones', 100)->nullable()->default(null)->after('objetivo_general');
+            $table->string('conclusiones', 1000)->nullable()->default(null)->after('objetivo_general');
+            $table->tinyInteger('aprobacion_dinamizador')->default(0)->after('conclusiones');
         });
     }
 
@@ -27,7 +28,7 @@ class AddConclusionesToActividadesTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['conclusiones']);
+            $table->dropColumn(['conclusiones', 'aprobacion_dinamizador']);
         });
     }
 }

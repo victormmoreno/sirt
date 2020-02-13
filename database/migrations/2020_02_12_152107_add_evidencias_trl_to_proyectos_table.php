@@ -20,6 +20,7 @@ class AddEvidenciasTrlToProyectosTable extends Migration
             $table->string('trl_pruebas', 300)->nullable()->default(null)->after('trl_prototipo');
             $table->string('trl_modelo', 300)->nullable()->default(null)->after('trl_pruebas');
             $table->string('trl_normatividad', 300)->nullable()->default(null)->after('trl_modelo');
+            $table->tinyInteger('evidencia_trl')->default(0)->after('trl_normatividad');
         });
     }
 
@@ -31,7 +32,7 @@ class AddEvidenciasTrlToProyectosTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['trl_prototipo', 'trl_pruebas', 'trl_modelo', 'trl_normatividad']);
+            $table->dropColumn(['trl_prototipo', 'trl_pruebas', 'trl_modelo', 'trl_normatividad', 'evidencia_trl']);
         });
     }
 }

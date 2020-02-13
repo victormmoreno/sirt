@@ -23,7 +23,7 @@
                   </a>
                 </div>
                 <div class="col s12 m6 l6 center">
-                  <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
+                  <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.cierre', $proyecto->id)}}">
                     <i class="material-icons left">library_books</i>
                     Entregables de la Fase de Cierre.
                   </a>
