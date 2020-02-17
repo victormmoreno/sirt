@@ -63,9 +63,9 @@
                                 <div class="row">
                                     <div class="col s6 m6 l6">
                                         <p class="p-v-xs">
-                                            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }}
-                                                id="txtcronograma" name="txtcronograma" value="1">
-                                            <label for="txtcronograma">
+                                            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
+                                                id="txtseguimiento" name="txtseguimiento" value="1">
+                                            <label for="txtseguimiento">
                                                 Seguimiento y usos de infraestructuras.
                                             </label>
                                         </p>

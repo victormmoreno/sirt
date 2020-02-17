@@ -52,7 +52,7 @@ function printErroresFormulario(data) {
 function mensajesProyectoCierre(data) {
     if (data.state == 'update') {
         Swal.fire({
-            title: 'Registro Exitoso',
+            title: 'Modificación Exitosa!',
             text: "El proyecto ha sido modificado satisfactoriamente",
             type: 'success',
             showCancelButton: false,

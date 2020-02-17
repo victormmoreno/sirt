@@ -453,7 +453,7 @@ class ProyectoController extends Controller
    * @return \Illuminate\Http\Response
    * @author Victor Manuel Moreno Vega
    */
-  public function edit($id)
+  public function inicio($id)
   {
     $proyecto = Proyecto::findOrFail($id);
 
@@ -491,37 +491,26 @@ class ProyectoController extends Controller
   public function planeacion($id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    // if ($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Ejecución' || $proyecto->fase->nombre == 'Cierre' ) {
-
-    switch (Session::get('login_role')) {
-      case User::IsGestor():
+    if ($proyecto->fase->nombre == 'Inicio') {
+      Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      if (Session::get('login_role') == User::IsGestor()) {
         return view('proyectos.gestor.fase_planeacion', [
           'proyecto' => $proyecto
         ]);
-        break;
-
-      case User::IsDinamizador():
+      } else if (Session::get('login_role') == User::IsDinamizador()) {
         return view('proyectos.dinamizador.fase_planeacion', [
           'proyecto' => $proyecto
         ]);
-        break;
-
-      case User::IsTalento():
+      } else if (Session::get('login_role') == User::IsTalento()) {
         return view('proyectos.talento.fase_planeacion', [
           'proyecto' => $proyecto
         ]);
-        break;
-
-      default:
+      } else {
         abort('403');
-        break;
+      }
     }
-
-    // } else {
-    //   Alert::warning('Advertencia!', 'El proyecto no se encuentra en esta fase!')->showConfirmButton('Ok', '#3085d6');
-    //   return back();
-    // }
-
   }
 
   /**
@@ -533,28 +522,33 @@ class ProyectoController extends Controller
   public function ejecucion(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    switch (Session::get('login_role')) {
-      case User::IsGestor():
-        return view('proyectos.gestor.fase_ejecucion', [
-          'proyecto' => $proyecto
-        ]);
-        break;
-
-      case User::IsDinamizador():
-        return view('proyectos.dinamizador.fase_ejecucion', [
-          'proyecto' => $proyecto
-        ]);
-        break;
-
-      case User::IsTalento():
-        return view('proyectos.talento.fase_ejecucion', [
-          'proyecto' => $proyecto
-        ]);
-        break;
-
-      default:
-        abort('403');
-        break;
+    if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación') {
+      Alert::error('Error!', 'El proyecto se encuentra en la fase de '.$proyecto->fase->nombre.'!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      switch (Session::get('login_role')) {
+        case User::IsGestor():
+          return view('proyectos.gestor.fase_ejecucion', [
+            'proyecto' => $proyecto
+          ]);
+          break;
+  
+        case User::IsDinamizador():
+          return view('proyectos.dinamizador.fase_ejecucion', [
+            'proyecto' => $proyecto
+          ]);
+          break;
+  
+        case User::IsTalento():
+          return view('proyectos.talento.fase_ejecucion', [
+            'proyecto' => $proyecto
+          ]);
+          break;
+  
+        default:
+          abort('403');
+          break;
+      }
     }
   }
 
@@ -567,25 +561,37 @@ class ProyectoController extends Controller
   public function cierre(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
-    switch (Session::get('login_role')) {
-      case User::IsGestor():
-        return view('proyectos.gestor.fase_cierre', [
-          'proyecto' => $proyecto,
-          'costo' => $costo
-        ]);
-      break;
-      
-      case User::IsDinamizador():
-        return view('proyectos.dinamizador.fase_cierre', [
-          'proyecto' => $proyecto,
-          'costo' => $costo
-        ]);
+    if ($proyecto->articulacion_proyecto->aprobacion_talento == 1) {
+      $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+      switch (Session::get('login_role')) {
+        case User::IsGestor():
+          return view('proyectos.gestor.fase_cierre', [
+            'proyecto' => $proyecto,
+            'costo' => $costo
+          ]);
         break;
-      
-      default:
-        # code...
-        break;
+        
+        case User::IsDinamizador():
+          return view('proyectos.dinamizador.fase_cierre', [
+            'proyecto' => $proyecto,
+            'costo' => $costo
+          ]);
+          break;
+        
+        case User::IsTalento():
+          return view('proyectos.talento.fase_cierre', [
+            'proyecto' => $proyecto,
+            'costo' => $costo
+          ]);
+          break;
+        
+        default:
+          # code...
+          break;
+      }
+    } else {
+      Alert::error('Error!', 'El talento interlocutor aún no ha dado su aprobación en la fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
   }
 
@@ -690,7 +696,7 @@ class ProyectoController extends Controller
 
   public function updateEntregables_Cierre(Request $request, $id)
   {
-    $proyecto = Proyecto::findOFail($id);
+    $proyecto = Proyecto::findOrFail($id);
     if ($proyecto->articulacion_proyecto->aprobacion_talento == 1) {
       if (Session::get('login_role') == User::IsGestor()) {
         $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);

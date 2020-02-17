@@ -19,8 +19,10 @@
                 @include('proyectos.gestor.form_ejecucion', [
                 'btnText' => 'Modificar'])
                 <center>
+                  @if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                  <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                  @endif
+                  <a href="{{ route('proyecto.planeacion', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
               </form>
             </div>

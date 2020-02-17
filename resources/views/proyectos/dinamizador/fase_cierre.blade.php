@@ -22,12 +22,24 @@
                                 @include('proyectos.detalle_fase_cierre')
                                 <div class="divider"></div>
                                 <center>
-                                    <button type="submit" value="send"
-                                        {{$proyecto->articulacion_proyecto->aprobacion_talento == 1 ? '' : 'disabled'}}
-                                        class="waves-effect cyan darken-1 btn center-aling">
-                                        <i class="material-icons right">done</i>
-                                        {{$proyecto->articulacion_proyecto->aprobacion_talento == 1 ? 'Aprobar fase de cierre' : 'El talento aún no ha aprobado la fase de ejecución del.'}}
+                                  @if ($proyecto->articulacion_proyecto->aprobacion_talento == 1)
+                                    @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
+                                    <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling" disabled>
+                                      <i class="material-icons right">done</i>
+                                      Ya se ha aprobado la fase de cierre.
                                     </button>
+                                    @else
+                                    <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
+                                      <i class="material-icons right">done</i>
+                                      Aprobar fase de cierre.
+                                      </button>
+                                    @endif
+                                  @else
+                                  <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
+                                      <i class="material-icons right">done</i>
+                                      El Talento aún no ha dado su aprobación de la fase de Ejecución
+                                  </button>
+                                  @endif
                                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                                         <i class="material-icons right">backspace</i>Cancelar
                                     </a>

@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
     // Contenedores
     divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
     divEconomiaNaranja = $('#economiaNaranja_content');

@@ -3652,7 +3652,6 @@ function eliminarProyectoPorId_moment(id) {
 }
 
 $(document).ready(function () {
-    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
     // Contenedores
     divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
     divEconomiaNaranja = $('#economiaNaranja_content');
@@ -4301,7 +4300,7 @@ function printErroresFormulario(data) {
 function mensajesProyectoCierre(data) {
     if (data.state == 'update') {
         Swal.fire({
-            title: 'Registro Exitoso',
+            title: 'Modificación Exitosa!',
             text: "El proyecto ha sido modificado satisfactoriamente",
             type: 'success',
             showCancelButton: false,

@@ -55,7 +55,7 @@ mix.scripts([
     'resources/assets/plugins/summernote/dist/summernote-lite.js',
     'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
-		'resources/assets/js/custom.js',
+		'resources/assets/js/custom.js'
 	],'public/js/libs.js');
 
 mix.minify('public/js/libs.js')

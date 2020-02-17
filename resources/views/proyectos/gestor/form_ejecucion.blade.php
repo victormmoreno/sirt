@@ -1,8 +1,5 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
-@php
-  \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
-@endphp
 <div class="row">
     <h5 class="center">Entregables de la fase de ejecución</h5>
 </div>
@@ -34,7 +31,7 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" {{$disabled}} {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
+            <input type="checkbox" {{$proyecto->articulacion_proyecto->aprobacion_talento == 1 ? 'disabled' : '' }} {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
                 id="txtseguimiento" name="txtseguimiento" value="1">
             <label for="txtseguimiento">
                 Seguimiento y usos de infraestructura.

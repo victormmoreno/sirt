@@ -16,11 +16,13 @@
               @include('proyectos.navegacion_fases')
               <form method="POST" action="{{route('proyecto.update.planeacion', $proyecto->id)}}">
                 {!! method_field('PUT')!!}
-                @include('proyectos.form_planeacion', [
+                @include('proyectos.gestor.form_planeacion', [
                 'btnText' => 'Modificar'])
                 <center>
+                  @if ($proyecto->fase->nombre == 'Planeación')
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                  <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                  @endif
+                  <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
               </form>
             </div>

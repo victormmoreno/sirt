@@ -109,7 +109,7 @@ $(document).ready(function() {
         clear: 'Limpiar',
         close: 'Cerrar',
         //   max: new Date(((new Date()).getFullYear()), 12, 31),
-        min: -10,
+        // min: -10,
         // max: true,
         // Formato da data que aparece no input
         format: 'yyyy-mm-dd',

@@ -5,7 +5,7 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
 use Illuminate\Support\Facades\{DB, Session, Notification, Storage};
-use App\Notifications\Proyecto\{ProyectoPendiente, ProyectoNoAprobado, ProyectoRevisadoFinal};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoNoAprobado, ProyectoRevisadoFinal};
 use Carbon\Carbon;
 use App\User;
 
@@ -1101,6 +1101,7 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::findOrFail($id);
+      Notification::send(User::find($proyecto->articulacion_proyecto->actividad->gestor->user->id), new ProyectoCierreAprobado($proyecto));
       $proyecto->articulacion_proyecto->actividad()->update([
         'aprobacion_dinamizador' => 1
       ]);

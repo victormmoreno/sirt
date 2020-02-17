@@ -46,6 +46,10 @@
 @push('script')
 <script>
   $( document ).ready(function() {
+    @if($proyecto->fase->nombre == 'Inicio')
+    consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
+    @endif
+    
   @if($proyecto->areaconocimiento->nombre == 'Otro')
     divOtroAreaConocmiento.show();
   @endif

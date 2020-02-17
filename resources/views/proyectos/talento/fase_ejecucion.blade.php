@@ -22,11 +22,18 @@
                 @include('proyectos.detalle_fase_ejecucion')
                 <div class="divider"></div>
                 <center>
+                  @if ($proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id == auth()->user()->talento->id)
                   <button type="submit" value="send" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? '' : 'disabled'}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? 'Aprobar fase de ejecución' : 'El Proyecto no se encuentra en fase de Ejecución'}}
+                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? 'Aprobar fase de ejecución' : 'Ya se ha aprobado esta fase del proyecto'}}
                   </button>
+                  @else
+                  <button disabled value="send" class="waves-effect cyan darken-1 btn center-aling">
+                    <i class="material-icons right">done</i>
+                    No eres el talento interlocutor de este proyecto.
+                  </button>
+                  @endif
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
@@ -56,6 +63,10 @@
 
   function changeToEjecucion() {
     window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+  }
+
+  function changeToCierre() {
+    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
   }
 
   function datatableArchivosDeUnProyecto_ejecucion() {

@@ -22,12 +22,19 @@
                                 @include('proyectos.detalle_fase_planeacion')
                                 <div class="divider"></div>
                                 <center>
-                                    <button type="submit" value="send"
-                                        {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}}
-                                        class="waves-effect cyan darken-1 btn center-aling">
-                                        <i class="material-icons right">done</i>
-                                        {{$proyecto->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'El Proyecto no se encuentra en fase de Planeación'}}
-                                    </button>
+                                  @if ($proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id == auth()->user()->talento->id)
+                                  <button type="submit" value="send"
+                                      {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}}
+                                      class="waves-effect cyan darken-1 btn center-aling">
+                                      <i class="material-icons right">done</i>
+                                      {{$proyecto->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'El Proyecto no se encuentra en fase de Planeación'}}
+                                  </button>
+                                  @else
+                                  <button disabled value="send" class="waves-effect cyan darken-1 btn center-aling">
+                                      <i class="material-icons right">done</i>
+                                      No eres el talento interlocutor de este proyecto.
+                                  </button>
+                                  @endif
                                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                                         <i class="material-icons right">backspace</i>Cancelar
                                     </a>
@@ -57,6 +64,10 @@
 
   function changeToEjecucion() {
     window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+  }
+
+  function changeToCierre() {
+    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
   }
 
   function datatableArchivosDeUnProyecto_planeacion() {

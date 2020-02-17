@@ -1,8 +1,5 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
-@php
-  \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
-@endphp
 <div class="row">
     <h5 class="center">Entregables de la fase de planeación</h5>
 </div>
@@ -34,25 +31,22 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" {{$disabled}} {{ $proyecto->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }}
-                id="txtcronograma" name="txtcronograma" value="1">
-            <label for="txtcronograma">
-                Cronograma de trabajo.
-            </label>
+            <input type="checkbox" {{$proyecto->fase->nombre != 'Planeación' ? 'disabled' : '' }} {{ $proyecto->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }} id="txtcronograma" name="txtcronograma" value="1">
+            <label for="txtcronograma">Cronograma de trabajo.</label>
         </p>
     </div>
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" {{$disabled}}
-                {{ $proyecto->estado_arte == 1 ? 'checked' : '' }} id="txtestado_arte"
-                name="txtestado_arte" value="1">
+            <input type="checkbox" {{$proyecto->fase->nombre != 'Planeación' ? 'disabled' : '' }} {{ $proyecto->estado_arte == 1 ? 'checked' : '' }} id="txtestado_arte" name="txtestado_arte" value="1">
             <label for="txtestado_arte">Estado del arte y/o Canvas</label>
         </p>
     </div>
 </div>
+@if ($proyecto->fase->nombre == 'Planeación')
 <div class="row">
     <div class="card-panel teal">
         <div class="dropzone" id="fase_planeacion_proyecto"></div>
     </div>
 </div>
+@endif
 <div class="divider"></div>
