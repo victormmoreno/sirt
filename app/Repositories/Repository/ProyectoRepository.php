@@ -844,6 +844,36 @@ class ProyectoRepository
     }
 
   }
+  
+  /**
+   * Cambia el estado del proyecto a Cierre y asigna un fecha de cierre al proyecto
+   * @param Request $request
+   * @param Proyecto $proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function cerrarProyecto($request, $proyecto)
+  {
+    DB::beginTransaction();
+    try {
+
+      $proyecto->update([
+        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'fecha_cierre' => $request->txtfecha_cierre
+      ]);
+
+        
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
 
   /**
    * Modifica los datos de cierre de un proyecto

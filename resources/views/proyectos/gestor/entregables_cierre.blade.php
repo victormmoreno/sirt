@@ -19,8 +19,10 @@
               <form action="{{route('proyecto.update.entregables.cierre', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
                 @include('proyectos.gestor.form_entregables_cierre')
                 <center>
+                  @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                  <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                  @endif
+                  <a href="{{ route('proyecto.cierre', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
               </form>
             </div>

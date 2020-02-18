@@ -16,8 +16,7 @@
               @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m6 l6 center">
-                  <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}"
-                    target="_blank">
+                  <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
                     <i class="material-icons left">file_download</i>
                     Descargar formulario.
                   </a>
@@ -29,8 +28,7 @@
                   </a>
                 </div>
               </div>
-              <form id="frmProyectos_FaseCierre_Update" action="{{route('proyecto.update.cierre', $proyecto->id)}}"
-                method="POST">
+              <form id="frmProyectos_FaseCierre_Update" action="{{route('proyecto.update.cierre', $proyecto->id)}}" method="POST">
                 {!! method_field('PUT')!!}
                 @include('proyectos.gestor.form_cierre', [
                 'btnText' => 'Modificar'])

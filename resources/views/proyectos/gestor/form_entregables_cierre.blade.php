@@ -1,7 +1,7 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
 @php
-  \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = ''
+  $disabled = $proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1 ? 'disabled' : '';
 @endphp
 <div class="row">
     <div class="input-field col s12 m6 l6">
@@ -43,9 +43,11 @@
         </p>
     </div>
 </div>
+@if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
 <div class="row">
     <div class="card-panel teal">
         <div class="dropzone" id="fase_cierre_proyecto"></div>
     </div>
 </div>
+@endif
 <div class="divider"></div>

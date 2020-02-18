@@ -15,17 +15,22 @@
             <div class="row">
               @include('proyectos.navegacion_fases')
               <div class="row">
-                <div class="col s12 m6 l6 center">
+                <div class="col s12 m4 l4 center">
                     <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
                         <i class="material-icons left">file_download</i>
                         Descargar formulario.
                     </a>
                 </div>
-                <div class="col s12 m6 l6 center">
+                <div class="col s12 m4 l4 center">
                     <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
                         <i class="material-icons left">library_books</i>
                         Entregables de la Fase de Inicio.
                     </a>
+                </div>
+                <div class="col s12 m4 l4 center">
+                  <a class="btn-large yellow accent-1 m-b-xs black-text" href="">
+                    Pedirle al dinamizador que apruebe la fase de inicio.
+                  </a>
                 </div>
             </div>
               <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">

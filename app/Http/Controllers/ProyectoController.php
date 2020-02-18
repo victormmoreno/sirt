@@ -725,19 +725,45 @@ class ProyectoController extends Controller
   public function updateCierre(Request $request, int $id)
   {
     if (Session::get('login_role') == User::IsGestor()) {
-      $req = new ProyectoFaseCierreFormRequest;
-      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-      if ($validator->fails()) {
-        return response()->json([
-          'state'   => 'error_form',
-          'errors' => $validator->errors(),
+      $proyecto = Proyecto::findOrFail($id);
+      if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1) {
+        
+        $validator = Validator::make($request->all(), [
+          'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
+        ],
+        [
+          'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
+          'txtfecha_cierre.max' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
         ]);
-      } else {
-        $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
-        if ($result) {
-          return response()->json(['state' => 'update']);
+        if ($validator->fails()) {
+          return response()->json([
+            'state'   => 'error_form',
+            'errors' => $validator->errors(),
+          ]);
         } else {
-          return response()->json(['state' => 'no_update']);
+          $cerrar = $this->getProyectoRepository()->cerrarProyecto($request, $proyecto);
+          if ($cerrar) {
+            return response()->json(['state' => 'update']);
+          } else {
+            return response()->json(['state' => 'no_update']);
+          }
+        }
+
+      } else {
+        $req = new ProyectoFaseCierreFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+          return response()->json([
+            'state'   => 'error_form',
+            'errors' => $validator->errors(),
+          ]);
+        } else {
+          $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
+          if ($result) {
+            return response()->json(['state' => 'update']);
+          } else {
+            return response()->json(['state' => 'no_update']);
+          }
         }
       }
     } else {

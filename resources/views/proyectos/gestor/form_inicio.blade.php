@@ -413,7 +413,7 @@
                             <tr id="propietarioAsociadoAlProyecto_Grupo{{$value->id}}">
                             <td><input type="hidden" name="propietarios_grupos[]" value="{{$value->id}}">{{$value->codigo_grupo}} - {{ $value->entidad->nombre }}</td>
                             @if ($proyecto->fase->nombre == 'Inicio')
-                            <td><a class="waves-effect red lighten-3 tn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                             @endif
                             </tr>
                         @endforeach
