@@ -18,6 +18,9 @@
             <div class="col s12 m12 l12">
               <form action="{{route('proyecto.update.entregables.cierre', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
                 @include('proyectos.gestor.form_entregables_cierre')
+                <div class="row">
+                  @include('proyectos.archivos_table_fase')
+                </div>
                 <center>
                   @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
@@ -35,6 +38,7 @@
 @endsection
 @push('script')
   <script>
+  datatableArchivosDeUnProyecto_cierre();
   var Dropzone = new Dropzone('#fase_cierre_proyecto', {
     url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
     headers: {
@@ -48,8 +52,8 @@
   });
 
   Dropzone.on('success', function (res) {
-    $('#archivosDeUnProyecto_FaseInicio').dataTable().fnDestroy();
-    // datatableArchivosDeUnProyecto();
+    $('#archivosDeUnProyecto').dataTable().fnDestroy();
+    datatableArchivosDeUnProyecto_cierre();
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -74,5 +78,39 @@
   })
 
   Dropzone.autoDiscover = false;
+
+  function datatableArchivosDeUnProyecto_cierre() {
+  $('#archivosDeUnProyecto').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: false,
+    ajax:{
+      url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'file',
+        name: 'file',
+        orderable: false,
+      },
+      {
+        data: 'download',
+        name: 'download',
+        orderable: false,
+      },
+      @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
+      {
+        data: 'delete',
+        name: 'delete',
+        orderable: false,
+      },
+      @endif
+    ],
+  });
+}
 </script>
 @endpush

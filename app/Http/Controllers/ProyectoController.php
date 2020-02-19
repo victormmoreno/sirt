@@ -596,6 +596,78 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
+   * 
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function notificar_inicio(int $id)
+  {
+    $notificacion = $this->getProyectoRepository()->notificarAlDinamziador_Inicio($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de inicio del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de inicio del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  /**
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
+   * 
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function notificar_cierre(int $id)
+  {
+    $notificacion = $this->getProyectoRepository()->notificarAlDinamziador_Cierre($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  /**
+   * Notitica al talento interlocutor para que apruebe la fase de planeación
+   *
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   **/
+  public function notificar_planeacion(int $id)
+  {
+    $notificacion = $this->getProyectoRepository()->notificarAlTalento_Planeacion($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de planeación del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al talento interlocutor para que apruebe la fase de planeación del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  /**
+   * Notitica al talento interlocutor para que apruebe la fase de ejecución
+   *
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   **/
+  public function notificar_ejecucion(int $id)
+  {
+    $notificacion = $this->getProyectoRepository()->notificarAlTalento_Ejecucion($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  /**
    * Modifica los datos de la fase de inicio de un proyecto.
    *
    * @param  \Illuminate\Http\Request  $request
@@ -623,10 +695,10 @@ class ProyectoController extends Controller
     } else {
       $update = $this->getProyectoRepository()->updateFaseProyecto($id, 'Planeación');
       if ($update) {
-        Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de planeación!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Aprobación Exitosa!', 'El proyecto ha cambiado a fase de planeación!')->showConfirmButton('Ok', '#3085d6');
         return redirect('proyecto');
       } else {
-        Alert::error('Modificación Errónea!', 'El proyecto no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
+        Alert::error('Aprobación Errónea!', 'El proyecto no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
         return back();
       }
     }

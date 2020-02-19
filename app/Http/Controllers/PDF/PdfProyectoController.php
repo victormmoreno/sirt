@@ -14,6 +14,12 @@ use App;
 class PdfProyectoController extends Controller
 {
 
+  public function printFormularioCierre($id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto]);
+    return $pdf->stream();
+  }
 
   public function printFormularioAcuerdoDeInicio($id)
   {

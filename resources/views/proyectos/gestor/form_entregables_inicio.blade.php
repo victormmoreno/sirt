@@ -41,6 +41,12 @@
     </div>
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
+            <input type="checkbox" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} {{ $proyecto->manual_uso_inf == 1 ? 'checked' : '' }} id="txtmanual_uso_inf" name="txtmanual_uso_inf" value="1">
+            <label for="txtmanual_uso_inf">Documento del Titular.</label>
+        </p>
+    </div>
+    <div class="col s6 m3 l3">
+        <p class="p-v-xs">
             <input type="checkbox" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} {{ $proyecto->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
             <label for="txtformulario_inicio">Formularios con firmas del gestor y talentos.</label>
         </p>

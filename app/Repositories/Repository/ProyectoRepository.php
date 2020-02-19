@@ -4,10 +4,11 @@ namespace App\Repositories\Repository;
 
 
 use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
-use Illuminate\Support\Facades\{DB, Session, Notification, Storage};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoNoAprobado, ProyectoRevisadoFinal};
+use Illuminate\Support\Facades\{DB, Notification, Storage};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre};
 use Carbon\Carbon;
 use App\User;
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 
 class ProyectoRepository
 {
@@ -1119,6 +1120,89 @@ class ProyectoRepository
       return true;
     } catch (\Throwable $th) {
       DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Inicio(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $proyecto = Proyecto::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id);
+      Notification::send($dinamizadores, new ProyectoAprobarInicio($proyecto));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Cierre(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $proyecto = Proyecto::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id);
+      Notification::send($dinamizadores, new ProyectoAprobarCierre($proyecto));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
+   * Notifica al talento interlocutor para que apruebe la fase de planeación
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlTalento_Planeacion(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+      $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user;
+      Notification::send($talento, new ProyectoAprobarPlaneacion($proyecto));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  public function notificarAlTalento_Ejecucion(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+      $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user;
+      Notification::send($talento, new ProyectoAprobarEjecucion($proyecto));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
       return false;
     }
   }

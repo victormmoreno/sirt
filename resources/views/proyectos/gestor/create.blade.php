@@ -39,3 +39,11 @@
 </main>
 @include('proyectos.modals')
 @endsection
+@push('script')
+<script>
+  $( document ).ready(function() {
+  consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
+  });
+        
+</script>
+@endpush

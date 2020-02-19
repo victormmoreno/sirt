@@ -13,7 +13,9 @@
                     <th>Fase</th>
                     <th style="width: 10%">Descargar</th>
                     @if ( \Session::get('login_role') == App\User::IsGestor() )
-                      <th style="width: 10%">Eliminar</th>
+                      @if ($proyecto->fase->nombre == 'Inicio')
+                        <th style="width: 10%">Eliminar</th>
+                      @endif
                     @endif
                   </tr>
                 </thead>

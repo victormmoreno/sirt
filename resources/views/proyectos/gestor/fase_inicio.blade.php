@@ -28,9 +28,15 @@
                     </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                  <a class="btn-large yellow accent-1 m-b-xs black-text" href="">
-                    Pedirle al dinamizador que apruebe la fase de inicio.
-                  </a>
+                  @if ($proyecto->fase->nombre == 'Inicio')
+                    <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.inicio', $proyecto->id)}}">
+                      Pedirle al dinamizador que apruebe la fase de inicio.
+                    </a>
+                  @else
+                    <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>
+                      Esta fase ya ha sido aprobada por el dinamizador.
+                    </a>
+                  @endif
                 </div>
             </div>
               <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">

@@ -486,6 +486,10 @@ Route::group(
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento'],
     ],
     function () {
+        Route::get('/notificar_inicio/{id}', 'ProyectoController@notificar_inicio')->name('proyecto.notificar.inicio')->middleware('role_session:Gestor');
+        Route::get('/notificar_planeacion/{id}', 'ProyectoController@notificar_planeacion')->name('proyecto.notificar.planeacion')->middleware('role_session:Gestor');
+        Route::get('/notificar_ejecucion/{id}', 'ProyectoController@notificar_ejecucion')->name('proyecto.notificar.ejecucion')->middleware('role_session:Gestor');
+        Route::get('/notificar_cierre/{id}', 'ProyectoController@notificar_cierre')->name('proyecto.notificar.cierre')->middleware('role_session:Gestor');
 
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
@@ -783,6 +787,7 @@ function () {
   Route::get('/', 'PdfComiteController@printPDF')->name('print');
   Route::get('/usos_proyecto/{id}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.proyecto.usos');
   Route::get('/inicio/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.incio');
+  Route::get('/cierre/{id}', 'PdfProyectoController@printFormularioCierre')->name('pdf.proyecto.cierre');
   Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
 }
 

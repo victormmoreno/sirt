@@ -14,10 +14,26 @@
           <div class="card-content">
             <div class="row">
               @include('proyectos.navegacion_fases')
+              <div class="row">
+                <div class="col s12 m12 l12 center">
+                  @if ($proyecto->fase->nombre == 'Planeación')
+                    <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.planeacion', $proyecto->id)}}">
+                      Pedirle al talento interlocutor que apruebe la fase de planeación.
+                    </a>
+                  @else
+                    <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>
+                      Esta fase ya ha sido aprobada por el talento interlocutor.
+                    </a>
+                  @endif
+                </div>
+              </div>
               <form method="POST" action="{{route('proyecto.update.planeacion', $proyecto->id)}}">
                 {!! method_field('PUT')!!}
                 @include('proyectos.gestor.form_planeacion', [
-                'btnText' => 'Modificar'])
+                  'btnText' => 'Modificar'])
+                <div class="row">
+                  @include('proyectos.archivos_table_fase')
+                </div>
                 <center>
                   @if ($proyecto->fase->nombre == 'Planeación')
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
@@ -35,7 +51,8 @@
 </main>
 @endsection
 @push('script')
-  <script>
+<script>
+  datatableArchivosDeUnProyecto_planeacion();
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
   }
@@ -65,7 +82,7 @@
 
   Dropzone.on('success', function (res) {
     $('#archivosDeUnProyecto').dataTable().fnDestroy();
-    // datatableArchivosDeUnProyecto();
+    datatableArchivosDeUnProyecto_planeacion();
     Swal.fire({
       toast: true,
       position: 'top-end',
@@ -90,5 +107,39 @@
   })
 
   Dropzone.autoDiscover = false;
+
+  function datatableArchivosDeUnProyecto_planeacion() {
+  $('#archivosDeUnProyecto').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: false,
+    ajax:{
+      url: "{{route('proyecto.files', [$proyecto->id, 'Planeación'])}}",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'file',
+        name: 'file',
+        orderable: false,
+      },
+      {
+        data: 'download',
+        name: 'download',
+        orderable: false,
+      },
+      @if ($proyecto->fase->nombre == 'Planeación')
+      {
+        data: 'delete',
+        name: 'delete',
+        orderable: false,
+      },
+      @endif
+    ],
+  });
+}
 </script>
 @endpush
