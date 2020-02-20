@@ -10,14 +10,21 @@ use App\Models\{Proyecto, Fase};
 use Carbon\Carbon;
 use PDF;
 use App;
+use App\Http\Controllers\CostoController;
 
 class PdfProyectoController extends Controller
 {
+  
+  public function __construct(CostoController $costoController)
+  {
+    $this->costoController = $costoController;
+  }
 
   public function printFormularioCierre($id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto]);
+    $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+    $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto, 'costo' => $costo]);
     return $pdf->stream();
   }
 

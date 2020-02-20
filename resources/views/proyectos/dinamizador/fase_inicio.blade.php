@@ -8,7 +8,7 @@
         <h5>
           <a class="footer-text left-align" href="{{route('proyecto')}}">
             <i class="material-icons arrow-l left">arrow_back</i>
-          </a> Proyectos
+          </a> Proyectos de Base Tecnológica
         </h5>
         <div class="card">
           <div class="card-content">

@@ -16,44 +16,27 @@
                             @include('proyectos.navegacion_fases')
                             <div class="divider"></div>
                             <br />
-                            <form action="{{route('proyecto.update.planeacion', $proyecto->id)}}" method="POST">
-                                {!! method_field('PUT')!!}
-                                @csrf
-                                @include('proyectos.detalle_fase_planeacion')
+                                @include('proyectos.detalle_fase_cierre')
                                 <div class="divider"></div>
                                 <center>
-                                  @if ($proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id == auth()->user()->talento->id)
-                                  <button type="submit" value="send"
-                                      {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}}
-                                      class="waves-effect cyan darken-1 btn center-aling">
-                                      <i class="material-icons right">done</i>
-                                      {{$proyecto->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'El Proyecto no se encuentra en fase de Planeación'}}
-                                  </button>
-                                  @else
-                                  <button disabled value="send" class="waves-effect cyan darken-1 btn center-aling">
-                                      <i class="material-icons right">done</i>
-                                      No eres el talento interlocutor de este proyecto.
-                                  </button>
-                                  @endif
-                                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                    <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
                                         <i class="material-icons right">backspace</i>Cancelar
                                     </a>
                                 </center>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </main>
 @endsection
 @push('script')
-<script>
+<script>
     $( document ).ready(function() {
-    datatableArchivosDeUnProyecto_planeacion();
+    datatableArchivosDeUnProyecto_cierre();
   });
-
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
   }
@@ -70,7 +53,7 @@
     window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
   }
 
-  function datatableArchivosDeUnProyecto_planeacion() {
+  function datatableArchivosDeUnProyecto_cierre() {
   $('#archivosDeUnProyecto').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -79,7 +62,7 @@
     serverSide: true,
     order: false,
     ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Planeación'])}}",
+      url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
       type: "get",
     },
     columns: [

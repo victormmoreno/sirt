@@ -8,7 +8,7 @@
         <h5>
           <a class="footer-text left-align" href="{{route('proyecto')}}">
             <i class="material-icons arrow-l">arrow_back</i>
-          </a> Proyectos
+          </a> Proyectos de Base Tecnológica
         </h5>
         <div class="card">
           <div class="card-content">
@@ -30,7 +30,7 @@
                 <div class="col s12 m4 l4 center">
                   @if ($proyecto->fase->nombre == 'Inicio')
                     <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.inicio', $proyecto->id)}}">
-                      Pedirle al dinamizador que apruebe la fase de inicio.
+                      Solicitar al dinamizador que apruebe la fase de inicio.
                     </a>
                   @else
                     <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>

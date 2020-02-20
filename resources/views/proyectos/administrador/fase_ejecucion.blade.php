@@ -19,7 +19,7 @@
                 @include('proyectos.detalle_fase_ejecucion')
                 <div class="divider"></div>
                 <center>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                  <a href="{{route('proyecto.planeacion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>

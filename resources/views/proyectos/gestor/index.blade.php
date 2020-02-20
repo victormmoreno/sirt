@@ -9,7 +9,7 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons">library_books</i>Proyectos</h5>
+          <h5><i class="left material-icons">library_books</i>Proyectos de Base Tecnológica</h5>
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -66,15 +66,5 @@
         </div>
       </div>
     </div>
-    @include('proyectos.modals')
   </main>
 @endsection
-@push('script')
-  <script>
-  consultarProyectosPendientesPorAprobacion();
-  function generarExcelDeProyectosDelGestorPorAnho() {
-    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
-    location.href = '/excel/excelProyectosDelGestorPorAnho/'+{{ auth()->user()->gestor->id }}+'/'+anho
-  }
-  </script>
-@endpush

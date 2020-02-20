@@ -272,7 +272,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    @include('proyectos.archivos_table_fase')
+                                    @include('proyectos.archivos_table_fase', ['fase' => 'cierre'])
                                 </div>
                             </div>
                         </div>

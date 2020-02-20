@@ -8,7 +8,7 @@
         <h5>
           <a class="footer-text left-align" href="{{route('proyecto')}}">
             <i class="material-icons arrow-l">arrow_back</i>
-          </a> Proyectos
+          </a> Proyectos de Base Tecnológica
         </h5>
         <div class="card">
           <div class="card-content">
@@ -18,7 +18,7 @@
                 <div class="col s12 m12 l12 center">
                   @if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)
                     <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.ejecucion', $proyecto->id)}}">
-                      Pedirle al talento interlocutor que apruebe la fase de ejecución.
+                      Solicitar al talento interlocutor que apruebe la fase de ejecución.
                     </a>
                   @else
                     <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ComiteFormRequest;
 use App\Repositories\Repository\{ComiteRepository, IdeaRepository};
-use App\Models\{Nodo, Idea};
+use App\Models\{Nodo, Idea, Comite};
 use App\Http\Controllers\PDF\PdfComiteController;
 use Illuminate\Support\Facades\{DB, Session, Validator};
 use Carbon\Carbon;
@@ -214,7 +214,8 @@ class ComiteController extends Controller
       alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
       return back()->withInput();
     } else {
-      $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
+      // $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
+      $contComites = COUNT(session('ideasComiteCreate'));
       if ( $contComites != 0 ) {
         alert()->warning('Advertencia!','Ya se encuentra un comité registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
         return back()->withInput();
@@ -223,7 +224,10 @@ class ComiteController extends Controller
           $codigoComite = Carbon::parse($request['txtfechacomite_create']);
           $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
           $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
-          $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY');
+          $idComite = Comite::selectRaw('MAX(id+1) AS max')->get()->last();
+          $idComite->max == null ? $idComite->max = 1 : $idComite->max = $idComite->max;
+          $idComite->max = sprintf("%04d", $idComite->max);
+          $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY') . '-' .$idComite->max;
           $comite = $this->getComiteRepository()->store($request, $codigoComite);
           foreach (session('ideasComiteCreate') as $key => $value) {
             $this->getComiteRepository()->storeComiteIdea($value, $comite->id);

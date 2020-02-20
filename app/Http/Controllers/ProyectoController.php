@@ -64,6 +64,17 @@ class ProyectoController extends Controller
     return $this->datatableProyectos($request, $proyectos);
   }
 
+  public function detalle(int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+    return view('proyectos.detalle', [
+      'proyecto' => $proyecto,
+      'costo' => $costo
+    ]);
+
+  }
+
   /**
    * @param Collection $proyecto Proyectos
    * @param Request $request
@@ -86,8 +97,12 @@ class ProyectoController extends Controller
       })->addColumn('delete', function ($data) {
         $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarProyectoPorId_event(' . $data->id . ', event)"><i class="material-icons">delete_sweep</i></a>';
         return $delete;
-      })->addColumn('edit', function ($data) {
-        $edit = '<a class="btn m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">edit</i></a>';
+      })->addColumn('proceso', function ($data) {
+        if ($data->nombre_fase == 'Cierre' || $data->nombre_fase == 'Suspendido') {
+          $edit = '<a class="btn m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
+        } else {
+          $edit = '<a class="btn m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
+        }
         return $edit;
       })->filter(function ($instance) use ($request) {
         if (!empty($request->get('codigo_proyecto'))) {
@@ -105,6 +120,11 @@ class ProyectoController extends Controller
             return Str::contains($row['nombre_fase'], $request->get('nombre_fase')) ? true : false;
           });
         }
+        if (!empty($request->get('sublinea_nombre'))) {
+          $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+            return Str::contains($row['sublinea_nombre'], $request->get('sublinea_nombre')) ? true : false;
+          });
+        }
         if (!empty($request->get('gestor'))) {
           $instance->collection = $instance->collection->filter(function ($row) use ($request) {
             return Str::contains($row['gestor'], $request->get('gestor')) ? true : false;
@@ -120,11 +140,13 @@ class ProyectoController extends Controller
               return true;
             } else if (Str::contains(Str::lower($row['gestor']), Str::lower($request->get('search')))) {
               return true;
+            } else if (Str::contains(Str::lower($row['sublinea_nombre']), Str::lower($request->get('search')))) {
+              return true;
             }
             return false;
           });
         }
-      })->rawColumns(['details', 'edit', 'delete', 'download_seguimiento'])->make(true);
+      })->rawColumns(['details', 'proceso', 'delete', 'download_seguimiento'])->make(true);
   }
 
   /**
@@ -482,6 +504,12 @@ class ProyectoController extends Controller
         ]);
         break;
 
+      case User::IsAdministrador():
+        return view('proyectos.administrador.fase_inicio', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
       default:
         // code...
         break;
@@ -505,6 +533,10 @@ class ProyectoController extends Controller
         ]);
       } else if (Session::get('login_role') == User::IsTalento()) {
         return view('proyectos.talento.fase_planeacion', [
+          'proyecto' => $proyecto
+        ]);
+      } else if (Session::get('login_role') == User::IsAdministrador()) {
+        return view('proyectos.administrador.fase_planeacion', [
           'proyecto' => $proyecto
         ]);
       } else {
@@ -545,6 +577,12 @@ class ProyectoController extends Controller
           ]);
           break;
   
+        case User::IsAdministrador():
+          return view('proyectos.administrador.fase_ejecucion', [
+            'proyecto' => $proyecto
+          ]);
+          break;
+  
         default:
           abort('403');
           break;
@@ -580,6 +618,13 @@ class ProyectoController extends Controller
         
         case User::IsTalento():
           return view('proyectos.talento.fase_cierre', [
+            'proyecto' => $proyecto,
+            'costo' => $costo
+          ]);
+          break;
+        
+        case User::IsAdministrador():
+          return view('proyectos.administrador.fase_cierre', [
             'proyecto' => $proyecto,
             'costo' => $costo
           ]);

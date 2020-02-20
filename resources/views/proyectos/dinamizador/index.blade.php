@@ -10,7 +10,7 @@
                       <i class="material-icons left">
                           library_books
                       </i>
-                      Proyectos
+                      Proyectos de Base Tecnológica
                   </h5>
               </div>
               <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
@@ -119,6 +119,10 @@
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
 
+  $("#nombre_fase_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
   $("#sublinea_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
@@ -151,6 +155,7 @@
             d.gestor = $('#gestor_tblproyectosDelGestorPorAnho').val(),
             d.nombre = $('#nombre_tblproyectosDelGestorPorAnho').val(),
             d.sublinea_nombre = $('#sublinea_nombre_tblproyectosDelGestorPorAnho').val(),
+            d.nombre_fase = $('#nombre_fase_tblproyectosDelGestorPorAnho').val(),
             d.search = $('input[type="search"]').val()
           }
           // type: "get",
@@ -174,23 +179,21 @@
             name: 'sublinea_nombre',
           },
           {
-            width: '8%',
-            data: 'details',
-            name: 'details',
-            orderable: false
+            data: 'nombre_fase',
+            name: 'nombre_fase',
           },
           {
             width: '8%',
-            data: 'edit',
-            name: 'edit',
+            data: 'proceso',
+            name: 'proceso',
             orderable: false
           },
-          {
-            width: '8%',
-            data: 'delete',
-            name: 'delete',
-            orderable: false
-          },
+          // {
+          //   width: '8%',
+          //   data: 'delete',
+          //   name: 'delete',
+          //   orderable: false
+          // },
           ],
         });
     }

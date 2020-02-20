@@ -5,9 +5,9 @@
       <th>Gestor</th>
       <th>Nombre</th>
       <th>Sublínea</th>
+      <th>Fase</th>
       <th>Detalles</th>
-      <th>Editar</th>
-      <th>Eliminar</th>
+      {{-- <th>Eliminar</th> --}}
     </tr>
   </thead>
   <tfoot>
@@ -24,9 +24,11 @@
       <th>
         <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por Sublinea">
       </th>
+      <th>
+        <input type="text" name="nombre_fase" id="nombre_fase_tblproyectosDelGestorPorAnho" placeholder="Buscar por Fase">
+      </th>
       <th></th>
-      <th></th>
-      <th></th>
+      {{-- <th></th> --}}
     </tr>
   </tfoot>
   <tbody>

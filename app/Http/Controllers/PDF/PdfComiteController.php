@@ -11,7 +11,7 @@ class PdfComiteController extends Controller
 {
   public static function printPDF($informacion)
   {
-    $nodo =\NodoHelper::returnNodoUsuario();
+    $nodo =\NodoHelper::returnNameNodoUsuario();
     $informacion['nodoNombre'] = $nodo;
     $pdf = PDF::loadView('pdf.csibt.pdf_idea_aceptada', $informacion);
     return $pdf->stream();

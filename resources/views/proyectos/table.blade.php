@@ -6,7 +6,6 @@
       <th>Nombre</th>
       <th>Fase</th>
       <th>Detalles</th>
-      <th>Editar</th>
     </tr>
   </thead>
   <tfoot>
@@ -20,7 +19,6 @@
       <th>
         <input type="text" name="nombre_fase" class="sublinea_nombre" placeholder="Buscar por Fase">
       </th>
-      <th></th>
       <th></th>
     </tr>
   </tfoot>
@@ -38,9 +36,8 @@
       <th>Gestor</th>
       <th>Nombre</th>
       <th>Sublínea</th>
-      <th>Detalles</th>
+      <th>Fase</th>
       <th>Editar</th>
-      <th>Eliminar</th>
     </tr>
   </thead>
   <tfoot>
@@ -57,8 +54,9 @@
       <th>
         <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Sublinea">
       </th>
-      <th></th>
-      <th></th>
+      <th>
+        <input type="text" name="nombre_fase" id="fase_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Fase">
+      </th>
       <th></th>
     </tr>
   </tfoot>
@@ -76,11 +74,8 @@
       <th>Gestor</th>
       <th>Nombre</th>
       <th>Sublínea</th>
-      <th>Estado</th>
-      <th>Revisado Final</th>
-      <th>Talentos</th>
+      <th>Fase</th>
       <th>Detalles</th>
-      <th>Entregables</th>
     </tr>
   </thead>
   <tfoot>
@@ -98,13 +93,8 @@
         <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Sublinea">
       </th>
       <th>
-        <input type="text" name="estado_nombre" id="estado_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Estado">
+        <input type="text" name="nombre_fase" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Fase">
       </th>
-      <th>
-        <input type="text" name="revisado_final" id="revisado_final_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Revisado Final">
-      </th>
-      <th></th>
-      <th></th>
       <th></th>
     </tr>
   </tfoot>

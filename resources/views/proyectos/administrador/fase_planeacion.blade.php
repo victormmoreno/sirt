@@ -16,10 +16,10 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
-                @include('proyectos.detalle_fase_ejecucion')
+                @include('proyectos.detalle_fase_planeacion')
                 <div class="divider"></div>
                 <center>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                  <a href="{{route('proyecto.inicio', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
@@ -30,11 +30,12 @@
     </div>
   </div>
 </main>
+@include('proyectos.modals')
 @endsection
 @push('script')
 <script>
   $( document ).ready(function() {
-    datatableArchivosDeUnProyecto_ejecucion();
+    datatableArchivosDeUnProyecto_planeacion();
   });
 
   function changeToPlaneacion() {
@@ -53,7 +54,7 @@
     window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
   }
 
-  function datatableArchivosDeUnProyecto_ejecucion() {
+  function datatableArchivosDeUnProyecto_planeacion() {
   $('#archivosDeUnProyecto').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -62,7 +63,7 @@
     serverSide: true,
     order: false,
     ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Ejecución'])}}",
+      url: "{{route('proyecto.files', [$proyecto->id, 'Planeación'])}}",
       type: "get",
     },
     columns: [

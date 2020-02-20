@@ -11,7 +11,7 @@
                       <i class="material-icons left">
                           library_books
                       </i>
-                      Proyectos
+                      Proyectos de Base Tecnológica
                   </h5>
               </div>
               <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
@@ -161,29 +161,13 @@
           name: 'sublinea_nombre',
         },
         {
-          data: 'estado_nombre',
-          name: 'estado_nombre',
-        },
-        {
-          data: 'revisado_final',
-          name: 'revisado_final',
+          data: 'nombre_fase',
+          name: 'nombre_fase',
         },
         {
           width: '8%',
-          data: 'talentos',
-          name: 'talentos',
-          orderable: false
-        },
-        {
-          width: '8%',
-          data: 'details',
-          name: 'details',
-          orderable: false
-        },
-        {
-          width: '8%',
-          data: 'entregables',
-          name: 'entregables',
+          data: 'proceso',
+          name: 'proceso',
           orderable: false
         },
         ],

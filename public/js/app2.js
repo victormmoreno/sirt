@@ -3506,14 +3506,8 @@ function consultarProyectosDelGestorPorAnho() {
       },
       {
         width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'edit',
-        name: 'edit',
+        data: 'proceso',
+        name: 'proceso',
         orderable: false
       },
     ],
@@ -3551,6 +3545,10 @@ $("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
   $('#tblproyectosDelNodoPorAnho').DataTable().draw();
 });
 
+$("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+  $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
+
 /**
 * Consulta los proyectos del nodo por año
 */
@@ -3571,6 +3569,7 @@ function consultarProyectosDelNodoPorAnho() {
         d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
         d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
         d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
         d.search = $('input[type="search"]').val()
       }
       // type: "get",
@@ -3594,23 +3593,21 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'sublinea_nombre',
       },
       {
-        width: '6%',
-        data: 'details',
-        name: 'details',
-        orderable: false
+        data: 'nombre_fase',
+        name: 'nombre_fase',
       },
       {
         width: '6%',
-        data: 'edit',
-        name: 'edit',
+        data: 'proceso',
+        name: 'proceso',
         orderable: false
       },
-      {
-        width: '6%',
-        data: 'delete',
-        name: 'delete',
-        orderable: false
-      },
+      // {
+      //   width: '6%',
+      //   data: 'delete',
+      //   name: 'delete',
+      //   orderable: false
+      // },
     ],
   });
 }
