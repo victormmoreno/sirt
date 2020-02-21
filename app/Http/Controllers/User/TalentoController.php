@@ -38,6 +38,26 @@ class TalentoController extends Controller
         return $edad;
     }
 
+    public function datatableTalentosDeTecnoparque()
+    {
+        if (request()->ajax()) {
+            $talentos = Talento::ConsultarTalentosDeTecnoparque()->get();
+            return datatables()->of($talentos)
+                ->addColumn('add_articulacion', function ($data) {
+                    $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    return $add;
+                })->addColumn('add_proyecto', function ($data) {
+                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    return $add;
+                })->addColumn('add_propiedad', function ($data) {
+                    $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    return $propiedad;
+                })->rawColumns(['add_articulacion', 'add_proyecto', 'add_propiedad'])->make(true);
+        }
+        abort('404');
+    }
+
+
 
     public function consultarUnTalentoPorId($id)
     {

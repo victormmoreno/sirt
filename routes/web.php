@@ -110,6 +110,10 @@ Route::group(
         Route::get('ingreso', 'IngresoController@index')->name('usuario.ingreso.index');
         Route::get('ingreso/papelera', 'IngresoController@trash')->name('usuario.ingreso.papelera');
 
+        Route::get('/talento/getTalentosDeTecnoparque', [
+            'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
+            'as'   => 'talento.tecnoparque',
+        ]);
 
 
         Route::get('/talento/consultarTalentoPorId/{id}', [
