@@ -186,10 +186,13 @@
                                                                         <li class="collection-item">
                                                                             
                                                                             <span class="title">
+                                                                                @if(isset($gestor->user->documento) && isset($infocenter->user->nombres))
                                                                                 {{$infocenter->user->documento}} - {{$infocenter->user->nombres}} {{$infocenter->user->apellidos}}
+                                                                                @endif
+                                                                                
                                                                             </span>
                                                                             <p>
-                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{$infocenter->user->email}}<br/>
+                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{isset($infocenter->user->email) ? $infocenter->user->email : 'No registra' }}<br/>
                                                                                <b class="cyan-text text-darken-3">Teléfono:</b> {{isset($infocenter->user->telefono) ? $infocenter->user->telefono : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Celular: </b>
                                                                                {{isset($infocenter->user->celular)  ? $infocenter->user->celular : 'No registra'}}<br/>
@@ -268,10 +271,12 @@
                                                                         <li class="collection-item ">
                                                                             
                                                                             <span class="title">
+                                                                                @if(isset($ingreso->user->documento) && isset($ingreso->user->nombres))
                                                                                 {{$ingreso->user->documento}} - {{$ingreso->user->nombres}} {{$ingreso->user->apellidos}}
+                                                                                @endif
                                                                             </span>
                                                                             <p>
-                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{$ingreso->user->email}}<br/>
+                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{isset($ingreso->user->email) ? $ingreso->user->email : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Teléfono:</b> {{isset($ingreso->user->telefono) ? $ingreso->user->telefono : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Celular: </b>
                                                                                {{isset($ingreso->user->celular)  ? $ingreso->user->celular : 'No registra'}}<br/>
