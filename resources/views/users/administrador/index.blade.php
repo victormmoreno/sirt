@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <i class="material-icons left">
                                 supervised_user_circle
                             </i>
@@ -29,7 +29,7 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             Usuarios {{ config('app.name')}}
                                         </span>
                                     </div>
@@ -37,7 +37,7 @@
                                 
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('usuario.usuarios.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                        <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
                             </div>
@@ -48,14 +48,13 @@
                                     <div class="col s12 m3 l3">
                                         <div class="card">
                                             <div class="card-image waves-effect waves-block waves-light center">
-                                              <i class="large material-icons center ">
+                                              <i class="large material-icons center green-complement-text">
                                                 person_pin
                                             </i>
                                             </div>
 
                                             <div class="card-content">
                                               <span class="card-title activator grey-text text-darken-4 center">{{$role}}</span>
-                                              
                                               @switch($role)
                                                     @case(config('laravelpermission.roles.roleAdministrador'))
                                                         <p class="center"><a href="{{route('usuario.administrador.index')}}">ir a {{$role}}</a></p>
@@ -98,7 +97,7 @@
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.usuarios.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
                          <i class="material-icons">add_circle</i>
                     </a>
                 </div>

@@ -10,13 +10,28 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons">autorenew</i>Articulaciones</h5>
+          <div class="row">
+            <div class="col s8 m8 l10">
+                <h5 class="left-align">
+                    <i class="material-icons left">
+                        autorenew
+                    </i>
+                    Articulaciones con Grupos de Investigación
+                </h5>
+            </div>
+            <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li class="active">Articulaciones G.I</li>
+                </ol>
+            </div>
+        </div>
           <div class="card">
             <div class="card-content">
               <div class="row">
                 <div class="col s12 m10 l10">
                   <div class="center-align">
-                    <span class="card-title center-align">Articulaciones - {{auth()->user()->nombres}} {{ auth()->user()->apellidos}}</span>
+                    <span class="card-title center-align">Articulaciones G.I - {{auth()->user()->nombres}} {{ auth()->user()->apellidos}}</span>
                   </div>
                 </div>
                 <div class="col s12 m2 l2">
@@ -70,7 +85,7 @@
 
                   </tbody>
                 </table>
-                <div class="col s12 m2 l2">
+                {{-- <div class="col s12 m2 l2">
                   <a href="{{route('articulacion.excel.gestor', auth()->user()->gestor->id)}}">
                     <div class="card green">
                       <div class="card-content center">
@@ -78,7 +93,7 @@
                       </div>
                     </div>
                   </a>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>

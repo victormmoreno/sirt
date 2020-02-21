@@ -30,7 +30,6 @@ class NodoRepository
     public function findByid($id)
     {
         return Entidad::whereHas('nodo')->findOrFail($id);
-
     }
 
     public function getSelectNodo()
@@ -97,20 +96,27 @@ class NodoRepository
                 'telefono'    => $request->input('txttelefono'),
             ]);
 
-            $porcentaje = 100 / count($request->get('txtlineas'))  ;
+            if ($request->filled('txtlineas')) {
+                $porcentaje = 100 / count($request->get('txtlineas'));
 
-            $syncDataLinea = array();
+                $syncDataLinea = [];
                 foreach ($request->get('txtlineas') as $id => $value) {
-                    $syncDataLinea[$id] = array('linea_tecnologica_id' => $value,  'porcentaje_linea' =>$porcentaje);
+                    $syncDataLinea[$id] = [
+                        'linea_tecnologica_id' => $value,
+                        'porcentaje_linea' => $porcentaje
+                    ];
                 }
 
-            $nodo->lineas()->sync($syncDataLinea);
+                $nodo->lineas()->sync($syncDataLinea);
+            }
+
+
 
             $costo = CostoAdministrativo::all();
             if (!$costo->isEmpty()) {
                 $syncData = array();
                 foreach ($costo as $id => $value) {
-                    $syncData[$id] = array('costo_administrativo_id' => $value->id,  'anho' =>Carbon::now()->year, 'valor' => 0);
+                    $syncData[$id] = array('costo_administrativo_id' => $value->id,  'anho' => Carbon::now()->year, 'valor' => 0);
                 }
                 $nodo->costoadministrativonodo()->attach($syncData);
             }
@@ -121,7 +127,6 @@ class NodoRepository
             DB::rollback();
             return false;
         }
-
     }
 
     /*=====  End of metodo para guardar un nodo  ======*/
@@ -131,6 +136,7 @@ class NodoRepository
     ======================================================*/
     public function Update($request, $entidadNodo)
     {
+
         DB::beginTransaction();
 
         try {
@@ -148,20 +154,23 @@ class NodoRepository
                 'telefono'  => $request->input('txttelefono'),
             ]);
 
-            $porcentaje =  100 / count($request->get('txtlineas'));
+            if ($request->filled('txtlineas')) {
 
-           
-            $syncDataLinea = array();
+                $porcentaje =  100 / count($request->get('txtlineas'));
+
+                $syncDataLinea = [];
                 foreach ($request->get('txtlineas') as $id => $value) {
-                        
-                    $syncDataLinea[$id] = array('linea_tecnologica_id' => $value,  'porcentaje_linea' =>$porcentaje);
-                    
 
+                    $syncDataLinea[$id] = [
+                        'linea_tecnologica_id' => $value,
+                        'porcentaje_linea' => $porcentaje
+                    ];
                 }
 
-            $entidadNodo->nodo->lineas()->sync($syncDataLinea, true);
-            
+                $entidadNodo->nodo->lineas()->detach();
 
+                $entidadNodo->nodo->lineas()->attach($syncDataLinea);
+            }
             DB::commit();
             return true;
         } catch (Exception $e) {
@@ -203,7 +212,6 @@ class NodoRepository
             'ingresos',
             'ingresos.user',
         ]);
-
     }
 
     /**
@@ -216,5 +224,4 @@ class NodoRepository
     {
         return $this->getTeamTecnoparque()->findOrFailNodo($nodo);
     }
-
 }

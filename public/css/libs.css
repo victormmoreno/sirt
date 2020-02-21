@@ -18195,6 +18195,12 @@ body.mailbox .page-footer {
 }
 
 
+select {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+}
+
 
 
 

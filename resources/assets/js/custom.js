@@ -52,42 +52,55 @@ $(document).ready(function() {
         tags: true,
         language: "es"
     });
-    $('.datepicker').pickadate({
-        selectMonths: true,
-        selectYears: 60,
-        // Título dos botões de navegação
-        labelMonthNext: 'Próximo Mes',
-        labelMonthPrev: 'Mes anterior',
-        // Título dos seletores de mês e ano
-        labelMonthSelect: 'Selecione Mes',
-        labelYearSelect: 'Selecione Año',
-        // Meses e dias da semana
-        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-        weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-        // Letras da semana
-        weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
-        //Botões
-        today: 'Hoy',
-        clear: 'Limpiar',
-        close: 'Cerrar',
-        // max: new Date(((new Date()).getFullYear()), 12, 31),
-        // min: -10,
-        max: true,
-        // Formato da data que aparece no input
-        format: 'yyyy-mm-dd',
-        // format: 'dddd, dd mmm, yyyy',
-        // formatSubmit: 'yyyy/mm/dd',
-        // hiddenPrefix: 'prefix__',
-        // hiddenSuffix: '__suffix',
-        // disable: [
-        //   1, 7
-        // ],
-        onClose: function() {
-            $(document.activeElement).blur()
-        }
+    $('.datepicker').bootstrapMaterialDatePicker({
+      time:false,
+      date:true,
+      // year:true,
+      shortTime:true,
+      format: 'YYYY-MM-DD',
+      // monthPicker: true,
+      // minDate : new Date(),
+      maxDate: new Date,
+      language: 'es',
+      weekStart : 1, cancelText : 'Cancelar',
+      okText: 'Guardar'
     });
+    // $('.datepicker').pickadate({
+    //     selectMonths: true,
+    //     selectYears: 60,
+    //     // Título dos botões de navegação
+    //     labelMonthNext: 'Próximo Mes',
+    //     labelMonthPrev: 'Mes anterior',
+    //     // Título dos seletores de mês e ano
+    //     labelMonthSelect: 'Selecione Mes',
+    //     labelYearSelect: 'Selecione Año',
+    //     // Meses e dias da semana
+    //     monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    //     monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    //     weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    //     weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+    //     // Letras da semana
+    //     weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
+    //     //Botões
+    //     today: 'Hoy',
+    //     clear: 'Limpiar',
+    //     close: 'Cerrar',
+    //     // max: new Date(((new Date()).getFullYear()), 12, 31),
+    //     // min: -10,
+    //     max: true,
+    //     // Formato da data que aparece no input
+    //     format: 'yyyy-mm-dd',
+    //     // format: 'dddd, dd mmm, yyyy',
+    //     // formatSubmit: 'yyyy/mm/dd',
+    //     // hiddenPrefix: 'prefix__',
+    //     // hiddenSuffix: '__suffix',
+    //     // disable: [
+    //     //   1, 7
+    //     // ],
+    //     onClose: function() {
+    //         $(document.activeElement).blur()
+    //     }
+    // });
     $('.atepic').pickadate({
         selectMonths: true,
         selectYears: 60,

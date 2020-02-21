@@ -4,9 +4,10 @@ namespace App\Http\Traits\UserTrait;
 
 use App\Events\User\UserWasRegistered;
 use App\Http\Requests\UsersRequests\UserFormRequest;
-use App\Models\Nodo;
+use App\Models\{Nodo, TipoTalento, TipoFormacion, TipoEstudio, Etnia, LineaTecnologica};
 use App\User;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 trait RegistersUsers
 {
@@ -15,14 +16,20 @@ trait RegistersUsers
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($document)
     {
+        $user = $this->userRepository->findUserByDocument($document)->first();
+        if ($user != null) {
+            abort('404');
+        }
+        $this->authorize('create', User::class);
+
         $roles = null;
         $nodo  = null;
-        $this->authorize('create', User::class);
+
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                
+
                 $roles = $this->userRepository->getRoleWhereInRole([User::IsAdministrador(), User::IsDinamizador()]);
                 $nodo  = $this->userRepository->getAllNodo();
 
@@ -30,7 +37,7 @@ trait RegistersUsers
 
             case User::IsDinamizador():
 
-                $roles = $this->userRepository->getRoleWhereNotInRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento(),User::IsDesarrollador()]);
+                $roles = $this->userRepository->getRoleWhereNotInRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento(), User::IsDesarrollador()]);
                 $nodo  = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
 
                 break;
@@ -39,15 +46,33 @@ trait RegistersUsers
                 $roles = $this->userRepository->getRoleWhereInRole([User::IsTalento()]);
                 $nodo  = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
 
+                return view('users.create', [
+                    'etnias' => Etnia::pluck('nombre', 'id'),
+                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+                    'eps'               => $this->userRepository->getAllEpsActivas(),
+                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'roles'             => $roles,
+                    'nodos'             => $nodo,
+                    'regionales'        => $this->userRepository->getAllRegionales(),
+                    'documento' => $document,
+                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
+                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
+                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
+                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
+                    'view' => 'create'
+                ]);
                 break;
             default:
                 abort('404');
                 break;
-
         }
 
-  
-        return view('users.administrador.create', [
+
+        return view('users.create', [
+            'etnias' => Etnia::pluck('nombre', 'id'),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
@@ -56,10 +81,11 @@ trait RegistersUsers
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
             'roles'             => $roles,
             'nodos'             => $nodo,
-            'perfiles'          => $this->userRepository->getAllPerfiles(),
             'regionales'        => $this->userRepository->getAllRegionales(),
+            'documento' => $document,
+            'lineas' => LineaTecnologica::pluck('nombre', 'id'),
+            'view' => 'create'
         ]);
-
     }
 
     /**
@@ -68,29 +94,50 @@ trait RegistersUsers
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserFormRequest $request)
+    public function store(Request $request)
     {
-        //policy 
+        //policy
         $this->authorize('store', User::class);
+        $req       = new UserFormRequest;
 
-        //generar una contraseña
-        $password = User::generatePasswordRamdom();
-        //creamos el usuario
-        $user = $this->userRepository->Store($request, $password);
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
 
-        if ($user != null) {
-            //evento para crear token para activacion de cuenta
-            // $this->userRepository->activationToken($user->id);
-            //envio de email con contraseña
-            event(new UserWasRegistered($user, $password));
-            //regresamos una respuesta al usuario
-            alert()->success('Registro Exitoso.', 'El Usuario ha sido creado satisfactoriamente')->footer('<p class="red-text">Hemos enviado un correo electrónico al  usuario ' . $user->nombres . ' ' . $user->apellidos . ' con las credenciales de ingreso a la plataforma.</p>')->showConfirmButton('Ok', '#009891')->toHtml();
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
         } else {
-            alert()->error('El Usuario no se ha creado.', 'Registro Erróneo.')->footer('Por favor intente de nuevo')->showConfirmButton('Ok', '#009891')->toHtml();
+
+            //generar una contraseña
+            $password = User::generatePasswordRamdom();
+            //creamos el usuario
+            $user = $this->userRepository->Store($request, $password);
+
+            if ($user != null) {
+                //evento para crear token para activacion de cuenta
+                // $this->userRepository->activationToken($user->id);
+
+                //envio de email con contraseña
+                event(new UserWasRegistered($user, $password));
+
+
+                return response()->json([
+                    'state'   => 'success',
+                    'message' => 'El Usuario ha sido creado satisfactoriamente',
+                    'url' => route('usuario.index'),
+                    'user' => $user,
+                ]);
+            } else {
+
+                return response()->json([
+                    'state'   => 'error',
+                    'message' => 'El Usuario no se ha creado',
+                    'url' => false
+
+                ]);
+            }
         }
-        //redireccion
-        return redirect()->route('usuario.index');
-
     }
-
 }

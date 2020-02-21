@@ -23,18 +23,11 @@ $(document).ready(function() {
             data: 'email',
             name: 'email',
         }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'estado',
-            name: 'estado',
+            data: 'celular',
+            name: 'celular',
         }, {
             data: 'detail',
             name: 'detail',
-            orderable: false,
-        }, {
-            data: 'edit',
-            name: 'edit',
             orderable: false,
         }, ],
     });

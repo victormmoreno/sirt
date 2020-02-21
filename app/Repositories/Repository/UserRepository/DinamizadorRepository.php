@@ -19,9 +19,9 @@ class DinamizadorRepository
             ->Join('dinamizador', 'dinamizador.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'dinamizador.nodo_id')
             ->role(User::IsDinamizador())
-            ->where('nodos.id', '=', $nodo)
-            ->orderby('users.created_at', 'desc')
-            ->get();
+            ->where('nodos.id', '=', $nodo);
+            
+
 
     }
 

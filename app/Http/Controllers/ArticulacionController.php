@@ -109,8 +109,18 @@ class ArticulacionController extends Controller
       ';
       return $button;
     })->addColumn('edit', function ($data) {
-      $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
-      return $edit;
+
+      if($data->tipo_articulacion == 'Empresa' ){
+        return '<span class="new badge" data-badge-caption="Articulación con empresa"></span>';
+      }else if($data->tipo_articulacion == 'Emprendedor(es)'){
+        return '<span class="new badge" data-badge-caption="Articulación con Emprendedor"></span>';
+      }else if($data->tipo_articulacion =='Grupo de Investigación'){
+        $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
+        return $edit;
+      }else{
+        return '<span class="new badge" data-badge-caption="No Aplica"></span>';
+      }
+      
     })->addColumn('entregables', function ($data) {
       $button = '
       <a class="btn blue-grey m-b-xs" href='. route('articulacion.entregables', $data->id) .'>
@@ -270,6 +280,7 @@ class ArticulacionController extends Controller
       } else {
         $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho);
       }
+      
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
   }
@@ -390,6 +401,7 @@ class ArticulacionController extends Controller
   public function edit($id)
   {
     $articulacion = Articulacion::find($id);
+  
     if ($articulacion->estado == Articulacion::IsCierre()) {
       alert()->warning('Advertencia!','No se puede realizar esta acción por el estado de la articulación es Cierre.')->showConfirmButton('Ok', '#3085d6');
       return back();

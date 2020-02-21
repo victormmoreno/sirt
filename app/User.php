@@ -7,6 +7,7 @@ use App\Models\ActivationToken;
 use App\Models\Ciudad;
 use App\Models\Dinamizador;
 use App\Models\Eps;
+use App\Models\Etnia;
 use App\Models\Gestor;
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
@@ -21,11 +22,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements JWTSubject
 {
 
-    use Notifiable, HasRoles, UsersTrait;
+    use  SoftDeletes, Notifiable, HasRoles,  UsersTrait;
 
     const IS_MASCULINO     = 1;
     const IS_FEMENINO      = 0;
@@ -80,6 +82,10 @@ class User extends Authenticatable implements JWTSubject
         'estrato',
         'otra_eps',
         'otra_ocupacion',
+        'etnia_id',
+        'grado_discapacidad',
+        'descripcion_grado_discapacidad',
+        
     ];
 
     /**
@@ -133,6 +139,11 @@ class User extends Authenticatable implements JWTSubject
     public function proyectos()
     {
         return $this->morphToMany(Proyecto::class, 'propietario');
+    }
+
+    public function etnia()
+    {
+        return $this->belongsTo(Etnia::class, 'etnia_id', 'id');
     }
 
     //relaciones muchos a muchos
@@ -210,7 +221,6 @@ class User extends Authenticatable implements JWTSubject
 
         return $query->with($relations)
             ->role($role);
-
     }
 
     /*==============================================================================
@@ -225,5 +235,4 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /*=====  End of scope para mostrar informacion relevante en datatables  ======*/
-
 }

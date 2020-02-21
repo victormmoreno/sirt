@@ -94,7 +94,7 @@ class ArticulacionRepository
       $directory = $this->returnDirectoryArticulacionFiles($padre->articulacion_proyecto->id);
       if ($directory != false) {
         // Elimina los archivos del servidor
-        Storage::deleteDirectory($directory);
+        \Storage::deleteDirectory($directory);
         // Elimina los registros de la tabla de archivos_articulacion_proyecto
         ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $padre->articulacion_proyecto->id)->delete();
       }
@@ -516,7 +516,7 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('nodos.id', $id)
-    // ->whereYear('fecha_inicio', $anho)
+    ->where('tipo_articulacion', '!=', Articulacion::IsEmpresa())
     ->where(function($q) use ($anho) {
       $q->where(function($query) use ($anho) {
         $query->whereYear('fecha_inicio', '=', $anho);
@@ -728,7 +728,7 @@ class ArticulacionRepository
     'fecha_inicio',
     'fecha_cierre',
     'tiposarticulaciones.nombre AS tipoarticulacion')
-    ->selectRaw('IF(tipo_articulacion = ' . Articulacion::IsGrupo() . ', "Grupo de Investigación", IF(tipo_articulacion = ' . Articulacion::IsEmpresa() . ', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
+    ->selectRaw('IF(tipo_articulacion = ' . Articulacion::IsEmpresa() . ', "Empresa", "Emprendedor(es)") AS tipo_articulacion')
     ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsInicio() . ', "Inicio", IF(articulaciones.estado = ' . Articulacion::IsEjecucion() . ', "Ejecución", "Cierre") ) AS estado')
     ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
@@ -745,6 +745,38 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
+    ->where('tipo_articulacion', '!=', Articulacion::IsEmpresa())
+    ->whereYear('fecha_inicio', $anho)
+    ->get();
+  }
+
+  public function consultarIntervencionesEmpresasDeUnGestor($id, $anho)
+  {
+    return Articulacion::select('codigo_actividad AS codigo_articulacion',
+    'actividades.nombre',
+    'articulaciones.id',
+    'observaciones',
+    'fecha_inicio',
+    'fecha_cierre',
+    'tiposarticulaciones.nombre AS tipoarticulacion')
+    ->selectRaw('IF(tipo_articulacion = ' . Articulacion::IsEmpresa() . ', "Empresa", "Emprendedor(es)") AS tipo_articulacion')
+    ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsInicio() . ', "Inicio", IF(articulaciones.estado = ' . Articulacion::IsEjecucion() . ', "Ejecución", "Cierre") ) AS estado')
+    ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
+    ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
+    // ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsCierre() . ', fecha_cierre, "La Articulación aún no se ha cerrado") AS fecha_cierre')
+    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
+    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
+    ->selectRaw('IF(tipo_articulacion = "Grupo de Investigación", IF(acc = 1, "Si", "No"), "No Aplica") AS acc')
+    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
+    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(informe_final = 1, "Si", "No"), "No Aplica") AS informe_final')
+    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(pantallazo = 1, "Si", "No"), "No Aplica") AS pantallazo')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->where('actividades.gestor_id', $id)
+    ->where('tipo_articulacion', '=', Articulacion::IsEmpresa())
     ->whereYear('fecha_inicio', $anho)
     ->get();
   }

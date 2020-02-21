@@ -18,9 +18,8 @@ class IngresoRepository
             ->Join('ingresos', 'ingresos.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'ingresos.nodo_id')
             ->role(User::IsIngreso())
-            ->where('nodos.id', '=', $nodo)
-            ->orderby('users.created_at', 'desc')
-            ->get();
+            ->where('nodos.id', '=', $nodo);
+            
 
     }
 

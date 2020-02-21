@@ -78,6 +78,7 @@ class NodoFormRequest extends FormRequest
 
             'txtemail_entidad.required'  => 'El correo electrónico es obligatorio.',
             'txtemail_entidad.min'       => 'El correo electrónico debe ser minimo 1 caracter',
+            'txtemail_entidad.email'       => 'El valor ingreaso no es un correo válido',
             'txtemail_entidad.max'       => 'El correo electrónico debe ser máximo 100 caracteres',
 
             'txttelefono.required'       => 'El teléfono es obligatorio.',

@@ -27,7 +27,6 @@ class MaterialesFormRequest extends FormRequest
         if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
             return [
                 'txtlineatecnologica' => 'required',
-                'txttipomaterial'     => 'required',
                 'txtpresentacion'     => 'required|min:1|max:45',
                 'txtmedida'           => 'required|min:1|max:45',
                 'txtfecha'            => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
@@ -39,7 +38,6 @@ class MaterialesFormRequest extends FormRequest
             ];
         } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
             return [
-                'txttipomaterial'     => 'required',
                 'txtpresentacion'     => 'required|min:1|max:45',
                 'txtmedida'           => 'required|min:1|max:45',
                 'txtfecha'            => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),

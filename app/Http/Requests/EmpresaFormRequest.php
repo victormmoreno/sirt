@@ -8,25 +8,25 @@ use Illuminate\Validation\Rule;
 class EmpresaFormRequest extends FormRequest
 {
   /**
-  * Determine if the user is authorized to make this request.
-  *
-  * @return bool
-  */
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
   public function authorize()
   {
     return true;
   }
 
   /**
-  * Get the validation rules that apply to the request.
-  *
-  * @return array
-  */
+   * Get the validation rules that apply to the request.
+   *
+   * @return array
+   */
   public function rules()
   {
     return [
       'nombre' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-      'nit' => 'required|numeric|digits_between:6,45|unique:empresas,nit,'.$this->route('id'),
+      'nit' => 'required|numeric|digits_between:6,45|unique:empresas,nit,' . $this->route('id'),
       'email_entidad' => 'email|nullable|min:7|max:200',
       'direccion' => 'max:100|nullable',
       'txtdepartamento' => 'required',
@@ -74,9 +74,9 @@ class EmpresaFormRequest extends FormRequest
       ];
     }
 
-    public function attributes()
-    {
-      return [
+  public function attributes()
+  {
+    return [
       'nombre' => 'Nombre de la Empresa',
       'nit' => 'Nit de la Empresa',
       'email_entidad' => 'Email de la Empresa',
@@ -84,6 +84,6 @@ class EmpresaFormRequest extends FormRequest
       'txtdepartamento' => 'Departamento de la Empresa',
       'txtciudad_id' => 'Ciudad de la Empresa',
       'txtsector' => 'Sector de la Empresa',
-      ];
-    }
+    ];
   }
+}
