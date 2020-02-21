@@ -19,7 +19,7 @@
               <form action="{{route('proyecto.update.entregables.cierre', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
                 @include('proyectos.gestor.form_entregables_cierre')
                 <div class="row">
-                  @include('proyectos.archivos_table_fase')
+                  @include('proyectos.archivos_table_fase', ['fase' => 'cierre'])
                 </div>
                 <center>
                   @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
