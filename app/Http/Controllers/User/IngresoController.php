@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Repository\UserRepository\IngresoRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
+use Illuminate\Http\Request;
+use App\Repositories\Datatables\UserDatatables;
 
 class IngresoController extends Controller
 {
 
     protected $ingresoRepository;
     protected $userRepository;
+    public $userdatables;
 
-    public function __construct(IngresoRepository $ingresoRepository, UserRepository $userRepository)
+    public function __construct(IngresoRepository $ingresoRepository, UserRepository $userRepository, UserDatatables $userdatables)
     {
-
+        $this->middleware('auth');
         $this->ingresoRepository = $ingresoRepository;
         $this->userRepository    = $userRepository;
+        $this->userdatables        = $userdatables;
     }
     /**
      * Display a listing of the resource.
@@ -31,10 +35,31 @@ class IngresoController extends Controller
             case User::IsAdministrador():
                 return view('users.administrador.ingreso.index', [
                     'nodos' => $this->userRepository->getAllNodo(),
+                    'view' => 'activos'
                 ]);
                 break;
             case User::IsDinamizador():
-                return view('users.dinamizador.ingreso.index');
+                return view('users.dinamizador.ingreso.index', ['view' => 'activos']);
+                break;
+
+            default:
+                abort('404');
+                break;
+        }
+    }
+
+    public function trash()
+    {
+        // $this->authorize('indexIngreso', User::class);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.ingreso.index', [
+                    'nodos' => $this->userRepository->getAllNodo(),
+                    'view' => 'inactivos'
+                ]);
+                break;
+            case User::IsDinamizador():
+                return view('users.dinamizador.ingreso.index', ['view' => 'inactivos']);
                 break;
 
             default:
@@ -46,41 +71,37 @@ class IngresoController extends Controller
     /*=================================================================================
     =            metodo para mostrar los usuarios ingreso en el datatables            =
     =================================================================================*/
+    
 
-    public function getIngresoForNodo($nodo)
+    public function getIngresoForNodo(Request $request, $nodo)
     {
 
         if (request()->ajax()) {
-            return datatables()->of($this->ingresoRepository->getAllUsersIngresoForNodo($nodo))
-                ->addColumn('detail', function ($data) {
+                $users = $this->ingresoRepository->getAllUsersIngresoForNodo($nodo)
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
 
-                    $button = '<a class=" btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#modal1" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })
-
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })->addColumn('edit', function ($data) {
-                if ($data->id != auth()->user()->id) {
-                    $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                } else {
-                    $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                }
-                return $button;
-            })
-                ->rawColumns(['detail', 'estado', 'edit'])
-                ->make(true);
+                return $this->userdatables->datatableUsers($request, $users);
         }
         abort('404');
     }
 
     /*=====  End of metodo para mostrar los usuarios ingreso en el datatables  ======*/
+
+
+    public function getIngresoForNodoTrash(Request $request, $nodo)
+    {
+
+        if (request()->ajax()) {
+            $users = $this->ingresoRepository->getAllUsersIngresoForNodo($nodo)
+                    ->onlyTrashed()
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
+        }
+        abort('404');
+    }
 
     /*=======================================================================================
     =            metodo para mostrar todos los usuarios ingreso de determinado nodo            =
@@ -94,26 +115,11 @@ class IngresoController extends Controller
             return datatables()->of($this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id))
                 ->addColumn('detail', function ($data) {
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
+                    $button = '<a href="' . route("usuario.usuarios.show", $data->documento) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
                     return $button;
                 })
-                ->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })
-                ->rawColumns(['detail', 'estado', 'edit'])
+                
+                ->rawColumns(['detail'])
                 ->make(true);
         }
         abort('404');

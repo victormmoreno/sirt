@@ -220,10 +220,13 @@
                                                                         <li class="collection-item">
                                                                             
                                                                             <span class="title">
+                                                                                @if(isset($gestor->user->documento) && isset($gestor->user->nombres) && isset($gestor->user->apellidos))
                                                                                 {{$gestor->user->documento}} - {{$gestor->user->nombres}} {{$gestor->user->apellidos}}
+                                                                                @endif
+                                                                                
                                                                             </span>
                                                                             <p>
-                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{$gestor->user->email}}<br/>
+                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{isset($gestor->user->email) ? $gestor->user->email : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Teléfono:</b> {{isset($gestor->user->telefono) ? $gestor->user->telefono : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Celular: </b>
                                                                                {{isset($gestor->user->celular)  ? $gestor->user->celular : 'No registra'}}<br/>

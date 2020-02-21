@@ -11,8 +11,8 @@ class Perfil extends Model
 
     use PerfilTrait;
 
-	const IS_EGRESADO_SENA = 'Egresado SENA';
-	const IS_APRENDIZ_SENA_CON_APOYO = 'Aprendiz SENA con apoyo de sostenimiento';
+    const IS_EGRESADO_SENA = 'Egresado SENA';
+    const IS_APRENDIZ_SENA_CON_APOYO = 'Aprendiz SENA con apoyo de sostenimiento';
     const IS_APRENDIZ_SENA_SIN_APOYO = 'Aprendiz SENA sin apoyo de sostenimiento';
     const IS_FUNCIONARIO_EMPRESA_PUBLICA  = 'Funcionario empresa pública';
     const IS_EST_UNIVERSITARIO_PREGRADO  = 'Estudiante Universitario de Pregrado';
@@ -36,7 +36,7 @@ class Perfil extends Model
 
     public function talentos()
     {
-      return $this->hasMany(Talento::class, 'perfil_id', 'id');
+        return $this->hasMany(Talento::class, 'perfil_id', 'id');
     }
 
     /*=====  End of relaciones eloquent  ======*/
@@ -53,5 +53,4 @@ class Perfil extends Model
 
 
     /*=====  End of scope para consultar todos los perfiles del talento  ======*/
-
 }

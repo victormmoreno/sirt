@@ -9,7 +9,7 @@ use App\Models\Departamento;
 use App\Models\Dinamizador;
 use App\Models\Entidad;
 use App\Models\Eps;
-use App\Models\Gestor;
+use App\Models\{Gestor, TipoTalento};
 use App\Models\GradoEscolaridad;
 use App\Models\GrupoSanguineo;
 use App\Models\Infocenter;
@@ -187,7 +187,46 @@ class UserRepository
                 'ingreso.nodo.entidad',
             ]
         )->findOrFail($id);
+    }
 
+
+    public function findUserByDocument($document)
+    {
+
+        return User::with(
+            [
+                'tipodocumento' => function ($query) {
+                    $query->select('id', 'nombre');
+                },
+                'roles'         => function ($query) {
+                    $query->select('id', 'name');
+                },
+                'ocupaciones',
+                'eps',
+                'gradoescolaridad',
+                'gruposanguineo',
+                'ciudad',
+                'ciudad.departamento',
+                'ciudadexpedicion.departamento',
+                'dinamizador',
+                'dinamizador.nodo',
+                'dinamizador.nodo.entidad',
+                'gestor',
+                'gestor.nodo',
+                'gestor.nodo.entidad',
+                'gestor.nodo.centro',
+                'gestor.nodo.centro.regional',
+                'gestor.nodo.centro.entidad',
+                'gestor.lineatecnologica',
+                'infocenter',
+                'infocenter.nodo',
+                'infocenter.nodo.entidad',
+                'talento',
+                'talento.perfil',
+                'talento.entidad',
+                'ingreso.nodo.entidad',
+            ]
+        )->where('documento', $document);
     }
 
     /*=====  End of metodo para consultar el usuario por id  ======*/
@@ -209,7 +248,7 @@ class UserRepository
 
     public function getAllRoles()
     {
-        return Role::whereNotIn('name',[User::IsDesarrollador()])->pluck('name', 'id');
+        return Role::whereNotIn('name', [User::IsDesarrollador()])->pluck('name', 'id');
     }
 
     /*=====  End of metodo para obtener todos los roles laravel permision  ======*/
@@ -351,7 +390,6 @@ class UserRepository
             DB::rollback();
             return false;
         }
-
     }
 
     /*=====  End of metodo para guardar un usuario  ======*/
@@ -372,6 +410,10 @@ class UserRepository
             "email"                => $request->input('txtemail'),
             "barrio"               => $request->input('txtbarrio'),
             "direccion"            => $request->input('txtdireccion'),
+            "etnia_id"               => $request->input('txtetnias'),
+            "grado_discapacidad"    => $request->input('txtgrado_discapacidad'),
+            "descripcion_grado_discapacidad"    => $request->input('txtdiscapacidad'),
+
             "celular"              => $request->input('txtcelular'),
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
@@ -385,7 +427,6 @@ class UserRepository
             "estrato"              => $request->input('txtestrato'),
             "otra_ocupacion"       => collect($request->input('txtocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('txtotra_ocupacion') : null,
         ]);
-
     }
 
     private function assignRoleUser($user, $role)
@@ -398,22 +439,62 @@ class UserRepository
 
         $entidad = null;
 
-        if ($request->get('txtperfil') == Perfil::IsAprendizSenaConApoyo() || $request->get('txtperfil') == Perfil::IsAprendizSenaSinApoyo() || $request->get('txtperfil') == Perfil::IsEgresadoSena()) {
-            $entidad = $request->input('txtcentroformacion') ?: $this->getIdNoAplicaEntidad();
-        } else if ($request->get('txtperfil') == Perfil::IsInvestigador()) {
-            $entidad = $this->getIdGrupoInvesitgacion($request) ?: $this->getIdNoAplicaEntidad();
-        } else {
+
+
+        if (
+            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
+            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id 
+        ) {
+            $entidad = $request->input('txtcentroformacion_aprendiz') ?: $this->getIdNoAplicaEntidad();
+        }
+        else if ($request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id
+        ) {
+            $entidad = $request->input('txtcentroformacion_egresado') ?: $this->getIdNoAplicaEntidad();
+        } 
+        else if ($request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id 
+        ) {
+            $entidad = $request->input('txtcentroformacion_funcionarioSena') ?: $this->getIdNoAplicaEntidad();
+        }
+        else if ($request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id 
+        ) {
+            $entidad = $request->input('txtcentroformacion_instructorSena') ?: $this->getIdNoAplicaEntidad();
+        }
+        
+        else {
             $entidad = $this->getIdNoAplicaEntidad();
         }
         return Talento::create([
             "user_id"               => $user->id,
-            "perfil_id"             => $request->input('txtperfil'),
+            "perfil_id"             => $request->input('txttipotalento'),
+            "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
-            "programa_formacion"    => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsAprendizSenaConApoyo()) ? $request->input('txtprogramaformacion') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsAprendizSenaSinApoyo()) ? $request->input('txtprogramaformacion') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEgresadoSena()) ? $request->input('txtprogramaformacion') : null,
-            "universidad"           => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPregrado()) ? $request->input('txtuniveridad') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPostgrado()) ? $request->input('txtuniveridad') : null,
-            "carrera_universitaria" => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPregrado()) ? $request->input('txtcarrerauniversitaria') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPostgrado()) ? $request->input('txtcarrerauniversitaria') : null,
-            "empresa"               => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioGrandeEmpresa()) ? $request->input('txtempresa') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioMedianaEmpresa()) ? $request->input('txtempresa') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioMicroempresa()) ? $request->input('txtempresa') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioEmpresaPublica()) ? $request->input('txtempresa') : null,
-            "otro_tipo_talento"     => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsOtro()) ? $request->input('txtotrotipotalento') : null,
+
+            "programa_formacion"    => $request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ?
+                $request->input('txtprogramaformacion_aprendiz') : $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) ?
+                $request->input('txtprogramaformacion_aprendiz') : $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
+                $request->input('txtprogramaformacion_egresado') : null,
+
+            "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
+                $request->input('txttipoformacion') : null,
+
+            "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
+                $request->input('txttipoestudio') : null,
+            "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
+                $request->input('txtdependencia') : null,
+
+
+            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
+                $request->input('txtuniversidad') : null,
+
+
+            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
+                $request->input('txtcarrera') : null,
+
+            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
+                $request->input('txtempresa') : null,
+            "otro_tipo_talento"     => null,
+
+
         ]);
     }
 
@@ -445,9 +526,15 @@ class UserRepository
 
     public function Update($request, $user)
     {
-        $userdinamizador = User::whereHas('dinamizador.nodo', function ($query) use ($request) {
-            $query->where('id', $request->txtnododinamizador);
-        })->get();
+        
+        if($request->filled('txtnododinamizador')){
+            $userdinamizador = User::whereHas('dinamizador.nodo', function ($query) use ($request) {
+                $query->where('id', $request->txtnododinamizador);
+            })->get();
+        }   
+        
+        
+
 
         DB::beginTransaction();
         try {
@@ -460,13 +547,16 @@ class UserRepository
 
             $removeRole = array_diff(collect($userUpdated->getRoleNames())->toArray(), $request->input('role'));
 
+            
+
             if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsDinamizador()) && isset($userUpdated->dinamizador)) {
                 Dinamizador::find($userUpdated->dinamizador->id)->delete();
-
+              
             }
 
             if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsInfocenter()) && isset($userUpdated->infocenter)) {
                 Infocenter::find($userUpdated->infocenter->id)->delete();
+
             }
 
             if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsIngreso()) && isset($userUpdated->ingreso)) {
@@ -484,7 +574,6 @@ class UserRepository
                         }
                         $item->dinamizador->delete();
                         $item->removeRole(config('laravelpermission.roles.roleDinamizador'));
-
                     });
                     Dinamizador::create([
                         "user_id" => $userUpdated->id,
@@ -496,7 +585,6 @@ class UserRepository
                         "nodo_id" => $request->input('txtnododinamizador'),
                     ]);
                 }
-
             }
 
             if ($newRole != null && $this->roleIsAssigned($newRole, User::IsGestor()) && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
@@ -509,7 +597,6 @@ class UserRepository
                         "honorarios"          => $request->input('txthonorario'),
                     ]);
                 }
-
             }
 
             if ($newRole != null && $this->roleIsAssigned($newRole, User::IsInfocenter()) && !isset($userUpdated->infocenter) && $this->notExistRoleInArray($request, $userUpdated, User::IsInfocenter())) {
@@ -544,7 +631,6 @@ class UserRepository
                         }
                         $item->dinamizador->delete();
                         $item->removeRole(config('laravelpermission.roles.roleDinamizador'));
-
                     });
 
                     Dinamizador::create([
@@ -556,42 +642,45 @@ class UserRepository
                         "nodo_id" => $request->input('txtnododinamizador'),
                     ]);
                 }
-
+                
             }
 
             //update gestor
-            if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor())) {
+            if (isset($userUpdated->gestor) && $this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
 
+                
                 Gestor::find($userUpdated->gestor->id)->update([
                     "nodo_id"             => $request->input('txtnodogestor'),
                     "lineatecnologica_id" => $request->input('txtlinea'),
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
-
+            }else if(isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')){
+                Gestor::find($userUpdated->gestor->id)->update([
+                    "nodo_id"             => $request->input('txtnodogestor'),
+                    "lineatecnologica_id" => $request->input('txtlinea'),
+                    "honorarios"          => $request->input('txthonorario'),
+                ]);
             }
 
             //update infocenter
-            if (isset($userUpdated->infocenter->id) && !$this->roleIsAssigned($removeRole, User::IsInfocenter())) {
+            if (isset($userUpdated->infocenter->id) && !$this->roleIsAssigned($removeRole, User::IsInfocenter()) && $request->filled('txtnodoinfocenter')) {
 
                 Infocenter::find($userUpdated->infocenter->id)->update([
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
                     "extension" => $request->input('txtextension'),
                 ]);
-
             }
 
             if (isset($userUpdated->talento) && !$this->roleIsAssigned($removeRole, User::IsTalento())) {
 
                 $this->updateTalento($request, $userUpdated);
-
             }
 
-            if (isset($userUpdated->ingreso) && !$this->roleIsAssigned($removeRole, User::IsIngreso())) {
+            if (isset($userUpdated->ingreso) && !$this->roleIsAssigned($removeRole, User::IsIngreso()) && $request->filled('txtnodoingreso')) {
 
                 Ingreso::find($userUpdated->ingreso->id)->update([
                     "nodo_id" => $request->input('txtnodoingreso'),
                 ]);
-
             }
 
             $userUpdated->syncRoles($request->role);
@@ -637,7 +726,6 @@ class UserRepository
             }
             return false;
         }
-
     }
 
     /*===================================================================================================
@@ -671,6 +759,9 @@ class UserRepository
             "email"                => $request->input('txtemail'),
             "barrio"               => $request->input('txtbarrio'),
             "direccion"            => $request->input('txtdireccion'),
+            "etnia_id"               => $request->input('txtetnias'),
+            "grado_discapacidad"    => $request->input('txtgrado_discapacidad'),
+            "descripcion_grado_discapacidad"    => $request->input('txtgrado_discapacidad') == 1 ? $request['txtdiscapacidad'] : null,
             "celular"              => $request->input('txtcelular'),
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
@@ -684,7 +775,6 @@ class UserRepository
         ]);
 
         return $user;
-
     }
 
     /*=====  End of metodo privado para actualizar un usuario y se llamdo en Update  ======*/
@@ -696,25 +786,67 @@ class UserRepository
     {
         $entidad = null;
 
-        if ($request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsAprendizSenaConApoyo()) || $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsAprendizSenaSinApoyo()) || $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEgresadoSena())) {
-
-            $entidad = $this->getIdEntidadCentro($request->input('txtcentroformacion'));
-        } else if ($request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsInvestigador())) {
-            $entidad = $this->getIdGrupoInvesitgacion($request) ?: $this->getIdNoAplicaEntidad();
-        } else {
+        if (
+            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
+            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id 
+        ) {
+            $entidad = $request->input('txtcentroformacion_aprendiz') ?: $this->getIdNoAplicaEntidad();
+        }
+        else if ($request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id
+        ) {
+            $entidad = $request->input('txtcentroformacion_egresado') ?: $this->getIdNoAplicaEntidad();
+        } 
+        else if ($request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id 
+        ) {
+            $entidad = $request->input('txtcentroformacion_funcionarioSena') ?: $this->getIdNoAplicaEntidad();
+        }
+        else if ($request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id 
+        ) {
+            $entidad = $request->input('txtcentroformacion_instructorSena') ?: $this->getIdNoAplicaEntidad();
+        }
+        
+        else {
             $entidad = $this->getIdNoAplicaEntidad();
         }
+        
 
+        if($request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) || 
+         $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)){
+            $programa = $request->input('txtprogramaformacion_aprendiz');
+        }elseif($request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA)){
+            $programa = $request->input('txtprogramaformacion_egresado');
+        }else{
+            $programa = 'No Aplica';
+        }
         return Talento::find($userUpdated->talento->id)->update([
-            "perfil_id"             => $request->input('txtperfil'),
-            "entidad_id"            => $entidad,
-            "programa_formacion"    => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsAprendizSenaConApoyo()) ? $request->input('txtprogramaformacion') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsAprendizSenaSinApoyo()) ? $request->input('txtprogramaformacion') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEgresadoSena()) ? $request->input('txtprogramaformacion') : null,
-            "universidad"           => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPregrado()) ? $request->input('txtuniversidad') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPostgrado()) ? $request->input('txtuniversidad') : null,
-            "carrera_universitaria" => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPregrado()) ? $request->input('txtcarrerauniversitaria') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsEstudianteUniversitarioPostgrado()) ? $request->input('txtcarrerauniversitaria') : null,
-            "empresa"               => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioGrandeEmpresa()) ? $request->input('txtempresa') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioMedianaEmpresa()) ? $request->input('txtempresa') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioMicroempresa()) ? $request->input('txtempresa') : $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsFuncionarioEmpresaPublica()) ? $request->input('txtempresa') : null,
-            "otro_tipo_talento"     => $request->get('txtperfil') == $this->getIdPerfilForNombre(Perfil::IsOtro()) ? $request->input('txtotrotipotalento') : null,
-        ]);
 
+            "perfil_id"             => $request->input('txttipotalento'),
+            "tipo_talento_id"       => $request->input('txttipotalento'),
+            "entidad_id"            => $entidad,
+
+            "programa_formacion"    =>  $programa,
+
+            "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
+                $request->input('txttipoformacion') : null,
+
+            "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
+                $request->input('txttipoestudio') : null,
+            "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
+                $request->input('txtdependencia') : null,
+
+
+            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
+                $request->input('txtuniversidad') : null,
+
+
+            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
+                $request->input('txtcarrera') : null,
+
+            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
+                $request->input('txtempresa') : null,
+            "otro_tipo_talento"     => null,
+
+        ]);
     }
 
     /*=====  End of metodo para actualizar un usuario talento  ======*/
@@ -726,6 +858,11 @@ class UserRepository
     public function getIdPerfilForNombre(string $perfil)
     {
         return Perfil::where('nombre', $perfil)->first()->id;
+    }
+
+    public function getIdTipoTalentoForNombre(string $tipotalento)
+    {
+        return TipoTalento::where('nombre', $tipotalento)->first()->id;
     }
 
     /*=====  End of metodo para consultar el id del perfil por nombre  ======*/
@@ -782,7 +919,6 @@ class UserRepository
         }])
             ->orderby('users.created_at', 'desc')
             ->get();
-
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
@@ -809,7 +945,6 @@ class UserRepository
                 $item->dinamizador->delete();
                 $item->removeRole(config('laravelpermission.roles.roleDinamizador'));
             });
-
         }
 
         if ($method == 'store') {
@@ -820,14 +955,60 @@ class UserRepository
 
             $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
         }
-
     }
 
     /*=====  End of metodo para validar que solo exista un dinamizador por nodo  ======*/
 
     public function userInfoWithRelations(array $role = [], array $relations = [])
     {
-        return User::infoUserRole($role , $relations);
+        return User::infoUserRole($role, $relations);
     }
 
+
+    public function getUsersTalentosByProject($nodo = null, $user = null, $anio = null)
+    {
+
+        if ($user != null && session()->get('login_role') == User::IsGestor()) {
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo)
+                ->where('gestores.id', $user);
+                
+        } else if ($user == null && session()->get('login_role') == User::IsDinamizador()) {
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo);
+               
+        } else if ($user != null && session()->get('login_role') == User::IsDinamizador()) {
+
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo)
+                ->where('gestores.id', $user);
+                
+        } else if ($user == null && session()->get('login_role') == User::IsAdministrador()) {
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo);
+                
+        }
+    }
+
+    private function getInfoUsersTalentosWithProjects($anio = null)
+    {
+        return User::InfoUserDatatable()
+            ->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
+            ->join('talentos', 'talentos.user_id', '=', 'users.id')
+            ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
+            ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+            ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+            ->where(function ($q) use ($anio) {
+                $q->where(function ($query) use ($anio) {
+                    $query->whereYear('fecha_cierre', $anio);
+                })
+                    ->orWhere(function ($query) use ($anio) {
+                        $query->whereYear('fecha_inicio', $anio);
+                    });
+            })
+            ->orderBy('nombres');
+    }
 }

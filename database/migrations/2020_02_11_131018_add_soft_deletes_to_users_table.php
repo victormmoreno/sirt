@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class AddSoftDeleteToNodosTable extends Migration
+class AddSoftDeletesToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddSoftDeleteToNodosTable extends Migration
      */
     public function up()
     {
-        Schema::table('nodos', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->softDeletes()->after('updated_at');
         });
     }
@@ -25,7 +25,7 @@ class AddSoftDeleteToNodosTable extends Migration
      */
     public function down()
     {
-        Schema::table('nodos', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $this->dropColumn(['delete_at']);
         });
     }

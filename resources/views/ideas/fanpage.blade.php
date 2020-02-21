@@ -15,8 +15,7 @@
                                 <h3 class="center-align">
                                     El SENA te da la bienvenida a su
                                     programa {{config('app.name')}},
-                                    ahora podrás acceder a los servicios
-                                    que la red ofrece para tí.
+                                    pronto nos comunicaremos contigo que presentes tu propuesta ante el comité de ideas. ¡ Entrena para tu pich de 5 minutos !
                                 </h3>
                                 <h4>El Registro ha sido guardado​ exitosamente.</h4>
                                 Regresar al <a href="{{route('/')}}">Inicio</a>

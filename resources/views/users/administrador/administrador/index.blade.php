@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -32,41 +32,41 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Administradores {{ config('app.name')}}
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                            @if($view == 'activos')
+                                            Administradores con acceso a {{ config('app.name')}}
+                                            @else
+                                            Administradores sin acceso a {{ config('app.name')}}
+                                            @endif
                                         </span>
-                                        <i class="material-icons ">
+                                        <i class="material-icons  orange-text text-darken-3">
                                             supervised_user_circle
                                         </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('usuario.usuarios.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                        <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="divider">
                             </div>
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.administrador.indexinactivos'), 'message' => 'Ver Administradores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.administrador.index'), 'message' => 'Ver Administradores con acceso'])
                             <br>
-                                <table class="display responsive-table" id="administrador_table">
-                                    <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Documento</th>
-                                        <th>Administrador</th>
-                                        <th>Correo</th>
-                                        <th>Telefono</th>
-                                        <th>Estado Sistema</th>
-                                        <th>Detalles</th>
-                                        <th>Editar</th>
-                                    </thead>
-                    
-                                </table>
+                            @if($view == 'activos')
+       
+                                 @include('users.table', ['id' => 'administrador_activos_table'] )  
+                            @elseif($view == 'inactivos')
+                            
+                            @include('users.table', ['id' => 'administrador_inactivos_table'] ) 
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.usuarios.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
                          <i class="material-icons">add_circle</i>
                     </a>
                 </div>
@@ -83,3 +83,5 @@
   </div>
 </div>
 @endsection
+
+

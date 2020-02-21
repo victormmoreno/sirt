@@ -1727,7 +1727,7 @@ var grupoInvestigacionIndex = {
 }
 
 $(document).ready(function() {
-    $('#administrador_table').DataTable({
+    $('#administrador_activos_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -1751,37 +1751,79 @@ $(document).ready(function() {
             data: 'email',
             name: 'email',
         }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'estado',
-            name: 'estado',
-        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
             data: 'detail',
             name: 'detail',
-            orderable: false,
-        }, {
-            data: 'edit',
-            name: 'edit',
             orderable: false,
         }, ],
     });
 });
 
+
+
+
 $(document).ready(function() {
-    $('#dinamizador_table').DataTable({
+    $('#administrador_inactivos_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        "lengthChange": false,
+        ajax: {
+            url: "/usuario/administrador/papelera",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, ],
+    });
+});
+
+
+$(document).ready(function() {
+    $('#dinamizador_table_activos').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         "lengthChange": false,
     });
+
+    $('#dinamizador_table_inactivos').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+    });
+
+
+    
 });
 var UserAdministradorDinamizador = {
     selectDinamizadoresPorNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#dinamizador_table').dataTable().fnDestroy();
+        $('#dinamizador_table_activos').dataTable().fnDestroy();
         if (nodo != '') {
-            $('#dinamizador_table').DataTable({
+            $('#dinamizador_table_activos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -1805,23 +1847,61 @@ var UserAdministradorDinamizador = {
                     data: 'email',
                     name: 'email',
                 }, {
-                    data: 'telefono',
-                    name: 'telefono',
-                }, {
-                    data: 'estado',
-                    name: 'estado',
-                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
                     data: 'detail',
                     name: 'detail',
                     orderable: false,
-                }, {
-                    data: 'edit',
-                    name: 'edit',
-                    orderable: false,
-                }, ],
+                },  ],
             });
         } else {
-            $('#dinamizador_table').DataTable({
+            $('#dinamizador_table_activos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
+    },
+    selectDinamizadoresPorNodoTrash: function() {
+        let nodo = $('#selectnodo').val();
+        $('#dinamizador_table_inactivos').dataTable().fnDestroy();
+        if (nodo != '') {
+            $('#dinamizador_table_inactivos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usuario/dinamizador/getDinamizador/papelera/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                },  ],
+            });
+        } else {
+            $('#dinamizador_table_inactivos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -1831,7 +1911,14 @@ var UserAdministradorDinamizador = {
     },
 }
 $(document).ready(function() {
-    $('#gestor_table').DataTable({
+    $('#gestor_table_activos').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+    });
+
+    $('#gestor_table_inactivos').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -1841,9 +1928,9 @@ $(document).ready(function() {
 var UserAdministradorGestor = {
     selectGestoresPorNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#gestor_table').dataTable().fnDestroy();
+        $('#gestor_table_activos').dataTable().fnDestroy();
         if (nodo != '') {
-            $('#gestor_table').DataTable({
+            $('#gestor_table_activos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -1867,23 +1954,63 @@ var UserAdministradorGestor = {
                     data: 'email',
                     name: 'email',
                 }, {
-                    data: 'telefono',
-                    name: 'telefono',
-                }, {
-                    data: 'estado',
-                    name: 'estado',
-                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
                     data: 'detail',
                     name: 'detail',
-                    orderable: false,
-                }, {
-                    data: 'edit',
-                    name: 'edit',
                     orderable: false,
                 }, ],
             });
         }else{
-            $('#gestor_table').DataTable({
+            $('#gestor_table_activos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
+    },
+
+
+    selectGestoresPorNodoTrash: function() {
+        let nodo = $('#selectnodo').val();
+        $('#gestor_table_inactivos').dataTable().fnDestroy();
+        if (nodo != '') {
+            $('#gestor_table_inactivos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usuario/gestor/getGestor/papelera/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, ],
+            });
+        }else{
+            $('#gestor_table_inactivos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -1893,7 +2020,14 @@ var UserAdministradorGestor = {
     },
 }
 $(document).ready(function() {
-    $('#infocenter_table').DataTable({
+    $('#infocenter_table_activos').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+    });
+
+    $('#infocenter_table_inactivos').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -1903,9 +2037,9 @@ $(document).ready(function() {
 var UserAdministradorInfocenter = {
     selectInfocentersForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#infocenter_table').dataTable().fnDestroy();
+        $('#infocenter_table_activos').dataTable().fnDestroy();
         if (nodo != '') {
-            $('#infocenter_table').DataTable({
+            $('#infocenter_table_activos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -1929,23 +2063,62 @@ var UserAdministradorInfocenter = {
                     data: 'email',
                     name: 'email',
                 }, {
-                    data: 'telefono',
-                    name: 'telefono',
-                }, {
-                    data: 'estado',
-                    name: 'estado',
-                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
                     data: 'detail',
                     name: 'detail',
-                    orderable: false,
-                }, {
-                    data: 'edit',
-                    name: 'edit',
                     orderable: false,
                 }, ],
             });
         }else{
-            $('#infocenter_table').DataTable({
+            $('#infocenter_table_activos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
+    },
+
+    selectInfocentersForNodoTrash: function() {
+        let nodo = $('#selectnodo').val();
+        $('#infocenter_table_inactivos').dataTable().fnDestroy();
+        if (nodo != '') {
+            $('#infocenter_table_inactivos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                ajax: {
+                    url: "/usuario/infocenter/getinfocenter/papelera/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, ],
+            });
+        }else{
+            $('#infocenter_table_inactivos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -1955,18 +2128,54 @@ var UserAdministradorInfocenter = {
     },
 }
 $(document).ready(function() {
-    $('#talento_history_table').DataTable({
-        language: {
+  $('#talentoByDinamizador_table_activos').DataTable({
+      language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      "lengthChange": false,
+  });
+  $('#talentoByDinamizador_table_inactivos').DataTable({
+    language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    "lengthChange": false,
+});
+  
+
+});
+  
+  var usuarios = {
+    consultarTalentosByTecnoparque: function (){
+      let anho = $('#txt_anio_user').val();
+      let nodo = $('#txtnodo').val();
+
+      if(nodo == '' || nodo == null){
+        Swal.fire(
+          'Error',
+          'Por favor selecciona un nodo',
+          'error'
+        );
+      }else if(anho == '' || anho == null){
+        Swal.fire(
+          'Error',
+          'Por favor selecciona un año',
+          'error'
+        );
+      }else{
+        $('#talentoByDinamizador_table_activos').dataTable().fnDestroy();
+        $('#talentoByDinamizador_table_activos').DataTable({
+          language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/usuario/talento",
-            type: "get",
-        },
-        columns: [{
+          },
+          "lengthChange": false,
+          processing: true,
+          serverSide: true,
+          order: [ 0, 'desc' ],
+          ajax:{
+            url: "/usuario/getuserstalentosbynodo/"+nodo+"/"+anho,
+            
+          },
+          columns: [{
             data: 'tipodocumento',
             name: 'tipodocumento',
         }, {
@@ -1979,24 +2188,92 @@ $(document).ready(function() {
             data: 'email',
             name: 'email',
         }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'estado',
-            name: 'estado',
-        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
             data: 'detail',
             name: 'detail',
             orderable: false,
+        },  ],
+        });
+  
+      }
+      
+      
+      
+    },
+
+    consultarTalentosByTecnoparqueTrash: function (){
+      let anho = $('#txt_anio_user').val();
+      let nodo = $('#txtnodo').val();
+
+      if(nodo == '' || nodo == null){
+        Swal.fire(
+          'Error',
+          'Por favor selecciona un nodo',
+          'error'
+        );
+      }else if(anho == '' || anho == null){
+        Swal.fire(
+          'Error',
+          'Por favor selecciona un año',
+          'error'
+        );
+      }else{
+        $('#talentoByDinamizador_table_inactivos').dataTable().fnDestroy();
+        $('#talentoByDinamizador_table_inactivos').DataTable({
+          language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "lengthChange": false,
+          processing: true,
+          serverSide: true,
+          order: [ 0, 'desc' ],
+          ajax:{
+            url: "/usuario/getuserstalentosbynodo/papelera/"+nodo+"/"+anho,
+            
+          },
+          columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
         }, {
-            data: 'edit',
-            name: 'edit',
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
+            data: 'detail',
+            name: 'detail',
             orderable: false,
-        }, ],
-    });
-});
+        },  ],
+        });
+  
+      }
+      
+      
+      
+    },
+    
+  }
+  
+    
+    
 $(document).ready(function() {
-    $('#ingreso_table').DataTable({
+    $('#ingreso_table_activos').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false
+    });
+
+    $('#ingreso_table_inactivos').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -2006,9 +2283,9 @@ $(document).ready(function() {
 var UserAdministradorIngreso = {
     selectIngresoForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#ingreso_table').dataTable().fnDestroy();
+        $('#ingreso_table_activos').dataTable().fnDestroy();
         if (nodo != '') {
-            $('#ingreso_table').DataTable({
+            $('#ingreso_table_activos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -2032,23 +2309,62 @@ var UserAdministradorIngreso = {
                     data: 'email',
                     name: 'email',
                 }, {
-                    data: 'telefono',
-                    name: 'telefono',
-                }, {
-                    data: 'estado',
-                    name: 'estado',
-                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
                     data: 'detail',
                     name: 'detail',
                     orderable: false,
-                }, {
-                    data: 'edit',
-                    name: 'edit',
-                    orderable: false,
-                }, ],
+                },  ],
             });
         } else {
-            $('#ingreso_table').DataTable({
+            $('#ingreso_table_activos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false
+            }).clear().draw();
+        }
+    },
+
+    selectIngresoForNodoTrash: function() {
+        let nodo = $('#selectnodo').val();
+        $('#ingreso_table_inactivos').dataTable().fnDestroy();
+        if (nodo != '') {
+            $('#ingreso_table_inactivos').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "/usuario/ingreso/getingreso/papelera/" + nodo,
+                    type: "get",
+                },
+                columns: [{
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombre',
+                    name: 'nombre',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                },  ],
+            });
+        } else {
+            $('#ingreso_table_inactivos').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -2082,22 +2398,132 @@ $(document).ready(function() {
             data: 'email',
             name: 'email',
         }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'estado',
-            name: 'estado',
-        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
             data: 'detail',
             name: 'detail',
-            orderable: false,
-        }, {
-            data: 'edit',
-            name: 'edit',
             orderable: false,
         }, ],
     });
 });
+
+
+// $(document).ready(function() {
+
+//     $('#talentoByDinamizador_table').DataTable({
+//       language: {
+//         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//       },
+//       "lengthChange": false,
+//     });
+
+
+
+//   });
+
+//   var user = {
+//     consultarTalentosByTecnoparque: function (){
+//       let anho = $('#anio_proyecto_talento').val();
+
+//       $('#talentoByDinamizador_table').dataTable().fnDestroy();
+//         $('#talentoByDinamizador_table').DataTable({
+//           language: {
+//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//           },
+//           "lengthChange": false,
+//           processing: true,
+//           serverSide: true,
+//           order: [ 0, 'desc' ],
+//           ajax:{
+//             url: "/usuario/getuserstalentosbydatatables/"+anho,
+
+//           },
+//           columns: [{
+//             data: 'tipodocumento',
+//             name: 'tipodocumento',
+//         }, {
+//             data: 'documento',
+//             name: 'documento',
+//         }, {
+//             data: 'nombre',
+//             name: 'nombre',
+//         }, {
+//             data: 'email',
+//             name: 'email',
+//         }, {
+//             data: 'celular',
+//             name: 'celular',
+//         },  {
+//             data: 'detail',
+//             name: 'detail',
+//             orderable: false,
+//         },  ],
+//         });
+
+
+//     },
+//     getUserTalentosByGestor: function(){
+//       let anho = $('#txtanho_user_talento').val();
+//       let gestor = $('#txtgestor_id').val();
+
+//       if(gestor == '' || gestor == null){
+//         Swal.fire(
+//           'Error',
+//           'Por favor selecciona un gestor',
+//           'error'
+//         );
+//       }else if(anho == '' || anho == null){
+//         Swal.fire(
+//           'Error',
+//           'Por favor selecciona un gestor',
+//           'error'
+//         );
+//       }else{
+//         $('#talentoByGestor_table').dataTable().fnDestroy();
+//         $('#talentoByGestor_table').DataTable({
+//           language: {
+//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//           },
+//           "lengthChange": false,
+//           processing: true,
+//           serverSide: true,
+//           order: [ 0, 'desc' ],
+//           ajax:{
+//             url: "/usuario/getuserstalentosbygestordatatables/"+gestor+"/"+anho,
+            
+//           },
+//           columns: [{
+//             data: 'tipodocumento',
+//             name: 'tipodocumento',
+//         }, {
+//             data: 'documento',
+//             name: 'documento',
+//         }, {
+//             data: 'nombre',
+//             name: 'nombre',
+//         }, {
+//             data: 'email',
+//             name: 'email',
+//         }, {
+//             data: 'celular',
+//             name: 'celular',
+//         },  {
+//             data: 'detail',
+//             name: 'detail',
+//             orderable: false,
+//         },  ],
+//         });
+//       }
+
+
+//     }
+//   }
+
+
+
+
+
 $(document).ready(function() {
     $('#infocenters_dinamizador_table').DataTable({
         language: {
@@ -2123,18 +2549,11 @@ $(document).ready(function() {
             data: 'email',
             name: 'email',
         }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'estado',
-            name: 'estado',
+            data: 'celular',
+            name: 'celular',
         }, {
             data: 'detail',
             name: 'detail',
-            orderable: false,
-        }, {
-            data: 'edit',
-            name: 'edit',
             orderable: false,
         }, ],
     });
@@ -2164,22 +2583,759 @@ $(document).ready(function() {
             data: 'email',
             name: 'email',
         }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'estado',
-            name: 'estado',
-        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
             data: 'detail',
             name: 'detail',
             orderable: false,
-        }, {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-        }, ],
+        },  ],
     });
 });
+$(document).ready(function() {
+  
+  $('#talento_activosByGestor_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    "lengthChange": false,
+  });
+
+  $('#talento_inactivosByGestor_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    "lengthChange": false,
+  });
+
+
+});
+
+// Ajax que muestra los usuarios talentos con proyectos  por año de un determinado gestor
+function consultarTalentosByGestor() {
+    
+    let anho = $('#anio_proyecto_talento').val();
+
+    $('#talento_activosByGestor_table').dataTable().fnDestroy();
+    $('#talento_activosByGestor_table').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      "lengthChange": false,
+      processing: true,
+      serverSide: true,
+      order: [ 0, 'desc' ],
+      ajax:{
+        url: "/usuario/getuserstalentosbydatatables/"+anho,
+      },
+      columns: [{
+        data: 'tipodocumento',
+        name: 'tipodocumento',
+    }, {
+        data: 'documento',
+        name: 'documento',
+    }, {
+        data: 'nombre',
+        name: 'nombre',
+    }, {
+        data: 'email',
+        name: 'email',
+    }, {
+        data: 'celular',
+        name: 'celular',
+    },  {
+        data: 'detail',
+        name: 'detail',
+        orderable: false,
+    }, ],
+    });
+  }
+
+  function consultarTalentosByGestorTrash() {
+    
+    let anho = $('#anio_proyecto_talento').val();
+
+    $('#talento_inactivosByGestor_table').dataTable().fnDestroy();
+    $('#talento_inactivosByGestor_table').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      "lengthChange": false,
+      processing: true,
+      serverSide: true,
+      order: [ 0, 'desc' ],
+      ajax:{
+        url: "/usuario/getuserstalentosbydatatables/papelera/"+anho,
+      },
+      columns: [{
+        data: 'tipodocumento',
+        name: 'tipodocumento',
+    }, {
+        data: 'documento',
+        name: 'documento',
+    }, {
+        data: 'nombre',
+        name: 'nombre',
+    }, {
+        data: 'email',
+        name: 'email',
+    }, {
+        data: 'celular',
+        name: 'celular',
+    },  {
+        data: 'detail',
+        name: 'detail',
+        orderable: false,
+    }, ],
+    });
+  }
+ 
+  
+  
+ 
+var userSearch = {
+    queryUserByDocumento:function () {
+        var inputSearch = $("#search_user").val();
+        var patron=new RegExp('^[0-9]{6,11}$')
+
+        if (inputSearch == null || inputSearch == '' || !patron.test(inputSearch)){
+            Swal.fire(
+                'Error',
+                'Por favor ingrese un número de documento válido',
+                'error'
+              );
+        }else{
+            $.ajax({
+                type: 'GET',
+                url: '/usuario/usuarios/consultarusuariopordocumento/'+ inputSearch,
+                contentType: false,
+                dataType: 'json',
+                processData: false,
+                success: function (data) {
+
+                    userSearch.responseAlertHtml(data, inputSearch);
+
+                    console.log(data);
+
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                }
+            });
+        }
+
+
+    },
+    responseAlertHtml:function (response, inputSearch){
+        $('#response-alert').empty();
+        if(response.message == 'error'){
+            $('#response-alert').append(`
+            <div class="mailbox-list">
+                <ul>
+                    <li >
+                        <a  class="mail-active">
+
+                            <h4 class="center-align">no se encontraron resultados</h4>
+
+                            <a class="grey-text text-darken-3 green accent-1 center-align" href="`+response.url+`/`+inputSearch+`">Registrar nuevo usuario</a>
+
+
+
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            `);
+        }else if(response.message == 'success'){
+            $('#response-alert').append(`
+            <div class="mailbox-list">
+                <ul>
+                    <li >
+                        <a href="`+response.url+`" class="mail-active">
+
+                            <h5 class="mail-author">`+response.data.user.documento+` - `+response.data.user.nombres +` `+ response.data.user.apellidos+`</h5>
+                            <h4 class="mail-title">`+response.data.roles+`</h4>
+                            <p class="hide-on-small-and-down mail-text">Miembro desde `+moment(response.data.user.created_at).format('LL')+`</p>
+                            <div class="position-top-right p f-12 mail-date"> Acceso al sistema: `+ userSearch.state(response.data.user.estado) +`</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            `);
+        }
+
+    },
+    responseSweetAlert: function (response){
+        if(response.message == 'success'){
+
+            Swal.fire({
+                title: 'Usuario Registrado',
+                html: '<strong>El Usuario '+response.data.user.nombres+ ' ' +response.data.user.apellidos+'</u> ya existe en nuestros registros</strong>',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Editar información usuario',
+                cancelButtonText: 'Cancelar'
+              }).then((result) => {
+                if (result.value) {
+                  Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                  )
+                }
+              })
+        }else{
+            $('.search-users').hide();
+            Swal.fire({
+                title: '<strong>No se encontraron resultados</strong>',
+                icon: 'info',
+                html:
+                    'You can use <b>bold text</b>, ' +
+                    '<a href="//sweetalert2.github.io">links</a> ' +
+                    'and other HTML tags',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:
+                    '<i class="fa fa-thumbs-up"></i> Great!',
+                confirmButtonAriaLabel: 'Thumbs up, great!',
+                cancelButtonText:
+                    '<i class="fa fa-thumbs-down"></i>',
+                cancelButtonAriaLabel: 'Thumbs down'
+            });
+        }
+
+    },
+    state: function (state){
+        if(state){
+            return 'Si';
+        }else{
+            return 'No';
+        }
+    }
+}
+
+
+var user = {
+    getCiudadExpedicion:function(){
+        let id;
+        id = $('#txtdepartamentoexpedicion').val();
+        $.ajax({
+          dataType:'json',
+          type:'get',
+          url:'/usuario/getciudad/'+id
+        }).done(function(response){
+          $('#txtciudadexpedicion').empty();
+        //   $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
+          $.each(response.ciudades, function(i, e) {
+            $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+          });
+          $('#txtciudadexpedicion').material_select();
+        });
+      },
+
+      getOtraEsp:function (ideps) {
+        let id = $(ideps).val();
+        let nombre = $("#txteps option:selected").text();
+      
+        if (id == 42) {
+            // $('.otraeps').css("display:block");
+            $('.otraeps').removeAttr("style");
+             
+        }else{
+            $('.otraeps').attr("style","display:none");
+        }
+    },
+    getCiudad:function(){
+        let id;
+        id = $('#txtdepartamento').val();
+        $.ajax({
+          dataType:'json',
+          type:'get',
+          url:'/usuario/getciudad/'+id
+        }).done(function(response){
+          $('#txtciudad').empty();
+          $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
+          $.each(response.ciudades, function(i, e) {
+            $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+          })
+          
+          $('#txtciudad').material_select();
+        });
+    },
+    getGradoEscolaridad(gradoescolaridad){
+        let grado = $(gradoescolaridad).val();
+       
+      
+        if (grado == 1) {
+        
+            $('.gradodiscapacidad').removeAttr("style");
+             
+        }else{
+            $('.gradodiscapacidad').attr("style","display:none");
+        }
+    }
+}
+
+
+$(document).ready(function() {
+    $('#txtocupaciones').select2({
+      language: "es",
+      isMultiple: true
+    });
+
+    estudios.getOtraOcupacion();
+});
+
+var estudios = {
+    getOtraOcupacion:function (idocupacion) {
+        $('#otraocupacion').hide();
+        let id = $(idocupacion).val();
+        let nombre = $("#txtocupaciones option:selected").text();
+        let resultado = nombre.match(/[A-Z][a-z]+/g);
+        
+            
+            
+       
+        $('#otraocupacion').hide();
+        if (resultado != null) {
+          
+
+            if (resultado.includes('Otra')) {
+
+            $('#otraocupacion').show();
+          }
+        }
+      }
+}
+
+$(document).ready(function() {
+    // $(".aprendizSena").hide();
+    tipoTalento.getSelectTipoTalento();
+});
+
+var tipoTalento = {
+    getSelectTipoTalento:function (idperfil) {
+        let valor = $(idperfil).val();
+        let nombrePerfil = $("#txttipotalento option:selected").text();
+        console.log(nombrePerfil);
+        if(valor == 1 || valor == 2){
+
+            tipoTalento.showAprendizSena();
+        }
+        else if(valor == 3){
+            tipoTalento.showEgresadoSena();
+        }
+        else if(valor == 4){
+            tipoTalento.showInstructorSena();
+        }
+        else if(valor == 5){
+            tipoTalento.showFuncionarioSena();
+        }
+        else if(valor == 6){
+            tipoTalento.showPropietarioEmpresa();
+        }
+        else if(valor == 7){
+            tipoTalento.showEmprendedor();
+        }
+        else if(valor == 8){
+            tipoTalento.showUniversitario();
+        }
+        else if(valor == 9){
+            tipoTalento.showFuncionarioEmpresa();
+        }
+        else{
+            tipoTalento.ShowSelectTipoTalento();
+        }
+    },
+
+    showAprendizSena: function(){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hidePropietarioEmpresa();
+        tipoTalento.hideEmprendedor();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+        $(".aprendizSena").css("display", "block");
+        $(".aprendizSena").show();
+
+    },
+    showEgresadoSena: function(){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hidePropietarioEmpresa();
+        tipoTalento.hideEmprendedor();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+        // $(".egresadoSena").css("display", "block");
+        $(".egresadoSena").show();
+
+    },
+    showInstructorSena: function(){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hidePropietarioEmpresa();
+        tipoTalento.hideEmprendedor();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+        $(".instructorSena").css("display", "block");
+
+    },
+    showFuncionarioSena: function(){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hidePropietarioEmpresa();
+        tipoTalento.hideEmprendedor();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+        $(".funcionarioSena").css("display", "block");
+
+    },
+    showPropietarioEmpresa: function (){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+
+        $('.otherUser').empty();
+        $('.otherUser').append(`<div class="valign-wrapper" >
+            <h5> Seleccionaste Propietario empresa</h5>
+        </div>`);
+    },
+    showEmprendedor: function (){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+        $('.otherUser').empty();
+        $('.otherUser').append(`<div class="valign-wrapper" >
+            <h5> Seleccionaste Emprendedor</h5>
+        </div>`);
+    },
+
+    showUniversitario: function(){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hidePropietarioEmpresa();
+        tipoTalento.hideEmprendedor();
+        tipoTalento.hideFuncionarioEmpresa();
+        $(".universitario").css("display", "block");
+
+    },
+    showFuncionarioEmpresa: function(){
+        tipoTalento.hideSelectTipoTalento();
+        tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hidePropietarioEmpresa();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideEmprendedor();
+        $(".funcionarioEmpresa").css("display", "block");
+
+    },
+
+    hideAprendizSena: function(){
+        // $(".aprendizSena").css("display", "none");
+        $(".aprendizSena").hide();
+
+    },
+    hideEgresadoSena: function(){
+        // $(".egresadoSena").css("display", "none");
+        $(".egresadoSena").hide();
+
+    },
+    hideInstructorSena: function(){
+        $(".instructorSena").css("display", "none");
+
+    },
+    hideFuncionarioSena: function(){
+        $(".funcionarioSena").css("display", "none");
+
+    },
+    hideSelectTipoTalento: function(){
+        $(".selecttipotalento").css("display", "none");
+    },
+    hidePropietarioEmpresa: function(){
+
+        $(".otherUser").css("display", "none");
+    },
+    hideUniversitario: function(){
+
+        $(".universitario").css("display", "none");
+    },
+    hideFuncionarioEmpresa: function(){
+
+        $(".funcionarioEmpresa").css("display", "none");
+    },
+
+    hideEmprendedor: function(){
+
+        $(".otherUser").css("display", "none");
+    },
+    ShowSelectTipoTalento: function(){
+        tipoTalento.hideAprendizSena();
+        $(".selecttipotalento").css("display", "block");
+    },
+    getCentroFormacionAprendiz:function (){
+        let regional = $('#txtregional_aprendiz').val();
+        $.ajax({
+            dataType:'json',
+            type:'get',
+            url:'/centro-formacion/getcentrosregional/'+regional
+        }).done(function(response){
+            $('#txtcentroformacion_aprendiz').empty();
+            $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
+            $.each(response.centros, function(id, nombre) {
+                $('#txtcentroformacion_aprendiz').append('<option  value="'+id+'">'+nombre+'</option>');
+
+
+                $('#txtcentroformacion_aprendiz').material_select();
+
+            });
+        });
+    },
+    getCentroFormacionEgresadoSena:function (){
+        let regional = $('#txtregional_egresado').val();
+        $.ajax({
+            dataType:'json',
+            type:'get',
+            url:'/centro-formacion/getcentrosregional/'+regional
+        }).done(function(response){
+            $('#txtcentroformacion_egresado').empty();
+            $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
+            $.each(response.centros, function(id, nombre) {
+                $('#txtcentroformacion_egresado').append('<option  value="'+id+'">'+nombre+'</option>');
+
+
+                $('#txtcentroformacion_egresado').material_select();
+
+            });
+        });
+    },
+    getCentroFormacionFuncionarioSena:function (){
+        let regional = $('#txtregional_funcionarioSena').val();
+        $.ajax({
+            dataType:'json',
+            type:'get',
+            url:'/centro-formacion/getcentrosregional/'+regional
+        }).done(function(response){
+            $('#txtcentroformacion_funcionarioSena').empty();
+            $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
+            $.each(response.centros, function(id, nombre) {
+                $('#txtcentroformacion_funcionarioSena').append('<option  value="'+id+'">'+nombre+'</option>');
+
+
+                $('#txtcentroformacion_funcionarioSena').material_select();
+
+            });
+        });
+    },
+    getCentroFormacionInstructorSena:function (){
+        let regional = $('#txtregional_instructorSena').val();
+        $.ajax({
+            dataType:'json',
+            type:'get',
+            url:'/centro-formacion/getcentrosregional/'+regional
+        }).done(function(response){
+            $('#txtcentroformacion_instructorSena').empty();
+            $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')
+            $.each(response.centros, function(id, nombre) {
+                $('#txtcentroformacion_instructorSena').append('<option  value="'+id+'">'+nombre+'</option>');
+
+
+                $('#txtcentroformacion_instructorSena').material_select();
+
+            });
+        });
+    },
+    
+
+
+
+
+}
+
+
+$(document).on('submit', 'form#formRegisterUser', function (event) {
+    // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+      type: form.attr('method'),
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      dataType: 'json',
+      processData: false,
+      success: function (data) {
+        // $('button[type="submit"]').removeAttr('disabled');
+        $('button[type="submit"]').prop("disabled", false);
+        $('.error').hide();
+        if (data.fail) {
+            
+          for (control in data.errors) {
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+          }
+
+          createUser.printErroresFormulario(data);
+        }
+        if (data.state == 'error' && data.url == false) {
+          Swal.fire({
+            title: 'El Usuario no se ha registrado, por favor inténtalo de nuevo',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+        }
+        if (data.state == 'success' && data.url != false) {
+          Swal.fire({
+            title: 'Registro Exitoso',
+            text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido creado satisfactoriamente`,
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok',
+            footer: '<p class="red-text">Hemos enviado un correo electrónico al  usuario ' + data.user.nombres + ' '+ data.user.apellidos+ ' con las credenciales de ingreso a la plataforma.</p>'
+          });
+          setTimeout(function(){
+            window.location.href = data.url;
+          }, 1000);
+        }
+      },
+      // error: function (xhr, textStatus, errorThrown) {
+      //   alert("Error: " + errorThrown);
+      // }
+    });
+  });
+
+var createUser = {
+  printErroresFormulario: function (data){
+    if (data.state == 'error_form') {
+      let errores = "";
+      for (control in data.errors) {
+          errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+          $('#' + control + '-error').html(data.errors[control]);
+          $('#' + control + '-error').show();
+      }
+      Swal.fire({
+          title: 'Advertencia!',
+          html: 'Estas ingresando mal los datos.' + errores,
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      });
+  }
+  }
+}  
+$(document).on('submit', 'form#formEditUser', function (event) {
+    // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+      type: form.attr('method'),
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      dataType: 'json',
+      processData: false,
+      success: function (data) {
+        console.log(data);
+        $('button[type="submit"]').removeAttr('disabled');
+        $('button[type="submit"]').prop("disabled", false);
+        $('.error').hide();
+        if (data.fail) {
+
+          for (control in data.errors) {
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+          }
+
+          EditUser.printErroresFormulario(data);
+        }
+        if (data.state == 'error' && data.url == false) {
+          Swal.fire({
+            title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+        }
+        if (data.state == 'success' && data.url != false) {
+          Swal.fire({
+            title: 'Modifciación Exitosa',
+            text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          });
+          setTimeout(function(){
+            window.location.href = data.url;
+          }, 1000);
+        }
+      },
+      // error: function (xhr, textStatus, errorThrown) {
+      //   alert("Error: " + errorThrown);
+      // }
+    });
+  });
+
+var EditUser = {
+  printErroresFormulario: function (data){
+    if (data.state == 'error_form') {
+      let errores = "";
+      for (control in data.errors) {
+          errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+          $('#' + control + '-error').html(data.errors[control]);
+          $('#' + control + '-error').show();
+      }
+      Swal.fire({
+          title: 'Advertencia!',
+          html: 'Estas ingresando mal los datos.' + errores,
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      });
+  }
+  }
+}
+
 var UserIndex = {
 	detailUser(id) {
         $.ajax({
@@ -2192,50 +3348,6 @@ var UserIndex = {
     }
 }
 
-$(document).ready(function() {
-    $('#all_users_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/usuarios/allusuarios",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'telefono',
-            name: 'telefono',
-        }, {
-            data: 'role',
-            name: 'role',
-        }, {
-            data: 'estado',
-            name: 'estado',
-        },{
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-        }, ],
-    });
-});
 function modalUser(respuesta) {
     $(".titulo_users").empty();
     let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
@@ -3066,15 +4178,15 @@ function detallesDeUnaArticulacion(id){
         +'</div>'
         +'<div class="divider"></div>'
 
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="teal-text text-darken-3">Empresa/Emprendedores/Grupo de Investigación: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.tipo_articulacion+'</span><span onclick="verDetalleDeLaEntidadAsocidadALaArticulacion('+respuesta.detalles.id+')" class="new badge blue" data-badge-caption="Pulse aquí para ver estos detalles"></span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
+        // +'<div class="row">'
+        // +'<div class="col s12 m6 l6">'
+        // +'<span class="teal-text text-darken-3">Empresa/Emprendedores/Grupo de Investigación: </span>'
+        // +'</div>'
+        // +'<div class="col s12 m6 l6">'
+        // +'<span class="black-text">'+respuesta.detalles.tipo_articulacion+'</span><span onclick="verDetalleDeLaEntidadAsocidadALaArticulacion('+respuesta.detalles.id+')" class="new badge blue" data-badge-caption="Pulse aquí para ver estos detalles"></span>'
+        // +'</div>'
+        // +'</div>'
+        // +'<div class="divider"></div>'
       );
     $('#articulacionDetalle').openModal();
     }
@@ -3368,6 +4480,461 @@ function eliminarArticulacionPorId_moment(id) {
   })
 }
 
+function consultarIntervencionesEmpresaDelGestor(anho) {
+  $('#IntervencionGestor_table').dataTable().fnDestroy();
+  $('#IntervencionGestor_table').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
+      // type: "get",
+      data: function (d) {
+        d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
+        d.nombre = $('#nombre_GestorTable').val(),
+        d.estado = $('#estado_GestorTable').val(),
+        d.search = $('input[type="search"]').val()
+      }
+    },
+    columns: [
+      {
+        data: 'codigo_articulacion',
+        name: 'codigo_articulacion',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'estado',
+        name: 'estado',
+      },
+      {
+        data: 'revisado_final',
+        name: 'revisado_final',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        data: 'entregables',
+        name: 'entregables',
+        orderable: false
+      },
+      {
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+    ],
+  });
+}
+
+$("#codigo_articulacion_GestorTable").keyup(function(){
+  $('#IntervencionGestor_table').DataTable().draw();
+});
+
+$("#nombre_GestorTable").keyup(function(){
+  $('#IntervencionGestor_table').DataTable().draw();
+});
+
+
+$("#estado_GestorTable").keyup(function(){
+  $('#IntervencionGestor_table').DataTable().draw();
+});
+
+function detallesDeUnaIntervencion(id){
+    $.ajax({
+       dataType:'json',
+       type:'get',
+       url:"/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
+    }).done(function(respuesta){
+      $("#articulacionDetalle_titulo").empty();
+      $("#detalleArticulacion").empty();
+      if (respuesta.detalles == null) {
+        Swal.fire(
+          'Ups!!',
+          'Ha ocurrido un error',
+          'error'
+        );
+      } else {
+        $("#articulacionDetalle_titulo").append("<div class='valign-wrapper left material-icons'><a href='/excel/excelDeUnaArticulacion/"+id+"'><img class='btn btn-flat' src='https://img.icons8.com/color/48/000000/ms-excel.png'></a></div><span class='teal-text text-darken-3'>Código de la Intervención: </span><b>"+respuesta.detalles.codigo_articulacion+"</b>");
+        $("#detalleArticulacion").append(
+          '<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Nombre de la Articulación: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.nombre+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Gestor a cargo: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.gestor+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Fecha de Inicio: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.fecha_inicio+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Estado de la Articulación: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.estado+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Observaciones: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.observaciones+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Tipo de Articulación: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.tipoArticulacion+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Entregables: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text"><a onclick="verDetallesDeLosEntregablesDeUnaIntervencionEmpresa('+respuesta.detalles.id+')" class="btn btn-small teal darken-3">Pulse aquí para ver los entregables</a></span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+  
+          +'<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Revisado Final: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.detalles.revisado_final+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+        );
+      $('#articulacionDetalle').openModal();
+      }
+    });
+  }
+
+  function verDetallesDeLosEntregablesDeUnaIntervencionEmpresa(id) {
+    $.ajax({
+       dataType:'json',
+       type:'get',
+       url:"/articulacion/ajaxDetallesDeLosEntregablesDeUnaArticulacion/"+id,
+    }).done(function(respuesta){
+      $("#detalleDeUnaArticulacion_titulo").empty();
+      $("#detalleArticulacion_body").empty();
+      if (respuesta.entregables == null) {
+        Swal.fire(
+          'Ups!!',
+          'Ha ocurrido un error',
+          'error'
+        );
+      } else {
+        $("#detalleDeUnaArticulacion_titulo").append("<a class='btn btn-small blue-grey' target='_blank' href='/intervencion/"+respuesta.articulacion.id+"/entregables'>Ver los Archivos</a> <span class='teal-text text-darken-3'>Código de la Intervención a Empresa: </span><b>"+respuesta.articulacion.codigo_articulacion+"</b>");
+        $("#detalleArticulacion_body").append(
+          '<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Acta de Inicio: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.entregables.acta_inicio+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+        );
+        if (respuesta.articulacion.tipo_articulacion == 'Grupo de Investigación') {
+          $("#detalleArticulacion_body").append(
+            '<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="teal-text text-darken-3">Formato de confidencialidad y compromiso firmado: </span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.entregables.acc+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+          );
+        }
+        $("#detalleArticulacion_body").append(
+          '<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Actas de Seguimiento: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.entregables.actas_seguimiento+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+        );
+        $("#detalleArticulacion_body").append(
+          '<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Acta de Cierre: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.entregables.acta_cierre+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+        );
+  
+        if (respuesta.articulacion.tipo_articulacion == 'Empresa' || respuesta.articulacion.tipo_articulacion == 'Emprendedor') {
+          $("#detalleArticulacion_body").append(
+            '<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="teal-text text-darken-3">Informe final de la asesoría: </span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.entregables.informe_final+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+  
+            +'<div class="row">'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="teal-text text-darken-3">Encuesta de satisfacción: </span>'
+            +'</div>'
+            +'<div class="col s12 m6 l6">'
+            +'<span class="black-text">'+respuesta.entregables.pantallazo+'</span>'
+            +'</div>'
+            +'</div>'
+            +'<div class="divider"></div>'
+          );
+        }
+  
+        $("#detalleArticulacion_body").append(
+          '<div class="row">'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="teal-text text-darken-3">Otros: </span>'
+          +'</div>'
+          +'<div class="col s12 m6 l6">'
+          +'<span class="black-text">'+respuesta.entregables.otros+'</span>'
+          +'</div>'
+          +'</div>'
+          +'<div class="divider"></div>'
+        );
+      $("#detalleArticulacion_modal").openModal();
+      }
+    });
+  }
+
+  function verDetalleDeLaEntidadAsocidadALaArticulacion(id) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+  }).done(function(respuesta){
+    $("#detalleDeUnaArticulacion_titulo").empty();
+    $("#detalleArticulacion_body").empty();
+    if (respuesta.detalles == null) {
+      Swal.fire(
+        'Ups!!',
+        'Ha ocurrido un error',
+        'error'
+      );
+    } else {
+      if (respuesta.articulacion.tipo_articulacion == 'Empresa') {
+        $("#detalleDeUnaArticulacion_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Empresa </span><br>");
+        $("#detalleArticulacion_body").append("<div class='row'>"
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nit de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.nit+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.nombre_empresa+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Dirección de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.direccion+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Ciudad de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.ciudad+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Email de la Empresa: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+respuesta.detalles.email_entidad+'</span>'
+        +'</div>'
+        +'</div>'
+      );
+      $('#detalleArticulacion_modal').openModal();
+    } else if (respuesta.articulacion.tipo_articulacion == 'Grupo de Investigación') {
+      $("#detalleDeUnaArticulacion_titulo").append("<span class='cyan-text text-darken-3'>Datos del Grupo de Investigación </span><br>");
+      $("#detalleArticulacion_body").append("<div class='row'>"
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Código del Grupo de Investigacion: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.codigo_grupo+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Nombre del Grupo de Investigación: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.nombre_grupo+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Correo del Grupo de Investigacion: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.correo_grupo+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Ciudad del Grupo de Investigación: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.ciudad+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Tipo de Grupo de Investigación: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.tipogrupo+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Institución que avala el grupo de investigación: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.institucion+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="divider"></div>'
+      +'<div class="row">'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="cyan-text text-darken-3">Clasificación Colciencias del Grupo de Investigación: </span>'
+      +'</div>'
+      +'<div class="col s12 m6 l6">'
+      +'<span class="black-text">'+respuesta.detalles.nombre_clasificacion+'</span>'
+      +'</div>'
+      +'</div>'
+    );
+    $('#detalleArticulacion_modal').openModal();
+  } else {
+    $("#talentosDeUnaArticulacion_titulo").empty();
+    $("#talentosDeUnaArticulacion_table").empty();
+    $("#talentosDeUnaArticulacion_titulo").append("<span class='cyan-text text-darken-3'>Datos de los Talentos </span><br>");
+    $.each(respuesta.detalles, function( index, value ) {
+      let rol = "Autor";
+      if (value.talento_lider == 1) {
+        rol = "Talento Líder";
+      }
+      $("#talentosDeUnaArticulacion_table").append('<tr><td>'+rol+'</td><td>'+value.talento+'</td></tr>'
+      );
+    });
+    $('#talentosDeUnaArticulacion_modal').openModal();
+  }
+  }
+});
+}
+
+  function eliminarIntervencionEmpresaPorId_event(id, e) {
+    Swal.fire({
+      title: '¿Desea eliminar la Intervención a Empresa?',
+      text: "Al hacer esto, todo lo relacionado con esta Intervención a Empresa será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      cancelButtonText: 'No',
+      confirmButtonText: 'Sí, eliminar!'
+    }).then((result) => {
+      if (result.value) {
+        eliminarIntervencionEmpresaPorId_moment(id);
+      }
+    })
+  }
+  
+  function eliminarIntervencionEmpresaPorId_moment(id) {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/intervencion/eliminarArticulacion/'+id,
+      success: function (data) {
+        if (data.retorno) {
+          Swal.fire('Eliminación Exitosa!', 'La Intervención a Empresa se ha eliminado completamente!', 'success');
+          location.href = '/intervencion';
+        } else {
+          Swal.fire('Eliminación Errónea!', 'La Intervención a Empresa no se ha eliminado!', 'error');
+        }
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+  }
 $(document).ready(function() {
   consultarProyectosDelGestorPorAnho();
   consultarProyectosDelNodoPorAnho();
@@ -7998,3 +9565,122 @@ function consultarTotalTalentosEgresadosSenaEnProyecto_total(bandera) {
   let input = 'txt_total_ind48';
   dispararAjax_Fechas(idnodo, fecha_inicio, fecha_fin, url, input);
 }
+
+$(document).ready(function() {
+  consultarPublicacionesOtros();
+  consultarPublicacionesDesarrollador();
+})
+
+function consultarPublicacionesOtros() {
+  $('#tblnovedades_Otros').dataTable().fnDestroy();
+  $('#tblnovedades_Otros').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/publicacion/datatablePublicaciones",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'fecha_inicio',
+        name: 'fecha_inicio',
+      },
+      {
+        data: 'titulo',
+        name: 'titulo',
+      },
+      {
+        width: '8%',
+        data: 'detalle',
+        name: 'detalle',
+        orderable: false
+      },
+    ],
+  });
+}
+
+function consultarPublicacionesDesarrollador() {
+  $('#tblnovedades_Desarrollador').dataTable().fnDestroy();
+  $('#tblnovedades_Desarrollador').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    ajax:{
+      url: "/publicacion/datatablePublicaciones",
+      type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_publicacion',
+        name: 'codigo_publicacion',
+      },
+      {
+        // width: '15%',
+        data: 'fecha_inicio',
+        name: 'fecha_inicio',
+      },
+      {
+        data: 'titulo',
+        name: 'titulo',
+      },
+      {
+        data: 'role',
+        name: 'role',
+      },
+      {
+        width: '8%',
+        data: 'detalle',
+        name: 'detalle',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'update',
+        name: 'update',
+        orderable: false
+      },
+    ],
+  });
+}
+
+$('#txtcontenido').summernote({
+  lang: 'es-ES',
+  height: 300
+});
+
+$('#txtfecha_inicio').bootstrapMaterialDatePicker({
+  time:false,
+  date:true,
+  shortTime:true,
+  format: 'YYYY-MM-DD',
+  // minDate : new Date(),
+  language: 'es',
+  weekStart : 1, cancelText : 'Cancelar',
+  okText: 'Guardar'
+});
+
+$('#txtfecha_fin').bootstrapMaterialDatePicker({
+  time:false,
+  date:true,
+  shortTime:true,
+  format: 'YYYY-MM-DD',
+  // minDate : new Date(),
+  language: 'es',
+  weekStart : 1, cancelText : 'Cancelar',
+  okText: 'Guardar'
+});

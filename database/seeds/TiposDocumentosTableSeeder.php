@@ -13,26 +13,23 @@ class TiposDocumentosTableSeeder extends Seeder
     public function run()
     {
         TipoDocumento::create([
-            'id'          => 1,
+            'abreviatura'          => 'CC',
             'nombre'      => 'Cédula de Ciudadanía',
         ]);
 
         TipoDocumento::create([
-            'id'          => 2,
+            'abreviatura'          => 'TI',
             'nombre'      => 'Tarjeta de Identidad',
         ]);
 
         TipoDocumento::create([
-            'id'          => 3,
+            'abreviatura'          => 'CE',
             'nombre'      => 'Cédula de Extranjería',
         ]);
 
         TipoDocumento::create([
-            'id'          => 4,
+            'abreviatura'          => 'RC',
             'nombre'      => 'Registro Civil',
         ]);
-
-        // factory(TipoDocumento::class, 10)->create();
-
     }
 }

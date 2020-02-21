@@ -1,0 +1,95 @@
+<div class="row">
+    
+    <div class="col s12 m9 l9">
+        <div class="divider mailbox-divider"></div>
+        <div class="mailbox-view-header">
+            <div class="center">
+                <div class="center">
+                    <i class="Small material-icons prefix green-complement-text">
+                        supervised_user_circle
+                    </i>
+                </div>
+                <div class="center">
+                    <span class="mailbox-title green-complement-text">Último estudio</span>
+                </div>
+            </div>
+        </div>
+        <div class="divider mailbox-divider"></div>
+        <div class="row">
+            <div class="input-field col s12 m6 l6">
+                <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion')}}">
+                <label for="txtinstitucion">Institución <span class="red-text">*</span></label>
+                
+                <small id="txtinstitucion-error" class="error red-text"></small>
+            </div>
+            <div class="input-field col s12 m6 l6 ">
+                <select class="" id="txtgrado_escolaridad" name="txtgrado_escolaridad" style="width: 100%" tabindex="-1">
+                    <option value="">Seleccione grado de escolaridad</option>
+                    @foreach($gradosescolaridad as $value)
+                        @if(isset($user->gradoescolaridad_id))
+                        <option value="{{$value->id}}" {{old('txtgrado_escolaridad',$user->gradoescolaridad_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                        @else
+                            <option value="{{$value->id}}" {{old('txtgrado_escolaridad') ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                        @endif
+
+                    @endforeach
+                </select>
+                <label for="txtgrado_escolaridad">Grado Escolaridad <span class="red-text">*</span></label>
+                
+                <small id="txtgrado_escolaridad-error" class="error red-text"></small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 m6 l6">
+                <input class="validate" id="txttitulo" name="txttitulo" type="text"  value="{{ isset($user->titulo_obtenido) ? $user->titulo_obtenido : old('txttitulo')}}">
+                <label for="txttitulo">Titulo Obtenido <span class="red-text">*</span></label>
+                <small id="txttitulo-error" class="error red-text"></small>
+            </div>
+            <div class="input-field col s12 m6 l6">
+                <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fecha_terminacion) ? $user->fecha_terminacion->toDateString() : old('txtfechaterminacion')}}">
+                <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
+                <small id="txtfechaterminacion-error" class="error red-text"></small>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ocupaciones -->
+<div class="row">
+    <div class="col s12 m3 l3">
+        <div class="divider mailbox-divider"></div>
+        <blockquote>
+            <ul class="collection">
+                <li class="collection-item">
+                    <span class="title"><b>Ocupaciones</b></span>
+                    <p>Puedes seleccionar varias ocupaciones si es el caso de que las tenga, sino seleccione una</p>
+                </li>
+            </ul>
+        </blockquote>
+    </div>
+    <div class="col s12 m9 l9">
+        <div class="divider mailbox-divider"></div>
+        <div class="row">
+            <div class="input-field col s12 m6 l6 offset-l3 m-3">
+
+                <select class="js-states browser-default  selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple onchange="estudios.getOtraOcupacion(this)">
+                    @foreach($ocupaciones as $id => $nombre)
+                        @if(isset($user))
+                        <option value="{{$id}}" {{collect(old('txtocupaciones',$user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : ''  }} >{{$nombre}}</option>
+                        @else
+                            <option {{collect(old('txtocupaciones'))->contains($id) ? 'selected' : ''  }}  value="{{$id}}" >{{$nombre}}</option>
+                        @endif
+                    @endforeach
+                </select>
+                <label for="txtocupaciones" class="active">Ocupación <span class="red-text">*</span></label>
+               
+                <small id="txtocupaciones-error" class="error red-text"></small>
+            </div>
+            <div class="input-field col s12 m6 l6 offset-l3 m-3" id="otraocupacion">
+                <input class="validate" id="txtotra_ocupacion" name="txtotra_ocupacion" type="text"  value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('txtotra_ocupacion')}}">
+                <label for="txtotra_ocupacion" class="active">¿Cuál? <span class="red-text">*</span></label>
+                <small id="txtotra_ocupacion-error" class="error red-text"></small>
+            </div>
+        </div>
+
+    </div>
+</div>

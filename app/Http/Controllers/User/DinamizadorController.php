@@ -7,18 +7,21 @@ use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
+use App\Repositories\Datatables\UserDatatables;
 
 class DinamizadorController extends Controller
 {
 
     public $dinamizadorRepository;
     public $userRepository;
+    public $userdatables;
 
-    public function __construct(DinamizadorRepository $dinamizadorRepository, UserRepository $userRepository)
+    public function __construct(DinamizadorRepository $dinamizadorRepository, UserRepository $userRepository, UserDatatables $userdatables)
     {
         $this->middleware('auth');
         $this->dinamizadorRepository = $dinamizadorRepository;
         $this->userRepository        = $userRepository;
+        $this->userdatables        = $userdatables;
     }
     /**
      * Display a listing of the resource.
@@ -32,6 +35,7 @@ class DinamizadorController extends Controller
             case User::IsAdministrador():
                 return view('users.administrador.dinamizador.index', [
                     'nodos' => $this->userRepository->getAllNodos(),
+                    'view' => 'activos'
                 ]);
                 break;
 
@@ -39,41 +43,57 @@ class DinamizadorController extends Controller
                 abort('404');
                 break;
         }
-
     }
 
-    public function getDinanizador($nodo)
+    public function getDinanizador(Request $request, $nodo)
     {
         $this->authorize('indexDinamizador', User::class);
+
         if (request()->ajax()) {
-            return datatables()->of($this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo))
-                ->addColumn('detail', function ($data) {
+            $users = $this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo)
+                ->orderby('users.created_at', 'desc')
+                ->get();
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })
-                ->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })
-                ->rawColumns(['detail', 'edit'])
-                ->make(true);
+            return $this->userdatables->datatableUsers($request, $users);
         }
 
         abort('404');
-
     }
 
+    public function getDinanizadorTrash(Request $request, $nodo)
+    {
+        $this->authorize('indexDinamizador', User::class);
+
+        if (request()->ajax()) {
+            $users = $this->dinamizadorRepository->getAllDinamizadoresPorNodo($nodo)
+                    ->onlyTrashed()
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+            return $this->userdatables->datatableUsers($request, $users);
+        }
+
+        abort('404');
+    }
+
+
+    
+
+    public function trash(Request $request)
+    {
+        $this->authorize('indexDinamizador', User::class);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+
+
+                return view('users.administrador.dinamizador.index', [
+                    'view' => 'inactivos',
+                    'nodos' => $this->userRepository->getAllNodos(),
+                ]);
+                break;
+            default:
+                abort('404');
+                break;
+        }
+    }
 }

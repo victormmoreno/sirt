@@ -16,7 +16,7 @@
             </div>
           </a>
         </div>
-        <div class="col s12 m3 l3 ">
+        <div class="col s12 m3 l3">
           <a href="{{ route('pdf.proyecto.acc', 39) }}" class="black-text">
             <div class="card green lighten-3 stats-card">
               <div class="card-content">

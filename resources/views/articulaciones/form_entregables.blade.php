@@ -1,6 +1,6 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
-{!! \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = '' !!}
+@php \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = '' @endphp
 <div class="row">
   <div class="input-field col s12 m6 l6">
     <input id="txtcodigo_actividad" disabled value="{{$articulacion->codigo_articulacion}}">

@@ -67,6 +67,10 @@ class EmpresaRepository
       $empresa->sector_id = $request->input('txtsector');
       $empresa->nit       = $request->input('nit');
       $empresa->direccion = $request->input('direccion');
+      $empresa->tipoempresa_id  = $request->input('txttipoempresa_id');
+      $empresa->tamanhoempresa_id  = $request->input('txttamanhoempresa_id');
+      $empresa->fecha_creacion  = $request->input('fecha_creacion');
+      $empresa->codigo_ciiu  = $request->input('codigo_ciiu');
       $empresa->update();
       DB::commit();
       return $empresa;
@@ -94,10 +98,13 @@ class EmpresaRepository
       'sector_id'  => $request->input('txtsector'),
       'nit'        => $request->input('nit'),
       'direccion'  => $request->input('direccion'),
+      'tipoempresa_id'  => $request->input('txttipoempresa_id'),
+      'tamanhoempresa_id'  => $request->input('txttamanhoempresa_id'),
+      'fecha_creacion'  => $request->input('fecha_creacion'),
+      'codigo_ciiu'  => $request->input('codigo_ciiu'),
       ]);
 
       DB::commit();
-
       return $empresa;
     } catch (Exception $e) {
       DB::rollback();

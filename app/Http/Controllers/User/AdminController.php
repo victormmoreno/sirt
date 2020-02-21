@@ -9,14 +9,16 @@ use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use PDF;
 use Illuminate\Http\Request;
+use App\Repositories\Datatables\UserDatatables;
 
 class AdminController extends Controller
 {
 
     public $adminRepository;
     public $userRepository;
+    public $userdatables;
 
-    public function __construct(AdminRepository $adminRepository, UserRepository $userRepository)
+    public function __construct(AdminRepository $adminRepository, UserRepository $userRepository, UserDatatables $userdatables)
     {
         $this->middleware([
             'auth',
@@ -25,6 +27,7 @@ class AdminController extends Controller
         ]);
         $this->adminRepository = $adminRepository;
         $this->userRepository  = $userRepository;
+        $this->userdatables = $userdatables;
     }
 
     /**
@@ -32,46 +35,44 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        // return $this->adminRepository->getAllAdministradores()->get();
         $this->authorize('indexAdministrador', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
 
                 if (request()->ajax()) {
-                    return datatables()->of($this->adminRepository->getAllAdministradores())
-                        ->addColumn('detail', function ($data) {
-
-                            $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                            return $button;
-                        })
-                        ->addColumn('edit', function ($data) {
-                            if ($data->id != auth()->user()->id) {
-                                $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                            } else {
-                                $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                            }
-                            return $button;
-                        })
-                        ->editColumn('estado', function ($data) {
-                            if ($data->estado == User::IsActive()) {
-                                return $data->estado = 'Habilitado';
-                            } else {
-                                return $data->estado = 'Inhabilitado ';
-                            }
-                        })
-                        ->rawColumns(['detail', 'edit'])
-                        ->make(true);
+                    $users = $this->adminRepository->getAllAdministradores()->orderBy('id', 'ASC')->get();
+                    return $this->userdatables->datatableUsers($request, $users);
                 }
-
-                return view('users.administrador.administrador.index');
+                return view('users.administrador.administrador.index', ['view' => 'activos']);
                 break;
             default:
                 abort('404');
                 break;
         }
 
+    }
+
+     public function trash(Request $request)
+    {
+        $this->authorize('indexAdministrador', User::class);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                               
+                if (request()->ajax()) {
+                    $user = $this->adminRepository->getAllAdministradores()->onlyTrashed()->get();
+                    return $this->userdatables->datatableUsers($request, $user);
+                }
+
+                return view('users.administrador.administrador.index', ['view' => 'inactivos']);
+                break;
+            default:
+                abort('404');
+                break;
+        }
     }
 
     public function exportAdminUser($extension = 'xlsx')

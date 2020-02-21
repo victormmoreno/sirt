@@ -69,30 +69,11 @@
 	@endif
 
 	<div class="row">
-		<div class="input-field col s12 m6 l6">
-		    <label class="active" for="txttipomaterial">Tipo Material <span class="red-text">*</span></label>
-		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txttipomaterial" id="txttipomaterial" >
-	            <option value="">Seleccione Tipo Material</option>
-	            @forelse($tiposmateriales as $id => $tipomaterial)
-		            @if(isset($material->tipomaterial->id))
-		            	<option value="{{$id}}" {{ old('txttipomaterial', $material->tipomaterial->id) == $id ? 'selected':'' }}>{{$tipomaterial}}</option>
-		            @else
-		            	<option value="{{$id}}" {{ old('txttipomaterial') == $id ? 'selected':'' }}>{{$tipomaterial}}</option>
-		            @endif
-	            @empty
-	             	<option value="">No hay información disponible</option>
-	            @endforelse
-	        </select>
-	        @error('txttipomaterial')
-            <label class="error" for="txttipomaterial" id="txttipomaterial-error">
-                {{ $message }}
-            </label>
-            @enderror
-		</div>
-		<div class="input-field col s12 m6 l6">
-		    <label class="active" for="txtcategoria">TipoMaterial / Categoria Material <span class="red-text">*</span></label>
+		
+		<div class="input-field col s12 m12 l12">
+		    <label class="active" for="txtcategoria">Categoria Material <span class="red-text">*</span></label>
 		    <select class="js-states browser-default select2Tags " tabindex="-1" style="width: 100%" name="txtcategoria" id="txtcategoria" >
-	            <option value="">Seleccione TipoMaterial / Categoria Material</option>
+	            <option value="">Categoria Material</option>
 	            @forelse($categoriasMateriales as $id => $categoriaMaterial)
 		            @if(isset($material->categoriamaterial->id))
 		            	<option value="{{$id}}" {{ old('txtcategoria', $material->categoriamaterial->id) == $id ? 'selected':'' }}>{{$categoriaMaterial}}</option>

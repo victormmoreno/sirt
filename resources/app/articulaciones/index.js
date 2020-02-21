@@ -95,15 +95,15 @@ function detallesDeUnaArticulacion(id){
         +'</div>'
         +'<div class="divider"></div>'
 
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="teal-text text-darken-3">Empresa/Emprendedores/Grupo de Investigación: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.tipo_articulacion+'</span><span onclick="verDetalleDeLaEntidadAsocidadALaArticulacion('+respuesta.detalles.id+')" class="new badge blue" data-badge-caption="Pulse aquí para ver estos detalles"></span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
+        // +'<div class="row">'
+        // +'<div class="col s12 m6 l6">'
+        // +'<span class="teal-text text-darken-3">Empresa/Emprendedores/Grupo de Investigación: </span>'
+        // +'</div>'
+        // +'<div class="col s12 m6 l6">'
+        // +'<span class="black-text">'+respuesta.detalles.tipo_articulacion+'</span><span onclick="verDetalleDeLaEntidadAsocidadALaArticulacion('+respuesta.detalles.id+')" class="new badge blue" data-badge-caption="Pulse aquí para ver estos detalles"></span>'
+        // +'</div>'
+        // +'</div>'
+        // +'<div class="divider"></div>'
       );
     $('#articulacionDetalle').openModal();
     }

@@ -1,13 +1,16 @@
 @extends('layouts.app')
 @section('meta-title', 'Talentos')
 @section('content')
+@php
+  $year = Carbon\Carbon::now()->year;
+@endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -30,46 +33,77 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Talentos {{config('app.name')}}
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                             
+                                            @if($view == 'activos')
+                                            Talentos con acceso a {{config('app.name')}}
+                                            @else
+                                            Talentos sin acceso a {{config('app.name')}}
+                                            @endif
                                         </span>
-                                        <i class="material-icons">
+                                        <i class="material-icons orange-text text-darken-3">
                                             supervised_user_circle
                                         </i>
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('usuario.usuarios.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                        <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
                             </div>
-                            <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                              <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
-                              {{-- <li class="tab col s3"><a href="#TalentoProyectoNodo" >Talentos con proyectos realizados en {{config('app.name')}}</a></li> --}}
-                              <div class="indicator" style="right: 580.5px; left: 0px;"></div>
-                            </ul>
-                            <div class="divider">
+                            <div class="divider"></div>
+                            
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
+                            <div class="row">
+                                <div class="input-field col s12 m6 l6">
+                                  
+                                  <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
+                                  
+                                    <option value="">Seleccione Nodo * </option>
+                                    @foreach($nodos as $nodo)
+                                      <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                    @endforeach
+                                  </select>
+                                  <label for="txtnodo">Nodo</label>
+                                </div>
+                                <div class="col s12 m6 l6">
+                                  <div class="input-field col s12 m12 l12">
+                                    <select class="js-states"  tabindex="-1" style="width: 100%" id="txt_anio_user" name="txt_anio_user">
+                                      @for ($i=2016; $i <= $year; $i++)
+                                        <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                                      @endfor
+                                    </select>
+                                    <label for="txt_anio_user">Seleccione el Año</label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 m4 l4 offset-l4">
+                                      @if($view == 'activos')
+                                      <a onclick="usuarios.consultarTalentosByTecnoparque();" href="javascript:void(0)">
+                                      @elseif($view == 'inactivos')
+                                      <a onclick="usuarios.consultarTalentosByTecnoparqueTrash();" href="javascript:void(0)">
+                                      @endif
+                                        
+                                          <div class="card blue">
+                                            <div class="card-content center flow-text">
+                                              <i class="left material-icons white-text small">search</i>
+                                              <span class="white-text">Consultar Talento</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </div>
+                                </div>
+                              </div>
+                              @if($view == 'activos')
+                                @include('users.table', ['id' => 'talentoByDinamizador_table_activos'] )  
+                              @elseif($view == 'inactivos')
+                                @include('users.table', ['id' => 'talentoByDinamizador_table_inactivos'] ) 
+                              @endif
+                             
                             </div>
-                            <div id="historialTalento">
-                                <h5 class="center-align">Talentos {{config('app.name')}}</h5>
-                                <div class="divider">
-                            </div>
-                                <table class="display responsive-table" id="talento_history_table">
-                                <thead>
-                                    <th>Tipo Documento</th>
-                                    <th>Documento</th>
-                                    <th>Usuario</th>
-                                    <th>Correo</th>
-                                    <th>Telefono</th>
-                                    <th>Estado Sistema</th>
-                                    <th>Detalles</th>
-                                    <th>Editar</th>
-                                </thead>
-                
-                            </table>
-                            </div>
-                        </div>
+                            
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
@@ -90,5 +124,7 @@
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
   </div>
 </div>
+
+
 
 @endsection
