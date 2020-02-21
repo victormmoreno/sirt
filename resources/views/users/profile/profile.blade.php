@@ -205,8 +205,12 @@
                                                                 <span class="title">
                                                                     Fecha de Nacimiento
                                                                 </span>
-                                                                <p>
-                                                                    {{$user->fechanacimiento->isoFormat('LL')}}
+                                                                <p> 
+                                                                    @if(isset($user->fechanacimiento))
+                                                                    {{optional($user->fechanacimiento)->isoFormat('LL')}}
+                                                                    @else
+                                                                        No registra
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -414,7 +418,12 @@
                                                                         Fecha de terminación
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->fecha_terminacion->isoFormat('LL') ? : 'No registra'}}
+                                                                        @if(isset($user->fecha_terminacion))
+                                                                        {{optional($user->fecha_terminacion)->isoFormat('LL') ? : 'No registra'}}
+                                                                        @else
+                                                                        No registra
+                                                                        @endif
+                                                                        
                                                                     </p>
                                                                 </li>
                                                             </ul>

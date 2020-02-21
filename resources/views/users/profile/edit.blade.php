@@ -319,11 +319,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            {{-- <div class="right">
-                                                                <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
-                                                                    Solicitar actualización del genero
-                                                                </a>
-                                                            </div> --}}
+                                                            
                                                         </div>
                                                          
                                                     </div>
@@ -420,7 +416,7 @@
                                                                 <i class="material-icons prefix">
                                                                     date_range
                                                                 </i>
-                                                                <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fechanacimiento) ? $user->fechanacimiento->toDateString() : old('txtfechaterminacion')}}">
+                                                                <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fecha_terminacion) ? $user->fecha_terminacion->toDateString() : old('txtfechaterminacion')}}">
                                                                 <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
                                                                 @error('txtfechaterminacion')
                                                                     <label id="txtfechaterminacion-error" class="error" for="txtfechaterminacion">{{ $message }}</label>
