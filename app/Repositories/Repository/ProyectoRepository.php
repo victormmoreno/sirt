@@ -1137,7 +1137,7 @@ class ProyectoRepository
     try {
       $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
       Notification::send($dinamizadores, new ProyectoAprobarInicio($proyecto));
       DB::commit();
       return true;
@@ -1160,7 +1160,7 @@ class ProyectoRepository
     try {
       $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
       Notification::send($dinamizadores, new ProyectoAprobarCierre($proyecto));
       DB::commit();
       return true;

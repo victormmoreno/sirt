@@ -32,7 +32,7 @@
                 @include('proyectos.gestor.form_ejecucion', [
                   'btnText' => 'Modificar'])
                 <div class="row">
-                  @include('proyectos.archivos_table_fase')
+                  @include('proyectos.archivos_table_fase', ['fase' => 'ejecucion'])
                 </div>
                 <center>
                   @if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)

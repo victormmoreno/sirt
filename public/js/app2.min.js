@@ -4980,8 +4980,8 @@ function consultarProyectosDeTalentos () {
       },
       {
         width: '8%',
-        data: 'edit',
-        name: 'edit',
+        data: 'proceso',
+        name: 'proceso',
         orderable: false
       },
     ],

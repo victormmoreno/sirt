@@ -32,7 +32,7 @@
                 @include('proyectos.gestor.form_planeacion', [
                   'btnText' => 'Modificar'])
                 <div class="row">
-                  @include('proyectos.archivos_table_fase')
+                  @include('proyectos.archivos_table_fase', ['fase' => 'planeacion'])
                 </div>
                 <center>
                   @if ($proyecto->fase->nombre == 'Planeación')
