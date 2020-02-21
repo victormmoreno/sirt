@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ProyectoPendiente extends Notification implements ShouldQueue
+class ProyectoCierreAprobado extends Notification implements ShouldQueue
 {
   use Queueable;
   private $proyecto;
@@ -43,11 +43,11 @@ class ProyectoPendiente extends Notification implements ShouldQueue
   public function toArray($notifiable)
   {
     return [
-      'link'  => route('proyecto.aprobacion', $this->getProyecto()->id),
+      'link'  => route('proyecto.cierre', $this->getProyecto()->id),
       'icon'  => 'library_books',
       'color' => 'green',
-      'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres}",
-      'text'  => "Proyecto pendiente de aprobación | {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
+      'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->apellidos}",
+      'text'  => "Proyecto aprobado en fase de cierre | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
     ];
   }
 

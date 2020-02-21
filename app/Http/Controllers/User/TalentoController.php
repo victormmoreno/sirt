@@ -39,7 +39,6 @@ class TalentoController extends Controller
     }
 
 
-
     public function consultarUnTalentoPorId($id)
     {
         return response()->json([

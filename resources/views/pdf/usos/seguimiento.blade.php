@@ -17,10 +17,10 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{ $proyecto['codigo_proyecto'] }}</td>
-        <td>{{ $proyecto['nombre'] }}</td>
-        <td>{{ $proyecto['nombre_gestor'] }}</td>
-        <td>{{ $proyecto['nombre_linea'] }}</td>
+        <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
+        <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
+        <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
+        <td>{{ $proyecto->sublinea->nombre }}</td>
       </tr>
     </tbody>
   </table>
@@ -42,7 +42,7 @@
     <tbody>
       @forelse ($talentos->articulacion_proyecto->talentos as $value)
         <tr>
-          <td>{{ $value->user->nombres }}</td>
+          <td>{{ $value->user->documento }}</td>
           <td>{{ $value->user->nombres }} {{ $value->user->apellidos }}</td>
           <td>{{ $value->user->email }}</td>
           <td>{{ $value->user->celular }} {{ $value->user->telefono }}</td>
@@ -137,4 +137,19 @@
       @endforelse
     </tbody>
   </table>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="row">
+    <div class="column">
+      <div>__________________________________________________________</div>
+      <small>Firma del gestor(a) - {{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}}</small>
+    </div>
+    <div class="column">
+      <div>__________________________________________________________</div>
+      <small>Firma del talento interlocutor - {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}}</small>
+    </div>
+  </div>
+  <br>
 @endsection

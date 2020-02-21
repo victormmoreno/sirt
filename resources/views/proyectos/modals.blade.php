@@ -17,6 +17,63 @@
   </div>
 </div>
 
+<div class="modal" id="posiblesPropietarios_Personas_modal">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <table id="posiblesPropietarios_Personas_table" style="width: 100%" class="centered">
+          <thead>
+            <th>Documento de Identidad</th>
+            <th>Nombres del Usuario</th>
+            <th>Asociar como dueño de la propiedad intelectual</th>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+  </div>
+</div>
+
+<div class="modal" id="posiblesPropietarios_Empresas_modal">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <table id="posiblesPropietarios_Empresas_table" style="width: 100%" class="centered">
+          <thead>
+            <th>Nit</th>
+            <th>Nombre de la Empresa</th>
+            <th>Asociar como dueño de la propiedad intelectual</th>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+  </div>
+</div>
+
+<div class="modal" id="posiblesPropietarios_Grupos_modal">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <table id="posiblesPropietarios_Grupos_table" style="width: 100%" class="centered">
+          <thead>
+            <th>Código del Grupo</th>
+            <th>Nombre del Grupo</th>
+            <th>Asociar como dueño de la propiedad intelectual</th>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+  </div>
+</div>
+
 <div class="modal" id="ideasDeProyectoConEmprendedores_modal">
   <div class="modal-content">
     <div class="row">

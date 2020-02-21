@@ -129,11 +129,16 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('aprobacion');
     }
 
+    // public function proyectos()
+    // {
+    //     return $this->belongsToMany(Proyecto::class, 'aprobaciones')
+    //         ->withTimestamps()
+    //         ->withPivot('aprobacion');
+    // }
+
     public function proyectos()
     {
-        return $this->belongsToMany(Proyecto::class, 'aprobaciones')
-            ->withTimestamps()
-            ->withPivot('aprobacion');
+        return $this->morphToMany(Proyecto::class, 'propietario');
     }
 
     public function etnia()

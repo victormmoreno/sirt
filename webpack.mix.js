@@ -55,7 +55,7 @@ mix.scripts([
     'resources/assets/plugins/summernote/dist/summernote-lite.js',
     'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
-		'resources/assets/js/custom.js',
+		'resources/assets/js/custom.js'
 	],'public/js/libs.js');
 
 mix.minify('public/js/libs.js')
@@ -106,6 +106,8 @@ mix.scripts([
 		'resources/app/intervenciones/gestor/index.js',
 		'resources/app/intervenciones/index.js',
 		'resources/app/proyecto/index.js',
+		'resources/app/proyecto/gestor/form.js',
+		'resources/app/proyecto/gestor/form_cierre.js',
 		'resources/app/edt/gestor/form.js',
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
@@ -147,7 +149,7 @@ mix.minify('public/js/app2.js')
 
 mix.browserSync({
 
-        proxy: 'http://gestion2019.test',
+        proxy: 'http://gestion2020.test',
         files: [
             'app/**/*',
             'resources/views/**/*',

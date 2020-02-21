@@ -71,8 +71,8 @@ class EmpresaFormRequest extends FormRequest
       'date_format.date_format' => 'La fecha de creación no tiene un formato válido (Y-m-d).',
 
       'codigo_ciiu.max' => 'El código CIIU de la empresa debe ser máximo de 15 carácteres.',
-    ];
-  }
+      ];
+    }
 
   public function attributes()
   {

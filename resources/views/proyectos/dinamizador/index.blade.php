@@ -10,7 +10,7 @@
                       <i class="material-icons left">
                           library_books
                       </i>
-                      Proyectos
+                      Proyectos de Base Tecnológica
                   </h5>
               </div>
               <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
@@ -53,15 +53,6 @@
                 </div>
                 <div class="row">
                   @include('proyectos.table')
-                  <div class="col s12 m2 l2">
-                    <a onclick="generarExcelDeProyectosDelNodoPorAnho()" href="javascript:void(0)">
-                      <div class="card green">
-                        <div class="card-content center">
-                          <span class="white-text">Descargar tabla</span>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
                 </div>
               </div>
               <div id="proyectos_por_gestor">
@@ -104,15 +95,6 @@
                 </div>
                 <div class="row">
                   @include('proyectos.table2')
-                  <div class="col s12 m2 l2">
-                    <a onclick="generarExcelDeProyectosDelGestorPorAnho()" href="javascript:void(0)">
-                      <div class="card green">
-                        <div class="card-content center">
-                          <span class="white-text">Descargar tabla</span>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
@@ -125,28 +107,6 @@
 @endsection
 @push('script')
   <script>
-  function generarExcelDeProyectosDelGestorPorAnho() {
-    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
-    let id = $('#txtgestor_id').val();
-    if (id == '') {
-      Swal.fire({
-        title: 'Error!',
-        text: "Debes seleccionar un gestor!",
-        type: 'warning',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
-    } else {
-      location.href = '/excel/excelProyectosDelGestorPorAnho/'+id+'/'+anho
-    }
-  }
-
-  function generarExcelDeProyectosDelNodoPorAnho() {
-    let anho = $('#anho_proyectoPorNodoYAnho').val();
-    location.href = '/excel/excelProyectosDelNodoPorAnho/'+{{ auth()->user()->dinamizador->nodo_id }}+'/'+anho
-  }
-
   $("#codigo_proyecto_tblproyectosDelGestorPorAnho").keyup(function(){
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
@@ -159,15 +119,11 @@
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
 
+  $("#nombre_fase_tblproyectosDelGestorPorAnho").keyup(function(){
+    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
+  });
+
   $("#sublinea_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
-    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
-  });
-
-  $("#estado_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
-    $('#tblproyectosDelGestorPorAnho').DataTable().draw();
-  });
-
-  $("#revisado_final_tblproyectosDelGestorPorAnho").keyup(function(){
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
   // Ajax que muestra los proyectos de un gestor por año
@@ -199,8 +155,7 @@
             d.gestor = $('#gestor_tblproyectosDelGestorPorAnho').val(),
             d.nombre = $('#nombre_tblproyectosDelGestorPorAnho').val(),
             d.sublinea_nombre = $('#sublinea_nombre_tblproyectosDelGestorPorAnho').val(),
-            d.estado_nombre = $('#estado_nombre_tblproyectosDelGestorPorAnho').val(),
-            d.revisado_final = $('#revisado_final_tblproyectosDelGestorPorAnho').val(),
+            d.nombre_fase = $('#nombre_fase_tblproyectosDelGestorPorAnho').val(),
             d.search = $('input[type="search"]').val()
           }
           // type: "get",
@@ -224,43 +179,21 @@
             name: 'sublinea_nombre',
           },
           {
-            data: 'estado_nombre',
-            name: 'estado_nombre',
-          },
-          {
-            data: 'revisado_final',
-            name: 'revisado_final',
+            data: 'nombre_fase',
+            name: 'nombre_fase',
           },
           {
             width: '8%',
-            data: 'talentos',
-            name: 'talentos',
+            data: 'proceso',
+            name: 'proceso',
             orderable: false
           },
-          {
-            width: '8%',
-            data: 'details',
-            name: 'details',
-            orderable: false
-          },
-          {
-            width: '8%',
-            data: 'edit',
-            name: 'edit',
-            orderable: false
-          },
-          {
-            width: '8%',
-            data: 'entregables',
-            name: 'entregables',
-            orderable: false
-          },
-          {
-            width: '8%',
-            data: 'delete',
-            name: 'delete',
-            orderable: false
-          },
+          // {
+          //   width: '8%',
+          //   data: 'delete',
+          //   name: 'delete',
+          //   orderable: false
+          // },
           ],
         });
     }
