@@ -18,12 +18,15 @@ class Talento extends Model
     protected $fillable = [
         'user_id',
         'perfil_id',
+        'tipo_talento_id',
         'entidad_id',
         'universidad',
         'programa_formacion',
         'carrera_universitaria',
         'empresa',
-        'otro_tipo_talento',
+        'tipo_formacion_id',
+        'tipo_estudio_id',
+        'dependencia',
     ];
 
     // Relacion muchos a muchos con articulaciones
@@ -46,9 +49,24 @@ class Talento extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function tipoformacion()
+    {
+        return $this->belongsTo(TipoFormacion::class, 'tipo_formacion_id', 'id');
+    }
+
+    public function tipoestudio()
+    {
+        return $this->belongsTo(TipoEstudio::class, 'tipo_estudio_id', 'id');
+    }
+
     public function perfil()
     {
         return $this->belongsTo(Perfil::class, 'perfil_id', 'id');
+    }
+
+    public function tipotalento()
+    {
+        return $this->belongsTo(TipoTalento::class, 'tipo_talento_id', 'id');
     }
 
     public function entidad()
@@ -60,7 +78,7 @@ class Talento extends Model
     // Consulta los talentos de tecnoparque
     public function scopeConsultarTalentosDeTecnoparque($query)
     {
-        return $query->select('users.documento', 'talentos.id')
+        return $query->select('users.documento', 'talentos.id', 'users.id AS user_id')
             ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
             ->join('users', 'users.id', '=', 'talentos.user_id');
     }
@@ -104,5 +122,4 @@ class Talento extends Model
     }
 
     /*=====  End of mutadores eloquent  ======*/
-
 }

@@ -15,9 +15,8 @@ class TalentoRepository
 	{
 		return User::InfoUserDatatable()
             ->Join('talentos', 'talentos.user_id', '=', 'users.id')
-            ->role(User::IsTalento())
-            ->orderby('users.created_at', 'desc')
-            ->get();
+            ->role(User::IsTalento());
+            
 
 	}
 

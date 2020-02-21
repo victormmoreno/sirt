@@ -5,11 +5,13 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormRequest;
 use App\Http\Traits\UserTrait\RegistersUsers;
-use App\Models\Nodo;
+use App\Models\{Nodo, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use App\Repositories\Datatables\UserDatatables;
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -23,6 +25,13 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    public function findUserById(int $id)
+    {
+        return response()->json([
+            'user' => User::find($id),
+        ]);
+    }
+
     /**
      * metodo para mostrar el index o listado de usarios.
      *
@@ -31,10 +40,7 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('index', User::class);
-        
-       
 
-        // return $user;
 
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
@@ -45,19 +51,19 @@ class UserController extends Controller
             case User::IsDinamizador():
                 $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
                 return view('users.administrador.index', [
+
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
 
             case User::IsGestor():
 
-                return view('users.gestor.talento.index');
+                return view('users.gestor.talento.index', ['view' => 'activos']);
                 break;
             default:
                 abort('404');
                 break;
         }
-
     }
 
     /*===============================================================================
@@ -78,51 +84,83 @@ class UserController extends Controller
     /*=====  End of metodo API para consultar las ciudades por departamento  ======*/
 
     /*============================================================================
-    =            metodo para mostrar todos los usuarios en datatables            =
+    =            metodo encargado de hacer consulta y retonar la dataables          =
     ============================================================================*/
 
-    public function getAllUsersInDatatable()
+    public function getDatatablesUsersTalentosByDatatables(Request $request, UserDatatables $usersDatatables, $anio)
     {
         if (request()->ajax()) {
 
-            return datatables()->of($this->userRepository->getAllUsersForDatatables())
-                ->addColumn('detail', function ($data) {
+            if (session()->get('login_role') == User::IsGestor()) {
+                $auth = auth()->user()->gestor->id;
+                $nodo = auth()->user()->gestor->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->groupBy('users.id')
+                ->get();
 
-                    $button = '<a class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })->editColumn('estado', function ($data) {
-                if ($data->estado == User::IsActive()) {
-
-                    return $data->estado = 'Habilitado';
-                } else {
-                    return $data->estado = 'Inhabilitado ';
-                }
-            })
-                ->editColumn('role', function ($data) {
-                    
-                    return $data->roles->whenEmpty(function($collection) {
-                        return $collection->push('No tiene roles asignados');
-                    })->implode('name', ', ');
-                                       
-                    
-                })
-                ->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
-                ->rawColumns(['detail', 'edit', 'estado', 'role'])
-                ->make(true);
-        } else {
-            abort('404');
+                return $usersDatatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
+                ->get();
+                return $usersDatatables->datatableUsers($request, $users);
+            }
         }
+        abort('404');
     }
 
-    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
+    public function getDatatablesUsersTalentosByGestorDatatables(Request $request, UserDatatables $usersDatatables, $gestor, $anio)
+    {
+        if (request()->ajax()) {
+
+            if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)->groupBy('users.id')
+                ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            }
+        }
+        abort('404');
+    }
+
+
+    public function getDatatablesUsersTalentosByNodoDatatables(Request $request, UserDatatables $usersDatatables, $nodo, $anio)
+    {
+        if (request()->ajax()) {
+
+            if (session()->get('login_role') == User::IsAdministrador()) {
+
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
+                ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            }
+        }
+        abort('404');
+    }
+
+    public function getDatatablesUsersTalentosByNodoDatatablesTrash(Request $request, UserDatatables $usersDatatables, $nodo, $anio)
+    {
+        if (request()->ajax()) {
+
+            if (session()->get('login_role') == User::IsAdministrador()) {
+
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                        ->onlyTrashed()
+                        ->groupBy('users.id')
+                        ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            }
+        }
+        abort('404');
+    }
+
+
+
+    /*============================================================================
+    =            metodo para mostrar todos los usuarios en datatables            =
+    ============================================================================*/
 
     /**
      * Display the specified resource.
@@ -130,22 +168,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($documento)
     {
-        $user = $this->userRepository->findById($id);
 
-        if (request()->ajax()) {
-            $data = [
-                'user' => $user,
-                'role' => $user->getRoleNames()->implode(', '),
-            ];
+        $user = User::where('documento',$documento)->first();
 
-            return response()->json([
-                'data' => $data,
-            ]);
-
+        if($user == null){
+            $user = User::onlyTrashed()->where('documento',$documento)->firstOrFail();
         }
-        abort('404');
+
+        return view('users.show', ['user' => $user]);
+
     }
 
     /**
@@ -154,15 +187,21 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($documento)
     {
-        $user = $this->userRepository->findById($id);
+        $user = User::where('documento',$documento)->first();
+
+        if($user == null){
+            $user = User::onlyTrashed()->where('documento',$documento)->firstOrFail();
+        }
         $this->authorize('edit', $user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
 
-                return view('users.administrador.edit', [
-                    'user'              => $this->userRepository->findById($id),
+                return view('users.edit', [
+                    'etnias' => Etnia::pluck('nombre', 'id'),
+                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
+                    'user'              => $user,
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
                     'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
@@ -173,13 +212,23 @@ class UserController extends Controller
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
+                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
+                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
+                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
+                    'view' => 'edit'
                 ]);
                 break;
             case User::IsDinamizador():
-                $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
+                if(isset(auth()->user()->dinamizador->nodo->id)){
+                    $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
+                }else{
+                    $nodo = [];
+                    return redirect()->route('home');
+                }
+                
 
-                return view('users.administrador.edit', [
-                    'user'              => $this->userRepository->findById($id),
+                return view('users.edit', [
+                    'user'              => $user,
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
                     'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
@@ -190,13 +239,24 @@ class UserController extends Controller
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
+                    'etnias' => Etnia::pluck('nombre', 'id'),
+                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
+                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
+                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
+                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
+                    
+                    'view' => 'edit'
                 ]);
                 break;
             case User::IsGestor():
-                $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
-
-                return view('users.administrador.edit', [
-                    'user'              => $this->userRepository->findById($id),
+                if(isset(auth()->user()->gestor->nodo->id)){
+                    $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
+                }else{
+                    $nodo = [];
+                    return redirect()->route('home');
+                }
+                return view('users.edit', [
+                    'user'              => $user,
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
                     'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
                     'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
@@ -207,6 +267,12 @@ class UserController extends Controller
                     'nodos'             => $this->userRepository->getAllNodo(),
                     'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
+                    'etnias' => Etnia::pluck('nombre', 'id'),
+                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
+                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
+                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
+                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
+                    'view' => 'edit'
                 ]);
 
                 break;
@@ -215,7 +281,6 @@ class UserController extends Controller
                 abort('404');
                 break;
         }
-
     }
 
     /**
@@ -225,19 +290,157 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserFormRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $user = $this->userRepository->findById($id);
+
+        
+        $user = User::find($id);
+
+        if($user == null){
+            $user = User::onlyTrashed()->find($id);
+        }
+
         $this->authorize('update', $user);
 
-        if ($user != null) {
-            $userUpdate = $this->userRepository->Update($request, $user);
-            alert()->success("El Usuario {$userUpdate->nombres} {$userUpdate->apellidos} ha sido  modificado.", 'Modificación Exitosa', "success");
+        $req       = new UserFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
         } else {
-            alert()->error("El Usuario {$user->nombres} {$user->apellidos} no ha sido  modificado.", 'Modificación Errónea', "error");
+            if ($user != null) {
+                $userUpdate = $this->userRepository->Update($request, $user);
+               
+                return response()->json([
+                    'state'   => 'success',
+                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
+                    'url' => route('usuario.index'),
+                    'user' => $userUpdate,
+                ]);
+            } else {
+                return response()->json([
+                    'state'   => 'error',
+                    'message' => 'El Usuario no se ha modificado',
+                    'url' => false
+
+                ]);
+            }
         }
-        //redireccion
-        return redirect()->route('usuario.index');
     }
 
+
+    public function userSearch()
+    {
+        return view('users.search');
+    }
+
+    public function queryUserByDocument($document = null)
+    {
+        $user = User::where('documento', $document)->first();
+
+        if($user == null){
+            $user = User::onlyTrashed()->where('documento', $document)->first();
+        }
+
+        if ($user == null) {
+            return response()->json([
+                'data' => null,
+                'message' => 'error',
+                'url' => route('usuario.usuarios.create'),
+            ]);
+        } else if ($user != null) {
+            return response()->json([
+                'data' => ['user' => $user, 'roles' => $user->getRoleNames()->implode(', ')],
+                'message' => 'success',
+                'url' => route('usuario.usuarios.show', $user->documento),
+            ]);
+        }
+    }
+
+    public function consultaremail(Request $request)
+    {
+        $user = User::where('email', $request->txtemail)->first();
+
+        if ($user != null) {
+            return response()->json([
+                'response' => false
+            ]);
+        } else {
+
+            return response()->json([
+                'response' => true
+            ]);
+        }
+    }
+
+
+    public function study($document = null)
+    {
+        $user = $this->userRepository->findUserByDocument($document)->first();
+        if ($user != null) {
+            abort('404');
+        }
+
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                break;
+            case User::IsGestor():
+                return view('users.estudios', [
+                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+                    'documento' => $document,
+                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+                ]);
+
+                break;
+            default:
+                abort('404');
+                break;
+        }
+    }
+
+    public function acceso($document)
+    {
+        $user = User::where('documento',$document)->first();
+
+        if($user == null){
+            $user = User::onlyTrashed()->where('documento',$document)->firstOrFail();
+        }
+
+        $this->authorize('show', $user);
+        
+        return view('users.acceso', ['user' => $user]);
+    }
+
+
+    public function updateAcceso(Request $request, $documento)
+    {
+        $user = User::where('documento',$documento)->first();
+
+        if($user == null){
+            $user = User::onlyTrashed()->where('documento',$documento)->firstOrFail();
+        }
+
+        if($request->get('txtestado') == 'on'){
+            $user->update(['estado' =>0]);
+                
+    
+            $user->delete();
+            return redirect()->back()->withSuccess('Acceso de usuario modificado');
+        }else{
+            $user->update([
+                'estado' => 1,
+            ]);
+
+            $user->restore();
+            return redirect()->back()->withSuccess('Acceso de usuario modificado');
+        }
+        
+
+        return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
+    }
 }

@@ -44,7 +44,7 @@ class MaterialRepository
         Material::create([
             'nodo_id'               => $this->findNodoBySession(),
             'lineatecnologica_id'   => $this->findLineaBySession($request),
-            'tipomaterial_id'       => $request->input('txttipomaterial'),
+            'tipomaterial_id'       => 1,
             'categoria_material_id' => $request->input('txtcategoria'),
             'presentacion_id'       => $request->input('txtpresentacion'),
             'medida_id'             => $request->input('txtmedida'),
@@ -84,7 +84,7 @@ class MaterialRepository
             $material->update([
                 'nodo_id'               => $this->findNodoBySession(),
                 'lineatecnologica_id'   => $this->findLineaBySession($request),
-                'tipomaterial_id'       => $request->input('txttipomaterial'),
+                'tipomaterial_id'       => 1,
                 'categoria_material_id' => $request->input('txtcategoria'),
                 'presentacion_id'       => $request->input('txtpresentacion'),
                 'medida_id'             => $request->input('txtmedida'),

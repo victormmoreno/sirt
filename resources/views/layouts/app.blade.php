@@ -11,7 +11,7 @@
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
-        
+
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
@@ -27,8 +27,8 @@
         <meta property="og:title" content="{{config('app.name')}}" />
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
-        <meta property="og:site_name" content="{{config('app.name')}}" /> 
-        
+        <meta property="og:site_name" content="{{config('app.name')}}" />
+
     </head>
     <body>
         <div class="mn-content fixed-sidebar" id="app">

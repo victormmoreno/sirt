@@ -9,7 +9,7 @@
               <h5 class="left-align">
                   <a class="footer-text left-align" href="{{ route('proyecto') }}">
                     <i class="material-icons arrow-l">arrow_back</i>
-                  </a> Proyectos
+                  </a> Proyectos de Base Tecnológica
               </h5>
           </div>
           <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">

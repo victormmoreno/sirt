@@ -23,21 +23,19 @@
             @if($count = auth()->user()->unreadNotifications->count())
               @if($count <= 9)
                 <span class="badge">
-                     {{$count}} 
+                  {{$count}}
                 </span>
               @else
-                <span class="badge">
-                     9+
-                </span>
+                <span class="badge">9+</span>
               @endif
             @endif
           </a>
         </li>
-        <li class="show-on-large hide-on-med-and-down">             
+        <li>
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
             @else
-            {{auth()->user()->nombres}} {{ auth()->user()->apellidos}}
+            {{optional(auth()->user())->nombres}} {{ optional(auth()->user())->apellidos}}
             @endguest
           </a>
         </li>
@@ -45,7 +43,6 @@
           <clock>
           </clock>
         </li>
-
       </ul>
       <ul class="dropdown-content notifications-dropdown" id="dropdown2">
         <li class="notificatoins-dropdown-container">
@@ -61,10 +58,13 @@
                 </b>
                 {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
                 <br>
+                
+                @if(auth()->user()->fechanacimiento != null || isset(auth()->user()->fechanacimiento))
                 <b>
                   Edad:
                 </b>
-                {{ auth()->user()->fechanacimiento->age }} años
+                {{ optional(auth()->user()->fechanacimiento)->age }} años
+                @endif
                 @endguest
               </br>
             </br>
@@ -116,9 +116,7 @@
                 Notificaciones
               </div>
             </li>
-            
             <li class="divider" tabindex="-1"></li>
-            
               @forelse (Auth::user()->unreadNotifications as $notification)
                 <li>
                   <a href="{{route('notifications.index')}}">
@@ -127,7 +125,7 @@
                         <i class="material-icons">{{ $notification->data["icon"] }}</i>
                       </div>
                       <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
-                        <span>{{$notification->created_at->diffForHumans()}}</span>
+                        <span>{{optional($notification->created_at)->diffForHumans()}}</span>
                       </div>
                     </div>
                   </a>
@@ -138,7 +136,7 @@
                        <i class="large material-icons  teal-text lighten-2 center ">
                             notifications_off
                         </i>
-                        <p class="center-align">No tienes notificationes</p> 
+                        <p class="center-align">No tienes notificationes</p>
                     </div>
                   </li>
               @endforelse
@@ -155,13 +153,9 @@
                     </div>
                   </a>
               </li>
-
         </ul>
     </li>
-    
-             
 </ul>
-
 </div>
 </nav>
 </header>
@@ -172,7 +166,6 @@
         <a class="account-settings-link" href="javascript:void(0);">
           <p>
             @guest
-
             @else
             {{ auth()->user()->nombres}} {{auth()->user()->apellidos}}
             @endguest
@@ -180,22 +173,18 @@
           <span>
             @guest
             @else
-      
-              @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() )
-
+              @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
                 {{ \NodoHelper::returnNodoUsuario() }}
-                
               @else
                 @if (\Session::get('login_role') == App\User::IsTalento())
                   Talento de Tecnoparque
-                @else
+                @elseif (\Session::get('login_role') == App\User::IsAdministrador())
                   Administrador de Tecnoparque
+                @else
+                  Desarrollador de Tecnoparque
                 @endif
-               
+
               @endif
-
-  
-
             <i class="material-icons right">
               arrow_drop_down
             </i>
@@ -232,10 +221,9 @@
     </div>
 
   <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-      
+
       <div class="row">
           <div class="input-field col s12 m12 offset-m0">
-
             <select name="change-role" id="change-role" onchange="roleUserSession.setRoleSession(this)">
                 @forelse(auth()->user()->getRoleNames() as  $name)
                   <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
@@ -243,7 +231,6 @@
                   <p>No tienes roles asignados</p>
                 @endforelse
             </select>
-            {{-- <small>Seleccione Su rol</small> --}}
           </div>
         </div>
       <li class="no-padding {{setActiveRoute('home')}}">
@@ -254,10 +241,6 @@
           Inicio
         </a>
       </li>
-
-
-
-
     @switch( \Session::get('login_role'))
     @case(App\User::IsInfocenter())
 
@@ -292,8 +275,11 @@
       @endif
     @break
 
-    @default
+    @case(App\User::IsDesarrollador())
 
+    @include('layouts.navrole.desarrollador')
+    @break
+    @default
     @endswitch
   </ul>
     <div class="footer">

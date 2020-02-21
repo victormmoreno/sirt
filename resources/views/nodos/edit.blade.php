@@ -74,9 +74,9 @@ var Regional = {
           $('#txtcentro').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
          @if($errors->any())
-        $('#txtcentro').val('{{old('txtcentro')}}');
+        $('#txtcentro').select2('val','{{old('txtcentro')}}');
         @else
-        $('#txtcentro').val('{{$nodo->entidad->nodo->centro->id}}');
+        $('#txtcentro').select2('val','{{$nodo->entidad->nodo->centro->id}}');
         @endif
         $('#txtcentro').material_select();
       });
@@ -100,9 +100,9 @@ var DepartamentsEdit = {
 
         })
         @if($errors->any())
-        $('#txtciudad').val('{{old('txtciudad')}}');
+        $('#txtciudad').select2('val','{{old('txtciudad')}}');
         @else
-            $('#txtciudad').val('{{$nodo->entidad->ciudad->id}}');
+            $('#txtciudad').select2('val','{{$nodo->entidad->ciudad->id}}');
         @endif
         $('#txtciudad').material_select();
       });

@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('meta-title', 'Talentos')
 @section('content')
+@php
+  $year = Carbon\Carbon::now()->year;
+@endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -31,7 +34,12 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align">
-                                            Talentos {{config('app.name')}}
+                                            @if($view == 'activos')
+                                                Talentos {{config('app.name')}}
+                                            @elseif($view == 'inactivos')
+                                                Talentos sin acceso {{config('app.name')}}
+                                            @endif
+
                                         </span>
                                         <i class="material-icons">
                                             supervised_user_circle
@@ -40,58 +48,49 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('usuario.usuarios.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                        <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
                             </div>
-                            <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                                <li class="tab col s3"><a href="#usuarios" >Usuarios {{config('app.name')}}</a></li>
-                              <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
-                              <div class="indicator" style="right: 580.5px; left: 0px;"></div>
-                            </ul>
+                            
                             <div class="divider">
                             </div>
-                            <div id="usuarios">
-                                <h5 class="center-align">Usuarios {{config('app.name')}}</h5>
-                                <div class="divider"></div>
-                                <table class="display responsive-table" id="all_users_table" style="width: 100%">
-                                    <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
-                                        <th>Usuario</th>
-                                        <th>Correo</th>
-                                        <th>Telefono</th>
-                                        <th>Roles</th>
-                                        <th>Estado Sistema</th>
-                                        <th>Detalles</th>
-                                        <th>Editar</th>
-                                    </thead>
-                
-                                </table>
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.index'), 'message' => 'Ver Talentos con acceso'])
+                            <br>
+                                
+                                
+                            @if($view == 'activos')
+                            <div class="col s12 m12 l12">
+                                <div class="input-field col s12 m12 l12">
+                                    <select class="js-states"  tabindex="-1" style="width: 100%" id="anio_proyecto_talento" name="anio_proyecto_talento" onchange="consultarTalentosByGestor();">
+                                        @for ($i=2016; $i <= $year; $i++)
+                                        <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                    <label for="anio_proyecto_talento">Seleccione el Año</label>
+                                </div>
                             </div>
-                            <div id="historialTalento">
-                                <h5 class="center-align">Talentos {{config('app.name')}}</h5>
-                                <div class="divider">
+       
+                                 @include('users.table', ['id' => 'talento_activosByGestor_table'] )  
+                            @elseif($view == 'inactivos')
+                            <div class="col s12 m12 l12">
+                                <div class="input-field col s12 m12 l12">
+                                    <select class="js-states"  tabindex="-1" style="width: 100%" id="anio_proyecto_talento" name="anio_proyecto_talento" onchange="consultarTalentosByGestorTrash();">
+                                        @for ($i=2016; $i <= $year; $i++)
+                                        <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                    <label for="anio_proyecto_talento">Seleccione el Año</label>
+                                </div>
                             </div>
-                                <table class="display responsive-table" id="talento_history_table">
-                                <thead>
-                                    <th>Tipo Documento</th>
-                                    <th>Docuemento</th>
-                                    <th>Usuario</th>
-                                    <th>Correo</th>
-                                    <th>Telefono</th>
-                                    <th>Estado Sistema</th>
-                                    <th>Detalles</th>
-                                    <th>Editar</th>
-                                </thead>
-                
-                            </table>
-                            </div>
+                            @include('users.table', ['id' => 'talento_inactivosByGestor_table'] ) 
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.usuarios.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
                          <i class="material-icons">add_circle</i>
                     </a>
                 </div>
@@ -99,16 +98,5 @@
         </div>
     </div>
 </main>
-
-<div  class="modal detalleUsers">
-  <div class="modal-content">
-    <div class="titulo_users"></div>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
-
-
 
 @endsection

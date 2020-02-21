@@ -29,7 +29,8 @@ class UsoInfraestructuraController extends Controller
   */
   public function downloadPDFUsosInfraestructura(int $idProyecto)
   {
-    $proyecto = $this->getProyectoController()->consultarDetallesDeUnProyecto($idProyecto);
+    // $proyecto = $this->getProyectoController()->consultarDetallesDeUnProyecto($idProyecto);
+    $proyecto = Proyecto::findOrFail($idProyecto);
     $usos = Proyecto::with('articulacion_proyecto.actividad.usoinfraestructuras')->find($idProyecto);
     $talentos = Proyecto::with('articulacion_proyecto.talentos.user')->find($idProyecto);
     // dd($talentos);

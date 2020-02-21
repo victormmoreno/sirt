@@ -92,7 +92,7 @@ class ArticulacionController extends Controller
   public function excelArticulacionFinalizadasPorFechaYNodo_Controller($id, $fecha_inicio, $fecha_cierre)
   {
     $idnodo = $id;
-    // dd(Session::get('login_role'));
+  
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       $idnodo = auth()->user()->dinamizador->nodo_id;
     }

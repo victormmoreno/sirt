@@ -60,6 +60,33 @@ class UserPolicy
         return (bool) $this->authUser->id == $this->user->id;
     }
 
+
+    public function show()
+    {
+        if(auth()->user()->id == $this->user->id){ 
+            return false;
+        }elseif( $this->user->hasAnyRole([User::IsAdministrador(),User::IsDinamizador(),User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') ==User::IsDinamizador()){
+
+            // if(isset($this->user->gestor) && $this->gestor->nodo->id == auth()->user()->dinamizador->nodo->id && session()->has('login_role') && session()->get('login_role') ==User::IsDinamizador() && $this->user->hasRole([User::IsGestor()])){
+            //     return true;
+            // }elseif(isset($this->user->infocenter) && $this->infocenter->nodo->id == auth()->user()->dinamizador->nodo->id && session()->has('login_role') && session()->get('login_role') ==User::IsDinamizador() && $this->user->hasRole([User::IsInfocenter()])){
+            //     return true;
+            // }elseif(isset($this->user->ingreso) && $this->ingreso->nodo->id == auth()->user()->dinamizador->nodo->id && session()->has('login_role') && session()->get('login_role') ==User::IsDinamizador() && $this->user->hasRole([User::IsIngreso()])){
+            //     return true;
+            // }else{
+            //     return false;
+            // }
+            return false;
+            
+        }elseif($this->user->hasAnyRole([User::IsAdministrador(),User::IsDinamizador(),User::IsGestor(),User::IsInfocenter(),User::IsIngreso() ]) && session()->has('login_role') && session()->get('login_role') ==User::IsGestor()){
+            return false;
+        }else{
+            return true;
+        }
+
+    
+    }
+
     /**
      * Determine whether the user can update the model.
      * @author julian londono
@@ -139,11 +166,17 @@ class UserPolicy
 
     public function edit(User $authuser, User $user)
     {
+        // if ($user->documento ==  $authuser->documento){
+        //     return true;
+        // }else{
+        //     return false;
+        // }
+        
 
-        if (session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all()) && $authuser->id != $user->id || 
+        if (session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all()) && $authuser->documento != $user->documento || 
             $user->roles->isEmpty()) {
             return true;
-        } elseif (session()->get('login_role') == User::IsDinamizador() && $authuser->id != $user->id || $user->roles->isEmpty()) {
+        } elseif (session()->get('login_role') == User::IsDinamizador() && $authuser->documento != $user->documento || $user->roles->isEmpty()) {
             if (isset($authuser->dinamizador->nodo->id) && isset($user->gestor->nodo->id) && $authuser->dinamizador->nodo->id == $user->gestor->nodo->id && $user->hasAnyRole(Role::findByName(User::IsGestor()))) {
                 return true;
             } else if (isset($authuser->dinamizador->nodo->id) && isset($user->infocenter->nodo->id) && $authuser->dinamizador->nodo->id == $user->infocenter->nodo->id && $user->hasAnyRole(Role::findByName(User::IsInfocenter()))) {
@@ -153,7 +186,7 @@ class UserPolicy
             } elseif ($user->hasAnyRole(Role::findByName(User::IsTalento()))) {
                 return true;
             }
-        } elseif (session()->get('login_role') == User::IsGestor() && $authuser->id != $user->id || $user->roles->isEmpty()) {
+        } elseif (session()->get('login_role') == User::IsGestor() && $authuser->documento != $user->documento || $user->roles->isEmpty()) {
 
             if ($user->hasAnyRole(Role::all()) ||  $user->roles->isEmpty()) {
                 return true;

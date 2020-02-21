@@ -18,6 +18,10 @@ class Empresa extends Model
         'sector_id',
         'nit',
         'direccion',
+        'tipoempresa_id',
+        'tamanhoempresa_id',
+        'fecha_creacion',
+        'codigo_ciiu',
         // 'nombre_contacto',
         // 'correo_contacto',
         // 'telefono_contacto',
@@ -57,6 +61,11 @@ class Empresa extends Model
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
+    }
+
+    public function proyectos()
+    {
+        return $this->morphToMany(Proyecto::class, 'propietario');
     }
 
     // Relación a la tabla de sectores

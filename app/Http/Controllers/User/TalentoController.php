@@ -3,22 +3,25 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Talento;
+use App\Models\{Talento, Gestor, Nodo};
 use App\Repositories\Repository\UserRepository\TalentoRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
+use App\Repositories\Datatables\UserDatatables;
 
 class TalentoController extends Controller
 {
     public $talentoRepository;
     public $userRepository;
+    public $userdatables;
 
-    public function __construct(TalentoRepository $talentoRepository, UserRepository $userRepository)
+    public function __construct(TalentoRepository $talentoRepository, UserRepository $userRepository, UserDatatables $userdatables)
     {
         $this->middleware('auth');
         $this->talentoRepository = $talentoRepository;
         $this->userRepository    = $userRepository;
+        $this->userdatables = $userdatables;
     }
 
     /**
@@ -30,26 +33,11 @@ class TalentoController extends Controller
      */
     public function getEdad($id)
     {
-      $talento = Talento::find($id);
-      $edad = $talento->user->fechanacimiento->age;
-      return $edad;
+        $talento = Talento::find($id);
+        $edad = $talento->user->fechanacimiento->age;
+        return $edad;
     }
 
-    public function datatableTalentosDeTecnoparque()
-    {
-        if (request()->ajax()) {
-            $talentos = Talento::ConsultarTalentosDeTecnoparque()->get();
-            return datatables()->of($talentos)
-                ->addColumn('add_articulacion', function ($data) {
-                    $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-                    return $add;
-                })->addColumn('add_proyecto', function ($data) {
-                $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-                return $add;
-            })->rawColumns(['add_articulacion', 'add_proyecto'])->make(true);
-        }
-        abort('404');
-    }
 
     public function consultarUnTalentoPorId($id)
     {
@@ -62,84 +50,96 @@ class TalentoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (request()->ajax()) {
 
-            return datatables()->of($this->talentoRepository->getAllTalentos())
-                ->addColumn('detail', function ($data) {
+            $users = $this->talentoRepository->getAllTalentos()
+                        ->orderby('users.created_at', 'desc')
+                        ->get();
 
-                    $button = '<a class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })->editColumn('estado', function ($data) {
-                if ($data->estado == User::IsActive()) {
-
-                    return $data->estado = 'Habilitado';
-                } else {
-                    return $data->estado = 'Inhabilitado ';
-                }
-            })->addColumn('edit', function ($data) {
-                if ($data->id != auth()->user()->id) {
-                    $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                } else {
-                    $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                }
-                return $button;
-            })
-                ->rawColumns(['detail', 'edit', 'estado'])
-                ->make(true);
+            return $this->userdatables->datatableUsers($request, $users);
         }
 
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.talento.index', [
-                    'nodos' => $this->userRepository->getAllNodos(),
+                    'nodos' => Nodo::SelectNodo()->get(),
+                    'view' => 'activos'
                 ]);
                 break;
             case User::IsDinamizador():
-                return view('users.dinamizador.talento.index');
+                $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
+                return view('users.dinamizador.talento.index', [
+                    'gestores' => $gestores,
+                    'view' => 'activos'
+                ]);
                 break;
 
             default:
                 abort('403');
                 break;
         }
-
     }
 
     /*============================================================================
     =            metodo para mostrar todos los usuarios en datatables            =
     ============================================================================*/
 
-    public function getUsersTalentosForDatatables()
+    public function getUsersTalentosForDatatables(Request $request)
     {
-        // if (request()->ajax()) {
-            return datatables()->of($this->talentoRepository->getAllTalentos())
-                ->addColumn('detail', function ($data) {
+        if (request()->ajax()) {
+            $users = $this->talentoRepository->getAllTalentos()
+                ->orderby('users.created_at', 'desc')
+                ->get();
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })
-
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        if ($data->id == auth()->user()->id) {
-                            return $data->estado = 'Habilitado <span class="new badge" data-badge-caption="ES USTED"></span>';
-                        }
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })
-                ->rawColumns(['detail', 'estado'])
-                ->make(true);
-        // }
-        // abort('404');
+            return $this->userdatables->datatableUsers($request, $users);
+        }
+        abort('404');
 
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
 
+    public function talentosTrash(Request $request)
+    {
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():            
+                return view('users.administrador.talento.index', [
+                    'nodos' => Nodo::SelectNodo()->get(),
+                    'view' => 'inactivos'
+                    ]);
+                break;
+                
+            case User::IsGestor():            
+                return view('users.gestor.talento.index', ['view' => 'inactivos']);
+                break;
+            default:
+                abort('404');
+                break;
+        }
+    }
+
+
+    public function getDatatablesUsersTalentosByDatatablesTrash(Request $request, $anio)
+    {
+        if (request()->ajax()) {
+
+            if (session()->get('login_role') == User::IsGestor()) {
+                $auth = auth()->user()->gestor->id;
+                $nodo = auth()->user()->gestor->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->onlyTrashed()->groupBy('users.id')
+                ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->onlyTrashed()->groupBy('users.id')
+                ->get();
+                return $this->userdatables->datatableUsers($request, $users);
+            }
+        }
+        abort('404');
+    }
+        
 }

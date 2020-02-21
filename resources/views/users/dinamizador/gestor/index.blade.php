@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('usuario.usuarios.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                        <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
                             </div>
@@ -56,9 +56,8 @@
                                         <th>Administrador</th>
                                         <th>Correo</th>
                                         <th>Telefono</th>
-                                        <th>Estado Sistema</th>
                                         <th>Detalles</th>
-                                        <th>Editar</th>
+                                        
                                     </thead>
                     
                                 </table>
@@ -66,7 +65,7 @@
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.usuarios.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
                          <i class="material-icons">add_circle</i>
                     </a>
                 </div>

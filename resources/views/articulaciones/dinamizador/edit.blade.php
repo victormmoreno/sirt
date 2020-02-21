@@ -64,10 +64,10 @@
                         <p class="center p-v-xs">
                           <input class="with-gap" disabled onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 0 ? 'checked' : '' }} id="IsGrupo" value="0"/>
                           <label for="IsGrupo">Grupo de Investigación</label>
-                          <input class="with-gap" disabled onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 1 ? 'checked' : '' }} id="IsEmpresa" value="1"/>
+                          {{-- <input class="with-gap" disabled onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 1 ? 'checked' : '' }} id="IsEmpresa" value="1"/>
                           <label for="IsEmpresa">Empresa</label>
                           <input class="with-gap" disabled onchange="contenedores();" name="group1" type="radio" {{ $articulacion->tipo_articulacion == 2 ? 'checked' : '' }} id="IsEmprendededor" value="2"/>
-                          <label for="IsEmprendededor">Emprendedor</label>
+                          <label for="IsEmprendededor">Emprendedor</label> --}}
                         </p>
                         <center>
                           <small id="group1-error" class="center-align error red-text"></small>

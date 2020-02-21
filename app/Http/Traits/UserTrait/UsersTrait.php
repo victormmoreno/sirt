@@ -34,6 +34,11 @@ trait UsersTrait
         return self::IS_INACTIVE;
     }
 
+    public static function IsDesarrollador()
+    {
+        return self::IS_DESARROLLADOR;
+    }
+
     public static function IsAdministrador()
     {
         return self::IS_ADMINISTRADOR;
@@ -47,11 +52,6 @@ trait UsersTrait
     public static function IsGestor()
     {
         return self::IS_GESTOR;
-    }
-
-    public static function IsDesarrollador()
-    {
-        return self::IS_DESARROLLADOR;
     }
 
     public static function IsInfocenter()

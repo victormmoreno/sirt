@@ -178,7 +178,10 @@ class GrupoInvestigacionController extends Controller
         })->addColumn('add_articulacion', function ($data) {
           $add = '<a onclick="addGrupoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add;
-        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts'])->make(true);
+        })->addColumn('add_propietario', function ($data) {
+          $add_propietario = '<a onclick="addGrupoPropietario(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+          return $add_propietario;
+        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_propietario'])->make(true);
       } else {
         return datatables()->of($gruposInvestigacion)
         ->addColumn('details', function ($data) {

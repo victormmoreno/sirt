@@ -20,7 +20,12 @@
 </li>
 <li class="no-padding {{setActiveRoute('articulacion')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones
+    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones G.I
+  </a>
+</li>
+<li class="no-padding {{setActiveRoute('intervencion')}}">
+  <a href="{{ route('intervencion.index') }}" class="{{setActiveRouteActivePage('intervencion')}}" rel="canonical" title="Articulaciones">
+    <i class="material-icons {{setActiveRouteActiveIcon('intervencion')}}">autorenew</i>Intervención a Empresas
   </a>
 </li>
 <li class="{!! setActiveRoute('edt') !!}">
@@ -53,11 +58,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('indicadores')}}">
+{{-- <li class="no-padding {{setActiveRoute('indicadores')}}">
   <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
-</li>
+</li> --}}
 <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto

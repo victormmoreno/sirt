@@ -7,17 +7,21 @@ use App\Repositories\Repository\UserRepository\GestorRepository;
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
+use App\Repositories\Datatables\UserDatatables;
 
 class GestorController extends Controller
 {
 
     public $userRepository;
     public $gestorRepository;
+    public $userdatables;
 
-    public function __construct(UserRepository $userRepository, GestorRepository $gestorRepository)
+    public function __construct(UserRepository $userRepository, GestorRepository $gestorRepository, UserDatatables $userdatables)
     {
+        $this->middleware('auth');
         $this->userRepository   = $userRepository;
         $this->gestorRepository = $gestorRepository;
+        $this->userdatables        = $userdatables;
     }
 
     /**
@@ -29,9 +33,11 @@ class GestorController extends Controller
      */
     public function getGestorPorNodoSelect($id)
     {
-      return response()->json([
-        'gestores' => $this->gestorRepository->getAllGestoresPorNodo($nodo)
-      ]);
+        return response()->json([
+            'gestores' => $this->gestorRepository->getAllGestoresPorNodo($id)
+                            ->orderby('users.created_at', 'desc')
+                            ->get()
+        ]);
     }
 
     /*=================================================================
@@ -45,7 +51,6 @@ class GestorController extends Controller
                 'lineas' => $this->userRepository->getAllLineaNodo($nodo)->lineas->pluck('nombre', 'id'),
             ]);
         }
-
     }
 
     /*=====  End of metodo para consultar las lineas por nodo  ======*/
@@ -62,92 +67,90 @@ class GestorController extends Controller
             case User::IsAdministrador():
                 return view('users.administrador.gestor.index', [
                     'nodos' => $this->userRepository->getAllNodo(),
+                    'view' => 'activos'
                 ]);
                 break;
             case User::IsDinamizador():
-                return view('users.dinamizador.gestor.index');
+                return view('users.dinamizador.gestor.index', ['view' => 'activos']);
                 break;
 
             default:
                 abort('404');
                 break;
         }
+    }
 
+
+    public function trash()
+    {
+        $this->authorize('indexGestor', User::class);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('users.administrador.gestor.index', [
+                    'nodos' => $this->userRepository->getAllNodo(),
+                    'view' => 'inactivos'
+                ]);
+                break;
+            case User::IsDinamizador():
+                return view('users.dinamizador.gestor.index', ['view' => 'inactivos']);
+                break;
+
+            default:
+                abort('404');
+                break;
+        }
     }
 
     /*==================================================================
     =            metodop para mostrar los gestores por nodo            =
     ==================================================================*/
 
-    public function getGestor($nodo)
+    public function getGestor(Request $request, $nodo)
     {
 
         if (request()->ajax()) {
 
-            return datatables()->of($this->gestorRepository->getAllGestoresPorNodo($nodo))
-                ->addColumn('detail', function ($data) {
+            $users = $this->gestorRepository->getAllGestoresPorNodo($nodo)
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })->addColumn('edit', function ($data) {
-                if ($data->id != auth()->user()->id) {
-                    $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                } else {
-                    $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                }
-                return $button;
-            })->rawColumns(['detail', 'estado', 'edit'])
-                ->make(true);
+            return $this->userdatables->datatableUsers($request, $users);
         }
         abort('404');
     }
 
     /*=====  End of metodop para mostrar los gestores por nodo  ======*/
 
-    /*==============================================================================
-    =            metodo para mostrar los gestores de un determnado nodo            =
-    ==============================================================================*/
-
-    public function getAllGestoresOfNodo()
+    public function getGestorTrash(Request $request, $nodo)
     {
 
         if (request()->ajax()) {
 
-            return datatables()->of($this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id))
-                ->addColumn('detail', function ($data) {
+            $users = $this->gestorRepository->getAllGestoresPorNodo($nodo)
+                    ->onlyTrashed()
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
 
-                    $button = '<a class="  btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="#" onclick="UserIndex.detailUser(' . $data->id . ')"><i class="material-icons">info_outline</i></a>';
-
-                    return $button;
-                })
-                ->addColumn('edit', function ($data) {
-                    if ($data->id != auth()->user()->id) {
-                        $button = '<a href="' . route("usuario.usuarios.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                    } else {
-                        $button = '<center><span class="new badge" data-badge-caption="ES USTED"></span></center>';
-                    }
-                    return $button;
-                })
-                ->editColumn('estado', function ($data) {
-                    if ($data->estado == User::IsActive()) {
-                        return $data->estado = 'Habilitado';
-                    } else {
-                        return $data->estado = 'Inhabilitado ';
-                    }
-                })
-                ->rawColumns(['detail', 'estado', 'edit'])
-                ->make(true);
+            return $this->userdatables->datatableUsers($request, $users);
         }
         abort('404');
+    }
 
+    /*==============================================================================
+    =            metodo para mostrar los gestores de un determnado nodo            =
+    ==============================================================================*/
+
+    public function getAllGestoresOfNodo(Request $request)
+    {
+        if (request()->ajax()) {
+
+                $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)
+                ->orderby('users.created_at', 'desc')
+                ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
+        }
+        abort('404');
     }
 
     /*=====  End of metodo para mostrar los gestores de un determnado nodo  ======*/

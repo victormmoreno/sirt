@@ -9,7 +9,7 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-          <h5><i class="left material-icons">library_books</i>Proyectos</h5>
+          <h5><i class="left material-icons">library_books</i>Proyectos de Base Tecnológica</h5>
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -56,26 +56,9 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="right material-icons">
-                        <a onclick="generarExcelDeProyectosDelGestorPorAnho()">
-                          <img class="btn btn-flat" src="https://img.icons8.com/color/48/000000/ms-excel.png">
-                        </a>
-                      </div>
                       @include('proyectos.table')
-                      <div class="col s12 m2 l2">
-                        <a onclick="generarExcelDeProyectosDelGestorPorAnho()" href="javascript:void(0)">
-                          <div class="card green">
-                            <div class="card-content center">
-                              <span class="white-text">Descargar tabla</span>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
                     </div>
                   </div>
-                  {{-- <div id="proyectos_pendientes">
-                    @include('proyectos.table_pendientes')
-                  </div> --}}
                 </div>
               </div>
             </div>
@@ -83,15 +66,5 @@
         </div>
       </div>
     </div>
-    @include('proyectos.modals')
   </main>
 @endsection
-@push('script')
-  <script>
-  consultarProyectosPendientesPorAprobacion();
-  function generarExcelDeProyectosDelGestorPorAnho() {
-    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
-    location.href = '/excel/excelProyectosDelGestorPorAnho/'+{{ auth()->user()->gestor->id }}+'/'+anho
-  }
-  </script>
-@endpush

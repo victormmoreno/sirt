@@ -201,11 +201,15 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-
+        
         $this->authorize('update', Nodo::class);
+
+        
         $nodo = $this->getNodoRepository()->findById($id);
 
-        $nodoUpdate = $this->getNodoRepository()->update($request, $nodo);
+        $nodoUpdate = $this->getNodoRepository()->Update($request, $nodo);
+
+        // return $nodoUpdate;
 
         if ($nodoUpdate == true) {
 

@@ -27,10 +27,7 @@ class GestorRepository
             ->Join('gestores', 'gestores.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
             ->role(User::IsGestor())
-            ->where('nodos.id', '=', $nodo)
-            ->orderby('users.created_at', 'desc')
-            ->get();
-
+            ->where('nodos.id', '=', $nodo);
     }
 
 

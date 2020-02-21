@@ -9,7 +9,7 @@
         <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description"/>
         <meta content="{{ csrf_token()}}" name="csrf-token"/>
         <link href="{{config('app.url')}}" rel="canonical"/>
-        <link href="{{ asset('css/libs.min.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
 
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
@@ -27,7 +27,7 @@
         <meta property="og:title" content="{{config('app.name')}}" />
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
-        <meta property="og:site_name" content="{{config('app.name')}}" /> 
+        <meta property="og:site_name" content="{{config('app.name')}}" />
 
     </head>
     <body class="white">
@@ -44,8 +44,8 @@
             </div>
 
         </div>
-        <script  src="{{ asset('js/app.min.js') }}"></script>
-        <script  src="{{ asset('js/libs.min.js') }}"></script>
+        <script  src="{{ asset('js/app.js') }}"></script>
+        <script  src="{{ asset('js/libs.js') }}"></script>
         @include('sweetalert::alert')
     </body>
 </html>

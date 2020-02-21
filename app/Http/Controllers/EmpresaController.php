@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
-use App\Models\{Empresa, Sector, Entidad, GrupoInvestigacion, ContactoEntidad};
+use App\Models\{Empresa, Sector, TamanhoEmpresa, TipoEmpresa};
 use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository, EntidadRepository};
 use Illuminate\Support\Facades\{DB, Validator};
 use App\Helpers\ArrayHelper;
@@ -133,9 +133,12 @@ class EmpresaController extends Controller
         })->addColumn('add_articulacion', function ($data) {
           $add = '<a onclick="addEmpresaArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
           return $add;
+        })->addColumn('add_propietario', function ($data) {
+          $add_propietario = '<a onclick="addEntidadEmpresa(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+          return $add_propietario;
         })->addColumn('add_empresa_a_edt', function ($data) {
           return '<a class="btn blue m-b-xs" onclick="addEmpresaAEdt('.$data->id_entidad.')"><i class="material-icons">done_all</i></a>';
-        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_empresa_a_edt'])->make(true);
+        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_empresa_a_edt', 'add_propietario'])->make(true);
       } else {
         $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
         return datatables()->of($empresas)
@@ -186,6 +189,8 @@ class EmpresaController extends Controller
       return view('empresa.gestor.create', [
       'departamentos' => $this->userRepository->getAllDepartamentos(),
       'sectores' => Sector::SelectAllSectors()->get(),
+      'tamanhos' => TamanhoEmpresa::all(),
+      'tipos' => TipoEmpresa::all()
       ]);
     }
   }
@@ -221,6 +226,8 @@ class EmpresaController extends Controller
       'empresa' => Empresa::find($id),
       'departamentos' => $this->userRepository->getAllDepartamentos(),
       'sectores' => Sector::SelectAllSectors()->get(),
+      'tamanhos' => TamanhoEmpresa::all(),
+      'tipos' => TipoEmpresa::all()
       ]);
     }
   }

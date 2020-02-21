@@ -7,17 +7,17 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="row">
-              <div class="col s8 m8 l10">
+              <div class="col s8 m8 l9">
                   <h5>
                     <a class="footer-text left-align" href="{{route('articulacion')}}" rel="nofollow">
                       <i class="material-icons arrow-l">arrow_back</i>
                     </a> Articulaciones
                   </h5>
               </div>
-              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+              <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
-                      <li><a href="{{route('articulacion')}}">Articulaciones</a></li>
+                      <li><a href="{{route('intervencion.index')}}">Articulaciones</a></li>
                       <li class="active">Entregables</li>
                   </ol>
               </div>

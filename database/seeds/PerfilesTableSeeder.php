@@ -12,7 +12,7 @@ class PerfilesTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
         Perfil::create([
             'nombre' => 'Aprendiz SENA sin apoyo de sostenimiento',
         ]);
@@ -26,7 +26,7 @@ class PerfilesTableSeeder extends Seeder
         ]);
 
         Perfil::create([
-            
+
             'nombre' => 'Funcionario empresa pública',
         ]);
 

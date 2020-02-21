@@ -11,7 +11,7 @@
                   <h5>
                     <a class="footer-text left-align" href="{{route('articulacion')}}" rel="nofollow">
                       <i class="material-icons arrow-l">arrow_back</i>
-                    </a> CSIBT
+                    </a> Entregables Articulación
                   </h5>
               </div>
               <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">

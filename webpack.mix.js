@@ -26,6 +26,7 @@ mix.styles([
 		'resources/assets/plugins/bootstrap-datapicker/css/bootstrap-material-datetimepicker.css',
 		'resources/assets/plugins/dropzone/dropzone.css',
 		'resources/assets/plugins/dropzone/basic.min.css',
+		'resources/assets/plugins/summernote/dist/summernote-lite.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
 	],'public/css/libs.css');
@@ -37,7 +38,7 @@ mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
-		'resources/assets/plugins/jquery-validation/jquery.validate.min.js',
+		'resources/assets/plugins/jquery-validation/jquery.validate.js',
 		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
@@ -51,8 +52,10 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
 		'resources/assets/plugins/highcharts/modules/variable-pie.js',
+    'resources/assets/plugins/summernote/dist/summernote-lite.js',
+    'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
-		'resources/assets/js/custom.js',
+		'resources/assets/js/custom.js'
 	],'public/js/libs.js');
 
 mix.minify('public/js/libs.js')
@@ -84,15 +87,27 @@ mix.scripts([
 		'resources/app/user/administrador/index-talento.js',
 		'resources/app/user/administrador/index-ingreso.js',
 		'resources/app/user/dinamizador/index-gestor.js',
+		'resources/app/user/dinamizador/index-talento.js',
 		'resources/app/user/dinamizador/index-infocenter.js',
 		'resources/app/user/dinamizador/index-ingreso.js',
+		'resources/app/user/gestor/index-talento.js',
+        'resources/app/user/search.js',
+		'resources/app/user/infopersonal.js',
+		'resources/app/user/estudio.js',
+		'resources/app/user/tipotalento.js',
+        'resources/app/user/create.js',
+        'resources/app/user/edit.js',
 		'resources/app/user/index-user.js',
 		'resources/app/user/modaluser.js',
 		'resources/app/user/role/roleuser.js',
 		'resources/app/sublinea/administrador/index.js',
 		'resources/app/articulaciones/gestor/index.js',
 		'resources/app/articulaciones/index.js',
+		'resources/app/intervenciones/gestor/index.js',
+		'resources/app/intervenciones/index.js',
 		'resources/app/proyecto/index.js',
+		'resources/app/proyecto/gestor/form.js',
+		'resources/app/proyecto/gestor/form_cierre.js',
 		'resources/app/edt/gestor/form.js',
 		'resources/app/edt/gestor/index.js',
 		'resources/app/edt/index.js',
@@ -120,7 +135,9 @@ mix.scripts([
 		'resources/app/graficos/index.js',
 		'resources/app/seguimiento/index.js',
 		'resources/app/costos/index.js',
-		'resources/app/indicadores/index.js'
+		'resources/app/indicadores/index.js',
+    'resources/app/publicacion/index.js',
+    'resources/app/publicacion/form.js'
 	],'public/js/app2.js');
 
 mix.minify('public/js/app2.js')
@@ -132,7 +149,7 @@ mix.minify('public/js/app2.js')
 
 mix.browserSync({
 
-        proxy: 'http://gestion2019.test',
+        proxy: 'http://gestion2020.test',
         files: [
             'app/**/*',
             'resources/views/**/*',

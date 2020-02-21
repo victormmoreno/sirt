@@ -15,12 +15,13 @@ class TipoDocumento extends Model
      * @var array
      */
     protected $fillable = [
+        'abreviatura',
         'nombre',
     ];
 
     public function users()
     {
-      return $this->hasMany(User::class, 'tipodocumento_id', 'id');
+        return $this->hasMany(User::class, 'tipodocumento_id', 'id');
     }
 
     /*==========================================================================
@@ -30,8 +31,7 @@ class TipoDocumento extends Model
     public function scopeAllTipoDocumento($query)
     {
 
-        return $query->select('tiposdocumentos.id','tiposdocumentos.nombre');
-
+        return $query->select('tiposdocumentos.id', 'tiposdocumentos.nombre');
     }
 
     /*=====  End of scope para consultar todos los tipos de documentos  ======*/
@@ -43,7 +43,6 @@ class TipoDocumento extends Model
 
     public function scopeGetTiposDocumentos($query)
     {
-        return $query->pluck('nombre','id');
+        return $query->pluck('nombre', 'id');
     }
-
 }

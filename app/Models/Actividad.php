@@ -36,6 +36,15 @@ class Actividad extends Model
         'nombre',
         'fecha_inicio',
         'fecha_cierre',
+        'objetivo_general',
+        'conclusiones',
+        'aprobacion_dinamizador',
+        'formulario_inicio',
+        'cronograma',
+        'seguimiento',
+        'evidencia_final',
+        'formulario_final'
+
     ];
 
     /**
@@ -76,6 +85,11 @@ class Actividad extends Model
     public function usoinfraestructuras()
     {
         return $this->hasMany(UsoInfraestructura::class, 'actividad_id', 'id');
+    }
+
+    public function objetivos_especificos()
+    {
+      return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
     }
 
 }

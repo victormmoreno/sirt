@@ -29,7 +29,7 @@ class AddFechaToMaterialesTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $this->dropColumn(['fecha']);
+            $table->dropColumn(['fecha']);
         });
     }
 }

@@ -40,7 +40,7 @@ class HomeController extends Controller
         //         $query->where('id', $nodo);
         //     })->pluck('id');
         // dd($nododinamizador);
-        // 
+        //
 
 
 
@@ -54,7 +54,7 @@ class HomeController extends Controller
             ->whereHas('user', function($query){
                 $query->where('estado', User::IsActive());
             })->get()->count();
-            
+
 
             $gestoresActivos = Gestor::with('user')->whereHas('user', function($query){
                 $query->where('estado', User::IsActive());
@@ -73,11 +73,16 @@ class HomeController extends Controller
               'administradores' => User::role(User::IsAdministrador())->select('documento','nombres','apellidos')->get(),
             ]);
         case 'Dinamizador':
-          return view('home.dinamizador');
+        // $datos = array('actualizacion' => 114215, 'spot' => 123);
+          return view('home.home');
           break;
 
         case 'Gestor':
           return view('home.home');
+          break;
+
+        case 'Desarrollador':
+          return view('home.desarrollador');
           break;
 
         default:
@@ -85,7 +90,7 @@ class HomeController extends Controller
           break;
       }
 
-        
+
         // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');
          // session()->put('login_role', 'value');
 

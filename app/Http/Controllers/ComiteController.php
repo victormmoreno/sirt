@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\ComiteFormRequest;
 use App\Repositories\Repository\{ComiteRepository, IdeaRepository};
-use App\Models\{Nodo, Idea, Comite, ComiteIdea};
-use App\Http\Controllers\{ArchivoComiteController, PDF\PdfComiteController};
+use App\Models\{Nodo, Idea, Comite};
+use App\Http\Controllers\PDF\PdfComiteController;
 use Illuminate\Support\Facades\{DB, Session, Validator};
 use Carbon\Carbon;
 use App\Events\Comite\ComiteWasRegistered;
@@ -32,7 +32,7 @@ class ComiteController extends Controller
   */
   public function index()
   {
-    if ( \Session::get('login_role') == User::IsInfocenter() ) {
+    if ( Session::get('login_role') == User::IsInfocenter() ) {
       if (request()->ajax()) {
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->infocenter->nodo_id );
         return datatables()->of($csibt)
@@ -56,7 +56,7 @@ class ComiteController extends Controller
         })->rawColumns(['details', 'edit', 'evidencias'])->make(true);
       }
       return view('comite.infocenter.index');
-    } else if ( \Session::get('login_role') == User::IsGestor() ) {
+    } else if ( Session::get('login_role') == User::IsGestor() ) {
       if (request()->ajax()) {
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
         return datatables()->of($csibt)
@@ -77,10 +77,10 @@ class ComiteController extends Controller
         })->rawColumns(['details', 'evidencias'])->make(true);
       }
       return view('comite.gestor.index');
-    } else if ( \Session::get('login_role') == User::IsAdministrador() ) {
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
       $nodos = Nodo::SelectNodo()->get();
       return view('comite.administrador.index', compact('nodos'));
-    } else if ( \Session::get('login_role') == User::IsDinamizador() ) {
+    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
       if (request()->ajax()) {
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->dinamizador->nodo_id );
         return datatables()->of($csibt)
@@ -108,7 +108,7 @@ class ComiteController extends Controller
   public function datatableArchivosDeUnComite($id)
   {
     if (request()->ajax()) {
-      if ( \Session::get('login_role') == User::IsInfocenter() ) {
+      if ( Session::get('login_role') == User::IsInfocenter() ) {
         $archivosComite = $this->getComiteRepository()->consultarRutasArchivosDeUnComite( $id );
         return datatables()->of($archivosComite)
         ->addColumn('download', function ($data) {
@@ -195,7 +195,7 @@ class ComiteController extends Controller
   {
     // session(['ideasComiteCreate' => []]);
 
-    if ( \Session::get('login_role') == User::IsInfocenter() ) {
+    if ( Session::get('login_role') == User::IsInfocenter() ) {
        $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
        // dd($ideas);
       return view('comite.infocenter.create', compact('ideas'));
@@ -214,7 +214,8 @@ class ComiteController extends Controller
       alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
       return back()->withInput();
     } else {
-      $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
+      // $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
+      $contComites = COUNT(session('ideasComiteCreate'));
       if ( $contComites != 0 ) {
         alert()->warning('Advertencia!','Ya se encuentra un comité registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
         return back()->withInput();
@@ -223,7 +224,10 @@ class ComiteController extends Controller
           $codigoComite = Carbon::parse($request['txtfechacomite_create']);
           $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
           $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
-          $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY');
+          $idComite = Comite::selectRaw('MAX(id+1) AS max')->get()->last();
+          $idComite->max == null ? $idComite->max = 1 : $idComite->max = $idComite->max;
+          $idComite->max = sprintf("%04d", $idComite->max);
+          $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY') . '-' .$idComite->max;
           $comite = $this->getComiteRepository()->store($request, $codigoComite);
           foreach (session('ideasComiteCreate') as $key => $value) {
             $this->getComiteRepository()->storeComiteIdea($value, $comite->id);
@@ -249,11 +253,11 @@ class ComiteController extends Controller
   // Muestra las evidencias/entregables de un comité
   public function evidencias($id)
   {
-    if ( \Session::get('login_role') == User::IsInfocenter() ) {
+    if ( Session::get('login_role') == User::IsInfocenter() ) {
       $comite = $this->getComiteRepository()->consultarComitePorId($id)->last();
       // dd($comite);
       return view('comite.infocenter.evidencias', compact('comite'));
-    } else if (\Session::get('login_role') != User::IsIngreso() && \Session::get('login_role') != User::IsTalento())  {
+    } else if (Session::get('login_role') != User::IsIngreso() && Session::get('login_role') != User::IsTalento())  {
       $comite = $this->getComiteRepository()->consultarComitePorId($id)->last();
       return view('comite.evidencias', compact('comite'));
     }

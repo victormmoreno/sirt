@@ -17,13 +17,13 @@
                       <i class="material-icons left">
                           autorenew
                       </i>
-                      Articulaciones
+                      Articulaciones con Grupos de Investigación
                   </h5>
               </div>
               <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
-                      <li class="active">Articulaciones</li>
+                      <li class="active">Articulaciones G.I</li>
                   </ol>
               </div>
           </div>
@@ -32,7 +32,7 @@
               <div class="row">
                 <div class="col s12 m10 l10">
                   <div class="center-align">
-                    <span class="card-title center-align">Articulaciones de Tecnoparque</span>
+                    <span class="card-title center-align">Articulaciones con Grupos de Investigación</span>
                   </div>
                 </div>
               </div>
@@ -62,7 +62,7 @@
                     <div class="card blue">
                       <div class="card-content center flow-text">
                         <i class="left material-icons white-text small">search</i>
-                        <span class="white-text">Consultar Articulaciones</span>
+                        <span class="white-text">Consultar Articulaciones G.I</span>
                       </div>
                     </div>
                   </a>
@@ -140,11 +140,6 @@
             {
               data: 'entregables',
               name: 'entregables',
-              orderable: false
-            },
-            {
-              data: 'edit',
-              name: 'edit',
               orderable: false
             },
             ],

@@ -10,8 +10,9 @@
           <h5>
             <a class="footer-text left-align" href="{{route('articulacion')}}">
               <i class="left material-icons arrow-l">arrow_back</i>
-            </a> Articulaciones
+            </a> Articulaciones con Grupos de Investigación
           </h5>
+          
           <div class="card">
             <div class="card-content">
               <div class="row">
@@ -47,15 +48,15 @@
                       </div>
                     </div>
                     <div class="row">
-                      <p class="center card-title">Seleccione con quién será la articulación <span class="red-text">*</span></p><br>
+                      {{-- <p class="center card-title">Seleccione con quién será la articulación <span class="red-text">*</span></p><br> --}}
                       <div class="input-field col s12 m12 l12">
                         <p class="center p-v-xs">
-                          <input class="with-gap" name="group1" type="radio" id="IsGrupo" value="0"/>
+                          <input class="with-gap" name="group1" type="radio" id="IsGrupo" value="0"/ checked readonly>
                           <label for="IsGrupo">Grupo de Investigación</label>
-                          <input class="with-gap" name="group1" type="radio" id="IsEmpresa" value="1"/>
+                          {{-- <input class="with-gap" name="group1" type="radio" id="IsEmpresa" value="1"/>
                           <label for="IsEmpresa">Empresa</label>
                           <input class="with-gap" name="group1" type="radio" id="IsEmprendededor" value="2"/>
-                          <label for="IsEmprendededor">Emprendedor</label>
+                          <label for="IsEmprendededor">Emprendedor</label> --}}
                         </p>
                         <center>
                           <small id="group1-error" class="center-align error red-text"></small>
@@ -94,7 +95,7 @@
                         </div>
                       </div>
                     </div>
-                    <div id="divEmpresa" class="row">
+                    {{-- <div id="divEmpresa" class="row">
                       <div class="col s12 m6 l6">
                         <table style="width: 100%" id="empresasDeTecnoparque_ArticulacionCreate_table" class="display responsive-table datatable-example DataTable">
                           <thead>
@@ -124,8 +125,8 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div id="divEmprendedor">
+                    </div> --}}
+                    {{-- <div id="divEmprendedor"> --}}
                       {{-- <div class="row">
                         <div class="col s12 m8 l8">
                           <table style="width: 100%;" id="talentosDeTecnoparque_ArticulacionCreate_table" class="display responsive-table datatable-example dataTable">
@@ -156,18 +157,18 @@
                           </div>
                         </div>
                       </div> --}}
-                      <div class="row col s12 m10 l10">
-                        <div class="input-field col s12 m2 l2">
+                      {{-- <div class="row col s12 m10 l10"> --}}
+                        {{-- <div class="input-field col s12 m2 l2">
                           <input type="text" id="txtdocumento_emprendedor" name="txtdocumento_emprendedor"/>
                           <label for="txtdocumento_emprendedor">Documento del emprendedor<span class="red-text">*</span></label>
                           <small id="txtdocumento_emprendedor-error" class="error red-text"></small>
-                        </div>
-                        <div class="input-field col s12 m2 l2">
+                        </div> --}}
+                        {{-- <div class="input-field col s12 m2 l2">
                           <input type="text" id="txtnombres_emprendedor" name="txtnombres_emprendedor"/>
                           <label for="txtnombres_emprendedor">Nombres del emprendedor<span class="red-text">*</span></label>
                           <small id="txtnombres_emprendedor-error" class="error red-text"></small>
-                        </div>
-                        <div class="input-field col s12 m2 l2">
+                        </div> --}}
+                        {{-- <div class="input-field col s12 m2 l2">
                           <input type="email" name="txtemail_emprendedor" id="txtemail_emprendedor">
                           <label for="txtemail_emprendedor">Email del emprendedor</label>
                           <small id="txtemail_emprendedor-error" class="error red-text"></small>
@@ -186,9 +187,9 @@
                               </div>
                             </div>
                           </a>
-                        </div>
-                      </div>
-                      <div class="row">
+                        </div> --}}
+                      {{-- </div> --}}
+                      {{-- <div class="row">
                         <div class="col s10 m8 l8">
                           <div class="card blue-grey lighten-5">
                             <div class="card-content">
@@ -223,8 +224,8 @@
                             </blockquote>
                           </div>
                         </div>
-                      </div>
-                    </div>
+                      </div> --}}
+                    {{-- </div> --}}
                     <div class="divider"></div>
                     <div class="row">
                       <div class="input-field col s12 m12 l12">
@@ -283,40 +284,42 @@
 @push('script')
   <script>
     $(document).ready(function() {
+      consultarTipoArticulacion(0);
       $divGrupo = $("#divGrupo");
-      $divGrupo.hide();
-      $divEmpresa = $("#divEmpresa");
-      $divEmpresa.hide();
-      $divEmprendedor = $('#divEmprendedor');
-      $divEmprendedor.hide();
+      // $divGrupo.hide();
+      $divGrupo.show();
+      // $divEmpresa = $("#divEmpresa");
+      // $divEmpresa.hide();
+      // $divEmprendedor = $('#divEmprendedor');
+      // $divEmprendedor.hide();
 
-      $('#empresasDeTecnoparque_ArticulacionCreate_table').DataTable({
-        "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        ajax:{
-          url: "/empresa/datatableEmpresasDeTecnoparque",
-          type: "get",
-        },
-        columns: [
-        {
-          data: 'nit',
-          name: 'nit',
-        },
-        {
-          data: 'nombre_empresa',
-          name: 'nombre_empresa',
-        },
-        {
-          data: 'add_articulacion',
-          name: 'add_articulacion',
-          orderable: false,
-        },
-        ],
-      });
+      // $('#empresasDeTecnoparque_ArticulacionCreate_table').DataTable({
+      //   "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
+      //   language: {
+      //     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      //   },
+      //   processing: true,
+      //   serverSide: true,
+      //   ajax:{
+      //     url: "/empresa/datatableEmpresasDeTecnoparque",
+      //     type: "get",
+      //   },
+      //   columns: [
+      //   {
+      //     data: 'nit',
+      //     name: 'nit',
+      //   },
+      //   {
+      //     data: 'nombre_empresa',
+      //     name: 'nombre_empresa',
+      //   },
+      //   {
+      //     data: 'add_articulacion',
+      //     name: 'add_articulacion',
+      //     orderable: false,
+      //   },
+      //   ],
+      // });
 
       $('#grupoDeInvestigacionTecnoparque_ArticulacionCreate_table').DataTable({
         "lengthMenu": [[5, 25, 50, -1], [5, 25, 50, "All"]],
@@ -431,25 +434,25 @@
       });
     });
 
-    function addEmpresaArticulacion(id) {
-      $.ajax({
-        dataType:'json',
-        type:'get',
-        url:"/empresa/ajaxDetallesDeUnaEmpresa/"+id
-      }).done(function(respuesta){
-        $('#empresa').val(respuesta.detalles.nit + ' - ' + respuesta.detalles.nombre_empresa);
-        $("label[for='empresa']").addClass('active');
-        $('#txtempresa_id').val(respuesta.detalles.id);
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          type: 'success',
-          title: 'El nit de la empresa con la que se realizará la articulación es: ' + respuesta.detalles.nit
-        })
-      })
-    }
+    // function addEmpresaArticulacion(id) {
+    //   $.ajax({
+    //     dataType:'json',
+    //     type:'get',
+    //     url:"/empresa/ajaxDetallesDeUnaEmpresa/"+id
+    //   }).done(function(respuesta){
+    //     $('#empresa').val(respuesta.detalles.nit + ' - ' + respuesta.detalles.nombre_empresa);
+    //     $("label[for='empresa']").addClass('active');
+    //     $('#txtempresa_id').val(respuesta.detalles.id);
+    //     Swal.fire({
+    //       toast: true,
+    //       position: 'top-end',
+    //       showConfirmButton: false,
+    //       timer: 3000,
+    //       type: 'success',
+    //       title: 'El nit de la empresa con la que se realizará la articulación es: ' + respuesta.detalles.nit
+    //     })
+    //   })
+    // }
 
     function addGrupoArticulacion(id) {
       $.ajax({
@@ -510,69 +513,69 @@
     }
 
     // Método para agregar talentos a una articulación
-    function addTalentoArticulacion() {
-      let documento = $('#txtdocumento_emprendedor').val();
-      let nombres = $('#txtnombres_emprendedor').val();
-      let email = $('#txtemail_emprendedor').val();
-      let contacto = $('#txttelefono_emprendedor').val();
-      if (noRepeat(documento) == false) {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1500,
-          type: 'warning',
-          title: 'El talento ya está asociado a la articulación!'
-        });
-      } else {
+    // function addTalentoArticulacion() {
+    //   let documento = $('#txtdocumento_emprendedor').val();
+    //   let nombres = $('#txtnombres_emprendedor').val();
+    //   let email = $('#txtemail_emprendedor').val();
+    //   let contacto = $('#txttelefono_emprendedor').val();
+    //   if (noRepeat(documento) == false) {
+    //     Swal.fire({
+    //       toast: true,
+    //       position: 'top-end',
+    //       showConfirmButton: false,
+    //       timer: 1500,
+    //       type: 'warning',
+    //       title: 'El talento ya está asociado a la articulación!'
+    //     });
+    //   } else {
 
-        if (documento === '') {
-          Swal.fire('Advertencia!', 'El número de documento del emprendedor debe ser obligatorio', 'warning');
-        } else {
-          if (nombres === '') {
-            Swal.fire('Advertencia!', 'El nombre del emprendedor debe ser obligatorio', 'warning');
-          } else {
-            if (email === '') {
-              email = 'No registra';
-            }
+    //     if (documento === '') {
+    //       Swal.fire('Advertencia!', 'El número de documento del emprendedor debe ser obligatorio', 'warning');
+    //     } else {
+    //       if (nombres === '') {
+    //         Swal.fire('Advertencia!', 'El nombre del emprendedor debe ser obligatorio', 'warning');
+    //       } else {
+    //         if (email === '') {
+    //           email = 'No registra';
+    //         }
 
-            if (contacto === '') {
-              contacto = 'No registra';
-            }
+    //         if (contacto === '') {
+    //           contacto = 'No registra';
+    //         }
 
-            let fila = '<tr class="selected" id='+documento+'>'
-            +'<td><input type="hidden" name="documento[]" value="'+documento+'">'+ documento +'</td>'
-            +'<td><input type="hidden" name="nombres[]" value="'+nombres+'">'+ nombres +'</td>'
-            +'<td><input type="hidden" name="email[]" value="'+email+'">'+ email +'</td>'
-            +'<td><input type="hidden" name="contacto[]" value="'+contacto+'">'+ contacto +'</td>'
-            +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+documento+');"><i class="material-icons">delete_sweep</i></a></td>'
-            +'</tr>';
-            $('#detalleTalentosDeUnaArticulacion').append(fila);
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'El emprendedor se ha asociado a la articulación!'
-            });
-            resetValueInputEmprendedores();
-          }
-        }
+    //         let fila = '<tr class="selected" id='+documento+'>'
+    //         +'<td><input type="hidden" name="documento[]" value="'+documento+'">'+ documento +'</td>'
+    //         +'<td><input type="hidden" name="nombres[]" value="'+nombres+'">'+ nombres +'</td>'
+    //         +'<td><input type="hidden" name="email[]" value="'+email+'">'+ email +'</td>'
+    //         +'<td><input type="hidden" name="contacto[]" value="'+contacto+'">'+ contacto +'</td>'
+    //         +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminar('+documento+');"><i class="material-icons">delete_sweep</i></a></td>'
+    //         +'</tr>';
+    //         $('#detalleTalentosDeUnaArticulacion').append(fila);
+    //         Swal.fire({
+    //           toast: true,
+    //           position: 'top-end',
+    //           showConfirmButton: false,
+    //           timer: 1500,
+    //           type: 'success',
+    //           title: 'El emprendedor se ha asociado a la articulación!'
+    //         });
+    //         resetValueInputEmprendedores();
+    //       }
+    //     }
 
-      }
-    }
+    //   }
+    // }
 
-    function resetValueInputEmprendedores() {
-      $('#txtdocumento_emprendedor').val(null);
-      $("label[for='txtdocumento_emprendedor']").removeClass("active", false);
-      $('#txtnombres_emprendedor').val(null);
-      $("label[for='txtnombres_emprendedor']").removeClass("active", false);
-      $('#txtemail_emprendedor').val(null);
-      $("label[for='txtemail_emprendedor']").removeClass("active", false);
-      $('#txttelefono_emprendedor').val(null);
-      $("label[for='txttelefono_emprendedor']").removeClass("active", false);
-    }
+    // function resetValueInputEmprendedores() {
+    //   $('#txtdocumento_emprendedor').val(null);
+    //   $("label[for='txtdocumento_emprendedor']").removeClass("active", false);
+    //   $('#txtnombres_emprendedor').val(null);
+    //   $("label[for='txtnombres_emprendedor']").removeClass("active", false);
+    //   $('#txtemail_emprendedor').val(null);
+    //   $("label[for='txtemail_emprendedor']").removeClass("active", false);
+    //   $('#txttelefono_emprendedor').val(null);
+    //   $("label[for='txttelefono_emprendedor']").removeClass("active", false);
+    // }
 
     // function addTalentoArticulacion(id) {
     //   if (noRepeat(id) == false) {
