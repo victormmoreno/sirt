@@ -1009,7 +1009,7 @@ class ProyectoRepository
     try {
       $proyecto = Proyecto::findOrFail($id);
       $proyecto->articulacion_proyecto()->update([
-        'aprobacion_talento' => 1
+        'aprobacion_dinamizador_ejecucion' => 1
       ]);
       DB::commit();
       return true;
@@ -1177,13 +1177,14 @@ class ProyectoRepository
    * @return boolean
    * @author dum
    */
-  public function notificarAlTalento_Planeacion(int $id)
+  public function notificarAlDinamizador_Planeacion(int $id)
   {
     DB::beginTransaction();
     try {
+      $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
-      $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user;
-      Notification::send($talento, new ProyectoAprobarPlaneacion($proyecto));
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ProyectoAprobarPlaneacion($proyecto));
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -1192,13 +1193,14 @@ class ProyectoRepository
     }
   }
 
-  public function notificarAlTalento_Ejecucion(int $id)
+  public function notificarAlDinamizador_Ejecucion(int $id)
   {
     DB::beginTransaction();
     try {
+      $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
-      $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user;
-      Notification::send($talento, new ProyectoAprobarEjecucion($proyecto));
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ProyectoAprobarEjecucion($proyecto));
       DB::commit();
       return true;
     } catch (\Throwable $th) {

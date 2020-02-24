@@ -210,14 +210,15 @@ class ComiteController extends Controller
   */
   public function store(ComiteFormRequest $request)
   {
+    
     if ( session('ideasComiteCreate') == false ) {
       alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
       return back()->withInput();
     } else {
       // $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
       $contComites = COUNT(session('ideasComiteCreate'));
-      if ( $contComites != 0 ) {
-        alert()->warning('Advertencia!','Ya se encuentra un comité registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
+      if ( $contComites > 8 ) {
+        alert()->warning('Advertencia!','Solo se puede asociar un máximo de 8 ideas de proyectos al comité (Se puede registrar otro comité en el mismo día).')->showConfirmButton('Ok', '#3085d6');
         return back()->withInput();
       } else {
         DB::transaction(function () use ($request) {

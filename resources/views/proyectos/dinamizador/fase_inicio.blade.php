@@ -16,13 +16,13 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
+              <form action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST" name="frmInicioDinamizador">
                 {!! method_field('PUT')!!}
                 @csrf
                 @include('proyectos.detalle_fase_inicio')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" {{$proyecto->fase->nombre == 'Planeación' ? 'disabled' : ''}}
+                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre == 'Planeación' ? 'disabled' : ''}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
                     {{$proyecto->fase->nombre == 'Planeación' ? 'El Proyecto se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
@@ -59,7 +59,45 @@
 
   datatableArchivosDeUnProyecto_inicio();
   });
+  
 
+//   $("form").on('submit', function(e){
+//     e.preventDefault();
+//     Swal.fire({
+//     title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
+//     // text: "You won't be able to revert this!",
+//     type: 'warning',
+//     showCancelButton: true,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//     cancelButtonText: 'Cancelar',
+//     confirmButtonText: 'Sí!'
+//     }).then((result) => {
+//       if (result.value) {
+
+//       }
+//     })
+// });
+
+
+  function preguntaInicio(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmInicioDinamizador.submit();
+      }
+    })
+  }
+  
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
   }
