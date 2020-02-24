@@ -9,8 +9,8 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s10 m10 l10">
-                        <h5 class="left-align">
-                            <i class="material-icons left">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <i class="material-icons left ">
                                 supervised_user_circle
                             </i>
                             Usuarios | Perfil
