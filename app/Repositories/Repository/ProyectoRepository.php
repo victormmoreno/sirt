@@ -1290,7 +1290,7 @@ class ProyectoRepository
       ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
       ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
       ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
-      ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+      ->leftJoin('fases', 'fases.id', '=', 'proyectos.fase_id')
       ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
       ->where(function ($q) use ($anho) {
         $q->where(function ($query) use ($anho) {
