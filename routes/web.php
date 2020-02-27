@@ -3,11 +3,13 @@
 use App\User;
 use Carbon\Carbon;
 use App\Models\Entidad;
+use App\Models\Articulacion;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
 
-    return view('spa');
+Route::get('/', function () {
+    
+      return view('spa');
     // $proyecto = App\Models\Proyecto::find(455);
     // $proyecto->users_propietarios()->attach([7]);
 })->name('/');
@@ -548,6 +550,8 @@ Route::group(
         Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
         Route::post('/', 'ArticulacionController@store')->name('articulacion.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload')->middleware('role_session:Gestor');
+
+
     }
 );
 
@@ -982,6 +986,7 @@ Route::group(
         Route::get('intervencion/ajaxDetallesDeUnaArticulacion/{id}', 'IntervencionEmpresaController@detallesDeUnaIntervencion')->name('intervencion.detalle');
         Route::get('intervencion/datatableIntervencionesAEmpresasDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesAempresasPorGestor')->name('intervencion.datatable');
         Route::get('intervencion/datatableIntervencionesDelNodo/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesPorNodo')->name('intervencion.datatable.nodo');
+        Route::get('intervencion/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
         Route::resource('intervencion', 'IntervencionEmpresaController', ['except' => ['show', 'destroy']])->parameters([
             'intervencion' => 'id',
         ])->names([

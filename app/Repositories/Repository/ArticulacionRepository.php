@@ -789,7 +789,7 @@ class ArticulacionRepository
   */
   public function create($request)
   {
-
+    
     DB::beginTransaction();
     try {
       $anho = Carbon::now()->isoFormat('YYYY');
@@ -799,24 +799,25 @@ class ArticulacionRepository
       $idArticulacion = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
       $idArticulacion->max == null ? $idArticulacion->max = 1 : $idArticulacion->max = $idArticulacion->max;
       $idArticulacion->max = sprintf("%04d", $idArticulacion->max);
-      $fechaEjecucion = request()->txtfecha_inicio;
-
-      // dd($anho);
-      $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
+      $fechaEjecucion =$request->txtfecha_inicio;
+      
       if (request()->group1 == Articulacion::IsGrupo()) {
-        request()->entidad_id = Entidad::select('entidades.id')
+        $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
+       $request->entidad_id = Entidad::select('entidades.id')
         ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
-        ->where('gruposinvestigacion.id', request()->txtgrupo_id)->get()->last()->id;
+        ->where('gruposinvestigacion.id',$request->txtgrupo_id)->get()->last()->id;
       }
 
       if (request()->group1 == Articulacion::IsEmpresa()) {
-        request()->entidad_id = Entidad::select('entidades.id')
+        $codigo = 'INT' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
+       $request->entidad_id = Entidad::select('entidades.id')
         ->join('empresas', 'empresas.entidad_id', '=', 'entidades.id')
-        ->where('empresas.id', request()->txtempresa_id)->get()->last()->id;
+        ->where('empresas.id',$request->txtempresa_id)->get()->last()->id;
       }
 
       if (request()->group1 == Articulacion::IsEmprendedor()) {
-        request()->entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
+        $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
+       $request->entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
       }
 
       if (request()->txtestado == Articulacion::IsEjecucion()) {
@@ -827,26 +828,26 @@ class ArticulacionRepository
       'gestor_id' => auth()->user()->gestor->id,
       'nodo_id' => auth()->user()->gestor->nodo_id,
       'codigo_actividad' => $codigo,
-      'nombre' => request()->txtnombre,
-      'fecha_inicio' => request()->txtfecha_inicio,
+      'nombre' =>$request->txtnombre,
+      'fecha_inicio' =>$request->txtfecha_inicio,
       ]);
 
       $articulacion_proyecto = ArticulacionProyecto::create([
-      'entidad_id'   => request()->entidad_id,
+      'entidad_id'   =>$request->entidad_id,
       'actividad_id' => $actividad->id,
       ]);
 
       $articulacion = Articulacion::create([
       'articulacion_proyecto_id' => $articulacion_proyecto->id,
-      'tipoarticulacion_id' => request()->txttipoarticulacion_id,
-      'tipo_articulacion' => request()->group1,
+      'tipoarticulacion_id' =>$request->txttipoarticulacion_id,
+      'tipo_articulacion' =>$request->group1,
       'fecha_ejecucion' => $fechaEjecucion,
-      'observaciones' => request()->txtobservaciones,
-      'estado' => request()->txtestado,
+      'observaciones' =>$request->txtobservaciones,
+      'estado' => $request->txtestado,
       ]);
 
       // Registrar los emprendedores
-      if (request()->group1 == Articulacion::IsEmprendedor()) {
+      if ($request->group1 == Articulacion::IsEmprendedor()) {
         $syncData = array();
         foreach ($request->get('documento') as $id => $value) {
           $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);

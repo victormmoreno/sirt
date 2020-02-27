@@ -62,7 +62,6 @@
                     <tr>
                       <th>Código de la Articulación</th>
                       <th>Nombre</th>
-                      <th>Tipo de Articulación</th>
                       <th>Estado</th>
                       <th>Revisado Final</th>
                       <th>Detalles</th>
@@ -74,7 +73,6 @@
                     <tr>
                       <th><input type="text" name="codigo_articulacion_GestorTable" id="codigo_articulacion_GestorTable" placeholder="Buscar por código de articulación"></th>
                       <th><input type="text" name="nombre_GestorTable" id="nombre_GestorTable" placeholder="Buscar por nombre"></th>
-                      <th><input type="text" name="tipo_articulacion_GestorTable" id="tipo_articulacion_GestorTable" placeholder="Buscar por Tipo de Articulación"></th>
                       <th><input type="text" name="estado_GestorTable" id="estado_GestorTable" placeholder="Buscar por Estado"></th>
                       <th></th>
                       <th></th>

@@ -60,7 +60,7 @@
                 <table id="IntervencionGestor_table" class="display responsive-table datatable-example dataTable">
                   <thead>
                     <tr>
-                      <th>Código de la Intervención0</th>
+                      <th>Código de la Intervención</th>
                       <th>Nombre</th>
                       <th>Estado</th>
                       <th>Revisado Final</th>

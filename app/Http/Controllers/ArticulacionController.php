@@ -110,11 +110,11 @@ class ArticulacionController extends Controller
       return $button;
     })->addColumn('edit', function ($data) {
 
-      if($data->tipo_articulacion == 'Empresa' ){
+      if($data->tipoarticulacion_id ==  Articulacion::IsEmpresa() ){
         return '<span class="new badge" data-badge-caption="Articulación con empresa"></span>';
-      }else if($data->tipo_articulacion == 'Emprendedor(es)'){
+      }else if($data->tipoarticulacion_id ==  Articulacion::IsEmprendedor()){
         return '<span class="new badge" data-badge-caption="Articulación con Emprendedor"></span>';
-      }else if($data->tipo_articulacion =='Grupo de Investigación'){
+      }else if($data->tipoarticulacion_id ==Articulacion::IsGrupo()){
         $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
         return $edit;
       }else{
@@ -369,6 +369,7 @@ class ArticulacionController extends Controller
   */
   public function store(Request $request)
   {
+    return request()->group1;
     $req = new ArticulacionFormRequest;
     $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
@@ -378,6 +379,7 @@ class ArticulacionController extends Controller
       ]);
     }
     $result = $this->articulacionRepository->create($request);
+    return $result;
     if ($result == false) {
       return response()->json([
           'fail' => false,

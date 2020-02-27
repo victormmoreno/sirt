@@ -80,14 +80,23 @@ class ArchivoRepository
    * @return Collection
    * @author dum
    */
-  public function consultarRutasArchivosDeUnaArticulacionProyecto($id, $fase)
+  public function consultarRutasArchivosDeUnaArticulacionProyecto($id, $fase = null)
   {
-    return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
-    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
-    ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
-    ->where('articulacion_proyecto.id', $id)
-    ->where('fases.nombre', $fase);
-  }
+        if($fase == null){
+          return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
+          ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
+          ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
+          ->where('articulacion_proyecto.id', $id);
+        
+        }else{
+          return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
+          ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
+          ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
+          ->where('articulacion_proyecto.id', $id)
+          ->where('fases.nombre', $fase);
+        }
+    }
+    
 
   /**
   * @param int $id Id de la tabla articulacion_proyecto
