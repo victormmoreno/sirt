@@ -401,7 +401,8 @@ class ArchivoController extends Controller
   {
     if (request()->ajax()) {
       $articulacion = Articulacion::findOrFail($id);
-      $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($articulacion->articulacion_proyecto_id);
+      
+      $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($articulacion->articulacion_proyecto_id, null);
       return $this->datatableArchivosArticulacionProyecto($archivosDeLaArticulacion);
     }
   }

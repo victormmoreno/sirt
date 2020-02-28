@@ -48,6 +48,7 @@ class User extends Authenticatable implements JWTSubject
         'ultimo_login',
         'fechanacimiento',
         'fecha_terminacion',
+        'deleted_at'
     ];
 
     public $items = null;

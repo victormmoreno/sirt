@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -32,9 +32,9 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             Gestores Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
-                                            <i class="material-icons">
+                                            <i class="material-icons orange-text text-darken-3">
                                                 supervised_user_circle
                                             </i>
                                         </span>

@@ -17,7 +17,11 @@
             <br>
                 Miembro desde {{optional($user->created_at)->isoFormat('LL')}}
                 <br>
+                    @if(isset($user->fechanacimiento))
                     {{$user->fechanacimiento->age}} años
+                    @endif
+                    
+                    
                 </br>
             </br>
         </span>
