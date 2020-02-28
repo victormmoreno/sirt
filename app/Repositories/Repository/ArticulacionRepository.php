@@ -732,7 +732,6 @@ class ArticulacionRepository
     ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsInicio() . ', "Inicio", IF(articulaciones.estado = ' . Articulacion::IsEjecucion() . ', "Ejecución", "Cierre") ) AS estado')
     ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
-    // ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsCierre() . ', fecha_cierre, "La Articulación aún no se ha cerrado") AS fecha_cierre')
     ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
     ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
     ->selectRaw('IF(tipo_articulacion = "Grupo de Investigación", IF(acc = 1, "Si", "No"), "No Aplica") AS acc')
@@ -745,8 +744,8 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
-    ->where('tipo_articulacion', '!=', Articulacion::IsEmpresa())
-    ->whereYear('fecha_inicio', $anho)
+    ->where('articulaciones.tipoarticulacion_id', '!=', Articulacion::IsEmpresa())
+    ->whereYear('actividades.fecha_inicio', $anho)
     ->get();
   }
 
@@ -776,8 +775,8 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
-    ->where('tipo_articulacion', '=', Articulacion::IsEmpresa())
-    ->whereYear('fecha_inicio', $anho)
+    ->where('articulaciones.tipoarticulacion_id', '!=', Articulacion::IsEmpresa())
+    ->whereYear('actividades.fecha_inicio', $anho)
     ->get();
   }
 

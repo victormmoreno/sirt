@@ -295,12 +295,17 @@ class ArticulacionController extends Controller
   */
   public function datatableArticulacionesPorGestor(Request $request, $id, $anho)
   {
+    
+
     if (request()->ajax()) {
-      $idgestor = $id;
       if ( Session::get('login_role') == User::IsGestor() ) {
         $idgestor = auth()->user()->gestor->id;
+      }else{
+        $idgestor = $id;
       }
+        
 
+      
       $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($idgestor, $anho);
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
