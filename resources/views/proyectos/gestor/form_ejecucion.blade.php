@@ -31,7 +31,7 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" {{$proyecto->articulacion_proyecto->aprobacion_talento == 1 ? 'disabled' : '' }} {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
+            <input type="checkbox" {{$proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1 ? 'disabled' : '' }} {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
                 id="txtseguimiento" name="txtseguimiento" value="1">
             <label for="txtseguimiento">
                 Seguimiento y usos de infraestructura.
@@ -43,7 +43,7 @@
         <a class="btn green lighten-1 m-b-xs" href="{{route('pdf.proyecto.usos', $proyecto->id)}}" target="_blank"><i class="far fa-file-pdf"></i></a>
     </div>
 </div>
-@if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)
+@if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
 <div class="row">
     <div class="card-panel teal">
         <div class="dropzone" id="fase_ejecucion_proyecto"></div>

@@ -16,30 +16,13 @@
                             @include('proyectos.navegacion_fases')
                             <div class="divider"></div>
                             <br />
-                            <form action="{{route('proyecto.update.planeacion', $proyecto->id)}}" method="POST">
-                                {!! method_field('PUT')!!}
-                                @csrf
                                 @include('proyectos.detalle_fase_planeacion')
                                 <div class="divider"></div>
                                 <center>
-                                  @if ($proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id == auth()->user()->talento->id)
-                                  <button type="submit" value="send"
-                                      {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}}
-                                      class="waves-effect cyan darken-1 btn center-aling">
-                                      <i class="material-icons right">done</i>
-                                      {{$proyecto->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'El Proyecto no se encuentra en fase de Planeación'}}
-                                  </button>
-                                  @else
-                                  <button disabled value="send" class="waves-effect cyan darken-1 btn center-aling">
-                                      <i class="material-icons right">done</i>
-                                      No eres el talento interlocutor de este proyecto.
-                                  </button>
-                                  @endif
                                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                                         <i class="material-icons right">backspace</i>Cancelar
                                     </a>
                                 </center>
-                            </form>
                         </div>
                     </div>
                 </div>

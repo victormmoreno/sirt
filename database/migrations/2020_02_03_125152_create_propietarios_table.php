@@ -16,6 +16,7 @@ class CreatePropietariosTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('proyecto_id')->unsigned();
             $table->integer('propietario_id')->unsigned();
