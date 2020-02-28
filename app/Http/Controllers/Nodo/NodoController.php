@@ -92,7 +92,22 @@ class NodoController extends Controller
             case User::IsDinamizador():
                 if (isset(auth()->user()->dinamizador)) {
                     $nodoAuth = auth()->user()->dinamizador->nodo->id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
+                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
+                    ->orWhereHas('ingresos.user', function ($query) {
+                        $query->Where('deleted_at', 'null');
+                    })
+                    ->orWhereHas('gestores.user', function ($query) {
+                        $query->orWhere('deleted_at', 'null');
+                    })
+                    ->orWhereHas('infocenter.user', function ($query) {
+                        $query->orWhere('deleted_at', 'null');
+                    })
+                    ->orWhereHas('dinamizador.user', function ($query) {
+                        $query->orWhere('deleted_at', 'null');
+                    })
+                                    ->where('id', $nodoAuth)
+                                    ->first();
+                    // return $nodo;
 
                     return view('nodos.show', [
                         'nodo'              => $nodo,

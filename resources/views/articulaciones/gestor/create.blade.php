@@ -51,12 +51,9 @@
                       {{-- <p class="center card-title">Seleccione con quién será la articulación <span class="red-text">*</span></p><br> --}}
                       <div class="input-field col s12 m12 l12">
                         <p class="center p-v-xs">
-                          <input class="with-gap" name="group1" type="radio" id="IsGrupo" value="0"/ checked readonly>
+                          <input class="with-gap" name="group1" type="radio" id="IsGrupo" value="0" checked readonly>
                           <label for="IsGrupo">Grupo de Investigación</label>
-                          {{-- <input class="with-gap" name="group1" type="radio" id="IsEmpresa" value="1"/>
-                          <label for="IsEmpresa">Empresa</label>
-                          <input class="with-gap" name="group1" type="radio" id="IsEmprendededor" value="2"/>
-                          <label for="IsEmprendededor">Emprendedor</label> --}}
+                          
                         </p>
                         <center>
                           <small id="group1-error" class="center-align error red-text"></small>
@@ -397,6 +394,8 @@
         contentType: false,
         processData: false,
         success: function (data) {
+          
+          
           $('button[type="submit"]').removeAttr('disabled');
           // $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();

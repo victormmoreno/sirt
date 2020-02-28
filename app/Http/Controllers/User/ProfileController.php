@@ -7,7 +7,9 @@ use App\Http\Requests\ProfileRequest\{ChangePasswordRequest, ProfileFormRequest}
 use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
 use App\Repositories\Repository\{ProfileRepository\ProfileRepository, UserRepository\UserRepository};
 use App\User;
+use App\Models\Etnia;
 use Illuminate\Http\Request;
+use Illuminate\Support\{Facades\Validator};
 use PDF;
 
 class ProfileController extends Controller
@@ -74,12 +76,14 @@ class ProfileController extends Controller
 
         return view('users.profile.edit', [
             'user'              => $authUser,
+            'etnias' => Etnia::pluck('nombre', 'id'),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+            'view' => 'edit'
         ]);
     }
 
@@ -90,21 +94,58 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProfileFormRequest $request, $id)
+    public function update(Request $request, $id)
     {
-
         //buscar usuario por su id
-        $authUser = $this->getAuthUserFindById();
-        $this->authorize('updateProfile', $authUser);
-        //acutalizar usuario
-        $userUpdated = $this->profileRepostory->Update($request, $authUser);
+        $user = User::find($id);
 
-        if ($userUpdated != null) {
-            $this->userRepository->destroySessionUser();
-            return redirect()->route('login')->withSuccess('Tu perfil ha sido actualizado exitosamente.');
+        if($user == null){
+            $user = User::onlyTrashed()->find($id);
+        }
+        $this->authorize('updateProfile', $user);
+
+        $req       = new ProfileFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            if ($user != null) {
+                //acutalizar usuario
+                $userUpdate = $this->profileRepostory->Update($request, $user);
+               
+                return response()->json([
+                    'state'   => 'success',
+                    'message' => 'Tu perfil ha sido actualizado exitosamente.',
+                    'url' => route('login'),    
+                    'user' => $userUpdate,
+                ]);
+            } else {
+                return response()->json([
+                    'state'   => 'error',
+                    'message' => 'El Usuario no se ha modificado',
+                    'url' => redirect()->back()
+
+                ]);
+            }
         }
 
-        return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
+
+
+        
+        // $userUpdated = $this->profileRepostory->Update($request, $user);
+
+        // if ($userUpdated != null) {
+        //     $this->userRepository->destroySessionUser();
+        //     return redirect()->route('login')->withSuccess('Tu perfil ha sido actualizado exitosamente.');
+        // }
+
+        // return redirect()->back()->with('error', 'error al actualizar tu perfil, intentalo de nuevo.');
 
     }
 

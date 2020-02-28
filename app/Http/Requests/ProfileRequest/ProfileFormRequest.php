@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\ProfileRequest;
 
-use App\Models\Ocupacion;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use \App\Models\Eps;
+use \App\Models\{Eps, Ocupacion};
 
 class ProfileFormRequest extends FormRequest
 {
@@ -28,29 +27,33 @@ class ProfileFormRequest extends FormRequest
     {
 
         return [
-            'txttipo_documento'    => 'required',
-            'txtgrado_escolaridad' => 'required',
-            'txtgruposanguineo'    => 'required',
-            'txtocupaciones'       => 'required',
-            'txteps'               => 'required',
-            'txtciudad'            => 'required',
-            'txtdepartamento'      => 'required',
-            // 'txtdocumento'         => ['required|digits_between:6,11|numeric|unique:users,documento,' . $this->route('administrador')],
-            'txtdocumento'         => ['required', 'digits_between:6,11', 'numeric', Rule::unique('users', 'documento')->ignore($this->route('perfil'))],
-            'txtnombres'           => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtapellidos'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtfecha_nacimiento'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
-            'txtestrato'           => 'required',
-            'txtemail'             => 'required|email|min:1|max:100,|unique:users,email,' . $this->route('perfil'),
-            'txtbarrio'            => 'required|min:1|max:100',
-            'txtdireccion'         => 'required|min:1|max:200',
-            'txttelefono'          => 'nullable|digits_between:6,11|numeric',
-            'txtcelular'           => 'nullable|digits_between:10,11|numeric',
-            'txtotraeps'           => Rule::requiredIf($this->txteps == Eps::where('nombre', Eps::OTRA_EPS)->first()->id) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
-            'txtinstitucion'       => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txttitulo'            => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtfechaterminacion'  => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
-            'txtotra_ocupacion'    => Rule::requiredIf(collect($this->txtocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'txttipo_documento'         => 'required',
+            'txtocupaciones'            => 'required',
+            'txtgrado_escolaridad'      => 'required',
+            'txtgruposanguineo'         => 'required',
+            'txteps'                    => 'required',
+            'txtciudad'                 => 'required',
+            'txtdepartamento'           => 'required',
+            'txtciudadexpedicion'       => 'required',
+            'txtdepartamentoexpedicion' => 'required',
+            'txtetnias'           => 'required',
+            'txtdocumento'              => 'required|digits_between:6,11|numeric|unique:users,documento,' . request()->route('perfil'),
+            'txtnombres'                => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtapellidos'              => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtfecha_nacimiento'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'txtestrato'                => 'required',
+            'txtgrado_discapacidad'    => 'required',
+            'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('perfil'),
+            'txtbarrio'                 => 'required|min:1|max:100',
+            'txtdireccion'              => 'required|min:1|max:200',
+            'txttelefono'               => 'nullable|digits_between:6,11|numeric',
+            'txtcelular'                => 'nullable|digits_between:10,11|numeric',
+            'txtinstitucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txttitulo'                 => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'txtfechaterminacion'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'txtotraeps'                => Rule::requiredIf(request()->txteps == Eps::where('nombre', Eps::OTRA_EPS)->first()->id) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'txtotra_ocupacion'         => Rule::requiredIf(collect(request()->txtocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
 
         ];
     }
@@ -58,17 +61,23 @@ class ProfileFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-            'txttipo_documento.required'          => 'El tipo de documento es obligatorio.',
-            'txtgrado_escolaridad.required'       => 'El grado de escolaridad es obligatorio.',
-            'txtgruposanguineo.required'          => 'El grupo sanguíneo es obligatorio.',
-            'txteps.required'                     => 'La eps es obligatoria.',
-            'txtciudad.required'                  => 'La ciudad es obligatorio.',
-            'txtdepartamento.required'            => 'El departamento es obligatorio.',
+            'txtetnias.required'                  => 'La Etnia es obligatoria.',
+            'txttipo_documento.required'          => 'El tipo documento es obligatorio.',
+            'txttipoestudio.required'          => 'El tipo de estudio es obligatorio.',
+            'txttipoformacion.required'          => 'El tipo de formación es obligatorio.',
 
-            'txtdocumento.required'               => 'El documento es obligatorio.',
-            'txtdocumento.digits_between'         => 'El documento debe tener entre 6 y 11 digitos',
-            'txtdocumento.numeric'                => 'El documento debe ser numérico',
-            'txtdocumento.unique'                 => 'El documento ya ha sido registrado',
+            'txtgrado_escolaridad.required'       => 'El grado de escolaridad es obligatorio.',
+            'txtgruposanguineo.required'          => 'El grupo sanguineo es obligatorio.',
+            'txteps.required'                     => 'La la eps es obligatoria.',
+            'txtciudad.required'                  => 'La ciudad de residencia es obligatoria.',
+            'txtciudadexpedicion.required'        => 'La ciudad de expedición del documento es obligatoria.',
+            'txtdepartamento.required'            => 'El departamento de residencia es obligatorio.',
+            'txtdepartamentoexpedicion.required'  => 'El departamento de expedición del documento es obligatorio.',
+
+            'txtdocumento.required'               => 'El número de documento es obligatorio.',
+            'txtdocumento.digits_between'         => 'El número de documento debe tener entre 6 y 11 digitos',
+            'txtdocumento.numeric'                => 'El número de documento debe ser numérico',
+            'txtdocumento.unique'                 => 'El número de documento ya ha sido registrado',
 
             'txtnombres.required'                 => 'Los nombres son obligatorios.',
             'txtnombres.min'                      => 'Los nombres deben ser minimo 1 caracter',
@@ -82,7 +91,7 @@ class ProfileFormRequest extends FormRequest
 
             'txtfecha_nacimiento.required'        => 'La fecha de nacimiento es obligatoria.',
             'txtfecha_nacimiento.date'            => 'La fecha de nacimiento no es una fecha válida.',
-            'txtfecha_nacimiento.before_or_equal' => 'La fecha de nacimiento  debe ser una fecha anterior o igual a la fecha de hoy',
+            'txtfecha_nacimiento.before_or_equal' => 'La fecha de nacimiento  debe ser una fecha anterior o igual a 2019-06-11.',
 
             'txtestrato.required'                 => 'El estrato es obligatorio.',
 
@@ -91,6 +100,7 @@ class ProfileFormRequest extends FormRequest
             'txtemail.max'                        => 'El correo electrónico debe ser máximo 100 caracteres',
             'txtemail.unique'                     => 'El correo electrónico ya ha sido registrado',
 
+            'txtdireccion.required'               => 'La dirección es obligatoria.',
             'txtdireccion.min'                    => 'La dirección debe ser minimo 1 caracter',
             'txtdireccion.max'                    => 'La dirección debe ser máximo 200 caracteres',
 
@@ -107,7 +117,24 @@ class ProfileFormRequest extends FormRequest
             'txtotraeps.required'                 => 'Por favor ingrese otra eps',
             'txtotraeps.min'                      => 'La otra eps debe ser minimo 1 caracter',
             'txtotraeps.max'                      => 'La otra eps debe ser minimo 45 caracteres',
-            'txtotraeps.regex'                    => 'El formato del campo otra eps es incorrecto',
+            'txtotraeps.regex'                    => 'El formato del campo otra eso es incorrecto',
+
+
+            'txtgrado_discapacidad.required'                  => 'El grado de discapacidad es obligatorio.',
+
+
+            'txtdiscapacidad.required'                 => 'Por favor digite cual grado de discapacidad',
+            'txtdiscapacidad.min'                      => 'El grado de discapacidad debe ser minimo 1 caracter',
+            'txtdiscapacidad.max'                      => 'El grado de discapacidad debe ser minimo 45 caracteres',
+            'txtdiscapacidad.regex'                    => 'El formato del campo cual eso es incorrecto',
+
+            'txtocupaciones.required'             => 'seleccione al menos una ocupación',
+
+            'txtfechaterminacion.required'        => 'La fecha de terminación es obligatoria.',
+            'txtfechaterminacion.date'            => 'La fecha de terminación no es una fecha válida.',
+            'txtfechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
+
+            'txtgrado_discapacidad.required'                  => 'El grado de discapacidad es obligatorio.',
 
             'txtinstitucion.required'             => 'La institución es obligatoria.',
             'txtinstitucion.min'                  => 'La institución  debe ser minimo 1 caracter',
@@ -119,18 +146,11 @@ class ProfileFormRequest extends FormRequest
             'txttitulo.max'                       => 'El titulo  debe ser minimo 200 caracteres',
             'txttitulo.regex'                     => 'El formato del campo titulo es incorrecto',
 
-            'txtfechaterminacion.required'        => 'La fecha de terminación es obligatoria.',
-            'txtfechaterminacion.date'            => 'La fecha de terminación no es una fecha válida.',
-            'txtfechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
-
-            'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
-            'txtotra_ocupacion.regex'             => 'Sólo se permiten caracteres alfabeticos',
-            'txtocupaciones.required'             => 'seleccione al menos una ocupación',
 
         ];
     }
 
-    public function attributes():array
+    public function attributes(): array
     {
         return [
             'txttipo_documento'    => 'tipo de documento',

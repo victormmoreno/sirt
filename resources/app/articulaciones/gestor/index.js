@@ -9,11 +9,9 @@ function consultarArticulacionesDelGestor(anho) {
     order: [ 0, 'desc' ],
     ajax:{
       url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
-      // type: "get",
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
         d.nombre = $('#nombre_GestorTable').val(),
-        d.tipo_articulacion = $('#tipo_articulacion_GestorTable').val(),
         d.estado = $('#estado_GestorTable').val(),
         d.search = $('input[type="search"]').val()
       }
@@ -26,10 +24,6 @@ function consultarArticulacionesDelGestor(anho) {
       {
         data: 'nombre',
         name: 'nombre',
-      },
-      {
-        data: 'tipo_articulacion',
-        name: 'tipo_articulacion',
       },
       {
         data: 'estado',
@@ -66,9 +60,6 @@ $("#nombre_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();
 });
 
-$("#tipo_articulacion_GestorTable").keyup(function(){
-  $('#articulacionesGestor_table').DataTable().draw();
-});
 
 $("#estado_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();

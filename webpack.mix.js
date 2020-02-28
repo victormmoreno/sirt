@@ -99,6 +99,7 @@ mix.scripts([
         'resources/app/user/edit.js',
 		'resources/app/user/index-user.js',
 		'resources/app/user/modaluser.js',
+		'resources/app/user/edit-profile.js',
 		'resources/app/user/role/roleuser.js',
 		'resources/app/sublinea/administrador/index.js',
 		'resources/app/articulaciones/gestor/index.js',

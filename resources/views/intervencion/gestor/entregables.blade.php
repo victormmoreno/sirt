@@ -43,7 +43,7 @@
                         <div class="collapsible-body">
                           <div class="row">
                             <div class="col s12 m12 l12">
-                              <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="archivoDeUnaArticulacion">
+                              <table class="display responsive-table datatable-example dataTable" style="width: 100%" id="archivoDeUnaIntervencion">
                                 <thead>
                                   <tr>
                                     <th>Archivo</th>
@@ -89,7 +89,7 @@
   <script>
   datatableArchivosDeUnaArticulacion();
   function datatableArchivosDeUnaArticulacion() {
-    $('#archivoDeUnaArticulacion').DataTable({
+    $('#archivoDeUnaIntervencion').DataTable({
       language: {
         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
       },
@@ -97,7 +97,7 @@
       serverSide: true,
       order: false,
       ajax:{
-        url: "/articulacion/archivosDeUnaArticulacion/"+{{$articulacion->id}},
+        url: "/intervencion/archivosDeUnaArticulacion/"+{{$articulacion->id}},
         type: "get",
       },
       columns: [
@@ -172,7 +172,7 @@
   });
 
   DropzoneArticulacionInicio.on('success', function (res) {
-    $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
+    $('#archivoDeUnaIntervencion').dataTable().fnDestroy();
     datatableArchivosDeUnaArticulacion();
     Swal.fire({
       toast: true,
@@ -185,7 +185,7 @@
   })
 
   DropzoneArticulacionEjecucion.on('success', function (res) {
-    $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
+    $('#archivoDeUnaIntervencion').dataTable().fnDestroy();
     datatableArchivosDeUnaArticulacion();
     Swal.fire({
       toast: true,
@@ -198,7 +198,7 @@
   })
 
   DropzoneArticulacionCierre.on('success', function (res) {
-    $('#archivoDeUnaArticulacion').dataTable().fnDestroy();
+    $('#archivoDeUnaIntervencion').dataTable().fnDestroy();
     datatableArchivosDeUnaArticulacion();
     Swal.fire({
       toast: true,
