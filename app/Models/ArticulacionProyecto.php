@@ -37,7 +37,7 @@ class ArticulacionProyecto extends Model
   protected $fillable = [
     'entidad_id',
     'actividad_id',
-    'aprobacion_talento',
+    'aprobacion_dinamizador_ejecucion',
     'revisado_final',
     'acta_inicio',
     'actas_seguimiento',

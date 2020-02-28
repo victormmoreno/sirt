@@ -175,7 +175,9 @@
                                                             Primer objetivo específico
                                                         </span>
                                                         <p>
+                                                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo))
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}
+                                                            @endif
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
@@ -183,7 +185,10 @@
                                                             Segundo objetivo específico
                                                         </span>
                                                         <p>
+                                                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}
+                                                            @endif
+                                                            {{-- {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}} --}}
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
@@ -191,7 +196,10 @@
                                                             Tercer objetivo específico
                                                         </span>
                                                         <p>
+                                                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}
+                                                            @endif
+                                                            {{-- {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}} --}}
                                                         </p>
                                                     </li>
                                                     <li class="collection-item">
@@ -199,7 +207,10 @@
                                                             Cuarto objetivo específico
                                                         </span>
                                                         <p>
+                                                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo))
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}
+                                                            @endif
+                                                            {{-- {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}} --}}
                                                         </p>
                                                     </li>
                                                 </ul>
