@@ -17,11 +17,7 @@
     footer .page:after {
       content: counter(page);
     }
-    .table_acta {
-      border-width: 3px;
-      border-style: solid;
-      border-color: black;
-    }
+
 
 
     </style>
@@ -39,7 +35,7 @@
     <footer>
         GD-F-007 V01
     </footer>
-    <table class="table-bordered table-sm table_acta">
+    <table class="table-bordered table-sm">
       <thead>
         <tr>
           <th colspan="1">

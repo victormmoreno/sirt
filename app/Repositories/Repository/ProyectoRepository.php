@@ -1295,7 +1295,7 @@ class ProyectoRepository
       ->where(function ($q) use ($anho) {
         $q->where(function ($query) use ($anho) {
           $query->whereYear('actividades.fecha_cierre', '=', $anho)
-          ->where('fases.nombre', 'Cierre');
+          ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
         })
           ->orWhere(function ($query) {
             $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);

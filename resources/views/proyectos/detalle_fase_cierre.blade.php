@@ -148,6 +148,7 @@
                                                         <span class="title cyan-text text-darken-3">
                                                             Primer objetivo específico
                                                         </span>
+                                                        @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo))
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}
                                                         </p>
@@ -157,11 +158,17 @@
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->cumplido == 0 ? 'NO' : 'SI'}}
                                                         </p>
+                                                        @else
+                                                        <p>
+                                                            No hay registros de los objetivos específicos
+                                                        </p>
+                                                        @endif
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
                                                             Segundo objetivo específico
                                                         </span>
+                                                        @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}
                                                         </p>
@@ -171,11 +178,17 @@
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->cumplido == 0 ? 'NO' : 'SI'}}
                                                         </p>
+                                                        @else
+                                                        <p>
+                                                            No hay registros de los objetivos específicos
+                                                        </p>
+                                                        @endif
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
                                                             Tercer objetivo específico
                                                         </span>
+                                                        @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}
                                                         </p>
@@ -185,11 +198,17 @@
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->cumplido == 0 ? 'NO' : 'SI'}}
                                                         </p>
+                                                        @else
+                                                        <p>
+                                                            No hay registros de los objetivos específicos
+                                                        </p>
+                                                        @endif
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
                                                             Cuarto objetivo específico
                                                         </span>
+                                                        @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}
                                                         </p>
@@ -199,6 +218,11 @@
                                                         <p>
                                                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->cumplido == 0 ? 'NO' : 'SI'}}
                                                         </p>
+                                                        @else
+                                                        <p>
+                                                            No hay registros de los objetivos específicos
+                                                        </p>
+                                                        @endif
                                                     </li>
                                                 </ul>
                                             </div>
