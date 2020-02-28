@@ -16,13 +16,13 @@
               @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m12 l12 center">
-                  @if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)
+                  @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
                     <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.ejecucion', $proyecto->id)}}">
-                      Solicitar al talento interlocutor que apruebe la fase de ejecución.
+                      Solicitar al dinamizador que apruebe la fase de ejecución.
                     </a>
                   @else
                     <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>
-                      Esta fase ya ha sido aprobada por el talento interlocutor.
+                      Esta fase ya ha sido aprobada por el dinamizador.
                     </a>
                   @endif
                 </div>
@@ -32,10 +32,10 @@
                 @include('proyectos.gestor.form_ejecucion', [
                   'btnText' => 'Modificar'])
                 <div class="row">
-                  @include('proyectos.archivos_table_fase')
+                  @include('proyectos.archivos_table_fase', ['fase' => 'ejecucion'])
                 </div>
                 <center>
-                  @if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)
+                  @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                   @endif
                   <a href="{{ route('proyecto.planeacion', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
@@ -131,7 +131,7 @@
         name: 'download',
         orderable: false,
       },
-      @if ($proyecto->articulacion_proyecto->aprobacion_talento == 0)
+      @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
       {
         data: 'delete',
         name: 'delete',

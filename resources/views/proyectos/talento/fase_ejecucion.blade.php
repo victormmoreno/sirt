@@ -16,29 +16,13 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('proyecto.update.ejecucion', $proyecto->id)}}" method="POST">
-                {!! method_field('PUT')!!}
-                @csrf
                 @include('proyectos.detalle_fase_ejecucion')
                 <div class="divider"></div>
                 <center>
-                  @if ($proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id == auth()->user()->talento->id)
-                  <button type="submit" value="send" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? '' : 'disabled'}}
-                    class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_talento == 0 ? 'Aprobar fase de ejecución' : 'Ya se ha aprobado esta fase del proyecto'}}
-                  </button>
-                  @else
-                  <button disabled value="send" class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    No eres el talento interlocutor de este proyecto.
-                  </button>
-                  @endif
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
-              </form>
             </div>
           </div>
         </div>

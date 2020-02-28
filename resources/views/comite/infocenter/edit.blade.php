@@ -320,6 +320,8 @@
             let asistencia = 0;
             let observaciones = $('#txtobservacionesidea').val();
             let admitida = 0;
+            let asistenciaAlComite = 0;
+            let ideaAdmitida = 0;
 
             if ( $('#txtasistencia').is(":checked") ) {
               asistenciaAlComite = 1
@@ -329,14 +331,14 @@
               ideaAdmitida = 1;
             }
 
-            if (asistencia == 0) {
+            if (asistenciaAlComite == 0) {
               asistencia = 'No';
             } else {
               asistencia = 'Si';
             }
 
-            if (admitida == 0) {
-              admitida = 'Si';
+            if (ideaAdmitida == 0) {
+              admitida = 'No';
             } else {
               admitida = 'Si';
             }

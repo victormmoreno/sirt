@@ -16,13 +16,22 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
+              <form action="{{route('proyecto.update.ejecucion', $proyecto->id)}}" method="POST" name="frmEjecucionDinamizador">
+                {!! method_field('PUT')!!}
+                @csrf
                 @include('proyectos.detalle_fase_ejecucion')
                 <div class="divider"></div>
                 <center>
+                  <button type="submit" onclick="preguntaEjecucion(event)" value="send" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? '' : 'disabled'}}
+                    class="waves-effect cyan darken-1 btn center-aling">
+                    <i class="material-icons right">done</i>
+                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? 'Aprobar fase de ejecución' : 'Ya se ha aprobado esta fase del proyecto'}}
+                  </button>
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
+              </form>
             </div>
           </div>
         </div>
@@ -36,6 +45,24 @@
   $( document ).ready(function() {
     datatableArchivosDeUnProyecto_ejecucion();
   });
+
+  function preguntaEjecucion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de aprobar la fase de ejecución de este proyecto?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmEjecucionDinamizador.submit();
+      }
+    })
+  }
 
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";

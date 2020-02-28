@@ -67,7 +67,7 @@ class ComiteRepository
        $admitido = 0;
        $asistencia = 0;
 
-       if ($request->get('admitido_ideas')[$id] == 'No') {
+       if ($request->get('admitido_ideas')[$id] == 'Si') {
          $admitido = 1;
        }
        if ($request->get('asistencias_ideas')[$id] == 'Si') {

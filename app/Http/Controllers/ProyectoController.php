@@ -599,7 +599,7 @@ class ProyectoController extends Controller
   public function cierre(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    if ($proyecto->articulacion_proyecto->aprobacion_talento == 1) {
+    if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
       $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
       switch (Session::get('login_role')) {
         case User::IsGestor():
@@ -677,7 +677,7 @@ class ProyectoController extends Controller
   }
 
   /**
-   * Notitica al talento interlocutor para que apruebe la fase de planeación
+   * Notitica al dinamizador para que apruebe la fase de planeación
    *
    * @param int $id Id del proyecto
    * @return Response
@@ -685,17 +685,17 @@ class ProyectoController extends Controller
    **/
   public function notificar_planeacion(int $id)
   {
-    $notificacion = $this->getProyectoRepository()->notificarAlTalento_Planeacion($id);
+    $notificacion = $this->getProyectoRepository()->notificarAlDinamizador_Planeacion($id);
     if ($notificacion) {
-      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de planeación del proyecto!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de planeación del proyecto!')->showConfirmButton('Ok', '#3085d6');
     } else {
-      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al talento interlocutor para que apruebe la fase de planeación del proyecto!')->showConfirmButton('Ok', '#3085d6');
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de planeación del proyecto!')->showConfirmButton('Ok', '#3085d6');
     }
     return back();
   }
 
   /**
-   * Notitica al talento interlocutor para que apruebe la fase de ejecución
+   * Notitica al dinamizador para que apruebe la fase de ejecución
    *
    * @param int $id Id del proyecto
    * @return Response
@@ -703,11 +703,11 @@ class ProyectoController extends Controller
    **/
   public function notificar_ejecucion(int $id)
   {
-    $notificacion = $this->getProyectoRepository()->notificarAlTalento_Ejecucion($id);
+    $notificacion = $this->getProyectoRepository()->notificarAlDinamizador_Ejecucion($id);
     if ($notificacion) {
-      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
     } else {
-      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
     }
     return back();
   }
@@ -814,7 +814,7 @@ class ProyectoController extends Controller
   public function updateEntregables_Cierre(Request $request, $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    if ($proyecto->articulacion_proyecto->aprobacion_talento == 1) {
+    if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
       if (Session::get('login_role') == User::IsGestor()) {
         $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);
         if ($update) {

@@ -132,7 +132,7 @@ class Idea extends Model
     // ->join('entrenamiento_idea', 'entrenamiento_idea.idea_id', '=', 'ideas.id')
     // ->join('entrenamientos', 'entrenamientos.id', '=', 'entrenamiento_idea.entrenamiento_id')
     ->where('nodo_id', $id)
-    ->whereYear('ideas.created_at', Carbon::now()->isoFormat('YYYY'))
+    // ->whereYear('ideas.created_at', Carbon::now()->isoFormat('YYYY'))
     // ->where('tipo_idea', $this->IsEmprendedor())
     ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado'])
     ->groupBy('ideas.id')
