@@ -97,18 +97,21 @@ Route::group(
         Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
         Route::get('gestor/getGestor/papelera/{id}', 'GestorController@getGestorTrash')->name('usuario.gestor.getGestor.papelera');
         Route::get('gestor/getgestor', 'GestorController@getAllGestoresOfNodo')->name('usuario.gestor.getGestorofnodo');
+        Route::get('gestor/getgestor/papelera', 'GestorController@getAllGestoresOfNodoTrash')->name('usuario.gestor.getGestorofnodo.papelera');
         Route::get('gestor', 'GestorController@index')->name('usuario.gestor.index');
         Route::get('gestor/papelera', 'GestorController@trash')->name('usuario.gestor.papelera');
 
         Route::get('infocenter/getinfocenter/{id}', 'InfocenterController@getInfocenterForNodo')->name('usuario.infoncenter.getinfocenter');
         Route::get('infocenter/getinfocenter/papelera/{id}', 'InfocenterController@getInfocenterForNodoTrash')->name('usuario.infoncenter.getinfocenter.papelera');
         Route::get('infocenter/getinfocenter', 'InfocenterController@getAllInfocentersOfNodo')->name('usuario.infocenter.getinfocenternodo');
+        Route::get('infocenter/getinfocenter/papelera', 'InfocenterController@getAllInfocentersOfNodoTrash')->name('usuario.infocenter.getinfocenternodo.papelera');
         Route::get('infocenter', 'InfocenterController@index')->name('usuario.infocenter.index');
         Route::get('infocenter/papelera', 'InfocenterController@trash')->name('usuario.infocenter.papelera');
 
         Route::get('ingreso/getingreso/{id}', 'IngresoController@getIngresoForNodo')->name('usuario.ingreso.getingreso');
         Route::get('ingreso/getingreso/papelera/{id}', 'IngresoController@getIngresoForNodoTrash')->name('usuario.ingreso.getingreso.papelera');
         Route::get('ingreso/getingreso', 'IngresoController@getAllIngresoOfNodo')->name('usuario.ingreso.getingresonodo');
+        Route::get('ingreso/getingreso/papelera', 'IngresoController@getAllIngresoOfNodoTrash')->name('usuario.ingreso.getingresonodo.papelera');
         Route::get('ingreso', 'IngresoController@index')->name('usuario.ingreso.index');
         Route::get('ingreso/papelera', 'IngresoController@trash')->name('usuario.ingreso.papelera');
 
@@ -147,6 +150,11 @@ Route::group(
         ]);
 
         Route::get('/getuserstalentosbydatatables/papelera/{anio}', [
+            'uses' => 'UserController@getDatatablesUsersTalentosByDatatablesTrash',
+            'as'   => 'usuario.getusuariobydatatables.papelera',
+        ]);
+
+        Route::get('/getuserstalentosbydatatables/papelera/{anio}', [
             'uses' => 'TalentoController@getDatatablesUsersTalentosByDatatablesTrash',
             'as'   => 'usuario.getusuariobydatatablestrash',
         ]);
@@ -155,6 +163,11 @@ Route::group(
         Route::get('/getuserstalentosbygestordatatables/{gestor}/{anio}', [
             'uses' => 'UserController@getDatatablesUsersTalentosByGestorDatatables',
             'as'   => 'usuario.getusuariobygestordatatables',
+        ]);
+
+        Route::get('/getuserstalentosbygestordatatables/papelera/{gestor}/{anio}', [
+            'uses' => 'UserController@getDatatablesUsersTalentosByGestorDatatablesTrash',
+            'as'   => 'usuario.getusuariobygestordatatables.papelera',
         ]);
 
         Route::get('/getuserstalentosbynodo/{nodo}/{anio}', [
@@ -368,6 +381,11 @@ Route::group([
 
     Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
         ->name('usoinfraestructura.usoinfraestructurapornodo');
+
+    Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
+        ->name('usoinfraestructura.projectsforuser');
+        Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
+        ->name('usoinfraestructura.projectsforuser.projects');
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/

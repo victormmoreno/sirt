@@ -130,9 +130,21 @@ class TalentoController extends Controller
                     'view' => 'inactivos'
                     ]);
                 break;
-                
-            case User::IsGestor():            
-                return view('users.gestor.talento.index', ['view' => 'inactivos']);
+
+            case User::IsDinamizador():
+
+                $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
+                return view('users.dinamizador.talento.index', [
+                    'gestores' => $gestores,
+                    'view' => 'inactivos'
+                ]);
+            break;
+            case User::IsGestor():
+                            
+                return view('users.gestor.talento.index', [
+                    'view' => 'inactivos',
+                    
+                    ]);
                 break;
             default:
                 abort('404');

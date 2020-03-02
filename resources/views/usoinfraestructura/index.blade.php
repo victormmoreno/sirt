@@ -9,11 +9,11 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <i class="material-icons left">
                                 domain
                             </i>
-                            Uso Infraestructura
+                            Usos de Infraestructura
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
@@ -31,7 +31,7 @@
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                                 <div class="row">
                                     <div class="col s12 m12 l12">
-                                        <div class="center-align">
+                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
                                                 Usos de Infraestructura {{ config('app.name')}}
                                                 <div class="divider"></div>
@@ -71,7 +71,7 @@
                                 
                                 <div class="row">
                                     <div class="col s12 m12 l12">
-                                        <div class="center-align">
+                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
                                                 Usos de Infraestructura  Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
                                                 <div class="divider"></div>
@@ -99,7 +99,7 @@
                             @else
                                 <div class="row">
                                     <div class="col s12 m12 l10">
-                                        <div class="center-align">
+                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
                                                 Usos de Infraestructura 
                                             </span>
@@ -120,14 +120,25 @@
                                 <div class="divider"></div>
                                 <br>
                                 <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <label class="active" for="selecProyecto">Proyecto <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selecProyecto" onchange="usoinfraestructuraIndex.selectProyectListDatatables()">
+                                            <option value="">Seleccione Proyecto</option>
+                                            @foreach($proyectos as $id => $proyecto)
+                                              <option value="{{$id}}">{{$proyecto}}</option>
+                                            @endforeach
+                                        </select>       
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <table class="display responsive-table" id="usoinfraestructura_table">
                                         <thead>
                                             <th>Fecha</th>
                                             <th>Nombre</th>
+                                            <th>Fase</th>
                                             <th>Asesoria Directa</th>
                                             <th>Asesoria Indirecta</th>
                                             <th>Detalles</th>
-                                            <th>Editar</th>
                                         </thead>
                                     </table>
                                 </div>

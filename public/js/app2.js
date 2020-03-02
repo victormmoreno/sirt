@@ -2406,124 +2406,246 @@ $(document).ready(function() {
             orderable: false,
         }, ],
     });
+
+    $('#gestores_dinamizador_inactivos_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        "lengthChange": false,
+        ajax: {
+            url: "/usuario/gestor/getgestor/papelera",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, ],
+    });
 });
 
 
-// $(document).ready(function() {
+$(document).ready(function() {
 
-//     $('#talentoByDinamizador_table').DataTable({
-//       language: {
-//         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//       },
-//       "lengthChange": false,
-//     });
+    $('#talentoByDinamizador_table').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      "lengthChange": false,
+    });
 
-
-
-//   });
-
-//   var user = {
-//     consultarTalentosByTecnoparque: function (){
-//       let anho = $('#anio_proyecto_talento').val();
-
-//       $('#talentoByDinamizador_table').dataTable().fnDestroy();
-//         $('#talentoByDinamizador_table').DataTable({
-//           language: {
-//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//           },
-//           "lengthChange": false,
-//           processing: true,
-//           serverSide: true,
-//           order: [ 0, 'desc' ],
-//           ajax:{
-//             url: "/usuario/getuserstalentosbydatatables/"+anho,
-
-//           },
-//           columns: [{
-//             data: 'tipodocumento',
-//             name: 'tipodocumento',
-//         }, {
-//             data: 'documento',
-//             name: 'documento',
-//         }, {
-//             data: 'nombre',
-//             name: 'nombre',
-//         }, {
-//             data: 'email',
-//             name: 'email',
-//         }, {
-//             data: 'celular',
-//             name: 'celular',
-//         },  {
-//             data: 'detail',
-//             name: 'detail',
-//             orderable: false,
-//         },  ],
-//         });
-
-
-//     },
-//     getUserTalentosByGestor: function(){
-//       let anho = $('#txtanho_user_talento').val();
-//       let gestor = $('#txtgestor_id').val();
-
-//       if(gestor == '' || gestor == null){
-//         Swal.fire(
-//           'Error',
-//           'Por favor selecciona un gestor',
-//           'error'
-//         );
-//       }else if(anho == '' || anho == null){
-//         Swal.fire(
-//           'Error',
-//           'Por favor selecciona un gestor',
-//           'error'
-//         );
-//       }else{
-//         $('#talentoByGestor_table').dataTable().fnDestroy();
-//         $('#talentoByGestor_table').DataTable({
-//           language: {
-//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//           },
-//           "lengthChange": false,
-//           processing: true,
-//           serverSide: true,
-//           order: [ 0, 'desc' ],
-//           ajax:{
-//             url: "/usuario/getuserstalentosbygestordatatables/"+gestor+"/"+anho,
+    $('#talentoByDinamizador_inactivos_table').DataTable({
+        language: {
+          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        "lengthChange": false,
+      });
+  
+  
+  
+  });
+  
+  var userTalentoByDinamizador = {
+    consultarTalentosByTecnoparque: function (){
+      let anho = $('#anio_proyecto_talento').val();
+  
+      $('#talentoByDinamizador_table').dataTable().fnDestroy();
+        $('#talentoByDinamizador_table').DataTable({
+          language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "lengthChange": false,
+          processing: true,
+          serverSide: true,
+          order: [ 0, 'desc' ],
+          ajax:{
+            url: "/usuario/getuserstalentosbydatatables/"+anho,
             
-//           },
-//           columns: [{
-//             data: 'tipodocumento',
-//             name: 'tipodocumento',
-//         }, {
-//             data: 'documento',
-//             name: 'documento',
-//         }, {
-//             data: 'nombre',
-//             name: 'nombre',
-//         }, {
-//             data: 'email',
-//             name: 'email',
-//         }, {
-//             data: 'celular',
-//             name: 'celular',
-//         },  {
-//             data: 'detail',
-//             name: 'detail',
-//             orderable: false,
-//         },  ],
-//         });
-//       }
-
-
-//     }
-//   }
-
-
-
-
-
+          },
+          columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        },  ],
+        });
+    },
+    consultarTalentosByTecnoparqueTrash: function (){
+        let anho = $('#anio_proyecto_talento').val();
+    
+        $('#talentoByDinamizador_inactivos_table').dataTable().fnDestroy();
+          $('#talentoByDinamizador_inactivos_table').DataTable({
+            language: {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            order: [ 0, 'desc' ],
+            ajax:{
+              url: "/usuario/getuserstalentosbydatatables/papelera/"+anho,
+              
+            },
+            columns: [{
+              data: 'tipodocumento',
+              name: 'tipodocumento',
+          }, {
+              data: 'documento',
+              name: 'documento',
+          }, {
+              data: 'nombre',
+              name: 'nombre',
+          }, {
+              data: 'email',
+              name: 'email',
+          }, {
+              data: 'celular',
+              name: 'celular',
+          },  {
+              data: 'detail',
+              name: 'detail',
+              orderable: false,
+          },  ],
+          });
+      },
+    getUserTalentosByGestor: function(){
+      let anho = $('#txtanho_user_talento').val();
+      let gestor = $('#txtgestor_id').val();
+  
+      if(gestor == '' || gestor == null){
+        Swal.fire(
+          'Error',
+          'Por favor selecciona un gestor',
+          'error'
+        );
+      }else if(anho == '' || anho == null){
+        Swal.fire(
+          'Error',
+          'Por favor selecciona un gestor',
+          'error'
+        );
+      }else{
+        $('#talentoByGestor_table').dataTable().fnDestroy();
+        $('#talentoByGestor_table').DataTable({
+          language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "lengthChange": false,
+          processing: true,
+          serverSide: true,
+          order: [ 0, 'desc' ],
+          ajax:{
+            url: "/usuario/getuserstalentosbygestordatatables/"+gestor+"/"+anho,
+            
+          },
+          columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        },  ],
+        });
+      }
+    },
+    getUserTalentosByGestorTrash: function(){
+        let anho = $('#txtanho_user_talento').val();
+        let gestor = $('#txtgestor_id').val();
+    
+        if(gestor == '' || gestor == null){
+          Swal.fire(
+            'Error',
+            'Por favor selecciona un gestor',
+            'error'
+          );
+        }else if(anho == '' || anho == null){
+          Swal.fire(
+            'Error',
+            'Por favor selecciona un gestor',
+            'error'
+          );
+        }else{
+          $('#talentoByGestor_inactivos_table').dataTable().fnDestroy();
+          $('#talentoByGestor_inactivos_table').DataTable({
+            language: {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            order: [ 0, 'desc' ],
+            ajax:{
+                url: "/usuario/getuserstalentosbygestordatatables/papelera/"+gestor+"/"+anho,
+            },
+            columns: [{
+                data: 'tipodocumento',
+                name: 'tipodocumento',
+            }, {
+                data: 'documento',
+                name: 'documento',
+            }, {
+                data: 'nombre',
+                name: 'nombre',
+            }, {
+                data: 'email',
+                name: 'email',
+            }, {
+                data: 'celular',
+                name: 'celular',
+            },  {
+                data: 'detail',
+                name: 'detail',
+                orderable: false,
+            },  ],
+        });
+        }
+    }
+  }
+  
 $(document).ready(function() {
     $('#infocenters_dinamizador_table').DataTable({
         language: {
@@ -2534,6 +2656,39 @@ $(document).ready(function() {
         "lengthChange": false,
         ajax: {
             url: "/usuario/infocenter/getinfocenter",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        }, {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        }, ],
+    });
+
+    $('#infocenters_dinamizador_inactivos_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        "lengthChange": false,
+        ajax: {
+            url: "/usuario/infocenter/getinfocenter/papelera",
             type: "get",
         },
         columns: [{
@@ -2568,6 +2723,39 @@ $(document).ready(function() {
         "lengthChange": false,
         ajax: {
             url: "/usuario/ingreso/getingreso",
+            type: "get",
+        },
+        columns: [{
+            data: 'tipodocumento',
+            name: 'tipodocumento',
+        }, {
+            data: 'documento',
+            name: 'documento',
+        }, {
+            data: 'nombre',
+            name: 'nombre',
+        }, {
+            data: 'email',
+            name: 'email',
+        }, {
+            data: 'celular',
+            name: 'celular',
+        },  {
+            data: 'detail',
+            name: 'detail',
+            orderable: false,
+        },  ],
+    });
+
+    $('#ingresos_dinamizador_inactivos_table').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        "lengthChange": false,
+        ajax: {
+            url: "/usuario/ingreso/getingreso/papelera",
             type: "get",
         },
         columns: [{
@@ -7641,42 +7829,65 @@ $(document).ready(function() {
         });
 });
 $(document).ready(function() {
+
     $('#usoinfraestructura_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
-        processing: true,
-        serverSide: true,
         "lengthChange": false,
-        ajax: {
-            url: "/usoinfraestructura",
-            type: "get",
-        },
-        columns: [{
-                    data: 'fecha',
-                    name: 'fecha',
-                },  {
-                    data: 'actividad',
-                    name: 'actividad',
-                }, {
-                    data: 'asesoria_directa',
-                    name: 'asesoria_directa',
-                }, {
-                    data: 'asesoria_indirecta',
-                    name: 'asesoria_indirecta',
-                },{
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },{
-                    width: '12%',
-                    data: 'edit',
-                    name: 'edit',
-                    orderable: false,
-                },],    
-
-        });
+    });
+    
 });
+
+var usoinfraestructuraIndex = {
+    selectProyectListDatatables: function (){
+        let proyecto = $('#selecProyecto').val();
+        $('#usoinfraestructura_table').dataTable().fnDestroy();
+        if (proyecto != '') {
+            $('#usoinfraestructura_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                ajax: {
+                    url: "/usoinfraestructura/projectsforuser/" + proyecto,
+                    type: "get",
+                },
+                columns: [{
+                            data: 'fecha',
+                            name: 'fecha',
+                        },  {
+                            data: 'actividad',
+                            name: 'actividad',
+                        }, {
+                            data: 'fase',
+                            name: 'fase',
+                        },
+                        {
+                            data: 'asesoria_directa',
+                            name: 'asesoria_directa',
+                        }, {
+                            data: 'asesoria_indirecta',
+                            name: 'asesoria_indirecta',
+                        },{
+                            data: 'detail',
+                            name: 'detail',
+                            orderable: false,
+                        },],    
+                });
+            }else{
+                $('#usoinfraestructura_table').DataTable({
+                    language: {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    },
+                    "lengthChange": false
+                }).clear().draw();
+            }
+        }
+        
+}
 function datatableVisitantesPorNodo_Ingreso() {
   $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();
   $('#visitantesRedTecnoparque_table').DataTable({

@@ -50,10 +50,44 @@
 	                                                    </span>
                                                     </div>
                                                     
+                                                    
                                                 </div>
                                                 <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
-                                                            <p class="center">Información Uso Infraestructura</p><br/>
+                                                            
+                                                            <p class="center">
+                                                                Información Uso Infraestructura
+                                                                <div class="right">
+                                                                    <a class="waves-effect waves-light btn m-t-xs dropdown-button " data-activates="actifiad" href="#">
+                                                                        <i class="material-icons right">
+                                                                            more_vert
+                                                                        </i>
+                                                                        Más Información
+                                                                    </a>
+                                                                    <!-- Dropdown Structure -->
+                                                                    <ul class="dropdown-content" id="actifiad">
+                                                                        <li>
+                                                                        <a href="{{route('usoinfraestructura.edit',$usoinfraestructura->id)}}">
+                                                                                Cambiar Información
+                                                                            </a>
+                                                                        </li>
+                                                                        {{-- @if(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(),App\User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                                                        
+                                                                        @elseif(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(), App\User::IsGestor(),App\User::IsInfocenter(), App\User::IsIngreso() ]) && session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                                                        
+                                                                        @else --}}
+    
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                Descargar Uso de Infraestructura
+                                                                            </a>
+                                                                        </li>
+                                                                        {{-- @endif --}}
+                                                                        
+                                                                        
+                                                                    </ul>
+                                                                </div>
+                                                            </p>
                                                             
                                                         </span>
                                                     </div> 
@@ -282,9 +316,11 @@
                                                                         
                                                                             @forelse ($usoinfraestructura->usogestores as $usogestor) 
                                                                             <li class="collection-item ">
+                                                                                @if(isset( $usogestor))
                                                                                 <span class="title cyan-text text-darken-3">
                                                                                     {{$usogestor->user->documento}} - {{$usogestor->user->nombres}} {{$usogestor->user->apellidos}}
                                                                                 </span>
+                                                                                @endif
                                                                                 @if ($usogestor->pivot->asesoria_directa == 1) 
                                                                                     <p class="title">
                                                                                         <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  hora
@@ -331,12 +367,15 @@
                                                                 <div class="divider mailbox-divider"></div>
                                                                 <ul class="collection">
                                                                     @forelse($usoinfraestructura->usotalentos as $usotal)
+                                                                        @if(isset($usotal->user))
                                                                         <li class="collection-item ">
                                                                             
                                                                             <span class="title">
+                                                                                {{-- {{$usotal->user['nombres']}} {{$usotal->user['nombres']}} --}}
                                                                                {{$usotal->user->documento}} - {{$usotal->user->nombres}} {{$usotal->user->apellidos}}
                                                                             </span>
                                                                         </li>
+                                                                        @endif
                                                                     @empty
                                                                     <div class="center">
                                                                        <i class="large material-icons center">

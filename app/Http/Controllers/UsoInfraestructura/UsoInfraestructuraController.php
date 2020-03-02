@@ -12,7 +12,7 @@ use App\Models\LineaTecnologica;
 use App\Models\Material;
 use App\Models\Nodo;
 use App\Models\Proyecto;
-use App\Models\Talento;
+use App\Models\{Talento};
 use App\Models\UsoInfraestructura;
 use App\Repositories\Datatables\UsoInfraestructuraDatatables;
 use App\Repositories\Repository\ArticulacionRepository;
@@ -20,7 +20,7 @@ use App\Repositories\Repository\EdtRepository;
 use App\Repositories\Repository\LineaRepository;
 use App\Repositories\Repository\ProyectoRepository;
 use App\Repositories\Repository\UserRepository\GestorRepository;
-use App\Repositories\Repository\UsoInfraestructuraRepository;
+use App\Repositories\Repository\{EmpresaRepository,UsoInfraestructuraRepository};
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,6 +36,7 @@ class UsoInfraestructuraController extends Controller
     private $UsoInfraestructuraRepository;
     private $lineaRepository;
     private $UsoInfraestructuraDatatables;
+    private $proyectoRepository;
 
     public function __construct(
         ProyectoRepository $UsoInfraestructuraProyectoRepository,
@@ -44,7 +45,8 @@ class UsoInfraestructuraController extends Controller
         UsoInfraestructuraRepository $UsoInfraestructuraRepository,
         GestorRepository $gestorRepository,
         LineaRepository $lineaRepository,
-        UsoInfraestructuraDatatables $UsoInfraestructuraDatatables
+        UsoInfraestructuraDatatables $UsoInfraestructuraDatatables,
+        ProyectoRepository $proyectoRepository
     ) {
         $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento']);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
@@ -54,6 +56,7 @@ class UsoInfraestructuraController extends Controller
         $this->setUsoInfraestructuraDatatables($UsoInfraestructuraDatatables);
         $this->setGestorRepository($gestorRepository);
         $this->setLineaTecnologicaRepository($lineaRepository);
+        $this->setProyectoRepository($proyectoRepository);
     }
 
     /**
@@ -204,6 +207,27 @@ class UsoInfraestructuraController extends Controller
     }
 
     /**
+   * Asigna un valor a $proyectoRepository
+   * @param object $proyectoRepository
+   * @return void type
+   * @author dum
+   */
+  private function setProyectoRepository($proyectoRepository)
+  {
+    $this->proyectoRepository = $proyectoRepository;
+  }
+
+  /**
+   * Retorna el valor de $proyectoRepository
+   * @return object
+   * @author dum
+   */
+  private function getProyectoRepository()
+  {
+    return $this->proyectoRepository;
+  }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -231,12 +255,10 @@ class UsoInfraestructuraController extends Controller
                 $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
                 ->whereHas('actividad.gestor.user', function ($query) use ($user) {
                             $query->where('id', $user);
-                        // $query->whereHas('gestor.user', function ($query) use ($user) {
-                        // });
+                        
                 })->whereHas('actividad', function($query){
                         $query->whereHas('articulacion_proyecto.proyecto.estadoproyecto', function ($query)  {
-                            $query->whereYear('fecha_cierre', Carbon::now()->year)
-                                ->orWhereIn('nombre', ['Inicio','Planeacion', 'En ejecución']);
+                            
                         });
                 })->orWhereHas('actividad', function($query){
                     $query->whereHas('articulacion_proyecto.articulacion', function ($query) {
@@ -244,8 +266,7 @@ class UsoInfraestructuraController extends Controller
                     });
                 })->orWhereHas('actividad', function($query){
                     $query->whereHas('edt', function ($query)  {
-                        $query->
-                            whereYear('fecha_cierre', Carbon::now()->year)->orWhere('estado', 1);
+                        
 
                     });
                 })
@@ -253,19 +274,23 @@ class UsoInfraestructuraController extends Controller
 
                 break;
             case User::IsTalento():
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.articulacion_proyecto.talentos.user', function ($query) use ($user) {
-                    $query->where('id', $user);
-                })
-                    ->where('tipo_usoinfraestructura', UsoInfraestructura::IsProyecto())
-                    ->orderBy('id', 'DESC')
-                    ->get();
+                $user= auth()->user()->id;
+                $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
+                ->where('user_talento.id', $user)
+                // ->whereIn('fases.id', [1,2,3])
+                ->pluck( 'nombre', 'proyectos.id');
+                
+                return view('usoinfraestructura.index', [
+                    'proyectos' => $proyectos,
+                ]);
                 break;
+                
             default:
                 return abort('403');
                 break;
         }
 
-        // return $usoinfraestructura3;
+     
 
         if (request()->ajax()) {
             return $this->getUsoInfraestructuraDatatables()->indexDatatable($usoinfraestructura);
@@ -418,6 +443,7 @@ class UsoInfraestructuraController extends Controller
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
             ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
+       
 
         $this->authorize('show', $usoinfraestructura);
 
@@ -643,7 +669,7 @@ class UsoInfraestructuraController extends Controller
         $estado = [
             'Inicio',
             'Planeación',
-            'En ejecución',
+            'Ejecución',
         ];
 
         $relations = [
@@ -660,16 +686,19 @@ class UsoInfraestructuraController extends Controller
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
-            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsActivesByUser($relations, $estado)
                 ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
                     $query->where('documento', $user);
-                })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
+                })
+                ->get();
 
         } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
 
-            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForUser($relations, $estado)->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsActivesByUser($relations, $estado)
+            ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
                 $query->where('documento', $user);
-            })->where('estado_aprobacion', Proyecto::IsAceptado())->get();
+            })
+            ->get();
         } else {
             abort('403');
         }
@@ -751,13 +780,13 @@ class UsoInfraestructuraController extends Controller
             $estado = [
                 'Inicio',
                 'Planeación',
-                'En ejecución',
+                'Ejecución',
             ];
 
             $proyectoNodo = Proyecto::findOrFail($id)->articulacion_proyecto->actividad->nodo_id;
 
             $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'actividades.gestor_id as actividad_gestor_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id', 'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.nombre as lineatecnologica_nombre')
-                ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
+                ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
                 ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
                 ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
                 ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
@@ -767,8 +796,8 @@ class UsoInfraestructuraController extends Controller
 
                 ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
 
-                ->whereIn('estadosproyecto.nombre', $estado)
-                ->where('estado_aprobacion', Proyecto::IsAceptado())
+                ->whereIn('fases.nombre', $estado)
+                // ->where('estado_aprobacion', Proyecto::IsAceptado())
                 ->findOrFail($id);
 
             $lineastecnologicas = LineaTecnologica::
@@ -928,6 +957,34 @@ class UsoInfraestructuraController extends Controller
         } else {
             abort('403');
         }
+    }
+
+
+    /**
+     * retorna query con los proyectos en fase Inicio, Planeación, En ejecución por usuarios
+     * @return object
+     * @author devjul
+     */
+    public function projectsByUser($proyect)
+    {
+        $relations = $this->getUsoInfraestructuraRepository()->getDataIndex();
+        if(Session::get('login_role') == User::IsTalento()){
+            $user = auth()->user()->id;
+            $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+                ->whereHas('actividad.articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                            $query->where('id', $user);
+                        
+                })
+                ->whereHas('actividad.articulacion_proyecto.proyecto', function ($query) use ($proyect) {
+                    $query->where('id', $proyect);
+                
+                })
+                ->get();
+        }        
+        if (request()->ajax()) {
+            return $this->getUsoInfraestructuraDatatables()->indexDatatable($usoinfraestructura);
+        }
+
     }
 
 }

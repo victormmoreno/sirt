@@ -39,9 +39,11 @@
                                         Seleccione Talento
                                     </option>
                                     @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                                    <option value="{{$talento->id}}">
-                                        {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
-                                    </option>
+                                    @if(isset($talento->user))
+                                        <option value="{{$talento->id}}">
+                                            {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
+                                        </option>
+                                    @endif
                                     @endforeach
                                 @else
                                     @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()))
@@ -90,11 +92,13 @@
                         <tbody id="detalleTalento">
                             @if(isset($usoinfraestructura->usotalentos))
                                 @forelse ($usoinfraestructura->usotalentos as $key => $talento)
-                                        
+                                    @if(isset($talento->user))
                                         <tr id="filaTalento{{$talento->id}}">
                                             <td>
                                                 <input type="hidden" name="talento[]" value="{{$talento->id}}"/>
+                                                
                                                 {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->nombres}}
+                                                
                                             </td>
                                             <td>
                                                 <a class="waves-effect red lighten-3 btn" onclick="eliminarTalento({{$talento->id}});">
@@ -102,6 +106,7 @@
                                                 </a>
                                             </td>
                                         </tr>
+                                    @endif
                                 @empty
                                     <tr>
                                         <td>
