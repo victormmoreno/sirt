@@ -38,6 +38,7 @@ class ArticulacionProyecto extends Model
     'entidad_id',
     'actividad_id',
     'aprobacion_dinamizador_ejecucion',
+    'aprobacion_dinamizador_suspender',
     'revisado_final',
     'acta_inicio',
     'actas_seguimiento',

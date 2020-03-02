@@ -17,3 +17,15 @@
         </ul>
     </div>
 </div>
+@if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
+<div class="divider"></div>
+<div class="row">
+    <div class="col s12 m4 l4 offset-m4 offset-l4">
+        <a href="{{route('proyecto.suspender', $proyecto->id)}}">
+            <div class="card-panel red lighten-3 black-text center">
+                Suspender proyecto.
+            </div>
+        </a>
+    </div>
+</div>
+@endif

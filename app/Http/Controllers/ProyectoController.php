@@ -72,7 +72,6 @@ class ProyectoController extends Controller
       'proyecto' => $proyecto,
       'costo' => $costo
     ]);
-
   }
 
   /**
@@ -220,7 +219,7 @@ class ProyectoController extends Controller
   {
     $proyecto = Proyecto::findOrFail($id);
     if (Session::get('login_role') == User::IsGestor()) {
-      return view('proyectos.gestor.entregables_cierre' ,[
+      return view('proyectos.gestor.entregables_cierre', [
         'proyecto' => $proyecto
       ]);
     }
@@ -555,7 +554,7 @@ class ProyectoController extends Controller
   {
     $proyecto = Proyecto::findOrFail($id);
     if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación') {
-      Alert::error('Error!', 'El proyecto se encuentra en la fase de '.$proyecto->fase->nombre.'!')->showConfirmButton('Ok', '#3085d6');
+      Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
       return back();
     } else {
       switch (Session::get('login_role')) {
@@ -564,25 +563,25 @@ class ProyectoController extends Controller
             'proyecto' => $proyecto
           ]);
           break;
-  
+
         case User::IsDinamizador():
           return view('proyectos.dinamizador.fase_ejecucion', [
             'proyecto' => $proyecto
           ]);
           break;
-  
+
         case User::IsTalento():
           return view('proyectos.talento.fase_ejecucion', [
             'proyecto' => $proyecto
           ]);
           break;
-  
+
         case User::IsAdministrador():
           return view('proyectos.administrador.fase_ejecucion', [
             'proyecto' => $proyecto
           ]);
           break;
-  
+
         default:
           abort('403');
           break;
@@ -607,29 +606,29 @@ class ProyectoController extends Controller
             'proyecto' => $proyecto,
             'costo' => $costo
           ]);
-        break;
-        
+          break;
+
         case User::IsDinamizador():
           return view('proyectos.dinamizador.fase_cierre', [
             'proyecto' => $proyecto,
             'costo' => $costo
           ]);
           break;
-        
+
         case User::IsTalento():
           return view('proyectos.talento.fase_cierre', [
             'proyecto' => $proyecto,
             'costo' => $costo
           ]);
           break;
-        
+
         case User::IsAdministrador():
           return view('proyectos.administrador.fase_cierre', [
             'proyecto' => $proyecto,
             'costo' => $costo
           ]);
           break;
-        
+
         default:
           # code...
           break;
@@ -637,6 +636,34 @@ class ProyectoController extends Controller
     } else {
       Alert::error('Error!', 'El talento interlocutor aún no ha dado su aprobación en la fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
       return back();
+    }
+  }
+
+  /**
+   * Vista para suspender un proyecto
+   *
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   **/
+  public function suspender(int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('proyectos.gestor.fase_suspendido', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
+      case User::IsDinamizador():
+
+        return view('proyectos.dinamizador.fase_suspendido', [
+          'proyecto' => $proyecto
+        ]);
+      default:
+        # code...
+        break;
     }
   }
 
@@ -672,6 +699,23 @@ class ProyectoController extends Controller
       Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre del proyecto!')->showConfirmButton('Ok', '#3085d6');
     } else {
       Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  /**
+   * Notifica al dinamizador para que un proyecto se suspenda
+   * @param int $id Id del proyecto
+   * @return Reponse
+   * @author dum
+   **/
+  public function notificar_suspendido(int $id)
+  {
+    $notificacion = $this->getProyectoRepository()->notificarAlDinamziador_Suspendido($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la suspensión del proyecto!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la suspensión del proyecto!')->showConfirmButton('Ok', '#3085d6');
     }
     return back();
   }
@@ -828,7 +872,6 @@ class ProyectoController extends Controller
     } else {
       Alert::error('Error!', 'El talento aún no ha aprobado la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
       return back();
-
     }
   }
 
@@ -844,14 +887,17 @@ class ProyectoController extends Controller
     if (Session::get('login_role') == User::IsGestor()) {
       $proyecto = Proyecto::findOrFail($id);
       if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1) {
-        
-        $validator = Validator::make($request->all(), [
-          'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
-        ],
-        [
-          'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
-          'txtfecha_cierre.max' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
-        ]);
+
+        $validator = Validator::make(
+          $request->all(),
+          [
+            'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
+          ],
+          [
+            'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
+            'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
+          ]
+        );
         if ($validator->fails()) {
           return response()->json([
             'state'   => 'error_form',
@@ -865,7 +911,6 @@ class ProyectoController extends Controller
             return response()->json(['state' => 'no_update']);
           }
         }
-
       } else {
         $req = new ProyectoFaseCierreFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -891,6 +936,57 @@ class ProyectoController extends Controller
       } else {
         Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
         return back();
+      }
+    }
+  }
+
+  /**
+   * Cambia el estado del proyecto a suspendido
+   * 
+   * @param Request $request
+   * @param int $id
+   * @return Response
+   * @author dum
+   **/
+  public function updateSuspendido(Request $request, int $id)
+  {
+    if (Session::get('login_role') == User::IsDinamizador()) {
+      $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id);
+      // dd($update);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'La fase de suspendido del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('Modificación Errónea!', 'La fase de suspendido del proyecto no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    } else {
+      $proyecto = Proyecto::findOrFail($id);
+      if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_suspender == 1) {
+        $validator = Validator::make(
+          $request->all(),
+          [
+            'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
+          ],
+          [
+            'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
+            'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
+          ]
+        );
+        if ($validator->fails()) {
+          Alert::error('Modificación Errónea!', 'Estás ingresando mal la fecha de cierre!')->showConfirmButton('Ok', '#3085d6');
+          return back()
+            ->withErrors($validator)
+            ->withInput();
+        }
+        $suspender = $this->getProyectoRepository()->suspenderProyecto($request, $proyecto);
+        if ($suspender) {
+          Alert::success('Modificación Exitosa!', 'El proyecto se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
+          return redirect('proyecto');
+        } else {
+          Alert::error('Modificación Errónea!', 'El proyecto no se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
+          return back();
+        }
       }
     }
   }

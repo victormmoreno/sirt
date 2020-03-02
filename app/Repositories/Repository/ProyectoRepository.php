@@ -5,7 +5,7 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
 use Illuminate\Support\Facades\{DB, Notification, Storage};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado};
 use Carbon\Carbon;
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
@@ -877,6 +877,32 @@ class ProyectoRepository
   }
 
   /**
+   * Suspende un proyecto
+   * @param Request $request 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   **/
+  public function suspenderProyecto($request, $proyecto)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto->update([
+        'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'fecha_cierre' => $request->txtfecha_cierre
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
    * Modifica los datos de cierre de un proyecto
    * 
    * @param Request $request
@@ -1171,6 +1197,29 @@ class ProyectoRepository
   }
 
   /**
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Suspendido(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $proyecto = Proyecto::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
    * Notifica al talento interlocutor para que apruebe la fase de planeación
    * 
    * @param int $id Id del proyecto
@@ -1227,6 +1276,31 @@ class ProyectoRepository
       DB::rollback();
       return false;
     }
+  }
+
+  /**
+   * Cambia el estado de aprobacion_dinamizador_suspender para que el gestor pueda suspender un proyecto
+   * @param int $id
+   * @return boolean
+   * @author dum
+   **/
+  public function updateAprobacionSuspendido(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+      $proyecto->articulacion_proyecto()->update([
+        'aprobacion_dinamizador_suspender' => 1
+      ]);
+      Notification::send(User::findOrFail($proyecto->articulacion_proyecto->actividad->gestor->user->id), new ProyectoSuspendidoAprobado($proyecto));
+      // dd($n);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+    
   }
   
   /**
