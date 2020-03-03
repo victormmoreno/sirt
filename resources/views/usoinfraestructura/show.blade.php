@@ -46,7 +46,7 @@
 	                                                        <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->actividad->gestor->lineatecnologica->nombre) ? $usoinfraestructura->actividad->gestor->lineatecnologica->nombre : 'No registra'}} <br/>
 	                                                       
 	                                                        <b>Gestor Asesor: </b> 
-	                                                        {{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}<br/>
+	                                                        {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->apellidos}}<br/>
 	                                                    </span>
                                                     </div>
                                                     
@@ -77,11 +77,11 @@
                                                                         
                                                                         @else --}}
     
-                                                                        <li>
+                                                                        {{-- <li>
                                                                             <a href="#">
                                                                                 Descargar Uso de Infraestructura
                                                                             </a>
-                                                                        </li>
+                                                                        </li> --}}
                                                                         {{-- @endif --}}
                                                                         
                                                                         
@@ -146,8 +146,8 @@
                                                                                 {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->areaconocimiento->nombre}}
                                                                             </p>
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Estado del Proyecto:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->estadoproyecto->nombre}}
+                                                                               <strong class="cyan-text text-darken-3">Fase del Proyecto:</strong>
+                                                                                {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase->nombre : 'No registra' }}
                                                                             </p>
                                                                         @elseif(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion != null)
                                                                             <p>
@@ -318,7 +318,7 @@
                                                                             <li class="collection-item ">
                                                                                 @if(isset( $usogestor))
                                                                                 <span class="title cyan-text text-darken-3">
-                                                                                    {{$usogestor->user->documento}} - {{$usogestor->user->nombres}} {{$usogestor->user->apellidos}}
+                                                                                    {{$usogestor->user()->withTrashed()->first()->documento}} - {{$usogestor->user()->withTrashed()->first()->nombres}} {{$usogestor->user()->withTrashed()->first()->apellidos}}
                                                                                 </span>
                                                                                 @endif
                                                                                 @if ($usogestor->pivot->asesoria_directa == 1) 
@@ -367,15 +367,15 @@
                                                                 <div class="divider mailbox-divider"></div>
                                                                 <ul class="collection">
                                                                     @forelse($usoinfraestructura->usotalentos as $usotal)
-                                                                        @if(isset($usotal->user))
+                                                                        {{-- @if(isset($usotal->user)) --}}
                                                                         <li class="collection-item ">
                                                                             
                                                                             <span class="title">
                                                                                 {{-- {{$usotal->user['nombres']}} {{$usotal->user['nombres']}} --}}
-                                                                               {{$usotal->user->documento}} - {{$usotal->user->nombres}} {{$usotal->user->apellidos}}
+                                                                               {{$usotal->user()->withTrashed()->first()->documento}} - {{$usotal->user()->withTrashed()->first()->nombres}} {{$usotal->user()->withTrashed()->first()->apellidos}}
                                                                             </span>
                                                                         </li>
-                                                                        @endif
+                                                                        {{-- @endif --}}
                                                                     @empty
                                                                     <div class="center">
                                                                        <i class="large material-icons center">

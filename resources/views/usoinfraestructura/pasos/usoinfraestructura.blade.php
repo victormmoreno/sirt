@@ -43,14 +43,14 @@
                             </label>
                             
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion() ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
+                                {{-- <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion() ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
                                 <label for="IsArticulacion">
                                     Articulaciones
                                 </label>
                                 <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsEdt() ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
                                 <label for="IsEdt">
                                     EDT
-                                </label>
+                                </label> --}}
                             @endif
                         @else
                             <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
@@ -59,14 +59,14 @@
                             </label>
                             
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
+                                {{-- <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
                                 <label for="IsArticulacion">
                                     Articulaciones
                                 </label>
                                 <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
                                 <label for="IsEdt">
                                     EDT
-                                </label>
+                                </label> --}}
                             @endif
                         @endif
                     </p>

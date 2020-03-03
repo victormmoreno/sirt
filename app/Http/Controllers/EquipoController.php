@@ -181,18 +181,23 @@ class EquipoController extends Controller
      * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getEquiposPorLinea($nodo = 1, $lineatecnologica)
+    public function getEquiposPorLinea($nodo, $lineatecnologica)
     {
         if (request()->ajax()) {
 
             if (isset($nodo)) {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })
-                    ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
-                        $query->where('id', $lineatecnologica);
-                    })->get();
+                    ->where('nodo_id', $nodo)
+                    ->where('lineatecnologica_id', $lineatecnologica)
+                    ->get();
+                    
+                    // ->whereHas('nodo', function ($query) use ($nodo) {
+                    //     $query->where('id', $nodo);
+                    // })
+                    // ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+                    //     $query->where('id', $lineatecnologica);
+                    // })
+                    // ->get();
             } else {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                     ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {

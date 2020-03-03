@@ -252,25 +252,35 @@ class UsoInfraestructuraController extends Controller
 
             case User::IsGestor():
 
-                $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                            $query->where('id', $user);
+                // $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+                // ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                //             $query->where('id', $user);
                         
-                })->whereHas('actividad', function($query){
-                        $query->whereHas('articulacion_proyecto.proyecto.estadoproyecto', function ($query)  {
+                // })->whereHas('actividad', function($query){
+                //         $query->whereHas('articulacion_proyecto.proyecto.estadoproyecto', function ($query)  {
                             
-                        });
-                })->orWhereHas('actividad', function($query){
-                    $query->whereHas('articulacion_proyecto.articulacion', function ($query) {
-                        $query->whereIn('estado',[0,1])->orWhereYear('fecha_inicio', Carbon::now()->year);
-                    });
-                })->orWhereHas('actividad', function($query){
-                    $query->whereHas('edt', function ($query)  {
+                //         });
+                // })->orWhereHas('actividad', function($query){
+                //     $query->whereHas('articulacion_proyecto.articulacion', function ($query) {
+                //         $query->whereIn('estado',[0,1])->orWhereYear('fecha_inicio', Carbon::now()->year);
+                //     });
+                // })->orWhereHas('actividad', function($query){
+                //     $query->whereHas('edt', function ($query)  {
                         
 
-                    });
-                })
-                ->get();
+                //     });
+                // })
+                // ->get();
+
+                $user= auth()->user()->gestor->id;
+                $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
+                ->where('gestores.id', $user)
+                // ->whereIn('fases.id', [1,2,3])
+                ->pluck( 'nombre', 'proyectos.id');
+                
+                return view('usoinfraestructura.index', [
+                    'proyectos' => $proyectos,
+                ]);
 
                 break;
             case User::IsTalento():
@@ -791,13 +801,9 @@ class UsoInfraestructuraController extends Controller
                 ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
                 ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
-
                 ->join('users', 'users.id', '=', 'gestores.user_id')
-
                 ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-
                 ->whereIn('fases.nombre', $estado)
-                // ->where('estado_aprobacion', Proyecto::IsAceptado())
                 ->findOrFail($id);
 
             $lineastecnologicas = LineaTecnologica::
@@ -831,6 +837,8 @@ class UsoInfraestructuraController extends Controller
                 ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
                 ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
                 ->where('proyectos.id', $proyectoTalento->id)
+                ->where('users.estado', User::IsActive())
+                ->where('users.deleted_at', null)
                 ->get();
 
             return response()->json([
@@ -980,7 +988,19 @@ class UsoInfraestructuraController extends Controller
                 
                 })
                 ->get();
-        }        
+        }else if(Session::get('login_role') == User::IsGestor()){
+            $user = auth()->user()->id;
+            $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                            $query->where('id', $user);
+                        
+                })
+                ->whereHas('actividad.articulacion_proyecto.proyecto', function ($query) use ($proyect) {
+                    $query->where('id', $proyect);
+                
+                })
+                ->get();
+        }       
         if (request()->ajax()) {
             return $this->getUsoInfraestructuraDatatables()->indexDatatable($usoinfraestructura);
         }
