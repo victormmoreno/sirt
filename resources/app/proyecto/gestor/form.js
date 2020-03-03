@@ -58,25 +58,6 @@ function ajaxSendFormProyecto(form, data, url, fase) {
     });
 };
 
-function printErroresFormulario(data) {
-    if (data.state == 'error_form') {
-        let errores = "";
-        for (control in data.errors) {
-            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-        }
-        Swal.fire({
-            title: 'Advertencia!',
-            html: 'Estas ingresando mal los datos.' + errores,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-        });
-    }
-}
-
 function mensajesProyectoCreate(data) {
     if (data.state == 'registro') {
         Swal.fire({

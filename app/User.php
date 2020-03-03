@@ -138,7 +138,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function proyectos()
     {
-        return $this->morphToMany(Proyecto::class, 'propietario');
+        return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
     }
 
     public function etnia()

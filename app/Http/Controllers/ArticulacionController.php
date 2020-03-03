@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor};
+use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor, Producto};
 use App\Http\Requests\ArticulacionFormRequest;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
@@ -357,7 +357,9 @@ class ArticulacionController extends Controller
   public function create()
   {
     if (\Session::get('login_role') == User::IsGestor()) {
-      return view('articulaciones.gestor.create');
+      return view('articulaciones.gestor.create', [
+        'productos' => Producto::all()
+      ]);
     }
   }
 

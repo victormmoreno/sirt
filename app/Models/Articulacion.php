@@ -49,6 +49,13 @@ class Articulacion extends Model
         'otros',
     ];
 
+    public function productos()
+    {
+      return $this->belongsToMany(Producto::class, 'articulaciones_productos')
+      ->withTimestamps()
+      ->withPivot('logrado');
+    }
+
     /**
     * Relación con la tabla de articulacion_emprendedor
     * @return Eloquent
