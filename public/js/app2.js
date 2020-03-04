@@ -4020,8 +4020,7 @@ function consultarArticulacionesDelGestor(anho) {
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
         d.nombre = $('#nombre_GestorTable').val(),
-        d.tipo_articulacion = $('#tipo_articulacion_GestorTable').val(),
-        d.estado = $('#estado_GestorTable').val(),
+        d.fase = $('#fase_GestorTable').val(),
         d.search = $('input[type="search"]').val()
       }
     },
@@ -4035,30 +4034,12 @@ function consultarArticulacionesDelGestor(anho) {
         name: 'nombre',
       },
       {
-        data: 'tipo_articulacion',
-        name: 'tipo_articulacion',
+        data: 'nombre_fase',
+        name: 'nombre_fase',
       },
       {
-        data: 'estado',
-        name: 'estado',
-      },
-      {
-        data: 'revisado_final',
-        name: 'revisado_final',
-      },
-      {
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        data: 'entregables',
-        name: 'entregables',
-        orderable: false
-      },
-      {
-        data: 'edit',
-        name: 'edit',
+        data: 'proceso',
+        name: 'proceso',
         orderable: false
       },
     ],
@@ -4073,11 +4054,7 @@ $("#nombre_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();
 });
 
-$("#tipo_articulacion_GestorTable").keyup(function(){
-  $('#articulacionesGestor_table').DataTable().draw();
-});
-
-$("#estado_GestorTable").keyup(function(){
+$("#fase_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();
 });
 
@@ -4202,7 +4179,7 @@ function ajaxSendFormArticulacion(form, data, url, fase) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace("/articulacion");
         }, 1000);
     }
     if (data.state == 'no_registro') {
@@ -4220,14 +4197,14 @@ function mensajesArticulacionUpdate(data) {
     if (data.state == 'update') {
         Swal.fire({
             title: 'Modificación Exitosa',
-            text: "La articulación ha sido registrada satisfactoriamente",
+            text: "La articulación ha sido modificada satisfactoriamente",
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace("/articulacion");
         }, 1000);
     }
     if (data.state == 'no_update') {
@@ -4241,6 +4218,14 @@ function mensajesArticulacionUpdate(data) {
     }
 };
 
+$(document).on('submit', 'form#frmArticulaciones_FaseInicio_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormArticulacion(form, data, url, 'update');
+});
 
 $(document).on('submit', 'form#frmArticulacion_FaseInicio', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');

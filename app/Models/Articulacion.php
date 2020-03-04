@@ -47,6 +47,9 @@ class Articulacion extends Model
         'informe_final',
         'pantallazo',
         'otros',
+        'acuerdos',
+        'alcance_articulacion',
+        'fase_id'
     ];
 
     public function productos()
@@ -54,6 +57,11 @@ class Articulacion extends Model
       return $this->belongsToMany(Producto::class, 'articulaciones_productos')
       ->withTimestamps()
       ->withPivot('logrado');
+    }
+
+    public function fase()
+    {
+      return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
     /**

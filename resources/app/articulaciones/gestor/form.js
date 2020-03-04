@@ -119,7 +119,7 @@ function ajaxSendFormArticulacion(form, data, url, fase) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace("/articulacion");
         }, 1000);
     }
     if (data.state == 'no_registro') {
@@ -137,14 +137,14 @@ function mensajesArticulacionUpdate(data) {
     if (data.state == 'update') {
         Swal.fire({
             title: 'Modificación Exitosa',
-            text: "La articulación ha sido registrada satisfactoriamente",
+            text: "La articulación ha sido modificada satisfactoriamente",
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace("/articulacion");
         }, 1000);
     }
     if (data.state == 'no_update') {
@@ -158,6 +158,14 @@ function mensajesArticulacionUpdate(data) {
     }
 };
 
+$(document).on('submit', 'form#frmArticulaciones_FaseInicio_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormArticulacion(form, data, url, 'update');
+});
 
 $(document).on('submit', 'form#frmArticulacion_FaseInicio', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');

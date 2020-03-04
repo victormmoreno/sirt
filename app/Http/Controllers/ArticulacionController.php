@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor, Producto};
-use App\Http\Requests\ArticulacionFormRequest;
+use App\Http\Requests\ArticulacionFaseInicioFormRequest;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
@@ -50,6 +50,86 @@ class ArticulacionController extends Controller
   }
 
   /**
+   * Modifica los datos de una articulación en la fase de inicio
+   *
+   * @param Request $request
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   **/
+  public function updateInicio(Request $request, int $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $req = new ArticulacionFaseInicioFormRequest;
+      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+      if ($validator->fails()) {
+        return response()->json([
+          'state'   => 'error_form',
+          'errors' => $validator->errors(),
+        ]);
+      } else {
+        $result = $this->articulacionRepository->update($request, $id);
+        if ($result) {
+          return response()->json(['state' => 'update']);
+        } else {
+          return response()->json(['state' => 'no_update']);
+        }
+      }
+    }
+  }
+
+  /**
+   * Método que valida cuales fueron los productos elegidos (en la fase de inicio)
+   *
+   * @param Eloquent $productos
+   * @return Eloquet $productosElegidos
+   * @return array
+   * @author dum
+   **/
+  public function productosElegidos($productos, $productosElegidos)
+  {
+    for ($i=0; $i < $productos->count() ; $i++) {
+      for ($j=0; $j < $productosElegidos->count() ; $j++) {
+        if ($productos[$i]->id == $productosElegidos[$j]->id) {
+          $productos[$i]['alcanzar'] = 1;
+        }
+      }
+    }
+    return $productos;
+  }
+
+
+
+  /**
+   * Fase de inicio de la articulación
+   * 
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   */
+  public function inicio(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    $productos = Producto::orderBy('nombre')->get();
+
+    $productos = $this->productosElegidos($productos, $articulacion->productos);
+
+
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('articulaciones.gestor.fase_inicio', [
+          'productos' => $productos,
+          'articulacion' => $articulacion
+        ]);
+        break;
+      
+      default:
+        # code...
+        break;
+    }
+  }
+
+  /**
    * Función para mostrar las datatables de las articulaciones
    * @param Collection $query Consulta
    * @return Reponse
@@ -68,19 +148,14 @@ class ArticulacionController extends Controller
           return Str::contains($row['nombre'], $request->get('nombre')) ? true : false;
         });
       }
-      if (!empty($request->get('tipo_articulacion'))) {
-        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-          return Str::contains($row['tipo_articulacion'], $request->get('tipo_articulacion')) ? true : false;
-        });
-      }
       if (!empty($request->get('nombre_completo_gestor'))) {
         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
           return Str::contains($row['nombre_completo_gestor'], $request->get('nombre_completo_gestor')) ? true : false;
         });
       }
-      if (!empty($request->get('estado'))) {
+      if (!empty($request->get('nombre_fase'))) {
         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-          return Str::contains($row['estado'], $request->get('estado')) ? true : false;
+          return Str::contains($row['nombre_fase'], $request->get('estado')) ? true : false;
         });
       }
       if (!empty($request->get('search'))) {
@@ -89,11 +164,9 @@ class ArticulacionController extends Controller
             return true;
           }else if (Str::contains(Str::lower($row['nombre']), Str::lower($request->get('search')))) {
             return true;
-          }else if (Str::contains(Str::lower($row['tipo_articulacion']), Str::lower($request->get('search')))) {
-            return true;
           }else if (Str::contains(Str::lower($row['nombre_completo_gestor']), Str::lower($request->get('search')))) {
             return true;
-          }else if (Str::contains(Str::lower($row['estado']), Str::lower($request->get('search')))) {
+          }else if (Str::contains(Str::lower($row['nombre_fase']), Str::lower($request->get('search')))) {
             return true;
           }
 
@@ -101,58 +174,14 @@ class ArticulacionController extends Controller
         });
       }
     })
-    ->addColumn('details', function ($data) {
-      $button = '
-      <a class="btn light-blue m-b-xs" onclick="detallesDeUnaArticulacion(' . $data->id . ')">
-      <i class="material-icons">info</i>
-      </a>
-      ';
-      return $button;
-    })->addColumn('edit', function ($data) {
-
-      if($data->tipo_articulacion == 'Empresa' ){
-        return '<span class="new badge" data-badge-caption="Articulación con empresa"></span>';
-      }else if($data->tipo_articulacion == 'Emprendedor(es)'){
-        return '<span class="new badge" data-badge-caption="Articulación con Emprendedor"></span>';
-      }else if($data->tipo_articulacion =='Grupo de Investigación'){
-        $edit = '<a class="btn m-b-xs" href='.route('articulacion.edit', $data->id).'><i class="material-icons">edit</i></a>';
-        return $edit;
-      }else{
-        return '<span class="new badge" data-badge-caption="No Aplica"></span>';
-      }
-      
-    })->addColumn('entregables', function ($data) {
-      $button = '
-      <a class="btn blue-grey m-b-xs" href='. route('articulacion.entregables', $data->id) .'>
-      <i class="material-icons">library_books</i>
-      </a>
-      ';
-      return $button;
-    })->addColumn('delete', function ($data) {
-      $delete = '
-      <a class="btn red lighten-3 m-b-xs" onclick="eliminarArticulacionPorId_event('.$data->id.', event)">
-      <i class="material-icons">delete_sweep</i>
-      </a>
-      ';
-      return $delete;
-    })->editColumn('estado', function($data){
-      if ($data->estado == 'Inicio') {
-        return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate red" style="width: 33%"></div></div>';
-      } else if ($data->estado == 'Ejecución' || $data->estado == 'Co-Ejecución') {
-        return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate yellow" style="width: 66%"></div></div>';
+    ->addColumn('proceso', function ($data) {
+      if ($data->nombre_fase == 'Cierre' || $data->nombre_fase == 'Suspendido') {
+        $edit = '<a class="btn m-b-xs" href=' . route('articulacion.detalle', $data->id) . '><i class="material-icons">search</i></a>';
       } else {
-        return $data->estado . '</br><div class="progress grey lighten-2"><div class="determinate green" style="width: 100%"></div></div>';
+        $edit = '<a class="btn m-b-xs" href=' . route('articulacion.inicio', $data->id) . '><i class="material-icons">search</i></a>';
       }
-    })->editColumn('revisado_final', function ($data) {
-      if ($data->revisado_final == 'Por Evaluar') {
-        return '<div class="card-panel blue lighten-4"><span><i class="material-icons left">query_builder</i>'.$data->revisado_final.'</span></div>';
-      } else if ($data->revisado_final == 'Aprobado') {
-        return '<div class="card-panel green lighten-4"><span><i class="material-icons left">done_all</i>'.$data->revisado_final.'</span></div>';
-      } else {
-        return '<div class="card-panel red lighten-4"><span><i class="material-icons left">close</i>'.$data->revisado_final.'</span></div>';
-      }
-      return '<span class="red-text">'.$data->revisado_final.'</span>';
-    })->rawColumns(['details', 'edit', 'entregables', 'revisado_final', 'estado', 'delete'])->make(true);
+      return $edit;
+    })->rawColumns(['proceso'])->make(true);
   }
 
   /**
@@ -301,7 +330,7 @@ class ArticulacionController extends Controller
         $idgestor = auth()->user()->gestor->id;
       }
 
-      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($idgestor, $anho);
+      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($anho)->where('actividades.gestor_id', $idgestor)->get();
       return $this->datatablesArticulaciones($request, $articulaciones);
     }
   }
@@ -358,7 +387,7 @@ class ArticulacionController extends Controller
   {
     if (\Session::get('login_role') == User::IsGestor()) {
       return view('articulaciones.gestor.create', [
-        'productos' => Producto::all()
+        'productos' => Producto::orderBy('nombre')->get()
       ]);
     }
   }
@@ -371,26 +400,24 @@ class ArticulacionController extends Controller
   */
   public function store(Request $request)
   {
-    $req = new ArticulacionFormRequest;
-    $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
+    // dd('exit');
+    $req = new ArticulacionFaseInicioFormRequest;
+
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
       return response()->json([
-        'fail' => true,
+        'state'   => 'error_form',
         'errors' => $validator->errors(),
       ]);
-    }
-    $result = $this->articulacionRepository->create($request);
-    if ($result == false) {
-      return response()->json([
-          'fail' => false,
-          'redirect_url' => false
-      ]);
     } else {
-      return response()->json([
-          'fail' => false,
-          'redirect_url' => url(route('articulacion'))
-      ]);
+      $result = $this->articulacionRepository->create($request);
+      if ($result) {
+        return response()->json(['state' => 'registro']);
+      } else {
+        return response()->json(['state' => 'no_registro']);
+      }
     }
+
   }
 
   /**
@@ -441,7 +468,7 @@ class ArticulacionController extends Controller
   public function update(Request $request, $id)
   {
     if ( Session::get('login_role') == User::IsGestor() ) {
-      $req = new ArticulacionFormRequest;
+      $req = new ArticulacionFaseInicioFormRequest;
       $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
       if ($validator->fails()) {
         return response()->json([

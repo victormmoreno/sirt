@@ -1,6 +1,7 @@
 {!! csrf_field() !!}
 @php
 $existe = isset($articulacion) ? true : false;
+$cont = 0;
 @endphp
 <div class="row">
     <div class="input-field col s12 m6 l6">
@@ -18,8 +19,7 @@ $existe = isset($articulacion) ? true : false;
     <div class="col s12 m12 l12">
         <blockquote>
             <ul class="collection">
-                <li class="collection-item">Debes tener en cuenta que solo se puede realizar un articulación con un solo
-                    grupo de investigación.</li>
+                <li class="collection-item">Debes tener en cuenta que solo se puede realizar un articulación con un solo grupo de investigación.</li>
             </ul>
         </blockquote>
     </div>
@@ -29,9 +29,9 @@ $existe = isset($articulacion) ? true : false;
     <div class="card-panel grey lighten-3 col s12 m6 l6">
         <div class="row">
             <div class="input-field col s12 m12 l12">
-                <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="">
+                <input type="hidden" name="txtgrupo_id" id="txtgrupo_id" value="{{$existe ? $articulacion->articulacion_proyecto->entidad->grupoinvestigacion->id : ''}}">
                 <input type="text" id="txtgrupoInvestigacion" name="txtgrupoInvestigacion"
-                    value="{{ $btnText == 'Guardar' ? '' : '' }}" readonly>
+                    value="{{ $existe ? $articulacion->articulacion_proyecto->entidad->grupoinvestigacion->codigo_grupo . ' - ' . $articulacion->articulacion_proyecto->entidad->nombre : '' }}" readonly>
                 <label for="txtgrupoInvestigacion">Grupo de Investigación</label>
                 <small id="txtgrupo_id-error" class="error red-text"></small>
             </div>
@@ -45,7 +45,7 @@ $existe = isset($articulacion) ? true : false;
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
             <label for="txtnombre">Nombre de la Articulación <span class="red-text">*</span></label>
-            <input type="text" id="txtnombre" name="txtnombre" />
+            <input type="text" id="txtnombre" name="txtnombre" value="{{$existe ? $articulacion->articulacion_proyecto->actividad->nombre : ''}}"/>
             <small id="txtnombre-error" class="error red-text"></small>
         </div>
     </div>
@@ -145,8 +145,7 @@ $existe = isset($articulacion) ? true : false;
                                                     </thead>
                                                     <tbody>
                                                         @if ($existe)
-                                                        @foreach ($articulacion->articulacion_proyecto->talentos as $key
-                                                        => $value)
+                                                        @foreach ($articulacion->articulacion_proyecto->talentos as $key => $value)
                                                         <tr id="talentoAsociadoALaArticulacion{{$value->id}}">
                                                             <td>
                                                                 <input type="radio" {{$articulacion->fase->nombre != 'Inicio' ? 'disabled' : '' }} class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}" />
@@ -187,24 +186,31 @@ $existe = isset($articulacion) ? true : false;
 </div>
 <div class="row">
     <ul class="collection">
-    @foreach ($productos as $item => $value)
-    <div class="col s12 m4 l4">
-            <li class="collection-item">
-                @if(isset($articulacion))
-                <p class="p-v-xs">
-                    <input type="checkbox" name="productos[]" class="filled-in" id="producto-{{$value->id}}">
-                    <label for="producto-{{$value->id}}">{{$value->nombre}}</label>
-                </p>
-                @else
-                <p class="p-v-xs">
-                    <input type="checkbox" name="productos[]" class="filled-in" id="producto-{{$value->id}}">
-                    <label for="producto-{{$value->id}}">{{$value->nombre}}</label>
-                </p>
-                @endif
-            </li>
-        </div>    
-        @endforeach
+        @if(isset($articulacion))
+            @foreach ($productos as $item => $value)
+            <div class="col s12 m4 l4">
+                <li class="collection-item">
+                    <p class="p-v-xs">
+                            <input type="checkbox" name="productos[]" class="filled-in" value="{{$value->id}}" id="producto-{{$value->id}}" {{$value->alcanzar == 1 ? 'checked' : ''}}>
+                            <label for="producto-{{$value->id}}">{{$value->nombre}}</label>
+                        </p>
+                    </li>
+                </div>    
+            @endforeach
+        @else
+            @foreach ($productos as $item => $value)
+            <div class="col s12 m4 l4">
+                <li class="collection-item">
+                    <p class="p-v-xs">
+                        <input type="checkbox" name="productos[]" class="filled-in" value="{{$value->id}}" id="producto-{{$value->id}}">
+                        <label for="producto-{{$value->id}}">{{$value->nombre}}</label>
+                    </p>
+                </li>
+            </div>   
+            @endforeach
+        @endif
     </ul>
+    <div id="productos-error" class="error red-text"></div>
 </div>
 <div class="divider"></div>
 <div class="row">
@@ -214,7 +220,7 @@ $existe = isset($articulacion) ? true : false;
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <textarea {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} name="txtacuerdos" class="materialize-textarea" length="1000" maxlength="1000" id="txtacuerdos">{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivo_general }}</textarea>
+            <textarea {{$articulacion->fase->nombre != 'Inicio' ? 'disabled' : '' }} name="txtacuerdos" class="materialize-textarea" length="1000" maxlength="1000" id="txtacuerdos">{{ $btnText == 'Guardar' ? '' : $articulacion->acuerdos }}</textarea>
             @else
             <textarea name="txtacuerdos" class="materialize-textarea" length="1000" maxlength="1000" id="txtacuerdos"></textarea>
             @endif
@@ -225,7 +231,7 @@ $existe = isset($articulacion) ? true : false;
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <textarea {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} name="txtalcance_articulacion" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_articulacion">{{ $btnText == 'Guardar' ? '' : $proyecto->alcance_proyecto }}</textarea>
+            <textarea {{$articulacion->fase->nombre != 'Inicio' ? 'disabled' : '' }} name="txtalcance_articulacion" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_articulacion">{{ $btnText == 'Guardar' ? '' : $articulacion->alcance_articulacion }}</textarea>
             @else
             <textarea name="txtalcance_articulacion" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_articulacion"></textarea>
             @endif
