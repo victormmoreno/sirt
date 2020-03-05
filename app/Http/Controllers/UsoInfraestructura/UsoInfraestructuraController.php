@@ -248,6 +248,30 @@ class UsoInfraestructuraController extends Controller
                 $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
                     $query->where('id', $nodo);
                 })->get();
+
+                // $gestores = Gestor::select('id', 'user_id', 'nodo_id')
+                // ->with([
+                // //     'user' => function($query){
+                // //     $query->withTrashed();
+                   
+                // // },
+                // 'user' => function ($query) {
+                //     $query->select('id', 'documento', 'nombres', 'apellidos')->withTrashed();
+                // }
+                // ])->where('nodo_id', $nodo)->get();
+
+                $gestores = User::select('gestores.id')
+                ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as user')
+                ->join('gestores', 'gestores.user_id', 'users.id')
+                ->where('gestores.nodo_id', $nodo)
+                ->role('Gestor')
+                ->withTrashed()
+                ->pluck('user', 'id');
+
+                // return $gestores;
+                return view('usoinfraestructura.index', [
+                    'gestores' => $gestores,
+                ]);
                 break;
 
             case User::IsGestor():

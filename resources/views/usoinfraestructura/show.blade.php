@@ -131,7 +131,7 @@
                                                                         @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto) && $usoinfraestructura->actividad->articulacion_proyecto->proyecto != null)
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Tipo de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto->nombre}}
+                                                                                {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto->nombre : 'No registra'}}
                                                                             </p>
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Sublinea:</strong>
@@ -139,7 +139,7 @@
                                                                             </p>
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Sector:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->sector->nombre}}
+                                                                                {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->sector) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->sector->nombre : 'No registra'}}
                                                                             </p>
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Área de Conocimiento:</strong>

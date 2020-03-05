@@ -3,6 +3,9 @@
 @section('meta-title', 'Uso Infraestructura ' )
 
 @section('content')
+@php
+  $year = Carbon\Carbon::now()->year;
+@endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -78,13 +81,53 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                    
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col s12 m4 l4">
+                                        <label class="active" for="selectGestor">Gestor <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectGestor" onchange="UsoInfraestructuraAdministrador.selectUsoInfraestructuraPorNodo()">
+                                            <option value="">Seleccione Gestor</option>
+                                            @foreach($gestores as $id => $gestor)
+                                                <option value="{{$id}}">{{$gestor}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m4 l4">
+                                        <label class="active" for="selectYear">Año <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectYear" onchange="UsoInfraestructuraAdministrador.selectUsoInfraestructuraPorNodo()">
+                                            <option value="">Seleccione Año</option>
+                                            @for ($i=2016; $i <= $year; $i++)
+                                                <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                                                @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m4 l4">
+                                        <label class="active" for="selectActivity">Actividad <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectActivity" onchange="UsoInfraestructuraAdministrador.selectUsoInfraestructuraPorNodo()">
+                                            <option value="">Seleccione Actividad</option>
+                                            {{-- @foreach($nodos as $id => $nodo)
+                                                <option value="{{$id}}">{{$nodo}}</option>
+                                            @endforeach --}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12 m4 l4 offset-l4">
+                                        <a onclick="#" href="javascript:void(0)">
+                                        <div class="card blue">
+                                          <div class="card-content center flow-text">
+                                            <i class="left material-icons white-text small">search</i>
+                                            <span class="white-text">Consultar Uso de Infraestructura</span>
+                                          </div>
+                                        </div>
+                                      </a>
+                                    </div>
                                 </div>
                                 <div class="divider"></div>
                                 <br>
                                 
-                                <div class="row">
+                                {{-- <div class="row">
                                     <table class="display responsive-table" id="usoinfraestructura_dinamizador_table">
                                         <thead>
                                             <th>Fecha</th>
@@ -95,7 +138,7 @@
                                         </thead>
                         
                                     </table>
-                                </div>
+                                </div> --}}
                             @else
                                 <div class="row">
                                     <div class="col s12 m12 l10">
