@@ -872,7 +872,7 @@ Route::group(
 function () {
   Route::get('/', 'PdfComiteController@printPDF')->name('print');
   Route::get('/usos_proyecto/{id}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.proyecto.usos');
-  Route::get('/inicio/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.incio');
+  Route::get('/inicio_proyecto/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.inicio');
   Route::get('/inicio/{id}', 'PdfArticulacionController@printFormularioInicio')->name('pdf.articulacion.inicio');
   Route::get('/cierre/{id}', 'PdfProyectoController@printFormularioCierre')->name('pdf.proyecto.cierre');
   Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');

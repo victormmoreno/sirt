@@ -20,12 +20,26 @@
 @if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
 <div class="divider"></div>
 <div class="row">
-    <div class="col s12 m4 l4 offset-m4 offset-l4">
+    <div class="col s12 m4 l4">
         <a href="{{route('proyecto.suspender', $proyecto->id)}}">
             <div class="card-panel red lighten-3 black-text center">
                 Suspender proyecto.
             </div>
         </a>
+    </div>
+    <div class="col s12 m8 l8">
+        @include('proyectos.historial_cambios')
+        {{-- <ul class="collection">
+            <li class="collection-item">
+                El proyecto fue creado el día {{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}.
+            </li>
+            @foreach ($proyecto->articulacion_proyecto->actividad->movimientos as $item)
+            <li class="collection-item">
+                El {{$item->roles_movimientos->first()->name}} {{$item->users_movimientos->first()->nombres . ' '. $item->users_movimientos->first()->apellidos}} 
+                {{$item->movimiento}} la fase de {{$item->fases_movimientos->first()->nombre}} el día {{$item->pivot->created_at}}.
+            </li>
+            @endforeach
+        </ul> --}}
     </div>
 </div>
 @endif

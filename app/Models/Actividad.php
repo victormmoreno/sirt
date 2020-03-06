@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Actividad extends Model
 {
@@ -61,6 +62,30 @@ class Actividad extends Model
     public function articulacion_proyecto()
     {
         return $this->hasOne(ArticulacionProyecto::class, 'actividad_id', 'id');
+    }
+
+    public function movimientos()
+    {
+      return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
+      ->withTimestamps();
+    }
+
+    public function users_movimientos()
+    {
+      return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')
+      ->withTimestamps();
+    }
+
+    public function roles_movimientos()
+    {
+      return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
+      ->withTimestamps();
+    }
+
+    public function fases_movimientos()
+    {
+      return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
+      ->withTimestamps();
     }
 
     public function edt()

@@ -3,8 +3,8 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
-use Illuminate\Support\Facades\{DB, Notification, Storage};
+use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role};
+use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado};
 use Carbon\Carbon;
 use App\User;
@@ -858,6 +858,13 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
 
+      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cerró')->first(), [
+        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
       $proyecto->update([
         'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
       ]);
@@ -1034,6 +1041,14 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::findOrFail($id);
+      
+      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
       $proyecto->articulacion_proyecto()->update([
         'aprobacion_dinamizador_ejecucion' => 1
       ]);
@@ -1058,7 +1073,22 @@ class ProyectoRepository
   {
     DB::beginTransaction();
     try {
+      
       $proyecto = Proyecto::findOrFail($id);
+
+      $fase_aprobada = -1;
+      if ($fase == 'Planeación') {
+        $fase_aprobada = Fase::where('nombre', 'Inicio')->first()->id;
+      } else {
+        $fase_aprobada = Fase::where('nombre', 'Planeación')->first()->id;
+      }
+      
+      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => $fase_aprobada,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
       $proyecto->update([
         'fase_id' => Fase::where('nombre', $fase)->first()->id
       ]);
@@ -1266,6 +1296,14 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::findOrFail($id);
+
+      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
       Notification::send(User::find($proyecto->articulacion_proyecto->actividad->gestor->user->id), new ProyectoCierreAprobado($proyecto));
       $proyecto->articulacion_proyecto->actividad()->update([
         'aprobacion_dinamizador' => 1
