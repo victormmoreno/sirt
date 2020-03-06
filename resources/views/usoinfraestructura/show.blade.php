@@ -97,7 +97,7 @@
                                             </div>
                                             <div class="mailbox-text">
                                                 <div class="row">
-                                                	<div class="col s12 m4 l4">
+                                                    <div class="col s12 m4 l4">
                                                         <div class="center">
                                                             <span class="mailbox-title ">
                                                                 Información {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}
@@ -109,20 +109,20 @@
                                                                 <li class="collection-item ">
                                                                     
                                                                     <p>
-                                                                       <strong class="cyan-text text-darken-3"> Código de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
+                                                                        <strong class="cyan-text text-darken-3"> Código de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
                                                                         {{$usoinfraestructura->actividad->codigo_actividad}}
                                                                     </p>
                                                                     <p>
-                                                                       <strong class="cyan-text text-darken-3">Nombre de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
+                                                                        <strong class="cyan-text text-darken-3">Nombre de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
                                                                         {{$usoinfraestructura->actividad->nombre}}
                                                                     </p>
                                                                     <p>
-                                                                       <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
+                                                                        <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
                                                                         {{$usoinfraestructura->actividad->fecha_inicio->isoformat('LL')}}
                                                                     </p>
                                                                     @if(isset($usoinfraestructura->actividad->fecha_cierre) && $usoinfraestructura->actividad->fecha_cierre != null)
                                                                         <p>
-                                                                       <strong class="cyan-text text-darken-3">Fecha de Cierre :</strong>
+                                                                        <strong class="cyan-text text-darken-3">Fecha de Cierre :</strong>
                                                                         {{$usoinfraestructura->actividad->fecha_cierre->isoformat('LL')}}
                                                                     </p>
                                                                     @endif
@@ -130,7 +130,7 @@
 
                                                                         @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto) && $usoinfraestructura->actividad->articulacion_proyecto->proyecto != null)
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Tipo de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
+                                                                                <strong class="cyan-text text-darken-3">Tipo de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
                                                                                 {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto->nombre : 'No registra'}}
                                                                             </p>
                                                                             <p>

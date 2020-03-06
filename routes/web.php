@@ -384,8 +384,14 @@ Route::group([
 
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
         ->name('usoinfraestructura.projectsforuser');
-        Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
+    Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
         ->name('usoinfraestructura.projectsforuser.projects');
+    
+        Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
+        ->name('usoinfraestructura.actividadesporgestor');
+
+        Route::get('usoinfraestructura/actividades/datatable/{gestor}/{anio}/{actividad}', 'UsoInfraestructuraController@getDatatableInfoActividad')
+        ->name('usoinfraestructura.actividadesdatatable');
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/

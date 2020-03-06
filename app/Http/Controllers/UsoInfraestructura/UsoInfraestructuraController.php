@@ -12,7 +12,7 @@ use App\Models\LineaTecnologica;
 use App\Models\Material;
 use App\Models\Nodo;
 use App\Models\Proyecto;
-use App\Models\{Talento};
+use App\Models\{Actividad, Talento};
 use App\Models\UsoInfraestructura;
 use App\Repositories\Datatables\UsoInfraestructuraDatatables;
 use App\Repositories\Repository\ArticulacionRepository;
@@ -1029,6 +1029,72 @@ class UsoInfraestructuraController extends Controller
             return $this->getUsoInfraestructuraDatatables()->indexDatatable($usoinfraestructura);
         }
 
+    }
+
+
+    public function activitiesByGestor($gestor = null, $anio = null)
+    {
+        // $activities =  Proyecto::select(
+        //     'actividades.codigo_actividad AS codigo_proyecto',
+        //     'actividades.nombre',
+        //     'areasconocimiento.nombre AS nombre_areaconocimiento',
+        //     'sublineas.nombre AS sublinea_nombre',
+        //     'articulacion_proyecto.id AS articulacion_proyecto_id',
+        //     'actividades.fecha_cierre AS fecha_fin',
+        //     'lineastecnologicas.nombre AS nombre_linea',
+        //     'fecha_inicio',
+        //     'fecha_cierre',
+        //     'economia_naranja',
+        //     'fases.nombre AS nombre_fase',
+        //     'proyectos.id'
+        //   )
+        //     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+        //     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
+        //     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+        //     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+        //     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+        //     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+        //     ->join('users', 'users.id', '=', 'gestores.user_id')
+        //     ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+        //     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+        //     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+        //     ->leftJoin('fases', 'fases.id', '=', 'proyectos.fase_id')
+        //     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+            
+            
+        //     ->where('gestor_id', $gestor)
+        //     ->groupBy('proyectos.id')
+        //     ->get();
+
+        $activities =  Actividad::select(
+            'id', 'fecha_inicio'
+          )->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+            
+            ->where('gestor_id', $gestor)
+            ->whereYear('fecha_inicio', $anio)
+            ->pluck('nombre', 'id');
+
+        return response()->json([
+            'actividades' => $activities
+        ], 201);
+    }
+
+
+    public function getDatatableInfoActividad($gestor = null, $anio = null, $actividad)
+    {
+        $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
+        ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+        ->whereHas('actividad', function ($query) use ($gestor, $anio, $actividad) {
+            $query->where('id', $actividad)->whereYear('fecha_inicio', $anio)->where('gestor_id', $gestor);
+        })->get();
+
+        if (request()->ajax()) {
+            return $this->getUsoInfraestructuraDatatables()
+                ->indexDatatable($usoinfraestructura);
+        } else {
+            abort('403');
+        }
     }
 
 }
