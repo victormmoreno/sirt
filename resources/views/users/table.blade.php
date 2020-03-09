@@ -22,7 +22,7 @@
       <th>
         <input type="text" name="usuario" class="usuario" placeholder="Buscar por Usuario">
       </th>
-      <th>
+      <th>xxx
         <input type="text" name="email" class="email" placeholder="Buscar por Correo">
       </th>
       <th>

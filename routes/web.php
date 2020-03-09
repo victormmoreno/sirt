@@ -205,6 +205,12 @@ Route::group(
 
         Route::get('/usuarios/crear/{documento}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
 
+        Route::get('/usuarios/gestores/nodo/{id}', [
+            'uses' => 'UserController@gestoresByNodo',
+            'as'   => 'usuario.gestores.nodo',
+        ]);
+
+
         Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index', 'create'])->names([
             'create'  => 'usuario.usuarios.create',

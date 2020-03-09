@@ -73,19 +73,19 @@ var usoinfraestructura = {
         });
   
       }
-      
-      
-      
     },
     queryActivitiesByGestor: function(){
         let gestor = $('#selectGestor').val();
         let anho = $('#selectYear').val();
-        // console.log('gestor: ', gestor);
-        // console.log('anho: ', anho);
 
         if (gestor == null || gestor == ''){
-            // $('#selectYear').select2('val','null');
-        }else{
+              
+              $('#selectYear').empty();
+              $('#selectActivity').empty();
+          }
+          else if(anho == null || anho == ''){
+              $('#selectActivity').empty();
+          }else{
             $.ajax({
                 type: 'GET',
                 url: '/usoinfraestructura/actividades/'+ gestor + '/' + anho,
@@ -93,9 +93,9 @@ var usoinfraestructura = {
                 dataType: 'json',
                 processData: false,
                 success: function (data) {
-                  console.log('data: ', data);
+                  
                   $('#selectActivity').empty();
-                  $('#selectActivity').append('<option value="">Seleccione la Ciudad</option>')
+                  $('#selectActivity').append('<option value="">Seleccione la Actividad</option>')
                   $.each(data.actividades, function(i, e) {
                     $('#selectActivity').append('<option  value="'+i+'">'+e+'</option>');
                   });

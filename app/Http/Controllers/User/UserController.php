@@ -484,4 +484,20 @@ class UserController extends Controller
 
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
     }
+
+
+    public function gestoresByNodo($nodo = null)
+    {
+        $gestores = User::select('gestores.id')
+        ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
+        ->join('gestores','gestores.user_id', 'users.id' )
+        ->role('Gestor')
+        ->where('gestores.nodo_id', $nodo)
+        ->withTrashed()
+        ->pluck('nombre', 'id');
+
+        return response()->json([
+            'gestores' => $gestores
+        ]);
+    }
 }
