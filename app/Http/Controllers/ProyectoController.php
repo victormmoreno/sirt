@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
-use Illuminate\Support\{Str, Facades\Session, Facades\Validator, Facades\DB};
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\Request;
 use App\User;
@@ -67,7 +67,7 @@ class ProyectoController extends Controller
   public function detalle(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = $this->consultarHistoricoProyecto($proyecto);
+    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
     return view('proyectos.detalle', [
       'proyecto' => $proyecto,
@@ -469,17 +469,6 @@ class ProyectoController extends Controller
     }
   }
 
-  private function consultarHistoricoProyecto($proyecto) {
-    return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'movimientos_actividades_users_roles.created_at')
-    ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
-    ->where('actividad_id', $proyecto->articulacion_proyecto->actividad->id)
-    ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
-    ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
-    ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
-    ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
-    ->get();
-  }
-
   /**
    * Show the form for editing the specified resource.
    *
@@ -490,7 +479,7 @@ class ProyectoController extends Controller
   public function inicio($id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = $this->consultarHistoricoProyecto($proyecto);
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
 
     switch (Session::get('login_role')) {
       case User::IsGestor():
@@ -534,7 +523,7 @@ class ProyectoController extends Controller
   public function planeacion($id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = $this->consultarHistoricoProyecto($proyecto);
+    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     if ($proyecto->fase->nombre == 'Inicio') {
       Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
       return back();
@@ -573,7 +562,7 @@ class ProyectoController extends Controller
   public function ejecucion(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = $this->consultarHistoricoProyecto($proyecto);
+    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación') {
       Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
       return back();
@@ -622,7 +611,7 @@ class ProyectoController extends Controller
   public function cierre(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = $this->consultarHistoricoProyecto($proyecto);
+    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
       $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
       switch (Session::get('login_role')) {

@@ -2,12 +2,118 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura, Fase};
-use Illuminate\Support\Facades\DB;
+use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura, Fase, Movimiento, Role};
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use App\Notifications\Articulacion\{ArticulacionAprobarInicio};
+use Illuminate\Support\Facades\{DB, Notification, Session};
 use Carbon\Carbon;
 
 class ArticulacionRepository
 {
+
+  /**
+   * Modifica los entregables de una articulación
+   * @param Request $request
+   * @param int $id Id del articulación
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregablesInicioArticulacionRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $acc = 1;
+      $formulario_inicio = 1;
+
+      if (!isset($request->txtacc)) {
+        $acc = 0;
+      }
+
+      if (!isset($request->txtformulario_inicio)) {
+        $formulario_inicio = 0;
+      }
+
+      $articulacion = Articulacion::find($id);
+
+      $articulacion->update([
+        'acc' => $acc
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'formulario_inicio' => $formulario_inicio
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Notifica al dinamizador para que apruebe la articulacion en la fase de inicio
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Inicio(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $articulacion = Articulacion::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ArticulacionAprobarInicio($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+    /** 
+   * Cambia una articulación de fase
+   * 
+   * @param int $id Id del articulacion
+   * @param string $fase nombre de la fase a la que se va a cambiar el articulacion
+   * @return boolean
+   * @author dum
+   */
+  public function updateFaseArticulacion($id, $fase)
+  {
+    DB::beginTransaction();
+    try {
+      
+      $articulacion = Articulacion::findOrFail($id);
+
+      $fase_aprobada = -1;
+      if ($fase == 'Planeación') {
+        $fase_aprobada = Fase::where('nombre', 'Inicio')->first()->id;
+      } else {
+        $fase_aprobada = Fase::where('nombre', 'Planeación')->first()->id;
+      }
+      
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => $fase_aprobada,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $articulacion->update([
+        'fase_id' => Fase::where('nombre', $fase)->first()->id
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
 
   /**
    * Cantidad de articulaciones con grupos de investigación

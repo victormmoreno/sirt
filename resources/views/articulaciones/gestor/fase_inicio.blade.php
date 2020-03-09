@@ -24,7 +24,7 @@
                   </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                  <a href="">
+                  <a href="{{route('articulacion.entregables.inicio', $articulacion->id)}}">
                     <div class="card-panel blue-grey white-text">
                       <i class="material-icons left">library_books</i>
                       Entregables de la Fase de Inicio.
@@ -33,7 +33,7 @@
                 </div>
                 <div class="col s12 m4 l4 center">
                   @if ($articulacion->fase->nombre == 'Inicio')
-                  <a href="">
+                  <a href="{{route('articulacion.notificar.inicio', $articulacion->id)}}">
                     <div class="card-panel yellow accent-1 black-text">
                       Solicitar al dinamizador que apruebe la fase de inicio.
                     </div>

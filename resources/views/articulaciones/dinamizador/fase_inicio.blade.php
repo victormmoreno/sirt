@@ -13,21 +13,21 @@
         <div class="card">
           <div class="card-content">
             <div class="row">
-              @include('proyectos.navegacion_fases')
+              @include('articulaciones.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST" name="frmInicioDinamizador">
+              <form action="{{route('articulacion.update.inicio', $articulacion->id)}}" method="POST" name="frmInicioDinamizador">
                 {!! method_field('PUT')!!}
                 @csrf
-                @include('proyectos.detalle_fase_inicio')
+                @include('articulaciones.detalle_fase_inicio')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre == 'Planeación' ? 'disabled' : ''}}
+                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$articulacion->fase->nombre == 'Planeación' ? 'disabled' : ''}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Planeación' ? 'El Proyecto se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
+                    {{$articulacion->fase->nombre == 'Planeación' ? 'La articulación se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
                   </button>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                  <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
@@ -44,27 +44,13 @@
 @push('script')
 <script>
   $( document ).ready(function() {
-  @if($proyecto->areaconocimiento->nombre == 'Otro')
-    divOtroAreaConocmiento.show();
-  @endif
-  @if($proyecto->economia_naranja == 1)
-  divEconomiaNaranja.show();
-  @endif
-  @if($proyecto->dirigido_discapacitados == 1)
-  divDiscapacidad.show();
-  @endif
-  @if($proyecto->art_cti == 1)
-  divNombreActorCTi.show();
-  @endif
-
-  datatableArchivosDeUnProyecto_inicio();
+  datatableArchivosDeUnaArticulacion_inicio();
   });
 
   function preguntaInicio(e){
     e.preventDefault();
     Swal.fire({
-    title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
-    // text: "You won't be able to revert this!",
+    title: '¿Está seguro(a) de aprobar la fase de inicio de esta articulación?',
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -78,24 +64,12 @@
     })
   }
   
-  function changeToPlaneacion() {
-    window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-  }
-
   function changeToInicio() {
-    window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
+    window.location.href = "{{ route('articulacion.inicio', $articulacion->id) }}";
   }
 
-  function changeToEjecucion() {
-    window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-  }
-
-  function changeToCierre() {
-    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-  }
-
-  function datatableArchivosDeUnProyecto_inicio() {
-  $('#archivosDeUnProyecto').DataTable({
+  function datatableArchivosDeUnaArticulacion_inicio() {
+  $('#archivosDeUnaArticulacion').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
@@ -103,7 +77,7 @@
     serverSide: true,
     order: false,
     ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
+      url: "{{route('articulacion.files', [$articulacion->id, 'Inicio'])}}",
       type: "get",
     },
     columns: [

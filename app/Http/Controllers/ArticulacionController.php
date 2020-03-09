@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor, Producto};
+use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor, Producto, Actividad};
 use App\Http\Requests\ArticulacionFaseInicioFormRequest;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
@@ -75,8 +75,48 @@ class ArticulacionController extends Controller
           return response()->json(['state' => 'no_update']);
         }
       }
+    } else {
+      $update = $this->articulacionRepository->updateFaseArticulacion($id, 'Planeación');
+      if ($update) {
+        Alert::success('Aprobación Exitosa!', 'La articulación ha cambiado a fase de planeación!')->showConfirmButton('Ok', '#3085d6');
+        return redirect()->route('articulacion.inicio', $id);
+      } else {
+        Alert::error('Aprobación Errónea!', 'La articulación no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
     }
   }
+
+    /**
+   * Modifica los datos de una articulación en el estado de planeación
+   * 
+   * @param \Illuminate\Http\Request $request
+   * @param int $id Id del proyecto
+   * @return \Illuminate\Http\Response
+   * @author dum
+   */
+  // public function updatePlaneacion(Request $request, $id)
+  // {
+  //   if (Session::get('login_role') == User::IsGestor()) {
+  //     $update = $this->articulacionRepository->updateEntregablesPlaneacionArticulacionRepository($request, $id);
+  //     if ($update) {
+  //       Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+  //       return redirect('proyecto');
+  //     } else {
+  //       Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+  //       return back();
+  //     }
+  //   } else {
+  //     $aprobar = $this->getProyectoRepository()->updateFaseProyecto($id, 'Ejecución');
+  //     if ($aprobar) {
+  //       Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+  //       return redirect('proyecto');
+  //     } else {
+  //       Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+  //       return back();
+  //     }
+  //   }
+  // }
 
   /**
    * Método que valida cuales fueron los productos elegidos (en la fase de inicio)
@@ -98,6 +138,23 @@ class ArticulacionController extends Controller
     return $productos;
   }
 
+    /**
+   * Vista para el formulario de los entregables de la fase de inicio de una articulación
+   *
+   * @param int $id Id del articulacion
+   * @return Response
+   * @author dum
+   */
+  public function entregables_inicio($id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    if (Session::get('login_role') == User::IsGestor()) {
+      return view('articulaciones.gestor.entregables_inicio', [
+        'articulacion' => $articulacion
+      ]);
+    }
+  }
+
 
 
   /**
@@ -111,15 +168,25 @@ class ArticulacionController extends Controller
   {
     $articulacion = Articulacion::findOrFail($id);
     $productos = Producto::orderBy('nombre')->get();
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    // dd($historico);
 
     $productos = $this->productosElegidos($productos, $articulacion->productos);
-
 
     switch (Session::get('login_role')) {
       case User::IsGestor():
         return view('articulaciones.gestor.fase_inicio', [
           'productos' => $productos,
-          'articulacion' => $articulacion
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
+      break;
+      
+      case User::IsDinamizador():
+        return view('articulaciones.dinamizador.fase_inicio', [
+          'productos' => $productos,
+          'articulacion' => $articulacion,
+          'historico' => $historico
         ]);
         break;
       
@@ -237,42 +304,42 @@ class ArticulacionController extends Controller
     ]);
   }
 
+    /**
+   * Notifica al dinamizador para que apruebe la articulación en la fase de inicio
+   * 
+   * @param int $id Id del articulacion
+   * @return Response
+   * @author dum
+   */
+  public function notificar_inicio(int $id)
+  {
+    $notificacion = $this->articulacionRepository->notificarAlDinamziador_Inicio($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de inicio de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de inicio de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
   /**
-   * Modifica los entregables de una articulación
+   * modifica los entregables de un proyecto
+   *
    * @param Request $request
-   * @param int $id Id de la articulación
+   * @param int $id Id del proyecto
    * @return Response
    * @author Victor Manuel Moreno Vega
    */
   public function updateEntregables(Request $request, $id)
   {
-    if (\Session::get('login_role') == User::IsGestor()) {
-      !isset($request['entregable_acta_inicio']) ? $request['entregable_acta_inicio'] = 0 : $request['entregable_acta_inicio'] = 1;
-      !isset($request['entregable_acuerdo_confidencialidad_compromiso']) ? $request['entregable_acuerdo_confidencialidad_compromiso'] = 0 : $request['entregable_acuerdo_confidencialidad_compromiso'] = 1;
-      !isset($request['entregable_acta_seguimiento']) ? $request['entregable_acta_seguimiento'] = 0 : $request['entregable_acta_seguimiento'] = 1;
-      !isset($request['entregable_acta_cierre']) ? $request['entregable_acta_cierre'] = 0 : $request['entregable_acta_cierre'] = 1;
-      !isset($request['entregable_informe_final']) ? $request['entregable_informe_final'] = 0 : $request['entregable_informe_final'] = 1;
-      !isset($request['entregable_encuesta_satisfaccion']) ? $request['entregable_encuesta_satisfaccion'] = 0 : $request['entregable_encuesta_satisfaccion'] = 1;
-      !isset($request['entregable_otros']) ? $request['entregable_otros'] = 0 : $request['entregable_otros'] = 1;
-      $entregablesArticulacion = $this->articulacionRepository->updateEntregablesArticulacion($request, $id);
-      alert()->success('Modificación Exitosa!','Los entregables de la articulación se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
-      return redirect('articulacion');
-    } else {
-      $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
-      // dd($articulacion->estado);
-      if ($request['txtrevisado_final'] == 0) {
-        $articulacionRevisadoFinal = $this->articulacionRepository->updateRevisadoFinalArticulacion($request, $id);
-        alert()->success('Modificación Exitosa!','El revisado final de la articulación se ha modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
-        return redirect('articulacion');
+    if (Session::get('login_role') == User::IsGestor()) {
+      $update = $this->articulacionRepository->updateEntregablesInicioArticulacionRepository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'Los entregables de la articulación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return redirect()->route('articulacion.inicio', $id);
       } else {
-        if ($articulacion->estado != 'Ejecución') {
-          alert()->warning('Advertencia!','Para cambiar el revisado final de una articulación, esta debe estar en estado de Ejecución.')->showConfirmButton('Ok', '#3085d6');
-          return back();
-        } else {
-          $articulacionRevisadoFinal = $this->articulacionRepository->updateRevisadoFinalArticulacion($request, $id);
-          alert()->success('Modificación Exitosa!','El revisado final de la articulación se ha modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
-          return redirect('articulacion');
-        }
+        Alert::error('Modificación Errónea!', 'Los entregables de la articulación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
       }
     }
   }

@@ -17,15 +17,18 @@
         </ul>
     </div>
 </div>
-{{-- @if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
+@if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
 <div class="divider"></div>
 <div class="row">
-    <div class="col s12 m4 l4 offset-m4 offset-l4">
-        <a href="{{route('proyecto.suspender', $articulacion->id)}}">
+    <div class="col s12 m4 l4">
+        <a href="">
             <div class="card-panel red lighten-3 black-text center">
-                Suspender proyecto.
+                Suspender articulación.
             </div>
         </a>
     </div>
+    <div class="col s12 m8 l8">
+        @include('articulaciones.historial_cambios')
+    </div>
 </div>
-@endif --}}
+@endif

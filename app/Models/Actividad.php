@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\User;
 
 class Actividad extends Model
@@ -47,6 +48,16 @@ class Actividad extends Model
         'formulario_final'
 
     ];
+
+    public static function consultarHistoricoActividad($id) {
+      return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'movimientos_actividades_users_roles.created_at')
+      ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
+      ->where('actividad_id', $id)
+      ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
+      ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
+      ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
+      ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id');
+    }
 
     /**
     * Consulta las actividades

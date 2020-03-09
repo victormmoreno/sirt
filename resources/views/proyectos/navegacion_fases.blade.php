@@ -29,17 +29,6 @@
     </div>
     <div class="col s12 m8 l8">
         @include('proyectos.historial_cambios')
-        {{-- <ul class="collection">
-            <li class="collection-item">
-                El proyecto fue creado el día {{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}.
-            </li>
-            @foreach ($proyecto->articulacion_proyecto->actividad->movimientos as $item)
-            <li class="collection-item">
-                El {{$item->roles_movimientos->first()->name}} {{$item->users_movimientos->first()->nombres . ' '. $item->users_movimientos->first()->apellidos}} 
-                {{$item->movimiento}} la fase de {{$item->fases_movimientos->first()->nombre}} el día {{$item->pivot->created_at}}.
-            </li>
-            @endforeach
-        </ul> --}}
     </div>
 </div>
 @endif
