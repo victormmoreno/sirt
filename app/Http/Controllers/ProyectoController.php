@@ -67,7 +67,7 @@ class ProyectoController extends Controller
   public function detalle(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
     return view('proyectos.detalle', [
       'proyecto' => $proyecto,
@@ -523,7 +523,7 @@ class ProyectoController extends Controller
   public function planeacion($id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     if ($proyecto->fase->nombre == 'Inicio') {
       Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
       return back();
@@ -562,7 +562,7 @@ class ProyectoController extends Controller
   public function ejecucion(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación') {
       Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
       return back();
@@ -611,7 +611,7 @@ class ProyectoController extends Controller
   public function cierre(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
-    $historico = Articulacion::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
       $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
       switch (Session::get('login_role')) {
@@ -651,7 +651,7 @@ class ProyectoController extends Controller
           break;
       }
     } else {
-      Alert::error('Error!', 'El talento interlocutor aún no ha dado su aprobación en la fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+      Alert::error('Error!', 'El dinamizador aún no ha dado su aprobación en la fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
   }

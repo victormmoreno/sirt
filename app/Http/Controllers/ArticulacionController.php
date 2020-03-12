@@ -7,6 +7,7 @@ use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor, Producto, Activida
 use App\Http\Requests\ArticulacionFaseInicioFormRequest;
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
+use App\Http\Controllers\CostoController;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\User;
 use Alert;
@@ -19,14 +20,16 @@ class ArticulacionController extends Controller
   private $grupoInvestigacionRepository;
   private $articulacionProyectoRepository;
   private $gestorRepository;
+  private $costoController;
 
-  public function __construct(GestorRepository $gestorRepository, ArticulacionRepository $articulacionRepository, EmpresaRepository $empresaRepository, GrupoInvestigacionRepository $grupoInvestigacionRepository, ArticulacionProyectoRepository $articulacionProyectoRepository)
+  public function __construct(GestorRepository $gestorRepository, ArticulacionRepository $articulacionRepository, EmpresaRepository $empresaRepository, GrupoInvestigacionRepository $grupoInvestigacionRepository, ArticulacionProyectoRepository $articulacionProyectoRepository, CostoController $costoController)
   {
     $this->articulacionRepository = $articulacionRepository;
     $this->empresaRepository = $empresaRepository;
     $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
     $this->articulacionProyectoRepository = $articulacionProyectoRepository;
     $this->gestorRepository = $gestorRepository;
+    $this->costoController = $costoController;
     $this->middleware(['auth']);
   }
 
@@ -91,32 +94,127 @@ class ArticulacionController extends Controller
    * Modifica los datos de una articulación en el estado de planeación
    * 
    * @param \Illuminate\Http\Request $request
-   * @param int $id Id del proyecto
+   * @param int $id Id de la articulación
    * @return \Illuminate\Http\Response
    * @author dum
    */
-  // public function updatePlaneacion(Request $request, $id)
-  // {
-  //   if (Session::get('login_role') == User::IsGestor()) {
-  //     $update = $this->articulacionRepository->updateEntregablesPlaneacionArticulacionRepository($request, $id);
-  //     if ($update) {
-  //       Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
-  //       return redirect('proyecto');
-  //     } else {
-  //       Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
-  //       return back();
-  //     }
-  //   } else {
-  //     $aprobar = $this->getProyectoRepository()->updateFaseProyecto($id, 'Ejecución');
-  //     if ($aprobar) {
-  //       Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
-  //       return redirect('proyecto');
-  //     } else {
-  //       Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
-  //       return back();
-  //     }
-  //   }
-  // }
+  public function updatePlaneacion(Request $request, $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $update = $this->articulacionRepository->updateEntregablesPlaneacionArticulacionRepository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    } else {
+      $aprobar = $this->articulacionRepository->updateFaseArticulacion($id, 'Ejecución');
+      if ($aprobar) {
+        Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    }
+  }
+
+  /**
+   * Modifica los cambios de la fase de ejecución
+   * @param Request $request
+   * @param int $id Id de la articulacion
+   * @return Response
+   * @author dum
+   **/
+  public function updateEjecucion(Request $request, $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $update = $this->articulacionRepository->updateEntregablesEjecucionArticulacionRepository($request, $id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    } else {
+      $update = $this->articulacionRepository->setPostCierreArticulacionRepository($id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'La fase de ejecución de la articulación se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        Alert::error('Modificación Errónea!', 'La fase de ejecución de la articulación no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    }
+  }
+
+  /**
+   * Cambia los datos de la articulación en estado de cierre
+   * 
+   * @param Request $request
+   * @param int $id Id de la articulación
+   * @author dum
+   */
+  public function updateCierre(Request $request, int $id)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $articulacion = Articulacion::findOrFail($id);
+      if ($articulacion->articulacion_proyecto->actividad->aprobacion_dinamizador == 1) {
+
+        $validator = Validator::make(
+          $request->all(),
+          [
+            'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
+          ],
+          [
+            'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
+            'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
+          ]
+        );
+        if ($validator->fails()) {
+          return response()->json([
+            'state'   => 'error_form',
+            'errors' => $validator->errors(),
+          ]);
+        } else {
+          $cerrar = $this->getProyectoRepository()->cerrarProyecto($request, $articulacion);
+          if ($cerrar) {
+            return response()->json(['state' => 'update']);
+          } else {
+            return response()->json(['state' => 'no_update']);
+          }
+        }
+      } else {
+        // $req = new ProyectoFaseCierreFormRequest;
+        // $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        // if ($validator->fails()) {
+        //   return response()->json([
+        //     'state'   => 'error_form',
+        //     'errors' => $validator->errors(),
+        //   ]);
+        // } else {
+        //   $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
+        //   if ($result) {
+        //     return response()->json(['state' => 'update']);
+        //   } else {
+        //     return response()->json(['state' => 'no_update']);
+        //   }
+        // }
+      }
+    } else {
+      $update = $this->articulacionRepository->updateAprobacionDinamizador($id);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'La fase de cierre se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      } else {
+        Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    }
+  }
 
   /**
    * Método que valida cuales fueron los productos elegidos (en la fase de inicio)
@@ -141,7 +239,7 @@ class ArticulacionController extends Controller
     /**
    * Vista para el formulario de los entregables de la fase de inicio de una articulación
    *
-   * @param int $id Id del articulacion
+   * @param int $id Id de la articulacion
    * @return Response
    * @author dum
    */
@@ -150,6 +248,23 @@ class ArticulacionController extends Controller
     $articulacion = Articulacion::findOrFail($id);
     if (Session::get('login_role') == User::IsGestor()) {
       return view('articulaciones.gestor.entregables_inicio', [
+        'articulacion' => $articulacion
+      ]);
+    }
+  }
+
+  /**
+   * Vista para subir las entregables de una articulacion en la fase de cierre
+   * 
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   */
+  public function entregables_cierre(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    if (Session::get('login_role') == User::IsGestor()) {
+      return view('articulaciones.gestor.entregables_cierre', [
         'articulacion' => $articulacion
       ]);
     }
@@ -193,6 +308,132 @@ class ArticulacionController extends Controller
       default:
         # code...
         break;
+    }
+  }
+
+  /**
+   * Vista para subir los entregables de la fase de planeación
+   *
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   **/
+  public function planeacion(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    if ($articulacion->fase->nombre == 'Inicio') {
+      Alert::error('Error!', 'La articulación se encuentra en la fase de ' . $articulacion->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      if (Session::get('login_role') == User::IsGestor()) {
+        return view('articulaciones.gestor.fase_planeacion', [
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
+      } else if (Session::get('login_role') == User::IsDinamizador()) {
+        return view('articulaciones.dinamizador.fase_planeacion', [
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
+      } else if (Session::get('login_role') == User::IsAdministrador()) {
+        // return view('proyectos.administrador.fase_planeacion', [
+        //   'proyecto' => $articulacion,
+        //   'historico' => $historico
+        // ]);
+      } else {
+        abort('403');
+      }
+    }
+  }
+
+    /**
+   * Vista para el formulario de la fase de ejecución del proyecto
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function ejecucion(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    if ($articulacion->fase->nombre == 'Inicio' || $articulacion->fase->nombre == 'Planeación') {
+      Alert::error('Error!', 'La articulación se encuentra en la fase de ' . $articulacion->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      switch (Session::get('login_role')) {
+        case User::IsGestor():
+          return view('articulaciones.gestor.fase_ejecucion', [
+            'articulacion' => $articulacion,
+            'historico' => $historico
+          ]);
+          break;
+
+        case User::IsDinamizador():
+          return view('articulaciones.dinamizador.fase_ejecucion', [
+            'articulacion' => $articulacion,
+            'historico' => $historico
+          ]);
+          break;
+
+        case User::IsAdministrador():
+          // return view('articulaciones.administrador.fase_ejecucion', [
+          //   'articulacion' => $articulacion,
+          //   'historico' => $historico
+          // ]);
+          break;
+
+        default:
+          abort('403');
+          break;
+      }
+    }
+  }
+
+    /**
+   * Vista para el formulario de la fase de cierre
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   */
+  public function cierre(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    if ($articulacion->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
+      $costo = $this->costoController->costosDeUnaActividad($articulacion->articulacion_proyecto->actividad->id);
+      switch (Session::get('login_role')) {
+        case User::IsGestor():
+          return view('articulaciones.gestor.fase_cierre', [
+            'articulacion' => $articulacion,
+            'costo' => $costo,
+            'historico' => $historico
+          ]);
+          break;
+
+        case User::IsDinamizador():
+          return view('articulaciones.dinamizador.fase_cierre', [
+            'articulacion' => $articulacion,
+            'costo' => $costo,
+            'historico' => $historico
+          ]);
+          break;
+
+        case User::IsAdministrador():
+          // return view('articulaciones.administrador.fase_cierre', [
+          //   'proyecto' => $articulacion,
+          //   'costo' => $costo,
+          //   'historico' => $historico
+          // ]);
+          break;
+
+        default:
+          # code...
+          break;
+      }
+    } else {
+      Alert::error('Error!', 'El dinamizador aún no ha dado su aprobación en la fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
   }
 
@@ -322,11 +563,65 @@ class ArticulacionController extends Controller
     return back();
   }
 
+    /**
+   * Notifica al dinamizador para que apruebe la articulación en la fase de planeacion
+   * 
+   * @param int $id Id del articulacion
+   * @return Response
+   * @author dum
+   */
+  public function notificar_planeacion(int $id)
+  {
+    $notificacion = $this->articulacionRepository->notificarAlDinamizador_Planeacion($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de planeación de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de planeación de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+    /**
+   * Notitica al dinamizador para que apruebe la fase de ejecución
+   *
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   **/
+  public function notificar_ejecucion(int $id)
+  {
+    $notificacion = $this->articulacionRepository->notificarAlDinamizador_Ejecucion($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de ejecución de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de ejecución de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
   /**
-   * modifica los entregables de un proyecto
+   * Notifica al dinamizador para que apruebe la articulación en la fase de cierre
+   * 
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   */
+  public function notificar_cierre(int $id)
+  {
+    $notificacion = $this->articulacionRepository->notificarAlDinamziador_Cierre($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  /**
+   * modifica los entregables de una articulación
    *
    * @param Request $request
-   * @param int $id Id del proyecto
+   * @param int $id Id de la articulacion
    * @return Response
    * @author Victor Manuel Moreno Vega
    */
@@ -341,6 +636,27 @@ class ArticulacionController extends Controller
         Alert::error('Modificación Errónea!', 'Los entregables de la articulación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
         return back();
       }
+    }
+  }
+
+
+  public function updateEntregables_Cierre(Request $request, $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    if ($articulacion->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
+      if (Session::get('login_role') == User::IsGestor()) {
+        $update = $this->articulacionRepository->updateEntregableCierreArticulacionRepository($request, $id);
+        if ($update) {
+          Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de cierre se han modificado!')->showConfirmButton('Ok', '#3085d6');
+          return back();
+        } else {
+          Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de cierre no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+          return back();
+        }
+      }
+    } else {
+      Alert::error('Error!', 'El dinamizador aún no ha aprobado la fase de ejecución de la articulación!')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
   }
 
@@ -372,9 +688,9 @@ class ArticulacionController extends Controller
   {
     if (request()->ajax()) {
       if (\Session::get('login_role') == User::IsDinamizador()) {
-        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo(auth()->user()->dinamizador->nodo_id, $anho);
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo(auth()->user()->dinamizador->nodo_id, $anho)->get();
       } else {
-        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho);
+        $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho)->get();
       }
       
       return $this->datatablesArticulaciones($request, $articulaciones);

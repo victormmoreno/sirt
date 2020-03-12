@@ -30,7 +30,7 @@
                             </div>
                             <div class="right">
                                 <small>
-                                    <b>Fecha de inicio del proyecto: </b>
+                                    <b>Fecha de inicio de la articulación: </b>
                                     {{optional($articulacion->articulacion_proyecto->actividad->created_at)->isoFormat('LL')}}
                                 </small>
                             </div>

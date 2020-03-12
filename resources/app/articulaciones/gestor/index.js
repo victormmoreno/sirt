@@ -12,6 +12,7 @@ function consultarArticulacionesDelGestor(anho) {
       // type: "get",
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
+        d.gestor = $('#nombre_GestorAdministradorTable').val(),
         d.nombre = $('#nombre_GestorTable').val(),
         d.fase = $('#fase_GestorTable').val(),
         d.search = $('input[type="search"]').val()

@@ -49,6 +49,7 @@ class Articulacion extends Model
         'otros',
         'acuerdos',
         'alcance_articulacion',
+        'siguientes_investigaciones',
         'fase_id'
     ];
 

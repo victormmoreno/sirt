@@ -16,18 +16,17 @@
               @include('articulaciones.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('articulacion.update.inicio', $articulacion->id)}}" method="POST" name="frmInicioDinamizador">
+              <form action="{{route('articulacion.update.planeacion', $articulacion->id)}}" method="POST" name="frmPlaneacionDinamizador">
                 {!! method_field('PUT')!!}
                 @csrf
-                @include('articulaciones.detalle_fase_inicio')
+                @include('articulaciones.detalle_fase_planeacion')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$articulacion->fase->nombre == 'Planeación' ? 'disabled' : ''}}
-                    class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    {{$articulacion->fase->nombre == 'Planeación' ? 'La articulación se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
+                  <button type="submit" onclick="preguntaPlaneacion(event)" value="send" {{$articulacion->fase->nombre == 'Planeación' ? '' : 'disabled'}} class="waves-effect cyan darken-1 btn center-aling">
+                      <i class="material-icons right">done</i>
+                      {{$articulacion->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'La articulación no se encuentra en fase de Planeación'}}
                   </button>
-                  <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling">
+                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
@@ -36,7 +35,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </main>
@@ -44,8 +42,26 @@
 @push('script')
 <script>
   $( document ).ready(function() {
-  datatableArchivosDeUnaArticulacion_inicio();
+    datatableArchivosDeUnaArticulacion_planeacion();
   });
+
+  function preguntaPlaneacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de aprobar la fase de planeación de esta articulación?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmPlaneacionDinamizador.submit();
+    }
+  })
+}
 
   function changeToInicio() {
     window.location.href = "{{ route('articulacion.inicio', $articulacion->id) }}";
@@ -63,29 +79,7 @@
     window.location.href = "{{ route('articulacion.cierre', $articulacion->id) }}";
   }
 
-
-  function preguntaInicio(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de aprobar la fase de inicio de esta articulación?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-      if (result.value) {
-        document.frmInicioDinamizador.submit();
-      }
-    })
-  }
-  
-  function changeToInicio() {
-    window.location.href = "{{ route('articulacion.inicio', $articulacion->id) }}";
-  }
-
-  function datatableArchivosDeUnaArticulacion_inicio() {
+  function datatableArchivosDeUnaArticulacion_planeacion() {
   $('#archivosDeUnaArticulacion').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -94,7 +88,7 @@
     serverSide: true,
     order: false,
     ajax:{
-      url: "{{route('articulacion.files', [$articulacion->id, 'Inicio'])}}",
+      url: "{{route('articulacion.files', [$articulacion->id, 'Planeación'])}}",
       type: "get",
     },
     columns: [

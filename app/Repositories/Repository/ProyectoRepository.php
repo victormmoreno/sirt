@@ -1150,28 +1150,28 @@ class ProyectoRepository
    */
   public function updateEntregableCierreProyectoRepository($request, $id)
   {
-    $evidencia_trl = 1;
-    $formulario_final = 1;
-    $proyecto = Proyecto::findOrFail($id);
-
-    if (!isset($request->txtevidencia_trl)) {
-      $evidencia_trl = 0;
-    }
-
-    if (!isset($request->txtformulario_final)) {
-      $formulario_final = 0;
-    }
-
-    
-    $proyecto->update([
-      'evidencia_trl' => $evidencia_trl
-    ]);
-
-    $proyecto->articulacion_proyecto->actividad()->update([
-      'formulario_final' => $formulario_final
-    ]);
     DB::beginTransaction();
     try {
+      $evidencia_trl = 1;
+      $formulario_final = 1;
+      $proyecto = Proyecto::findOrFail($id);
+  
+      if (!isset($request->txtevidencia_trl)) {
+        $evidencia_trl = 0;
+      }
+  
+      if (!isset($request->txtformulario_final)) {
+        $formulario_final = 0;
+      }
+  
+      
+      $proyecto->update([
+        'evidencia_trl' => $evidencia_trl
+      ]);
+  
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'formulario_final' => $formulario_final
+      ]);
       DB::commit();
       return true;
     } catch (\Throwable $th) {
