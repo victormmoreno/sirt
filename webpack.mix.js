@@ -103,6 +103,7 @@ mix.scripts([
 		'resources/app/sublinea/administrador/index.js',
 		'resources/app/articulaciones/gestor/index.js',
 		'resources/app/articulaciones/gestor/form.js',
+		'resources/app/articulaciones/gestor/form_cierre.js',
 		'resources/app/articulaciones/index.js',
 		'resources/app/intervenciones/gestor/index.js',
 		'resources/app/intervenciones/index.js',

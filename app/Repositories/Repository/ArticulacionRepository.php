@@ -7,6 +7,7 @@ use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Notifications\Articulacion\{ArticulacionAprobarInicio, ArticulacionAprobarPlaneacion, ArticulacionAprobarEjecucion, ArticulacionAprobarCierre, ArticulacionCierreAprobado};
 use Illuminate\Support\Facades\{DB, Notification, Session};
 use Carbon\Carbon;
+use App\User;
 
 class ArticulacionRepository
 {
@@ -153,6 +154,79 @@ class ArticulacionRepository
     }
   }
 
+   /**
+   * Modifica los datos de cierre de una articulación
+   * 
+   * @param Request $request
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   */
+  public function updateCierreArticulacionRepository($request, $id)
+  {
+    
+    DB::beginTransaction();
+    try {
+      
+      $articulacion = Articulacion::findOrFail($id);
+      $productos_alcanzados = $request->txtproducto_alcanzado;
+  
+      DB::table('articulaciones_productos')->where('articulacion_id', $articulacion->id)->update(['logrado' => 0]);
+  
+      DB::table('articulaciones_productos')->where('articulacion_id', $articulacion->id)
+      ->whereIn('producto_id', $productos_alcanzados)->update(['logrado' => 1]);
+
+      $articulacion->update([
+        'siguientes_investigaciones' => $request->txtsiguientes_investigaciones
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'conclusiones' => $request->txtconclusiones
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Cambia el estado de la articulación a Cierre y asigna un fecha de cierre a la articulación
+   * @param Request $request
+   * @param Articulacion $articulacion
+   * @return boolean
+   * @author dum
+   */
+  public function cerrarArticulacion($request, $articulacion)
+  {
+    DB::beginTransaction();
+    try {
+
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cerró')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $articulacion->update([
+        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'fecha_cierre' => $request->txtfecha_cierre
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
   /**
    * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar la artriculación
    */
@@ -160,7 +234,7 @@ class ArticulacionRepository
   {
     DB::beginTransaction();
     try {
-      $articulacion = Proyecto::findOrFail($id);
+      $articulacion = Articulacion::findOrFail($id);
 
       $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
         'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,

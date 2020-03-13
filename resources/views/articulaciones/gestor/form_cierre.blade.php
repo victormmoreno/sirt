@@ -24,7 +24,7 @@
         <h5 class="center">Productos alcanzados.</h5>
         @foreach ($articulacion->productos as $item)
         <p class="p-v-xs">
-            <input {{$disabled}} type="checkbox" name="txtproducto_alcanzado[]" id="txtproducto{{$item->id}}" value="1" >
+            <input {{$disabled}} type="checkbox" name="txtproducto_alcanzado[]" id="txtproducto{{$item->id}}" value="{{$item->id}}" {{$item->pivot->logrado == 1 ? 'checked' : ''}} >
             <label for="txtproducto{{$item->id}}">{{ $item->nombre }}</label>
         </p>
         @endforeach
@@ -46,7 +46,7 @@
     <div class="col s12 m6 l6">
         <h5 class="center">Siguiente paso.</h5>
         <div class="input-field col s12 m12 l12">
-            <textarea {{$disabled}} name="txtconclusiones" class="materialize-textarea" length="1000" maxlength="1000" id="txtsiguientes_investigaciones">{{ $btnText == 'Guardar' ? '' : $articulacion->articulacion_proyecto->actividad->conclusiones }}</textarea>
+            <textarea {{$disabled}} name="txtsiguientes_investigaciones" class="materialize-textarea" length="1000" maxlength="1000" id="txtsiguientes_investigaciones">{{ $btnText == 'Guardar' ? '' : $articulacion->siguientes_investigaciones }}</textarea>
             <label for="txtsiguientes_investigaciones">Siguientes investigaciones o proyectos de la articulación <span class="red-text">*</span></label>
             <small id="txtsiguientes_investigaciones-error" class="error red-text"></small>
         </div>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{TipoArticulacion, Articulacion, Nodo, Gestor, Producto, Actividad};
-use App\Http\Requests\ArticulacionFaseInicioFormRequest;
+use App\Http\Requests\{ArticulacionFaseInicioFormRequest, ArticulacionFaseCierreFormRequest};
 use App\Repositories\Repository\{ArticulacionRepository, EmpresaRepository, GrupoInvestigacionRepository, ArticulacionProyectoRepository, UserRepository\GestorRepository};
 use App\Helpers\ArrayHelper;
 use App\Http\Controllers\CostoController;
@@ -180,7 +180,7 @@ class ArticulacionController extends Controller
             'errors' => $validator->errors(),
           ]);
         } else {
-          $cerrar = $this->getProyectoRepository()->cerrarProyecto($request, $articulacion);
+          $cerrar = $this->articulacionRepository->cerrarArticulacion($request, $articulacion);
           if ($cerrar) {
             return response()->json(['state' => 'update']);
           } else {
@@ -188,21 +188,21 @@ class ArticulacionController extends Controller
           }
         }
       } else {
-        // $req = new ProyectoFaseCierreFormRequest;
-        // $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        // if ($validator->fails()) {
-        //   return response()->json([
-        //     'state'   => 'error_form',
-        //     'errors' => $validator->errors(),
-        //   ]);
-        // } else {
-        //   $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
-        //   if ($result) {
-        //     return response()->json(['state' => 'update']);
-        //   } else {
-        //     return response()->json(['state' => 'no_update']);
-        //   }
-        // }
+        $req = new ArticulacionFaseCierreFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+          return response()->json([
+            'state'   => 'error_form',
+            'errors' => $validator->errors(),
+          ]);
+        } else {
+          $result = $this->articulacionRepository->updateCierreArticulacionRepository($request, $id);
+          if ($result) {
+            return response()->json(['state' => 'update']);
+          } else {
+            return response()->json(['state' => 'no_update']);
+          }
+        }
       }
     } else {
       $update = $this->articulacionRepository->updateAprobacionDinamizador($id);

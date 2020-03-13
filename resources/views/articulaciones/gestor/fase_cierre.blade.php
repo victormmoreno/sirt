@@ -16,7 +16,7 @@
               @include('articulaciones.navegacion_fases')
               <div class="row">
                 <div class="col s12 m4 l4 center">
-                  <a href="" target="_blank">
+                  <a href="{{route('pdf.articulacion.cierre', $articulacion->id)}}" target="_blank">
                     <div class="card-panel blue white-text">
                       <i class="material-icons left">file_download</i>
                       Descargar formulario.

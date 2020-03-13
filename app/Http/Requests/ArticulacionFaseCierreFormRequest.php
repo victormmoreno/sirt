@@ -24,7 +24,20 @@ class ArticulacionFaseCierreFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'txtconclusiones' => 'required|max:1000',
+            'txtsiguientes_investigaciones' => 'required|max:1000'
         ];
     }
+
+    public function messages()
+    {
+      return $messages = [
+        'txtconclusiones.required' => 'Las conclusiones de la articulación son obligatorias.',
+        'txtconclusiones.max' => 'Las conclusiones de la articulación debe ser máximo de 1000 carácteres.',
+
+        'txtsiguientes_investigaciones.required' => 'El siguiente paso de la articulación es obligatorio.',
+        'txtsiguientes_investigaciones.max' => 'El siguiente paso de la articulación debe ser máximo de 1000 carácteres.',
+        ];
+      }
+
 }

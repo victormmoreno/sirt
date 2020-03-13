@@ -16,4 +16,11 @@ class PdfArticulacionController extends Controller
       $pdf = PDF::loadView('pdf.articulacion.form_inicio', ['articulacion' => $articulacion]);
       return $pdf->stream();
     }
+
+    public function printFormularioCierre($id)
+    {
+      $articulacion = Articulacion::findOrFail($id);
+      $pdf = PDF::loadView('pdf.articulacion.form_cierre', ['articulacion' => $articulacion]);
+      return $pdf->stream();
+    }
 }
