@@ -40,3 +40,27 @@
     </tfoot>
   </table>
 @endif
+@if (Session::get('login_role') == App\User::IsAdministrador())
+  <table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable">
+    <thead>
+      <tr>
+        <th>Código de la Articulación</th>
+        <th>Nodo</th>
+        <th>Gestor</th>
+        <th>Nombre</th>
+        <th>Fase</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th><input type="text" name="codigo_articulacion_AdministradorTable" id="codigo_articulacion_AdministradorTable" placeholder="Buscar por código de articulación"></th>
+        <th><input type="text" name="nombre_nodoAdministradorTable" id="nombre_nodoAdministradorTable" placeholder="Buscar por nodo"></th>
+        <th><input type="text" name="nombre_GestorAdministradorTable" id="nombre_GestorAdministradorTable" placeholder="Buscar por gestor"></th>
+        <th><input type="text" name="nombre_AdministradorTable" id="nombre_AdministradorTable" placeholder="Buscar por nombre"></th>
+        <th><input type="text" name="fase_AdministradorTable" id="fase_AdministradorTable" placeholder="Buscar por fase"></th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
+@endif

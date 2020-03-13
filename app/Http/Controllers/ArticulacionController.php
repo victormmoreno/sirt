@@ -305,6 +305,14 @@ class ArticulacionController extends Controller
         ]);
         break;
       
+      case User::IsAdministrador():
+        return view('articulaciones.administrador.fase_inicio', [
+          'productos' => $productos,
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
+        break;
+      
       default:
         # code...
         break;
@@ -337,10 +345,10 @@ class ArticulacionController extends Controller
           'historico' => $historico
         ]);
       } else if (Session::get('login_role') == User::IsAdministrador()) {
-        // return view('proyectos.administrador.fase_planeacion', [
-        //   'proyecto' => $articulacion,
-        //   'historico' => $historico
-        // ]);
+        return view('articulaciones.administrador.fase_planeacion', [
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
       } else {
         abort('403');
       }
@@ -377,10 +385,10 @@ class ArticulacionController extends Controller
           break;
 
         case User::IsAdministrador():
-          // return view('articulaciones.administrador.fase_ejecucion', [
-          //   'articulacion' => $articulacion,
-          //   'historico' => $historico
-          // ]);
+          return view('articulaciones.administrador.fase_ejecucion', [
+            'articulacion' => $articulacion,
+            'historico' => $historico
+          ]);
           break;
 
         default:
@@ -420,11 +428,11 @@ class ArticulacionController extends Controller
           break;
 
         case User::IsAdministrador():
-          // return view('articulaciones.administrador.fase_cierre', [
-          //   'proyecto' => $articulacion,
-          //   'costo' => $costo,
-          //   'historico' => $historico
-          // ]);
+          return view('articulaciones.administrador.fase_cierre', [
+            'articulacion' => $articulacion,
+            'costo' => $costo,
+            'historico' => $historico
+          ]);
           break;
 
         default:
@@ -456,14 +464,19 @@ class ArticulacionController extends Controller
           return Str::contains($row['nombre'], $request->get('nombre')) ? true : false;
         });
       }
-      if (!empty($request->get('nombre_completo_gestor'))) {
+      if (!empty($request->get('nombre_gestor'))) {
         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-          return Str::contains($row['nombre_completo_gestor'], $request->get('nombre_completo_gestor')) ? true : false;
+          return Str::contains($row['nombre_completo_gestor'], $request->get('nombre_gestor')) ? true : false;
         });
       }
-      if (!empty($request->get('nombre_fase'))) {
+      if (!empty($request->get('nombre_nodo'))) {
         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-          return Str::contains($row['nombre_fase'], $request->get('estado')) ? true : false;
+          return Str::contains($row['nombre_nodo'], $request->get('nombre_nodo')) ? true : false;
+        });
+      }
+      if (!empty($request->get('fase'))) {
+        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+          return Str::contains($row['nombre_fase'], $request->get('fase')) ? true : false;
         });
       }
       if (!empty($request->get('search'))) {
@@ -536,12 +549,15 @@ class ArticulacionController extends Controller
   * @return Response
   * @author dum
   */
-  public function detallesDeUnArticulacion($id)
+  public function detalles($id)
   {
-    $detalles = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
-    $detalles = ArrayHelper::validarDatoNullDeUnArray($detalles);
-    return response()->json([
-      'detalles' => $detalles,
+    $articulacion = Articulacion::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    $costo = $this->costoController->costosDeUnaActividad($articulacion->articulacion_proyecto->actividad->id);
+    return view('articulaciones.detalle', [
+      'articulacion' => $articulacion,
+      'costo' => $costo,
+      'historico' => $historico
     ]);
   }
 

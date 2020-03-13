@@ -201,9 +201,10 @@ class ArticulacionRepository
    */
   public function cerrarArticulacion($request, $articulacion)
   {
+    
     DB::beginTransaction();
     try {
-
+      
       $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cerró')->first(), [
         'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
         'user_id' => auth()->user()->id,
@@ -218,7 +219,6 @@ class ArticulacionRepository
       $articulacion->articulacion_proyecto->actividad()->update([
         'fecha_cierre' => $request->txtfecha_cierre
       ]);
-
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -894,6 +894,7 @@ class ArticulacionRepository
     'observaciones',
     'fecha_inicio',
     'fases.nombre AS nombre_fase',
+    'entidades.nombre AS nombre_nodo',
     'fecha_cierre')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
@@ -902,6 +903,7 @@ class ArticulacionRepository
     ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
     ->join('fases', 'fases.id', '=', 'articulaciones.fase_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
     ->where('nodos.id', $id)
     ->where('tipo_articulacion', Articulacion::IsGrupo())
     ->where(function ($q) use ($anho) {
@@ -1200,6 +1202,8 @@ class ArticulacionRepository
       $syncData = array();
       $syncData = $this->arraySyncTalentosDeUnaArticulacion($request);
       $articulacion_proyecto->talentos()->sync($syncData, false);
+
+      ArticulacionProyecto::habilitarTalentos($articulacion_proyecto);
 
       DB::commit();
       return true;

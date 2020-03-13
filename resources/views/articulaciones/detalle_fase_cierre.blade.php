@@ -68,13 +68,23 @@
                                                             {{$articulacion->articulacion_proyecto->actividad->nombre}}
                                                         </p>
                                                     </li>
+                                                    @if ($articulacion->fase->nombre == 'Cierre' || $articulacion->fase->nombre == 'Suspendido')
+                                                    <li class="collection-item">
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Fecha de cierre de la articulación
+                                                        </span>
+                                                        <p>
+                                                            {{$articulacion->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY-MM-DD')}}
+                                                        </p>
+                                                    </li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                             <div class="col s12 m4 l4">
                                                 <ul class="collection">
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            Costo Aproximado del Proyecto
+                                                            Costo aproximado de la articulación
                                                         </span>
                                                         <p>
                                                             $ {{$costo->getData()->costosTotales}}
@@ -100,7 +110,7 @@
                                             </div>
                                             <div class="col s12 m4 l4">
                                                 <ul class="collection with-header">
-                                                    <li class="collection-header"><h5>Productos alcanzados</h5></li>
+                                                    <li class="collection-header"><h5 class="title cyan-text text-darken-3">Productos alcanzados</h5></li>
                                                     @foreach ($articulacion->productos as $item)
                                                     <li class="collection-item">
                                                         <p>
