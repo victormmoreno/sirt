@@ -41,7 +41,9 @@ class TalentoController extends Controller
     public function datatableTalentosDeTecnoparque()
     {
         if (request()->ajax()) {
-            $talentos = Talento::ConsultarTalentosDeTecnoparque()->get();
+            $talentos = Talento::ConsultarTalentosDeTecnoparque()->with('user', function($query){
+                $query->withTrashed();
+            })->get();
             return datatables()->of($talentos)
                 ->addColumn('add_articulacion', function ($data) {
                     $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';

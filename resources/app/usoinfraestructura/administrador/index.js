@@ -54,12 +54,8 @@ var UsoInfraestructuraAdministrador = {
         let nodo = $('#selectnodo').val();
 
         if (nodo == null || nodo == ''){
-            Swal.fire(
-                'Error',
-                'Por favor selecciona  un nodo',
-                'error'
-              );
               $('#selectGestor').empty();
+              $('#selectGestor').append('<option value="" selected>Seleccione un Gestor</option>');
         }else{
             $.ajax({
                 type: 'GET',
@@ -70,7 +66,7 @@ var UsoInfraestructuraAdministrador = {
                 success: function (data) {
                     
                     $('#selectGestor').empty();
-                    $('#selectGestor').append('<option value="">Seleccione la Ciudad</option>')
+                    $('#selectGestor').append('<option value="">Seleccione un Gestor</option>')
                     $.each(data.gestores, function(i, e) {
                         $('#selectGestor').append('<option  value="'+i+'">'+e+'</option>');
                     })
@@ -91,31 +87,25 @@ var UsoInfraestructuraAdministrador = {
         
 
         if (nodo == null || nodo == ''){
-            Swal.fire(
-                'Error',
-                'Por favor selecciona  un nodo',
-                'error'
-            );
+            
             $('#selectGestor').empty();
+            $('#selectGestor').append('<option value="">Seleccione un Gestor</option>');
             $('#selectYear').empty();
+            $('#selectYear').append('<option value="">Seleccione un año</option>');
             $('#selectActivity').empty();
+            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
         }
         else if (gestor == null || gestor == ''){
-            Swal.fire(
-                'Error',
-                'Por favor selecciona  un gestor',
-                'error'
-            );
+            
             $('#selectYear').empty();
+            $('#selectYear').append('<option value="">Seleccione un año</option>');
             $('#selectActivity').empty();
+            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
         }
         else if(anho == null || anho == ''){
-            Swal.fire(
-                'Error',
-                'Por favor selecciona  un año',
-                'error'
-            );
+            
             $('#selectActivity').empty();
+            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
         }
         else{
             $.ajax({
@@ -127,7 +117,7 @@ var UsoInfraestructuraAdministrador = {
                 success: function (data) {
                   
                   $('#selectActivity').empty();
-                  $('#selectActivity').append('<option value="">Seleccione la Actividad</option>')
+                  $('#selectActivity').append('<option value="">Seleccione la Actividad</option>');
                   $.each(data.actividades, function(i, e) {
                     $('#selectActivity').append('<option  value="'+i+'">'+e+'</option>');
                   });
@@ -153,6 +143,9 @@ var UsoInfraestructuraAdministrador = {
               'Por favor selecciona un nodo',
               'error'
             );
+            $('#selectGestor').empty();
+            $('#selectGestor').append('<option value="">Seleccione un Gestor</option>');
+            
         }
         else if(gestor == '' || gestor == null){
             Swal.fire(
@@ -160,18 +153,28 @@ var UsoInfraestructuraAdministrador = {
             'Por favor selecciona un gestor',
             'error'
             );
+            $('#selectYear').empty();
+            $('#selectYear').append('<option value="">Seleccione un año</option>');
+            $('#selectActivity').empty();
+            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
         }else if(anho == '' || anho == null){
         Swal.fire(
           'Error',
           'Por favor selecciona un año',
           'error'
         );
+        
+            $('#selectActivity').empty();
+            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
       }else if(actividad == '' || actividad == null){
         Swal.fire(
             'Error',
             'Por favor selecciona una actividad',
             'error'
+            
         );
+            $('#selectActivity').empty();
+            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>')
       }
       else{
         $('#usoinfraestructura_administrador_table').dataTable().fnDestroy();

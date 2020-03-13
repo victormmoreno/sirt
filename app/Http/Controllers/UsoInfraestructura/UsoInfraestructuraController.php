@@ -37,6 +37,7 @@ class UsoInfraestructuraController extends Controller
     private $lineaRepository;
     private $UsoInfraestructuraDatatables;
     private $proyectoRepository;
+   
 
     public function __construct(
         ProyectoRepository $UsoInfraestructuraProyectoRepository,
@@ -47,6 +48,8 @@ class UsoInfraestructuraController extends Controller
         LineaRepository $lineaRepository,
         UsoInfraestructuraDatatables $UsoInfraestructuraDatatables,
         ProyectoRepository $proyectoRepository
+       
+        
     ) {
         $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento']);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
@@ -249,16 +252,6 @@ class UsoInfraestructuraController extends Controller
                     $query->where('id', $nodo);
                 })->get();
 
-                // $gestores = Gestor::select('id', 'user_id', 'nodo_id')
-                // ->with([
-                // //     'user' => function($query){
-                // //     $query->withTrashed();
-                   
-                // // },
-                // 'user' => function ($query) {
-                //     $query->select('id', 'documento', 'nombres', 'apellidos')->withTrashed();
-                // }
-                // ])->where('nodo_id', $nodo)->get();
 
                 $gestores = User::select('gestores.id')
                 ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as user')
@@ -275,35 +268,15 @@ class UsoInfraestructuraController extends Controller
                 break;
 
             case User::IsGestor():
-
-                // $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
-                // ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                //             $query->where('id', $user);
-                        
-                // })->whereHas('actividad', function($query){
-                //         $query->whereHas('articulacion_proyecto.proyecto.estadoproyecto', function ($query)  {
-                            
-                //         });
-                // })->orWhereHas('actividad', function($query){
-                //     $query->whereHas('articulacion_proyecto.articulacion', function ($query) {
-                //         $query->whereIn('estado',[0,1])->orWhereYear('fecha_inicio', Carbon::now()->year);
-                //     });
-                // })->orWhereHas('actividad', function($query){
-                //     $query->whereHas('edt', function ($query)  {
-                        
-
-                //     });
-                // })
-                // ->get();
-
-                $user= auth()->user()->gestor->id;
-                $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
-                ->where('gestores.id', $user)
-                // ->whereIn('fases.id', [1,2,3])
-                ->pluck( 'nombre', 'proyectos.id');
+                
+                // $user= auth()->user()->gestor->id;
+                // $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
+                // ->where('gestores.id', $user)
+                // // ->whereIn('fases.id', [1,2,3])
+                // ->pluck( 'nombre', 'proyectos.id');
                 
                 return view('usoinfraestructura.index', [
-                    'proyectos' => $proyectos,
+                    'gestor_id' => auth()->user()->gestor->id,
                 ]);
 
                 break;
@@ -477,12 +450,15 @@ class UsoInfraestructuraController extends Controller
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
             ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
-       
-
         $this->authorize('show', $usoinfraestructura);
 
+        $totalCostos = 0;
+
+        $totalCostos = $usoinfraestructura->usoequipos->sum('pivot.costo_equipo') + $usoinfraestructura->usogestores->sum('pivot.costo_asesoria') + $usoinfraestructura->usoequipos->sum('pivot.costo_administrativo') + $usoinfraestructura->usomateriales->sum('pivot.costo_material');
+        
         return view('usoinfraestructura.show', [
             'usoinfraestructura' => $usoinfraestructura,
+            'totalCostos' => $totalCostos,
         ]);
     }
 
@@ -1095,6 +1071,26 @@ class UsoInfraestructuraController extends Controller
         } else {
             abort('403');
         }
+    }
+
+    public function destroy(int $id)
+    {
+        $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->findOrFail($id);
+
+            $usoinfraestructura->usolaboratorios()->sync([]);
+            $usoinfraestructura->usoequipos()->sync([]);
+            $usoinfraestructura->usotalentos()->sync([]);
+            $usoinfraestructura->usomateriales()->sync([]);
+            $usoinfraestructura->usogestores()->sync([]);
+            $usoinfraestructura->delete();
+        
+            return response()->json([
+                'usoinfraestructura'=> 'success',
+                'route' => route('usoinfraestructura.index')
+            ]);
     }
 
 }

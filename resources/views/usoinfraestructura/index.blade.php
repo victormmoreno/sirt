@@ -201,16 +201,54 @@
                                 <div class="divider"></div>
                                 <br>
                                 <div class="row">
-                                    <div class="col s12 m12 l12">
-                                        <label class="active" for="selecProyecto">Proyecto <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selecProyecto" onchange="usoinfraestructuraIndex.selectProyectListDatatables()">
-                                            <option value="">Seleccione Proyecto</option>
-                                            @foreach($proyectos as $id => $proyecto)
+                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                    <div class="col s12 m6 l6">
+                                        <label class="active" for="selectYear">Año <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectYear" onchange="UsoInfraestructuraGestor.queryActivitiesByGestor({{$gestor_id}})">
+                                            <option value="" selected>Seleccione Año</option>
+                                            @for ($i=2016; $i <= $year; $i++)
+                                                <option value="{{$i}}" >{{$i}}</option>
+                                                @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m6 l6">
+                                        <label class="active" for="selectActivity">Actividad <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectActivity" >
+                                            <option value="">Seleccione Actividad</option>
+                                            {{-- @foreach($proyectos as $id => $proyecto)
                                               <option value="{{$id}}">{{$proyecto}}</option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>       
                                     </div>
+                                    
+                                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                                        <div class="col s12 m12 l12">
+                                            <label class="active" for="selecProyecto">Proyecto <span class="red-text">*</span></label>
+                                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selecProyecto" onchange="usoinfraestructuraIndex.selectProyectListDatatables()">
+                                                <option value="">Seleccione Proyecto</option>
+                                                @foreach($proyectos as $id => $proyecto)
+                                                <option value="{{$id}}">{{$proyecto}}</option>
+                                                @endforeach
+                                            </select>       
+                                        </div>
+                                    @endif
                                 </div>
+                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                <div class="row">
+                                    <div class="col s12 m4 l4 offset-l4">
+                                        <a onclick="UsoInfraestructuraGestor.ListActividadesPorGestor({{$gestor_id}})" href="javascript:void(0)">
+                                            <div class="card blue">
+                                                <div class="card-content center flow-text">
+                                                    <i class="left material-icons white-text small">search</i>
+                                                    <span class="white-text">Consultar Uso de Infraestructura</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <br>
+                                @endif
                                 <div class="row">
                                     <table class="display responsive-table" id="usoinfraestructura_table">
                                         <thead>

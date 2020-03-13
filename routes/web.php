@@ -393,11 +393,14 @@ Route::group([
     Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
         ->name('usoinfraestructura.projectsforuser.projects');
     
-        Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
+    Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
         ->name('usoinfraestructura.actividadesporgestor');
 
-        Route::get('usoinfraestructura/actividades/datatable/{gestor}/{anio}/{actividad}', 'UsoInfraestructuraController@getDatatableInfoActividad')
+    Route::get('usoinfraestructura/actividades/datatable/{gestor}/{anio}/{actividad}', 'UsoInfraestructuraController@getDatatableInfoActividad')
         ->name('usoinfraestructura.actividadesdatatable');
+    
+    Route::delete('usoinfraestructura/{id}', 'UsoInfraestructuraController@destroy')
+        ->name('usoinfraestructura.destroy');
 });
 
 /*=====  End of seccion para las rutas de uso de infraestructa  ======*/
@@ -1030,3 +1033,8 @@ Route::group(
         ]);
     }
 );
+
+
+Route::get('creditos', function(){
+    return view('configuracion.creditos');
+})->name('creditos');

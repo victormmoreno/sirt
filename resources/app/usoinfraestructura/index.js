@@ -6,6 +6,8 @@ $(document).ready(function() {
         },
         "lengthChange": false,
     });
+
+    
     
 });
 
@@ -55,6 +57,55 @@ var usoinfraestructuraIndex = {
                     "lengthChange": false
                 }).clear().draw();
             }
+        },
+    
+        destroyUsoInfraestructura: function(id){
+            
+            Swal.fire({
+                title: '¿Estas seguro de eliminar este uso de infraestructura?',
+                text: "Recuerde que si lo elimina no lo podrá recuperar.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'si, elminar uso',
+                cancelButtonText: 'No, cancelar',
+              }).then((result) => {
+                if (result.value) {
+
+                    let token = $("meta[name='csrf-token']").attr("content");
+                    $.ajax(
+                    {
+                        url: "/usoinfraestructura/"+id,
+                        type: 'DELETE',
+                        data: {
+                            "id": id,
+                            "_token": token,
+                        },
+                        success: function (data){
+                            if(data.usoinfraestructura == 'success'){
+                                Swal.fire(
+                                    'Eliminado!',
+                                    'Su uso de infraestructura ha sido eliminado satisfactoriamente.',
+                                    'success'
+                                  );
+                                location.href = data.route;
+                            }
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            alert("Error: " + errorThrown);
+                        }
+                    });
+                  
+                }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+                    swalWithBootstrapButtons.fire(
+                      'Cancelled',
+                      'Your imaginary file is safe :)',
+                      'error'
+                    )
+                  }
+              })
+                
+          
         }
-        
 }
