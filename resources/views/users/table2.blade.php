@@ -1,5 +1,5 @@
 @if(\Session::get('login_role') == App\User::IsDinamizador())
-    <table id="talentoByGestor_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
+    <table id="{{$id}}" class="display responsive-table datatable-example dataTable" style="width: 100%">
 @elseif(\Session::get('login_role') == App\User::IsAdministrador())
     <table id="talentoByAdministrador_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
 @endif

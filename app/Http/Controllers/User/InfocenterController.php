@@ -40,7 +40,6 @@ class InfocenterController extends Controller
                 break;
             case User::IsDinamizador():
                 return view('users.dinamizador.infocenter.index', [
-                    'nodos' => $this->userRepository->getAllNodos(),
                     'view' => 'activos'
                 ]);
                 break;
@@ -70,7 +69,6 @@ class InfocenterController extends Controller
                 break;
             case User::IsDinamizador():
                 return view('users.dinamizador.infocenter.index', [
-                    'nodos' => $this->userRepository->getAllNodos(),
                     'view' => 'inactivos'
                 ]);
                 break;
@@ -122,16 +120,38 @@ class InfocenterController extends Controller
 
         if (request()->ajax()) {
 
-            $users = $this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->dinamizador->nodo_id)
+            if(session()->get('login_role') == User::IsDinamizador()){
+                $users = $this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->dinamizador->nodo_id)
                         ->orderby('users.created_at', 'desc')
                         ->get();
             
-            return $this->userdatables->datatableUsers($request, $users);
+                return $this->userdatables->datatableUsers($request, $users);
+            }
+            abort('404');
         }
         abort('404');
 
     }
 
     /*=====  End of metodo para mostrar todos los infocenter de un determinado nodo  ======*/
+
+    public function getAllInfocentersOfNodoTrash(Request $request)
+    {
+
+        if (request()->ajax()) {
+
+            if(session()->get('login_role') == User::IsDinamizador()){
+                $users = $this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->dinamizador->nodo_id)
+                        ->onlyTrashed()
+                        ->orderby('users.created_at', 'desc')
+                        ->get();
+            
+                return $this->userdatables->datatableUsers($request, $users);
+            }
+            abort('404');
+        }
+        abort('404');
+
+    }
 
 }

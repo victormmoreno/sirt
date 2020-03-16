@@ -46,12 +46,9 @@ var user = {
           $('#txtciudad').material_select();
         });
     },
-    getGradoEscolaridad(gradoescolaridad){
-        let grado = $(gradoescolaridad).val();
-       
-      
+    getGradoDiscapacidad(gradodiscapacidad){
+        let grado = $(gradodiscapacidad).val();
         if (grado == 1) {
-        
             $('.gradodiscapacidad').removeAttr("style");
              
         }else{

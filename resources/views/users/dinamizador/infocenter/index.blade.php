@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -32,8 +32,12 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Infocenter Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                            @if($view == 'activos')
+                                            Infocenters con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            @else
+                                            Infocenters sin acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
+                                            @endif
                                             <i class="material-icons">
                                                 supervised_user_circle
                                             </i>
@@ -49,17 +53,13 @@
                             <div class="divider">
                             </div>
                             <br>
-                                <table class="display responsive-table" id="infocenters_dinamizador_table">
-                                    <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
-                                        <th>Administrador</th>
-                                        <th>Correo</th>
-                                        <th>Celular</th>
-                                        <th>Detalles</th>
-                                    </thead>
-                    
-                                </table>
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.infocenter.papelera'), 'message' => 'Ver Infocenters sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.infocenter.index'), 'message' => 'Ver Infocenters con acceso'])
+                            @if($view == 'activos')
+                                @include('users.table', ['id' => 'infocenters_dinamizador_table'] )  
+                            @elseif($view == 'inactivos')
+                                @include('users.table', ['id' => 'infocenters_dinamizador_inactivos_table'] ) 
+                            @endif
                         </div>
                     </div>
                 </div>
