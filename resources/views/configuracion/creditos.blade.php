@@ -14,7 +14,7 @@
 		                <div class="row">
 		                  <div class="col s12 m6 l12 m12  center-align">
 		                    <h1 style="-webkit-text-stroke: 2px black;
-                        color: transparent; " class="truncate tooltipped hand-of-Sean-fonts orange-text text-darken-3" data-position="bottom" data-delay="50" data-tooltip="RED TECNOPARQUE COLOMBIA" > RED TECNOPARQUE COLOMBIA</h1>
+                        color: transparent; " class="truncate  orange-text text-darken-3" data-position="bottom" data-delay="50" data-tooltip="RED TECNOPARQUE COLOMBIA" > RED TECNOPARQUE</h1>
 		                    <img class="responsive-img" style="width: 100%; height: 500px;" src="{{asset('img/Inicio.jpg')}}" alt="RED TECNOPARQUE COLOMBIA" title="RED TECNOPARQUE COLOMBIA" />
 		                  </div>
 						
@@ -36,7 +36,7 @@
 		                    <div class="card-content">
 		                      <div class="row">
 		                        <div class="col s12 m6 l12 m12  center-align">
-		                          <h3 class="hand-of-Sean-fonts orange-text text-darken-3">Créditos</h3>
+		                          <h3 class=" orange-text text-darken-3">CRÉDITOS</h3>
 		                          <div class="divider"></div><br>
 		                        </div>
 		                      </div>
@@ -161,7 +161,7 @@
                             </div>
                             <div class="row">
                                 <div class="col s12 m6 l12 m12  center-align">
-                                  <h3 class="hand-of-Sean-fonts orange-text text-darken-3">Agradecimientos</h3>
+                                  <h3 class="hand-of-Sean-fonts orange-text text-darken-3">AGRADECIMIENTOS</h3>
                                   <div class="divider"></div>
                                 </div>
                                 <div class="col s12 m8 l8 offset-l2 offset-m2  center-align">
@@ -174,7 +174,7 @@
                             </div>
                             <div class="row">
                               <div class="col s12 m6 l12 m12  center-align">
-                                <h3 class="hand-of-Sean-fonts orange-text text-darken-3">Bibliografía</h3>
+                                <h3 class="hand-of-Sean-fonts orange-text text-darken-3">BIBLIOGRAFIA</h3>
                                 <div class="divider"></div>
                               </div>
                               <div class="col s12 m8 l8 offset-l2 offset-m2  center-align">
