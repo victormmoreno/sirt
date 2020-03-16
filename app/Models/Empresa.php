@@ -65,7 +65,7 @@ class Empresa extends Model
 
     public function proyectos()
     {
-        return $this->morphToMany(Proyecto::class, 'propietario');
+        return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
     }
 
     // Relación a la tabla de sectores

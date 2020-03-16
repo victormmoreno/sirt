@@ -565,22 +565,38 @@ Route::group(
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor'],
     ],
     function () {
+        Route::get('/notificar_inicio/{id}', 'ArticulacionController@notificar_inicio')->name('articulacion.notificar.inicio')->middleware('role_session:Gestor');
+        Route::get('/notificar_planeacion/{id}', 'ArticulacionController@notificar_planeacion')->name('articulacion.notificar.planeacion')->middleware('role_session:Gestor');
+        Route::get('/notificar_ejecucion/{id}', 'ArticulacionController@notificar_ejecucion')->name('articulacion.notificar.ejecucion')->middleware('role_session:Gestor');
+        Route::get('/notificar_cierre/{id}', 'ArticulacionController@notificar_cierre')->name('articulacion.notificar.cierre')->middleware('role_session:Gestor');
 
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
+        Route::get('/inicio/{id}', 'ArticulacionController@inicio')->name('articulacion.inicio')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
+        Route::get('/planeacion/{id}', 'ArticulacionController@planeacion')->name('articulacion.planeacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
+        Route::get('/ejecucion/{id}', 'ArticulacionController@ejecucion')->name('articulacion.ejecucion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
+        Route::get('/cierre/{id}', 'ArticulacionController@cierre')->name('articulacion.cierre')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
+
         Route::get('/eliminarArticulacion/{id}', 'ArticulacionController@eliminarArticulación')->name('articulacion.delete')->middleware('role_session:Dinamizador');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create')->middleware('role_session:Gestor');
         Route::get('/datatableArticulacionesDelGestor/{id}/{anho}', 'ArticulacionController@datatableArticulacionesPorGestor')->name('articulacion.datatable');
         Route::get('/datatableArticulacionesDelNodo/{id}/{anho}', 'ArticulacionController@datatableArticulacionesPorNodo')->name('articulacion.datatable.nodo')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/{id}/edit', 'ArticulacionController@edit')->name('articulacion.edit')->middleware('role_session:Gestor|Dinamizador');
-        Route::get('/ajaxDetallesDeUnArticulacion/{id}', 'ArticulacionController@detallesDeUnArticulacion')->name('articulacion.detalle');
+        Route::get('/detalle/{id}', 'ArticulacionController@detalles')->name('articulacion.detalle')->middleware('role_session:Administrador|Dinamizador|Gestor');
         Route::get('/ajaxDetallesDeLosEntregablesDeUnaArticulacion/{id}', 'ArticulacionController@detallesDeLosEntregablesDeUnaArticulacion')->name('articulacion.detalle.entregables');
         Route::get('/consultarTiposArticulacion/{id}', 'ArticulacionController@consultarTipoArticulacion')->name('articulacion.tiposarticulacion');
         Route::get('/{id}/entregables', 'ArticulacionController@entregables')->name('articulacion.entregables');
-        Route::get('/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
+        Route::get('/archivosDeUnaArticulacion/{id}/{fase}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
         Route::get('/consultarEntidadDeLaArticulacion/{id}', 'ArticulacionController@consultarEntidadDeLaArticulacion')->name('articulacion.detalle.entidad');
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
+        Route::get('/entregables/inicio/{id}', 'ArticulacionController@entregables_inicio')->name('articulacion.entregables.inicio')->middleware('role_session:Gestor');
+        Route::get('/entregables/cierre/{id}', 'ArticulacionController@entregables_cierre')->name('articulacion.entregables.cierre')->middleware('role_session:Gestor');
+        Route::put('/inicio/{id}', 'ArticulacionController@updateInicio')->name('articulacion.update.inicio')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/planeacion/{id}', 'ArticulacionController@updatePlaneacion')->name('articulacion.update.planeacion')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/ejecucion/{id}', 'ArticulacionController@updateEjecucion')->name('articulacion.update.ejecucion')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/cierre/{id}', 'ArticulacionController@updateCierre')->name('articulacion.update.cierre')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables.inicio')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/updateEntregables_Cierre/{id}', 'ArticulacionController@updateEntregables_Cierre')->name('articulacion.update.entregables.cierre')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update')->middleware('role_session:Gestor|Dinamizador');
-        Route::put('/updateEntregables/{id}', 'ArticulacionController@updateEntregables')->name('articulacion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
         Route::post('/', 'ArticulacionController@store')->name('articulacion.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload')->middleware('role_session:Gestor');
 
@@ -600,6 +616,7 @@ Route::group(
         Route::get('/notificar_planeacion/{id}', 'ProyectoController@notificar_planeacion')->name('proyecto.notificar.planeacion')->middleware('role_session:Gestor');
         Route::get('/notificar_ejecucion/{id}', 'ProyectoController@notificar_ejecucion')->name('proyecto.notificar.ejecucion')->middleware('role_session:Gestor');
         Route::get('/notificar_cierre/{id}', 'ProyectoController@notificar_cierre')->name('proyecto.notificar.cierre')->middleware('role_session:Gestor');
+        Route::get('/notificar_suspendido/{id}', 'ProyectoController@notificar_suspendido')->name('proyecto.notificar.suspension')->middleware('role_session:Gestor');
 
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
@@ -619,6 +636,7 @@ Route::group(
         Route::get('/planeacion/{id}', 'ProyectoController@planeacion')->name('proyecto.planeacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/ejecucion/{id}', 'ProyectoController@ejecucion')->name('proyecto.ejecucion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/cierre/{id}', 'ProyectoController@cierre')->name('proyecto.cierre')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
+        Route::get('/suspender/{id}', 'ProyectoController@suspender')->name('proyecto.suspender')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/entregables/inicio/{id}', 'ProyectoController@entregables_inicio')->name('proyecto.entregables.inicio')->middleware('role_session:Gestor');
         Route::get('/entregables/cierre/{id}', 'ProyectoController@entregables_cierre')->name('proyecto.entregables.cierre')->middleware('role_session:Gestor');
         Route::get('/ajaxConsultarTalentosDeUnProyecto/{id}', 'ProyectoController@consultarTalentosDeUnProyecto')->name('proyecto.talentos');
@@ -629,6 +647,7 @@ Route::group(
         Route::put('/planeacion/{id}', 'ProyectoController@updatePlaneacion')->name('proyecto.update.planeacion')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/ejecucion/{id}', 'ProyectoController@updateEjecucion')->name('proyecto.update.ejecucion')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/cierre/{id}', 'ProyectoController@updateCierre')->name('proyecto.update.cierre')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables.inicio')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables_Cierre/{id}', 'ProyectoController@updateEntregables_Cierre')->name('proyecto.update.entregables.cierre')->middleware('role_session:Gestor|Dinamizador');
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
@@ -904,7 +923,9 @@ Route::group(
 function () {
   Route::get('/', 'PdfComiteController@printPDF')->name('print');
   Route::get('/usos_proyecto/{id}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.proyecto.usos');
-  Route::get('/inicio/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.incio');
+  Route::get('/inicio_proyecto/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.inicio');
+  Route::get('/inicio_articulacion/{id}', 'PdfArticulacionController@printFormularioInicio')->name('pdf.articulacion.inicio');
+  Route::get('/cierre_articulacion/{id}', 'PdfArticulacionController@printFormularioCierre')->name('pdf.articulacion.cierre');
   Route::get('/cierre/{id}', 'PdfProyectoController@printFormularioCierre')->name('pdf.proyecto.cierre');
   Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
 }
@@ -1007,32 +1028,32 @@ Route::resource('laboratorio', 'LaboratorioController')->parameters([
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
  */
-Route::group(
-    [
-        'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador', 'disablepreventback'],
-    ],
-    function () {
-        Route::get('intervencion/datatableIntervencionEmpresaDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesEmpresaPorGestor')->name('intervencion.datatable.gestor');
-        Route::get('intervencion/eliminarArticulacion/{id}', 'IntervencionEmpresaController@eliminarIntervencionEmpresa')->name('intervencion.delete')->middleware('role_session:Dinamizador');
-        Route::put('intervencion/updateEntregables/{id}', 'IntervencionEmpresaController@updateEntregables')->name('intervencion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
-        Route::get('intervencion/{id}/entregables', 'IntervencionEmpresaController@entregables')->name('intervencion.entregables');
-        Route::get('intervencion/ajaxDetallesDeUnaArticulacion/{id}', 'IntervencionEmpresaController@detallesDeUnaIntervencion')->name('intervencion.detalle');
-        Route::get('intervencion/datatableIntervencionesAEmpresasDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesAempresasPorGestor')->name('intervencion.datatable');
-        Route::get('intervencion/datatableIntervencionesDelNodo/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesPorNodo')->name('intervencion.datatable.nodo');
-        Route::get('intervencion/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
-        Route::resource('intervencion', 'IntervencionEmpresaController', ['except' => ['show', 'destroy']])->parameters([
-            'intervencion' => 'id',
-        ])->names([
-            'create'  => 'intervencion.create',
-            'update'  => 'intervencion.update',
-            'edit'    => 'intervencion.edit',
-            'destroy' => 'intervencion.destroy',
-            'show'    => 'intervencion.show',
-            'index'   => 'intervencion.index',
-            'store'   => 'intervencion.store',
-        ]);
-    }
-);
+// Route::group(
+//     [
+//         'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador', 'disablepreventback'],
+//     ],
+//     function () {
+//         Route::get('intervencion/datatableIntervencionEmpresaDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesEmpresaPorGestor')->name('intervencion.datatable.gestor');
+//         Route::get('intervencion/eliminarArticulacion/{id}', 'IntervencionEmpresaController@eliminarIntervencionEmpresa')->name('intervencion.delete')->middleware('role_session:Dinamizador');
+//         Route::put('intervencion/updateEntregables/{id}', 'IntervencionEmpresaController@updateEntregables')->name('intervencion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
+//         Route::get('intervencion/{id}/entregables', 'IntervencionEmpresaController@entregables')->name('intervencion.entregables');
+//         Route::get('intervencion/ajaxDetallesDeUnaArticulacion/{id}', 'IntervencionEmpresaController@detallesDeUnaIntervencion')->name('intervencion.detalle');
+//         Route::get('intervencion/datatableIntervencionesAEmpresasDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesAempresasPorGestor')->name('intervencion.datatable');
+//         Route::get('intervencion/datatableIntervencionesDelNodo/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesPorNodo')->name('intervencion.datatable.nodo');
+//         Route::get('intervencion/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
+//         Route::resource('intervencion', 'IntervencionEmpresaController', ['except' => ['show', 'destroy']])->parameters([
+//             'intervencion' => 'id',
+//         ])->names([
+//             'create'  => 'intervencion.create',
+//             'update'  => 'intervencion.update',
+//             'edit'    => 'intervencion.edit',
+//             'destroy' => 'intervencion.destroy',
+//             'show'    => 'intervencion.show',
+//             'index'   => 'intervencion.index',
+//             'store'   => 'intervencion.store',
+//         ]);
+//     }
+// );
 
 
 Route::get('creditos', function(){
