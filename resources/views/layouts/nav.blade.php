@@ -14,6 +14,11 @@
       </div>
       <ul class="right col s10 m10 l10 nav-right-menu">
         <li class="hide-on-small-and-down">
+        <a href="{{route('creditos')}}" title="Creditos" class="dropdown-button dropdown-right show-on-large">
+            <i class="material-icons">help</i>
+          </a>
+        </li>
+        <li class="hide-on-small-and-down">
           <a href="javascript:void(0)" data-activates="dropdown1" class="dropdown-button dropdown-right show-on-large">
             @if(auth()->user()->unreadNotifications->count() > 0)
               <i class="material-icons">notifications_active</i>
@@ -31,6 +36,8 @@
             @endif
           </a>
         </li>
+        
+        
         <li>
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest

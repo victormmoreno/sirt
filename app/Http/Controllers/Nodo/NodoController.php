@@ -93,21 +93,9 @@ class NodoController extends Controller
                 if (isset(auth()->user()->dinamizador)) {
                     $nodoAuth = auth()->user()->dinamizador->nodo->id;
                     $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                    ->orWhereHas('ingresos.user', function ($query) {
-                        $query->Where('deleted_at', 'null');
-                    })
-                    ->orWhereHas('gestores.user', function ($query) {
-                        $query->orWhere('deleted_at', 'null');
-                    })
-                    ->orWhereHas('infocenter.user', function ($query) {
-                        $query->orWhere('deleted_at', 'null');
-                    })
-                    ->orWhereHas('dinamizador.user', function ($query) {
-                        $query->orWhere('deleted_at', 'null');
-                    })
-                                    ->where('id', $nodoAuth)
+                                    ->where('nodos.id', $nodoAuth)
                                     ->first();
-                    // return $nodo;
+                
 
                     return view('nodos.show', [
                         'nodo'              => $nodo,
@@ -121,7 +109,10 @@ class NodoController extends Controller
 
                 if (isset(auth()->user()->gestor)) {
                     $nodoAuth = auth()->user()->gestor->nodo->id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()->where('id', $nodoAuth)->first();
+                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
+                                ->where('id', $nodoAuth)
+                                ->first();
+                    // return $nodo;
                     return view('nodos.show', [
                         'nodo'              => $nodo,
                         'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),

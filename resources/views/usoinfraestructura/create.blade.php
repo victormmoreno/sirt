@@ -416,8 +416,9 @@
                 }
 
                 if (response.lineastecnologicas.length != 0) {
-                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {        
-                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.abreviatura + ' ' + lineatecnologica.nombre + '</option>');
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
+                           
+                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
 
                 }else{
@@ -432,9 +433,10 @@
                 }else{
                     $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
                 }
-
+                console.log(response);
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
+                        
                         $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
                     });
                 }else{
@@ -732,7 +734,7 @@
                     type:'get',
                     url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
-            
+                    
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');

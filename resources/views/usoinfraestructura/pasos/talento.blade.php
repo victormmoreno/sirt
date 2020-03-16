@@ -29,19 +29,21 @@
             <div class="divider"></div>
             <div class="row">
                 <div class="col s12 m10 l10 offset-l1 m1">
-                    
+                    {{-- {{$usoinfraestructura->actividad->articulacion_proyecto->talentos->user}} --}}
                 <div class="row">
                         <div class="input-field col s10 m8 l8">
                             <select class="js-states browser-default select2" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
-
-                                @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos))
+                                
+                                @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos->user))
                                     <option value="">
                                         Seleccione Talento
                                     </option>
                                     @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                                    <option value="{{$talento->id}}">
-                                        {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}
-                                    </option>
+                                    @if(isset($talento->user))
+                                        <option value="{{$talento->id}}">
+                                            {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user->apellidos}}
+                                        </option>
+                                    @endif
                                     @endforeach
                                 @else
                                     @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()))
@@ -90,11 +92,13 @@
                         <tbody id="detalleTalento">
                             @if(isset($usoinfraestructura->usotalentos))
                                 @forelse ($usoinfraestructura->usotalentos as $key => $talento)
-                                        
+                                    @if(isset($talento->user))
                                         <tr id="filaTalento{{$talento->id}}">
                                             <td>
                                                 <input type="hidden" name="talento[]" value="{{$talento->id}}"/>
-                                                {{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->nombres}}
+                                                
+                                                {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user()->withTrashed()->first()->apellidos}}
+                                                
                                             </td>
                                             <td>
                                                 <a class="waves-effect red lighten-3 btn" onclick="eliminarTalento({{$talento->id}});">
@@ -102,6 +106,7 @@
                                                 </a>
                                             </td>
                                         </tr>
+                                    @endif
                                 @empty
                                     <tr>
                                         <td>

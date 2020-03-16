@@ -190,17 +190,17 @@ class UserFormRequest extends FormRequest
             'txtbarrio.min'                       => 'El barrio debe ser minimo 1 caracter',
             'txtbarrio.max'                       => 'El barrio debe ser máximo 100 caracteres',
 
-            'txttelefono.numeric'                 => 'El telefono debe ser numérico',
-            'txttelefono.digits_between'          => 'El telefono debe tener entre 6 y 11 digitos',
+            'txttelefono.numeric'                 => 'El teléfono debe ser numérico',
+            'txttelefono.digits_between'          => 'El teléfono debe tener entre 6 y 11 digitos',
 
             'txtcelular.numeric'                  => 'El celular debe ser numérico',
             'txtcelular.digits_between'           => 'El celular debe tener entre 10 y 11 digitos',
 
-            'txtgenero.required'                  => 'El genero es obligatorio.',
+            'txté.required'                  => 'El género es obligatorio.',
             'txtotraeps.required'                 => 'Por favor ingrese otra eps',
             'txtotraeps.min'                      => 'La otra eps debe ser minimo 1 caracter',
             'txtotraeps.max'                      => 'La otra eps debe ser minimo 45 caracteres',
-            'txtotraeps.regex'                    => 'El formato del campo otra eso es incorrecto',
+            'txtotraeps.regex'                    => 'El formato del campo otra eps es incorrecto',
 
 
             'txtgrado_discapacidad.required'                  => 'El grado de discapacidad es obligatorio.',
@@ -306,7 +306,7 @@ class UserFormRequest extends FormRequest
             'txtbarrio'            => 'barrio',
             'txttelefono'          => 'telefono',
             'txtcelular'           => 'celular',
-            'txtgenero'            => 'genero',
+            'txté'            => 'é',
             'txtotraeps'           => 'otra eps',
         ];
     }

@@ -72,7 +72,10 @@
 @push('script')
 <script>
     $(document).ready(function() {
-	        usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
+            usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
+            @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto))
+            usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->id}});
+            @endif
 	        
 	    });
 
@@ -368,7 +371,7 @@
                     $('#txtnodo').val();
                     $("label[for='txtlinea']").addClass('active');
                 }
-
+                console.log(response);
                 if (response.talentos.length != 0) {
                     $.each(response.talentos, function(e, talento) {
                         $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
@@ -379,7 +382,7 @@
 
                 if (response.lineastecnologicas.length != 0) {
                     $.each(response.lineastecnologicas, function(e, lineatecnologica) {        
-                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.abreviatura + ' ' + lineatecnologica.nombre + '</option>');
+                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' ' + lineatecnologica.nombre + '</option>');
                     });
                 }else{
                     $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
@@ -689,7 +692,9 @@
                     type:'get',
                     url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
-            
+                    console.log('response',response);
+                    console.log('nodo',nodo);
+                    console.log('lineatecnologica',lineatecnologica);
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');

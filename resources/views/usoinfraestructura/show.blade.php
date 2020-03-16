@@ -7,13 +7,17 @@
 	        <div class="row no-m-t no-m-b">
 	            <div class="col s12 m12 l12">
 	                <div class="row">
-	                    <div class="col s12 m6 l6">
-	                        <h5 class="left-align">
-	                            
+	                    <div class="col s12 m8 l8">
+	                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+	                            <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
+                                    <i class="material-icons arrow-l">
+                                        arrow_back
+                                    </i>
+                                </a>
 	                            Uso Infraestructura 
 	                        </h5>
 	                    </div>
-	                    <div class="col s12 m4 l4 offset-l2 m-2 rigth-align">
+	                    <div class="col s12 m4 l4 ">
 	                        <ol class="breadcrumbs">
 	                            <li><a href="{{route('home')}}">Inicio</a></li>
 	                            <li><a href="{{route('usoinfraestructura.index')}}">Uso Infraestructura </a></li>
@@ -33,39 +37,57 @@
                                             <div class="mailbox-view-header">
                                             	<div class="left">
                                                     <div class="left">
-                                                        <i class="material-icons left">
+                                                        <i class="material-icons left orange-text text-darken-3">
                                                             location_city
                                                         </i>
                                                     </div>
                                                     <div class="left">
-                                                        <span class="mailbox-title">
+                                                        <span class="mailbox-title orange-text text-darken-3">
 	                                                        Uso Infraestructura | {{$usoinfraestructura->actividad->codigo_actividad}} - {{$usoinfraestructura->actividad->nombre}}
 	                                                    </span>
 	                                                    <span class="mailbox-author">
 	                                                        <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->actividad->nodo->entidad->nombre}}, {{$usoinfraestructura->actividad->nodo->entidad->ciudad->nombre}} ({{$usoinfraestructura->actividad->nodo->entidad->ciudad->departamento->nombre}})<br/>
 	                                                        <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->actividad->gestor->lineatecnologica->nombre) ? $usoinfraestructura->actividad->gestor->lineatecnologica->nombre : 'No registra'}} <br/>
-	                                                       
 	                                                        <b>Gestor Asesor: </b> 
-	                                                        {{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}<br/>
+	                                                        {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->apellidos}}<br/>
 	                                                    </span>
                                                     </div>
-                                                    
                                                 </div>
+                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
                                                 <div class="right mailbox-buttons">
-                                                        <span class="mailbox-title">
-                                                            <p class="center">Información Uso Infraestructura</p><br/>
+                                                    <span class="mailbox-title">
                                                             
-                                                        </span>
-                                                    </div> 
-                                                
+                                                        <p class="center">
+                                                            Información Uso Infraestructura
+                                                                <div class="right">
+                                                                    <a class="waves-effect waves-light btn m-t-xs dropdown-button " data-activates="actifiad" href="#">
+                                                                        <i class="material-icons right">
+                                                                            more_vert
+                                                                        </i>
+                                                                        Más Información
+                                                                    </a>
+                                                                    <!-- Dropdown Structure -->
+                                                                    <ul class="dropdown-content" id="actifiad">
+                                                                        <li>
+                                                                        <a href="{{route('usoinfraestructura.edit',$usoinfraestructura->id)}}">
+                                                                                Cambiar Información
+                                                                            </a>
+                                                                        </li>
+                                                                        
+                                                                    </ul>
+                                                            </div>
+                                                        </p>  
+                                                    </span>
+                                                </div>
+                                                @endif
                                             </div>
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
                                                 <div class="row">
-                                                	<div class="col s12 m4 l4">
+                                                    <div class="col s12 m4 l4">
                                                         <div class="center">
-                                                            <span class="mailbox-title ">
+                                                            <span class="mailbox-title green-complement-text">
                                                                 Información {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}
                                                             </span>
                                                             
@@ -75,20 +97,20 @@
                                                                 <li class="collection-item ">
                                                                     
                                                                     <p>
-                                                                       <strong class="cyan-text text-darken-3"> Código de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
+                                                                        <strong class="cyan-text text-darken-3"> Código de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
                                                                         {{$usoinfraestructura->actividad->codigo_actividad}}
                                                                     </p>
                                                                     <p>
-                                                                       <strong class="cyan-text text-darken-3">Nombre de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
+                                                                        <strong class="cyan-text text-darken-3">Nombre de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
                                                                         {{$usoinfraestructura->actividad->nombre}}
                                                                     </p>
                                                                     <p>
-                                                                       <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
+                                                                        <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
                                                                         {{$usoinfraestructura->actividad->fecha_inicio->isoformat('LL')}}
                                                                     </p>
                                                                     @if(isset($usoinfraestructura->actividad->fecha_cierre) && $usoinfraestructura->actividad->fecha_cierre != null)
                                                                         <p>
-                                                                       <strong class="cyan-text text-darken-3">Fecha de Cierre :</strong>
+                                                                        <strong class="cyan-text text-darken-3">Fecha de Cierre :</strong>
                                                                         {{$usoinfraestructura->actividad->fecha_cierre->isoformat('LL')}}
                                                                     </p>
                                                                     @endif
@@ -96,8 +118,8 @@
 
                                                                         @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto) && $usoinfraestructura->actividad->articulacion_proyecto->proyecto != null)
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Tipo de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto->nombre}}
+                                                                                <strong class="cyan-text text-darken-3">Tipo de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
+                                                                                {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->tipoproyecto->nombre : 'No registra'}}
                                                                             </p>
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Sublinea:</strong>
@@ -105,25 +127,25 @@
                                                                             </p>
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Sector:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->sector->nombre}}
+                                                                                {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->sector) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->sector->nombre : 'No registra'}}
                                                                             </p>
                                                                             <p>
                                                                                <strong class="cyan-text text-darken-3">Área de Conocimiento:</strong>
                                                                                 {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->areaconocimiento->nombre}}
                                                                             </p>
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Estado del Proyecto:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->estadoproyecto->nombre}}
+                                                                                <strong class="cyan-text text-darken-3">Fase del Proyecto:</strong>
+                                                                                {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase->nombre : 'No registra' }}
                                                                             </p>
                                                                         @elseif(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion != null)
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Tipo Articulación:</strong>
+                                                                                <strong class="cyan-text text-darken-3">Tipo Articulación:</strong>
                                                                                 {{$usoinfraestructura->actividad->articulacion_proyecto->articulacion->tipoarticulacion->nombre}}
                                                                             </p>
                                                                             
                                                                             @if(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion != null)
                                                                                     <p>
-                                                                                   <strong class="cyan-text text-darken-3">Fecha de Ejecucíon :</strong>
+                                                                                    <strong class="cyan-text text-darken-3">Fecha de Ejecucíon :</strong>
                                                                                     {{$usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion->isoformat('LL')}}
                                                                                 </p>
                                                                             @endif
@@ -134,27 +156,27 @@
                                                                     @elseif(isset($usoinfraestructura->actividad->edt) && $usoinfraestructura->actividad->edt != null)
                                                                     
                                                                         <p>
-                                                                           <strong class="cyan-text text-darken-3">Área de conocimiento:</strong>
+                                                                            <strong class="cyan-text text-darken-3">Área de conocimiento:</strong>
                                                                             {{$usoinfraestructura->actividad->edt->areaconocimiento->nombre}}
                                                                         </p>
                                                                         <p>
-                                                                           <strong class="cyan-text text-darken-3">Tipo de EDT:</strong>
+                                                                            <strong class="cyan-text text-darken-3">Tipo de EDT:</strong>
                                                                             {{$usoinfraestructura->actividad->edt->tipoedt->nombre}}
                                                                         </p>
                                                                         <p>
-                                                                           <strong class="cyan-text text-darken-3">Empleados:</strong>
+                                                                            <strong class="cyan-text text-darken-3">Empleados:</strong>
                                                                             {{$usoinfraestructura->actividad->edt->empleados}}
                                                                         </p>
                                                                         <p>
-                                                                           <strong class="cyan-text text-darken-3">Instructores:</strong>
+                                                                            <strong class="cyan-text text-darken-3">Instructores:</strong>
                                                                             {{$usoinfraestructura->actividad->edt->instructores}}
                                                                         </p>
                                                                         <p>
-                                                                           <strong class="cyan-text text-darken-3">Aprendices:</strong>
+                                                                            <strong class="cyan-text text-darken-3">Aprendices:</strong>
                                                                             {{$usoinfraestructura->actividad->edt->aprendices}}
                                                                         </p>
                                                                         <p>
-                                                                           <strong class="cyan-text text-darken-3">Público:</strong>
+                                                                            <strong class="cyan-text text-darken-3">Público:</strong>
                                                                             {{$usoinfraestructura->actividad->edt->publico}}
                                                                         </p>
                                                                     @endif
@@ -167,29 +189,29 @@
                                                                     </span>
                                                                     
                                                                 </div>
-                                                                 <ul class="collection">
+                                                                <ul class="collection">
                                                                     @forelse($usoinfraestructura->actividad->edt->entidades as $entidad)
                                                                         <li class="collection-item avatar">
                                                                             <i class="material-icons circle teal darken-2">
                                                                                 business_center
                                                                             </i>
                                                                             <span class="title">
-                                                                               {{$entidad->empresa->nit}} - {{$entidad->nombre}}
+                                                                                {{$entidad->empresa->nit}} - {{$entidad->nombre}}
                                                                             </span>
                                                                             <p>
-                                                                               {{$entidad->ciudad->nombre}} ({{$entidad->ciudad->departamento->nombre}})
+                                                                                {{$entidad->ciudad->nombre}} ({{$entidad->ciudad->departamento->nombre}})
                                                                             </p>
                                                                             <p>
-                                                                               {{$entidad->email_entidad}}
+                                                                                {{$entidad->email_entidad}}
                                                                             </p>
                                                                             <p>
-                                                                               {{$entidad->empresa->direccion}}
+                                                                                {{$entidad->empresa->direccion}}
                                                                             </p>
                                                                             
                                                                         </li>
                                                                     @empty
                                                                     <div class="center">
-                                                                       <i class="large material-icons center">
+                                                                        <i class="large material-icons center">
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">No se encontraron resultados</p> 
@@ -200,10 +222,40 @@
                                                             @endif
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
+                                                        <ul class="collection">
+                                                            <li class="collection-item ">
+                                                                <p class="title">
+                                                                    <strong class="cyan-text text-darken-3">Costos de Asesoria: </strong>$ {{number_format($usoinfraestructura->usogestores->sum('pivot.costo_asesoria'),0)}}
+                                                                </p>
+                                                            </li>
+                                                            @if(isset($usoinfraestructura->usoequipos))
+                                                                <li class="collection-item ">
+                                                                    <p class="title">
+                                                                        <strong class="cyan-text text-darken-3">Costos de Equipos: </strong>$ {{number_format($usoinfraestructura->usoequipos->sum('pivot.costo_equipo'),0)}}
+                                                                    </p>
+                                                                    <p class="title">
+                                                                        <strong class="cyan-text text-darken-3">Costos Administrativos: </strong>$ {{number_format($usoinfraestructura->usoequipos->sum('pivot.costo_administrativo'),0)}}
+                                                                    </p>
+                                                                </li>
+                                                            @endif
+                                                            @if(isset($usoinfraestructura->usomateriales))
+                                                                <li class="collection-item ">
+                                                                    <p class="title">
+                                                                        <strong class="cyan-text text-darken-3">Costos de Materiales de formación: </strong>$ {{number_format($usoinfraestructura->usomateriales->sum('pivot.costo_material'),0)}}
+                                                                    </p>
+                                                                </li>
+                                                            @endif
+                                                            <li class="collection-item ">
+                                                                <p class="title">
+                                                                    <strong class="cyan-text text-darken-3">Total Costos: </strong>$ {{number_format($totalCostos,0)}}
+                                                                </p>
+                                                            </li>
+                                                            
+                                                        </ul>
                                                     </div>
                                                     <div class="col s12 m8 l8">
                                                         <div class="center">
-                                                            <span class="mailbox-title ">
+                                                            <span class="mailbox-title green-complement-text">
                                                                 Información Uso Infraestructura
                                                             </span>
                                                             
@@ -215,10 +267,10 @@
                                                                     <li class="collection-item ">
                                                                         
                                                                         <span class="title cyan-text text-darken-3">
-                                                                           Fecha
+                                                                            Fecha
                                                                         </span>
                                                                         <p>
-                                                                           {{$usoinfraestructura->fecha->isoformat('LL')}}
+                                                                            {{$usoinfraestructura->fecha->isoformat('LL')}}
                                                                         </p>
                                                                     </li>
                                                                 </ul>
@@ -228,13 +280,11 @@
                                                             <div class="col s12 m6 l6">
                                                                 <ul class="collection">
                                                                     <li class="collection-item ">
-                                                        
                                                                         <span class="title cyan-text text-darken-3">
-                                                                           Asesoria Directa 
+                                                                            Asesoria Directa 
                                                                         </span>
                                                                         <p>
                                                                             {{$usoinfraestructura->usogestores->sum('pivot.asesoria_directa')}}
-                                                                       
                                                                         </p>
                                                                     </li>
                                                                 </ul>
@@ -243,11 +293,10 @@
                                                                 <ul class="collection">
                                                                     <li class="collection-item ">
                                                                         <span class="title cyan-text text-darken-3">
-                                                                           Asesoria Indirecta
+                                                                            Asesoria Indirecta
                                                                         </span>
                                                                         <p>
                                                                             {{$usoinfraestructura->usogestores->sum('pivot.asesoria_indirecta')}}
-                                                                       
                                                                         </p>
                                                                     </li>
                                                                 </ul>
@@ -257,74 +306,74 @@
                                                             <div class="col s12 m12 l12">
                                                                 <ul class="collection">
                                                                     <li class="collection-item ">
-                                                                    
                                                                         <span class="title cyan-text text-darken-3">
-                                                                           Descripción
+                                                                            Descripción
                                                                         </span>
                                                                         <p>
-                                                                           {{isset($usoinfraestructura->descripcion) && $usoinfraestructura->descripcion != '' ? $usoinfraestructura->descripcion : 'No registra'}}
+                                                                            {{isset($usoinfraestructura->descripcion) && $usoinfraestructura->descripcion != '' ? $usoinfraestructura->descripcion : 'No registra'}}
                                                                         </p>
                                                                     </li>
                                                                 </ul>
                                                             </div>
                                                         </div>
-                                                        {{-- @if ($usoinfraestructura->usogestores->isEmpty()) --}}
-                                                            <div class="row">
-                                                                <div class="col s12 m6 l6 offset-l3 m3">
-                                                                    <div class="center">
-                                                                        <span class="mailbox-title ">
-                                                                            Asesores ({{$usoinfraestructura->usogestores->count()}})
-                                                                        </span> 
-                                                                    </div>
-                                                                    <div class="divider mailbox-divider"></div>
-                                                                    <ul class="collection">
-                                                                        
-                                                                        
-                                                                            @forelse ($usoinfraestructura->usogestores as $usogestor) 
-                                                                            <li class="collection-item ">
-                                                                                <span class="title cyan-text text-darken-3">
-                                                                                    {{$usogestor->user->documento}} - {{$usogestor->user->nombres}} {{$usogestor->user->apellidos}}
-                                                                                </span>
-                                                                                @if ($usogestor->pivot->asesoria_directa == 1) 
-                                                                                    <p class="title">
-                                                                                        <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  hora
-                                                                                    </p>
-                                                                                @elseif($usogestor->pivot->asesoria_directa == 0)
-                                                                                    <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>No registra
-                                                                                @else
-                                                                                    <p class="title">
-                                                                                         <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  horas
-                                                                                    </p> 
-                                                                                @endif
-                                                                                @if ($usogestor->pivot->asesoria_indirecta == 1) 
-                                                                                    <p class="title">
-                                                                                        <strong class="cyan-text text-darken-3">Horas Asesoria Indirecta: </strong>{{$usogestor->pivot->asesoria_indirecta}}  hora
-                                                                                    </p>
-                                                                                @elseif($usogestor->pivot->asesoria_indirecta == 0)
-                                                                                    <strong class="cyan-text text-darken-3">Horas Asesoria Indirecta: </strong>No registra
-                                                                                @else
-                                                                                    <p class="title">
-                                                                                         <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_indirecta}}  horas
-                                                                                    </p> 
-                                                                                @endif
-                                                                            </li>
-                                                                            @empty
-                                                                                <div class="center">
-                                                                                   <i class="large material-icons center">
-                                                                                        block
-                                                                                    </i>
-                                                                                    <p class="center-align">No se encontraron resultados</p> 
-                                                                                </div>
-                                                                            @endforelse
-                                                                        
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        {{-- @endif --}}
                                                         <div class="row">
                                                             <div class="col s12 m6 l6 offset-l3 m3">
                                                                 <div class="center">
-                                                                    <span class="mailbox-title ">
+                                                                    <span class="mailbox-title green-complement-text">
+                                                                        Asesores ({{$usoinfraestructura->usogestores->count()}})
+                                                                    </span> 
+                                                                </div>
+                                                                <div class="divider mailbox-divider"></div>
+                                                                <ul class="collection">
+                                                                    @forelse ($usoinfraestructura->usogestores as $usogestor) 
+                                                                    <li class="collection-item ">
+                                                                        @if(isset( $usogestor))
+                                                                        
+                                                                        <p class="title">
+                                                                            <strong class="cyan-text text-darken-3">Asesor: </strong>{{$usogestor->user()->withTrashed()->first()->documento}} - {{$usogestor->user()->withTrashed()->first()->nombres}} {{$usogestor->user()->withTrashed()->first()->apellidos}}
+                                                                        </p>
+                                                                        @endif
+                                                                        @if ($usogestor->pivot->asesoria_directa == 1) 
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  hora
+                                                                            </p>
+                                                                        @elseif($usogestor->pivot->asesoria_directa == 0)
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>No registra
+                                                                            </p>
+                                                                        @else
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_directa}}  horas
+                                                                            </p> 
+                                                                        @endif
+                                                                        @if ($usogestor->pivot->asesoria_indirecta == 1) 
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Horas Asesoria Indirecta: </strong>{{$usogestor->pivot->asesoria_indirecta}}  hora
+                                                                            </p>
+                                                                        @elseif($usogestor->pivot->asesoria_indirecta == 0)
+                                                                            <strong class="cyan-text text-darken-3">Horas Asesoria Indirecta: </strong>No registra
+                                                                        @else
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Horas Asesoria Directa: </strong>{{$usogestor->pivot->asesoria_indirecta}}  horas
+                                                                            </p> 
+                                                                        @endif
+                                                                    </li>
+                                                                    @empty
+                                                                        <div class="center">
+                                                                            <i class="large material-icons center">
+                                                                                block
+                                                                            </i>
+                                                                            <p class="center-align">No se encontraron resultados</p> 
+                                                                        </div>
+                                                                    @endforelse
+                                                                    
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col s12 m6 l6 offset-l3 m3">
+                                                                <div class="center">
+                                                                    <span class="mailbox-title green-complement-text">
                                                                         Talentos ({{$usoinfraestructura->usotalentos->count()}})
                                                                     </span> 
                                                                 </div>
@@ -332,20 +381,18 @@
                                                                 <ul class="collection">
                                                                     @forelse($usoinfraestructura->usotalentos as $usotal)
                                                                         <li class="collection-item ">
-                                                                            
                                                                             <span class="title">
-                                                                               {{$usotal->user->documento}} - {{$usotal->user->nombres}} {{$usotal->user->apellidos}}
+                                                                                {{$usotal->user()->withTrashed()->first()->documento}} - {{$usotal->user()->withTrashed()->first()->nombres}} {{$usotal->user()->withTrashed()->first()->apellidos}}
                                                                             </span>
                                                                         </li>
                                                                     @empty
                                                                     <div class="center">
-                                                                       <i class="large material-icons center">
+                                                                        <i class="large material-icons center">
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">No se encontraron resultados</p> 
                                                                     </div>
                                                                     @endforelse
-                                                                    
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -353,7 +400,7 @@
                                                         <div class="row">
                                                             <div class="col s12 m6 l6">
                                                                 <div class="center">
-                                                                    <span class="mailbox-title ">
+                                                                    <span class="mailbox-title green-complement-text">
                                                                         Equipos ({{$usoinfraestructura->usoequipos->count()}})
                                                                     </span> 
                                                                 </div>
@@ -361,30 +408,28 @@
                                                                 <ul class="collection">
                                                                     @forelse($usoinfraestructura->usoequipos as $usoequipo)
                                                                         <li class="collection-item ">
-                                                                            
-                                                                            <span class="cyan-text text-darken-3">
-                                                                               Nombre: 
-                                                                            </span>
-                                                                            {{$usoequipo->nombre}}
-                                                                            <p class="cyan-text text-darken-3">
-                                                                                Referencia: 
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Nombre: </strong>{{$usoequipo->nombre}}
                                                                             </p>
-                                                                            {{$usoequipo->referencia}}
+                                                                            <p class="title">
+                                                                                <strong class="cyan-text text-darken-3">Referencia: </strong>{{$usoequipo->referencia}}
+                                                                            </p>
                                                                         </li>
                                                                     @empty
                                                                     <div class="center">
-                                                                       <i class="large material-icons center">
+                                                                        <i class="large material-icons center">
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">No se encontraron resultados</p> 
                                                                     </div>
                                                                     @endforelse
                                                                     
+                                                                    
                                                                 </ul>
                                                             </div>
                                                             <div class="col s12 m6 l6">
                                                                 <div class="center">
-                                                                    <span class="mailbox-title ">
+                                                                    <span class="mailbox-title green-complement-text">
                                                                         Materiales de Formación ({{$usoinfraestructura->usomateriales->count()}})
                                                                     </span> 
                                                                 </div>
@@ -394,30 +439,34 @@
                                                                         <li class="collection-item ">
                                                                             
                                                                             <span class="title">
-                                                                               <strong class="cyan-text text-darken-3">Material:</strong> {{$usomaterial->codigo_material}} {{$usomaterial->nombre}} 
+                                                                                <strong class="cyan-text text-darken-3">Material:</strong> {{$usomaterial->codigo_material}} {{$usomaterial->nombre}} 
                                                                             </span>
                                                                             <p>
-                                                                               <strong class="cyan-text text-darken-3">Cantidad:</strong> {{$usomaterial->pivot->unidad}}  
+                                                                                <strong class="cyan-text text-darken-3">Cantidad:</strong> {{$usomaterial->pivot->unidad}}  
                                                                             </p>   
                                                                         </li>
                                                                     @empty
                                                                     <div class="center">
-                                                                       <i class="large material-icons center">
+                                                                        <i class="large material-icons center">
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">No se encontraron resultados</p> 
                                                                     </div>
                                                                     @endforelse
-                                                                    
                                                                 </ul>
                                                             </div>
                                                         </div>
                                                         <div class="right">
-                                                            <a href="{{route('usoinfraestructura.index')}}" class="btn waves-effect cyan darken-2 center-aling"><i class="material-icons right">
+                                                            <a href="{{route('usoinfraestructura.edit',$usoinfraestructura->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
+                                                                Cambiar Información 
+                                                            </a>
+                                                            <a href="javascript:void(0)"  class="waves-effect waves-teal  darken-2 red darken-2 btn-flat m-t-xs center-aling" onclick="usoinfraestructuraIndex.destroyUsoInfraestructura({{$usoinfraestructura->id}})">
+                                                                <i class="material-icons right">
                                                                     arrow_back
                                                                 </i>
-                                                                volver
+                                                                Eliminar
                                                             </a>
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>

@@ -10,7 +10,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -32,12 +32,12 @@
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l10">
-                                    <div class="center-align">
+                                    <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                         <span class="card-title center-align">
                                             @if($view == 'activos')
-                                                Talentos {{config('app.name')}}
-                                            @elseif($view == 'inactivos')
-                                                Talentos sin acceso {{config('app.name')}}
+                                            Talentos con acceso y  con proyectos en {{config('app.name')}}
+                                            @else
+                                            Talentos sin acceso y con proyectos en {{config('app.name')}}
                                             @endif
 
                                         </span>

@@ -107,25 +107,34 @@ class IngresoController extends Controller
     =            metodo para mostrar todos los usuarios ingreso de determinado nodo            =
     =======================================================================================*/
 
-    public function getAllIngresoOfNodo()
+    public function getAllIngresoOfNodo(Request $request)
     {
 
         if (request()->ajax()) {
-
-            return datatables()->of($this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id))
-                ->addColumn('detail', function ($data) {
-
-                    $button = '<a href="' . route("usuario.usuarios.show", $data->documento) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
-                    return $button;
-                })
-                
-                ->rawColumns(['detail'])
-                ->make(true);
+            if(session()->get('login_role') == User::IsDinamizador()){
+                $users = $this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id)->get();
+            return $this->userdatables->datatableUsers($request, $users);
+            }
+            abort('404');
         }
         abort('404');
-
     }
 
     /*=====  End of metodo para mostrar todos los usuarios ingreso de determinado nodo  ======*/
+
+    public function getAllIngresoOfNodoTrash(Request $request)
+    {
+
+        if (request()->ajax()) {
+            if(session()->get('login_role') == User::IsDinamizador()){
+                $users = $this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id)
+                ->onlyTrashed()
+                ->get();
+            return $this->userdatables->datatableUsers($request, $users);
+            }
+            abort('404');
+        }
+        abort('404');
+    }
 
 }

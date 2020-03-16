@@ -144,15 +144,35 @@ class GestorController extends Controller
     {
         if (request()->ajax()) {
 
-                $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)
-                ->orderby('users.created_at', 'desc')
-                ->get();
+                if(session()->get('login_role') == User::IsDinamizador()){
+                    $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
 
-                return $this->userdatables->datatableUsers($request, $users);
+                    return $this->userdatables->datatableUsers($request, $users);
+                }
+                abort('404');
         }
         abort('404');
     }
 
     /*=====  End of metodo para mostrar los gestores de un determnado nodo  ======*/
+
+    public function getAllGestoresOfNodoTrash(Request $request)
+    {
+        if (request()->ajax()) {
+
+                if(session()->get('login_role') == User::IsDinamizador()){
+                    $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)
+                    ->onlyTrashed()
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+                    return $this->userdatables->datatableUsers($request, $users);
+                }
+                abort('404');
+        }
+        abort('404');
+    }
 
 }

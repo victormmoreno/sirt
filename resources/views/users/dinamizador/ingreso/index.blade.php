@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -31,9 +31,14 @@
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l10">
-                                    <div class="center-align">
+                                    <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                         <span class="card-title center-align">
-                                            Ingreso Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            
+                                            @if($view == 'activos')
+                                            Usuarios Ingresos con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            @else
+                                            Usuarios Ingresos sin acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
+                                            @endif
                                             <i class="material-icons">
                                                 supervised_user_circle
                                             </i>
@@ -48,18 +53,14 @@
                             </div>
                             <div class="divider">
                             </div>
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.ingreso.papelera'), 'message' => 'Ver Usuarios Ingresos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.ingreso.index'), 'message' => 'Ver Usuarios Ingresos con acceso'])
                             <br>
-                                <table class="display responsive-table" id="ingresos_dinamizador_table">
-                                    <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
-                                        <th>Usuario</th>
-                                        <th>Correo</th>
-                                        <th>Celular</th>
-                                        <th>Detalles</th>
-                                    </thead>
-                    
-                                </table>
+                            @if($view == 'activos')
+                                @include('users.table', ['id' => 'ingresos_dinamizador_table'] )  
+                            @elseif($view == 'inactivos')
+                                @include('users.table', ['id' => 'ingresos_dinamizador_inactivos_table'] ) 
+                            @endif
                         </div>
                     </div>
                 </div>

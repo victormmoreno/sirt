@@ -9,12 +9,21 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s10 m10 l10">
-                        <h5 class="left-align">
-                            <i class="material-icons left">
-                                supervised_user_circle
-                            </i>
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
                             Usuarios | Acceso
                         </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align rigth-align show-on-large hide-on-med-and-down">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Acceso</li>
+                        </ol>
                     </div>
                 </div>
                 <div class="row">
@@ -49,7 +58,7 @@
                                                             <blockquote>
                                                                 <ul class="collection">
                                                                     <li class="collection-item">
-                                                                        <h5 class="title center"><b> Acceso</b></h5>
+                                                                        <h5 class="title center green-complement-text"><b> Acceso</b></h5>
                                                                     <p>Después de una actualización correcta del acceso a la plataforma, si el usuario fue Inhabilitado no podrá acceder a la plataforma {{config('app.name')}}</p>
                                                                     </li>
                                                 
@@ -59,7 +68,7 @@
                                                         <div class="col s12 m9 l9"><br>
                                                             
                                                             <div class="center">
-                                                                <span class="title">Cambia Acceso a la plataforma {{config('app.name')}}</span>
+                                                                <span class="title green-complement-text">Cambia Acceso a la plataforma {{config('app.name')}}</span>
                                                             </div>
                                                             <div class="divider mailbox-divider">
                                                             </div>

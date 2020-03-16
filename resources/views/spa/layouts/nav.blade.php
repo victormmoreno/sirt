@@ -23,6 +23,7 @@
           <li class="hide-on-med-and-down"><a href="#objetivos" title="Haz clic aquí para ver los objetivos">OBJETIVOS</a></li>
           <li class="hide-on-med-and-down"><a href="#tecnoparque" title="Haz clic aquí para ver que es tecnnoparque">¿QUÉ ES TECNOPARQUE? </a></li>
           {{-- <li class="hide-on-med-and-down"><a href="" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Descarga TECNOPARQUE RA"> TECNOPARQUE RA</a></li> --}}
+          <li class="hide-on-med-and-down"><a href="{{route('creditos')}}" rel="canonical" title="Haz clic aquí para ver los créditos"> CRÉDITOS</a></li>
         </ul>
         <ul class="col s2 m1 l2 nav-right-menu">
           <li class="hide-on-med-and-down"><a href="{{ route('login') }}" rel="canonical" title="Haz clic aquí para iniciar sesión" class="waves-effect waves-light btn">{{ __('Login') }}</a></li>
@@ -56,6 +57,7 @@
     <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="#objetivos"><i class="material-icons">info_outline</i>OBJETIVOS</a></li>
     <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="#tecnoparque"><i class="material-icons">info_outline</i>¿QUÉ ES TECNOPARQUE?</a></li>
     {{-- <li class="hide-on-large-only"><a href="" class="waves-effect waves-grey" ><i class="material-icons">cloud_download</i> TECNOPARQUE RA</a></li> --}}
+  <li class="hide-on-large-only"><a href="{{route('creditos')}}" class="waves-effect waves-grey" ><i class="material-icons">help</i> CRÉDITOS</a></li>
 
     <li class="hide-on-large-only"><a href="{{ route('login') }}" rel="canonical"  class="waves-effect waves-light btn"><i class="material-icons left">fingerprint</i> Iniciar Sesión</a></li>
 
