@@ -15,19 +15,15 @@
             <div class="row">
               @include('proyectos.navegacion_fases')
               <div class="row">
-                <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
+                <div class="col s12 m12 l12 center">
                   @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
-                  <a href="{{route('proyecto.notificar.ejecucion', $proyecto->id)}}">
-                    <div class="card-panel yellow accent-1 black-text">
+                    <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.ejecucion', $proyecto->id)}}">
                       Solicitar al dinamizador que apruebe la fase de ejecución.
-                    </div>
-                  </a>
+                    </a>
                   @else
-                  <a disabled>
-                    <div class="card-panel yellow accent-1 black-text">
+                    <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>
                       Esta fase ya ha sido aprobada por el dinamizador.
-                    </div>
-                  </a>
+                    </a>
                   @endif
                 </div>
               </div>

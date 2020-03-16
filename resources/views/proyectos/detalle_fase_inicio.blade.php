@@ -241,7 +241,7 @@
                                                     @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
                                                         <tr>
                                                         <td>{{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}</td>
-                                                        <td>{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
+                                                        <td>{{$value->user->documento}} - {{$value->user->nombres}} {{$value->user->apellidos}}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

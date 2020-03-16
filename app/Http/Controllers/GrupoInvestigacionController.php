@@ -166,6 +166,11 @@ class GrupoInvestigacionController extends Controller
           <i class="material-icons">local_phone</i>
           </a>
           ';
+          // $contact = '
+          // <a class="btn orange lighten-3 m-b-xs modal-trigger" href="#modal1" onclick="consultarContactosDeUnaEntidad('. $data->id_entidad .')">
+          // <i class="material-icons">local_phone</i>
+          // </a>
+          // ';
           return $contact;
         })->addColumn('edit', function ($data) {
           $edit = '<a href="'. route("grupo.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';

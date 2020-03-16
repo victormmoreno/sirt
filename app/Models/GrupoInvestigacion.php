@@ -33,7 +33,7 @@ class GrupoInvestigacion extends Model
 
     public function proyectos()
     {
-        return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
+        return $this->morphToMany(Proyecto::class, 'propietario');
     }
 
 

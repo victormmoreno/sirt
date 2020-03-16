@@ -3,9 +3,9 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role};
-use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado};
+use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, UsoInfraestructura};
+use Illuminate\Support\Facades\{DB, Notification, Storage};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre};
 use Carbon\Carbon;
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
@@ -843,8 +843,9 @@ class ProyectoRepository
       DB::rollback();
       return false;
     }
-  }
 
+  }
+  
   /**
    * Cambia el estado del proyecto a Cierre y asigna un fecha de cierre al proyecto
    * @param Request $request
@@ -857,13 +858,6 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
 
-      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cerró')->first(), [
-        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-        'user_id' => auth()->user()->id,
-        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
-        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-      ]);
-
       $proyecto->update([
         'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
       ]);
@@ -872,38 +866,12 @@ class ProyectoRepository
         'fecha_cierre' => $request->txtfecha_cierre
       ]);
 
-
+        
 
       DB::commit();
       return true;
     } catch (\Throwable $th) {
       DB::rollback();
-      return false;
-    }
-  }
-
-  /**
-   * Suspende un proyecto
-   * @param Request $request 
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   **/
-  public function suspenderProyecto($request, $proyecto)
-  {
-    DB::beginTransaction();
-    try {
-      $proyecto->update([
-        'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
-      ]);
-
-      $proyecto->articulacion_proyecto->actividad()->update([
-        'fecha_cierre' => $request->txtfecha_cierre
-      ]);
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
       return false;
     }
   }
@@ -954,23 +922,23 @@ class ProyectoRepository
       $proyecto->articulacion_proyecto->actividad()->update([
         'conclusiones' => $request->txtconclusiones
       ]);
-
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
+      
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
         'cumplido' => $objetivo1_alcanzado
       ]);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update([
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update([
         'cumplido' => $objetivo2_alcanzado
       ]);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(2)->update([
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(2)->update([
         'cumplido' => $objetivo3_alcanzado
       ]);
 
-      $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(3)->update([
+     $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(3)->update([
         'cumplido' => $objetivo4_alcanzado
       ]);
-
+ 
 
       DB::commit();
       return true;
@@ -1040,14 +1008,6 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::findOrFail($id);
-
-      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-        'user_id' => auth()->user()->id,
-        'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
-        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-      ]);
-
       $proyecto->articulacion_proyecto()->update([
         'aprobacion_dinamizador_ejecucion' => 1
       ]);
@@ -1072,22 +1032,7 @@ class ProyectoRepository
   {
     DB::beginTransaction();
     try {
-
       $proyecto = Proyecto::findOrFail($id);
-
-      $fase_aprobada = -1;
-      if ($fase == 'Planeación') {
-        $fase_aprobada = Fase::where('nombre', 'Inicio')->first()->id;
-      } else {
-        $fase_aprobada = Fase::where('nombre', 'Planeación')->first()->id;
-      }
-
-      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-        'user_id' => auth()->user()->id,
-        'fase_id' => $fase_aprobada,
-        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-      ]);
       $proyecto->update([
         'fase_id' => Fase::where('nombre', $fase)->first()->id
       ]);
@@ -1149,28 +1094,28 @@ class ProyectoRepository
    */
   public function updateEntregableCierreProyectoRepository($request, $id)
   {
+    $evidencia_trl = 1;
+    $formulario_final = 1;
+    $proyecto = Proyecto::findOrFail($id);
+
+    if (!isset($request->txtevidencia_trl)) {
+      $evidencia_trl = 0;
+    }
+
+    if (!isset($request->txtformulario_final)) {
+      $formulario_final = 0;
+    }
+
+    
+    $proyecto->update([
+      'evidencia_trl' => $evidencia_trl
+    ]);
+
+    $proyecto->articulacion_proyecto->actividad()->update([
+      'formulario_final' => $formulario_final
+    ]);
     DB::beginTransaction();
     try {
-      $evidencia_trl = 1;
-      $formulario_final = 1;
-      $proyecto = Proyecto::findOrFail($id);
-
-      if (!isset($request->txtevidencia_trl)) {
-        $evidencia_trl = 0;
-      }
-
-      if (!isset($request->txtformulario_final)) {
-        $formulario_final = 0;
-      }
-
-
-      $proyecto->update([
-        'evidencia_trl' => $evidencia_trl
-      ]);
-
-      $proyecto->articulacion_proyecto->actividad()->update([
-        'formulario_final' => $formulario_final
-      ]);
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -1226,29 +1171,6 @@ class ProyectoRepository
   }
 
   /**
-   * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
-   * 
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   */
-  public function notificarAlDinamziador_Suspendido(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
-    }
-  }
-
-  /**
    * Notifica al talento interlocutor para que apruebe la fase de planeación
    * 
    * @param int $id Id del proyecto
@@ -1286,7 +1208,7 @@ class ProyectoRepository
       return false;
     }
   }
-
+  
   /**
    * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
    */
@@ -1295,14 +1217,6 @@ class ProyectoRepository
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::findOrFail($id);
-
-      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-        'user_id' => auth()->user()->id,
-        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
-        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-      ]);
-
       Notification::send(User::find($proyecto->articulacion_proyecto->actividad->gestor->user->id), new ProyectoCierreAprobado($proyecto));
       $proyecto->articulacion_proyecto->actividad()->update([
         'aprobacion_dinamizador' => 1
@@ -1314,31 +1228,7 @@ class ProyectoRepository
       return false;
     }
   }
-
-  /**
-   * Cambia el estado de aprobacion_dinamizador_suspender para que el gestor pueda suspender un proyecto
-   * @param int $id
-   * @return boolean
-   * @author dum
-   **/
-  public function updateAprobacionSuspendido(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $proyecto = Proyecto::findOrFail($id);
-      $proyecto->articulacion_proyecto()->update([
-        'aprobacion_dinamizador_suspender' => 1
-      ]);
-      Notification::send(User::findOrFail($proyecto->articulacion_proyecto->actividad->gestor->user->id), new ProyectoSuspendidoAprobado($proyecto));
-      // dd($n);
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollback();
-      return false;
-    }
-  }
-
+  
   /**
    * Modifica los entregables de un proyecto en la fase de ejecución
    * 
@@ -1405,7 +1295,7 @@ class ProyectoRepository
       ->where(function ($q) use ($anho) {
         $q->where(function ($query) use ($anho) {
           $query->whereYear('actividades.fecha_cierre', '=', $anho)
-            ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
+          ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
         })
           ->orWhere(function ($query) {
             $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
@@ -1517,8 +1407,6 @@ class ProyectoRepository
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
       $articulacion_proyecto->talentos()->sync($syncData, false);
 
-      ArticulacionProyecto::habilitarTalentos($articulacion_proyecto);
-
       $actividad->objetivos_especificos()->create([
         'objetivo' => request()->txtobjetivo_especifico1
       ]);
@@ -1538,6 +1426,10 @@ class ProyectoRepository
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
       $proyecto->empresas()->attach(request()->propietarios_empresas);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
+
+      // for ($i=0; $i < count($idUsers) ; $i++) {
+      //   Notification::send(User::find($idUsers[$i]), new ProyectoPendiente($proyecto));
+      // }
 
       DB::commit();
       return true;

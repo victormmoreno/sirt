@@ -240,30 +240,35 @@ class EntrenamientoController extends Controller
       alert()->warning('Advertencia!','Para registrar el entrenamiento debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
       return back()->withInput();
     } else {
-      DB::transaction(function () use ($request) {
-        if (!isset($request->txtcorreos)) {
-          $request->txtcorreos = "0";
-        }
-        if (!isset($request->txtfotos)) {
-          $request->txtfotos = "0";
-        }
-        if (!isset($request->txtlistado_asistencia)) {
-          $request->txtlistado_asistencia = "0";
-        }
-        $entrenamiento = $this->entrenamientoRepository->store($request);
-        foreach (session('ideasEntrenamiento') as $key => $value) {
-          $this->entrenamientoRepository->storeEntrenamientoIdea($value, $entrenamiento->id);
-          // $value['Convocado'] == 1 ? $this->ideaRepository->updateEstadoIdea($value->id, 'Convocado') : $this->ideaRepository->updateEstadoIdea($value->id, 'No Convocado');
-          if ($value['Convocado'] == 1) {
-            $this->ideaRepository->updateEstadoIdea($value['id'], 'Convocado');
-          } else {
-            $this->ideaRepository->updateEstadoIdea($value['id'], 'No Convocado');
+      if (count($this->entrenamientoRepository->consultarEntrenamientoPorFechas(auth()->user()->infocenter->nodo_id, $request->txtfecha_sesion1, $request->txtfecha_sesion2)) != 0 ) {
+        alert()->warning('Advertencia!','Ya se encuentra un entrenamiento registrado en estas fechas.')->showConfirmButton('Ok', '#3085d6');
+        return back()->withInput();
+      } else {
+        DB::transaction(function () use ($request) {
+          if (!isset($request->txtcorreos)) {
+            $request->txtcorreos = "0";
           }
-        }
-      });
-      session(['ideasEntrenamiento' => []]);
-      alert()->success('El Entrenamiento ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
-      return redirect('entrenamientos');
+          if (!isset($request->txtfotos)) {
+            $request->txtfotos = "0";
+          }
+          if (!isset($request->txtlistado_asistencia)) {
+            $request->txtlistado_asistencia = "0";
+          }
+          $entrenamiento = $this->entrenamientoRepository->store($request);
+          foreach (session('ideasEntrenamiento') as $key => $value) {
+            $this->entrenamientoRepository->storeEntrenamientoIdea($value, $entrenamiento->id);
+            // $value['Convocado'] == 1 ? $this->ideaRepository->updateEstadoIdea($value->id, 'Convocado') : $this->ideaRepository->updateEstadoIdea($value->id, 'No Convocado');
+            if ($value['Convocado'] == 1) {
+              $this->ideaRepository->updateEstadoIdea($value['id'], 'Convocado');
+            } else {
+              $this->ideaRepository->updateEstadoIdea($value['id'], 'No Convocado');
+            }
+          }
+        });
+        session(['ideasEntrenamiento' => []]);
+        alert()->success('El Entrenamiento ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
+        return redirect('entrenamientos');
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('meta-title', 'Articulaciones G.I')
-@section('meta-content', 'Articulaciones G.I')
-@section('meta-keywords', 'Articulaciones G.I')
+@section('meta-title', 'Articulaciones')
+@section('meta-content', 'Articulaciones')
+@section('meta-keywords', 'Articulaciones')
 
 @section('content')
   @php
@@ -98,39 +98,48 @@
           ajax:{
             url: "/articulacion/datatableArticulacionesDelNodo/"+id+"/"+anho,
             data: function (d) {
-              d.codigo_articulacion = $('#codigo_articulacion_AdministradorTable').val(),
-              d.nombre_gestor = $('#nombre_GestorAdministradorTable').val(),
-              d.nombre_nodo = $('#nombre_nodoAdministradorTable').val(),
-              d.nombre = $('#nombre_AdministradorTable').val(),
-              d.fase = $('#fase_AdministradorTable').val(),
+              d.codigo_articulacion = $('.codigo_articulacion').val(),
+              d.nombre = $('.nombre').val(),
+              d.tipo_articulacion = $('.tipo_articulacion').val(),
+              d.nombre_completo_gestor = $('.nombre_completo_gestor').val(),
+              d.estado = $('.estado').val(),
               d.search = $('input[type="search"]').val()
             }
             // type: "get",
           },
           columns: [
             {
-            data: 'codigo_articulacion',
-            name: 'codigo_articulacion',
-            },
-            {
-              data: 'nombre_nodo',
-              name: 'nombre_nodo',
-            },
-            {
-              data: 'nombre_completo_gestor',
-              name: 'nombre_completo_gestor',
+              data: 'codigo_articulacion',
+              name: 'codigo_articulacion',
             },
             {
               data: 'nombre',
               name: 'nombre',
             },
             {
-              data: 'nombre_fase',
-              name: 'nombre_fase',
+              data: 'tipo_articulacion',
+              name: 'tipo_articulacion',
             },
             {
-              data: 'proceso',
-              name: 'proceso',
+              data: 'nombre_completo_gestor',
+              name: 'nombre_completo_gestor',
+            },
+            {
+              data: 'estado',
+              name: 'estado',
+            },
+            {
+              data: 'revisado_final',
+              name: 'revisado_final',
+            },
+            {
+              data: 'details',
+              name: 'details',
+              orderable: false
+            },
+            {
+              data: 'entregables',
+              name: 'entregables',
               orderable: false
             },
             ],
@@ -138,25 +147,24 @@
       }
     }
 
-    $("#codigo_articulacion_AdministradorTable").keyup(function(){
+    $(".codigo_articulacion").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#nombre_GestorAdministradorTable").keyup(function(){
+    $(".nombre").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#nombre_nodoAdministradorTable").keyup(function(){
+    $(".tipo_articulacion").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#nombre_AdministradorTable").keyup(function(){
+    $(".nombre_completo_gestor").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#fase_AdministradorTable").keyup(function(){
+    $(".estado").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
-
   </script>
 @endpush

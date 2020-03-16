@@ -345,7 +345,7 @@
                                                             @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
                                                                 <tr id="talentoAsociadoAProyecto{{$value->id}}">
                                                                 <td><input type="radio" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
-                                                                <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
+                                                                <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user->documento}} - {{$value->user->nombres}} {{$value->user->apellidos}}</td>
                                                                 @if ($proyecto->fase->nombre == 'Inicio')
                                                                 <td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                                                                 @endif

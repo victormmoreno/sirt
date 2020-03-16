@@ -52,7 +52,6 @@ return [
         ['name' => TiposMaterialesTableSeeder::class, 'callable' => true],
         ['name' => MaterialesTableSeeder::class, 'callable' => true],
         ['name' => CostosAdministrativosTableSeeder::class, 'callable' => true],
-        ['name' => ProductosTableSeeder::class, 'callable' => true],
 
     ],
 ];

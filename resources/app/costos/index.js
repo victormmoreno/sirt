@@ -119,34 +119,6 @@ function consultarCostoDeUnaActividad() {
 
 function graficoCostos(data, name, title) {
   Highcharts.chart(name, {
-    exporting: {
-      allowHTML: true,
-      chartOptions: {
-        chart: {
-          height: 600,
-          marginTop: 110,
-          events: {
-            load: function() {
-              this.renderer.image('http://drive.google.com/uc?export=view&id=1qLb9tjGI1hEnmEzQ6mPzxqv1zjMtxdMw', 80, 20, 200, 47).add();
-              this.renderer.image('http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C', 290, 20, 200, 47).add();
-              this.update({
-                credits: {
-                  text: 'Generado: ' + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', Date.now())
-                }
-              });
-            }
-          }
-        },
-        legend: {
-          y: -220
-        },
-        title: {
-          align: 'center',
-          y: 90
-        },
-
-      }
-    },
     chart: {
       type: 'column',
     },

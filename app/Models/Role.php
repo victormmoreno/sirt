@@ -31,28 +31,4 @@ class Role extends RoleSpatie
     ->withTimestamps()
     ->withPivot('aprobacion');
   }
-
-  public function users_movimientos()
-  {
-    return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')
-    ->withTimestamps();
-  }
-
-  public function movimientos()
-  {
-    return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
-    ->withTimestamps();
-  }
-
-  public function fases_movimientos()
-  {
-    return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-    ->withTimestamps();
-  }
-
-  public function actividades_movimientos()
-  {
-    return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-    ->withTimestamps();
-  }
 }
