@@ -16,7 +16,6 @@ use App\Models\Ingreso;
 use App\Models\Ocupacion;
 use App\Models\Proyecto;
 use App\Models\Role;
-use App\Models\Movimiento;
 use App\Models\Talento;
 use App\Models\TipoDocumento;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -140,7 +139,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function proyectos()
     {
-        return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
+        return $this->morphToMany(Proyecto::class, 'propietario');
     }
 
     public function etnia()
@@ -149,30 +148,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     //relaciones muchos a muchos
-
-    public function movimientos()
-    {
-      return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
-    }
-
-    public function roles_movimientos()
-    {
-      return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
-    }
-
-    public function fases_movimientos()
-    {
-      return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
-    }
-
-    public function actividades_movimientos()
-    {
-      return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
-    }
 
     public function ocupaciones()
     {

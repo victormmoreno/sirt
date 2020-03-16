@@ -29,7 +29,7 @@
 </div>
 <div class="divider"></div>
 <div class="row">
-    <h5>Entregables Fase de Cierre</h5>
+    <h5>Entregables Fase Inicio</h5>
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
             <input type="checkbox" {{ $disabled }} {{ $proyecto->evidencia_trl == 1 ? 'checked' : '' }} id="txtevidencia_trl" name="txtevidencia_trl" value="1">

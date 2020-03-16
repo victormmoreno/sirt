@@ -43,7 +43,7 @@
               <img src="{{asset('img/web.png')}}">
             </center>
           </th>
-          <th colspan="5" class="centrar">ACTA No. {{ substr($proyecto->articulacion_proyecto->actividad->codigo_actividad, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}</th>
+          <th colspan="5" class="centrar">ACTA No.</th>
         </tr>
       </thead>
       <tbody>

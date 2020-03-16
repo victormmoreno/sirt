@@ -59,6 +59,26 @@
 
   datatableArchivosDeUnProyecto_inicio();
   });
+  
+
+//   $("form").on('submit', function(e){
+//     e.preventDefault();
+//     Swal.fire({
+//     title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
+//     // text: "You won't be able to revert this!",
+//     type: 'warning',
+//     showCancelButton: true,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//     cancelButtonText: 'Cancelar',
+//     confirmButtonText: 'Sí!'
+//     }).then((result) => {
+//       if (result.value) {
+
+//       }
+//     })
+// });
+
 
   function preguntaInicio(e){
     e.preventDefault();

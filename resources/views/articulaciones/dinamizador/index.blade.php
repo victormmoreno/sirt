@@ -95,6 +95,15 @@
               <div class="divider"></div>
               <div class="row">
                 @include('articulaciones.table')
+                {{-- <div class="col s12 m2 l2">
+                  <a href="{{route('articulacion.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
+                    <div class="card green">
+                      <div class="card-content center">
+                        <span class="white-text">Descargar tabla</span>
+                      </div>
+                    </div>
+                  </a>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -119,11 +128,13 @@
         // searching: false,
         ajax:{
           url: "/articulacion/datatableArticulacionesDelNodo/"+0+"/"+anho,
+          // type: "get",
           data: function (d) {
-            d.codigo_articulacion = $('#codigo_articulacion_DinamizadorTable').val(),
-            d.nombre_gestor = $('#nombre_GestorDinamizadorTable').val(),
-            d.nombre = $('#nombre_DinamizadorTable').val(),
-            d.fase = $('#fase_DinamizadorTable').val(),
+            d.codigo_articulacion = $('.codigo_articulacion').val(),
+            d.nombre = $('.nombre').val(),
+            d.tipo_articulacion = $('.tipo_articulacion').val(),
+            d.nombre_completo_gestor = $('.nombre_completo_gestor').val(),
+            d.estado = $('.estado').val(),
             d.search = $('input[type="search"]').val()
           }
         },
@@ -133,39 +144,71 @@
           name: 'codigo_articulacion',
         },
         {
-          data: 'nombre_completo_gestor',
-          name: 'nombre_completo_gestor',
-        },
-        {
           data: 'nombre',
           name: 'nombre',
         },
         {
-          data: 'nombre_fase',
-          name: 'nombre_fase',
+          data: 'tipo_articulacion',
+          name: 'tipo_articulacion',
         },
         {
-          data: 'proceso',
-          name: 'proceso',
+          data: 'nombre_completo_gestor',
+          name: 'nombre_completo_gestor',
+        },
+        {
+          width: '15%',
+          data: 'estado',
+          name: 'estado',
+        },
+        {
+          data: 'revisado_final',
+          name: 'revisado_final',
+        },
+        {
+          width: '5%',
+          data: 'details',
+          name: 'details',
+          orderable: false
+        },
+        {
+          width: '5%',
+          data: 'entregables',
+          name: 'entregables',
+          orderable: false
+        },
+        {
+          width: '5%',
+          data: 'edit',
+          name: 'edit',
+          orderable: false
+        },
+        {
+          width: '5%',
+          data: 'delete',
+          name: 'delete',
           orderable: false
         },
         ],
       });
     }
 
-    $("#codigo_articulacion_DinamizadorTable").keyup(function(){
+    $(".codigo_articulacion").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#nombre_GestorDinamizadorTable").keyup(function(){
+    $(".nombre").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#nombre_DinamizadorTable").keyup(function(){
+    $(".tipo_articulacion").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
-    $("#fase_DinamizadorTable").keyup(function(){
+    $(".nombre_completo_gestor").keyup(function(){
+      $('#articulacionesNodo_table').DataTable().draw();
+    });
+
+    $(".estado").keyup(function(){
       $('#articulacionesNodo_table').DataTable().draw();
     });
 
