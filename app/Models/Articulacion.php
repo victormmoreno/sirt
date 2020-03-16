@@ -47,7 +47,23 @@ class Articulacion extends Model
         'informe_final',
         'pantallazo',
         'otros',
+        'acuerdos',
+        'alcance_articulacion',
+        'siguientes_investigaciones',
+        'fase_id'
     ];
+
+    public function productos()
+    {
+      return $this->belongsToMany(Producto::class, 'articulaciones_productos')
+      ->withTimestamps()
+      ->withPivot('logrado');
+    }
+
+    public function fase()
+    {
+      return $this->belongsTo(Fase::class, 'fase_id', 'id');
+    }
 
     /**
     * Relación con la tabla de articulacion_emprendedor

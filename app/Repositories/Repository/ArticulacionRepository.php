@@ -2,12 +2,409 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura};
-use Illuminate\Support\Facades\DB;
+use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura, Fase, Movimiento, Role};
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use App\Notifications\Articulacion\{ArticulacionAprobarInicio, ArticulacionAprobarPlaneacion, ArticulacionAprobarEjecucion, ArticulacionAprobarCierre, ArticulacionCierreAprobado};
+use Illuminate\Support\Facades\{DB, Notification, Session};
 use Carbon\Carbon;
+use App\User;
 
 class ArticulacionRepository
 {
+
+  /**
+   * Modifica los entregables de una articulación
+   * @param Request $request
+   * @param int $id Id del articulación
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregablesInicioArticulacionRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $acc = 1;
+      $formulario_inicio = 1;
+
+      if (!isset($request->txtacc)) {
+        $acc = 0;
+      }
+
+      if (!isset($request->txtformulario_inicio)) {
+        $formulario_inicio = 0;
+      }
+
+      $articulacion = Articulacion::find($id);
+
+      $articulacion->update([
+        'acc' => $acc
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'formulario_inicio' => $formulario_inicio
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Modifica los entregables de la fase de cierre
+   * 
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregableCierreArticulacionRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $informe_final = 1;
+      $formulario_final = 1;
+      $articulacion = Articulacion::findOrFail($id);
+  
+      if (!isset($request->txtinforme_final)) {
+        $informe_final = 0;
+      }
+  
+      if (!isset($request->txtformulario_final)) {
+        $formulario_final = 0;
+      }
+  
+      
+      $articulacion->update([
+        'informe_final' => $informe_final
+      ]);
+  
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'formulario_final' => $formulario_final
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Modifica los entregables de la fase de planeación de un proyecto
+   * @param int $id Id del proyecto
+   * @author dum
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregablesPlaneacionArticulacionRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+
+      $cronograma = 1;
+
+      if (!isset($request->txtcronograma)) {
+        $cronograma = 0;
+      }
+
+
+      $articulacion = Articulacion::findOrFail($id);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'cronograma' => $cronograma
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Modifica los entregables de un proyecto en la fase de ejecución
+   * 
+   * @param Request $request
+   * @param int $id Id de proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function updateEntregablesEjecucionArticulacionRepository($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::findOrFail($id);
+      $seguimiento = 1;
+
+      if (!isset($request->txtseguimiento)) {
+        $seguimiento = 0;
+      }
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'seguimiento' => $seguimiento
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+   /**
+   * Modifica los datos de cierre de una articulación
+   * 
+   * @param Request $request
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   */
+  public function updateCierreArticulacionRepository($request, $id)
+  {
+    
+    DB::beginTransaction();
+    try {
+      
+      $articulacion = Articulacion::findOrFail($id);
+      $productos_alcanzados = $request->txtproducto_alcanzado;
+  
+      DB::table('articulaciones_productos')->where('articulacion_id', $articulacion->id)->update(['logrado' => 0]);
+  
+      DB::table('articulaciones_productos')->where('articulacion_id', $articulacion->id)
+      ->whereIn('producto_id', $productos_alcanzados)->update(['logrado' => 1]);
+
+      $articulacion->update([
+        'siguientes_investigaciones' => $request->txtsiguientes_investigaciones
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'conclusiones' => $request->txtconclusiones
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Cambia el estado de la articulación a Cierre y asigna un fecha de cierre a la articulación
+   * @param Request $request
+   * @param Articulacion $articulacion
+   * @return boolean
+   * @author dum
+   */
+  public function cerrarArticulacion($request, $articulacion)
+  {
+    
+    DB::beginTransaction();
+    try {
+      
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cerró')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $articulacion->update([
+        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'fecha_cierre' => $request->txtfecha_cierre
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar la artriculación
+   */
+  public function updateAprobacionDinamizador(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::findOrFail($id);
+
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      Notification::send(User::find($articulacion->articulacion_proyecto->actividad->gestor->user->id), new ArticulacionCierreAprobado($articulacion));
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'aprobacion_dinamizador' => 1
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+
+  public function setPostCierreArticulacionRepository(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::findOrFail($id);
+      
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $articulacion->articulacion_proyecto()->update([
+        'aprobacion_dinamizador_ejecucion' => 1
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Notifica al dinamizador para que apruebe la articulacion en la fase de inicio
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Inicio(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $articulacion = Articulacion::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ArticulacionAprobarInicio($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+    /**
+   * Notifica al talento interlocutor para que apruebe la fase de planeación
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamizador_Planeacion(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $articulacion = Articulacion::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ArticulacionAprobarPlaneacion($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  public function notificarAlDinamizador_Ejecucion(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $articulacion = Articulacion::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ArticulacionAprobarEjecucion($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
+   * 
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Cierre(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $articulacion = Articulacion::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ArticulacionAprobarCierre($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+    /** 
+   * Cambia una articulación de fase
+   * 
+   * @param int $id Id del articulacion
+   * @param string $fase nombre de la fase a la que se va a cambiar el articulacion
+   * @return boolean
+   * @author dum
+   */
+  public function updateFaseArticulacion($id, $fase)
+  {
+    DB::beginTransaction();
+    try {
+      
+      $articulacion = Articulacion::findOrFail($id);
+
+      $fase_aprobada = -1;
+      if ($fase == 'Planeación') {
+        $fase_aprobada = Fase::where('nombre', 'Inicio')->first()->id;
+      } else {
+        $fase_aprobada = Fase::where('nombre', 'Planeación')->first()->id;
+      }
+      
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => $fase_aprobada,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $articulacion->update([
+        'fase_id' => Fase::where('nombre', $fase)->first()->id
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
 
   /**
    * Cantidad de articulaciones con grupos de investigación
@@ -496,36 +893,28 @@ class ArticulacionRepository
     'articulaciones.id',
     'observaciones',
     'fecha_inicio',
-    'fecha_cierre',
-    'tiposarticulaciones.nombre AS tipoarticulacion')
-    ->selectRaw('IF(tipo_articulacion = ' . Articulacion::IsGrupo() . ', "Grupo de Investigación", IF(tipo_articulacion = ' . Articulacion::IsEmpresa() . ', "Empresa", "Emprendedor(es)") ) AS tipo_articulacion')
-    ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsInicio() . ', "Inicio", IF(articulaciones.estado = ' . Articulacion::IsEjecucion() . ', "Ejecución", "Cierre") ) AS estado')
-    ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
+    'fases.nombre AS nombre_fase',
+    'entidades.nombre AS nombre_nodo',
+    'fecha_cierre')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
-    // ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsCierre() . ', fecha_cierre, "La Articulación aún no se ha cerrado") AS fecha_cierre')
-    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
-    ->selectRaw('IF(tipo_articulacion = "Grupo de Investigación", IF(acc = 1, "Si", "No"), "No Aplica") AS acc')
-    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
-    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
-    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(informe_final = 1, "Si", "No"), "No Aplica") AS informe_final')
-    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(pantallazo = 1, "Si", "No"), "No Aplica") AS pantallazo')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('fases', 'fases.id', '=', 'articulaciones.fase_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
     ->where('nodos.id', $id)
-    ->where('tipo_articulacion', '!=', Articulacion::IsEmpresa())
-    ->where(function($q) use ($anho) {
-      $q->where(function($query) use ($anho) {
-        $query->whereYear('fecha_inicio', '=', $anho);
+    ->where('tipo_articulacion', Articulacion::IsGrupo())
+    ->where(function ($q) use ($anho) {
+      $q->where(function ($query) use ($anho) {
+        $query->whereYear('actividades.fecha_cierre', '=', $anho)
+        ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
       })
-      ->orWhere(function($query) use ($anho) {
-        $query->whereYear('fecha_cierre', '=', $anho);
-      });
-    })
-    ->get();
+        ->orWhere(function ($query) {
+          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
+        });
+    });
   }
 
   /**
@@ -562,71 +951,31 @@ class ArticulacionRepository
     DB::beginTransaction();
     try {
 
-      $articulacionConsultaId = Articulacion::find($id);
+      $articulacion = Articulacion::findOrFail($id);
 
-      if (request()->txtestado == Articulacion::IsCierre()) {
-        $fechaCierre = request()->txtfecha_cierre;
-      } else {
-        $fechaCierre = null;
-      }
-
-      if (request()->group1 == Articulacion::IsGrupo()) {
-        request()->entidad_id = Entidad::select('entidades.id')
-        ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
-        ->where('gruposinvestigacion.id', request()->txtgrupo_id)->get()->last()->id;
-      }
-
-      if (request()->group1 == Articulacion::IsEmpresa()) {
-        request()->entidad_id = Entidad::select('entidades.id')
-        ->join('empresas', 'empresas.entidad_id', '=', 'entidades.id')
-        ->where('empresas.id', request()->txtempresa_id)->get()->last()->id;
-      }
-
-      if (request()->group1 == Articulacion::IsEmprendedor()) {
-        request()->entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
-      }
-
-      if (request()->txtestado == Articulacion::IsEjecucion()) {
-        if ($articulacionConsultaId->estado == Articulacion::IsEjecucion()) {
-          $fechaEjecucion = $articulacionConsultaId->fecha_ejecucion;
-        } else {
-          $fechaEjecucion = Carbon::now()->toDateString();
-        }
-      } else {
-        $fechaEjecucion = null;
-      }
-
-      if ($articulacionConsultaId->tipo_articulacion == Articulacion::IsEmprendedor()) {
-        // Método detach para eliminar los datos de la tabla articulacion_talento (pivot entre talentos y articulaciones)
-        $articulacionConsultaId->articulacion_proyecto->talentos()->detach();
-      }
-      $articulacionConsultaId->update([
-      'tipoarticulacion_id' => request()->txttipoarticulacion_id,
-      'tipo_articulacion'   => request()->group1,
-      'fecha_ejecucion'     => $fechaEjecucion,
-      'observaciones'       => request()->txtobservaciones,
-      'estado'              => request()->txtestado,
+      $entidad_id = Entidad::select('entidades.id')
+      ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
+      ->where('gruposinvestigacion.id', request()->txtgrupo_id)->get()->last()->id;
+      
+      $articulacion->update([
+      'acuerdos' => request()->txtacuerdos,
+      'alcance_articulacion' => request()->txtalcance_articulacion
       ]);
 
-      $articulacionConsultaId->articulacion_proyecto()->update([
-      'entidad_id' => request()->entidad_id,
+      $articulacion->articulacion_proyecto()->update([
+      'entidad_id'   => $entidad_id
       ]);
 
-      $articulacionConsultaId->articulacion_proyecto->actividad()->update([
-      'nombre'       => request()->txtnombre,
-      'fecha_inicio' => request()->txtfecha_inicio,
-      'fecha_cierre' => $fechaCierre,
-      ]);
 
-      $articulacionConsultaId->emprendedores()->delete();
-      // Registrar los emprendedores
-      if (request()->group1 == Articulacion::IsEmprendedor()) {
-        $syncData = array();
-        foreach ($request->get('documento') as $id => $value) {
-          $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);
-        }
-        $articulacionConsultaId->emprendedores()->createMany($syncData);
-      }
+      $articulacion->articulacion_proyecto->actividad()->update([
+      'nombre' => request()->txtnombre,
+      ]);
+      
+      $articulacion->productos()->sync(request()->productos, true);
+
+      $syncData = array();
+      $syncData = $this->arraySyncTalentosDeUnaArticulacion($request);
+      $articulacion->articulacion_proyecto->talentos()->sync($syncData, true);
 
       DB::commit();
       return true;
@@ -714,39 +1063,35 @@ class ArticulacionRepository
 
   /**
   * Consulta las articulaciones de un gestor
-  * @param int $id Id del gestor
   * @param string $anho Año para realizar el filtro
   * @return Collection
   * @author dum
   */
-  public function consultarArticulacionesDeUnGestor($id, $anho)
+  public function consultarArticulacionesDeUnGestor($anho)
   {
     return Articulacion::select('codigo_actividad AS codigo_articulacion',
     'actividades.nombre',
     'articulaciones.id',
-    'observaciones',
     'fecha_inicio',
-    'fecha_cierre',
-    'tiposarticulaciones.nombre AS tipoarticulacion')
-    ->selectRaw('IF(tipo_articulacion = ' . Articulacion::IsEmpresa() . ', "Empresa", "Emprendedor(es)") AS tipo_articulacion')
-    ->selectRaw('IF(articulaciones.estado = ' . Articulacion::IsInicio() . ', "Inicio", IF(articulaciones.estado = ' . Articulacion::IsEjecucion() . ', "Ejecución", "Cierre") ) AS estado')
-    ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado") ) AS revisado_final')
+    'fases.nombre AS nombre_fase',
+    'fecha_cierre')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
-    ->selectRaw('IF(acta_inicio = 1, "Si", "No") AS acta_inicio')
-    ->selectRaw('IF(actas_seguimiento = 1, "Si", "No") AS actas_seguimiento')
-    ->selectRaw('IF(tipo_articulacion = "Grupo de Investigación", IF(acc = 1, "Si", "No"), "No Aplica") AS acc')
-    ->selectRaw('IF(acta_cierre = 1, "Si", "No") AS acta_cierre')
-    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(informe_final = 1, "Si", "No"), "No Aplica") AS informe_final')
-    ->selectRaw('IF(tipo_articulacion != "Grupo de Investigación", IF(pantallazo = 1, "Si", "No"), "No Aplica") AS pantallazo')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    ->join('fases', 'fases.id', '=', 'articulaciones.fase_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
-    ->where('actividades.gestor_id', $id)
-    ->where('articulaciones.tipoarticulacion_id', '!=', Articulacion::IsEmpresa())
-    ->whereYear('actividades.fecha_inicio', $anho)
-    ->get();
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->where('tipo_articulacion', Articulacion::IsGrupo())
+    ->where(function ($q) use ($anho) {
+      $q->where(function ($query) use ($anho) {
+        $query->whereYear('actividades.fecha_cierre', '=', $anho)
+        ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
+      })
+        ->orWhere(function ($query) {
+          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
+        });
+    });
   }
 
   public function consultarIntervencionesEmpresasDeUnGestor($id, $anho)
@@ -781,6 +1126,40 @@ class ArticulacionRepository
   }
 
   /**
+   * Genera un código para la articulación
+   *
+   * @return string
+   * @author dum
+   **/
+  public function generarCodigoArticulacion()
+  {
+    $anho = Carbon::now()->isoFormat('YYYY');
+    $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
+    $linea = auth()->user()->gestor->lineatecnologica_id;
+    $gestor = sprintf("%03d", auth()->user()->gestor->id);
+    $idArticulacion = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
+    $idArticulacion->max == null ? $idArticulacion->max = 1 : $idArticulacion->max = $idArticulacion->max;
+    $idArticulacion->max = sprintf("%04d", $idArticulacion->max);
+
+    $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
+
+    return $codigo;
+  }
+
+  private function arraySyncTalentosDeUnaArticulacion($request)
+  {
+    $syncData = array();
+    foreach ($request->get('talentos') as $id => $value) {
+      if ($value == request()->get('radioTalentoLider')) {
+        $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
+      } else {
+        $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
+      }
+    }
+    return $syncData;
+  }
+
+  /**
   * Registra un nueva articulación en la base de datos
   * @param Request $request
   * @return boolean
@@ -791,68 +1170,40 @@ class ArticulacionRepository
     
     DB::beginTransaction();
     try {
-      $anho = Carbon::now()->isoFormat('YYYY');
-      $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
-      $linea = auth()->user()->gestor->lineatecnologica_id;
-      $gestor = sprintf("%03d", auth()->user()->gestor->id);
-      $idArticulacion = Articulacion::selectRaw('MAX(id+1) AS max')->get()->last();
-      $idArticulacion->max == null ? $idArticulacion->max = 1 : $idArticulacion->max = $idArticulacion->max;
-      $idArticulacion->max = sprintf("%04d", $idArticulacion->max);
-      $fechaEjecucion =$request->txtfecha_inicio;
-      
-      if (request()->group1 == Articulacion::IsGrupo()) {
-        $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
-       $request->entidad_id = Entidad::select('entidades.id')
-        ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
-        ->where('gruposinvestigacion.id',$request->txtgrupo_id)->get()->last()->id;
-      }
-
-      if (request()->group1 == Articulacion::IsEmpresa()) {
-        $codigo = 'INT' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
-       $request->entidad_id = Entidad::select('entidades.id')
-        ->join('empresas', 'empresas.entidad_id', '=', 'entidades.id')
-        ->where('empresas.id',$request->txtempresa_id)->get()->last()->id;
-      }
-
-      if (request()->group1 == Articulacion::IsEmprendedor()) {
-        $codigo = 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
-       $request->entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
-      }
-
-      if (request()->txtestado == Articulacion::IsEjecucion()) {
-        $fechaEjecucion = Carbon::now()->toDateString();
-      }
+      $codigo = $this->generarCodigoArticulacion();
+      $entidad_id = Entidad::select('entidades.id')
+      ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
+      ->where('gruposinvestigacion.id', request()->txtgrupo_id)->get()->last()->id;
 
       $actividad = Actividad::create([
       'gestor_id' => auth()->user()->gestor->id,
       'nodo_id' => auth()->user()->gestor->nodo_id,
       'codigo_actividad' => $codigo,
-      'nombre' =>$request->txtnombre,
-      'fecha_inicio' =>$request->txtfecha_inicio,
+      'nombre' => request()->txtnombre,
+      'fecha_inicio' => Carbon::now()->isoFormat('YYYY-MM-DD'),
       ]);
 
       $articulacion_proyecto = ArticulacionProyecto::create([
-      'entidad_id'   =>$request->entidad_id,
+      'entidad_id'   => $entidad_id,
       'actividad_id' => $actividad->id,
       ]);
 
       $articulacion = Articulacion::create([
       'articulacion_proyecto_id' => $articulacion_proyecto->id,
-      'tipoarticulacion_id' =>$request->txttipoarticulacion_id,
-      'tipo_articulacion' =>$request->group1,
-      'fecha_ejecucion' => $fechaEjecucion,
-      'observaciones' =>$request->txtobservaciones,
-      'estado' => $request->txtestado,
+      'tipo_articulacion' => 0,
+      'fase_id' => Fase::where('nombre', 'Inicio')->first()->id,
+      'acuerdos' => request()->txtacuerdos,
+      'alcance_articulacion' => request()->txtalcance_articulacion
       ]);
+      
+      // dd(request()->productos);
+      $articulacion->productos()->sync(request()->productos);
 
-      // Registrar los emprendedores
-      if ($request->group1 == Articulacion::IsEmprendedor()) {
-        $syncData = array();
-        foreach ($request->get('documento') as $id => $value) {
-          $syncData[$id] = array('documento' => $value, 'nombres' => $request->get('nombres')[$id], 'email' => $request->get('email')[$id], 'contacto' => $request->get('contacto')[$id]);
-        }
-        $articulacion->emprendedores()->createMany($syncData);
-      }
+      $syncData = array();
+      $syncData = $this->arraySyncTalentosDeUnaArticulacion($request);
+      $articulacion_proyecto->talentos()->sync($syncData, false);
+
+      ArticulacionProyecto::habilitarTalentos($articulacion_proyecto);
 
       DB::commit();
       return true;
