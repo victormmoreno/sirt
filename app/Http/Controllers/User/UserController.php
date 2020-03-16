@@ -28,7 +28,7 @@ class UserController extends Controller
     public function findUserById(int $id)
     {
         return response()->json([
-            'user' => User::find($id),
+            'user' => User::withTrashed()->where('id', $id)->first(),
         ]);
     }
 

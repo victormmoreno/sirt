@@ -22,6 +22,9 @@
                   </ul>
                   <div class="divider"></div>
                 </div>
+                <div class="col s12 m12 l12">
+                    @include('proyectos.historial_cambios')
+                </div>
                 <div id="inicio" class="col s12 m12 l12">
                     @include('proyectos.detalle_fase_inicio')
                 </div>
