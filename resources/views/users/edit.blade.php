@@ -97,13 +97,16 @@
     });
     user.getCiudadExpedicion();
     user.getCiudad();
-    @if(isset($user->eps->id))
-    user.getOtraEsp('{{$user->eps->id}}');
-    @endif
-
     @if(isset($user->grado_discapacidad))
     user.getGradoDiscapacidad('{{$user->grado_discapacidad}}');
     @endif
+    
+    @if(isset($user->eps->id))
+
+    user.getOtraEsp('{{$user->eps_id}}');
+    @endif
+
+    
     
     
     @if(isset($user->talento->tipotalento->id))
@@ -556,7 +559,7 @@ var linea = {
             @if(session()->get('login_role') == App\User::IsGestor())
                 $.each(response.lineasForNodo.lineas, function(i, e) {
 
-                      $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                    $('#txtlinea').append('<option value="'+e.id+'">'+e.nombre+'</option>');
 
                 });
                 @if(isset($user->gestor->lineatecnologica_id))
@@ -620,28 +623,29 @@ var linea = {
     },
 
       getOtraEsp:function (ideps) {
-        let id = $(ideps).val();
+        let id = $("#txteps").val();
+       
         let nombre = $("#txteps option:selected").text();
         
-        if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
-           
-            $(".otraeps").css("display", "none");
+        if (nombre == '{{App\Models\Eps::OTRA_EPS }}') {
+            $(".otraeps").css("display", "block");
+            
           
             
 
         }else{
+            $(".otraeps").css("display", "none");
             
-            $(".otraeps").css("display", "block");
         }
     },
     
     getGradoDiscapacidad(discapacidad){
-         
-        if (discapacidad == 1) {
+        let gradodiscapacidad = $("#txtgrado_discapacidad").val();
+        if (gradodiscapacidad == 1) {
             $('.gradodiscapacidad').css("display", "block");
              
         }else{
-            $(".otraeps").css("display", "none");
+            $(".gradodiscapacidad").css("display", "none");
         }
     }
     

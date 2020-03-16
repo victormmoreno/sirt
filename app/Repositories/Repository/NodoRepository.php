@@ -2,12 +2,8 @@
 
 namespace Repositories\Repository;
 
-use App\Models\Centro;
-use App\Models\CostoAdministrativo;
-use App\Models\Entidad;
-use App\Models\LineaTecnologica;
-use App\Models\LineaTecnologicaNodo;
-use App\Models\Nodo;
+use App\Models\{LineaTecnologica, Nodo, Entidad, CostoAdministrativo, Centro};
+use App\User;
 use App\Models\Regional;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -212,6 +208,22 @@ class NodoRepository
             'ingresos',
             'ingresos.user',
         ]);
+        // ->orWhereHas('gestores.user', function ($query){
+        //     $query->where('estado', User::IsActive())
+        //             ->where('deleted_at',null);
+        // })
+        // ->orWhereHas('infocenter.user', function ($query){
+        //     $query->where('estado', User::IsActive())
+        //             ->where('deleted_at',null);
+        // })
+        // ->orWhereHas('dinamizador.user', function ($query){
+        //     $query->where('estado', User::IsActive())
+        //             ->where('deleted_at',null);
+        // })
+        // ->orWhereHas('ingresos.user', function ($query){
+        //     $query->where('estado', User::IsActive())
+        //             ->where('deleted_at',null);
+        // });
     }
 
     /**

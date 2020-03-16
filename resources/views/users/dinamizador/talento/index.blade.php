@@ -10,7 +10,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -32,9 +32,13 @@
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l10">
-                                    <div class="center-align">
+                                    <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                         <span class="card-title center-align">
-                                            Talentos {{config('app.name')}}
+                                          @if($view == 'activos')
+                                          Talentos con acceso y  con proyectos en {{config('app.name')}}
+                                          @else
+                                          Talentos sin acceso y  con proyectos en {{config('app.name')}}
+                                          @endif
                                         </span>
                                         <i class="material-icons">
                                             supervised_user_circle
@@ -47,6 +51,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="divider"></div>
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
+                            <br><br>
                             <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                               <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
                               <li class="tab col s3"><a href="#talentoByGestor" >Talentos por Gestor </a></li>
@@ -59,7 +67,12 @@
                             </div>
                             <div class="col s12 m12 l12">
                                 <div class="input-field col s12 m12 l12">
-                                    <select class="js-states"  tabindex="-1" style="width: 100%" id="anio_proyecto_talento" name="anio_proyecto_talento" onchange="user.consultarTalentosByTecnoparque();">
+                                  @if($view == 'activos')
+                                    <select class="js-states"  tabindex="-1" style="width: 100%" id="anio_proyecto_talento" name="anio_proyecto_talento" onchange="userTalentoByDinamizador.consultarTalentosByTecnoparque();">
+                                  @elseif($view == 'inactivos')
+                                  <select class="js-states"  tabindex="-1" style="width: 100%" id="anio_proyecto_talento" name="anio_proyecto_talento" onchange="userTalentoByDinamizador.consultarTalentosByTecnoparqueTrash();">
+                                  @endif
+                                    
                                         @for ($i=2016; $i <= $year; $i++)
                                         <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
                                         @endfor
@@ -67,7 +80,12 @@
                                     <label for="anio_proyecto_talento">Seleccione el Año</label>
                                 </div>
                             </div>
-                            @include('users.table',['id' => 'talentoByDinamizador_table'])
+                            @if($view == 'activos')
+                                @include('users.table', ['id' => 'talentoByDinamizador_table'] )  
+                            @elseif($view == 'inactivos')
+                                @include('users.table', ['id' => 'talentoByDinamizador_inactivos_table'] ) 
+                            @endif
+                            
                             </div>
                             <div id="talentoByGestor">
                                 <h5 class="center-align">Talentos Por Gestor</h5>
@@ -96,7 +114,11 @@
 
                                 <div class="row">
                                   <div class="col s12 m4 l4 offset-l4">
-                                    <a onclick="user.getUserTalentosByGestor();" href="javascript:void(0)">
+                                    @if($view == 'activos')
+                                      <a onclick="userTalentoByDinamizador.getUserTalentosByGestor();" href="javascript:void(0)">
+                                    @elseif($view == 'inactivos')
+                                      <a onclick="userTalentoByDinamizador.getUserTalentosByGestorTrash();" href="javascript:void(0)">
+                                    @endif
                                       <div class="card blue">
                                         <div class="card-content center flow-text">
                                           <i class="left material-icons white-text small">search</i>
@@ -105,7 +127,12 @@
                                       </div>
                                     </a>
                                   </div>
-                                  @include('users.table2')
+                                  
+                                  @if($view == 'activos')
+                                      @include('users.table2', ['id' => 'talentoByGestor_table'] )  
+                                  @elseif($view == 'inactivos')
+                                      @include('users.table2', ['id' => 'talentoByGestor_inactivos_table'] ) 
+                                  @endif
                                 </div>
                               </div>
                         </div>
@@ -127,121 +154,4 @@
 
 @endsection
 
-@push('script')
-<script>
-    $(document).ready(function() {
-
-  $('#talentoByDinamizador_table').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    "lengthChange": false,
-  });
-
-
-
-});
-
-var user = {
-  consultarTalentosByTecnoparque: function (){
-    let anho = $('#anio_proyecto_talento').val();
-
-    $('#talentoByDinamizador_table').dataTable().fnDestroy();
-      $('#talentoByDinamizador_table').DataTable({
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        processing: true,
-        serverSide: true,
-        order: [ 0, 'desc' ],
-        ajax:{
-          url: "/usuario/getuserstalentosbydatatables/"+anho,
-          
-        },
-        columns: [{
-          data: 'tipodocumento',
-          name: 'tipodocumento',
-      }, {
-          data: 'documento',
-          name: 'documento',
-      }, {
-          data: 'nombre',
-          name: 'nombre',
-      }, {
-          data: 'email',
-          name: 'email',
-      }, {
-          data: 'celular',
-          name: 'celular',
-      },  {
-          data: 'detail',
-          name: 'detail',
-          orderable: false,
-      },  ],
-      });
-
-
-  },
-  getUserTalentosByGestor: function(){
-    let anho = $('#txtanho_user_talento').val();
-    let gestor = $('#txtgestor_id').val();
-
-    if(gestor == '' || gestor == null){
-      Swal.fire(
-        'Error',
-        'Por favor selecciona un gestor',
-        'error'
-      );
-    }else if(anho == '' || anho == null){
-      Swal.fire(
-        'Error',
-        'Por favor selecciona un gestor',
-        'error'
-      );
-    }else{
-      $('#talentoByGestor_table').dataTable().fnDestroy();
-      $('#talentoByGestor_table').DataTable({
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        processing: true,
-        serverSide: true,
-        order: [ 0, 'desc' ],
-        ajax:{
-          url: "/usuario/getuserstalentosbygestordatatables/"+gestor+"/"+anho,
-          
-        },
-        columns: [{
-          data: 'tipodocumento',
-          name: 'tipodocumento',
-      }, {
-          data: 'documento',
-          name: 'documento',
-      }, {
-          data: 'nombre',
-          name: 'nombre',
-      }, {
-          data: 'email',
-          name: 'email',
-      }, {
-          data: 'celular',
-          name: 'celular',
-      },  {
-          data: 'detail',
-          name: 'detail',
-          orderable: false,
-      },  ],
-      });
-    }
-
-
-  }
-}
-
-
-
-</script>
-@endpush
 

@@ -183,19 +183,23 @@
                                                                 </div>
                                                                 <ul class="collection">
                                                                     @forelse($nodo->infocenter as $infocenter)
+                                                                        @if(isset($infocenter->user))
                                                                         <li class="collection-item">
-                                                                            
                                                                             <span class="title">
+                                                                                @if(isset($gestor->user->documento) && isset($infocenter->user->nombres))
                                                                                 {{$infocenter->user->documento}} - {{$infocenter->user->nombres}} {{$infocenter->user->apellidos}}
+                                                                                @endif
+                                                                                
                                                                             </span>
                                                                             <p>
-                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{$infocenter->user->email}}<br/>
+                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{isset($infocenter->user->email) ? $infocenter->user->email : 'No registra' }}<br/>
                                                                                <b class="cyan-text text-darken-3">Teléfono:</b> {{isset($infocenter->user->telefono) ? $infocenter->user->telefono : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Celular: </b>
                                                                                {{isset($infocenter->user->celular)  ? $infocenter->user->celular : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Telefono + (extensión) </b> {{$nodo->telefono}} ({{$infocenter->extension}})  
                                                                             </p>
                                                                         </li>
+                                                                        @endif
                                                                     @empty
                                                                         <div class="center">
                                                                            <i class="large material-icons center">
@@ -215,6 +219,7 @@
                                                             <div class="divider mailbox-divider">
                                                             </div>
                                                             @forelse($nodo->gestores as $gestor)
+                                                                @if(isset($gestor->user))
                                                                 <div class="col s12 m6 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
@@ -239,6 +244,7 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
+                                                                @endif
                                                             @empty
                                                                 <div class="col s12 m6 l6 offset-l3 m3">
                                                                     
@@ -263,15 +269,18 @@
                                                             <div class="divider mailbox-divider">
                                                             </div>
                                                             @forelse($nodo->ingresos as $ingreso)
+                                                                @if(isset($ingreso->user))
                                                                 <div class="col s12 m6 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item ">
                                                                             
                                                                             <span class="title">
+                                                                                @if(isset($ingreso->user->documento) && isset($ingreso->user->nombres))
                                                                                 {{$ingreso->user->documento}} - {{$ingreso->user->nombres}} {{$ingreso->user->apellidos}}
+                                                                                @endif
                                                                             </span>
                                                                             <p>
-                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{$ingreso->user->email}}<br/>
+                                                                                <b class="cyan-text text-darken-3">Correo Electrónco:</b> {{isset($ingreso->user->email) ? $ingreso->user->email : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Teléfono:</b> {{isset($ingreso->user->telefono) ? $ingreso->user->telefono : 'No registra'}}<br/>
                                                                                <b class="cyan-text text-darken-3">Celular: </b>
                                                                                {{isset($ingreso->user->celular)  ? $ingreso->user->celular : 'No registra'}}<br/>
@@ -279,6 +288,7 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
+                                                                @endif
                                                             @empty
                                                                 <div class="col s12 m6 l6 offset-l3 m3">
                                                                     <ul class="collection">

@@ -1554,4 +1554,14 @@ class ProyectoRepository
   {
     return Proyecto::estadoOfProjects($relations, $estado);
   }
+
+  public function getProjectsActivesByUser(array $relations, array $fase = [])
+  {
+    return Proyecto::with($relations)->whereHas(
+      'fase',
+      function ($query) use ($fase) {
+        $query->whereIn('nombre', $fase);
+      }
+    );
+  }
 }

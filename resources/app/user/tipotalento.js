@@ -8,7 +8,7 @@ var tipoTalento = {
     getSelectTipoTalento:function (idperfil) {
         let valor = $(idperfil).val();
         let nombrePerfil = $("#txttipotalento option:selected").text();
-        console.log(nombrePerfil);
+        
         if(valor == 1 || valor == 2){
 
             tipoTalento.showAprendizSena();
@@ -61,7 +61,6 @@ var tipoTalento = {
         tipoTalento.hideEmprendedor();
         tipoTalento.hideUniversitario();
         tipoTalento.hideFuncionarioEmpresa();
-        // $(".egresadoSena").css("display", "block");
         $(".egresadoSena").show();
 
     },
@@ -184,6 +183,13 @@ var tipoTalento = {
     },
     ShowSelectTipoTalento: function(){
         tipoTalento.hideAprendizSena();
+        tipoTalento.hideEgresadoSena();
+        tipoTalento.hideEmprendedor();
+        tipoTalento.hideUniversitario();
+        tipoTalento.hideFuncionarioEmpresa();
+        tipoTalento.hideFuncionarioSena();
+        tipoTalento.hideInstructorSena();
+        tipoTalento.hidePropietarioEmpresa();
         $(".selecttipotalento").css("display", "block");
     },
     getCentroFormacionAprendiz:function (){

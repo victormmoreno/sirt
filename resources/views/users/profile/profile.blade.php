@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s10 m10 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <i class="material-icons left">
                                 supervised_user_circle
                             </i>
@@ -42,14 +42,14 @@
                                                             <i class="material-icons circle teal darken-2">
                                                                 assignment_ind
                                                             </i>
-                                                            <span class="title">
+                                                            <span class="title green-complement-text">
                                                                 Nodo del Dinamizador
                                                             </span>
                                                             <p>
                                                                 Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre ? : 'No registra'}}
                                                                 <br>
                                                                     <small>
-                                                                        <b>
+                                                                        <b class="green-complement-text">
                                                                             Dirección:
                                                                         </b>
                                                                         {{$user->dinamizador->nodo->direccion ? : 'No registra'}}
@@ -78,17 +78,17 @@
                                                                 assignment_ind
                                                             </i>
                                                             <span class="title">
-                                                                <b class="teal-text darken-2">
+                                                                <b class="green-complement-text">
                                                                     Nodo del {{App\User::IsGestor()}}:
                                                                 </b>
                                                                 Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}
                                                                 <br>
-                                                                    <b class="teal-text darken-2">
+                                                                    <b class="green-complement-text">
                                                                         Linea del {{App\User::IsGestor()}}:
                                                                     </b>
                                                                     {{$user->gestor->lineatecnologica->nombre}}
                                                                     <br>
-                                                                        <b class="teal-text darken-2">
+                                                                        <b class="green-complement-text">
                                                                             Honorario del {{App\User::IsGestor()}}:
                                                                         </b>
                                                                         ${{ number_format($user->gestor->honorarios,0) ? : 'No registra'}}
@@ -117,12 +117,12 @@
                                                                 assignment_ind
                                                             </i>
                                                             <span class="title">
-                                                                <b class="teal-text darken-2">
+                                                                <b class="green-complement-text">
                                                                     Nodo del {{App\User::IsInfocenter()}}:
                                                                 </b>
                                                                 Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre ? : 'No registra'}}
                                                                 <br>
-                                                                    <b class="teal-text darken-2">
+                                                                    <b class="green-complement-text">
                                                                         Extensión del {{App\User::IsInfocenter()}}:
                                                                     </b>
                                                                     {{$user->infocenter->extension ? : 'No registra'}}
@@ -191,7 +191,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     credit_card
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Tipo Documento
                                                                 </span>
                                                                 <p>
@@ -202,11 +202,15 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     calendar_today
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Fecha de Nacimiento
                                                                 </span>
-                                                                <p>
-                                                                    {{$user->fechanacimiento->isoFormat('LL')}}
+                                                                <p> 
+                                                                    @if(isset($user->fechanacimiento))
+                                                                    {{optional($user->fechanacimiento)->isoFormat('LL')}}
+                                                                    @else
+                                                                        No registra
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -214,7 +218,7 @@
                                                                     account_balance_wallet
                                                                 </i>
                                                                 <div class="left">
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Eps
                                                                     </span>
                                                                     <p>
@@ -223,7 +227,7 @@
                                                                 </div>
                                                                 @if($user->eps->nombre == App\Models\Eps::OTRA_EPS)
                                                                 <div class="right">
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Otra Eps
                                                                     </span>
                                                                     <p>
@@ -237,7 +241,7 @@
                                                                     my_location
                                                                 </i>
                                                                 <div class="left">
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Dirección
                                                                     </span>
                                                                     <p>
@@ -245,7 +249,7 @@
                                                                     </p>
                                                                 </div>
                                                                 <div class="right">
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Barrio
                                                                     </span>
                                                                     <p>
@@ -257,7 +261,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     mail_outline
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Correo Electrónico
                                                                 </span>
                                                                 <p>
@@ -272,7 +276,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     contacts
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Documento
                                                                 </span>
                                                                 <p>
@@ -283,7 +287,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     details
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Grupo Sanguineo
                                                                 </span>
                                                                 <p>
@@ -294,7 +298,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     insert_chart
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Estrato Social
                                                                 </span>
                                                                 <p>
@@ -305,7 +309,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     map
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Lugar de Residencia
                                                                 </span>
                                                                 <p>
@@ -314,7 +318,7 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <div class="center">
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Datos contacto
                                                                     </span>
                                                                 </div>
@@ -323,14 +327,14 @@
                                                                         contact_phone
                                                                     </i>
                                                                     <p>
-                                                                        Telefono
+                                                                        <span class="title green-complement-text">Teléfono</span>
                                                                         <br>
                                                                             {{$user->telefono ? $user->telefono : 'No registra'}}
                                                                         </br>
                                                                     </p>
                                                                 </div>
                                                                 <div class="right">
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Celular
                                                                     </span>
                                                                     <p>
@@ -348,7 +352,7 @@
                                                                 <i class="material-icons circle teal darken-2">
                                                                     format_list_bulleted
                                                                 </i>
-                                                                <span class="title">
+                                                                <span class="title green-complement-text">
                                                                     Ocupaciones
                                                                 </span>
                                                                 <p>
@@ -373,7 +377,7 @@
                                                                     <i class="material-icons circle teal darken-2">
                                                                         cast_for_education
                                                                     </i>
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Institución
                                                                     </span>
                                                                     <p>
@@ -384,7 +388,7 @@
                                                                     <i class="material-icons circle teal darken-2">
                                                                         card_membership
                                                                     </i>
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Titulo obtenido
                                                                     </span>
                                                                     <p>
@@ -399,7 +403,7 @@
                                                                     <i class="material-icons circle teal darken-2">
                                                                         filter_list
                                                                     </i>
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Grado de escolaridad
                                                                     </span>
                                                                     <p>
@@ -410,11 +414,16 @@
                                                                     <i class="material-icons circle teal darken-2">
                                                                         date_range
                                                                     </i>
-                                                                    <span class="title">
+                                                                    <span class="title green-complement-text">
                                                                         Fecha de terminación
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->fecha_terminacion->isoFormat('LL') ? : 'No registra'}}
+                                                                        @if(isset($user->fecha_terminacion))
+                                                                        {{optional($user->fecha_terminacion)->isoFormat('LL') ? : 'No registra'}}
+                                                                        @else
+                                                                        No registra
+                                                                        @endif
+                                                                        
                                                                     </p>
                                                                 </li>
                                                             </ul>
@@ -439,7 +448,7 @@
                                                                             assignment_ind
                                                                         </i>
                                                                         <span>
-                                                                            <b class="teal-text darken-2">
+                                                                            <b class="green-complement-text">
                                                                                 Tipo {{App\User::IsTalento()}}:
                                                                             </b>
                                                                         </span>
@@ -491,9 +500,6 @@
                                                     <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs" href="{{route('perfil.edit')}}">
                                                         Cambiar Información Personal
                                                     </a>
-                                                    {{-- <a class="waves-effect waves-red btn-flat m-t-xs">
-                                                        Eliminar Usuario
-                                                    </a> --}}
                                                 </div>
                                             </div>
                                         </div>

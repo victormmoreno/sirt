@@ -1120,8 +1120,8 @@ class ArticulacionRepository
     ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
-    ->where('tipo_articulacion', '=', Articulacion::IsEmpresa())
-    ->whereYear('fecha_inicio', $anho)
+    ->where('articulaciones.tipoarticulacion_id', '!=', Articulacion::IsEmpresa())
+    ->whereYear('actividades.fecha_inicio', $anho)
     ->get();
   }
 
@@ -1167,7 +1167,7 @@ class ArticulacionRepository
   */
   public function create($request)
   {
-
+    
     DB::beginTransaction();
     try {
       $codigo = $this->generarCodigoArticulacion();

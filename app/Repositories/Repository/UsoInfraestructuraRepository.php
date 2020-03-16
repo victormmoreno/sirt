@@ -8,7 +8,7 @@ use App\Models\Equipo;
 use App\Models\EquipoMantenimiento;
 use App\Models\Gestor;
 use App\Models\Material;
-use App\Models\Nodo;
+use App\Models\{Nodo, Proyecto};
 use App\Models\UsoInfraestructura;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -334,7 +334,26 @@ class UsoInfraestructuraRepository
      */
     public function getUsoInfraestructuraForUser(array $relations)
     {
-        return UsoInfraestructura::usoInfraestructuraWithRelations($relations);
+        
+        return UsoInfraestructura::with([
+            'actividad'                                                     => function ($query) {
+                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
+            },
+            'actividad.nodo'                                                => function ($query) {
+                $query->select('id', 'entidad_id', 'direccion', 'telefono');
+            },
+            'actividad.nodo.entidad'                                        => function ($query) {
+                $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+            },
+            'actividad.nodo.entidad.ciudad.departamento',
+            'actividad.articulacion_proyecto'                               => function ($query) {
+                $query->select('id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
+            },
+            'actividad.articulacion_proyecto.proyecto'                      => function ($query) {
+                $query->select('id', 'articulacion_proyecto_id', 'sector_id', 'sublinea_id', 'areaconocimiento_id', 'estadoproyecto_id', 'tipoarticulacionproyecto_id', 'estadoprototipo_id', 'estado_aprobacion');
+            },
+            'actividad.articulacion_proyecto.proyecto.fase',
+        ]);
     }
 
     /**
@@ -445,6 +464,24 @@ class UsoInfraestructuraRepository
             },
 
         ];
+    }
+
+
+    public function getProyectosForUser($user)
+    {
+        return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'fases.nombre AS nombre_fase')
+        ->selectRaw('concat(actividades.codigo_actividad, " - ", actividades.nombre) AS nombre')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
+        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+        ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+        ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+        ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+        ->join('users', 'users.id', '=', 'gestores.user_id')
+        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+        ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+        ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.id');
     }
 
 }

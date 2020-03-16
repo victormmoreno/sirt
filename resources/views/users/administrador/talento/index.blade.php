@@ -36,9 +36,9 @@
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                              
                                             @if($view == 'activos')
-                                            Talentos con acceso a {{config('app.name')}}
+                                            Talentos con acceso y  con proyectos en {{config('app.name')}}
                                             @else
-                                            Talentos sin acceso a {{config('app.name')}}
+                                            Talentos sin acceso y con proyectos en {{config('app.name')}}
                                             @endif
                                         </span>
                                         <i class="material-icons orange-text text-darken-3">

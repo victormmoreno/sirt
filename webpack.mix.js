@@ -52,8 +52,8 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
 		'resources/assets/plugins/highcharts/modules/variable-pie.js',
-    'resources/assets/plugins/summernote/dist/summernote-lite.js',
-    'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
+    	'resources/assets/plugins/summernote/dist/summernote-lite.js',
+    	'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
 		'resources/assets/js/custom.js'
 	],'public/js/libs.js');
@@ -99,6 +99,7 @@ mix.scripts([
         'resources/app/user/edit.js',
 		'resources/app/user/index-user.js',
 		'resources/app/user/modaluser.js',
+		'resources/app/user/edit-profile.js',
 		'resources/app/user/role/roleuser.js',
 		'resources/app/sublinea/administrador/index.js',
 		'resources/app/articulaciones/gestor/index.js',
@@ -129,6 +130,7 @@ mix.scripts([
 		'resources/app/costoadministrativo/administrador/index.js',
 		'resources/app/usoinfraestructura/administrador/index.js',
 		'resources/app/usoinfraestructura/dinamizador/index.js',
+		'resources/app/usoinfraestructura/gestor/index-gestor.js',
 		'resources/app/usoinfraestructura/index.js',
 		'resources/app/visitante/index.js',
 		'resources/app/ingreso/index.js',

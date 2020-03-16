@@ -17,12 +17,7 @@ var userSearch = {
                 dataType: 'json',
                 processData: false,
                 success: function (data) {
-
                     userSearch.responseAlertHtml(data, inputSearch);
-
-                    console.log(data);
-
-
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     alert("Error: " + errorThrown);

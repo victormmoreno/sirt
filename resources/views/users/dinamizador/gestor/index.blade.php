@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                               <a class="footer-text left-align" href="{{route('usuario.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
@@ -32,9 +32,13 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Gestores Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
-                                            <i class="material-icons">
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                            @if($view == 'activos')
+                                            Gestores con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            @else
+                                            Gestores sin acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
+                                            @endif
+                                            <i class="material-icons orange-text text-darken-3">
                                                 supervised_user_circle
                                             </i>
                                         </span>
@@ -48,37 +52,26 @@
                             </div>
                             <div class="divider">
                             </div>
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
                             <br>
-                                <table class="display responsive-table" id="gestores_dinamizador_table">
-                                    <thead>
-                                        <th>Tipo Documento</th>
-                                        <th>Docuemento</th>
-                                        <th>Administrador</th>
-                                        <th>Correo</th>
-                                        <th>Telefono</th>
-                                        <th>Detalles</th>
-                                        
-                                    </thead>
-                    
-                                </table>
+                            @if($view == 'activos')
+                                @include('users.table', ['id' => 'gestores_dinamizador_table'] )  
+                            @elseif($view == 'inactivos')
+                                @include('users.table', ['id' => 'gestores_dinamizador_inactivos_table'] ) 
+                            @endif
+                                
                         </div>
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                     <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
-                         <i class="material-icons">add_circle</i>
+                        <i class="material-icons">add_circle</i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </main>
-<div  class="modal detalleUsers">
-  <div class="modal-content">
-    <div class="titulo_users"></div>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
+
 @endsection

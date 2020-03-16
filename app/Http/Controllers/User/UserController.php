@@ -108,6 +108,31 @@ class UserController extends Controller
         abort('404');
     }
 
+    public function getDatatablesUsersTalentosByDatatablesTrash(Request $request, UserDatatables $usersDatatables, $anio)
+    {
+        if (request()->ajax()) {
+
+            if (session()->get('login_role') == User::IsGestor()) {
+                $auth = auth()->user()->gestor->id;
+                $nodo = auth()->user()->gestor->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)
+                ->onlyTrashed()
+                ->groupBy('users.id')
+                ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                ->onlyTrashed()
+                ->groupBy('users.id')
+                ->get();
+                return $usersDatatables->datatableUsers($request, $users);
+            }
+        }
+        abort('404');
+    }
+
     public function getDatatablesUsersTalentosByGestorDatatables(Request $request, UserDatatables $usersDatatables, $gestor, $anio)
     {
         if (request()->ajax()) {
@@ -115,6 +140,22 @@ class UserController extends Controller
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)->groupBy('users.id')
+                ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            }
+        }
+        abort('404');
+    }
+    public function getDatatablesUsersTalentosByGestorDatatablesTrash(Request $request, UserDatatables $usersDatatables, $gestor, $anio)
+    {
+        if (request()->ajax()) {
+
+            if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)
+                ->onlyTrashed()
+                ->groupBy('users.id')
                 ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
@@ -442,5 +483,21 @@ class UserController extends Controller
         
 
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
+    }
+
+
+    public function gestoresByNodo($nodo = null)
+    {
+        $gestores = User::select('gestores.id')
+        ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
+        ->join('gestores','gestores.user_id', 'users.id' )
+        ->role('Gestor')
+        ->where('gestores.nodo_id', $nodo)
+        ->withTrashed()
+        ->pluck('nombre', 'id');
+
+        return response()->json([
+            'gestores' => $gestores
+        ]);
     }
 }
