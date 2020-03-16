@@ -171,6 +171,11 @@
                     usoInfraestructuraCreate.limpiarListaMateriales();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
                     usoInfraestructuraCreate.limpiarListaGestorAsesores();
+                    usoInfraestructuraCreate.removeDisableSelectButtons();
+                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
+                    usoInfraestructuraCreate.removeDisableButtonEquipos();
+                    usoInfraestructuraCreate.removeDisableButtonTalento();
+                    usoInfraestructuraCreate.removeDisableButtonMaterial();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
 
                 } else if( $("#IsEdt").is(":checked")) {
@@ -433,7 +438,7 @@
                 }else{
                     $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
                 }
-                console.log(response);
+                
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
                         
@@ -483,9 +488,9 @@
                     name: 'nombre',
                   },
                   {
-                    title: 'tipo articulacion',
-                    data: 'tipoarticulacion',
-                        name: 'tipoarticulacion',
+                    title: 'fase',
+                    data: 'fase',
+                        name: 'fase',
                   },
                   {
                     width: '20%',
@@ -504,18 +509,21 @@
             });
         },
 
-        getSelectTalentoArticulacionEmprendedores:function (id){
+        getSelectTalentoArticulacion:function (id){
             $.ajax({
                 dataType:'json',
                 type:'get',
                 url:'/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
+                
                 $('#txtequipo').empty();
                 $('#txtgestor').removeAttr('value');
                 $('#txtlinea').removeAttr('value');
                 $('#txtlineatecnologica').empty();
                 $('#txtmaterial').empty();
+                $('#txttalento').empty();
 
+                $('#txttalento').append('<option value="">Seleccione el talento</option>');
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
@@ -556,10 +564,18 @@
                     $('#txtnodo').val();
                     $("label[for='txtlinea']").addClass('active');
                 }
+
+                if (response.talentos.length != 0) {
+                    $.each(response.talentos, function(e, talento) {
+                        $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
+                    });
+                }else{
+                    $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                }
             
                 if (response.equipos.length != 0) {
-                    $.each(response.lineastecnologicas, function(i, lineatecnologica) {
-                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
+                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
                 }else{
                     $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
@@ -582,6 +598,7 @@
                     $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
                 }
 
+                $('#txttalento').select2();
                 $('#txtmaterial').select2();
                 $('#txtequipo').select2();
                 $('#txtlineatecnologica').select2();                 
@@ -692,8 +709,8 @@
                 }
                 
                 if (response.lineastecnologicas.length != 0) {
-                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {        
-                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
+                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
                 }else{
                    $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>'); 
@@ -727,6 +744,7 @@
         getEquipoPorLinea:function(){
             let lineatecnologica = $('#txtlineatecnologica').val();
             let nodo = $('#txtnodo').val();
+            console.log(lineatecnologica);
 
             if(nodo != '' && lineatecnologica !=''){
                 $.ajax({
@@ -734,7 +752,7 @@
                     type:'get',
                     url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
-                    
+                   
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
@@ -969,7 +987,7 @@
             $("label[for='txtactividad']").text("Articulación");
             $divActividad.show();
 
-            usoInfraestructuraCreate.getSelectTalentoArticulacionEmprendedores(id);
+            usoInfraestructuraCreate.getSelectTalentoArticulacion(id);
 
         }
 

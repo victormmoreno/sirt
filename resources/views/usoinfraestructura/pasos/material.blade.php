@@ -32,7 +32,7 @@
                 <div class="input-field col s12 m7 l7">
                   
                     @if(isset($usoinfraestructura->actividad->nodo->materiales))
-                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}>
+                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}}>
                             <option value="">Seleccione Material de  Formación</option>
                             @foreach($usoinfraestructura->actividad->nodo->materiales->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $material)
                                 
@@ -43,7 +43,7 @@
                             @endforeach
                         </select>
                     @else
-                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}>
+                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}}>
                             <option value="">Seleccione Material de  Formación</option>
                         </select>
                 
@@ -54,7 +54,7 @@
                     </label>
                 </div>
                 <div class="input-field col s12 m2 l2">
-                    <input  id="txtcantidad" name="txtcantidad" type="number" value="1"  {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}/>
+                    <input  id="txtcantidad" name="txtcantidad" type="number" value="1"  {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt()) ? 'disabled' : ''}}/>
                     <label for="txtcantidad">
                         Cantidad
                         <span class="red-text">
@@ -64,7 +64,7 @@
                     <label class="error" for="txtcantidad" id="txtcantidad-error"></label>
                 </div>
                 <div class="input-field col s2 m3 l3">
-                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()))
+                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ))
                    
                         <a class="waves-effect waves-light btn blue m-b-xs btnAgregarMaterial"  disabled>
                             Agregar Material 

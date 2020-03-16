@@ -57,20 +57,17 @@
                             
                             @if(isset($usoinfraestructura->usogestores))
                                 @forelse ($usoinfraestructura->usogestores as $key => $gestor)
-
+                                    @if($gestor->id === auth()->user()->gestor->id)
                                         <tr id="filaGestor{{$gestor->id}}">
-                                            @if($gestor->id == auth()->user()->gestor->id)
-                                            
+                                            {{-- {{$gestor}} {{auth()->user()->gestor->id}} --}}
                                                 <td>{{$gestor->lineatecnologica->abreviatura}} -  {{$gestor->lineatecnologica->nombre}}</td>
                                                 <td>
                                                     <input type="hidden" name="gestor[]" value="{{$gestor->id}}" min="0" />{{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo  
                                                 </td>
                                                 <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}" min="0"></td>
                                                 <td><input type="number" name="asesoriaindirecta[]" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
-                                            @endif
-                    
-                                        </tr>
-
+                                        </tr> 
+                                    @endif
                                 @empty
                                 <tr id="filaGestor{{$usoinfraestructura->actividad->gestor->id}}">
                                     <td>{{$usoinfraestructura->actividad->gestor->lineatecnologica->abreviatura}} -  {{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}</td>
@@ -82,7 +79,7 @@
                                 </tr>
                                 @endforelse
                             @else
-                               <tr>
+                                <tr>
                                     <td></td>
                                     <td></td>
                                     <td>Seleccione primero el tipo de uso de infraestructura.</td>
@@ -115,7 +112,7 @@
                             
                             @foreach($gestores as $gestor)
                                 <option value="{{$gestor->id}}">
-                                    {{$gestor->user()->where('deleted_at', null)->first()->documento}} - {{$gestor->user()->where('deleted_at', null)->first()->nombres}} {{$gestor->user()->where('deleted_at', null)->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
+                                    {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                                 </option>
                                 @endforeach
 
@@ -124,7 +121,7 @@
                            
                                 @foreach($gestores as $gestor)
                                 <option value="{{$gestor->id}}">
-                                    {{$gestor->user()->where('deleted_at', null)->first()->documento}} - {{$gestor->user()->where('deleted_at', null)->first()->nombres}} {{$gestor->user()->where('deleted_at', null)->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
+                                    {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                                 </option>
                                 @endforeach
                         @endif

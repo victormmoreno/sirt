@@ -138,10 +138,10 @@
                                                                                 {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase->nombre : 'No registra' }}
                                                                             </p>
                                                                         @elseif(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion != null)
-                                                                            <p>
+                                                                            {{-- <p>
                                                                                 <strong class="cyan-text text-darken-3">Tipo Articulación:</strong>
                                                                                 {{$usoinfraestructura->actividad->articulacion_proyecto->articulacion->tipoarticulacion->nombre}}
-                                                                            </p>
+                                                                            </p> --}}
                                                                             
                                                                             @if(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion != null)
                                                                                     <p>
