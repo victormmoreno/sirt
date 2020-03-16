@@ -1,40 +1,66 @@
-<table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-  <thead>
-    <tr>
-      <th>Código de la Articulación</th>
-      <th>Nombre</th>
-      <th>Tipo de Articulación</th>
-      <th>Gestor a cargo</th>
-      <th>Estado</th>
-      <th>Revisado Final</th>
-      <th>Detalles</th>
-      <th>Entregables</th>
-      @if ( \Session::get('login_role') != App\User::IsAdministrador() )
-      <th>Editar</th>
-      @endif
-      
-      @if ( \Session::get('login_role') == App\User::IsDinamizador() )
-        <th>Eliminar</th>
-      @endif
-    </tr>
-  </thead>
-  <tfoot>
-    <tr>
-      <th><input type="text" name="email" class="codigo_articulacion" placeholder="Buscar por código de articulación"></th>
-      <th><input type="text" name="nombre" class="nombre" placeholder="Buscar por nombre"></th>
-      <th><input type="text" name="tipo_articulacion" class="tipo_articulacion" placeholder="Buscar por Tipo de Articulación"></th>
-      <th><input type="text" name="nombre_completo_gestor" class="nombre_completo_gestor" placeholder="Buscar por Gestor"></th>
-      <th><input type="text" name="estado" class="estado" placeholder="Buscar por Estado"></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      @if ( \Session::get('login_role') != App\User::IsAdministrador() )
-      <th></th>
-      @endif
-      
-      @if ( \Session::get('login_role') == App\User::IsDinamizador() )
+@if (Session::get('login_role') == App\User::IsGestor())
+  <table id="articulacionesGestor_table" class="display responsive-table datatable-example dataTable">
+    <thead>
+      <tr>
+        <th>Código de la Articulación</th>
+        <th>Nombre</th>
+        <th>Fase</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th><input type="text" name="codigo_articulacion_GestorTable" id="codigo_articulacion_GestorTable" placeholder="Buscar por código de articulación"></th>
+        <th><input type="text" name="nombre_GestorTable" id="nombre_GestorTable" placeholder="Buscar por nombre"></th>
+        <th><input type="text" name="fase_GestorTable" id="fase_GestorTable" placeholder="Buscar por fase"></th>
         <th></th>
-      @endif
-    </tr>
-  </tfoot>
-</table>
+      </tr>
+    </tfoot>
+  </table>
+@endif
+@if (Session::get('login_role') == App\User::IsDinamizador())
+  <table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable">
+    <thead>
+      <tr>
+        <th>Código de la Articulación</th>
+        <th>Gestor</th>
+        <th>Nombre</th>
+        <th>Fase</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th><input type="text" name="codigo_articulacion_DinamizadorTable" id="codigo_articulacion_DinamizadorTable" placeholder="Buscar por código de articulación"></th>
+        <th><input type="text" name="nombre_GestorDinamizadorTable" id="nombre_GestorDinamizadorTable" placeholder="Buscar por gestor"></th>
+        <th><input type="text" name="nombre_DinamizadorTable" id="nombre_DinamizadorTable" placeholder="Buscar por nombre"></th>
+        <th><input type="text" name="fase_DinamizadorTable" id="fase_DinamizadorTable" placeholder="Buscar por fase"></th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
+@endif
+@if (Session::get('login_role') == App\User::IsAdministrador())
+  <table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable">
+    <thead>
+      <tr>
+        <th>Código de la Articulación</th>
+        <th>Nodo</th>
+        <th>Gestor</th>
+        <th>Nombre</th>
+        <th>Fase</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th><input type="text" name="codigo_articulacion_AdministradorTable" id="codigo_articulacion_AdministradorTable" placeholder="Buscar por código de articulación"></th>
+        <th><input type="text" name="nombre_nodoAdministradorTable" id="nombre_nodoAdministradorTable" placeholder="Buscar por nodo"></th>
+        <th><input type="text" name="nombre_GestorAdministradorTable" id="nombre_GestorAdministradorTable" placeholder="Buscar por gestor"></th>
+        <th><input type="text" name="nombre_AdministradorTable" id="nombre_AdministradorTable" placeholder="Buscar por nombre"></th>
+        <th><input type="text" name="fase_AdministradorTable" id="fase_AdministradorTable" placeholder="Buscar por fase"></th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
+@endif
