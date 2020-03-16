@@ -16,29 +16,37 @@
               @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m4 l4 center">
-                    <a class="btn-large blue m-b-xs" href="{{route('pdf.proyecto.incio', $proyecto->id)}}" target="_blank">
-                        <i class="material-icons left">file_download</i>
-                        Descargar formulario.
-                    </a>
+                  <a href="{{route('pdf.proyecto.inicio', $proyecto->id)}}" target="_blank">
+                    <div class="card-panel blue white-text">
+                      <i class="material-icons left">file_download</i>
+                      Descargar formulario.
+                    </div>
+                  </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                    <a class="btn-large blue-grey m-b-xs" href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
-                        <i class="material-icons left">library_books</i>
-                        Entregables de la Fase de Inicio.
-                    </a>
+                  <a href="{{route('proyecto.entregables.inicio', $proyecto->id)}}">
+                    <div class="card-panel blue-grey white-text">
+                      <i class="material-icons left">library_books</i>
+                      Entregables de la Fase de Inicio.
+                    </div>
+                  </a>
                 </div>
                 <div class="col s12 m4 l4 center">
                   @if ($proyecto->fase->nombre == 'Inicio')
-                    <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.inicio', $proyecto->id)}}">
+                  <a href="{{route('proyecto.notificar.inicio', $proyecto->id)}}">
+                    <div class="card-panel yellow accent-1 black-text">
                       Solicitar al dinamizador que apruebe la fase de inicio.
-                    </a>
+                    </div>
+                  </a>
                   @else
-                    <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>
+                  <a disabled>
+                    <div class="card-panel yellow accent-1 black-text">
                       Esta fase ya ha sido aprobada por el dinamizador.
-                    </a>
+                    </div>
+                  </a>
                   @endif
                 </div>
-            </div>
+              </div>
               <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
                 {!! method_field('PUT')!!}
                 @include('proyectos.gestor.form_inicio', [
