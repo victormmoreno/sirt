@@ -15,14 +15,18 @@
             <div class="row">
               @include('proyectos.navegacion_fases')
               <div class="row">
-                <div class="col s12 m12 l12 center">
+                <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
                   @if ($proyecto->fase->nombre == 'Planeación')
-                    <a class="btn-large yellow accent-1 m-b-xs black-text" href="{{route('proyecto.notificar.planeacion', $proyecto->id)}}">
+                  <a href="{{route('proyecto.notificar.planeacion', $proyecto->id)}}">
+                    <div class="card-panel yellow accent-1 black-text">
                       Solicitar al dinamizador que apruebe la fase de planeación.
-                    </a>
+                    </div>
+                  </a>
                   @else
-                    <a class="btn-large yellow accent-1 m-b-xs black-text" disabled>
-                      Esta fase ya ha sido aprobada por el dinamizador.
+                    <a disabled>
+                      <div class="card-panel yellow accent-1 black-text">
+                        Esta fase ya ha sido aprobada por el dinamizador.
+                      </div>
                     </a>
                   @endif
                 </div>

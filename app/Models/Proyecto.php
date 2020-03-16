@@ -130,17 +130,17 @@ class Proyecto extends Model
 
   public function empresas()
   {
-    return $this->morphedByMany(Empresa::class, 'propietario');
+    return $this->morphedByMany(Empresa::class, 'propietario')->withTimestamps();
   }
 
   public function gruposinvestigacion()
   {
-    return $this->morphedByMany(GrupoInvestigacion::class, 'propietario');
+    return $this->morphedByMany(GrupoInvestigacion::class, 'propietario')->withTimestamps();
   }
 
   public function users_propietarios()
   {
-    return $this->morphedByMany(User::class, 'propietario');
+    return $this->morphedByMany(User::class, 'propietario')->withTimestamps();
   }
 
   public function sector()

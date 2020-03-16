@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Articulaciones')
+@section('meta-title', 'Articulaciones G.I')
 @section('meta-content', 'Articulaciones')
 @section('meta-keywords', 'Articulaciones')
 @section('content')
@@ -57,41 +57,7 @@
                     <label for="txtanho_articulaciones_Gestor">Seleccione el Año</label>
                   </div>
                 </div>
-                <table id="articulacionesGestor_table" class="display responsive-table datatable-example dataTable">
-                  <thead>
-                    <tr>
-                      <th>Código de la Articulación</th>
-                      <th>Nombre</th>
-                      <th>Estado</th>
-                      <th>Revisado Final</th>
-                      <th>Detalles</th>
-                      <th>Entregables</th>
-                      <th>Editar</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th><input type="text" name="codigo_articulacion_GestorTable" id="codigo_articulacion_GestorTable" placeholder="Buscar por código de articulación"></th>
-                      <th><input type="text" name="nombre_GestorTable" id="nombre_GestorTable" placeholder="Buscar por nombre"></th>
-                      <th><input type="text" name="estado_GestorTable" id="estado_GestorTable" placeholder="Buscar por Estado"></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-
-                  </tbody>
-                </table>
-                {{-- <div class="col s12 m2 l2">
-                  <a href="{{route('articulacion.excel.gestor', auth()->user()->gestor->id)}}">
-                    <div class="card green">
-                      <div class="card-content center">
-                        <span class="white-text">Descargar tabla</span>
-                      </div>
-                    </div>
-                  </a>
-                </div> --}}
+                @include('articulaciones.table')
               </div>
             </div>
           </div>

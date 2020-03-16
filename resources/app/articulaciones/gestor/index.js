@@ -11,8 +11,9 @@ function consultarArticulacionesDelGestor(anho) {
       url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
+        d.gestor = $('#nombre_GestorAdministradorTable').val(),
         d.nombre = $('#nombre_GestorTable').val(),
-        d.estado = $('#estado_GestorTable').val(),
+        d.fase = $('#fase_GestorTable').val(),
         d.search = $('input[type="search"]').val()
       }
     },
@@ -26,26 +27,12 @@ function consultarArticulacionesDelGestor(anho) {
         name: 'nombre',
       },
       {
-        data: 'estado',
-        name: 'estado',
+        data: 'nombre_fase',
+        name: 'nombre_fase',
       },
       {
-        data: 'revisado_final',
-        name: 'revisado_final',
-      },
-      {
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        data: 'entregables',
-        name: 'entregables',
-        orderable: false
-      },
-      {
-        data: 'edit',
-        name: 'edit',
+        data: 'proceso',
+        name: 'proceso',
         orderable: false
       },
     ],
@@ -60,7 +47,6 @@ $("#nombre_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();
 });
 
-
-$("#estado_GestorTable").keyup(function(){
+$("#fase_GestorTable").keyup(function(){
   $('#articulacionesGestor_table').DataTable().draw();
 });

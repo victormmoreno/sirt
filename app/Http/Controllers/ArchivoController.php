@@ -386,27 +386,13 @@ class ArchivoController extends Controller
     return Storage::response($path);
   }
 
-  // Descarga el archivo de la articulación
-  public function downloadFileArticulacion($idFile)
-  {
-    $ruta = $this->archivoRepository->consultarRutaDeArchivoDeLaArticulacionPorId($idFile);
-    $path = str_replace('storage', 'public', $ruta->ruta);
-    return Storage::response($path);
-  }
-
-  /**
-   * Muestra los archivos de una articulacion
-   */
-  public function datatableArchivosDeUnaArticulacion($id)
-  {
-    if (request()->ajax()) {
-      $articulacion = Articulacion::findOrFail($id);
-      
-      $archivosDeLaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($articulacion->articulacion_proyecto_id, null);
-      return $this->datatableArchivosArticulacionProyecto($archivosDeLaArticulacion);
-    }
-  }
-
+  // // Descarga el archivo de la articulación
+  // public function downloadFileArticulacion($idFile)
+  // {
+  //   $ruta = $this->archivoRepository->consultarRutaDeArchivoDeLaArticulacionPorId($idFile);
+  //   $path = str_replace('storage', 'public', $ruta->ruta);
+  //   return Storage::response($path);
+  // }
 
   /**
   * Tabla para mostrar los archivos de una articulacion_proyecto
@@ -457,6 +443,22 @@ class ArchivoController extends Controller
   }
 
   /**
+  * Muestra la datatable de los arcivos de una articulación
+  * @param int $id Id del proyecto
+  * @param string $fase Nombre de la fase
+  * @return Datatable
+  * @author Victor Manuel Moreno Vega
+  */
+  public function datatableArchivosDeUnaArticulacion($id, $fase)
+  {
+    if (request()->ajax()) {
+      $articulacion = Articulacion::findOrFail($id);
+      $archivosDeUnaArticulacion = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($articulacion->articulacion_proyecto_id, $fase)->get();
+      return $this->datatableArchivosArticulacionProyecto($archivosDeUnaArticulacion);
+    }
+  }
+
+  /**
    * Subida de un arcivo al servidor
    * @param Request
    * @param int $id Id de la articulación
@@ -467,7 +469,7 @@ class ArchivoController extends Controller
   {
     if (request()->ajax()) {
       $this->validate(request(), [
-        'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xls,pptx,sldx,ppsx,exe,zip',
+        'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
       ],
       [
         'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
@@ -484,20 +486,16 @@ class ArchivoController extends Controller
       // Fase donde se guardará el archivo de la articulación
       $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
       // Tipo de Aritculación (AGI / Si es con grupo de investigación) ó (AEE / Si es con empresa o emprendedor)
-      $tipo = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
-      $folderTipoArticulacion = '';
-      $tipo->tipo_articulacion == 'Grupo de Investigación' ? $folderTipoArticulacion = 'AGI' : $folderTipoArticulacion = 'AEE';
-      // Nombre para la carpeta donde se guardaran los archivos de las articulaciones
-      $articulacion = 'Articulaciones';
+      $articulacion = Articulacion::findOrFail($id);;
       // Año de la fecha de inicio de una articulación
-      $anhoFechaInicio = $tipo->fecha_inicio;
-      $anhoFechaInicio = $anhoFechaInicio->format('Y');
+      $anhoFechaInicio = $articulacion->articulacion_proyecto->actividad->fecha_inicio;
+      $anhoFechaInicio = $anhoFechaInicio->format('YYYY');
       // Id del nodo
       $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
       // Id de articulacion proyecto
       $id = Articulacion::find($id);
       $id = $id->articulacion_proyecto_id;
-      $fileUrl = $file->storeAs("public/".$tecnoparque.'/'.$anhoFechaInicio.'/'.$articulacion.'/'.$folderTipoArticulacion.'/'.$id.'/'.$fase->nombre, $fileName);
+      $fileUrl = $file->storeAs("public/".$tecnoparque.'/'.$anhoFechaInicio.'/Articulaciones/AGI/'.$id.'/'.$fase->nombre, $fileName);
       $this->archivoRepository->storeFileArticulacionProyecto($id, $fase->id, Storage::url($fileUrl));
     }
   }
