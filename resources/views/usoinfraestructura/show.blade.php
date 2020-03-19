@@ -460,9 +460,9 @@
                                                             <a href="{{route('usoinfraestructura.edit',$usoinfraestructura->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
                                                                 Cambiar Información 
                                                             </a>
-                                                            <a href="javascript:void(0)"  class="waves-effect waves-teal  darken-2 red darken-2 btn-flat m-t-xs center-aling" onclick="usoinfraestructuraIndex.destroyUsoInfraestructura({{$usoinfraestructura->id}})">
+                                                            <a href="javascript:void(0)"  class="waves-effect red lighten-3 btn 2 btn-flat m-t-xs center-aling" onclick="usoinfraestructuraIndex.destroyUsoInfraestructura({{$usoinfraestructura->id}})">
                                                                 <i class="material-icons right">
-                                                                    arrow_back
+                                                                    delete_sweep
                                                                 </i>
                                                                 Eliminar
                                                             </a>

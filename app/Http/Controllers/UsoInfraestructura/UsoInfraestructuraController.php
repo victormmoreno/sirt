@@ -329,6 +329,7 @@ class UsoInfraestructuraController extends Controller
         $this->authorize('create', UsoInfraestructura::class);
         $sumasArray   = [];
         $artulaciones = $this->getDataArticulaciones()->count();
+        
         $projects     = $this->getDataProjectsForUser()->count();
         $date         = Carbon::now()->format('Y-m-d');
 
@@ -618,7 +619,20 @@ class UsoInfraestructuraController extends Controller
                 })
                 ->whereIn('fase_id',$fase)
                 ->get();
-
+        }elseif(Session::has('login_role') && Session::get('login_role') == User::IsTalento()){
+            return $this->getUsoIngraestructuraArtculacionRepository()
+                ->getArticulacionesForUser($relations)
+                
+                ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+                    $query->withTrashed();
+                })
+                ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
+                    $query->where('documento', $user);
+                    
+                })
+                ->whereIn('fase_id',$fase)
+                ->get();
+        
         }else{
             response()->json([
                 'error' => 'no tienes permisos'
@@ -671,10 +685,10 @@ class UsoInfraestructuraController extends Controller
     {
         $user = auth()->user()->documento;
 
-        $estado = [
-            'Inicio',
-            'Planeación',
-            'Ejecución',
+        $fase = [
+            Fase::IsInicio(),
+            Fase::IsPlaneacion(),
+            Fase::IsEjecucion(),
         ];
 
         $relations = [
@@ -691,7 +705,7 @@ class UsoInfraestructuraController extends Controller
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
-            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsActivesByUser($relations, $estado)
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForFaseById($relations, $fase)
                 ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
                     $query->where('documento', $user);
                 })
@@ -699,7 +713,7 @@ class UsoInfraestructuraController extends Controller
 
         } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
 
-            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsActivesByUser($relations, $estado)
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForFaseById($relations, $fase)
             ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user) {
                 $query->where('documento', $user);
             })
@@ -832,8 +846,9 @@ class UsoInfraestructuraController extends Controller
                 ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
                 ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
                 ->where('proyectos.id', $proyectoTalento->id)
-                ->where('users.estado', User::IsActive())
-                ->where('users.deleted_at', null)
+                ->whereHas('user', function($query){
+                    $query->withTrashed();
+                })
                 ->get();
 
             return response()->json([
@@ -911,6 +926,9 @@ class UsoInfraestructuraController extends Controller
                 ->join('articulaciones', 'articulacion_proyecto.id', 'articulaciones.articulacion_proyecto_id')
                 ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
                 ->where('articulaciones.id', $articulacion->artculacion_id)
+                ->whereHas('user', function($query){
+                    $query->withTrashed();
+                })
                 ->get();
 
             return response()->json([

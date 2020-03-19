@@ -46,7 +46,7 @@
             @endguest
           </a>
         </li>
-        <li class="hide-on-small-only">
+        <li class="hide-on-med-and-down">
           <clock>
           </clock>
         </li>

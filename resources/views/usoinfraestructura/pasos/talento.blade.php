@@ -91,13 +91,13 @@
                         </thead>
                         <tbody id="detalleTalento">
                             @if(isset($usoinfraestructura->usotalentos))
-                                @forelse ($usoinfraestructura->usotalentos as $key => $talento)
-                                    @if(isset($talento->user))
+                            @forelse ($usoinfraestructura->usotalentos as $key => $talento)  
+                                 @if(isset($talento->user()->withTrashed()->first()->id))                             
                                         <tr id="filaTalento{{$talento->id}}">
                                             <td>
                                                 <input type="hidden" name="talento[]" value="{{$talento->id}}"/>
                                                 
-                                                {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user()->withTrashed()->first()->apellidos}}
+                                                {{$talento->user()->withTrashed()->get()->last()->documento}} - {{$talento->user()->withTrashed()->get()->last()->nombres}} {{$talento->user()->withTrashed()->get()->last()->apellidos}}
                                                 
                                             </td>
                                             <td>

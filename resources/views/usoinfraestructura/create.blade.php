@@ -82,10 +82,7 @@
                                 Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.
                             </p>
                             <p>
-                                Aún no tienes articulaciones en fase de inicio o en fase de ejecución.
-                            </p>
-                            <p>
-                                Aún no tienes EDTS registradas.
+                                Aún no tienes articulaciones en fase de inicio, planeacion o en fase de ejecución.
                             </p>
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                             <p>

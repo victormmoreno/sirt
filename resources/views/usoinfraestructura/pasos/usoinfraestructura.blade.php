@@ -9,7 +9,7 @@
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     <li class="collection-item">
                         <span class="title"><b>Paso 1</b></span>
-                        <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos - Articulaciones - EDT)</p>
+                        <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos - Articulaciones)</p>
                     </li>
                 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                     <li class="collection-item">
