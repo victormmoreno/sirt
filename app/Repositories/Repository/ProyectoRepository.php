@@ -87,6 +87,7 @@ class ProyectoRepository
   public function eliminarProyecto_Repository($id)
   {
 
+
     DB::beginTransaction();
     try {
       $proyecto = Proyecto::find($id);
@@ -1561,6 +1562,16 @@ class ProyectoRepository
       'fase',
       function ($query) use ($fase) {
         $query->whereIn('nombre', $fase);
+      }
+    );
+  }
+
+  public function getProjectsForFaseById(array $relations, array $fase = [])
+  {
+    return Proyecto::with($relations)->whereHas(
+      'fase',
+      function ($query) use ($fase) {
+        $query->whereIn('id', $fase);
       }
     );
   }
