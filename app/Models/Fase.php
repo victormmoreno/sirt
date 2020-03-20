@@ -9,9 +9,40 @@ class Fase extends Model
   protected $table = 'fases';
   public $timestamps = false;
 
+  const IS_INICIO = 1;
+  const IS_PLANEACION = 2;
+  const IS_EJECUCION = 3;
+  const IS_CIERRE = 4;
+  const IS_SUSPENDIDO = 5;
+
   protected $fillable = [
     'nombre',
   ];
+
+  // Retorno para las constantes del campo fase
+  public static function IsInicio()
+  {
+    return self::IS_INICIO;
+  }
+
+  public static function IsPlaneacion()
+  {
+      return self::IS_PLANEACION;
+  }
+  public static function IsEjecucion()
+  {
+      return self::IS_EJECUCION;
+  }
+
+  public static function IsCierre()
+  {
+      return self::IS_CIERRE;
+  }
+
+  public static function IsSuspendido()
+  {
+      return self::IS_SUSPENDIDO;
+  }
 
   public function proyectos()
   {

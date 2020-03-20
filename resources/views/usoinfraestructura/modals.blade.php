@@ -25,7 +25,7 @@
           <thead>
             <th>Código de la Articulación</th>
             <th>Nombre de la Articulación</th>
-            <th>Tipo de artculación</th>
+            <th>Fase</th>
             <th>Seleccionar Articulación</th>
           </thead>
         </table>

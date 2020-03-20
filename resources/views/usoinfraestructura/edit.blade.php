@@ -76,6 +76,12 @@
             @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto))
             usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->id}});
             @endif
+
+            @if(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion))
+            usoInfraestructuraUpdate.getSelectTalentoArticulacion({{$usoinfraestructura->actividad->articulacion_proyecto->articulacion->id}});
+            @endif
+            
+            
 	        
 	    });
 
@@ -255,6 +261,9 @@
 	        limpiarInputNodo: function (){
 	            $('#txtnodo').val("");
 	        },
+            limpiarTipoUsoInfraestructura: function (){
+	            $('#txttipousoinfraestructura').removeAttr("checked");
+	        },
 	        limpiarListaTalentos: function (){
 	            $('#detalleTalento').empty();
 	        },
@@ -371,7 +380,7 @@
                     $('#txtnodo').val();
                     $("label[for='txtlinea']").addClass('active');
                 }
-                console.log(response);
+               
                 if (response.talentos.length != 0) {
                     $.each(response.talentos, function(e, talento) {
                         $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
@@ -444,9 +453,9 @@
                     name: 'nombre',
                   },
                   {
-                    title: 'tipo articulacion',
-                    data: 'tipoarticulacion',
-                        name: 'tipoarticulacion',
+                    title: 'fase',
+                    data: 'fase',
+                        name: 'fase',
                   },
                   {
                     width: '20%',
@@ -465,7 +474,7 @@
             });
         },
         
-        getSelectTalentoArticulacionEmprendedores:function (id){
+        getSelectTalentoArticulacion:function (id){
             $.ajax({
                 dataType:'json',
                 type:'get',
@@ -476,7 +485,9 @@
                 $('#txtlinea').removeAttr('value');
                 $('#txtlineatecnologica').empty();
                 $('#txtmaterial').empty();
+                $('#txttalento').empty();
 
+                $('#txttalento').append('<option value="">Seleccione el talento</option>');
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
@@ -486,8 +497,13 @@
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
+                        @if(!isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion))
 
+                        
                         fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.articulacion.lineatecnologica_abreviatura + ' - ' + response.articulacion.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]" value="'+response.articulacion.gestor_id+'">'+response.articulacion.documento + ' - ' +response.articulacion.user_nombres+' '+ response.articulacion.user_apellidos +' - Gestor a cargo'+'</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="1"></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
+                        @endif
+
+                        
                         cont++;
                         $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
@@ -516,6 +532,22 @@
                     $('#txtnodo').val();
                     $("label[for='txtlinea']").addClass('active');
                 }
+
+                if (response.talentos.length != 0) {
+                    $.each(response.talentos, function(e, talento) {
+                        $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
+                    });
+                }else{
+                    $('#txttalento').append('<option value="">no se encontraron resultados</option>');
+                }
+            
+                if (response.equipos.length != 0) {
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
+                        $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
+                    });
+                }else{
+                    $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
+                }
             
                 if (response.equipos.length != 0) {
                     $.each(response.lineastecnologicas, function(i, lineatecnologica) {
@@ -541,7 +573,7 @@
                 }else{
                     $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
                 }
-
+                $('#txttalento').select2();
                 $('#txtmaterial').select2();
                 $('#txtequipo').select2();
                 $('#txtlineatecnologica').select2();                 
@@ -825,6 +857,7 @@
         usoInfraestructuraUpdate.addDisableButtonEquipos();
         usoInfraestructuraUpdate.addDisableButtonMaterial();
         usoInfraestructuraUpdate.limpiarInputNodo();
+        usoInfraestructuraUpdate.limpiarTipoUsoInfraestructura();
         
     }
 
@@ -925,7 +958,7 @@
             $("label[for='txtactividad']").addClass('active');
             $("label[for='txtactividad']").text("Articulación");
             
-            usoInfraestructuraUpdate.getSelectTalentoArticulacionEmprendedores(id);
+            usoInfraestructuraUpdate.getSelectTalentoArticulacion(id);
 
         }
 

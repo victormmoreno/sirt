@@ -375,7 +375,6 @@ Route::group([
         ->name('usoinfraestructura.articulacionesforuser');
 
 
-
     Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
         ->name('usoinfraestructura.talentosporarticulacion');
 
@@ -1026,6 +1025,7 @@ Route::resource('laboratorio', 'LaboratorioController')->parameters([
 /*=====  End of rutas para las funcionalidades de la configuracion app  ======*/
 
 /**
+ * 
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
  */
 // Route::group(

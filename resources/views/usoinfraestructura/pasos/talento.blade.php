@@ -29,10 +29,10 @@
             <div class="divider"></div>
             <div class="row">
                 <div class="col s12 m10 l10 offset-l1 m1">
-                    {{-- {{$usoinfraestructura->actividad->articulacion_proyecto->talentos->user}} --}}
+                  
                 <div class="row">
                         <div class="input-field col s10 m8 l8">
-                            <select class="js-states browser-default select2" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()) ? 'disabled' : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
+                            <select class="js-states browser-default select2" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? "disabled" : ''}}   id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
                                 
                                 @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos->user))
                                     <option value="">
@@ -46,7 +46,7 @@
                                     @endif
                                     @endforeach
                                 @else
-                                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() || $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsArticulacion()))
+                                    @if(isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() )
                                         <option value="">
                                             No se encontraron resultados
                                         </option>
@@ -91,13 +91,13 @@
                         </thead>
                         <tbody id="detalleTalento">
                             @if(isset($usoinfraestructura->usotalentos))
-                                @forelse ($usoinfraestructura->usotalentos as $key => $talento)
-                                    @if(isset($talento->user))
+                            @forelse ($usoinfraestructura->usotalentos as $key => $talento)  
+                                 @if(isset($talento->user()->withTrashed()->first()->id))                             
                                         <tr id="filaTalento{{$talento->id}}">
                                             <td>
                                                 <input type="hidden" name="talento[]" value="{{$talento->id}}"/>
                                                 
-                                                {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user()->withTrashed()->first()->apellidos}}
+                                                {{$talento->user()->withTrashed()->get()->last()->documento}} - {{$talento->user()->withTrashed()->get()->last()->nombres}} {{$talento->user()->withTrashed()->get()->last()->apellidos}}
                                                 
                                             </td>
                                             <td>
