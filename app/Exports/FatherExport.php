@@ -5,7 +5,6 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithTitle, WithEvents, WithDrawings};
 use PhpOffice\PhpSpreadsheet\Style\{Border, Fill};
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use Illuminate\Contracts\View\View;
 
@@ -161,6 +160,30 @@ abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAu
 
   abstract public function view(): View;
 
-  abstract public function drawings();
+    /**
+  * Método para pinta imágenes en el archivo de Excel
+  * @return object
+  * @abstract
+  * @author dum
+  */
+  public function drawings()
+  {
+    $drawing = new Drawing();
+    $drawing->setName('Logo Tecnoparque');
+    $drawing->setPath(public_path('/img/logonacional_Negro.png'));
+    $drawing->setResizeProportional(false);
+    $drawing->setHeight(104);
+    $drawing->setWidth(120);
+    $drawing->setCoordinates('A1');
+
+    $drawing2 = new Drawing();
+    $drawing2->setName('Logo Sennova');
+    $drawing2->setPath(public_path('/img/sennova.png'));
+    $drawing2->setResizeProportional(false);
+    $drawing2->setHeight(104);
+    $drawing2->setWidth(120);
+    $drawing2->setCoordinates('F1');
+    return [$drawing, $drawing2];
+  }
 
 }
