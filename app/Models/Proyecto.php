@@ -140,7 +140,7 @@ class Proyecto extends Model
 
   public function users_propietarios()
   {
-    return $this->morphedByMany(User::class, 'propietario')->withTimestamps();
+    return $this->morphedByMany(User::class, 'propietario')->withTimestamps()->withTrashed();
   }
 
   public function sector()

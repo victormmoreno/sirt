@@ -53,11 +53,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('indicadores')}}">
+<li class="no-padding {{setActiveRoute('indicadores')}}">
   <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
-</li> --}}
+</li>
 <li class="no-padding {{setActiveRoute('grafico')}}">
   <a href="{{route('grafico')}}" class="{{setActiveRouteActivePage('grafico')}}" rel="canonical" title="Gráficos">
     <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
