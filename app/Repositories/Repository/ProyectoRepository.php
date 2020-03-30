@@ -274,60 +274,62 @@ class ProyectoRepository
    * @return Collection
    * @author dum
    */
-  public function consultarProyectos_Repository()
+  public function consultarProyectos_Repository(string $fecha_inicio = '', string $fecha_cierre = '')
   {
     return Proyecto::select(
-      'fecha_inicio',
-      'sectores.nombre AS nombre_sector',
+      'entidades.nombre AS nodo',
+      'actividades.codigo_actividad',
+      'actividades.nombre',
       'lineastecnologicas.nombre AS nombre_linea',
       'sublineas.nombre AS nombre_sublinea',
       'areasconocimiento.nombre AS nombre_areaconocimiento',
-      'estadosproyecto.nombre AS nombre_estadoproyecto',
-      'tiposarticulacionesproyectos.nombre AS nombre_tipoproyecto',
-      'observaciones_proyecto',
-      'fecha_cierre',
-      'impacto_proyecto',
-      'economia_naranja',
-      'art_cti',
-      'diri_ar_emp',
-      'reci_ar_emp',
-      'dine_reg',
-      'acc',
-      'manual_uso_inf',
-      'acta_inicio',
-      // 'aval_empresa_grupo',
-      'estado_arte',
-      'actas_seguimiento',
-      'video_tutorial',
-      'ficha_caracterizacion',
-      'acta_cierre',
-      'encuesta',
-      'lecciones_aprendidas',
-      'actividades.codigo_actividad',
-      'actividades.nombre'
+      'fecha_inicio',
+      'fases.nombre AS nombre_fase'
     )
       ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
-      ->selectRaw('concat(g.documento, " - ", g.nombres, " ", g.apellidos) AS gestor')
-      // ->selectRaw('GROUP_CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos SEPARATOR "; ") AS talentos')
-      ->selectRaw('IF(art_cti = 1, nom_act_cti, "No Aplica") AS nom_act_cti')
-      ->selectRaw('IF(video_tutorial = 1, url_videotutorial, "No Aplica") AS url_videotutorial')
-      ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado", "No Aprobado")) AS revisado_final')
+      ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+      ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
+      ->selectRaw('IF(fases.nombre = "Cierre", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
+      ->selectRaw('IF(fases.nombre = "Cierre" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
+      ->selectRaw('IF(areasconocimiento.nombre = "Otro", otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
+      ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
+      ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
+      ->selectRaw('IF(economia_naranja = 0, "No", "Si") AS economia_naranja')
+      ->selectRaw('IF(economia_naranja = 0, "No aplica", tipo_economianaranja) AS tipo_economianaranja')
+      ->selectRaw('IF(dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
+      ->selectRaw('IF(dirigido_discapacitados = 0, "No aplica", tipo_discapacitados) AS tipo_discapacitados')
+      ->selectRaw('IF(art_cti = 0, "No", "Si") AS art_cti')
+      ->selectRaw('IF(art_cti = 0, "No aplica", nom_act_cti) AS nom_act_cti')
+      ->selectRaw('IF(fases.nombre = "Cierre", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
       ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
       ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
       ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+      ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
       ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-      ->join('sectores', 'sectores.id', '=', 'proyectos.sector_id')
       ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
       ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
       ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
-      ->join('tiposarticulacionesproyectos', 'tiposarticulacionesproyectos.id', '=', 'proyectos.tipoarticulacionproyecto_id')
-      // ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-      // ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
-      // ->join('users', 'users.id', '=', 'talentos.user_id')
+      ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
       ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-      ->join('users AS g', 'g.id', '=', 'gestores.user_id')
-      ->join('estadosproyecto', 'estadosproyecto.id', '=', 'proyectos.estadoproyecto_id')
-      ->where('estado_aprobacion', Proyecto::IsAceptado());
+      ->join('users', 'users.id', '=', 'gestores.user_id')
+      ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+        $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+          $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+        })
+        ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+          $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+        });
+      })
+      // ->where(function ($q) use ($fecha_inicio, $fecha_cierre) {
+      //   $q->where(function ($query) use ($fecha_inicio, $fecha_cierre) {
+      //     $query->whereBetween('actividades.fecha_cierre', [$fecha_inicio, $fecha_cierre])
+      //       ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
+      //   })
+      //     ->orWhere(function ($query) {
+      //       $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
+      //     });
+      // })
+      ->orderBy('entidades.nombre');
   }
 
   /**
