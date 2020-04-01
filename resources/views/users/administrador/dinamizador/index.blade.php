@@ -36,7 +36,7 @@
                                             @else
                                                 Dinamizadores sin acceso a {{config('app.name')}}
                                             @endif
-                                            
+
                                         </span>
                                         <i class="material-icons orange-text text-darken-3">
                                             supervised_user_circle
@@ -51,8 +51,8 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.dinamizador.papelera'), 'message' => 'Ver Dinamizadores sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.dinamizador.index'), 'message' => 'Ver Dinamizadores con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = 'UserAdministradorDinamizador.downloadAllDinamizador(1)',$event= 'UserAdministradorDinamizador.downloadDinamizador(1)','url' => route('usuario.dinamizador.papelera'), 'message' => 'Ver Dinamizadores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = 'UserAdministradorDinamizador.downloadAllDinamizador(0)', $event= 'UserAdministradorDinamizador.downloadDinamizador(0)','url' => route('usuario.dinamizador.index'), 'message' => 'Ver Dinamizadores con acceso'])
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -61,23 +61,23 @@
                                     @elseif($view == 'inactivos')
                                         <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorDinamizador.selectDinamizadoresPorNodoTrash()">
                                     @endif
-                                    
+
                                         <option value="">Seleccione nodo</option>
                                         @foreach($nodos as $id => $nodo)
                                           <option value="{{$id}}">{{$nodo}}</option>
                                         @endforeach
-                                    </select>       
+                                    </select>
                                 </div>
                             </div>
                             <br>
-                            
+
                             <br>
                             @if($view == 'activos')
-       
-                                 @include('users.table', ['id' => 'dinamizador_table_activos'] )  
+
+                                 @include('users.table', ['id' => 'dinamizador_table_activos'] )
                             @elseif($view == 'inactivos')
-                            
-                            @include('users.table', ['id' => 'dinamizador_table_inactivos'] ) 
+
+                            @include('users.table', ['id' => 'dinamizador_table_inactivos'] )
                             @endif
                         </div>
                     </div>

@@ -23,7 +23,7 @@ class AdminController extends Controller
         $this->middleware([
             'auth',
             'role_or_permission:'
-            . session()->get('login_role', config('laravelpermission.roles.roleAdministrador')),
+                . session()->get('login_role', config('laravelpermission.roles.roleAdministrador')),
         ]);
         $this->adminRepository = $adminRepository;
         $this->userRepository  = $userRepository;
@@ -53,15 +53,14 @@ class AdminController extends Controller
                 abort('404');
                 break;
         }
-
     }
 
-     public function trash(Request $request)
+    public function trash(Request $request)
     {
         $this->authorize('indexAdministrador', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                               
+
                 if (request()->ajax()) {
                     $user = $this->adminRepository->getAllAdministradores()->onlyTrashed()->get();
                     return $this->userdatables->datatableUsers($request, $user);
@@ -75,10 +74,10 @@ class AdminController extends Controller
         }
     }
 
-    public function exportAdminUser($extension = 'xlsx')
+    public function exportAdminUser($state = 1, $extension = 'xlsx')
     {
         $this->authorize('exportAdminUser', User::class);
-        $user = $this->getData();
+        $user = $this->getData($state);
         $this->setQuery($user);
         return (new AdminUserExport($this->getQuery()))->download("administradores.{$extension}");
     }
@@ -103,7 +102,7 @@ class AdminController extends Controller
      * @return collection
      * @author dum
      */
-    private function getData()
+    private function getData($state = null)
     {
         $role = [User::IsAdministrador()];
 
@@ -134,29 +133,12 @@ class AdminController extends Controller
             },
             'ocupaciones',
         ];
-
-        return $this->userRepository->userInfoWithRelations($role, $relations)->get();
+        if ($state == null) {
+            return $this->userRepository->userInfoWithRelations($role, $relations)->get();
+        } elseif ($state == 1) {
+            return $this->userRepository->userInfoWithRelations($role, $relations)->where('estado', $state)->get();
+        } elseif ($state == 0) {
+            return $this->userRepository->userInfoWithRelations($role, $relations)->where('estado', $state)->onlyTrashed()->get();
+        }
     }
-
-
-    /**
-     * descargar pdf administradores
-     * @return object
-     * @author devjul
-     */
-    public function downloadPDFAdministrator($extennsion = '.pdf', $orientacion = 'portrait')
-    {
-        // $this->authorize('downloadCertificatedPlataform', User::class);
-
-        $user = $this->getData();
-
-
-        $pdf = PDF::loadView('pdf.user.admin.reportListAdministrator', compact('user'));
-
-        $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-
-        return $pdf->stream("certificado  " . config('app.name') . $extennsion);
-    }
-
-
 }

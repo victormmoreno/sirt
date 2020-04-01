@@ -8,16 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
-    
-      return view('spa');
+
+    return view('spa');
     // $proyecto = App\Models\Proyecto::find(455);
     // $proyecto->users_propietarios()->attach([7]);
 })->name('/');
 
-DB::listen(function ($query) {
-    // echo "<pre>{$query->sql}</pre>";
-    // echo "<pre>{$query->time}</pre>";
-});
+// DB::listen(function ($query) {
+// echo "<pre>{$query->sql}</pre>";
+// echo "<pre>{$query->time}</pre>";
+// });
 
 /*===========================================================
 =            ruta para revisar funcionaliddes de prueba          =
@@ -29,8 +29,6 @@ DB::listen(function ($query) {
 // return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
 // return new App\Mail\User\SendNotificationPassoword(App\User::first(), 'asdafasafasdf');
 // });
-
-Route::get('excel', 'User\AdminController@exportAdminUser');
 
 /*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
 
@@ -86,7 +84,7 @@ Route::group(
 
         Route::get('administrador', 'AdminController@index')->name('usuario.administrador.index');
         Route::get('administrador/papelera', 'AdminController@trash')->name('usuario.administrador.indexinactivos');
-        Route::get('administrador/pdf', 'AdminController@downloadPDFAdministrator')->name('usuario.administrador.downloadpdf');
+
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
         Route::get('dinamizador/getDinamizador/papelera/{id}', 'DinamizadorController@getDinanizadorTrash')->name('usuario.dinamizador.getDinanizador.papelera');
@@ -137,7 +135,7 @@ Route::group(
 
         Route::get('usuarios/allusuarios', 'UserController@getAllUsersInDatatable')->name('usuario.allusers');
         Route::get('consultarUserPorId/{id}', 'UserController@findUserById');
-        
+
 
         Route::get('/', [
             'uses' => 'UserController@index',
@@ -225,6 +223,26 @@ Route::group(
         ]);
     }
 );
+
+Route::group([
+    'prefix'     => 'usuario/excel',
+    'namespace'  => 'User',
+], function () {
+    Route::get('/administrador/{state}', [
+        'uses' => 'AdminController@exportAdminUser',
+        'as'   => 'usuario.excel.administrador',
+    ]);
+
+    Route::get('/dinamizador/{state}/{nodo}', [
+        'uses' => 'DinamizadorController@exportDinamizadorUser',
+        'as'   => 'usuario.excel.dinamizador',
+    ]);
+
+    Route::get('/dinamizador/{state}', [
+        'uses' => 'DinamizadorController@exportDinamizadorUser',
+        'as'   => 'usuario.excel.dinamizador.all',
+    ]);
+});
 
 
 /*========================================================================
@@ -391,13 +409,13 @@ Route::group([
         ->name('usoinfraestructura.projectsforuser');
     Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
         ->name('usoinfraestructura.projectsforuser.projects');
-    
+
     Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
         ->name('usoinfraestructura.actividadesporgestor');
 
     Route::get('usoinfraestructura/actividades/datatable/{gestor}/{anio}/{actividad}', 'UsoInfraestructuraController@getDatatableInfoActividad')
         ->name('usoinfraestructura.actividadesdatatable');
-    
+
     Route::delete('usoinfraestructura/{id}', 'UsoInfraestructuraController@destroy')
         ->name('usoinfraestructura.destroy');
 });
@@ -598,8 +616,6 @@ Route::group(
         Route::put('/{id}', 'ArticulacionController@update')->name('articulacion.update')->middleware('role_session:Gestor|Dinamizador');
         Route::post('/', 'ArticulacionController@store')->name('articulacion.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileArticulacion')->name('articulacion.files.upload')->middleware('role_session:Gestor');
-
-
     }
 );
 
@@ -844,56 +860,57 @@ Route::group(
 /**
  * Route group para el módulo de indicadores
  */
-  Route::group([
-    'prefix' => 'indicadores',
-    'middleware' => ['auth', 'role_session:Administrador|Dinamizador',]
-  ],
-  function () {
-    Route::get('/', 'IndicadorController@index')->name('indicadores');
-    // Relacionado a proyectos
-    Route::get('/totalProyectosInscritos/{idnodo}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalProyectosInscritos');
-    Route::get('/totalProyectosEnEjecucion/{id}', 'IndicadorController@totalProyectosEjecucion');
-    Route::get('/totalPFFfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPFFfinalizados');
-    Route::get('/totalInscritosSena/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalInscritosSena');
-    Route::get('/totalProyectosEnEjecucionSena/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionSena');
-    Route::get('/totalPFFSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFSena');
-    Route::get('/totalCostoPFFFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoSena');
-    Route::get('/totalInscritosEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalInscritosEmpresas');
-    Route::get('/totalProyectosEnEjecucionEmpresas/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmpresas');
-    Route::get('/totalPFFfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFfinalizadosConEmpresas');
-    Route::get('/totalCostoPFFFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmpresas');
-    Route::get('/totalTalentosConProyectosEnAsocioConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConProyectosEnAsocioConEmpresas');
-    Route::get('/totalProyectosInscritosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectosInscritosEmprendedoresInvetoresOtro');
-    Route::get('/totalPFFFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFFinalizadosEmprendedoresInvetoresOtro');
-    Route::get('/totalProyectosEnEjecucionEmprendedoresInventoresOtros/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmprendedoresInventoresOtros');
-    Route::get('/totalCostoPFFFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmprendedoresOtros');
-    Route::get('/totalPMVfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPMVfinalizados');
-    Route::get('/totalPMVSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVSena');
-    Route::get('/totalCostoPMVFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoSena');
-    Route::get('/totalPMVfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVfinalizadosConEmpresas');
-    Route::get('/totalCostoPMVFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmpresas');
-    Route::get('/totalPMVFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVFinalizadosEmprendedoresInvetoresOtro');
-    Route::get('/totalCostoPMVFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmprendedoresOtros');
-    Route::get('/totalProyectoConGruposInternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternos');
-    Route::get('/totalProyectoConGruposInternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternosFinalizados');
-    Route::get('/totalProyectoConGruposExternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternos');
-    Route::get('/totalProyectoConGruposExternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternosFinalizados');
-    Route::get('/totalTalentosConApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConApoyoYProyectosAsociados');
-    Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
-    // Relacionado a articulaciones
-    Route::get('/totalAsesoriasIDiEmpresasYEmprendedores/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasYEmprendedores');
-    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
-    Route::get('/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresFinalizadas');
-    Route::get('/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}/{nombre_tipo_articulacion}', 'IndicadorController@totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas');
-    // Relacionado a edts
-    Route::get('/totalEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalEdts');
-    Route::get('/totalAtendidosEnEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}/{campos}', 'IndicadorController@totalAtendidosEnEdts');
-    // Relacionado a talento
-    Route::get('/totalTalentosEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEnProyecto');
-    Route::get('/totalTalentosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSenaEnProyecto');
-    Route::get('/totalTalentosMujeresSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosMujeresSenaEnProyecto');
-    Route::get('/totalTalentosEgresadosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEgresadosSenaEnProyecto');
-  }
+Route::group(
+    [
+        'prefix' => 'indicadores',
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador',]
+    ],
+    function () {
+        Route::get('/', 'IndicadorController@index')->name('indicadores');
+        // Relacionado a proyectos
+        Route::get('/totalProyectosInscritos/{idnodo}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalProyectosInscritos');
+        Route::get('/totalProyectosEnEjecucion/{id}', 'IndicadorController@totalProyectosEjecucion');
+        Route::get('/totalPFFfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPFFfinalizados');
+        Route::get('/totalInscritosSena/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalInscritosSena');
+        Route::get('/totalProyectosEnEjecucionSena/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionSena');
+        Route::get('/totalPFFSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFSena');
+        Route::get('/totalCostoPFFFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoSena');
+        Route::get('/totalInscritosEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalInscritosEmpresas');
+        Route::get('/totalProyectosEnEjecucionEmpresas/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmpresas');
+        Route::get('/totalPFFfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFfinalizadosConEmpresas');
+        Route::get('/totalCostoPFFFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmpresas');
+        Route::get('/totalTalentosConProyectosEnAsocioConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConProyectosEnAsocioConEmpresas');
+        Route::get('/totalProyectosInscritosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectosInscritosEmprendedoresInvetoresOtro');
+        Route::get('/totalPFFFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFFinalizadosEmprendedoresInvetoresOtro');
+        Route::get('/totalProyectosEnEjecucionEmprendedoresInventoresOtros/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmprendedoresInventoresOtros');
+        Route::get('/totalCostoPFFFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmprendedoresOtros');
+        Route::get('/totalPMVfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPMVfinalizados');
+        Route::get('/totalPMVSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVSena');
+        Route::get('/totalCostoPMVFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoSena');
+        Route::get('/totalPMVfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVfinalizadosConEmpresas');
+        Route::get('/totalCostoPMVFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmpresas');
+        Route::get('/totalPMVFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVFinalizadosEmprendedoresInvetoresOtro');
+        Route::get('/totalCostoPMVFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmprendedoresOtros');
+        Route::get('/totalProyectoConGruposInternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternos');
+        Route::get('/totalProyectoConGruposInternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternosFinalizados');
+        Route::get('/totalProyectoConGruposExternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternos');
+        Route::get('/totalProyectoConGruposExternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternosFinalizados');
+        Route::get('/totalTalentosConApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConApoyoYProyectosAsociados');
+        Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
+        // Relacionado a articulaciones
+        Route::get('/totalAsesoriasIDiEmpresasYEmprendedores/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasYEmprendedores');
+        Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
+        Route::get('/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresFinalizadas');
+        Route::get('/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}/{nombre_tipo_articulacion}', 'IndicadorController@totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas');
+        // Relacionado a edts
+        Route::get('/totalEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalEdts');
+        Route::get('/totalAtendidosEnEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}/{campos}', 'IndicadorController@totalAtendidosEnEdts');
+        // Relacionado a talento
+        Route::get('/totalTalentosEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEnProyecto');
+        Route::get('/totalTalentosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSenaEnProyecto');
+        Route::get('/totalTalentosMujeresSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosMujeresSenaEnProyecto');
+        Route::get('/totalTalentosEgresadosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEgresadosSenaEnProyecto');
+    }
 );
 
 
@@ -920,31 +937,31 @@ Route::group(
         'namespace' => 'PDF',
     ],
 
-function () {
-  Route::get('/', 'PdfComiteController@printPDF')->name('print');
-  Route::get('/usos_proyecto/{id}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.proyecto.usos');
-  Route::get('/inicio_proyecto/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.inicio');
-  Route::get('/inicio_articulacion/{id}', 'PdfArticulacionController@printFormularioInicio')->name('pdf.articulacion.inicio');
-  Route::get('/cierre_articulacion/{id}', 'PdfArticulacionController@printFormularioCierre')->name('pdf.articulacion.cierre');
-  Route::get('/cierre/{id}', 'PdfProyectoController@printFormularioCierre')->name('pdf.proyecto.cierre');
-  Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
-}
+    function () {
+        Route::get('/', 'PdfComiteController@printPDF')->name('print');
+        Route::get('/usos_proyecto/{id}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.proyecto.usos');
+        Route::get('/inicio_proyecto/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.inicio');
+        Route::get('/inicio_articulacion/{id}', 'PdfArticulacionController@printFormularioInicio')->name('pdf.articulacion.inicio');
+        Route::get('/cierre_articulacion/{id}', 'PdfArticulacionController@printFormularioCierre')->name('pdf.articulacion.cierre');
+        Route::get('/cierre/{id}', 'PdfProyectoController@printFormularioCierre')->name('pdf.proyecto.cierre');
+        Route::put('/acc/{id}', 'PdfProyectoController@printAcuerdoConfidencialidadCompromiso')->name('pdf.proyecto.acc');
+    }
 
 );
 
 //------------------------------ Route group para el módulo de publicacion
 Route::group([
-  'prefix' => 'publicacion',
-  'middleware' => ['auth']
+    'prefix' => 'publicacion',
+    'middleware' => ['auth']
 ], function () {
-  Route::get('/', 'PublicacionController@index')->name('publicacion.index')->middleware('role_session:Desarrollador');
-  Route::get('/updateEstado/{id}/{estado}', 'PublicacionController@updateEstado')->name('publicacion.update.estado')->middleware('role_session:Desarrollador');
-  Route::get('/create', 'PublicacionController@create')->name('publicacion.create');
-  Route::get('/show/{codigo}', 'PublicacionController@show')->name('publicacion.show');
-  Route::get('/edit/{codigo}', 'PublicacionController@edit')->name('publicacion.edit')->middleware('role_session:Desarrollador');
-  Route::get('/datatablePublicaciones', 'PublicacionController@datatablePublicaciones');
-  Route::put('/{id}', 'PublicacionController@update')->name('publicacion.update')->middleware('role_session:Desarrollador');
-  Route::post('/store', 'PublicacionController@store')->name('publicacion.store');
+    Route::get('/', 'PublicacionController@index')->name('publicacion.index')->middleware('role_session:Desarrollador');
+    Route::get('/updateEstado/{id}/{estado}', 'PublicacionController@updateEstado')->name('publicacion.update.estado')->middleware('role_session:Desarrollador');
+    Route::get('/create', 'PublicacionController@create')->name('publicacion.create');
+    Route::get('/show/{codigo}', 'PublicacionController@show')->name('publicacion.show');
+    Route::get('/edit/{codigo}', 'PublicacionController@edit')->name('publicacion.edit')->middleware('role_session:Desarrollador');
+    Route::get('/datatablePublicaciones', 'PublicacionController@datatablePublicaciones');
+    Route::put('/{id}', 'PublicacionController@update')->name('publicacion.update')->middleware('role_session:Desarrollador');
+    Route::post('/store', 'PublicacionController@store')->name('publicacion.store');
 });
 
 
@@ -1026,7 +1043,7 @@ Route::resource('laboratorio', 'LaboratorioController')->parameters([
 /*=====  End of rutas para las funcionalidades de la configuracion app  ======*/
 
 /**
- * 
+ *
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
  */
 // Route::group(
@@ -1057,6 +1074,6 @@ Route::resource('laboratorio', 'LaboratorioController')->parameters([
 // );
 
 
-Route::get('creditos', function(){
+Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');

@@ -1761,9 +1761,6 @@ $(document).ready(function() {
     });
 });
 
-
-
-
 $(document).ready(function() {
     $('#administrador_inactivos_table').DataTable({
         language: {
@@ -1799,6 +1796,25 @@ $(document).ready(function() {
     });
 });
 
+let downloadAdministrador = {
+    downloadAdministrator: function(state){
+        if(state !== null){
+            location.href = '/usuario/excel/administrador/'+ state;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    }
+}
+
 
 $(document).ready(function() {
     $('#dinamizador_table_activos').DataTable({
@@ -1816,7 +1832,7 @@ $(document).ready(function() {
     });
 
 
-    
+
 });
 var UserAdministradorDinamizador = {
     selectDinamizadoresPorNodo: function() {
@@ -1909,7 +1925,33 @@ var UserAdministradorDinamizador = {
             }).clear().draw();
         }
     },
+
+    downloadDinamizador: function(state){
+
+        let nodo = $('#selectnodo').val();
+        if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un nodo',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null && (nodo !== null || nodo !== 0)) {
+            location.href = '/usuario/excel/dinamizador/'+ state+'/'+nodo;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+    downloadAllDinamizador:function (state){
+        location.href = '/usuario/excel/dinamizador/'+ state;
+    }
 }
+
+
+
 $(document).ready(function() {
     $('#gestor_table_activos').DataTable({
         language: {

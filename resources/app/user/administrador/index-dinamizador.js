@@ -14,7 +14,7 @@ $(document).ready(function() {
     });
 
 
-    
+
 });
 var UserAdministradorDinamizador = {
     selectDinamizadoresPorNodo: function() {
@@ -107,4 +107,29 @@ var UserAdministradorDinamizador = {
             }).clear().draw();
         }
     },
+
+    downloadDinamizador: function(state){
+
+        let nodo = $('#selectnodo').val();
+        if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un nodo',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null && (nodo !== null || nodo !== 0)) {
+            location.href = '/usuario/excel/dinamizador/'+ state+'/'+nodo;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+    downloadAllDinamizador:function (state){
+        location.href = '/usuario/excel/dinamizador/'+ state;
+    }
 }
+
+
