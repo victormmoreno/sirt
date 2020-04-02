@@ -103,7 +103,7 @@ class DinamizadorController extends Controller
         $this->authorize('exportAdminUser', User::class);
         $user = $this->getData($state, $nodo);
         $this->setQuery($user);
-        return (new DinamizadorUserExport($this->getQuery()))->download("administradores.{$extension}");
+        return (new DinamizadorUserExport($this->getQuery()))->download("Dinamizadores - " . config('app.name') . ".{$extension}");
     }
 
     private function setQuery($query)

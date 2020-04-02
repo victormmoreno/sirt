@@ -34,7 +34,7 @@
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             @if($view == 'activos')
-                                            Gestores con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            Gestores con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
                                             @else
                                             Gestores sin acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
                                             @endif
@@ -52,15 +52,15 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = null,$event= null,'url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = null,$event= null,'url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
                             <br>
                             @if($view == 'activos')
-                                @include('users.table', ['id' => 'gestores_dinamizador_table'] )  
+                                @include('users.table', ['id' => 'gestores_dinamizador_table'] )
                             @elseif($view == 'inactivos')
-                                @include('users.table', ['id' => 'gestores_dinamizador_inactivos_table'] ) 
+                                @include('users.table', ['id' => 'gestores_dinamizador_inactivos_table'] )
                             @endif
-                                
+
                         </div>
                     </div>
                 </div>
