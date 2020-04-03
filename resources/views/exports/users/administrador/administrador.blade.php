@@ -79,7 +79,7 @@
                 {{$user->tipodocumento->nombre}}
             </td>
             <td>
-                {{$user->documento}}
+                {{isset($user->documento) ? $user->documento : 'No registra'}}
             </td>
             <td>
                 {{$user->ciudadexpedicion->nombre}} ({{$user->ciudadexpedicion->departamento->nombre}})
@@ -88,13 +88,13 @@
                 {{$user->nombres}} {{$user->apellidos}}
             </td>
             <td>
-                {{$user->fechanacimiento->isoFormat('LL')}}
+                {{isset($user->fechanacimiento) ? $user->fechanacimiento->isoFormat('LL') : 'No registra'}}
             </td>
             <td>
-                {{$user->fechanacimiento->age}} años
+            {{isset($user->fechanacimiento->age) ? $user->fechanacimiento->age: 'No registra'}} {{isset($user->fechanacimiento) ? "años" : ""}}
             </td>
             <td>
-                {{$user->email}}
+                {{isset($user->email)? $user->email: 'No registra'}}
             </td>
             <td>
                 {{!empty($user->telefono) ? $user->telefono : 'No registra'}}
@@ -130,10 +130,13 @@
                 {{!empty($user->titulo_obtenido) ? $user->titulo_obtenido : 'No registra'}}
             </td>
             <td>
-                {{$user->fecha_terminacion->isoFormat('LL')}}
+                {{isset($user->fecha_terminacion) ? $user->fecha_terminacion->isoFormat('LL') : 'No registra'}}
             </td>
             <td>
                 {{$user->getOcupacionesNames()->implode(', ') ? : 'No registra'}}
+            </td>
+            <td>
+                {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}
             </td>
             <td>
                 {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}

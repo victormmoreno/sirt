@@ -242,6 +242,16 @@ Route::group([
         'uses' => 'DinamizadorController@exportDinamizadorUser',
         'as'   => 'usuario.excel.dinamizador.all',
     ]);
+
+    Route::get('/gestor/{state}/{nodo}', [
+        'uses' => 'GestorController@exportGestorUser',
+        'as'   => 'usuario.excel.gestor',
+    ]);
+
+    Route::get('/gestor/{state}', [
+        'uses' => 'GestorController@exportGestorUser',
+        'as'   => 'usuario.excel.gestor.all',
+    ]);
 });
 
 
