@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Exports\FatherExport;
 use Maatwebsite\Excel\Events\{AfterSheet};
 
-class Proyectos extends FatherExport
+class ProyectosExport extends FatherExport
 {
 
     public function __construct($query)

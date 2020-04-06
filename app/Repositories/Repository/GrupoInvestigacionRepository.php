@@ -9,6 +9,46 @@ class GrupoInvestigacionRepository
 {
 
   /**
+   * Método para consultar grupos de investigación propietarios de propiedades intelectuales
+   * @param string $fecha_inicio
+   * @param string $fecha_cierre
+   * @return Builder
+   * @author dum
+   **/
+  public function gruposPropietarios(string $fecha_inicio, string $fecha_cierre)
+  {
+    return GrupoInvestigacion::select(
+      'codigo_actividad',
+      'codigo_grupo',
+      'entidades.nombre AS nombre_grupo',
+      'email_entidad',
+      'institucion',
+      'clasificacionescolciencias.nombre AS nombre_clasificacion'
+    )
+    ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+    ->selectRaw('if(tipogrupo = '.GrupoInvestigacion::IsInterno().', "SENA", "Externo") AS tipogrupo')
+    ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
+    ->join('propietarios', 'propietarios.propietario_id', '=', 'gruposinvestigacion.id')
+    ->join('proyectos', 'proyectos.id', '=', 'propietarios.proyecto_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+    ->where('entidades.nombre', '!=', 'No Aplica')
+    ->where('propietarios.propietario_type', 'App\Models\GrupoInvestigacion')
+    ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+      });
+    });
+  }
+
+  /**
    * Consulta los grupos de investigacion y los proyectos y articulaciones a los qu eestá asociados
    * @param string $fecha_inicio Primera fecha para realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro

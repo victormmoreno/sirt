@@ -134,16 +134,6 @@ class ArticulacionController extends Controller
     return Excel::download(new ArticulacionesUnicaExport($this->getArticulacionRepository(), $id, $articulacion, $this->getArticulacionProyectoRepository(), $this->getGrupoInvestigacionRepository(), $this->getEmpresaRepository()), 'Articulacion ' . $articulacion->codigo_articulacion . '.xls');
   }
 
-  // /**
-  //  * Genera el excel de todas las articulaciones de tecnoparque
-  //  * @return Response
-  //  * @author dum
-  //  */
-  // public function articulacionesDeTecnoparque()
-  // {
-  //   return Excel::download(new ArticulacionesTecnoparqueExport($this->articulacionRepository, $id, $articulaciones), 'Articulaciones de Tecnoparque.xls');
-  // }
-
   /**
    * Retorna el valor de $empresaRepository
    *

@@ -15,8 +15,15 @@
                 @if ($historico[$i]->fase == 'Finalizado')
                 El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el proyecto el día {{$historico[$i]->created_at}}
                 @else
-                El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
-                {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]  ->created_at}}.
+                  @if ($historico[$i]->movimiento == 'Cambió')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el gestor del proyecto el día {{$historico[$i]->created_at}}
+                  (Este proyecto se encontraba en fase de {{$historico[$i]->fase}})
+                  @elseif($historico[$i]->movimiento == 'Reversó')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la fase del proyecto de {{$historico[$i]->fase}} a Inicio
+                  @else
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                  {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]  ->created_at}}.
+                  @endif
                 @endif
               </li>
             @endfor
