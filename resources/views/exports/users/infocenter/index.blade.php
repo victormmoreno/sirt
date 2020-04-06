@@ -25,11 +25,18 @@
             <th>
                 Fecha de Nacimiento
             </th>
-            
+            <th>
+                Edad
+            </th>
             <th>
                 Correo Electrónico
             </th>
-            
+            <th>
+                Telefono
+            </th>
+            <th>
+                Celular
+            </th>
             <th>
                 Dirección
             </th>
@@ -72,7 +79,7 @@
         @forelse($users as $user)
         <tr>
             <td>
-                Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}
+                Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}
             </td>
             <td>
                 {{$user->tipodocumento->nombre}}

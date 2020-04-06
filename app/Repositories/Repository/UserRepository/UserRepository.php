@@ -993,18 +993,31 @@ class UserRepository
     {
 
         if ($user != null && session()->get('login_role') == User::IsGestor()) {
+            if ($nodo == null) {
+                return $this->getInfoUsersTalentosWithProjects($anio)
+                    ->where('gestores.id', $user);
+            }
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
         } else if ($user == null && session()->get('login_role') == User::IsDinamizador()) {
+            if ($nodo == null) {
+                $this->getInfoUsersTalentosWithProjects($anio);
+            }
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo);
         } else if ($user != null && session()->get('login_role') == User::IsDinamizador()) {
-
+            if ($nodo == null) {
+                $this->getInfoUsersTalentosWithProjects($anio)
+                    ->where('gestores.id', $user);
+            }
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
         } else if ($user == null && session()->get('login_role') == User::IsAdministrador()) {
+            if ($nodo == null) {
+                $this->getInfoUsersTalentosWithProjects($anio);
+            }
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo);
         }
@@ -1012,6 +1025,17 @@ class UserRepository
 
     private function getInfoUsersTalentosWithProjects($anio = null)
     {
+        if ($anio == null) {
+            return User::InfoUserDatatable()
+                ->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
+                ->join('talentos', 'talentos.user_id', '=', 'users.id')
+                ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
+                ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+                ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id');
+        }
         return User::InfoUserDatatable()
             ->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
             ->join('talentos', 'talentos.user_id', '=', 'users.id')

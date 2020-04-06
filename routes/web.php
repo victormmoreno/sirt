@@ -252,6 +252,26 @@ Route::group([
         'uses' => 'GestorController@exportGestorUser',
         'as'   => 'usuario.excel.gestor.all',
     ]);
+
+    Route::get('/infocenter/{state}/{nodo}', [
+        'uses' => 'InfocenterController@exportInfocenterUser',
+        'as'   => 'usuario.excel.infocenter',
+    ]);
+
+    Route::get('/infocenter/{state}', [
+        'uses' => 'InfocenterController@exportInfocenterUser',
+        'as'   => 'usuario.excel.infocenter.all',
+    ]);
+
+    Route::get('/talento/{state}/{nodo}/{anio}', [
+        'uses' => 'TalentoController@exportTalentoUser',
+        'as'   => 'usuario.excel.talento',
+    ]);
+
+    Route::get('/talento/{state}', [
+        'uses' => 'TalentoController@exportTalentoUser',
+        'as'   => 'usuario.excel.talento.all',
+    ]);
 });
 
 

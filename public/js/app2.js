@@ -2191,6 +2191,28 @@ var UserAdministradorInfocenter = {
             }).clear().draw();
         }
     },
+    downloadInfocenter: function(state){
+
+        let nodo = $('#selectnodo').val();
+        if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un nodo',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null && (nodo !== null || nodo !== 0)) {
+            location.href = '/usuario/excel/infocenter/'+ state+'/'+nodo;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+    downloadAllInfocenter:function (state){
+        location.href = '/usuario/excel/infocenter/'+ state;
+    }
 }
 $(document).ready(function() {
   $('#talentoByDinamizador_table_activos').DataTable({
@@ -2319,12 +2341,38 @@ $(document).ready(function() {
             orderable: false,
         },  ],
         });
-  
-      }
-      
-      
-      
+      }      
     },
+    downloadTalento: function(state){
+
+        let nodo = $('#selectnodo').val();
+
+        let anio = $('#txt_anio_user').val();
+        if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un nodo',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un año',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null && (nodo !== null || nodo !== 0) &&(anio !== null || anio !== 0)) {
+            location.href = '/usuario/excel/talento/'+ state+'/'+nodo+'/'+anio;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+    downloadAllTalentos:function (state){
+        location.href = '/usuario/excel/talento/'+ state;
+    }
     
   }
   
