@@ -52,8 +52,9 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = null,$event= null,'url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = null,$event= null,'url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
+
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$event= 'UserDinamizadorGestor.downloadGestor(1)','url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$event= 'UserDinamizadorGestor.downloadGestor(0)','url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
                             <br>
                             @if($view == 'activos')
                                 @include('users.table', ['id' => 'gestores_dinamizador_table'] )

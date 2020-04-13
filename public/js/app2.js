@@ -2345,8 +2345,8 @@ $(document).ready(function() {
     },
     downloadTalento: function(state){
 
-        let nodo = $('#selectnodo').val();
-
+        let nodo = $('#txtnodo').val();
+        
         let anio = $('#txt_anio_user').val();
         if(nodo == null || nodo == 0){
             Swal.fire({
@@ -2354,7 +2354,7 @@ $(document).ready(function() {
 
                 confirmButtonText: 'Ok',
             });
-        }else if(nodo == null || nodo == 0){
+        }else if(anio == null || anio == 0){
             Swal.fire({
                 title: 'Por favor selecciona un año',
 
@@ -2485,6 +2485,28 @@ var UserAdministradorIngreso = {
             }).clear().draw();
         }
     },
+    downloadIngreso: function(state){
+
+        let nodo = $('#selectnodo').val();
+        if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un nodo',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null && (nodo !== null || nodo !== 0)) {
+            location.href = '/usuario/excel/ingreso/'+ state+'/'+nodo;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+    downloadAllIngreso:function (state){
+        location.href = '/usuario/excel/ingreso/'+ state;
+    }
 }
 $(document).ready(function() {
     $('#gestores_dinamizador_table').DataTable({
@@ -2553,6 +2575,22 @@ $(document).ready(function() {
         }, ],
     });
 });
+
+var UserDinamizadorGestor = {
+    downloadGestor: function(state){
+
+        if(state !== null) {
+            location.href = '/usuario/excel/gestor/'+ state;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+}
+
 
 
 $(document).ready(function() {
@@ -2826,6 +2864,21 @@ $(document).ready(function() {
         }, ],
     });
 });
+
+var UserDinamizadorInfocenter = {
+    downloadInfocenter: function(state){
+
+        if(state !== null) {
+            location.href = '/usuario/excel/infocenter/'+ state;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+}
 $(document).ready(function() {
     $('#ingresos_dinamizador_table').DataTable({
         language: {
@@ -2893,6 +2946,21 @@ $(document).ready(function() {
         },  ],
     });
 });
+
+var UserDinamizadorIngreso = {
+    downloadIngreso: function(state){
+
+        if(state !== null) {
+            location.href = '/usuario/excel/ingreso/'+ state;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+}
 $(document).ready(function() {
   
   $('#talento_activosByGestor_table').DataTable({
@@ -3572,7 +3640,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
       dataType: 'json',
       processData: false,
       success: function (data) {
-  
+
         $('button[type="submit"]').removeAttr('disabled');
         $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();

@@ -55,8 +55,8 @@
                             
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.index'), 'message' => 'Ver Talentos con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$event= null,'url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$event= null,'url' => route('usuario.index'), 'message' => 'Ver Talentos con acceso'])
                             <br>
                                 
                                 

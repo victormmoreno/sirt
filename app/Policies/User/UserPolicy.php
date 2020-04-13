@@ -281,4 +281,16 @@ class UserPolicy
             || collect($user->getRoleNames())->contains(User::IsInfocenter())
             && session()->get('login_role') == User::IsInfocenter();
     }
+
+    public function exportUsersIngreso(User $user)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
+            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
+            || collect($user->getRoleNames())->contains(User::IsDinamizador())
+            && session()->get('login_role') == User::IsDinamizador()
+            || collect($user->getRoleNames())->contains(User::IsGestor())
+            && session()->get('login_role') == User::IsGestor()
+            || collect($user->getRoleNames())->contains(User::IsInfocenter())
+            && session()->get('login_role') == User::IsInfocenter();
+    }
 }

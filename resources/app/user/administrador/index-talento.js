@@ -129,8 +129,8 @@ $(document).ready(function() {
     },
     downloadTalento: function(state){
 
-        let nodo = $('#selectnodo').val();
-
+        let nodo = $('#txtnodo').val();
+        
         let anio = $('#txt_anio_user').val();
         if(nodo == null || nodo == 0){
             Swal.fire({
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
                 confirmButtonText: 'Ok',
             });
-        }else if(nodo == null || nodo == 0){
+        }else if(anio == null || anio == 0){
             Swal.fire({
                 title: 'Por favor selecciona un año',
 

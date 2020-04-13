@@ -178,6 +178,7 @@ class TalentoController extends Controller
     {
         $this->authorize('exportUsersTalento', User::class);
         $user = $this->getData($state, $nodo, $anio);
+        // dd($user);
 
         $this->setQuery($user);
         return (new TalentoUserExport($this->getQuery()))->download("Talentos - " . config('app.name') . ".{$extension}");

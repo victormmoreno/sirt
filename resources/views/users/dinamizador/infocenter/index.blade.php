@@ -53,8 +53,8 @@
                             <div class="divider">
                             </div>
                             <br>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.infocenter.papelera'), 'message' => 'Ver Infocenters sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.infocenter.index'), 'message' => 'Ver Infocenters con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [ $event = 'UserDinamizadorInfocenter.downloadInfocenter(1)','url' => route('usuario.infocenter.papelera'), 'message' => 'Ver Infocenters sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [ $event = 'UserDinamizadorInfocenter.downloadInfocenter(0)','url' => route('usuario.infocenter.index'), 'message' => 'Ver Infocenters con acceso'])
                             @if($view == 'activos')
                                 @include('users.table', ['id' => 'infocenters_dinamizador_table'] )  
                             @elseif($view == 'inactivos')

@@ -272,6 +272,16 @@ Route::group([
         'uses' => 'TalentoController@exportTalentoUser',
         'as'   => 'usuario.excel.talento.all',
     ]);
+
+    Route::get('/ingreso/{state}/{nodo}', [
+        'uses' => 'IngresoController@exportIngresoUser',
+        'as'   => 'usuario.excel.ingreso',
+    ]);
+
+    Route::get('/ingreso/{state}', [
+        'uses' => 'IngresoController@exportIngresoUser',
+        'as'   => 'usuario.excel.ingreso.all',
+    ]);
 });
 
 

@@ -52,8 +52,8 @@
                                 </div>
                             </div>
                             <div class="divider"></div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$event = null,'url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$event = null,'url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
                             <br><br>
                             <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                               <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>

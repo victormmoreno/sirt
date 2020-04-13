@@ -53,8 +53,8 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.ingreso.papelera'), 'message' => 'Ver Usuarios Ingresos sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.ingreso.index'), 'message' => 'Ver Usuarios Ingresos con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [ $event = 'UserDinamizadorIngreso.downloadIngreso(1)','url' => route('usuario.ingreso.papelera'), 'message' => 'Ver Usuarios Ingresos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [ $event = 'UserDinamizadorIngreso.downloadIngreso(0)','url' => route('usuario.ingreso.index'), 'message' => 'Ver Usuarios Ingresos con acceso'])
                             <br>
                             @if($view == 'activos')
                                 @include('users.table', ['id' => 'ingresos_dinamizador_table'] )  

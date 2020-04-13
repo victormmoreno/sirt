@@ -1026,19 +1026,88 @@ class UserRepository
     private function getInfoUsersTalentosWithProjects($anio = null)
     {
         if ($anio == null) {
-            return User::InfoUserDatatable()
-                ->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
+            return User::select(
+                'users.id',
+                'tiposdocumentos.nombre as tipodocumento',
+                'users.documento',
+                'users.email',
+                'users.direccion',
+                'users.celular',
+                'users.telefono',
+                'users.barrio',
+                'users.estado',
+                'users.genero',
+                'users.institucion',
+                'users.titulo_obtenido',
+                'users.fecha_terminacion',
+                'users.estrato',
+                'users.otra_eps',
+                'users.otra_ocupacion',
+                'users.grado_discapacidad',
+                'users.descripcion_grado_discapacidad',
+                'users.fechanacimiento',
+                'tipo_talentos.nombre as tipotalento',
+                'etnias.nombre as etnia',
+                'gruposanguineos.nombre as grupo_sanguineo',
+                'gradosescolaridad.nombre as grado_escolaridad',
+                'eps.nombre as eps'
+            )
+                ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
+                ->selectRaw("CONCAT(ciudades.nombre,' - ',departamentos.nombre) as residencia")
+                ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+                ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
+                ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+                ->join('gruposanguineos', 'gruposanguineos.id', 'users.gruposanguineo_id')
+                ->join('gradosescolaridad', 'gradosescolaridad.id', 'users.gradoescolaridad_id')
                 ->join('talentos', 'talentos.user_id', '=', 'users.id')
+                ->join('eps', 'eps.id', 'users.eps_id')
+                ->join('tipo_talentos', 'tipo_talentos.id', '=', 'talentos.tipo_talento_id')
+                ->leftjoin('etnias', 'etnias.id', 'users.etnia_id')
                 ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
                 ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
                 ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
                 ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
                 ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id');
+                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+                ->groupBy('users.documento');
         }
-        return User::InfoUserDatatable()
-            ->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
+        return User::select(
+            'users.id',
+            'tiposdocumentos.nombre as tipodocumento',
+            'users.documento',
+            'users.email',
+            'users.direccion',
+            'users.celular',
+            'users.telefono',
+            'users.barrio',
+            'users.estado',
+            'users.genero',
+            'users.institucion',
+            'users.titulo_obtenido',
+            'users.fecha_terminacion',
+            'users.estrato',
+            'users.otra_eps',
+            'users.otra_ocupacion',
+            'users.grado_discapacidad',
+            'users.descripcion_grado_discapacidad',
+            'users.fechanacimiento',
+            'tipo_talentos.nombre as tipotalento',
+            'etnias.nombre as etnia',
+            'gruposanguineos.nombre as grupo_sanguineo',
+            'gradosescolaridad.nombre as grado_escolaridad',
+            'eps.nombre as eps'
+        )
+            ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
+            ->selectRaw("CONCAT(ciudades.nombre,' - ',departamentos.nombre) as residencia")
+            ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+            ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
+            ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+            ->join('gruposanguineos', 'gruposanguineos.id', 'users.gruposanguineo_id')
+            ->join('gradosescolaridad', 'gradosescolaridad.id', 'users.gradoescolaridad_id')
             ->join('talentos', 'talentos.user_id', '=', 'users.id')
+            ->join('eps', 'eps.id', 'users.eps_id')
+            ->join('tipo_talentos', 'tipo_talentos.id', '=', 'talentos.tipo_talento_id')
+            ->leftjoin('etnias', 'etnias.id', 'users.etnia_id')
             ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
             ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
             ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')

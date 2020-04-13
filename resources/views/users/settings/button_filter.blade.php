@@ -4,9 +4,6 @@
             {{$message}}
          </a>
     </div>
-    {{-- <div class="center input-field col s12 m2 l2">
-        <a onclick="{{$event}}" class="btn"><i class="material-icons">file_download</i></a>
-   </div> --}}
    <div class="right mailbox-buttons">
     <span class="mailbox-title">
         <p class="center">
@@ -19,12 +16,18 @@
                 </a>
                 <!-- Dropdown Structure -->
                 <ul class="dropdown-content" id="dropdown">
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                     <li>
                         <a onclick="{{$event}}" >Por nodo</a>
                     </li>
                     <li>
                         <a onclick="{{$eventAll}}">Todos</a>
                     </li>
+                    @else
+                    <li>
+                        <a onclick="{{$event}}">Desargar</a>
+                    </li>
+                    @endif
                 </ul>
             </div>
         </p>

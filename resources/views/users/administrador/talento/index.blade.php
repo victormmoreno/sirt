@@ -54,8 +54,8 @@
                             </div>
                             <div class="divider"></div>
                             
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = null, $event = null,'url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = null, $event = null,'url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = 'usuarios.downloadAllTalentos(1)', $event = 'usuarios.downloadTalento(1)','url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = 'usuarios.downloadAllTalentos(0)', $event = 'usuarios.downloadTalento(0)','url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
                             <div class="row">
                                 <div class="input-field col s12 m6 l6">
                                   
