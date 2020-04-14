@@ -36,6 +36,52 @@ class EmpresaRepository
     });
   }
 
+  /**
+   * Consulta las empresas asociadas como propietarias a proyecto
+   *
+   * @param string $fecha_inicio
+   * @param string $fecha_cierre
+   * @return Eloquent
+   * @author dum
+   **/
+  public function empresasPropietarias(string $fecha_inicio, string $fecha_cierre)
+  {
+    return Empresa::select(
+      'codigo_actividad',
+      'nit',
+      'codigo_ciiu',
+      'entidades.nombre AS nombre_empresa',
+      'fecha_creacion',
+      'sectores.nombre AS nombre_sector',
+      'email_entidad',
+      'empresas.direccion',
+      'tamanhos_empresas.nombre AS tamanho_empresa',
+      'tipos_empresas.nombre AS tipo_empresa'
+    )
+    ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+    ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
+    ->join('propietarios', 'propietarios.propietario_id', '=', 'empresas.id')
+    ->join('proyectos', 'proyectos.id', '=', 'propietarios.proyecto_id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
+    ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
+    ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id')
+    ->where('entidades.nombre', '!=', 'No Aplica')
+    ->where('propietarios.propietario_type', 'App\Models\Empresa')
+    ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+      });
+    });
+  }
+
   // Consulta los contactos que tiene el nodo con las empresas
   public function consultarContactosPorNodoDeUnaEmpresa($identidad, $idnodo)
   {

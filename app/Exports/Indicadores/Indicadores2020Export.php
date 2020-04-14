@@ -3,22 +3,28 @@
 namespace App\Exports\Indicadores;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Events\{AfterSheet};
-use Illuminate\Contracts\View\View;
-use App\Exports\FatherExport;
-use App\Exports\Proyectos\{Proyectos};
+use App\Exports\Proyectos\{ProyectosExport};
+use App\Exports\Articulaciones\{ArticulacionesExport};
+use App\Exports\Empresas\{EmpresasExport};
+use App\Exports\GruposInvestigacion\{GruposExport};
 use App\Exports\User\Talento\TalentoUserExport;
 
 class Indicadores2020Export implements WithMultipleSheets
 {
     private $queryProyectos;
+    private $queryTalentos;
+    private $queryArticulacion;
+    private $queryEmpresasPropietarias;
+    private $queryGruposPropietarios;
+    private $queryTalentosPropietarios;
 
-    public function __construct($queryProyectos, $queryTalentos) {
+    public function __construct($queryProyectos, $queryTalentos, $queryArticulacion, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios) {
         $this->setQueryProyectos($queryProyectos);
         $this->setQueryTalentos($queryTalentos);
+        $this->setQueryArticulacion($queryArticulacion);
+        $this->setQueryEmpresasPropietarias($queryEmpresasPropietarias);
+        $this->setQueryTalentosPropietarios($queryTalentosPropietarios);
+        $this->setQueryGruposPropietarios($queryGruposPropietarios);
     }
   /**
    * @return array
@@ -27,8 +33,12 @@ class Indicadores2020Export implements WithMultipleSheets
   {
       $sheets = [];
 
-      $sheets[] = new Proyectos($this->getQueryProyectos());
+      $sheets[] = new ProyectosExport($this->getQueryProyectos());
       $sheets[] = new TalentoUserExport($this->getQueryTalentos(), 'Proyectos');
+      $sheets[] = new EmpresasExport($this->getQueryEmpresasPropietarias(), 'propietarias');
+      $sheets[] = new GruposExport($this->getQueryGruposPropietarios(), 'propietarios');
+      $sheets[] = new TalentoUserExport($this->getQueryTalentosPropietarios(), 'Propietarios');
+      $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
 
 
       return $sheets;
@@ -48,5 +58,37 @@ class Indicadores2020Export implements WithMultipleSheets
 
   private function getQueryTalentos() {
     return $this->queryTalentos;
+  }
+
+  private function setQueryArticulacion($queryArticulacion) {
+    $this->queryArticulacion = $queryArticulacion;
+  }
+
+  private function getQueryArticulacion() {
+    return $this->queryArticulacion;
+  }
+
+  private function setQueryEmpresasPropietarias($queryEmpresasPropietarias) {
+    $this->queryEmpresasPropietarias = $queryEmpresasPropietarias;
+  }
+
+  private function getQueryEmpresasPropietarias() {
+    return $this->queryEmpresasPropietarias;
+  }
+
+  private function setQueryGruposPropietarios($queryGruposPropietarios) {
+    $this->queryGruposPropietarios = $queryGruposPropietarios;
+  }
+
+  private function getQueryGruposPropietarios() {
+    return $this->queryGruposPropietarios;
+  }
+
+  private function setQueryTalentosPropietarios($queryTalentosPropietarios) {
+    $this->queryTalentosPropietarios = $queryTalentosPropietarios;
+  }
+
+  private function getQueryTalentosPropietarios() {
+    return $this->queryTalentosPropietarios;
   }
 }

@@ -407,6 +407,48 @@ class ArticulacionRepository
   }
 
   /**
+   * Consulta información de las articulaciones
+   *
+   * @param string $fecha_inicio
+   * @param string $fecha_cierre
+   * @return type
+   * @throws conditon
+   **/
+  public function consultarArticulaciones_repository(string $fecha_inicio = '', string $fecha_cierre = '')
+  {
+    return Articulacion::select(
+      'n.nombre AS nodo',
+      'lineastecnologicas.nombre AS nombre_linea',
+      'actividades.codigo_actividad',
+      'actividades.nombre',
+      'fecha_inicio',
+      'fases.nombre AS nombre_fase'
+    )
+    ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+    ->selectRaw('if(fases.nombre = "Cierre" || fases.nombre = "Suspendido", fecha_cierre, "La articulación no se ha cerrado") AS fecha_cierre')
+    ->selectRaw('concat(entidades.nombre, " - ", gruposinvestigacion.codigo_grupo) AS grupo')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades AS n', 'n.id', '=', 'nodos.entidad_id')
+    ->join('fases', 'fases.id', '=', 'articulaciones.fase_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('entidades', 'entidades.id', '=', 'articulacion_proyecto.entidad_id')
+    ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
+    ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+      $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+      })
+      ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+      });
+    })
+    ->orderBy('n.nombre');
+  }
+
+  /**
    * Cantidad de articulaciones con grupos de investigación
    *
    * @return Builder

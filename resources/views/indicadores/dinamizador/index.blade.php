@@ -51,7 +51,7 @@
                       <a onclick="generarExcelConTodosLosIndicadores(0);" class="btn"><i class="material-icons">file_download</i></a>
                     </div>
                   </div>
-                  <div class="row">
+                  {{-- <div class="row">
                     <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                       <li class="tab col s3"><a class="active" href="#indicadores_proyectos">Proyectos</a></li>
                       <li class="tab col s3"><a class="" href="#indicadores_articulaciones">Articulaciones con empresas y emprendedores</a></li>
@@ -59,9 +59,9 @@
                       <li class="tab col s3"><a class="" href="#indicadores_talentos">Talentos</a></li>
                     </ul>
                     <br>
-                  </div>
-                  <div class="divider"></div>
-                  <div id="indicadores_proyectos" class="row">
+                  </div> --}}
+                  {{-- <div class="divider"></div> --}}
+                  {{-- <div id="indicadores_proyectos" class="row">
                     <div class="col s12 m6 l6">
                       <ul class="collapsible">
                         <li id="indicador1">
@@ -76,7 +76,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind1" name="txtfecha_inicio_ind1" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind1">Fecha Inicio</label>
@@ -110,10 +109,8 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
-                                {{-- <div class="input-field col s12 m12 l12"> --}}
                                   <input type="text" id="txt_total_ind2" name="txt_total_ind2" value="" disabled>
                                   <label for="txt_total_ind2" class="active">Total</label>
-                                {{-- </div> --}}
                                 <div class="center">
                                   <button onclick="consultarProyectosEnEjecucion_total(0)" class="btn">Consultar</button>
                                 </div>
@@ -133,7 +130,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind3" name="txtfecha_inicio_ind3" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind3">Fecha Inicio</label>
@@ -167,7 +163,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind4" name="txtfecha_inicio_ind4" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind4">Fecha Inicio</label>
@@ -201,10 +196,8 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
-                                {{-- <div class="input-field col s12 m12 l12"> --}}
                                   <input type="text" id="txt_total_ind5" name="txt_total_ind5" value="" disabled>
                                   <label for="txt_total_ind5" class="active">Total</label>
-                                {{-- </div> --}}
                                 <div class="center">
                                   <button onclick="consultarProyectosEnEjecucionConSena_total(0)" class="btn">Consultar</button>
                                 </div>
@@ -224,7 +217,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind6" name="txtfecha_inicio_ind6" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind6">Fecha Inicio</label>
@@ -258,7 +250,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind7" name="txtfecha_inicio_ind7" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind7">Fecha Inicio</label>
@@ -292,7 +283,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind8" name="txtfecha_inicio_ind8" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind8">Fecha Inicio</label>
@@ -326,10 +316,8 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
-                                {{-- <div class="input-field col s12 m12 l12"> --}}
                                   <input type="text" id="txt_total_ind9" name="txt_total_ind9" value="" disabled>
                                   <label for="txt_total_ind9" class="active">Total</label>
-                                {{-- </div> --}}
                                 <div class="center">
                                   <button onclick="consultarProyectosEnEjecucionConEmpresas_total(0)" class="btn">Consultar</button>
                                 </div>
@@ -349,7 +337,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind10" name="txtfecha_inicio_ind10" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind10">Fecha Inicio</label>
@@ -383,7 +370,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind11" name="txtfecha_inicio_ind11" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind11">Fecha Inicio</label>
@@ -417,7 +403,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind12" name="txtfecha_inicio_ind12" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind12">Fecha Inicio</label>
@@ -451,7 +436,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind13" name="txtfecha_inicio_ind13" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind13">Fecha Inicio</label>
@@ -485,10 +469,8 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
-                                {{-- <div class="input-field col s12 m12 l12"> --}}
                                   <input type="text" id="txt_total_ind14" name="txt_total_ind14" value="" disabled>
                                   <label for="txt_total_ind14" class="active">Total</label>
-                                {{-- </div> --}}
                                 <div class="center">
                                   <button onclick="consultarProyectosEnEjecucionConEmprendedoresInventoresOtros_total(0)" class="btn">Consultar</button>
                                 </div>
@@ -508,7 +490,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind15" name="txtfecha_inicio_ind15" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind15">Fecha Inicio</label>
@@ -546,7 +527,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind16" name="txtfecha_inicio_ind16" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind16">Fecha Inicio</label>
@@ -580,7 +560,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind17" name="txtfecha_inicio_ind17" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind17">Fecha Inicio</label>
@@ -614,7 +593,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind18" name="txtfecha_inicio_ind18" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind18">Fecha Inicio</label>
@@ -648,7 +626,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind19" name="txtfecha_inicio_ind19" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind19">Fecha Inicio</label>
@@ -682,7 +659,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind20" name="txtfecha_inicio_ind20" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind20">Fecha Inicio</label>
@@ -716,7 +692,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind21" name="txtfecha_inicio_ind21" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind21">Fecha Inicio</label>
@@ -750,7 +725,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind22" name="txtfecha_inicio_ind22" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind22">Fecha Inicio</label>
@@ -784,7 +758,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind23" name="txtfecha_inicio_ind23" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind23">Fecha Inicio</label>
@@ -818,7 +791,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind24" name="txtfecha_inicio_ind24" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind24">Fecha Inicio</label>
@@ -852,7 +824,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind25" name="txtfecha_inicio_ind25" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind25">Fecha Inicio</label>
@@ -886,7 +857,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind26" name="txtfecha_inicio_ind26" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind26">Fecha Inicio</label>
@@ -920,7 +890,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind27" name="txtfecha_inicio_ind27" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind27">Fecha Inicio</label>
@@ -954,7 +923,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind28" name="txtfecha_inicio_ind28" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind28">Fecha Inicio</label>
@@ -988,7 +956,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind29" name="txtfecha_inicio_ind29" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind29">Fecha Inicio</label>
@@ -1028,7 +995,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind30" name="txtfecha_inicio_ind30" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind30">Fecha Inicio</label>
@@ -1062,10 +1028,8 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
-                                {{-- <div class="input-field col s12 m12 l12"> --}}
                                   <input type="text" id="txt_total_ind31" name="txt_total_ind31" value="" disabled>
                                   <label for="txt_total_ind31" class="active">Total</label>
-                                {{-- </div> --}}
                                 <div class="center">
                                   <button onclick="consultarAsesoriasIDiEmpresasEmprendedoresEnEjecucion_total(0)" class="btn">Consultar</button>
                                 </div>
@@ -1085,7 +1049,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind32" name="txtfecha_inicio_ind32" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind32">Fecha Inicio</label>
@@ -1119,7 +1082,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind33" name="txtfecha_inicio_ind33" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind33">Fecha Inicio</label>
@@ -1153,7 +1115,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind34" name="txtfecha_inicio_ind34" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind34">Fecha Inicio</label>
@@ -1191,7 +1152,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind35" name="txtfecha_inicio_ind35" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind35">Fecha Inicio</label>
@@ -1225,7 +1185,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind36" name="txtfecha_inicio_ind36" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind36">Fecha Inicio</label>
@@ -1259,7 +1218,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind37" name="txtfecha_inicio_ind37" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind37">Fecha Inicio</label>
@@ -1293,7 +1251,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind38" name="txtfecha_inicio_ind38" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind38">Fecha Inicio</label>
@@ -1327,7 +1284,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind39" name="txtfecha_inicio_ind39" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind39">Fecha Inicio</label>
@@ -1367,7 +1323,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind40" name="txtfecha_inicio_ind40" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind40">Fecha Inicio</label>
@@ -1401,7 +1356,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind41" name="txtfecha_inicio_ind41" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind41">Fecha Inicio</label>
@@ -1435,7 +1389,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind42" name="txtfecha_inicio_ind42" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind42">Fecha Inicio</label>
@@ -1473,7 +1426,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind43" name="txtfecha_inicio_ind43" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind43">Fecha Inicio</label>
@@ -1507,7 +1459,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind44" name="txtfecha_inicio_ind44" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind44">Fecha Inicio</label>
@@ -1547,7 +1498,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind45" name="txtfecha_inicio_ind45" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind45">Fecha Inicio</label>
@@ -1581,7 +1531,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind46" name="txtfecha_inicio_ind46" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind46">Fecha Inicio</label>
@@ -1619,7 +1568,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind47" name="txtfecha_inicio_ind47" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind47">Fecha Inicio</label>
@@ -1653,7 +1601,6 @@
                             </div>
                             <div class="row">
                               <div class="input-field col s12 m8 l8">
-                                {{-- <br> --}}
                                 <div class="input-field col s12 m6 l6">
                                   <input type="text" id="txtfecha_inicio_ind48" name="txtfecha_inicio_ind48" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
                                   <label for="txtfecha_inicio_ind48">Fecha Inicio</label>
@@ -1677,7 +1624,7 @@
                         </li>
                       </ul>
                     </div>
-                  </div>
+                  </div> --}}
                 </div>
               </div>
             </div>
