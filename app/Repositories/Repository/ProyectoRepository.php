@@ -271,7 +271,9 @@ class ProyectoRepository
 
   /**
    * Consulta los proyectos
-   * @return Collection
+   * @param string $fecha_inicio
+   * @param string $fecha_cierre
+   * @return Builder
    * @author dum
    */
   public function consultarProyectos_Repository(string $fecha_inicio = '', string $fecha_cierre = '')
@@ -320,15 +322,6 @@ class ProyectoRepository
           $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
         });
       })
-      // ->where(function ($q) use ($fecha_inicio, $fecha_cierre) {
-      //   $q->where(function ($query) use ($fecha_inicio, $fecha_cierre) {
-      //     $query->whereBetween('actividades.fecha_cierre', [$fecha_inicio, $fecha_cierre])
-      //       ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
-      //   })
-      //     ->orWhere(function ($query) {
-      //       $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
-      //     });
-      // })
       ->orderBy('entidades.nombre');
   }
 
@@ -979,6 +972,84 @@ class ProyectoRepository
       return true;
     } catch (\Throwable $th) {
       DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Cambia el gestor de un proyecto
+   *
+   * @param Request $request
+   * @param int $id id del proyecto
+   * @return boolean
+   * @author dum
+   **/
+  public function updateGestor($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $proyecto = Proyecto::findOrFail($id);
+
+      if ($proyecto->articulacion_proyecto->actividad->gestor_id != $request->txtgestor_id) {
+        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cambió')->first(), [
+          'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+          'user_id' => auth()->user()->id,
+          'fase_id' => $proyecto->fase_id,
+          'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+        ]);
+      }
+
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'gestor_id' => $request->txtgestor_id 
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
+   * Reversa la fase de un proyecto a Inicio
+   *
+   * @param int $id Id del proyecto
+   * @return boolean
+   * @author dum
+   **/
+  public function reversarProyecto(int $id)
+  {
+    DB::beginTransaction();
+    try {
+
+      $proyecto = Proyecto::findOrFail($id);
+
+      $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Reversó')->first(), [
+        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => $proyecto->fase_id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $proyecto->update([
+        'fase_id' => Fase::where('nombre', 'Inicio')->first()->id
+      ]);
+
+      $proyecto->articulacion_proyecto()->update([
+        'aprobacion_dinamizador_ejecucion' => 0,
+        'aprobacion_dinamizador_suspender' => 0
+      ]);
+
+      $proyecto->articulacion_proyecto->actividad()->update([
+        'aprobacion_dinamizador' => 0
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
       return false;
     }
   }

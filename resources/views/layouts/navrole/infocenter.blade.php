@@ -28,6 +28,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('proyecto')}}">
+  <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
+    <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica
+  </a>
+</li>
 {{-- <li class="no-padding">
   <a href="">
     <i class="material-icons">description</i>Reportes

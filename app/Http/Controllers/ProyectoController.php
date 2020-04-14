@@ -80,7 +80,7 @@ class ProyectoController extends Controller
    * @param Collection $proyecto Proyectos
    * @param Request $request
    * @return Response
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   private function datatableProyectos($request, $proyectos)
   {
@@ -155,7 +155,7 @@ class ProyectoController extends Controller
    * @param int $idnodo Id del nodo
    * @param string $anho Año para filtrar
    * @return Response
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function datatableProyectosDelNodoPorAnho(Request $request, $idnodo, $anho)
   {
@@ -163,6 +163,8 @@ class ProyectoController extends Controller
       $id = "";
       if (Session::get('login_role') == User::IsDinamizador()) {
         $id = auth()->user()->dinamizador->nodo_id;
+      } elseif (Session::get('login_role') == User::IsInfocenter()) {
+        $id = auth()->user()->infocenter->nodo_id;
       } else {
         $id = $idnodo;
       }
@@ -177,7 +179,7 @@ class ProyectoController extends Controller
    * @param Request $request
    * @param int $id Id del proyecto
    * @return Response
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function updateEntregables(Request $request, $id)
   {
@@ -233,7 +235,7 @@ class ProyectoController extends Controller
    * @param int $id Id del gestor
    * @param string $anho Año por el que se filtran los proyectos
    * @return Response
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function datatableProyectosDelGestorPorAnho(Request $request, $id, $anho)
   {
@@ -405,22 +407,29 @@ class ProyectoController extends Controller
     switch (Session::get('login_role')) {
       case User::IsGestor():
         return view('proyectos.gestor.index');
-        break;
+      break;
+
       case User::IsDinamizador():
         return view('proyectos.dinamizador.index', [
           'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         ]);
-        break;
+      break;
 
       case User::IsAdministrador():
         return view('proyectos.administrador.index', [
           'nodos' => Nodo::SelectNodo()->get(),
         ]);
-        break;
+      break;
 
       case User::IsTalento():
         return view('proyectos.talento.index');
-        break;
+      break;
+
+      case User::IsInfocenter():
+        return view('proyectos.infocenter.index', [
+          'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->pluck('nombres_gestor', 'id'),
+        ]);
+      break;
 
       default:
         // code...
@@ -474,7 +483,7 @@ class ProyectoController extends Controller
    *
    * @param int  $id
    * @return \Illuminate\Http\Response
-   * @author Victor Manuel Moreno Vega
+   * @author dum
    */
   public function inicio($id)
   {
@@ -514,6 +523,12 @@ class ProyectoController extends Controller
         ]);
         break;
 
+      case User::IsInfocenter():
+        return view('proyectos.infocenter.fase_inicio', [
+          'proyecto' => $proyecto
+        ]);
+        break;
+
       default:
         // code...
         break;
@@ -544,6 +559,11 @@ class ProyectoController extends Controller
         ]);
       } else if (Session::get('login_role') == User::IsAdministrador()) {
         return view('proyectos.administrador.fase_planeacion', [
+          'proyecto' => $proyecto,
+          'historico' => $historico
+        ]);
+      } else if(Session::get('login_role') == User::IsInfocenter()) {
+        return view('proyectos.infocenter.fase_planeacion', [
           'proyecto' => $proyecto,
           'historico' => $historico
         ]);
@@ -590,6 +610,13 @@ class ProyectoController extends Controller
 
         case User::IsAdministrador():
           return view('proyectos.administrador.fase_ejecucion', [
+            'proyecto' => $proyecto,
+            'historico' => $historico
+          ]);
+          break;
+
+        case User::IsInfocenter():
+          return view('proyectos.infocenter.fase_ejecucion', [
             'proyecto' => $proyecto,
             'historico' => $historico
           ]);
@@ -646,6 +673,14 @@ class ProyectoController extends Controller
           ]);
           break;
 
+        case User::IsInfocenter():
+          return view('proyectos.infocenter.fase_cierre', [
+            'proyecto' => $proyecto,
+            'costo' => $costo,
+            'historico' => $historico
+          ]);
+          break;
+
         default:
           # code...
           break;
@@ -678,6 +713,33 @@ class ProyectoController extends Controller
         return view('proyectos.dinamizador.fase_suspendido', [
           'proyecto' => $proyecto
         ]);
+      default:
+        # code...
+        break;
+    }
+  }
+
+  /**
+   * Formulario para cambiar el gestor de un proyecto
+   *
+   * @param int $id Id del proyecto
+   * @return type
+   * @throws conditon
+   **/
+  public function cambiar_gestor(int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+    $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+    switch (Session::get('login_role')) {
+      case User::IsDinamizador();
+        return view('proyectos.dinamizador.cambiar_gestor', [
+          'proyecto' => $proyecto,
+          'historico' => $historico,
+          'gestores' => $gestores
+        ]);
+        break;
+      
       default:
         # code...
         break;
@@ -1005,6 +1067,70 @@ class ProyectoController extends Controller
           return back();
         }
       }
+    }
+  }
+
+  /**
+   * Cambiar el gestor de un proyecto
+   *
+   * Undocumented function long description
+   *
+   * @param Request $request
+   * @param int $id
+   * @return Response
+   * @author dum
+   **/
+  public function updateGestor(Request $request, int $id)
+  {
+    $messages = [
+      'txtgestor_id.required' => 'El Gestor es obligatorio.',
+      ];
+
+      $validator = Validator::make($request->all(), [
+      'txtgestor_id' => 'required',
+      ], $messages);
+
+      if ($validator->fails()) {
+        return back()
+        ->withErrors($validator)
+        ->withInput();
+      }
+
+      $update = $this->getProyectoRepository()->updateGestor($request, $id);
+      if ($update) {
+        Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+  }
+
+  /**
+   * Reversa el proyecto de fase
+   *
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   **/
+  public function updateReversar(Request $request, int $id)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    if ($proyecto->fase->nombre == 'Inicio') {
+      Alert::warning('El proyecto ya se encuentra en fase de Inicio!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      $update = $this->getProyectoRepository()->reversarProyecto($id);
+      // dd($update);
+      if ($update) {
+        Alert::success('La fase del proyecto se ha reversado a Inicio!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('proyecto');
+      } else {
+        Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+
     }
   }
 
