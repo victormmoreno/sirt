@@ -41,6 +41,9 @@ class IngresoController extends Controller
             case User::IsDinamizador():
                 return view('users.dinamizador.ingreso.index', ['view' => 'activos']);
                 break;
+            case User::IsInfocenter():
+                return view('users.dinamizador.ingreso.index', ['view' => 'activos']);
+                break;
 
             default:
                 abort('404');
@@ -50,7 +53,7 @@ class IngresoController extends Controller
 
     public function trash()
     {
-        // $this->authorize('indexIngreso', User::class);
+        $this->authorize('indexIngreso', User::class);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 return view('users.administrador.ingreso.index', [
@@ -59,6 +62,9 @@ class IngresoController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
+                return view('users.dinamizador.ingreso.index', ['view' => 'inactivos']);
+                break;
+            case User::IsInfocenter():
                 return view('users.dinamizador.ingreso.index', ['view' => 'inactivos']);
                 break;
 
@@ -114,6 +120,9 @@ class IngresoController extends Controller
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $users = $this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id)->get();
                 return $this->userdatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $users = $this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->infocenter->nodo_id)->get();
+                return $this->userdatables->datatableUsers($request, $users);
             }
             abort('404');
         }
@@ -128,6 +137,11 @@ class IngresoController extends Controller
         if (request()->ajax()) {
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $users = $this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->dinamizador->nodo_id)
+                    ->onlyTrashed()
+                    ->get();
+                return $this->userdatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $users = $this->ingresoRepository->getAllUsersIngresoForNodo(auth()->user()->infocenter->nodo_id)
                     ->onlyTrashed()
                     ->get();
                 return $this->userdatables->datatableUsers($request, $users);

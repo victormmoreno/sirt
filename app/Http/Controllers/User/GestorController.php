@@ -73,6 +73,9 @@ class GestorController extends Controller
             case User::IsDinamizador():
                 return view('users.dinamizador.gestor.index', ['view' => 'activos']);
                 break;
+            case User::IsInfocenter():
+                return view('users.dinamizador.gestor.index', ['view' => 'activos']);
+                break;
 
             default:
                 abort('404');
@@ -92,6 +95,9 @@ class GestorController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
+                return view('users.dinamizador.gestor.index', ['view' => 'inactivos']);
+                break;
+            case User::IsInfocenter():
                 return view('users.dinamizador.gestor.index', ['view' => 'inactivos']);
                 break;
 
@@ -150,6 +156,12 @@ class GestorController extends Controller
                     ->get();
 
                 return $this->userdatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->infocenter->nodo_id)
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
             }
             abort('404');
         }
@@ -164,6 +176,13 @@ class GestorController extends Controller
 
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)
+                    ->onlyTrashed()
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $users = $this->gestorRepository->getAllGestoresPorNodo(auth()->user()->infocenter->nodo_id)
                     ->onlyTrashed()
                     ->orderby('users.created_at', 'desc')
                     ->get();

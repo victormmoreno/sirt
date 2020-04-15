@@ -96,6 +96,13 @@ class TalentoController extends Controller
                     'view' => 'activos'
                 ]);
                 break;
+            case User::IsInfocenter():
+                $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
+                return view('users.dinamizador.talento.index', [
+                    'gestores' => $gestores,
+                    'view' => 'activos'
+                ]);
+                break;
 
             default:
                 abort('403');
@@ -146,6 +153,14 @@ class TalentoController extends Controller
 
                 ]);
                 break;
+            case User::IsInfocenter():
+
+                $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
+                return view('users.dinamizador.talento.index', [
+                    'gestores' => $gestores,
+                    'view' => 'inactivos'
+                ]);
+                break;
             default:
                 abort('404');
                 break;
@@ -169,6 +184,11 @@ class TalentoController extends Controller
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->onlyTrashed()->groupBy('users.id')
                     ->get();
                 return $this->userdatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsInfocenter()) {
+                $nodo = auth()->user()->infocenter->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->onlyTrashed()->groupBy('users.id')
+                    ->get();
+                return $this->userdatables->datatableUsers($request, $users);
             }
         }
         abort('404');
@@ -178,7 +198,7 @@ class TalentoController extends Controller
     {
         $this->authorize('exportUsersTalento', User::class);
         $user = $this->getData($state, $nodo, $anio);
-        
+
         $this->setQuery($user);
         return (new TalentoUserExport($this->getQuery()))->download("Talentos - " . config('app.name') . ".{$extension}");
     }

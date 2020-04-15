@@ -4,7 +4,7 @@
             {{$message}}
          </a>
     </div>
-    
+
    <div class="right mailbox-buttons">
     <span class="mailbox-title">
         <p class="center">
@@ -26,17 +26,23 @@
                                 <a onclick="{{$eventAll}}">Todos</a>
                             </li>
                         @endif
-                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                    <li>
-                        <a onclick="{{$event}}">Descargar Talentos por año</a>
-                    </li>
+                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsInfocenter())
+                        @if(request()->is('usuario/talento'))
+                            <li>
+                                <a onclick="{{$event}}">Descargar Talentos por año</a>
+                            </li>
+                        @else
+                            <li>
+                                <a onclick="{{$event}}">Descargar</a>
+                            </li>
+                        @endif
                     @else
                     <li>
                         <a onclick="{{$event}}">Desargar</a>
                     </li>
                     @endif
-                    
-                    
+
+
                 </ul>
             </div>
         </p>

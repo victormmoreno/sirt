@@ -34,7 +34,7 @@
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             @if($view == 'activos')
-                                            Infocenters con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            Infocenters con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
                                             @else
                                             Infocenters sin acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
                                             @endif
@@ -44,11 +44,13 @@
                                         </span>
                                     </div>
                                 </div>
+                                @if(session()->has('login_role') && session()->get('login_role') != App\User::IsInfocenter())
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
                                         <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                             <div class="divider">
                             </div>
@@ -56,9 +58,9 @@
                             @includeWhen($view == 'activos', 'users.settings.button_filter', [ $event = 'UserDinamizadorInfocenter.downloadInfocenter(1)','url' => route('usuario.infocenter.papelera'), 'message' => 'Ver Infocenters sin acceso'])
                             @includeWhen($view == 'inactivos', 'users.settings.button_filter', [ $event = 'UserDinamizadorInfocenter.downloadInfocenter(0)','url' => route('usuario.infocenter.index'), 'message' => 'Ver Infocenters con acceso'])
                             @if($view == 'activos')
-                                @include('users.table', ['id' => 'infocenters_dinamizador_table'] )  
+                                @include('users.table', ['id' => 'infocenters_dinamizador_table'] )
                             @elseif($view == 'inactivos')
-                                @include('users.table', ['id' => 'infocenters_dinamizador_inactivos_table'] ) 
+                                @include('users.table', ['id' => 'infocenters_dinamizador_inactivos_table'] )
                             @endif
                         </div>
                     </div>

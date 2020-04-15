@@ -1034,11 +1034,11 @@ class UserRepository
             }
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo);
-        } else if ($user != null && session()->get('login_role') == User::IsInfocenter()) {
+        } else if ($user == null && session()->get('login_role') == User::IsInfocenter()) {
             if ($nodo == null) {
                 $this->getInfoUsersTalentosWithProjects($anio);
             }
-            $nodo = auth()->user()->infocente->nodo_id;
+            $nodo = auth()->user()->infocenter->nodo_id;
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo);
         } else if ($user != null && session()->get('login_role') == User::IsInfocenter()) {

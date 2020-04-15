@@ -39,7 +39,7 @@ class DinamizadorController extends Controller
                     'view' => 'activos'
                 ]);
                 break;
-
+            
             default:
                 abort('404');
                 break;

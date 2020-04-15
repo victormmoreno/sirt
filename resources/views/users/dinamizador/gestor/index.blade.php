@@ -44,11 +44,13 @@
                                         </span>
                                     </div>
                                 </div>
+                                @if(session()->has('login_role') && session()->get('login_role') != App\User::IsInfocenter())
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
                                         <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                             <div class="divider">
                             </div>

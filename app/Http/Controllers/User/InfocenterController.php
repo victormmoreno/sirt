@@ -43,6 +43,11 @@ class InfocenterController extends Controller
                     'view' => 'activos'
                 ]);
                 break;
+            case User::IsInfocenter():
+                return view('users.dinamizador.infocenter.index', [
+                    'view' => 'activos'
+                ]);
+                break;
 
             default:
                 abort('404');
@@ -67,6 +72,11 @@ class InfocenterController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
+                return view('users.dinamizador.infocenter.index', [
+                    'view' => 'inactivos'
+                ]);
+                break;
+            case User::IsInfocenter():
                 return view('users.dinamizador.infocenter.index', [
                     'view' => 'inactivos'
                 ]);
@@ -124,6 +134,12 @@ class InfocenterController extends Controller
                     ->get();
 
                 return $this->userdatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $users = $this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->infocenter->nodo_id)
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
             }
             abort('404');
         }
@@ -139,6 +155,13 @@ class InfocenterController extends Controller
 
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $users = $this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->dinamizador->nodo_id)
+                    ->onlyTrashed()
+                    ->orderby('users.created_at', 'desc')
+                    ->get();
+
+                return $this->userdatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $users = $this->infocenterRepository->getAllInfocentersForNodo(auth()->user()->infocenter->nodo_id)
                     ->onlyTrashed()
                     ->orderby('users.created_at', 'desc')
                     ->get();
