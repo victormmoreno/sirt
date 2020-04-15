@@ -25,11 +25,18 @@
             <th>
                 Fecha de Nacimiento
             </th>
-
+            <th>
+                Edad
+            </th>
             <th>
                 Correo Electrónico
             </th>
-
+            <th>
+                Teléfono
+            </th>
+            <th>
+                Celular
+            </th>
             <th>
                 Dirección
             </th>

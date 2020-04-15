@@ -28,8 +28,9 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a href="">
-    <i class="material-icons">description</i>Reportes
-  </a>
-</li> --}}
+<li class="no-padding {{setActiveRoute('nodo')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
+      <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
+    </a>
+</li>
+

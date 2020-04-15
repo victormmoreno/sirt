@@ -993,17 +993,30 @@ class UserRepository
     {
 
         if ($user != null && session()->get('login_role') == User::IsGestor()) {
+
             if ($nodo == null) {
                 return $this->getInfoUsersTalentosWithProjects($anio)
                     ->where('gestores.id', $user);
             }
+            $nodo = auth()->user()->gestor->nodo_id;
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo)
+                ->where('gestores.id', $user);
+        } else if ($user == null && session()->get('login_role') == User::IsGestor()) {
+            $user = auth()->user()->gestor->id;
+            if ($nodo == null) {
+                $this->getInfoUsersTalentosWithProjects($anio);
+            }
+            $nodo = auth()->user()->gestor->nodo_id;
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
         } else if ($user == null && session()->get('login_role') == User::IsDinamizador()) {
+
             if ($nodo == null) {
                 $this->getInfoUsersTalentosWithProjects($anio);
             }
+            $nodo = auth()->user()->dinamizador->nodo_id;
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo);
         } else if ($user != null && session()->get('login_role') == User::IsDinamizador()) {
@@ -1011,6 +1024,7 @@ class UserRepository
                 $this->getInfoUsersTalentosWithProjects($anio)
                     ->where('gestores.id', $user);
             }
+            $nodo = auth()->user()->dinamizador->nodo_id;
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
@@ -1020,6 +1034,22 @@ class UserRepository
             }
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo);
+        } else if ($user != null && session()->get('login_role') == User::IsInfocenter()) {
+            if ($nodo == null) {
+                $this->getInfoUsersTalentosWithProjects($anio);
+            }
+            $nodo = auth()->user()->infocente->nodo_id;
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo);
+        } else if ($user != null && session()->get('login_role') == User::IsInfocenter()) {
+            if ($nodo == null) {
+                $this->getInfoUsersTalentosWithProjects($anio)
+                    ->where('gestores.id', $user);
+            }
+            $nodo = auth()->user()->infocenter->nodo_id;
+            return $this->getInfoUsersTalentosWithProjects($anio)
+                ->where('nodos.id', $nodo)
+                ->where('gestores.id', $user);
         }
     }
 

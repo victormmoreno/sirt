@@ -227,6 +227,7 @@ Route::group(
 Route::group([
     'prefix'     => 'usuario/excel',
     'namespace'  => 'User',
+    'middleware' => 'auth',
 ], function () {
     Route::get('/administrador/{state}', [
         'uses' => 'AdminController@exportAdminUser',
