@@ -65,3 +65,18 @@ $(document).ready(function() {
         },  ],
     });
 });
+
+var UserDinamizadorIngreso = {
+    downloadIngreso: function(state){
+
+        if(state !== null) {
+            location.href = '/usuario/excel/ingreso/'+ state;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+}

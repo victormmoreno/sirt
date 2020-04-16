@@ -105,4 +105,26 @@ var UserAdministradorInfocenter = {
             }).clear().draw();
         }
     },
+    downloadInfocenter: function(state){
+
+        let nodo = $('#selectnodo').val();
+        if(nodo == null || nodo == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un nodo',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null && (nodo !== null || nodo !== 0)) {
+            location.href = '/usuario/excel/infocenter/'+ state+'/'+nodo;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+    downloadAllInfocenter:function (state){
+        location.href = '/usuario/excel/infocenter/'+ state;
+    }
 }

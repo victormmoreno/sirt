@@ -2,7 +2,6 @@
 
 use App\Models\TipoArticulacion;
 use Illuminate\Database\Seeder;
-// use App\Models\TipoArticulacion;
 
 class TiposArticulacionesTableSeeder extends Seeder
 {
@@ -78,6 +77,5 @@ class TiposArticulacionesTableSeeder extends Seeder
             'nombre' => 'Productos de actividades relacionadas con la Formación de Recurso Humano en CTeI.',
             'articulado_con' => TipoArticulacion::IsGrupo(),
         ]);
-
     }
 }

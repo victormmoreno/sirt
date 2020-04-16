@@ -34,7 +34,7 @@
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             @if($view == 'activos')
-                                            Gestores con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}} 
+                                            Gestores con acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
                                             @else
                                             Gestores sin acceso a Tecnoparque Nodo {{ \App\Helpers\NodoHelper::returnNameNodoUsuario()}}
                                             @endif
@@ -44,23 +44,26 @@
                                         </span>
                                     </div>
                                 </div>
+                                @if(session()->has('login_role') && session()->get('login_role') != App\User::IsInfocenter())
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
                                         <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
+
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$event= 'UserDinamizadorGestor.downloadGestor(1)','url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$event= 'UserDinamizadorGestor.downloadGestor(0)','url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
                             <br>
                             @if($view == 'activos')
-                                @include('users.table', ['id' => 'gestores_dinamizador_table'] )  
+                                @include('users.table', ['id' => 'gestores_dinamizador_table'] )
                             @elseif($view == 'inactivos')
-                                @include('users.table', ['id' => 'gestores_dinamizador_inactivos_table'] ) 
+                                @include('users.table', ['id' => 'gestores_dinamizador_inactivos_table'] )
                             @endif
-                                
+
                         </div>
                     </div>
                 </div>

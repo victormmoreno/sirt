@@ -8,6 +8,12 @@
     <thead>
         <tr>
             <th>
+                Nodo
+            </th>
+            <th>
+                Linea Tecnológica
+            </th>
+            <th>
                 Tipo Documento
             </th>
             <th>
@@ -70,11 +76,17 @@
             <th>
                 Otra Ocupación
             </th>
+            <th>Honorario Mensual</th>
         </tr>
     </thead>
     <tbody>
         @forelse($users as $user)
         <tr>
+            <td>
+                Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}
+            </td>
+            <td>{{ $user->gestor->lineatecnologica->abreviatura }} - {{ $user->gestor->lineatecnologica->nombre }}</td>
+
             <td>
                 {{$user->tipodocumento->nombre}}
             </td>
@@ -138,9 +150,7 @@
             <td>
                 {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}
             </td>
-            <td>
-                {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}
-            </td>
+            <td>$ {{isset($user->gestor->honorarios) ? number_format($user->gestor->honorarios) : 0}}</td>
         </tr>
         @empty
         <tr>

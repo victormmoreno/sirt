@@ -22,7 +22,12 @@
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsInfocenter())
+                            <li class="active">Filtrar Usuario</li>
+                            @else
                             <li class="active">Nuevo Usuario</li>
+                            @endif
+                            
                         </ol>
                     </div>
                 </div>
