@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\{Talento, Gestor, Nodo};
 use App\Repositories\Repository\UserRepository\{TalentoRepository, UserRepository};
-use App\Exports\User\Talento\TalentoUserExport;
+use App\Exports\User\Talento\InfoTalentoUserExport;
 use App\User;
 use Illuminate\Http\Request;
 use App\Repositories\Datatables\UserDatatables;
@@ -200,7 +200,7 @@ class TalentoController extends Controller
         $user = $this->getData($state, $nodo, $anio);
 
         $this->setQuery($user);
-        return (new TalentoUserExport($this->getQuery()))->download("Talentos - " . config('app.name') . ".{$extension}");
+        return (new InfoTalentoUserExport($this->getQuery()))->download("Talentos - " . config('app.name') . ".{$extension}");
     }
 
     private function setQuery($query)
