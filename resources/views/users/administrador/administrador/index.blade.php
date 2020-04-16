@@ -52,15 +52,16 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.administrador.indexinactivos'), 'message' => 'Ver Administradores sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.administrador.index'), 'message' => 'Ver Administradores con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = null,$event= 'UserAdministradorDinamizador.downloadDinamizador(1)','url' => route('usuario.administrador.indexinactivos'), 'message' => 'Ver Administradores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = null, $event= 'UserAdministradorDinamizador.downloadDinamizador(0)','url' => route('usuario.administrador.index'), 'message' => 'Ver Administradores con acceso'])
                             <br>
+
                             @if($view == 'activos')
-       
-                                 @include('users.table', ['id' => 'administrador_activos_table'] )  
+
+                                 @include('users.table', ['id' => 'administrador_activos_table'] )
                             @elseif($view == 'inactivos')
-                            
-                            @include('users.table', ['id' => 'administrador_inactivos_table'] ) 
+
+                            @include('users.table', ['id' => 'administrador_inactivos_table'] )
                             @endif
                         </div>
                     </div>

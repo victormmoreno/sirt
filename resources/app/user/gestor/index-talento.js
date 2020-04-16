@@ -93,9 +93,31 @@ function consultarTalentosByGestor() {
         name: 'detail',
         orderable: false,
     }, ],
-    });
-  }
- 
+    });   
+}
+var UserTalentoByGestor = {
+    downloadTalento: function(state){
+
+        let anio = $('#anio_proyecto_talento').val();
+        if(anio == null || anio == 0){
+            Swal.fire({
+                title: 'Por favor selecciona un año',
+
+                confirmButtonText: 'Ok',
+            });
+        }else if(state !== null &&(anio !== null || anio !== 0)) {
+            let nodo = 0;
+            location.href = '/usuario/excel/talento/'+ state+'/'+nodo+'/'+anio;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+                confirmButtonText: 'Ok',
+
+            });
+        }
+    },
+}
+
   
   
  

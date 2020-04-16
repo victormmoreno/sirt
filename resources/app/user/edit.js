@@ -14,7 +14,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
       dataType: 'json',
       processData: false,
       success: function (data) {
-  
+
         $('button[type="submit"]').removeAttr('disabled');
         $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();

@@ -3,22 +3,24 @@
 namespace App;
 
 use App\Http\Traits\UserTrait\UsersTrait;
-use App\Models\ActivationToken;
-use App\Models\Ciudad;
-use App\Models\Dinamizador;
-use App\Models\Eps;
-use App\Models\Etnia;
-use App\Models\Gestor;
-use App\Models\GradoEscolaridad;
-use App\Models\GrupoSanguineo;
-use App\Models\Infocenter;
-use App\Models\Ingreso;
-use App\Models\Ocupacion;
-use App\Models\Proyecto;
-use App\Models\Role;
-use App\Models\Movimiento;
-use App\Models\Talento;
-use App\Models\TipoDocumento;
+use App\Models\{
+    ActivationToken,
+    Ciudad,
+    Dinamizador,
+    Eps,
+    Etnia,
+    Gestor,
+    GradoEscolaridad,
+    GrupoSanguineo,
+    Infocenter,
+    Ingreso,
+    Ocupacion,
+    Proyecto,
+    Role,
+    Movimiento,
+    Talento,
+    TipoDocumento
+};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -87,7 +89,7 @@ class User extends Authenticatable implements JWTSubject
         'etnia_id',
         'grado_discapacidad',
         'descripcion_grado_discapacidad',
-        
+
     ];
 
     /**
@@ -152,26 +154,26 @@ class User extends Authenticatable implements JWTSubject
 
     public function movimientos()
     {
-      return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
+            ->withTimestamps();
     }
 
     public function roles_movimientos()
     {
-      return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
+            ->withTimestamps();
     }
 
     public function fases_movimientos()
     {
-      return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
+            ->withTimestamps();
     }
 
     public function actividades_movimientos()
     {
-      return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
+            ->withTimestamps();
     }
 
     public function ocupaciones()
@@ -249,13 +251,17 @@ class User extends Authenticatable implements JWTSubject
             ->role($role);
     }
 
+
+
     /*==============================================================================
     =            scope para mostrar informacion relevante en datatables            =
     ==============================================================================*/
 
     public function scopeInfoUserDatatable($query)
     {
-        return $query->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.direccion', 'users.celular', 'users.telefono', 'users.estado')
+        return $query->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
+            'users.documento', 'users.email', 'users.direccion', 'users.celular',
+            'users.telefono', 'users.estado', 'users.fechanacimiento')
             ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
     }

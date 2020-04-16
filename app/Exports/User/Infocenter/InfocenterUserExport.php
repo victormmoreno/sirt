@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports\User\Talento;
+namespace App\Exports\User\Infocenter;
 
 use App\Exports\FatherExport;
 use App\User;
@@ -13,12 +13,12 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Http\Traits\ExcelTrait\createDrawingsExcel;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class TalentoUserExport extends FatherExport implements Responsable, WithDrawings
+class InfocenterUserExport extends FatherExport implements Responsable, WithDrawings
 {
 
     use Exportable, createDrawingsExcel;
 
-    private $fileName = 'Talentos.xlsx';
+    private $fileName = 'Infocenters.xlsx';
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -32,7 +32,7 @@ class TalentoUserExport extends FatherExport implements Responsable, WithDrawing
             $this->setCount($this->getQuery()->count() + 7);
         }
 
-        $this->setRangeHeadingCell('A7:U7');
+        $this->setRangeHeadingCell('A7:V7');
         $this->setRangeBodyCell('A8:O' . $this->getCount());
     }
 
@@ -54,21 +54,26 @@ class TalentoUserExport extends FatherExport implements Responsable, WithDrawing
 
                 $event->sheet->mergeCells('D1:H2');
 
+
                 $event->sheet->mergeCells('D3:H3');
-                $event->sheet->setCellValue('D3', "Talentos " . config('app.name'))->getStyle('H3');
+                $event->sheet->setCellValue('D3', "Infocenters " . config('app.name'))->getStyle('H3');
                 $event->sheet->getStyle('D3:H3')->applyFromArray($this->styleArray());
                 $event->sheet->getStyle('D3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 $event->sheet->getStyle('D3')->applyFromArray($styles['impares'])->getFont()->setSize(20)->setBold(1);
 
                 $event->sheet->mergeCells('D4:H5');
 
-                $event->sheet->mergeCells('I1:U5');
+                $event->sheet->mergeCells('I1:V5');
 
-                $event->sheet->mergeCells('A6:N6');
-                $event->sheet->setCellValue('A6', 'Información Personal')->getStyle('N6');
-                $event->sheet->getStyle('A6:N6')->applyFromArray($this->styleArray());
+                $event->sheet->setCellValue('A6', 'TECNOPARQUES')->getStyle('N6');
                 $event->sheet->getStyle('A6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
                 $event->sheet->getStyle('A6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+                $event->sheet->mergeCells('B6:N6');
+                $event->sheet->setCellValue('B6', 'Información Personal')->getStyle('N6');
+                $event->sheet->getStyle('A6:N6')->applyFromArray($this->styleArray());
+                $event->sheet->getStyle('B6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
+                $event->sheet->getStyle('B6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 $event->sheet->mergeCells('O6:P6');
                 $event->sheet->setCellValue('O6', 'EPS')->getStyle('P6');
@@ -82,14 +87,14 @@ class TalentoUserExport extends FatherExport implements Responsable, WithDrawing
                 $event->sheet->getStyle('Q6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
                 $event->sheet->getStyle('Q6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-
-                $event->sheet->setCellValue('U6', 'Tipo Talento')->getStyle('U6');
-                $event->sheet->getStyle('U6:U6')->applyFromArray($this->styleArray());
+                $event->sheet->mergeCells('U6:V6');
+                $event->sheet->setCellValue('U6', 'Ocupaciones')->getStyle('V6');
+                $event->sheet->getStyle('U6:V6')->applyFromArray($this->styleArray());
                 $event->sheet->getStyle('U6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
                 $event->sheet->getStyle('U6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 $init = 'A';
-                for ($i = 0; $i < 21; $i++) {
+                for ($i = 0; $i < 22; $i++) {
                     $temp        = $init++;
                     $coordenadas = $temp . '7:' . $temp . $this->getCount();
                     $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
@@ -109,8 +114,8 @@ class TalentoUserExport extends FatherExport implements Responsable, WithDrawing
     public function view(): View
     {
 
-        return view('exports.users.talento.index', [
-            'talentos' => $this->getQuery(),
+        return view('exports.users.infocenter.index', [
+            'users' => $this->getQuery(),
         ]);
     }
 
@@ -122,6 +127,6 @@ class TalentoUserExport extends FatherExport implements Responsable, WithDrawing
      */
     public function title(): String
     {
-        return 'Talentos';
+        return 'Infocenters';
     }
 }

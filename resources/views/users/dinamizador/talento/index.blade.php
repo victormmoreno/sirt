@@ -46,14 +46,18 @@
                                     </div>
                                 </div>
                                 <div class="col s12 l2">
-                                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                    @if(session()->has('login_role') && session()->get('login_role') != App\User::IsInfocenter())
+                                    <div class="col s12 l2">
+                                        <div class="click-to-toggle show-on-large hide-on-med-and-down">
+                                            <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
+                                        </div>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="divider"></div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$event = 'userTalentoByDinamizador.downloadTalento(1)','url' => route('usuario.usuarios.talento.papelera'), 'message' => 'Ver Talentos sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$event = 'userTalentoByDinamizador.downloadTalento(0)','url' => route('usuario.talento.index'), 'message' => 'Ver Talentos con acceso'])
                             <br><br>
                             <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                               <li class="tab col s3"><a href="#historialTalento" class="active">Talentos {{config('app.name')}}</a></li>
@@ -72,7 +76,7 @@
                                   @elseif($view == 'inactivos')
                                   <select class="js-states"  tabindex="-1" style="width: 100%" id="anio_proyecto_talento" name="anio_proyecto_talento" onchange="userTalentoByDinamizador.consultarTalentosByTecnoparqueTrash();">
                                   @endif
-                                    
+
                                         @for ($i=2016; $i <= $year; $i++)
                                         <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
                                         @endfor
@@ -81,11 +85,11 @@
                                 </div>
                             </div>
                             @if($view == 'activos')
-                                @include('users.table', ['id' => 'talentoByDinamizador_table'] )  
+                                @include('users.table', ['id' => 'talentoByDinamizador_table'] )
                             @elseif($view == 'inactivos')
-                                @include('users.table', ['id' => 'talentoByDinamizador_inactivos_table'] ) 
+                                @include('users.table', ['id' => 'talentoByDinamizador_inactivos_table'] )
                             @endif
-                            
+
                             </div>
                             <div id="talentoByGestor">
                                 <h5 class="center-align">Talentos Por Gestor</h5>
@@ -127,11 +131,11 @@
                                       </div>
                                     </a>
                                   </div>
-                                  
+
                                   @if($view == 'activos')
-                                      @include('users.table2', ['id' => 'talentoByGestor_table'] )  
+                                      @include('users.table2', ['id' => 'talentoByGestor_table'] )
                                   @elseif($view == 'inactivos')
-                                      @include('users.table2', ['id' => 'talentoByGestor_inactivos_table'] ) 
+                                      @include('users.table2', ['id' => 'talentoByGestor_inactivos_table'] )
                                   @endif
                                 </div>
                               </div>

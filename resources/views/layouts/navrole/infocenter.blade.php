@@ -28,13 +28,20 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('nodo')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
+      <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
+    </a>
+</li>
+<li class="no-padding {{setActiveRoute('usuario')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
+      <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
+    </a>
+</li>
+
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a href="">
-    <i class="material-icons">description</i>Reportes
-  </a>
-</li> --}}
+

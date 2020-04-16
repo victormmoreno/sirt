@@ -4,8 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\{Talento, Gestor, Nodo};
-use App\Repositories\Repository\UserRepository\TalentoRepository;
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\UserRepository\{TalentoRepository, UserRepository};
+use App\Exports\User\Talento\TalentoUserExport;
 use App\User;
 use Illuminate\Http\Request;
 use App\Repositories\Datatables\UserDatatables;
@@ -42,7 +42,7 @@ class TalentoController extends Controller
     {
         if (request()->ajax()) {
             $talentos = Talento::ConsultarTalentosDeTecnoparque()
-            ->get();
+                ->get();
             return datatables()->of($talentos)
                 ->addColumn('add_articulacion', function ($data) {
                     $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
@@ -76,8 +76,8 @@ class TalentoController extends Controller
         if (request()->ajax()) {
 
             $users = $this->talentoRepository->getAllTalentos()
-                        ->orderby('users.created_at', 'desc')
-                        ->get();
+                ->orderby('users.created_at', 'desc')
+                ->get();
 
             return $this->userdatables->datatableUsers($request, $users);
         }
@@ -91,6 +91,13 @@ class TalentoController extends Controller
                 break;
             case User::IsDinamizador():
                 $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
+                return view('users.dinamizador.talento.index', [
+                    'gestores' => $gestores,
+                    'view' => 'activos'
+                ]);
+                break;
+            case User::IsInfocenter():
+                $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
                 return view('users.dinamizador.talento.index', [
                     'gestores' => $gestores,
                     'view' => 'activos'
@@ -117,7 +124,6 @@ class TalentoController extends Controller
             return $this->userdatables->datatableUsers($request, $users);
         }
         abort('404');
-
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
@@ -125,11 +131,11 @@ class TalentoController extends Controller
     public function talentosTrash(Request $request)
     {
         switch (session()->get('login_role')) {
-            case User::IsAdministrador():            
+            case User::IsAdministrador():
                 return view('users.administrador.talento.index', [
                     'nodos' => Nodo::SelectNodo()->get(),
                     'view' => 'inactivos'
-                    ]);
+                ]);
                 break;
 
             case User::IsDinamizador():
@@ -139,13 +145,21 @@ class TalentoController extends Controller
                     'gestores' => $gestores,
                     'view' => 'inactivos'
                 ]);
-            break;
+                break;
             case User::IsGestor():
-                            
+
                 return view('users.gestor.talento.index', [
                     'view' => 'inactivos',
-                    
-                    ]);
+
+                ]);
+                break;
+            case User::IsInfocenter():
+
+                $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->where('users.estado', User::IsActive())->pluck('nombres_gestor', 'id');
+                return view('users.dinamizador.talento.index', [
+                    'gestores' => $gestores,
+                    'view' => 'inactivos'
+                ]);
                 break;
             default:
                 abort('404');
@@ -162,17 +176,90 @@ class TalentoController extends Controller
                 $auth = auth()->user()->gestor->id;
                 $nodo = auth()->user()->gestor->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->onlyTrashed()->groupBy('users.id')
-                ->get();
+                    ->get();
 
                 return $this->userdatables->datatableUsers($request, $users);
             } else if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->onlyTrashed()->groupBy('users.id')
-                ->get();
+                    ->get();
+                return $this->userdatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsInfocenter()) {
+                $nodo = auth()->user()->infocenter->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->onlyTrashed()->groupBy('users.id')
+                    ->get();
                 return $this->userdatables->datatableUsers($request, $users);
             }
         }
         abort('404');
     }
-        
+
+    public function exportTalentoUser($state = 1, $nodo = null, $anio = null, $extension = 'xlsx')
+    {
+        $this->authorize('exportUsersTalento', User::class);
+        $user = $this->getData($state, $nodo, $anio);
+
+        $this->setQuery($user);
+        return (new TalentoUserExport($this->getQuery()))->download("Talentos - " . config('app.name') . ".{$extension}");
+    }
+
+    private function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Retorna el valor de $query
+     * @return object
+     * @author dum
+     */
+    private function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * retorna consulta de administradores
+     * @return collection
+     * @author dum
+     */
+    private function getData($state = null, $nodo = null, $anio = null)
+    {
+        $role = [User::IsTalento()];
+
+
+        if ($state == null && $nodo == null) {
+            return $this->userRepository->getUsersTalentosByProject($nodo = null, $auth = null, $anio = null)
+                ->role($role)
+                ->groupBy('users.id')
+                ->get();
+        } elseif ($state == 1) {
+            if ($nodo !== null && $anio !== null) {
+                return $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                    ->role($role)
+                    ->groupBy('users.id')
+                    ->get();
+            }
+            return $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                ->where('users.estado', $state)
+                ->role($role)
+                ->groupBy('users.id')
+                ->get();
+        } elseif ($state == 0) {
+            if ($nodo !== null) {
+                return $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                    ->where('users.estado', $state)
+                    ->role($role)
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
+            }
+            return $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                ->where('users.estado', $state)
+                ->role($role)
+                ->onlyTrashed()
+                ->groupBy('users.id')
+                ->get();
+        }
+    }
 }

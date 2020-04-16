@@ -23,7 +23,7 @@ class NodoController extends Controller
         $this->middleware('auth');
         $this->middleware([
             'auth',
-            'role_session:Administrador|Dinamizador|Gestor|Talento',
+            'role_session:Administrador|Dinamizador|Gestor|Infocenter|Talento',
         ]);
         $this->setNodoRepository($nodoRepository);
         $this->setDepartamentoRepository($departamentoRepository);
@@ -93,9 +93,9 @@ class NodoController extends Controller
                 if (isset(auth()->user()->dinamizador)) {
                     $nodoAuth = auth()->user()->dinamizador->nodo->id;
                     $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                                    ->where('nodos.id', $nodoAuth)
-                                    ->first();
-                
+                        ->where('nodos.id', $nodoAuth)
+                        ->first();
+
 
                     return view('nodos.show', [
                         'nodo'              => $nodo,
@@ -110,9 +110,24 @@ class NodoController extends Controller
                 if (isset(auth()->user()->gestor)) {
                     $nodoAuth = auth()->user()->gestor->nodo->id;
                     $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                                ->where('id', $nodoAuth)
-                                ->first();
-                    // return $nodo;
+                        ->where('id', $nodoAuth)
+                        ->first();
+
+                    return view('nodos.show', [
+                        'nodo'              => $nodo,
+                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
+                    ]);
+                }
+                abort('403');
+                break;
+            case User::IsInfocenter():
+                if (isset(auth()->user()->infocenter)) {
+                    $nodoAuth = auth()->user()->infocenter->nodo_id;
+                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
+                        ->where('id', $nodoAuth)
+                        ->first();
+
                     return view('nodos.show', [
                         'nodo'              => $nodo,
                         'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
@@ -125,7 +140,6 @@ class NodoController extends Controller
                 abort('403');
                 break;
         }
-
     }
 
     /**
@@ -207,10 +221,10 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-        
+
         $this->authorize('update', Nodo::class);
 
-        
+
         $nodo = $this->getNodoRepository()->findById($id);
 
         $nodoUpdate = $this->getNodoRepository()->Update($request, $nodo);
@@ -231,7 +245,7 @@ class NodoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $nodo = Nodo::find($id)->delete();
         return $nodo;
@@ -241,5 +255,4 @@ class NodoController extends Controller
     {
         return $nodoPdf->downloadPdfEquipoNodo();
     }
-
 }

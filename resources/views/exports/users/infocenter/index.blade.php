@@ -8,6 +8,9 @@
     <thead>
         <tr>
             <th>
+                Tecnoparque
+            </th>
+            <th>
                 Tipo Documento
             </th>
             <th>
@@ -76,6 +79,9 @@
         @forelse($users as $user)
         <tr>
             <td>
+                Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}
+            </td>
+            <td>
                 {{$user->tipodocumento->nombre}}
             </td>
             <td>
@@ -134,9 +140,6 @@
             </td>
             <td>
                 {{$user->getOcupacionesNames()->implode(', ') ? : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}
             </td>
             <td>
                 {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}

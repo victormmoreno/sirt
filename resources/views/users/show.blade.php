@@ -25,7 +25,7 @@
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m5 l3">
-                                        
+
                                         <div class="row">
                                             @if(isset($user->dinamizador) && collect($user->getRoleNames())->contains(App\User::IsDinamizador()))
                                             <div class="right zurich-bt-fonts green-complement-text">
@@ -142,7 +142,7 @@
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
                                                 @include('users.settings.nav.header')
-                                                @if(isset($user)  && auth()->user()->id != $user->id)
+                                                @if(isset($user)  && auth()->user()->id != $user->id && session()->has('login_role') && session()->get('login_role') != App\User::IsInfocenter())
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                         <p class="center">
@@ -162,9 +162,9 @@
                                                                         </a>
                                                                     </li>
                                                                     @if(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(),App\User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                                                    
+
                                                                     @elseif(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(), App\User::IsGestor(),App\User::IsInfocenter(), App\User::IsIngreso() ]) && session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                                                    
+
                                                                     @else
 
                                                                     <li>
@@ -173,8 +173,8 @@
                                                                         </a>
                                                                     </li>
                                                                     @endif
-                                                                    
-                                                                    
+
+
                                                                 </ul>
                                                             </div>
                                                         </p>
@@ -255,7 +255,7 @@
                                                                 @endif
                                                             </li>
                                                             <li class="collection-item avatar">
-                                                                
+
                                                                 <div class="left">
                                                                     <i class="material-icons circle teal darken-2">
                                                                         contact_phone
@@ -280,7 +280,7 @@
                                                                 </div>
                                                                 @endif
                                                             </li>
-                                                            
+
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
                                                                     mail_outline
@@ -338,24 +338,24 @@
                                                                 </span>
                                                                 <p>
                                                                     @if(isset($user->etnia))
-                                                                    {{$user->etnia->nombre ? : 'No registra'}} 
+                                                                    {{$user->etnia->nombre ? : 'No registra'}}
                                                                     @else
                                                                         No Registra
                                                                     @endif
                                                                 </p>
                                                             </li>
-                                                            
+
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
                                                                     my_location
                                                                 </i>
-                                                                
-                                                                
+
+
                                                                 <div class="left">
                                                                     <span class="title green-complement-text">
                                                                         Lugar de Residencia
                                                                     </span>
-                                                                    
+
                                                                     <p>
                                                                         {{$user->direccion ? : 'No registra'}}
                                                                     </p>
@@ -508,24 +508,24 @@
                                                                             </b>
                                                                         </span>
                                                                         <p>{{$user->talento->tipotalento->nombre ? : 'Información no disponible'}}</p>
-                                                                        
+
                                                                     </div>
                                                                     <div class="col s12 m6 l6">
-                                                                        
+
                                                                         @isset($user->talento->tipotalento)
-                                                                                                                                                    
-                                                                        @if($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO || 
+
+                                                                        @if($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ||
                                                                             $user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)
                                                                                <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{optional($user->talento->entidad->centro)->regional ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
-                                                                        
+
                                                                         @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_EGRESADO_SENA)
                                                                                <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">TIPO FORMACIÓN:</b></span> {{$user->talento->tipoformacion->nombre ?: 'No registra'}}</p>
-                                                                        
+
                                                                         @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_SENA)
                                                                                <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
@@ -533,8 +533,8 @@
 
                                                                         @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_INSTRUCTOR_SENA)
                                                                                <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>                                                                               
-                                                                        
+                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
+
                                                                         @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO)
                                                                         <p><span><b class="teal-text darken-2">TIPO ESTUDIO: </b></span> {{$user->talento->tipoestudio->nombre ?: 'No registra'}}</p>
                                                                         <p><span><b class="teal-text darken-2">UNIVERSIDAD: </b></span> {{$user->talento->universidad ?: 'No registra'}}</p>
@@ -542,11 +542,11 @@
 
                                                                         @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_EMPRESA)
                                                                         <p><span><b class="teal-text darken-2">EMPRESA:</b></span> {{$user->talento->empresa ?: 'No registra'}}</p>
-                                                                         
+
                                                                         @endif
 
                                                                         @endisset
-                                                                        
+
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -556,12 +556,11 @@
                                                 @endif
                                                 <div class="divider mailbox-divider">
                                                 </div>
-                                                @if(auth()->user()->id != $user->id)
+                                                @if(auth()->user()->id != $user->id && session()->has('login_role') && session()->get('login_role') != App\User::IsInfocenter())
                                                 <div class="right">
                                                     <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs" href="{{route('usuario.usuarios.edit', $user->documento)}}">
                                                         Cambiar Información Personal
                                                     </a>
-                                                    
                                                 </div>
                                                 @endif
                                             </div>

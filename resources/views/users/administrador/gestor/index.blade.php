@@ -31,7 +31,7 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                            
+
                                             @if($view == 'activos')
                                             Gestores con acceso a {{config('app.name')}}
                                             @else
@@ -51,8 +51,8 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = 'UserAdministradorGestor.downloadAllGestor(1)',$event= 'UserAdministradorGestor.downloadGestor(1)','url' => route('usuario.gestor.papelera'), 'message' => 'Ver Gestores sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = 'UserAdministradorGestor.downloadAllGestor(0)',$event= 'UserAdministradorGestor.downloadGestor(0)','url' => route('usuario.gestor.index'), 'message' => 'Ver Gestores con acceso'])
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -61,23 +61,23 @@
                                     @elseif($view == 'inactivos')
                                     <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorGestor.selectGestoresPorNodoTrash()">
                                     @endif
-                                    
+
                                         <option value="">Seleccione nodo</option>
                                         @foreach($nodos as $id => $nodo)
                                           <option value="{{$id}}">{{$nodo}}</option>
                                         @endforeach
                                     </select>
-                                    
+
                                 </div>
                             </div>
                             <br>
-                            
+
                             @if($view == 'activos')
-       
-                                 @include('users.table', ['id' => 'gestor_table_activos'] )  
+
+                                 @include('users.table', ['id' => 'gestor_table_activos'] )
                             @elseif($view == 'inactivos')
-                            
-                            @include('users.table', ['id' => 'gestor_table_inactivos'] ) 
+
+                            @include('users.table', ['id' => 'gestor_table_inactivos'] )
                             @endif
                         </div>
                     </div>

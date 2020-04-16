@@ -60,6 +60,13 @@ class UserController extends Controller
 
                 return view('users.gestor.talento.index', ['view' => 'activos']);
                 break;
+            case User::IsInfocenter():
+                $role = [User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+                return view('users.administrador.index', [
+
+                    'roles' => $this->userRepository->getRoleWhereInRole($role),
+                ]);
+                break;
             default:
                 abort('404');
                 break;
@@ -95,13 +102,18 @@ class UserController extends Controller
                 $auth = auth()->user()->gestor->id;
                 $nodo = auth()->user()->gestor->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->groupBy('users.id')
-                ->get();
+                    ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
             } else if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
-                ->get();
+                    ->get();
+                return $usersDatatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsInfocenter()) {
+                $nodo = auth()->user()->infocenter->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
+                    ->get();
                 return $usersDatatables->datatableUsers($request, $users);
             }
         }
@@ -116,17 +128,24 @@ class UserController extends Controller
                 $auth = auth()->user()->gestor->id;
                 $nodo = auth()->user()->gestor->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)
-                ->onlyTrashed()
-                ->groupBy('users.id')
-                ->get();
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
             } else if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
-                ->onlyTrashed()
-                ->groupBy('users.id')
-                ->get();
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
+                return $usersDatatables->datatableUsers($request, $users);
+            } else if (session()->get('login_role') == User::IsInfocenter()) {
+                $nodo = auth()->user()->infocenter->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
                 return $usersDatatables->datatableUsers($request, $users);
             }
         }
@@ -140,7 +159,13 @@ class UserController extends Controller
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)->groupBy('users.id')
-                ->get();
+                    ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $nodo = auth()->user()->infocenter->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)->groupBy('users.id')
+                    ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
             }
@@ -154,9 +179,17 @@ class UserController extends Controller
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)
-                ->onlyTrashed()
-                ->groupBy('users.id')
-                ->get();
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
+
+                return $usersDatatables->datatableUsers($request, $users);
+            } elseif (session()->get('login_role') == User::IsInfocenter()) {
+                $nodo = auth()->user()->infocenter->nodo_id;
+                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
             }
@@ -172,7 +205,7 @@ class UserController extends Controller
             if (session()->get('login_role') == User::IsAdministrador()) {
 
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
-                ->get();
+                    ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
             }
@@ -187,9 +220,9 @@ class UserController extends Controller
             if (session()->get('login_role') == User::IsAdministrador()) {
 
                 $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
-                        ->onlyTrashed()
-                        ->groupBy('users.id')
-                        ->get();
+                    ->onlyTrashed()
+                    ->groupBy('users.id')
+                    ->get();
 
                 return $usersDatatables->datatableUsers($request, $users);
             }
@@ -212,14 +245,13 @@ class UserController extends Controller
     public function show($documento)
     {
 
-        $user = User::where('documento',$documento)->first();
+        $user = User::where('documento', $documento)->first();
 
-        if($user == null){
-            $user = User::onlyTrashed()->where('documento',$documento)->firstOrFail();
+        if ($user == null) {
+            $user = User::onlyTrashed()->where('documento', $documento)->firstOrFail();
         }
 
         return view('users.show', ['user' => $user]);
-
     }
 
     /**
@@ -230,10 +262,10 @@ class UserController extends Controller
      */
     public function edit($documento)
     {
-        $user = User::where('documento',$documento)->first();
+        $user = User::where('documento', $documento)->first();
 
-        if($user == null){
-            $user = User::onlyTrashed()->where('documento',$documento)->firstOrFail();
+        if ($user == null) {
+            $user = User::onlyTrashed()->where('documento', $documento)->firstOrFail();
         }
         $this->authorize('edit', $user);
         switch (session()->get('login_role')) {
@@ -260,13 +292,13 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                if(isset(auth()->user()->dinamizador->nodo->id)){
+                if (isset(auth()->user()->dinamizador->nodo->id)) {
                     $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
-                }else{
+                } else {
                     $nodo = [];
                     return redirect()->route('home');
                 }
-                
+
 
                 return view('users.edit', [
                     'user'              => $user,
@@ -285,14 +317,14 @@ class UserController extends Controller
                     'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
                     'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
                     'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-                    
+
                     'view' => 'edit'
                 ]);
                 break;
             case User::IsGestor():
-                if(isset(auth()->user()->gestor->nodo->id)){
+                if (isset(auth()->user()->gestor->nodo->id)) {
                     $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
-                }else{
+                } else {
                     $nodo = [];
                     return redirect()->route('home');
                 }
@@ -334,10 +366,10 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
 
-        
+
         $user = User::find($id);
 
-        if($user == null){
+        if ($user == null) {
             $user = User::onlyTrashed()->find($id);
         }
 
@@ -356,7 +388,7 @@ class UserController extends Controller
         } else {
             if ($user != null) {
                 $userUpdate = $this->userRepository->Update($request, $user);
-               
+
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
@@ -384,7 +416,7 @@ class UserController extends Controller
     {
         $user = User::where('documento', $document)->first();
 
-        if($user == null){
+        if ($user == null) {
             $user = User::onlyTrashed()->where('documento', $document)->first();
         }
 
@@ -446,33 +478,33 @@ class UserController extends Controller
 
     public function acceso($document)
     {
-        $user = User::where('documento',$document)->first();
+        $user = User::where('documento', $document)->first();
 
-        if($user == null){
-            $user = User::onlyTrashed()->where('documento',$document)->firstOrFail();
+        if ($user == null) {
+            $user = User::onlyTrashed()->where('documento', $document)->firstOrFail();
         }
 
-        $this->authorize('show', $user);
-        
+        $this->authorize('acceso', $user);
+
         return view('users.acceso', ['user' => $user]);
     }
 
 
     public function updateAcceso(Request $request, $documento)
     {
-        $user = User::where('documento',$documento)->first();
+        $user = User::where('documento', $documento)->first();
 
-        if($user == null){
-            $user = User::onlyTrashed()->where('documento',$documento)->firstOrFail();
+        if ($user == null) {
+            $user = User::onlyTrashed()->where('documento', $documento)->firstOrFail();
         }
 
-        if($request->get('txtestado') == 'on'){
-            $user->update(['estado' =>0]);
-                
-    
+        if ($request->get('txtestado') == 'on') {
+            $user->update(['estado' => 0]);
+
+
             $user->delete();
             return redirect()->back()->withSuccess('Acceso de usuario modificado');
-        }else{
+        } else {
             $user->update([
                 'estado' => 1,
             ]);
@@ -480,7 +512,7 @@ class UserController extends Controller
             $user->restore();
             return redirect()->back()->withSuccess('Acceso de usuario modificado');
         }
-        
+
 
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
     }
@@ -489,12 +521,12 @@ class UserController extends Controller
     public function gestoresByNodo($nodo = null)
     {
         $gestores = User::select('gestores.id')
-        ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
-        ->join('gestores','gestores.user_id', 'users.id' )
-        ->role('Gestor')
-        ->where('gestores.nodo_id', $nodo)
-        ->withTrashed()
-        ->pluck('nombre', 'id');
+            ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
+            ->join('gestores', 'gestores.user_id', 'users.id')
+            ->role('Gestor')
+            ->where('gestores.nodo_id', $nodo)
+            ->withTrashed()
+            ->pluck('nombre', 'id');
 
         return response()->json([
             'gestores' => $gestores

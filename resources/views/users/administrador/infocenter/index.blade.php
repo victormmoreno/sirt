@@ -31,7 +31,7 @@
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                             
+
                                             @if($view == 'activos')
                                             Infocenters con acceso a {{config('app.name')}}
                                             @else
@@ -51,15 +51,15 @@
                             </div>
                             <div class="divider">
                             </div>
-                            @includeWhen($view == 'activos', 'users.settings.button_filter', ['url' => route('usuario.infocenter.papelera'), 'message' => 'Ver Infocenters sin acceso'])
-                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', ['url' => route('usuario.infocenter.index'), 'message' => 'Ver Infocenters con acceso'])
+                            @includeWhen($view == 'activos', 'users.settings.button_filter', [$eventAll = 'UserAdministradorInfocenter.downloadAllInfocenter(1)', $event= 'UserAdministradorInfocenter.downloadInfocenter(1)','url' => route('usuario.infocenter.papelera'), 'message' => 'Ver Infocenters sin acceso'])
+                            @includeWhen($view == 'inactivos', 'users.settings.button_filter', [$eventAll = 'UserAdministradorInfocenter.downloadAllInfocenter(0)', $event= 'UserAdministradorInfocenter.downloadInfocenter(0)','url' => route('usuario.infocenter.index'), 'message' => 'Ver Infocenters con acceso'])
                             <div class="row">
                                 <div class="col s12 m12 l12">
-                                    
+
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
                                     @if($view == 'activos')
                                         <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorInfocenter.selectInfocentersForNodo()">
-                                    @elseif($view == 'inactivos') 
+                                    @elseif($view == 'inactivos')
                                     <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UserAdministradorInfocenter.selectInfocentersForNodoTrash()">
                                     @endif
                                         <option value="">Seleccione nodo</option>
@@ -70,13 +70,13 @@
                                 </div>
                             </div>
                             <br>
-                            
+
                             @if($view == 'activos')
-       
-                                 @include('users.table', ['id' => 'infocenter_table_activos'] )  
+
+                                 @include('users.table', ['id' => 'infocenter_table_activos'] )
                             @elseif($view == 'inactivos')
-                            
-                            @include('users.table', ['id' => 'infocenter_table_inactivos'] ) 
+
+                            @include('users.table', ['id' => 'infocenter_table_inactivos'] )
                             @endif
                         </div>
                     </div>
