@@ -28,7 +28,7 @@
 </table>
 @endif
 
-@if(\Session::get('login_role') == App\User::IsDinamizador())
+@if(\Session::get('login_role') == App\User::IsDinamizador() || \Session::get('login_role') == App\User::IsInfocenter())
 <table id="tblproyectosDelNodoPorAnho" class="display responsive-table datatable-example dataTable" style="width: 100%">
   <thead>
     <tr>
@@ -37,7 +37,7 @@
       <th>Nombre</th>
       <th>Sublínea</th>
       <th>Fase</th>
-      <th>Editar</th>
+      <th>Detalles</th>
     </tr>
   </thead>
   <tfoot>

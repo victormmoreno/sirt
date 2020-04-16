@@ -5891,6 +5891,24 @@ $("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
   $('#tblproyectosDelNodoPorAnho').DataTable().draw();
 });
 
+function preguntaReversar(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de reversar este proyecto a la fase de inicio?',
+  // text: "You won't be able to revert this!",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmReversarFase.submit();
+    }
+  })
+}
+
 /**
 * Consulta los proyectos del nodo por año
 */

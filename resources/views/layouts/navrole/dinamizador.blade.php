@@ -53,11 +53,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('indicadores')}}">
+<li class="no-padding {{setActiveRoute('indicadores')}}">
   <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
-</li> --}}
+</li>
 <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto

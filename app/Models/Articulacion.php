@@ -25,12 +25,6 @@ class Articulacion extends Model
 
     protected $table = 'articulaciones';
 
-    protected $casts = [
-        'fecha_inicio'    => 'date:Y-m-d',
-        'fecha_ejecucion' => 'date:Y-m-d',
-        'fecha_cierre'    => 'date:Y-m-d',
-    ];
-
     /**
      * The attributes that are mass assignable.
      *

@@ -358,11 +358,11 @@ class UserRepository
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
 
-                Honorario::create([
-                    'gestor_id' => $gestor->id,
-                    'anio' => Carbon::now()->isoFormat('YYYY'),
-                    'valor' => $request->input('txthonorario')
-                ]);
+                // Honorario::create([
+                //     'gestor_id' => $gestor->id,
+                //     'anio' => Carbon::now()->isoFormat('YYYY'),
+                //     'valor' => $request->input('txthonorario')
+                // ]);
 
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }

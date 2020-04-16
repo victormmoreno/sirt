@@ -27,8 +27,24 @@
             </div>
         </a>
     </div>
-    <div class="col s12 m8 l8">
-        @include('proyectos.historial_cambios')
+    <div class="col s12 m4 l4">
+        <a href="{{route('proyecto.cambiar', $proyecto->id)}}">
+            <div class="card-panel green lighten-3 black-text center">
+                Cambiar el gestor del proyecto.
+            </div>
+        </a>
+    </div>
+    <div class="col s12 m4 l4">
+        <form action="{{route('proyecto.reversar', $proyecto->id)}}" method="POST" name="frmReversarFase">
+            {!! method_field('PUT')!!}
+            @csrf
+            <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">
+                Reversar fase del proyecto a Inicio.
+            </button>
+        </form>
     </div>
 </div>
+    <div class="col s12 m12 l12">
+        @include('proyectos.historial_cambios')
+    </div>
 @endif

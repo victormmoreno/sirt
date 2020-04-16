@@ -56,7 +56,8 @@ class Actividad extends Model
       ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
       ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
       ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
-      ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id');
+      ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
+      ->orderBy('movimientos_actividades_users_roles.created_at');
     }
 
     /**
