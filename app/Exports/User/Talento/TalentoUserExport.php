@@ -2,126 +2,114 @@
 
 namespace App\Exports\User\Talento;
 
-use App\Exports\FatherExport;
-use App\User;
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithDrawings;
-use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use App\Http\Traits\ExcelTrait\createDrawingsExcel;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Events\{AfterSheet};
+use Illuminate\Contracts\View\View;
+use App\Exports\FatherExport;
 
-class TalentoUserExport extends FatherExport implements Responsable, WithDrawings
+class TalentoUserExport extends FatherExport
 {
 
-    use Exportable, createDrawingsExcel;
+  private $title;
+  public function __construct($query, $title)
+  {
+    $this->setTitle($title);
+    $this->setQuery($query);
+    $this->setCount($this->getQuery()->count() + 7);
+    $this->setRangeHeadingCell('A7:W7');
+  }
 
-    private $fileName = 'Talentos.xlsx';
-    /**
-     * @return \Illuminate\Support\Collection
-     */
+  public function registerEvents(): array
+  {
+    return [
+      AfterSheet::class => function(AfterSheet $event) {
+        $this->mergedCells($event);
+        $this->styledCells($event);
+        $this->setFilters($event);
+        $this->setValues($event);
+      },
+    ];
+  }
 
-    public function __construct($query)
-    {
-        $this->setQuery($query);
-        if ($this->getQuery() == null) {
-            $this->setCount(0);
-        } else {
-            $this->setCount($this->getQuery()->count() + 7);
-        }
+  private function setValues(AfterSheet $event) {
+    $event->sheet->setCellValue('S6', 'Último estudio');
 
-        $this->setRangeHeadingCell('A7:U7');
-        $this->setRangeBodyCell('A8:O' . $this->getCount());
+  }
+
+  /**
+   * Aplica estilos a las celdas
+   * @param AfterSheet $event
+   * @return void
+   * @author dum
+   */
+  private function styledCells(AfterSheet $event)
+  {
+    // Estilos para los nombres de las columnas
+    $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
+
+    $event->sheet->getStyle('S6:V6')->applyFromArray($this->styleArray());
+    $event->sheet->getStyle('S6')->applyFromArray($this->styleArrayColumnsPar())->getFont()->setBold(1);
+    $event->sheet->getStyle('S6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+    // Estilos para los registros de la consulta
+    $init = 'A';
+    for ($i=0; $i < 23 ; $i++) {
+      $temp = $init++;
+      $coordenadas = $temp . '7:'. $temp . $this->getCount();
+      $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
+      if ( $i % 2 == 0 ) {
+        $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArrayColumnsPar());
+      } else {
+        $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArrayColumnsImPar());
+      }
     }
+  }
 
-    /**
-     * Método para aplicar estilos al archivo excel después de que se genera la hoja de excel
-     * @return array
-     * @abstract
-     * @author dum
-     */
-    public function registerEvents(): array
-    {
-        $columnPar   = $this->styleArrayColumnsPar();
-        $columnImPar = $this->styleArrayColumnsImPar();
-        $styles      = array('pares' => $columnPar, 'impares' => $columnImPar);
-        return [
-            AfterSheet::class => function (AfterSheet $event) use ($styles) {
-                $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
-                $event->sheet->mergeCells('A1:C5');
+  /**
+   * Funcion para la combinación de celdas
+   * @param AfterSheet $event
+   * @return void
+   * @author dum
+   */
+  private function mergedCells(AfterSheet $event)
+  {
+    // Celdas combinadas arriba de los talentos
+    $event->sheet->mergeCells('A1:R6');
+    $event->sheet->mergeCells('S6:V6');
+    $event->sheet->mergeCells('S1:V5');
+    $event->sheet->mergeCells('W1:W6');
+  }
 
-                $event->sheet->mergeCells('D1:H2');
+  /**
+  * @abstract
+  */
+  public function view(): View
+  {
+    return view('exports.users.talento.talento', [
+      'talentos' => $this->getQuery()
+    ]);
 
-                $event->sheet->mergeCells('D3:H3');
-                $event->sheet->setCellValue('D3', "Talentos " . config('app.name'))->getStyle('H3');
-                $event->sheet->getStyle('D3:H3')->applyFromArray($this->styleArray());
-                $event->sheet->getStyle('D3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $event->sheet->getStyle('D3')->applyFromArray($styles['impares'])->getFont()->setSize(20)->setBold(1);
+  }
 
-                $event->sheet->mergeCells('D4:H5');
+  /**
+  * Asigna el nombre para la hoja de excel
+  * @return string
+  * @abstract
+  * @author dum
+  */
+  public function title(): String
+  {
+    return 'Talentos - ' . $this->getTitle();
+  }
 
-                $event->sheet->mergeCells('I1:U5');
+  private function setTitle(string $title) {
+    $this->title = $title;
+  }
 
-                $event->sheet->mergeCells('A6:N6');
-                $event->sheet->setCellValue('A6', 'Información Personal')->getStyle('N6');
-                $event->sheet->getStyle('A6:N6')->applyFromArray($this->styleArray());
-                $event->sheet->getStyle('A6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-                $event->sheet->getStyle('A6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+  private function getTitle() {
+    return $this->title;
+  }
 
-                $event->sheet->mergeCells('O6:P6');
-                $event->sheet->setCellValue('O6', 'EPS')->getStyle('P6');
-                $event->sheet->getStyle('O6:P6')->applyFromArray($this->styleArray());
-                $event->sheet->getStyle('O6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-                $event->sheet->getStyle('O6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-                $event->sheet->mergeCells('Q6:T6');
-                $event->sheet->setCellValue('Q6', 'Último estudio')->getStyle('T6');
-                $event->sheet->getStyle('Q6:T6')->applyFromArray($this->styleArray());
-                $event->sheet->getStyle('Q6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-                $event->sheet->getStyle('Q6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-
-                $event->sheet->setCellValue('U6', 'Tipo Talento')->getStyle('U6');
-                $event->sheet->getStyle('U6:U6')->applyFromArray($this->styleArray());
-                $event->sheet->getStyle('U6')->applyFromArray($styles['impares'])->getFont()->setBold(1);
-                $event->sheet->getStyle('U6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-                $init = 'A';
-                for ($i = 0; $i < 21; $i++) {
-                    $temp        = $init++;
-                    $coordenadas = $temp . '7:' . $temp . $this->getCount();
-                    $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
-                    if ($i % 2 == 0) {
-                        $event->sheet->getStyle($coordenadas)->applyFromArray($styles['pares']);
-                    } else {
-                        $event->sheet->getStyle($coordenadas)->applyFromArray($styles['impares']);
-                    }
-                }
-            },
-        ];
-    }
-
-    /**
-     * @abstract
-     */
-    public function view(): View
-    {
-
-        return view('exports.users.talento.index', [
-            'talentos' => $this->getQuery(),
-        ]);
-    }
-
-    /**
-     * Asigna el nombre para la hoja de excel
-     * @return string
-     * @abstract
-     * @author dum
-     */
-    public function title(): String
-    {
-        return 'Talentos';
-    }
 }

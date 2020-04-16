@@ -7,22 +7,24 @@
 <table>
     <thead>
     <tr>
-        <th>Tipo Documento</th>
-        <th>Número de Documento</th>
-        <th>Nombre Completo</th>
-        <th>Fecha de Nacimiento</th>
+        <th>Código de Proyecto</th>
+        <th>Número de Documento del Talento</th>
+        <th>Nombres del Talento</th>
+        <th>Apellidos del Talento</th>
         <th>Correo Electrónico</th>
-        <th>Celular</th>
+        <th>Contacto</th>
         <th>Género</th>
         <th>Grupo sanguineo</th>
         <th>Estrato Social</th>
-        <th>Dirección</th>
         <th>Ciudad de residencia</th>
+        <th>Dirección</th>
+        <th>Barrio</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Eps</th>
+        <th>Otra eps</th>
         <th>Etnia a la que pertenece</th>
         <th>¿Tiene algún grado de discapacidad?</th>
         <th>¿Cuál es el grado de discapacidad?</th>
-        <th>Eps</th>
-        <th>Otra eps</th>
         <th>Grado de escolaridad</th>
         <th>Institución</th>
         <th>Título obtenido</th>
@@ -31,75 +33,32 @@
       </tr>
     </thead>
     <tbody>
-      @forelse($talentos as $user)
+      @foreach($talentos as $value)
         <tr>
-            <td>
-                {{isset($user->tipodocumento)? $user->tipodocumento : 'No registra'}}
-            </td>
-            <td>
-                {{isset($user->documento) ? $user->documento : 'No registra'}}
-            </td>
-            <td>
-                {{isset($user->nombre) ? $user->nombre: 'No Registra'}}
-            </td>
-            <td>
-                {{isset($user->fechanacimiento) ?  $user->fechanacimiento->isoFormat('LL'): 'No registra'}} 
-            </td>
-            <td>
-                {{isset($user->email)? $user->email: 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->celular) ? $user->celular : 'No registra'}}
-            </td>
-            <td>
-                {{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}
-            </td>
-            <td>
-                {{!empty($user->grupo_sanguineo) ? $user->grupo_sanguineo : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->estrato) ? $user->estrato : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->direccion) ? $user->direccion : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->residencia) ? $user->residencia : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->etnia) ? $user->etnia : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->grado_discapacidad) ? $user->grado_discapacidad : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->descripcion_grado_discapacidad) ? $user->descripcion_grado_discapacidad : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->eps) ? $user->eps : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->otra_eps) ? $user->otra_eps : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->grado_escolaridad) ? $user->grado_escolaridad : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->institucion) ? $user->institucion : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->titulo_obtenido) ? $user->titulo_obtenido : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->fecha_terminacion) ? $user->fecha_terminacion->isoFormat('LL') : 'No registra'}}
-            </td>
-            <td>
-                {{!empty($user->tipotalento) ? $user->tipotalento : 'No registra'}}
-            </td>
+          <td>{{ $value->codigo_actividad }}</td>
+          <td>{{ $value->documento }}</td>
+          <td>{{ $value->nombres }}</td>
+          <td>{{ $value->apellidos }}</td>
+          <td>{{ $value->email }}</td>
+          <td>{{ $value->contactos }}</td>
+          <td>{{ $value->genero }}</td>
+          <td>{{ $value->tipo_sangre }}</td>
+          <td>{{ $value->estrato }}</td>
+          <td>{{ $value->ciudad_residencia }}</td>
+          <td>{{ $value->direccion }}</td>
+          <td>{{ $value->barrio }}</td>
+          <td>{{ $value->fechanacimiento }}</td>
+          <td>{{ $value->nombre_eps }}</td>
+          <td>{{ $value->otra_eps }}</td>
+          <td>{{ $value->nombre_etnia }}</td>
+          <td>{{ $value->grado_discapacidad }}</td>
+          <td>{{ $value->descripcion_grado_discapacidad }}</td>
+          <td>{{ $value->nombre_gradoescolaridad }}</td>
+          <td>{{ $value->institucion }}</td>
+          <td>{{ $value->titulo_obtenido }}</td>
+          <td>{{ $value->fecha_terminacion }}</td>
+          <td>{{ $value->nombre_tipotalento }}</td>
         </tr>
-    @empty
-            No se encontraron resultados
-        
-      @endforelse
+      @endforeach
     </tbody>
 </table>
