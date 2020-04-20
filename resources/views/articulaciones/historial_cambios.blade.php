@@ -10,17 +10,22 @@
                             La articulación fue creada el día {{$articulacion->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}.
                         </li>
                         @for ($i = 0; $i < $historico->count(); $i++)
-                            <li class="collection-item">
-                                @if ($historico[$i]->fase == 'Finalizado')
-                                El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la
-                                articulación el día {{$historico[$i]->created_at}}
-                                @else
-                                El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
-                                {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día
-                                {{$historico[$i]->created_at}}.
-                                @endif
-                            </li>
-                        @endfor
+                        <li class="collection-item">
+                          @if ($historico[$i]->fase == 'Finalizado')
+                          El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la articulación el día {{$historico[$i]->created_at}}
+                          @else
+                            @if ($historico[$i]->movimiento == 'Cambió')
+                            El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el gestor de la articulación el día {{$historico[$i]->created_at}}
+                            (Este proyecto se encontraba en fase de {{$historico[$i]->fase}})
+                            @elseif($historico[$i]->movimiento == 'Reversó')
+                            El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la fase de la articulación de {{$historico[$i]->fase}} a Inicio el día {{$historico[$i]  ->created_at}}.
+                            @else
+                            El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                            {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]  ->created_at}}.
+                            @endif
+                          @endif
+                        </li>
+                      @endfor
                     </ul>
                 </div>
             </div>

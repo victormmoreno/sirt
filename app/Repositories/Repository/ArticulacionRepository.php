@@ -4,7 +4,7 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Actividad, Articulacion, ArticulacionProyecto, Entidad, ArchivoArticulacionProyecto, UsoInfraestructura, Fase, Movimiento, Role};
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Notifications\Articulacion\{ArticulacionAprobarInicio, ArticulacionAprobarPlaneacion, ArticulacionAprobarEjecucion, ArticulacionAprobarCierre, ArticulacionCierreAprobado};
+use App\Notifications\Articulacion\{ArticulacionAprobarInicio, ArticulacionAprobarPlaneacion, ArticulacionAprobarEjecucion, ArticulacionAprobarCierre, ArticulacionCierreAprobado, ArticulacionAprobarSuspendido, ArticulacionSuspendidoAprobado};
 use Illuminate\Support\Facades\{DB, Notification, Session};
 use Carbon\Carbon;
 use App\User;
@@ -365,6 +365,29 @@ class ArticulacionRepository
     }
   }
 
+    /**
+   * Notifica al dinamizador para que apruebe la articulación en la fase de suspendido
+   * 
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   */
+  public function notificarAlDinamziador_Suspendido(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $articulacion = Articulacion::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ArticulacionAprobarSuspendido($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
     /** 
    * Cambia una articulación de fase
    * 
@@ -401,6 +424,134 @@ class ArticulacionRepository
       DB::commit();
       return true;
     } catch (\Exception $e) {
+      DB::rollback();
+      return false;
+    }
+  }
+
+    /**
+   * Reversa la fase de una articulación a Inicio
+   *
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   **/
+  public function reversarArticulacion(int $id)
+  {
+    DB::beginTransaction();
+    try {
+
+      $articulacion = Articulacion::findOrFail($id);
+
+      $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Reversó')->first(), [
+        'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+        'user_id' => auth()->user()->id,
+        'fase_id' => $articulacion->fase_id,
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+      ]);
+
+      $articulacion->update([
+        'fase_id' => Fase::where('nombre', 'Inicio')->first()->id
+      ]);
+
+      $articulacion->articulacion_proyecto()->update([
+        'aprobacion_dinamizador_ejecucion' => 0,
+        'aprobacion_dinamizador_suspender' => 0
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'aprobacion_dinamizador' => 0
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+
+    /**
+   * Cambia el gestor de un proyecto
+   *
+   * @param Request $request
+   * @param int $id id del proyecto
+   * @return boolean
+   * @author dum
+   **/
+  public function updateGestor($request, $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::findOrFail($id);
+
+      if ($articulacion->articulacion_proyecto->actividad->gestor_id != $request->txtgestor_id) {
+        $articulacion->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cambió')->first(), [
+          'actividad_id' => $articulacion->articulacion_proyecto->actividad->id,
+          'user_id' => auth()->user()->id,
+          'fase_id' => $articulacion->fase_id,
+          'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+        ]);
+      }
+
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'gestor_id' => $request->txtgestor_id 
+      ]);
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+    /**
+   * Suspende una articulación
+   * @param Request $request 
+   * @param int $id Id de la articulación
+   * @return boolean
+   * @author dum
+   **/
+  public function suspenderArticulacion($request, $articulacion)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion->update([
+        'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
+      ]);
+
+      $articulacion->articulacion_proyecto->actividad()->update([
+        'fecha_cierre' => $request->txtfecha_cierre
+      ]);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+    /**
+   * Cambia el estado de aprobacion_dinamizador_suspender para que el gestor pueda suspender una articulación
+   * @param int $id
+   * @return boolean
+   * @author dum
+   **/
+  public function updateAprobacionSuspendido(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $articulacion = Articulacion::findOrFail($id);
+      $articulacion->articulacion_proyecto()->update([
+        'aprobacion_dinamizador_suspender' => 1
+      ]);
+      Notification::send(User::findOrFail($articulacion->articulacion_proyecto->actividad->gestor->user->id), new ArticulacionSuspendidoAprobado($articulacion));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
       DB::rollback();
       return false;
     }
