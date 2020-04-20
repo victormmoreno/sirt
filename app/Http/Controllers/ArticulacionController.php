@@ -216,6 +216,144 @@ class ArticulacionController extends Controller
     }
   }
 
+    /**
+   * Cambiar el gestor de una articulación
+   * @param Request $request
+   * @param int $id
+   * @return Response
+   * @author dum
+   **/
+  public function updateGestor(Request $request, int $id)
+  {
+    $messages = [
+      'txtgestor_id.required' => 'El Gestor es obligatorio.',
+      ];
+
+      $validator = Validator::make($request->all(), [
+      'txtgestor_id' => 'required',
+      ], $messages);
+
+      if ($validator->fails()) {
+        return back()
+        ->withErrors($validator)
+        ->withInput();
+      }
+
+      $update = $this->articulacionRepository->updateGestor($request, $id);
+      if ($update) {
+        Alert::success('Se ha cambiado el gestor de la articulación!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('articulacion');
+      } else {
+        Alert::error('No se ha cambiado el gestor de la articulación!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+  }
+
+    /**
+   * Reversa la articulación de fase
+   *
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @return Response
+   * @author dum
+   **/
+  public function updateReversar(Request $request, int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    if ($articulacion->fase->nombre == 'Inicio') {
+      Alert::warning('La articulación ya se encuentra en fase de Inicio!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    } else {
+      $update = $this->articulacionRepository->reversarArticulacion($id);
+      if ($update) {
+        Alert::success('La fase de la articulación se ha reversado a Inicio!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('articulacion');
+      } else {
+        Alert::error('La articulación no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+
+    }
+  }
+
+    /**
+   * Formulario para cambiar el gestor de un proyecto
+   *
+   * @param int $id Id del proyecto
+   * @return type
+   * @throws conditon
+   **/
+  public function cambiar_gestor(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    switch (Session::get('login_role')) {
+      case User::IsDinamizador();
+      $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+        return view('articulaciones.dinamizador.cambiar_gestor', [
+          'articulacion' => $articulacion,
+          'historico' => $historico,
+          'gestores' => $gestores
+        ]);
+        break;
+      
+      default:
+        # code...
+        break;
+    }
+  }
+
+    /**
+   * Cambia el estado de la articulación a suspendido
+   * 
+   * @param Request $request
+   * @param int $id
+   * @return Response
+   * @author dum
+   **/
+  public function updateSuspendido(Request $request, int $id)
+  {
+    if (Session::get('login_role') == User::IsDinamizador()) {
+      $update = $this->articulacionRepository->updateAprobacionSuspendido($id);
+      // dd($update);
+      if ($update) {
+        Alert::success('Modificación Exitosa!', 'La fase de suspendido de la articulación se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return redirect('articulacion');
+      } else {
+        Alert::error('Modificación Errónea!', 'La fase de suspendido de la articulación no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+        return back();
+      }
+    } else {
+      $articulacion = Articulacion::findOrFail($id);
+      if ($articulacion->articulacion_proyecto->aprobacion_dinamizador_suspender == 1) {
+        $validator = Validator::make(
+          $request->all(),
+          [
+            'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
+          ],
+          [
+            'txtfecha_cierre.required' => 'La fecha de cierre de la articulación es obligatoria.',
+            'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
+          ]
+        );
+        if ($validator->fails()) {
+          Alert::error('Modificación Errónea!', 'Estás ingresando mal la fecha de cierre!')->showConfirmButton('Ok', '#3085d6');
+          return back()
+            ->withErrors($validator)
+            ->withInput();
+        }
+        $suspender = $this->articulacionRepository->suspenderArticulacion($request, $articulacion);
+        if ($suspender) {
+          Alert::success('Modificación Exitosa!', 'La articulación se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
+          return redirect('articulacion');
+        } else {
+          Alert::error('Modificación Errónea!', 'La articulación no se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
+          return back();
+        }
+      }
+    }
+  }
+
   /**
    * Método que valida cuales fueron los productos elegidos (en la fase de inicio)
    *
@@ -631,6 +769,55 @@ class ArticulacionController extends Controller
       Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la fase de cierre de la articulación!')->showConfirmButton('Ok', '#3085d6');
     }
     return back();
+  }
+
+    /**
+   * Notifica al dinamizador para que una articulación se suspenda
+   * @param int $id Id de la articulacion
+   * @return Reponse
+   * @author dum
+   **/
+  public function notificar_suspendido(int $id)
+  {
+    $notificacion = $this->articulacionRepository->notificarAlDinamziador_Suspendido($id);
+    if ($notificacion) {
+      Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la suspensión de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la suspensión de la articulación!')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+  
+  /**
+   * Vista para suspender una articulación
+   *
+   * @param int $id Id de la articulación
+   * @return Response
+   * @author dum
+   **/
+  public function suspender(int $id)
+  {
+    $articulacion = Articulacion::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
+    switch (Session::get('login_role')) {
+      case User::IsGestor():
+        return view('articulaciones.gestor.fase_suspendido', [
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
+        break;
+
+      case User::IsDinamizador():
+
+        return view('articulaciones.dinamizador.fase_suspendido', [
+          'articulacion' => $articulacion,
+          'historico' => $historico
+        ]);
+      default:
+        # code...
+        break;
+    }
   }
 
   /**

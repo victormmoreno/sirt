@@ -20,12 +20,12 @@
                                 <div class="right mailbox-buttons">
                                     <span class="mailbox-title">
                                         <p class="center">
-                                            Información de la articulación en la fase de planeación -
+                                            Información de la articulación en la fase de suspendido -
                                             {{$articulacion->articulacion_proyecto->actividad->nombre}}
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:
-                                            {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->abreviatura}} - {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->nombre}}
+                                            {{ $articulacion->articulacion_proyecto->actividad->gestor->user->nombres }} - {{ $articulacion->articulacion_proyecto->actividad->gestor->user->apellidos }}
                                         </p>
                                     </span>
                                 </div>
@@ -36,7 +36,8 @@
                                     {{optional($articulacion->articulacion_proyecto->actividad->created_at)->isoFormat('LL')}}
                                 </small>
                             </div>
-                            <div class="divider mailbox-divider"></div>
+                            <div class="divider mailbox-divider">
+                            </div>
                             <div class="mailbox-text">
                                 <div class="row">
                                     <div class="col s12 m12 l12">
@@ -54,23 +55,12 @@
                                 <div class="center">
                                     <span class="mailbox-title">
                                         <i class="material-icons">attach_file</i>
-                                        Evidencias de la fase de planeación.
+                                        Evidencias de la fase de suspendido.
                                     </span>
                                 </div>
                                 <div class="divider mailbox-divider"></div>
                                 <div class="row">
-                                    <div class="col s6 m6 l6">
-                                        <p class="p-v-xs">
-                                            <input type="checkbox" disabled {{ $articulacion->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }}
-                                                id="txtcronograma" name="txtcronograma" value="1">
-                                            <label for="txtcronograma">
-                                                Cronograma de trabajo.
-                                            </label>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    @include('articulaciones.archivos_table_fase', ['fase' => 'planeacion'])
+                                    @include('articulaciones.archivos_table_fase', ['fase' => 'suspendido'])
                                 </div>
                             </div>
                         </div>

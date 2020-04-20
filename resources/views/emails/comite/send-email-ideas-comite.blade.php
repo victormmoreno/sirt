@@ -11,7 +11,7 @@ Cordial Saludo.
 	
 @endcomponent
 
-Hemos enviado este correo para informarte de la desición que se dió en el Comité de Selección de Ideas de Bases Tecnológicas.
+Hemos enviado este correo para informarte de la decisión que se dió en el Comité de Selección de Ideas de Bases Tecnológicas.
 <br>
 Para conocer el resultado, debe abrir el archivo adjunto a este email.
 <br>

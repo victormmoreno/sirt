@@ -73,7 +73,7 @@
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
         <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
         @if ($articulacion->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
-        Cerrar Proyecto
+        Cerrar Articulación
         @else
         {{isset($btnText) ? $btnText : 'error'}}
         @endif

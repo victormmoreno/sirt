@@ -701,17 +701,20 @@ class ProyectoController extends Controller
   public function suspender(int $id)
   {
     $proyecto = Proyecto::findOrFail($id);
+    $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
     switch (Session::get('login_role')) {
       case User::IsGestor():
         return view('proyectos.gestor.fase_suspendido', [
-          'proyecto' => $proyecto
+          'proyecto' => $proyecto,
+          'historico' => $historico
         ]);
         break;
 
       case User::IsDinamizador():
 
         return view('proyectos.dinamizador.fase_suspendido', [
-          'proyecto' => $proyecto
+          'proyecto' => $proyecto,
+          'historico' => $historico
         ]);
       default:
         # code...
@@ -1072,9 +1075,6 @@ class ProyectoController extends Controller
 
   /**
    * Cambiar el gestor de un proyecto
-   *
-   * Undocumented function long description
-   *
    * @param Request $request
    * @param int $id
    * @return Response
