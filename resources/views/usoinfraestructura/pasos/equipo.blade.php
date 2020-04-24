@@ -81,13 +81,11 @@
                 </div>
                 <div class="input-field col s12 m2 l2">
             
-                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? "disabled" : ""}}/>
+                    <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1" min="0" step="0.1" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? "disabled" : ""}}/>
                         <label for="txttiempouso">
                             Tiempo Uso (Horas)
                         </label>
-                        </label>
-                    <label class="error" for="txttiempouso" id="txttiempouso-error"></label>
-                    </input>
+                        <label class="error" for="txttiempouso" id="txttiempouso-error"></label>
                 </div>
                 <div class="input-field col s2 m2 l2">
                     @if(isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() )

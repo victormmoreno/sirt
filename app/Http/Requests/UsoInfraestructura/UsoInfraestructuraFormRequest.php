@@ -68,7 +68,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtlinea.required'                  => 'La linea tecnológica es obligatoria',
             'txtgestor.required'                 => 'El gestor es obligatorio',
             'txttipousoinfraestructura.required' => 'por favor seleccione el tipo de uso de infraestructura',
-            'txtactividad.required'              => 'El proyecto ó la articulación o la edt es obligatoria',
+            'txtactividad.required'              => 'El proyecto ó la articulación es obligatoria',
             'txtdescripcion.max'                 => 'La descripcion debe tener máximo 2000 caracteres',
             'txtasesoriadirecta.numeric'         => 'La asesoria directa debe ser un valor numérico',
             'txtasesoriadirecta.min'             => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
