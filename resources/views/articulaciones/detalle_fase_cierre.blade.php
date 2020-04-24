@@ -44,7 +44,7 @@
                                         <div class="center">
                                             <span class="mailbox-title">
                                                 <i class="material-icons">build</i>
-                                                Información del Proyecto
+                                                Información de la articulación
                                                 {{$articulacion->articulacion_proyecto->actividad->codigo_actividad}} - {{$articulacion->articulacion_proyecto->actividad->nombre}}
                                             </span>
                                         </div>

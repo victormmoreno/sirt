@@ -87,7 +87,7 @@ class TalentoUserExport extends FatherExport
   */
   public function view(): View
   {
-    return view('exports.users.talento.talento', [
+    return view('exports.users.talento.index', [
       'talentos' => $this->getQuery()
     ]);
 
