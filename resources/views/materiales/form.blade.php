@@ -21,7 +21,7 @@
         </div>
     </div>
     @endif
-    
+
     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
     <div class="row">
 		<div class="input-field col s12 m6 l6">
@@ -69,7 +69,7 @@
 	@endif
 
 	<div class="row">
-		
+
 		<div class="input-field col s12 m12 l12">
 		    <label class="active" for="txtcategoria">Categoria Material <span class="red-text">*</span></label>
 		    <select class="js-states browser-default select2Tags " tabindex="-1" style="width: 100%" name="txtcategoria" id="txtcategoria" >
@@ -89,7 +89,7 @@
                 {{ $message }}
             </label>
             @enderror
-		</div>		
+		</div>
 	</div>
 	<div class="row">
 		<div class="input-field col s12 m6 l6">
@@ -114,7 +114,7 @@
 		</div>
 		<div class="input-field col s12 m6 l6">
 		    <label class="active" for="txtmedida">Medida <span class="red-text">*</span></label>
-		    <select class="js-states browser-default select2Tags" tabindex="-1" style="width: 100%" name="txtmedida" id="txtmedida" >
+		    <select class="js-states browser-default select2Tags" tabindex="-1" style="width: 100%" name="txtmedida" id="txtmedida" onchange="getSelectMaterialMedida()">
 	            <option value="">Seleccione Medida</option>
 	            @forelse($medidas as $id => $medida)
 		            @if(isset($material->medida->id))
@@ -133,19 +133,19 @@
             @enderror
 		</div>
 	</div>
-	
+
 	<div class="row">
-		
-		<div class="input-field col s12 m3 l2">
-	      	<input type="text" name="txtcantidad" id="txtcantidad" value="{{ isset($material) ? $material->cantidad: old('txtcantidad')}}"/>
-	      	<label class="active" for="txtcantidad">Cantidad <span class="red-text">*</span></label>
+
+		<div class="input-field col s12 m4 l3">
+	      	<input type="number" name="txtcantidad" id="txtcantidad" min="0" step="0.1" value="{{ isset($material) ? $material->cantidad: old('txtcantidad')}}" disabled/>
+	      	<label class="active" for="txtcantidad">Tamaño presentacion o venta/paquete <span class="red-text">*</span></label>
 	      	@error('txtcantidad')
             <label class="error" for="txtcantidad" id="txtcantidad-error">
                 {{ $message }}
             </label>
             @enderror
 	    </div>
-	    <div class="input-field col s12 m6 l6">
+	    <div class="input-field col s12 m5 l5">
 	      	<input type="text" name="txtnombre" id="txtnombre" value="{{ isset($material) ? $material->nombre: old('txtnombre')}}"/>
 	      	<label class="active" for="txtnombre">Nombre de Material <span class="red-text">*</span></label>
 	      	@error('txtnombre')
@@ -163,10 +163,10 @@
             </label>
             @enderror
 	    </div>
-		 
+
 	</div>
 	<div class="row">
-		
+
 		<div class="input-field col s12 m6 l6">
 	      	<input type="text" name="txtmarca" id="txtmarca" value="{{ isset($material) ? $material->marca: old('txtmarca')}}"/>
 	      	<label class="active" for="txtmarca">Marca <span class="red-text">*</span></label>
@@ -186,7 +186,7 @@
             @enderror
 	    </div>
 	</div>
-	
+
 	<div class="divider"></div>
 	<center>
 	  	<button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>

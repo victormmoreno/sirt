@@ -18,9 +18,11 @@
                 <!-- Dropdown Structure -->
                 <ul class="dropdown-content" id="dropdown">
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
-                    <li>
-                        <a onclick="{{$event}}" >Por nodo</a>
-                    </li>
+                        @if(!request()->is('usuario/administrador'))
+                        <li>
+                            <a onclick="{{$event}}" >Por nodo</a>
+                        </li>
+                        @endif
                         @if(!request()->is('usuario/talento'))
                             <li>
                                 <a onclick="{{$eventAll}}">Todos</a>
@@ -29,7 +31,7 @@
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsInfocenter())
                         @if(request()->is('usuario/talento'))
                             <li>
-                                <a onclick="{{$event}}">Descargar Talentos por año</a>
+                                <a onclick="{{$event}}">Descargar Talentos {{config('app.name')}}</a>
                             </li>
                         @else
                             <li>

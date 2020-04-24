@@ -350,11 +350,13 @@ Route::resource('equipos', 'EquipoController', [
 Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMaterialesPorNodo')
     ->name('material.getmaterialespornodo');
 
+Route::get('/materiales/getmaterial/{id}', 'MaterialController@getMaterial')
+    ->name('material.getmaterial');
+
 Route::resource('materiales', 'MaterialController', [
     'as' => 'materiales',
     'except' => [
         'destroy',
-        // 'show',
     ]
 ])->names([
     'index'   => 'material.index',

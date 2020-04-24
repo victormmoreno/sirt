@@ -26,7 +26,7 @@
                 <div class="card ">
                     <div class="card-content">
                         <div class="row">
-                            
+
                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                                     <div class="row">
                                         <div class="col s12 m12 l12">
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div class="divider">
-                                    </div> 
+                                    </div>
                                     <div class="row">
                                         <div class="col s12 m12 l12">
                                             <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -48,10 +48,10 @@
                                                   <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                                                 @endforeach
                                             </select>
-                                            
+
                                         </div>
                                     </div>
-                                            
+
                                 @elseif(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
                                     <div class="row">
                                         <div class="col s12 m12 l10">
@@ -64,29 +64,29 @@
                                                     @endif
                                                 </span>
                                             </div>
-                                        </div>                          
+                                        </div>
                                         <div class="col s12 l2">
                                             <div class="click-to-toggle show-on-large hide-on-med-and-down">
                                                 <a href="{{route('material.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Material</a>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="divider"></div>
                                 @endif
-                            
-                             
+
+
                             <br>
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                                 <table class="display responsive-table" id="materiales_administrador_table"  style="width: 100%">
                                     <thead>
-                                        <th width="20%">Fecha Adquisición</th>
+                                        <th width="15%">Fecha Compra</th>
                                         <th width="20%">Linea Tecnológica</th>
                                         <th width="20%">Código de Material</th>
                                         <th width="30%">Nombre de Material</th>
                                         <th width="15%">Presentación</th>
                                         <th width="15%">Medida</th>
-                                        <th width="10%">Cantidad Adquirida</th>
+                                        <th width="10%">Tamaño presentacion o venta/paquete</th>
                                         <th width="20%">Valor Unitario</th>
                                         <th width="20%">Valor total</th>
                                         <th width="15%">Detalle</th>
@@ -95,35 +95,30 @@
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
                                 <table class="display responsive-table" id="materiales_dinamizador_table"  style="width: 100%">
                                     <thead>
-                                        <th width="20%">Fecha Adquisición</th>
+                                        <th width="15%">Fecha Compra</th>
                                         <th width="20%">Linea Tecnológica</th>
                                         <th width="20%">Código de Material</th>
                                         <th width="30%">Nombre de Material</th>
                                         <th width="15%">Presentación</th>
                                         <th width="15%">Medida</th>
-                                        <th width="10%">Cantidad Adquirida</th>
+                                        <th width="10%">Tamaño presentacion o venta/paquete</th>
                                         <th width="20%">Valor Unitario</th>
                                         <th width="20%">Valor total</th>
                                         <th width="15%">Detalle</th>
-                                        <th width="15%">Editar</th>
-
                                     </thead>
                                 </table>
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                                 <table class="display responsive-table" id="materiales_gestor_table"  style="width: 100%">
                                     <thead>
-                                        <th width="20%">Fecha Adquisición</th>
-                                        <th width="20%">Linea Tecnológica</th>
+                                        <th width="15%">Fecha Compra</th>
                                         <th width="20%">Código de Material</th>
                                         <th width="30%">Nombre de Material</th>
                                         <th width="15%">Presentación</th>
                                         <th width="15%">Medida</th>
-                                        <th width="10%">Cantidad Adquirida</th>
-                                        <th width="20%">Valor Unitario</th>
-                                        <th width="20%">Valor total</th>
-                                        <th width="15%">Detalle</th>
-                                        <th width="15%">Editar</th>
-
+                                        <th width="10%">Tamaño presentacion o venta/paquete</th>
+                                        <th width="25%">Valor Unitario</th>
+                                        <th width="25%">Valor total</th>
+                                        <th width="10%">Detalle</th>
                                     </thead>
                                 </table>
                             @endif

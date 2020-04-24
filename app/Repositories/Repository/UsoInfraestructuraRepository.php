@@ -34,7 +34,7 @@ class UsoInfraestructuraRepository
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
-             $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
+            $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
 
@@ -46,7 +46,6 @@ class UsoInfraestructuraRepository
             DB::rollback();
             return 'false';
         }
-
     }
 
     /**
@@ -111,7 +110,7 @@ class UsoInfraestructuraRepository
         $syncData            = [];
         $honorario           = [];
         $horasAsesoriaGestor = [];
-       
+
         foreach ($request->get('gestor') as $id => $value) {
 
             //calculo de costo de horas de asesoria
@@ -125,11 +124,10 @@ class UsoInfraestructuraRepository
             //array que almacena los datos a guardar
             $syncData[$id] = [
                 'gestor_id'          => $value,
-                'asesoria_directa'   => $request->get('asesoriadirecta')[$id] != null ? $request->get('asesoriadirecta')[$id] : 0 ,
-                'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id] != null ? $request->get('asesoriaindirecta')[$id] : 0 ,
+                'asesoria_directa'   => $request->get('asesoriadirecta')[$id] != null ? $request->get('asesoriadirecta')[$id] : 0,
+                'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id] != null ? $request->get('asesoriaindirecta')[$id] : 0,
                 'costo_asesoria'     => $honorario[$id],
             ];
-
         }
         return $syncData;
     }
@@ -164,14 +162,13 @@ class UsoInfraestructuraRepository
         foreach ($request->get('material') as $id => $value) {
             //busqueda  del material por el id
             $material = Material::where('id', $value)->first();
-
-            if(isset($material)){
-                $dataMateriales[$id] = round(($material->valor_compra / $material->cantidad) * (int) $request->get('cantidad')[$id]);
-            }else{
+            //calculo de costos de materiales
+            if (isset($material)) {
+                $dataMateriales[$id] = round(($material->valor_compra / $material->cantidad) * (float) $request->get('cantidad')[$id]);
+            } else {
                 $dataMateriales[$id] = 0;
             }
-            //calculo de costos de materiales
-            
+
             //array que almacena los datos en material_costos
             $syncData[$id] = [
                 'material_id'    => $value,
@@ -223,10 +220,9 @@ class UsoInfraestructuraRepository
             if (($anioActual - $equipo->anio_compra) < $equipo->vida_util) {
                 if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0) {
                     $depreciacionEquipo[$id] = 0;
-                }else{
-                   $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]); 
+                } else {
+                    $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
                 }
-                
             } else {
                 $depreciacionEquipo[$id] = 0;
             }
@@ -237,7 +233,6 @@ class UsoInfraestructuraRepository
             if (isset($equiposmantenimiento)) {
                 //formula para calcular el valor del mantenimiento del equipo * tiempo uso infraestructura
                 $mantenimientoEquipo = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
-
             } else {
                 $mantenimientoEquipo = 0;
             }
@@ -256,9 +251,9 @@ class UsoInfraestructuraRepository
 
             if ($costo->valor_costo_administrativo == 0) {
                 $costoAdministracion[$id] = 0;
-            }else{
+            } else {
                 $costoAdministracion[$id] = round((($costo->valor_costo_administrativo / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA / $countlineas / CostoAdministrativo::DEDICACION)
-                 * (100 / ($countequipos) * (int) $request->get('tiempouso')[$id]) / 100));
+                    * (100 / ($countequipos) * (int) $request->get('tiempouso')[$id]) / 100));
             }
 
 
@@ -283,7 +278,7 @@ class UsoInfraestructuraRepository
         DB::beginTransaction();
         try {
 
-            $usoInfraestructura = $this->updateUsoInfraestructura($id, $request);        
+            $usoInfraestructura = $this->updateUsoInfraestructura($id, $request);
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
@@ -334,7 +329,7 @@ class UsoInfraestructuraRepository
      */
     public function getUsoInfraestructuraForUser(array $relations)
     {
-        
+
         return UsoInfraestructura::with([
             'actividad'                                                     => function ($query) {
                 $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
@@ -470,18 +465,17 @@ class UsoInfraestructuraRepository
     public function getProyectosForUser($user)
     {
         return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'fases.nombre AS nombre_fase')
-        ->selectRaw('concat(actividades.codigo_actividad, " - ", actividades.nombre) AS nombre')
-        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-        ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-        ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-        ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
-        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-        ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
-        ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.id');
+            ->selectRaw('concat(actividades.codigo_actividad, " - ", actividades.nombre) AS nombre')
+            ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
+            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+            ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+            ->join('users', 'users.id', '=', 'gestores.user_id')
+            ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+            ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+            ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+            ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.id');
     }
-
 }

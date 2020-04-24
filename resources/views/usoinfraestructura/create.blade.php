@@ -143,10 +143,10 @@
                     usoInfraestructuraCreate.removeDisableButtonEquipos();
                     usoInfraestructuraCreate.removeDisableButtonTalento();
                     usoInfraestructuraCreate.removeDisableButtonMaterial();
-                    usoInfraestructuraCreate.DatatableProjectsForUser();         
-                      
+                    usoInfraestructuraCreate.DatatableProjectsForUser();
+
                 } else if ( $("#IsArticulacion").is(":checked") ) {
-                   
+
 
                     Swal.fire({
                         toast: true,
@@ -198,7 +198,7 @@
                     usoInfraestructuraCreate.limpiarListaMateriales();
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
                     usoInfraestructuraCreate.limpiarListaGestorAsesores();
-                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();                 
+                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
 
                 }
 
@@ -217,61 +217,61 @@
             .append('<option selected="selected" value="">seleccione el talento</option>').select2();
             $('#txtequipo')
             .empty()
-            .append('<option selected="selected"  value="">seleccione el equipo</option>').select2();          
+            .append('<option selected="selected"  value="">seleccione el equipo</option>').select2();
         },
 
         disableSelectButtons: function () {
-            $('#txttalento').attr("disabled", true).select2(); 
-            
+            $('#txttalento').attr("disabled", true).select2();
+
             $(".btnAgregarTalento").attr("disabled", true).removeAttr("onclick");
         },
         removeDisableSelectButtons: function () {
-            $('#txttalento').attr("disabled", false).select2(); 
+            $('#txttalento').attr("disabled", false).select2();
              $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'addTalentoAUso()');
         },
         removeDisableButtonGestorAsesor: function () {
              $(".btnAgregarGestorAsesor").removeAttr("disabled").attr('onclick', 'addGestoresAUso()');
-             $('#txtgestorasesor').attr("disabled", false).select2(); 
-             $('#txtasesoriadirecta').removeAttr("readonly"); 
-             $('#txtasesoriaindirecta').removeAttr("readonly"); 
+             $('#txtgestorasesor').attr("disabled", false).select2();
+             $('#txtasesoriadirecta').removeAttr("readonly");
+             $('#txtasesoriaindirecta').removeAttr("readonly");
 
         },
         removeDisableButtonEquipos: function () {
              $(".btnAgregarEquipo").removeAttr("disabled").attr('onclick', 'agregarEquipoAusoInfraestructura()');
-             $('#txtlineatecnologica').attr("disabled", false).select2(); 
-             $('#txtequipo').attr("disabled", false).select2(); 
-             $('#txttiempouso').removeAttr("readonly"); 
+             $('#txtlineatecnologica').attr("disabled", false).select2();
+             $('#txtequipo').attr("disabled", false).select2();
+             $('#txttiempouso').removeAttr("readonly");
         },
         removeDisableButtonMaterial: function () {
              $(".btnAgregarMaterial").removeAttr("disabled").attr('onclick', 'addMaterialesAUso()');
-             $('#txtmaterial').attr("disabled", false).select2(); 
-             $('#txtcantidad').removeAttr("readonly"); 
+             $('#txtmaterial').attr("disabled", false).select2();
+             $('#txtcantidad').removeAttr("readonly");
         },
         addDisableButtonGestorAsesor: function () {
              $(".btnAgregarGestorAsesor").removeAttr('onclick', 'addGestoresAUso()').attr("disabled");
-             $('#txtgestorasesor').attr("disabled", true).select2(); 
-             $('#txtasesoriadirecta').attr("readonly", true); 
+             $('#txtgestorasesor').attr("disabled", true).select2();
+             $('#txtasesoriadirecta').attr("readonly", true);
              $('#txtasesoriaindirecta').attr("readonly", true);
         },
         addDisableButtonEquipos: function () {
              $(".btnAgregarEquipo").removeAttr('onclick', 'agregarEquipoAusoInfraestructura()').attr("disabled");
-             $('#txtlineatecnologica').attr("disabled", true).select2(); 
-             $('#txtequipo').attr("disabled", true).select2(); 
-             $('#txttiempouso').attr("readonly", true); 
+             $('#txtlineatecnologica').attr("disabled", true).select2();
+             $('#txtequipo').attr("disabled", true).select2();
+             $('#txttiempouso').attr("readonly", true);
         },
         addDisableButtonMaterial: function () {
              $(".btnAgregarMaterial").removeAttr('onclick', 'addMaterialesAUso()').attr("disabled");
-             $('#txtmaterial').attr("disabled", true).select2(); 
-             $('#txtcantidad').attr("readonly", true); 
+             $('#txtmaterial').attr("disabled", true).select2();
+             $('#txtcantidad').attr("readonly", true);
         },
         removeDisableButtonTalento: function () {
              $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'addTalentoAUso()');
-             $('#txttalento').attr("disabled", false).select2();  
+             $('#txttalento').attr("disabled", false).select2();
 
         },
         addDisableButtonTalento: function () {
              $(".btnAgregarTalento").removeAttr('onclick', 'addTalentoAUso()').attr("disabled");
-             $('#txttalento').attr("disabled", true).select2(); 
+             $('#txttalento').attr("disabled", true).select2();
 
         },
         eliminarContentTables: function () {
@@ -283,7 +283,7 @@
         },
         limpiarInputsActividad: function (){
             $('#txtactividad').val();
-            
+
         },
         limpiarInputNodo: function (){
             $('#txtnodo').val("");
@@ -354,16 +354,16 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
-                
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();
                 $('#txtlineatecnologica').empty();
                 $('#txtmaterial').empty();
+
                 $('#txtlinea').removeAttr('value');
                 $('#detallesGestores').children("tr").remove();
 
-                
+
                 $('#txttalento').append('<option value="">Seleccione el talento</option>');
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
@@ -376,7 +376,7 @@
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
 
@@ -418,8 +418,8 @@
                 }
 
                 if (response.lineastecnologicas.length != 0) {
-                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
-                           
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {
+
                         $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
 
@@ -429,16 +429,16 @@
 
 
                 if (response.equipos.length != 0) {
-                    $.each(response.equipos, function(e, equipo) {       
+                    $.each(response.equipos, function(e, equipo) {
                         $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                     });
                 }else{
                     $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
                 }
-                
+
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
-                        
+
                         $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
                     });
                 }else{
@@ -455,7 +455,7 @@
             });
 
         },
-       
+
         //ARTICULACIONES
         dataTableArtculacionFindByUser: function () {
             $('#usoinfraestrucutaArticulacionesForUserTable').dataTable().fnDestroy();
@@ -512,7 +512,7 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
-                
+
                 $('#txtequipo').empty();
                 $('#txtgestor').removeAttr('value');
                 $('#txtlinea').removeAttr('value');
@@ -569,9 +569,9 @@
                 }else{
                     $('#txttalento').append('<option value="">no se encontraron resultados</option>');
                 }
-            
+
                 if (response.equipos.length != 0) {
-                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {
                         $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
                 }else{
@@ -579,8 +579,8 @@
                 }
 
                 if (response.equipos.length != 0) {
-                    $.each(response.equipos, function(e, equipo) { 
-                          
+                    $.each(response.equipos, function(e, equipo) {
+
                         $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                     });
                 }else{
@@ -598,8 +598,8 @@
                 $('#txttalento').select2();
                 $('#txtmaterial').select2();
                 $('#txtequipo').select2();
-                $('#txtlineatecnologica').select2();                 
- 
+                $('#txtlineatecnologica').select2();
+
             });
         },
 
@@ -704,31 +704,31 @@
                     $('#txtnodo').val();
                     $("label[for='txtlinea']").addClass('active');
                 }
-                
+
                 if (response.lineastecnologicas.length != 0) {
-                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {  
+                    $.each(response.lineastecnologicas, function(e, lineatecnologica) {
                         $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
                 }else{
-                   $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>'); 
+                   $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
                 }
-                
+
                 if (response.equipos.length != 0) {
                     $.each(response.equipos, function(e, equipo) {
                         $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
 
                     });
                 }else{
-                    $('#txtequipo').append('<option value="">no se encontraron resultados</option>'); 
-                } 
+                    $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
+                }
 
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
                         $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
                     });
                 }else{
-                    $('#txtmaterial').append('<option value="">no se encontraron resultados</option>'); 
-                } 
+                    $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
+                }
 
 
                 $('#txtequipo').select2();
@@ -737,11 +737,10 @@
 
             });
         },
-     
+
         getEquipoPorLinea:function(){
             let lineatecnologica = $('#txtlineatecnologica').val();
             let nodo = $('#txtnodo').val();
-            console.log(lineatecnologica);
 
             if(nodo != '' && lineatecnologica !=''){
                 $.ajax({
@@ -749,7 +748,7 @@
                     type:'get',
                     url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
-                   
+
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
@@ -761,7 +760,7 @@
                             });
                         @else
                             $.each(response.equipos, function(i, equipo) {
-                                
+
                                 $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                             });
                         @endif
@@ -775,7 +774,7 @@
                 $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
             }
 
-            
+
         },
 
 
@@ -848,6 +847,25 @@
           return validacion;
         },
 
+
+    }
+
+    function getSelectMaterial(){
+        let material = $("#txtmaterial").val();
+        if(material != ''){
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/materiales/getmaterial/'+ material
+            }).done(function(response){
+
+                $("label[for='txtcantidad']").empty();
+                $("label[for='txtcantidad']").text('cantidad a gastar ('+response.material.medida.nombre+ ')');
+            });
+        }else{
+            $("label[for='txtcantidad']").empty();
+            $('#txtcantidad').text('Cantidad a gastar');
+        }
     }
 
     function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
@@ -1047,9 +1065,6 @@
                         title: 'el Talento ' + nombreTalento + ' agregado.'
                       });
 
-
-                    // $("#txttalento option:contains(Seleccione el talento)").attr("selected", true);
-
                     let a = document.getElementsByName("talento[]");
                     let fila ="";
 
@@ -1059,7 +1074,7 @@
 
                 }
             }
-            // $("#txttalento").val();
+
             $("#txttalento option[value='']").attr("selected", true);
             $('#txttalento').select2();
         }
@@ -1077,15 +1092,15 @@
         }
 
         function eliminarEquipo(index){
-          $('#filaEquipo'+ index).remove();
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            type: 'success',
-            title: 'Equipo eliminado.'
-          });
+            $('#filaEquipo'+ index).remove();
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                type: 'success',
+                title: 'Equipo eliminado.'
+            });
         }
         function addGestoresAUso() {
 
@@ -1097,13 +1112,13 @@
             if ($("#txtgestorasesor").val() == ""){
 
                 Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        type: 'warning',
-                        title: 'Debe seleccionar un Gestor'
-                      });
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'Debe seleccionar un Gestor'
+                });
 
             }else{
                 if (usoInfraestructuraCreate.noRepeatGestor(idgestor) == false) {
@@ -1119,7 +1134,7 @@
                       });
 
                     $("#txtgestorasesor").val();
-                }else if($("#txtasesoriadirecta").val() == '' ||  (!/^([0-9])*$/.test($("#txtasesoriadirecta").val()))){
+                }else if($("#txtasesoriadirecta").val() == '' ||  (!/^([0-9])\d*(\.\d+)?$/.test($("#txtasesoriadirecta").val()))){
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1144,7 +1159,7 @@
                     $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
                 }
-                else if($("#txtasesoriaindirecta").val() == '' ||  (!/^([0-9])*$/.test($("#txtasesoriaindirecta").val()))){
+                else if($("#txtasesoriaindirecta").val() == '' ||  (!/^([0-9])\d*(\.\d+)?$/.test($("#txtasesoriaindirecta").val()))){
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1171,7 +1186,7 @@
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" min="0" step="0.1" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" min="0" step="0.1" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
 
@@ -1242,7 +1257,7 @@
 
                     $("#txtmaterial").val();
 
-                }else if($("#txtcantidad").val() == '' || $("#txtcantidad").val() <= 0 || (!/^([0-9])*$/.test($("#txtcantidad").val()))){
+                }else if($("#txtcantidad").val() == '' || $("#txtcantidad").val() <= 0 || (!/^([0-9])\d*(\.\d+)?$/.test($("#txtcantidad").val()))){
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1268,7 +1283,7 @@
                     let a = document.getElementsByName("material[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" min="0" step="0.1" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleMaterialUso').append(fila);
 
@@ -1299,7 +1314,7 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                     
+
                     $('button[type="submit"]').removeAttr('disabled');
                     $('.error').hide();
                     let errores = "";

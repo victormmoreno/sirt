@@ -34,11 +34,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
+{{-- <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Usos de infraestructura">
     <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
   </a>
-</li>
+</li> --}}
 <li class="no-padding  ">
   <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('equipo'), setActiveRouteActivePage('mantenimiento')!!} {!! setActiveRoutePadding('equipo'),  setActiveRoutePadding('mantenimiento')!!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('equipo'),  setActiveRouteActiveIcon('mantenimiento')}}">account_balance_wallet</i>Equipos
@@ -69,11 +69,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('seguimiento')}}">
+{{-- <li class="no-padding {{setActiveRoute('seguimiento')}}">
   <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
   </a>
-</li>
+</li> --}}
 <li class="no-padding {{setActiveRoute('costos')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}" rel="canonical" title="Costos">
     <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
