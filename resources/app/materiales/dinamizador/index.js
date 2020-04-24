@@ -52,10 +52,6 @@ $(document).ready(function() {
             name: 'detail',
             width: '15%'
         },
-        {
-            data: 'edit',
-            name: 'edit',
-            width: '15%'
-        }, ],
+         ],
     });
 });

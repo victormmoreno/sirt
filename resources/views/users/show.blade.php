@@ -516,7 +516,7 @@
 
                                                                         @if($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ||
                                                                             $user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{optional($user->talento->entidad->centro)->regional ?: 'No registra'}}</p>
+                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{optional($user->talento->entidad->centro)->regional->nombre ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
                                                                                <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
 
