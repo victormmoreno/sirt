@@ -40,7 +40,16 @@
                 <div id="actividades">
                   <div class="col s12 m4 l4">
                     <div class="row">
-                      <div class="input-field col s12 m12 l12">
+                      <div class="input-field col s12 m3 l3">
+                        <select class="js-states" tabindex="-1" style="width: 100%" id="txtanho_proyectos" name="txtanho_proyectos" onchange="consultarProyectosDelGestor_costos(this.value);">
+                          {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
+                          @for ($i=2016; $i <= $year; $i++)
+                            <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                          @endfor
+                        </select>
+                        <label for="txtanho_proyectos">Seleccione el Año</label>
+                      </div>
+                      <div class="input-field col s12 m9 l9">
                         <select id="txtactividad_id" name="txtactividad_id" style="width: 100%" class="js-states select2 browser-default">
                           <option value="">Seleccione una Actividad</option>
                           @forelse ($actividades as $id => $value)
@@ -105,7 +114,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="proyectos">
+                {{-- <div id="proyectos">
                   <div class="row">
                     <div class="col s12 m5 l5">
                       <div class="row">
@@ -202,8 +211,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <div id="proyectos_ipe">
+                </div> --}}
+                {{-- <div id="proyectos_ipe">
                   <div class="row">
                     <div class="col s12 m5 l5">
                       <div class="row">
@@ -300,7 +309,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
@@ -309,3 +318,41 @@
     </div>
   </main>
 @endsection
+@push('script')
+  <script>
+    function consultarProyectosDelGestor_costos (value) {
+      let anho;
+      anho = value;
+      $('#txtactividad_id').empty();
+      $('#txtactividad_id').append('<option value="">Seleccione una actividad</option>');
+      consultarProyectos(anho);
+      consultarArticulaciones(anho);
+      $('#txtactividad_id').select2();
+    }
+
+    function consultarProyectos(anho) {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/proyecto/consultarProyectos_costos/' + anho
+      }).done(function(response) {
+        
+        $.each(response.proyectos, function(i, e) {
+          $('#txtactividad_id').append('<option  value="' + e.actividad_id + '">' + e.codigo_proyecto + ' - ' + e.nombre + '</option>');
+        })
+      });
+    }
+
+    function consultarArticulaciones(anho) {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/articulacion/consultarArticulaciones_costos/' + anho
+      }).done(function(response) {
+        $.each(response.articulaciones, function(i, e) {
+          $('#txtactividad_id').append('<option  value="' + e.actividad_id + '">' + e.codigo_articulacion + ' - ' + e.nombre + '</option>');
+        })
+      });
+    }
+  </script>
+@endpush

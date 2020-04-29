@@ -68,6 +68,7 @@ class EmpresaRepository
     ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
     ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id')
     ->where('entidades.nombre', '!=', 'No Aplica')

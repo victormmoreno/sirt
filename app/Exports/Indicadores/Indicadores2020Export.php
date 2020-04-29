@@ -34,7 +34,7 @@ class Indicadores2020Export implements WithMultipleSheets
       $sheets = [];
 
       $sheets[] = new ProyectosExport($this->getQueryProyectos());
-      $sheets[] = new TalentoUserExport($this->getQueryTalentos(), 'Proyectos');
+      $sheets[] = new TalentoUserExport($this->getQueryTalentos(), 'Ejecutores');
       $sheets[] = new EmpresasExport($this->getQueryEmpresasPropietarias(), 'propietarias');
       $sheets[] = new GruposExport($this->getQueryGruposPropietarios(), 'propietarios');
       $sheets[] = new TalentoUserExport($this->getQueryTalentosPropietarios(), 'Propietarios');

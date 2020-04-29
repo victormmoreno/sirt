@@ -36,6 +36,7 @@ class GrupoInvestigacionRepository
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->where('entidades.nombre', '!=', 'No Aplica')
     ->where('propietarios.propietario_type', 'App\Models\GrupoInvestigacion')
     ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
