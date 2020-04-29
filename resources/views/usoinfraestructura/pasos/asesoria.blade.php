@@ -16,7 +16,7 @@
                         señor(a) ususario, si la asesoria fue acompañada por otro gestor agregue a este en la sección de gestores Asesores, pulsando el boton agregar gestor.
                     </p>
                 </li>
-                
+
             </ul>
         </blockquote>
     </div>
@@ -25,16 +25,16 @@
         <fieldset>
             <legend>Paso 2</legend>
             <p class="center card-title orange-text text-darken-3">
-               <b> Asesorias</b> 
+               <b> Asesorias</b>
             </p>
             <div class="divider"></div>
             <div class="row">
                 <div class="col s12 m8 l8 offset-l2 m2">
-                    
+
                         <h5 class="center-align">
                             <mark>Gestor A Cargo</mark>
                         </h5>
-                
+
                     <table class="striped centered responsive-table" id="tbldetallegestores">
                         <thead>
                             <tr>
@@ -48,34 +48,33 @@
                                     Asesoria Directa (Horas)
                                 </th>
                                 <th>
-                                  Asesoria Indirecta (Horas)
+                                    Asesoria Indirecta (Horas)
                                 </th>
-                                
+
                             </tr>
                         </thead>
                         <tbody id="detallesGestores">
-                            
+
                             @if(isset($usoinfraestructura->usogestores))
                                 @forelse ($usoinfraestructura->usogestores as $key => $gestor)
                                     @if($gestor->id === auth()->user()->gestor->id)
                                         <tr id="filaGestor{{$gestor->id}}">
-                                            {{-- {{$gestor}} {{auth()->user()->gestor->id}} --}}
-                                                <td>{{$gestor->lineatecnologica->abreviatura}} -  {{$gestor->lineatecnologica->nombre}}</td>
-                                                <td>
-                                                    <input type="hidden" name="gestor[]" value="{{$gestor->id}}" min="0" />{{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo  
-                                                </td>
-                                                <td><input type="number" name="asesoriadirecta[]" value="{{$gestor->pivot->asesoria_directa}}" min="0"></td>
-                                                <td><input type="number" name="asesoriaindirecta[]" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
-                                        </tr> 
+                                            <td>{{$gestor->lineatecnologica->abreviatura}} -  {{$gestor->lineatecnologica->nombre}}</td>
+                                            <td>
+                                                <input type="hidden" name="gestor[]"  value="{{$gestor->id}}" min="0" />{{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo
+                                            </td>
+                                            <td><input type="number" name="asesoriadirecta[]" min="0" step="0.1" value="{{$gestor->pivot->asesoria_directa}}"></td>
+                                            <td><input type="number" name="asesoriaindirecta[]" min="0" step="0.1" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
+                                        </tr>
                                     @endif
                                 @empty
                                 <tr id="filaGestor{{$usoinfraestructura->actividad->gestor->id}}">
                                     <td>{{$usoinfraestructura->actividad->gestor->lineatecnologica->abreviatura}} -  {{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}</td>
                                     <td>
-                                        <input type="hidden" name="gestor[]" value="{{$usoinfraestructura->actividad->gestor->id}}" min="0" />{{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}} - Gestor a cargo  
-                                    </td>        
-                                    <td><input type="number" name="asesoriadirecta[]" value="0" min="0"></td>
-                                    <td><input type="number" name="asesoriaindirecta[]" value="0"></td>
+                                        <input type="hidden" name="gestor[]" value="{{$usoinfraestructura->actividad->gestor->id}}" min="0" />{{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}} - Gestor a cargo
+                                    </td>
+                                    <td><input type="number" name="asesoriadirecta[]" value="0" step="0.1" min="0"></td>
+                                    <td><input type="number" name="asesoriaindirecta[]" value="0" step="0.1" min="0"></td>
                                 </tr>
                                 @endforelse
                             @else
@@ -84,10 +83,10 @@
                                     <td></td>
                                     <td>Seleccione primero el tipo de uso de infraestructura.</td>
                                     <td></td>
-                                </tr> 
+                                </tr>
                             @endif
-                            
-                            
+
+
                         </tbody>
                         <tfoot>
                             <td></td>
@@ -96,12 +95,14 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
             </div>
+            <br>
             <div class="divider"></div>
             <h5 class="center-align">
                 <mark>Gestores Asesores</mark>
             </h5>
+            <br><br>
             <div class="row">
                 <div class="input-field col s12 m4 l5">
                     <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->usogestores) ? '' : 'disabled'}} >
@@ -109,7 +110,7 @@
                                 Seleccione Gestor
                             </option>
                         @if(isset($usoinfraestructura->usogestores))
-                            
+
                             @foreach($gestores as $gestor)
                                 <option value="{{$gestor->id}}">
                                     {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
@@ -118,25 +119,25 @@
 
 
                         @else
-                           
+
                                 @foreach($gestores as $gestor)
                                 <option value="{{$gestor->id}}">
                                     {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                                 </option>
                                 @endforeach
                         @endif
-                        
+
                     </select>
                     <label class="active" for="txtgestorasesor">
                         Gestores
                     </label>
                 </div>
                 <div class="input-field col s12 m2 l2">
-                    
+
                     @if(isset($usoinfraestructura->asesoria_directa))
-                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text"  value="0" />
+                        <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="number"  min="0" step="0.1" value="0" />
                     @else
-                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="text" value="0" readonly />
+                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="number" min="0" step="0.1" value="0" readonly />
                     @endif
                     <label class="active" for="txtasesoriadirecta">
                         Asesoria Directa (Horas)
@@ -145,11 +146,11 @@
                     <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
                 <div class="input-field col s12 m2 l2">
-                    
+
                     @if(isset($usoinfraestructura->asesoria_indirecta))
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text" value="0"  /> 
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="number" min="0" step="0.1" value="0"  />
                     @else
-                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="text"  value="0" readonly />
+                        <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="number" min="0" step="0.1"  value="0" readonly />
                     @endif
                     <label class="active" for="txtasesoriaindirecta">
                         Asesoria Indirecta (Horas)
@@ -159,15 +160,15 @@
                 </div>
                 <div class="input-field col s2 m3 l3">
                     <a class="waves-effect waves-light btn blue m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">
-                        Agregar gestor 
-                    </a> 
+                        Agregar gestor
+                    </a>
                 </div>
                 <div class="row">
                     <div class="col s12 m8 l8 offset-l2 m2">
                         <table class="striped centered responsive-table" id="tbldetallegestorAsesor">
                             <thead>
                                 <tr>
-                                    
+
                                     <th>
                                        Gestor
                                     </th>
@@ -185,7 +186,7 @@
                             <tbody id="detallesGestoresAsesores">
                                 @if(isset($usoinfraestructura->usogestores))
                                     @forelse ($usoinfraestructura->usogestores as $key => $gestor)
-                                            
+
                                             <tr id="filaGestorAsesor{{$gestor->id}}">
                                                 @if($gestor->id != auth()->user()->gestor->id)
                                                 <td>
@@ -215,15 +216,15 @@
                                     <td></td>
                                     <td></td>
                                 @endif
-                                
+
                             </tbody>
                         </table>
                     </div>
-                    
+
                 </div>
 
             </div>
-            
+
             <div class="divider"></div>
             <div class="row">
                 <div class="input-field col s12 m12 l8 offset-l2">

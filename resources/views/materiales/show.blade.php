@@ -31,30 +31,30 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    
+
                                     <div class="col s12 m12 l12">
-                                        
+
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
 
                                                     <div class="left">
                                                         <div class="left">
-                                                            
+
                                                             <i class="material-icons fas fa-building"></i>
                                                         </div>
                                                         <div class="left">
                                                             <span class="mailbox-title">
-                                                                Tecnoparque nodo {{$material->nodo->entidad->nombre}} 
+                                                                Tecnoparque nodo {{$material->nodo->entidad->nombre}}
                                                             </span>
                                                             <span class="mailbox-author">
                                                                 <b>Dirección: </b> {{$material->nodo->direccion}}<br/>
-                                                                <b>Correo Electrónco: </b> 
+                                                                <b>Correo Electrónco: </b>
                                                                 {{isset($material->nodo->entidad->email_entidad) ? $material->nodo->entidad->email_entidad : 'No registra'}}<br/>
-                                                                <b>Teléfono: </b> 
+                                                                <b>Teléfono: </b>
                                                                 {{isset($material->nodo->telefono) ? $material->nodo->telefono : 'No registra'}}<br/>
                                                             </span>
                                                         </div>
-                                                        
+
                                                     </div>
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
@@ -73,122 +73,129 @@
                                             </div>
                                             <div class="mailbox-text">
                                                 <div class="row">
-                                                    
+
                                                     <div class="col s12 m8 l8 offset-l2 m2">
                                                         <div class="center">
                                                             <span class="mailbox-title">
-                                                               
+
                                                                 <i class="material-icons">build</i>
-                                                                Información Material de Formación {{$material->nombre}} 
+                                                                Información Material de Formación {{$material->nombre}}
                                                             </span>
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
                                                             <div class="row">
                                                                 <div class="col s12 m6 l6">
                                                                     <ul class="collection">
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Linea Tecnológica
                                                                             </span>
                                                                             <p>
                                                                               {{$material->lineatecnologica->nombre}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        
-                                                                        <li class="collection-item"> 
+
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Tipo Material
                                                                             </span>
                                                                             <p>
                                                                               {{$material->tipomaterial->nombre}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Presentación
                                                                             </span>
                                                                             <p>
                                                                               {{$material->presentacion->nombre}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Cantidad
                                                                             </span>
                                                                             <p>
                                                                               {{$material->cantidad}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Valor Total Compra
                                                                             </span>
                                                                             <p>
                                                                               ${{number_format($material->valor_compra,0)}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Marca
                                                                             </span>
                                                                             <p>
                                                                               ${{$material->marca}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                                 <div class="col s12 m6 l6">
                                                                     <ul class="collection">
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Fecha Adquisición
                                                                             </span>
                                                                             <p>
                                                                               {{$material->fecha->isoFormat('LL')}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Categoria Material
                                                                             </span>
                                                                             <p>
                                                                               {{$material->categoriamaterial->nombre}}
-                                                                            </p>  
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Medida
                                                                             </span>
                                                                             <p>
                                                                                {{$material->medida->nombre}}
-                                                                            </p>    
+                                                                            </p>
                                                                         </li>
-                                                                        <li class="collection-item"> 
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Nombre de Material
                                                                             </span>
                                                                             <p>
                                                                                {{$material->nombre}}
-                                                                            </p>    
+                                                                            </p>
                                                                         </li>
-                                                                        
-                                                                        <li class="collection-item"> 
+
+                                                                        <li class="collection-item">
                                                                             <span class="title cyan-text text-darken-3">
                                                                                 Proveedor
                                                                             </span>
                                                                             <p>
                                                                                {{$material->proveedor}}
-                                                                            </p>    
+                                                                            </p>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    
+
                                                     </div>
-                                            
+
                                                 <div class="divider mailbox-divider">
                                                 </div>
+                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
+                                                <div class="right">
+                                                    <a href="{{route('material.edit',$material->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
+                                                        Cambiar Información
+                                                    </a>
+                                                </div>
+                                                @endif
                                         </div>
                                     </div>
                                 </div>

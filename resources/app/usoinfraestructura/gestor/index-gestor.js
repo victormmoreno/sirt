@@ -1,13 +1,13 @@
 
 var UsoInfraestructuraGestor = {
     queryActivitiesByGestor: function(gestor){
-        
+
         let anho = $('#selectYear').val();
-       
-        
+
+
 
         if(anho == null || anho == ''){
-            
+
             $('#selectActivity').empty();
             $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
         }
@@ -19,13 +19,13 @@ var UsoInfraestructuraGestor = {
                 dataType: 'json',
                 processData: false,
                 success: function (data) {
-                  
+
                   $('#selectActivity').empty();
                   $('#selectActivity').append('<option value="">Seleccione la Actividad</option>');
                   $.each(data.actividades, function(i, e) {
                     $('#selectActivity').append('<option  value="'+i+'">'+e+'</option>');
                   });
-            
+
                   $('#selectActivity').material_select();
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -36,17 +36,16 @@ var UsoInfraestructuraGestor = {
 
     },
     ListActividadesPorGestor: function (gestor){
-        console.log(gestor);
         let anho = $('#selectYear').val();
         let actividad = $('#selectActivity').val();
-    
+
         if(anho == '' || anho == null){
             Swal.fire(
             'Error',
             'Por favor selecciona un año',
             'error'
             );
-        
+
             $('#selectActivity').empty();
             $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
         }else if(actividad == '' || actividad == null){
@@ -54,7 +53,7 @@ var UsoInfraestructuraGestor = {
                 'Error',
                 'Por favor selecciona una actividad',
                 'error'
-                
+
             );
                 $('#selectActivity').empty();
                 $('#selectActivity').append('<option value="">Seleccione una Actividad</option>')
@@ -71,7 +70,7 @@ var UsoInfraestructuraGestor = {
           order: [ 0, 'desc' ],
           ajax:{
             url: "/usoinfraestructura/actividades/datatable/"+gestor+"/"+anho+"/"+ actividad,
-            
+
           },
           columns: [{
             data: 'fecha',
@@ -93,7 +92,7 @@ var UsoInfraestructuraGestor = {
             data: 'detail',
             name: 'detail',
             orderable: false,
-        },],  
+        },],
         });
       }
     },

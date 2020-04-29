@@ -15,11 +15,7 @@ $(document).ready(function() {
             data: 'fecha',
             name: 'fecha',
             width: '20%'
-        }, {
-            data: 'nombrelinea',
-            name: 'nombrelinea',
-            width: '30%'
-        }, {
+        },  {
             data: 'codigo_material',
             name: 'codigo_material',
             width: '30%'
@@ -52,10 +48,23 @@ $(document).ready(function() {
             name: 'detail',
             width: '15%'
         },
-        {
-            data: 'edit',
-            name: 'edit',
-            width: '15%'
-        }, ],
+         ],
     });
 });
+
+function getSelectMaterialMedida(){
+    let medida = $('#txtmedida option:selected').text();
+    let id_medida = $('#txtmedida').val();
+    $("#txtcantidad").prop('disabled', true);
+    $("label[for='txtcantidad']").empty();
+     if(id_medida != ''){
+        $('#txtmedida').val('');
+        $("#txtcantidad").prop('disabled', false);
+        $("label[for='txtcantidad']").text('Tamaño presentacion o venta/paquete en '+medida);
+    }
+    else{
+        $('#txtmedida').val('');
+        $("#txtcantidad").prop('disabled', true);
+        $("label[for='txtcantidad']").text('Tamaño presentacion o venta/paquete');
+    }
+}

@@ -3,15 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MaterialesFormRequest;
-use App\Models\CategoriaMaterial;
-use App\Models\Material;
-use App\Models\Medida;
-use App\Models\Nodo;
-use App\Models\Presentacion;
-use App\Models\TipoMaterial;
+use App\Models\{CategoriaMaterial, Medida, Material, Presentacion, TipoMaterial};
 use App\Repositories\Datatables\MaterialDatatables;
-use App\Repositories\Repository\LineaRepository;
-use App\Repositories\Repository\MaterialRepository;
+use App\Repositories\Repository\{LineaRepository, MaterialRepository};
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -112,7 +106,6 @@ class MaterialController extends Controller
                     ->whereHas('nodo', function ($query) use ($nodo) {
                         $query->where('id', $nodo);
                     })->get();
-
             } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
 
                 $linea      = auth()->user()->gestor->lineatecnologica->id;
@@ -124,7 +117,6 @@ class MaterialController extends Controller
                     ->whereHas('lineatecnologica', function ($query) use ($linea) {
                         $query->where('id', $linea);
                     })->orderBy('nombre')->get();
-
             }
 
             return $materialDatatables->indexDatatable($materiales);
@@ -171,7 +163,6 @@ class MaterialController extends Controller
             } else {
                 return response()->json(['data' => 'no response']);
             }
-
         } else {
             abort('403');
         }
@@ -200,7 +191,6 @@ class MaterialController extends Controller
             'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
         ]);
-
     }
 
     /**
@@ -221,7 +211,6 @@ class MaterialController extends Controller
             alert()->error('Registro Erróneo.', 'El Material de Formación no se ha creado.');
         }
         return redirect()->route('material.index');
-
     }
 
     /**
@@ -267,7 +256,6 @@ class MaterialController extends Controller
             'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
         ]);
-
     }
 
     /**
@@ -292,4 +280,23 @@ class MaterialController extends Controller
         return redirect()->route('material.index');
     }
 
+    public function getMaterial($id)
+    {
+        if (request()->ajax()) {
+            $material = $this->getMaterialRepository()->getInfoDataMateriales()->find($id);
+            if ($material != null) {
+                return response()->json([
+                    'material' => $material,
+                    'message' => 'success'
+                ]);
+            } else {
+                return response()->json([
+                    'material' => null,
+                    'message' => 'error'
+                ]);
+            }
+        } else {
+            abort('404');
+        }
+    }
 }
