@@ -809,6 +809,8 @@ class ProyectoRepository
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
       $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
 
+      ArticulacionProyecto::habilitarTalentos($proyecto->articulacion_proyecto);
+
       $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
         'objetivo' => request()->txtobjetivo_especifico1
       ]);
@@ -1462,7 +1464,8 @@ class ProyectoRepository
       'fecha_cierre',
       'economia_naranja',
       'fases.nombre AS nombre_fase',
-      'proyectos.id'
+      'proyectos.id',
+      'actividades.id AS actividad_id'
     )
       ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
       ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
@@ -1518,41 +1521,41 @@ class ProyectoRepository
     try {
       $codigo_actividad = $this->generarCodigoDeProyecto();
       $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
-
+  
       $trl_esperado = 1;
       $reci_ar_emp = 1;
       $economia_naranja = 1;
       $dirigido_discapacitados = 1;
       $art_cti = 1;
       $fabrica_productividad = 1;
-
-
+  
+  
       $this->getIdeaRepository()->updateEstadoIdea(request()->txtidea_id, 'En Proyecto');
-
+  
       if (!isset(request()->trl_esperado)) {
         $trl_esperado = 0;
       }
-
+  
       if (!isset(request()->txtreci_ar_emp)) {
         $reci_ar_emp = 0;
       }
-
+  
       if (!isset(request()->txteconomia_naranja)) {
         $economia_naranja = 0;
       }
-
+  
       if (!isset(request()->txtdirigido_discapacitados)) {
         $dirigido_discapacitados = 0;
       }
-
+  
       if (!isset(request()->txtarti_cti)) {
         $art_cti = 0;
       }
-
+  
       if (!isset(request()->txtfabrica_productividad)) {
         $fabrica_productividad = 0;
       }
-
+  
       $actividad = Actividad::create([
         'gestor_id' => auth()->user()->gestor->id,
         'nodo_id' => auth()->user()->gestor->nodo_id,
@@ -1561,12 +1564,12 @@ class ProyectoRepository
         'fecha_inicio' => Carbon::now()->isoFormat('YYYY-MM-DD'),
         'objetivo_general' => request()->txtobjetivo
       ]);
-
+  
       $articulacion_proyecto = ArticulacionProyecto::create([
         'entidad_id' => $entidad_id,
         'actividad_id' => $actividad->id
       ]);
-
+  
       $proyecto = Proyecto::create([
         'articulacion_proyecto_id' => $articulacion_proyecto->id,
         'fase_id' => Fase::where('nombre', 'Inicio')->first()->id,
@@ -1585,12 +1588,12 @@ class ProyectoRepository
         'alcance_proyecto' => request()->txtalcance_proyecto,
         'fabrica_productividad' => $fabrica_productividad
       ]);
-
-
+  
+  
       $syncData = array();
       $syncData = $this->arraySyncTalentosDeUnProyecto($request);
       $articulacion_proyecto->talentos()->sync($syncData, false);
-
+      
       ArticulacionProyecto::habilitarTalentos($articulacion_proyecto);
 
       $actividad->objetivos_especificos()->create([

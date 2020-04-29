@@ -630,12 +630,13 @@ Route::group(
         Route::get('/notificar_ejecucion/{id}', 'ArticulacionController@notificar_ejecucion')->name('articulacion.notificar.ejecucion')->middleware('role_session:Gestor');
         Route::get('/notificar_cierre/{id}', 'ArticulacionController@notificar_cierre')->name('articulacion.notificar.cierre')->middleware('role_session:Gestor');
         Route::get('/notificar_suspendido/{id}', 'ArticulacionController@notificar_suspendido')->name('articulacion.notificar.suspension')->middleware('role_session:Gestor');
-
+        
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
         Route::get('/inicio/{id}', 'ArticulacionController@inicio')->name('articulacion.inicio')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/planeacion/{id}', 'ArticulacionController@planeacion')->name('articulacion.planeacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/ejecucion/{id}', 'ArticulacionController@ejecucion')->name('articulacion.ejecucion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/cierre/{id}', 'ArticulacionController@cierre')->name('articulacion.cierre')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
+        Route::get('/consultarArticulaciones_costos/{anho}', 'ArticulacionController@consultarArticulaciones_costos');
 
         Route::get('/eliminarArticulacion/{id}', 'ArticulacionController@eliminarArticulación')->name('articulacion.delete')->middleware('role_session:Dinamizador');
         Route::get('/create', 'ArticulacionController@create')->name('articulacion.create')->middleware('role_session:Gestor');
@@ -683,6 +684,7 @@ Route::group(
         Route::get('/notificar_suspendido/{id}', 'ProyectoController@notificar_suspendido')->name('proyecto.notificar.suspension')->middleware('role_session:Gestor');
 
         Route::get('/', 'ProyectoController@index')->name('proyecto');
+        Route::get('/consultarProyectos_costos/{anho}', 'ProyectoController@proyectosCostos')->name('proyecto.costos')->middleware('role_session:Dinamizador|Gestor');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
         Route::get('/datatableProyectosDelTalento', 'ProyectoController@datatableProyectoTalento')->name('proyecto.datatable.talento');
         Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
@@ -880,7 +882,7 @@ Route::group(
         Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
         // Rutas para la generación de excel del módulo de indicadores
-        Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@exportIndicadores2020')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
+        Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@exportIndicadores2020')->middleware('role_session:Dinamizador|Administrador|Gestor')->name('indicador.export.excel');
         // Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@export')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
 
         //Rutas para la generación de excel del módulo de nodo
@@ -915,7 +917,7 @@ Route::group(
 Route::group(
     [
         'prefix' => 'indicadores',
-        'middleware' => ['auth', 'role_session:Administrador|Dinamizador',]
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor',]
     ],
     function () {
         Route::get('/', 'IndicadorController@index')->name('indicadores');

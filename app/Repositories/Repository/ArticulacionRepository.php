@@ -1088,6 +1088,7 @@ class ArticulacionRepository
     'fecha_inicio',
     'fases.nombre AS nombre_fase',
     'entidades.nombre AS nombre_nodo',
+    'actividades.id AS actividad_id',
     'fecha_cierre')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
@@ -1169,6 +1170,8 @@ class ArticulacionRepository
       $syncData = array();
       $syncData = $this->arraySyncTalentosDeUnaArticulacion($request);
       $articulacion->articulacion_proyecto->talentos()->sync($syncData, true);
+
+      ArticulacionProyecto::habilitarTalentos($articulacion->articulacion_proyecto);
 
       DB::commit();
       return true;
@@ -1267,6 +1270,7 @@ class ArticulacionRepository
     'articulaciones.id',
     'fecha_inicio',
     'fases.nombre AS nombre_fase',
+    'actividades.id AS actividad_id',
     'fecha_cierre')
     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombre_completo_gestor')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
