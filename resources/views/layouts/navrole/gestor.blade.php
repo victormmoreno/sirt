@@ -69,6 +69,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('indicadores')}}">
+  <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
+  </a>
+</li>
 {{-- <li class="no-padding {{setActiveRoute('seguimiento')}}">
   <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento

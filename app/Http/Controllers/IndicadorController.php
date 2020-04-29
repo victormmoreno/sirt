@@ -69,10 +69,12 @@ class IndicadorController extends Controller
 
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('indicadores.dinamizador.index');
-    } else {
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
       return view('indicadores.administrador.index', [
         'nodos' => Nodo::SelectNodo()->get()
-      ]);
+        ]);
+      } else {
+        return view('indicadores.gestor.index');
     }
 
   }

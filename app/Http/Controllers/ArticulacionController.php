@@ -90,6 +90,20 @@ class ArticulacionController extends Controller
     }
   }
 
+  public function consultarArticulaciones_costos(string $anho)
+  {
+    if (Session::get('login_role') == User::IsGestor()) {
+      $id = auth()->user()->gestor->id;
+      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($anho)->where('actividades.gestor_id', $id)->get();
+    } else {
+      $id = auth()->user()->dinamizador->nodo_id;
+      $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho)->get();
+    }
+    return response()->json([
+      'articulaciones' => $articulaciones
+    ]);
+  }
+
     /**
    * Modifica los datos de una articulación en el estado de planeación
    * 

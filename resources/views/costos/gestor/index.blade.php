@@ -27,7 +27,7 @@
             <div class="card-content">
               <div class="row">
                 <div class="col s12 m4 l4">
-                  <div class="input-field col s12 m6 l6">
+                  <div class="input-field col s12 m3 l3">
                     <select class="js-states" tabindex="-1" style="width: 100%" id="txtanho_proyectos" name="txtanho_proyectos" onchange="consultarProyectosDelGestor_costos(this.value);">
                       {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
                       @for ($i=2016; $i <= $year; $i++)
@@ -36,7 +36,7 @@
                     </select>
                     <label for="txtanho_proyectos">Seleccione el Año</label>
                   </div>
-                  <div class="input-field col s12 m6 l6">
+                  <div class="input-field col s12 m9 l9">
                     <select id="txtactividad_id" name="txtactividad_id" class="js-states select2 browser-default">
                       <option value="">Seleccione un año</option>
                     </select>
@@ -104,17 +104,35 @@
     function consultarProyectosDelGestor_costos (value) {
       let anho;
       anho = value;
+      $('#txtactividad_id').empty();
+      $('#txtactividad_id').append('<option value="">Seleccione una actividad</option>');
+      consultarProyectos(anho);
+      consultarArticulaciones(anho);
+      $('#txtactividad_id').select2();
+    }
+
+    function consultarProyectos(anho) {
       $.ajax({
         dataType: 'json',
         type: 'get',
         url: '/proyecto/consultarProyectos_costos/' + anho
       }).done(function(response) {
-        $('#txtactividad_id').empty();
-        $('#txtactividad_id').append('<option value="">Seleccione un proyecto</option>')
-        $.each(response.ciudades, function(i, e) {
+        
+        $.each(response.proyectos, function(i, e) {
           $('#txtactividad_id').append('<option  value="' + e.actividad_id + '">' + e.codigo_proyecto + ' - ' + e.nombre + '</option>');
         })
-        $('#txtactividad_id').select2();
+      });
+    }
+
+    function consultarArticulaciones(anho) {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/articulacion/consultarArticulaciones_costos/' + anho
+      }).done(function(response) {
+        $.each(response.articulaciones, function(i, e) {
+          $('#txtactividad_id').append('<option  value="' + e.actividad_id + '">' + e.codigo_articulacion + ' - ' + e.nombre + '</option>');
+        })
       });
     }
   </script>
