@@ -1170,6 +1170,8 @@ class ArticulacionRepository
       $syncData = $this->arraySyncTalentosDeUnaArticulacion($request);
       $articulacion->articulacion_proyecto->talentos()->sync($syncData, true);
 
+      ArticulacionProyecto::habilitarTalentos($articulacion->articulacion_proyecto);
+
       DB::commit();
       return true;
     } catch (Exception $e) {

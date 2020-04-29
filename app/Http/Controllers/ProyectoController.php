@@ -174,6 +174,27 @@ class ProyectoController extends Controller
   }
 
   /**
+   * Consultar los proyectos para generar costos
+   *
+   * @param string $anho
+   * @return Request
+   * @author dum
+   **/
+  public function proyectosCostos(string $anho)
+  {
+    if (User::IsGestor() == Session::get('login_role')) {
+      $id = auth()->user()->gestor->nodo_id;
+      $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+    } else {
+      $id = auth()->user()->dinamizador->nodo_id;
+      $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+    }
+    return response()->json([
+      'proyectos' => $proyectos
+    ]);
+  }
+
+  /**
    * modifica los entregables de un proyecto
    *
    * @param Request $request
