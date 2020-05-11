@@ -45,17 +45,7 @@ $(document).ready(function() {
             data: 'detail',
             name: 'detail',
             orderable: false
-        }, {
-            data: 'edit',
-            name: 'edit',
-            orderable: false
-        }, 
-        // {
-        //     width: '8%',
-        //     data: 'delete',
-        //     name: 'delete',
-        //     orderable: false
-        // }, 
+        },  
         ],
     });
 });

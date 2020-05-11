@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col s12 l2">
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('nodo.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Nodo</a>
+                                        <a href="{{route('nodo.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Agregar</a>
                                     </div>
                                 </div>
                             </div>
@@ -49,8 +49,6 @@
                                         <th >Dirección</th>
                                         <th >Ubicación</th>
                                         <th >Detalle</th>
-                                        <th >Editar</th>
-                                        {{-- <th >Eliminar</th> --}}
                                     </thead>
                                 </table>
                                 <div class="col s12 m2 l2">

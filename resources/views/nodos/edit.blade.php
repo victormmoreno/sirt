@@ -7,17 +7,17 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                    <div class="col s8 m8 l9">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <a class="footer-text left-align" href="{{route('nodo.index')}}">
                                   <i class="material-icons arrow-l">
                                       arrow_back
                                   </i>
                               </a>
-                            Nodos
+                            Nodos | Editar Nodo
                         </h5>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align  show-on-large hide-on-med-and-down">
+                    <div class="col s4 m4 l3 rigth-align  show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('nodo.index')}}">Nodos</a></li>
@@ -25,23 +25,12 @@
                         </ol>
                     </div>
                 </div>
-                <div class="card stats-card">
-                    <div class="card-content">
-                        <div class="row">
-                            <div class="row">
-                                <center><span class="card-title center-align">Editar Nodo <b>{{$nodo->entidad->nombre}}</b></span> <i class="Small material-icons prefix">location_city </i></center>
-                                <div class="divider mailbox-divider"></div>
-                               
-                                <form action="{{ route('nodo.update', $nodo->entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
-                                	{!! method_field('PUT')!!}
-	                                @include('nodos.form', [
-              								    	'btnText' => 'Modificar',
-              								   	])
-              							   	</form>  
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <form action="{{ route('nodo.update', $nodo->entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
+                    {!! method_field('PUT')!!}
+                    @include('nodos.form', [
+                          'btnText' => 'Guardar Cambios',
+                      ])
+                  </form>
             </div>
         </div>
     </div>

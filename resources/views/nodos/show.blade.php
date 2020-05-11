@@ -8,13 +8,13 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s8 m8 l9">
+                    <div class="col s12 m8 l7">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             
                             Tecnoparque Nodo {{$nodo->entidad->nombre}}
                         </h5>
                     </div>
-                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
+                    <div class="col s12 m4 l5 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('nodo.index')}}">Nodos</a></li>
@@ -59,17 +59,18 @@
                                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsAdministrador())
                                             
                                             <div class="right hide-on-med-and-down">
-                                                {{-- <small class="green-text text-darken-2">
-                                                    <a class="waves-effect waves-red btn-flat">
-                                                        <i class="fas fa-file-pdf   fa-lg"></i>Exportar a PDF 
-                                                    </a>
-                                                    
-                                                </small> --}}
                                                 <small class="green-text text-darken-2">
                                                     <a class="waves-effect waves-green btn-flat" href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
                                                         <i class="fas fa-file-excel   fa-lg"></i>Exportar a Excel  
                                                     </a>
                                                 </small>
+                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                <small class="green-text text-darken-2">
+                                                <a href="{{route('nodo.edit', $nodo->entidad->slug)}}" class="waves-effect waves-blue btn-flat">
+                                                        Cambiar Infomación
+                                                    </a>  
+                                                </small>
+                                                @endif
                                             </div>
                                             @endif
                                             <div class="divider mailbox-divider"></div>
