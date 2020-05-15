@@ -7,8 +7,8 @@ $(document).ready(function() {
         "lengthChange": false,
     });
 
-    
-    
+
+
 });
 
 var usoinfraestructuraIndex = {
@@ -47,7 +47,7 @@ var usoinfraestructuraIndex = {
                             data: 'detail',
                             name: 'detail',
                             orderable: false,
-                        },],    
+                        },],
                 });
             }else{
                 $('#usoinfraestructura_table').DataTable({
@@ -58,9 +58,8 @@ var usoinfraestructuraIndex = {
                 }).clear().draw();
             }
         },
-    
         destroyUsoInfraestructura: function(id){
-            
+
             Swal.fire({
                 title: '¿Estas seguro de eliminar este uso de infraestructura?',
                 text: "Recuerde que si lo elimina no lo podrá recuperar.",
@@ -72,7 +71,6 @@ var usoinfraestructuraIndex = {
                 cancelButtonText: 'No, cancelar',
               }).then((result) => {
                 if (result.value) {
-
                     let token = $("meta[name='csrf-token']").attr("content");
                     $.ajax(
                     {
@@ -96,16 +94,14 @@ var usoinfraestructuraIndex = {
                             alert("Error: " + errorThrown);
                         }
                     });
-                  
+
                 }else if ( result.dismiss === Swal.DismissReason.cancel ) {
                     swalWithBootstrapButtons.fire(
-                      'Cancelled',
-                      'Your imaginary file is safe :)',
-                      'error'
-                    )
+                        'Cancelado',
+                        'Tu uso de infraestructura está a salvo',
+                        'error'
+                      )
                   }
               })
-                
-          
         }
 }

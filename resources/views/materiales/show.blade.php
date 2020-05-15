@@ -9,7 +9,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s12 m8 l8">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <a class="footer-text left-align" href="{{route('material.index')}}">
                                 <i class="material-icons arrow-l">
                                     arrow_back
@@ -37,16 +37,12 @@
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
 
-                                                    <div class="left">
                                                         <div class="left">
-
-                                                            <i class="material-icons fas fa-building"></i>
-                                                        </div>
-                                                        <div class="left">
-                                                            <span class="mailbox-title">
+                                                            <span class="mailbox-title green-complement-text">
+                                                                <i class="material-icons fas fa-building"></i> 
                                                                 Tecnoparque nodo {{$material->nodo->entidad->nombre}}
                                                             </span>
-                                                            <span class="mailbox-author">
+                                                            <span class="mailbox-author show-on-large hide-on-med-and-down ">
                                                                 <b>Dirección: </b> {{$material->nodo->direccion}}<br/>
                                                                 <b>Correo Electrónco: </b>
                                                                 {{isset($material->nodo->entidad->email_entidad) ? $material->nodo->entidad->email_entidad : 'No registra'}}<br/>
@@ -55,7 +51,7 @@
                                                             </span>
                                                         </div>
 
-                                                    </div>
+                                                   
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
                                                             <p class="center">Información Materiales de Formación {{$material->nombre}} </p><br/>
@@ -74,11 +70,9 @@
                                             <div class="mailbox-text">
                                                 <div class="row">
 
-                                                    <div class="col s12 m8 l8 offset-l2 m2">
+                                                    <div class="col s12 m8 l8 offset-l2 offset-m2">
                                                         <div class="center">
-                                                            <span class="mailbox-title">
-
-                                                                <i class="material-icons">build</i>
+                                                            <span class="mailbox-title hand-of-Sean-fonts orange-text text-darken-3">
                                                                 Información Material de Formación {{$material->nombre}}
                                                             </span>
                                                         </div>
@@ -190,11 +184,28 @@
                                                 <div class="divider mailbox-divider">
                                                 </div>
                                                 @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
-                                                <div class="right">
-                                                    <a href="{{route('material.edit',$material->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
-                                                        Cambiar Información
-                                                    </a>
+                                                
+                                                    <div class="row">
+                                                    <div class="col s6 ">
+                                                        <div class="right">
+                                                        <a href="{{route('material.edit',$material->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
+                                        
+                                                            Cambiar Información
+                                                        </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col s6 ">
+                                                        <div class="left">
+                                                        <a href="javascript:void(0)"  class="waves-effect red lighten-3 btn 2 btn-flat m-t-xs center-aling" onclick="materialFormacion.destroyMaterial({{$material->id}})">
+                                                            <i class="material-icons right">
+                                                                delete_sweep
+                                                            </i>
+                                                            Eliminar
+                                                        </a>
+                                                    </div>
+                                                    </div>
                                                 </div>
+                                                
                                                 @endif
                                         </div>
                                     </div>

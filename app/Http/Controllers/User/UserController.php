@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Repositories\Datatables\UserDatatables;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class UserController extends Controller
 {
@@ -72,6 +74,56 @@ class UserController extends Controller
                 break;
         }
     }
+    //usuarios sin proyectos 
+    public function notActvity()
+    {
+        $this->authorize('index', User::class);
+
+
+
+        // $user =  DB::table('users')
+        //     ->join('talentos', 'talentos.user_id', '=', 'users.id')
+        //     ->whereNotExists(function ($query) {
+        //         $query->select('articulacion_proyecto_talento.talento_id')
+        //             ->from('articulacion_proyecto_talento')
+        //             ->whereRaw('articulacion_proyecto_talento.talento_id = talentos.id');
+        //     })
+        //     ->get();
+
+        // return Datatables::of($user)
+
+        //     ->make(true);
+
+        // return $user;
+
+        // return DataTables::eloquent($user)
+        //     ->skipPaging()
+        //     ->toJson();
+
+        // switch (session()->get('login_role')) {
+        //         // case User::IsAdministrador():
+
+        //         // case User::IsDinamizador():
+
+
+        //     case User::IsGestor():
+        //         $auth = auth()->user()->gestor->id;
+        //         $nodo = auth()->user()->gestor->nodo_id;
+
+
+        //         // $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->groupBy('users.id')
+        //         //     ->get();
+        //         // return view('users.gestor.talento.notActivity', ['view' => 'activos']);
+        //         break;
+        //     case User::IsInfocenter():
+
+        //     default:
+        //         abort('404');
+        //         break;
+        // }
+    }
+
+
 
     /*===============================================================================
     =            metodo API para consultar las ciudades por departamento            =

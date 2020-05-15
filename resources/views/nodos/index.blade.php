@@ -7,7 +7,7 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <i class="material-icons left">
                                 domain
                             </i>
@@ -28,15 +28,21 @@
                             <div class="row">
                                 <div class="col s12 m12 l10">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
+                                        <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             Nodos {{ config('app.name')}}
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col s12 l2">
-                                    <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                        <a href="{{route('nodo.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Agregar</a>
-                                    </div>
+                                
+                                <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                    <a class="red" href="{{ route('nodo.create') }}">
+                                      <div class="card green">
+                                        <div class="card-content center">
+                                          <i class="left material-icons white-text">add_circle</i>
+                                          <span class="white-text">Nuevo Nodo</span>
+                                        </div>
+                                      </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="divider">
