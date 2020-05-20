@@ -193,49 +193,25 @@
           // type: "get",
         },
         columns: [
-        {
+          {
           data: 'codigo_articulacion',
           name: 'codigo_articulacion',
-        },
-        {
-          data: 'nombre',
-          name: 'nombre',
-        },
-        {
-          data: 'tipo_articulacion',
-          name: 'tipo_articulacion',
         },
         {
           data: 'nombre_completo_gestor',
           name: 'nombre_completo_gestor',
         },
         {
-          width: '15%',
-          data: 'estado',
-          name: 'estado',
+          data: 'nombre',
+          name: 'nombre',
         },
         {
-          data: 'revisado_final',
-          name: 'revisado_final',
+          data: 'nombre_fase',
+          name: 'nombre_fase',
         },
         {
-          data: 'details',
-          name: 'details',
-          orderable: false
-        },
-        {
-          data: 'entregables',
-          name: 'entregables',
-          orderable: false
-        },
-        {
-          data: 'edit',
-          name: 'edit',
-          orderable: false
-        },
-        {
-          data: 'delete',
-          name: 'delete',
+          data: 'proceso',
+          name: 'proceso',
           orderable: false
         },
         ],
