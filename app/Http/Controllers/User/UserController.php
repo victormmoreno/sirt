@@ -14,6 +14,7 @@ use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use DataTables;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -74,12 +75,10 @@ class UserController extends Controller
                 break;
         }
     }
-    //usuarios sin proyectos 
+    //usuarios sin proyectos
     public function notActvity()
     {
-        $this->authorize('index', User::class);
-
-
+        // $this->authorize('index', User::class);
 
         // $user =  DB::table('users')
         //     ->join('talentos', 'talentos.user_id', '=', 'users.id')
@@ -464,27 +463,60 @@ class UserController extends Controller
         return view('users.search');
     }
 
-    public function queryUserByDocument($document = null)
+    public function querySearchUser(Request $request)
     {
-        $user = User::where('documento', $document)->first();
 
-        if ($user == null) {
-            $user = User::onlyTrashed()->where('documento', $document)->first();
+        if ($request->input('txttype_search') == 1) {
+
+            $validator = Validator::make($request->all(), [
+                'txtsearch_user' => 'required|digits_between:6,11|numeric',
+                'txttype_search' => 'required|in:1',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'fail'   => true,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+
+            $user = User::where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            if ($user == null) {
+                $user = User::onlyTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            }
+        } else if ($request->input('txttype_search') == 2) {
+            $validator = Validator::make($request->all(), [
+                'txtsearch_user' => 'required|email',
+                'txttype_search' => 'required|in:2',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'fail'   => true,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+            $user = User::where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")
+                ->first();
+            if ($user == null) {
+                $user = User::onlyTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            }
         }
+
 
         if ($user == null) {
             return response()->json([
                 'data' => null,
-                'message' => 'error',
+                'status' => Response::HTTP_ACCEPTED,
+                'message' => 'el usuario no existe en nuestros registros',
                 'url' => route('usuario.usuarios.create'),
-            ]);
-        } else if ($user != null) {
-            return response()->json([
-                'data' => ['user' => $user, 'roles' => $user->getRoleNames()->implode(', ')],
-                'message' => 'success',
-                'url' => route('usuario.usuarios.show', $user->documento),
-            ]);
+            ], Response::HTTP_ACCEPTED);
         }
+        return response()->json([
+            'user' => $user,
+            'roles' => $user->getRoleNames()->implode(', '),
+            'message' => 'el usuario ya existe en nuestros registros',
+            'status' => Response::HTTP_OK,
+            'url' => route('usuario.usuarios.show', $user->documento),
+        ], Response::HTTP_OK);
     }
 
     public function consultaremail(Request $request)
@@ -496,7 +528,6 @@ class UserController extends Controller
                 'response' => false
             ]);
         } else {
-
             return response()->json([
                 'response' => true
             ]);

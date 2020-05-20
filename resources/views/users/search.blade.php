@@ -27,7 +27,7 @@
                             @else
                             <li class="active">Nuevo Usuario</li>
                             @endif
-                            
+
                         </ol>
                     </div>
                 </div>
@@ -35,38 +35,46 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <div class="col s12 m12 l12">                                
+                                <div class="col s12 m12 l12">
                                     <div class="mailbox-view">
                                         <div class="search-users">
                                             <div class="container">
                                                 <br><br>
                                                 <h2 class="header center hand-of-Sean-fonts orange-text text-darken-3">Usuarios</h2>
                                                 <div class="row center">
-                                                  <h5 class="header col s12 light black-text text-lighten-1"> Digite el número de documento para verificar si el usuario está registrado.</h5>
+                                                  <h5 class="header col s12 light black-text text-lighten-1"> Ingrese los campos para verificar si el usuario está registrado.</h5>
                                                 </div>
                                               </div>
                                             </div>
                                             <div class="container">
                                                 <div class="row">
-                                                  <div class="col s12">
-                                                    <div class="row">
-                                                      <div class="input-field col s12">
-                                                        <i class="material-icons prefix">search</i>
-                                                        <input type="text" id="search_user" class="autocomplete">
-                                                        <label for="search_user">Número de documento</label>
-                                                      </div>
+                                                    <div class="col s12">
+                                                        <form id="formSearchUser" action="{{ route('usuario.buscarusuario')}}" method="POST">
+                                                            {!! csrf_field() !!}
+                                                            <div class="row">
+                                                                <div class="input-field col s12 m4 l4">
+                                                                    <select class="js-states browser-default select2" tabindex="-1" style="width: 100%" name="txttype_search" id="txttype_search" onchange="userSearch.changetextLabel()">
+                                                                        <option value="1">Número de documento</option>
+                                                                        <option value="2">Correo Electrónico</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="input-field col s12 m8 l8">
+                                                                    <input type="text" id="txtsearch_user" name="txtsearch_user" class="autocomplete">
+                                                                    <label for="txtsearch_user">Número de documento</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="input-field col s6  center-align offset-s3">
+                                                                    <button  type="submit" class="waves-effect waves-light btn-large"><i class="material-icons right">search</i>Buscar Usuario</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <div id="response-alert"></div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="input-field col s6  center-align offset-s3">
-                                                            <button onclick="userSearch.queryUserByDocumento()" class="waves-effect waves-light btn-large"><i class="material-icons right">search</i>Buscar Usuario</button>
-                                                        </div>
-                                                    </div>
-                                                    <div id="response-alert"></div>
-                                                  </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>

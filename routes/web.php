@@ -142,12 +142,10 @@ Route::group(
             'as'   => 'usuario.index',
         ]);
 
-        Route::get('/sin-actividad', [
-            'uses' => 'UserController@notActvity',
-            'as'   => 'usuario.notactvity',
-        ]);
-
-
+        // Route::get('/sin-actividad', [
+        //     'uses' => 'UserController@notActvity',
+        //     'as'   => 'usuario.notactvity',
+        // ]);
 
         Route::get('/getuserstalentosbydatatables/{anio}', [
             'uses' => 'UserController@getDatatablesUsersTalentosByDatatables',
@@ -193,9 +191,9 @@ Route::group(
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
 
 
-        Route::get('/usuarios/consultarusuariopordocumento/{documento}', [
-            'uses' => 'UserController@queryUserByDocument',
-            'as'   => 'users.byid',
+        Route::post('/usuarios/consultarusuario', [
+            'uses' => 'UserController@querySearchUser',
+            'as'   => 'usuario.buscarusuario',
         ])->where('documento', '[0-9]+');
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
@@ -204,11 +202,11 @@ Route::group(
 
         Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
 
-        Route::get('/usuarios/estudios/{documento}', 'UserController@study')->name('usuario.study')->where('documento', '[0-9]+');;
+        Route::get('/usuarios/estudios/{documento}', 'UserController@study')->name('usuario.study')->where('documento', '[0-9]+');
 
         Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
-        Route::get('/usuarios/crear/{documento}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
+        Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
 
         Route::get('/usuarios/gestores/nodo/{id}', [
             'uses' => 'UserController@gestoresByNodo',
