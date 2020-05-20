@@ -264,8 +264,6 @@ class UserRepository
 
     public function getRoleWhereNotInRole(array $role)
     {
-
-        // return $role;
         return Role::whereNotIn('name', $role)->pluck('name', 'id');
     }
 

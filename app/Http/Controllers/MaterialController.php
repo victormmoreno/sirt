@@ -7,9 +7,9 @@ use App\Models\{CategoriaMaterial, Medida, Material, Presentacion, TipoMaterial}
 use App\Repositories\Datatables\MaterialDatatables;
 use App\Repositories\Repository\{LineaRepository, MaterialRepository};
 use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Repositories\Repository\NodoRepository;
+use Illuminate\Http\Response;
 
 class MaterialController extends Controller
 {
@@ -135,7 +135,7 @@ class MaterialController extends Controller
                 return view('materiales.index');
                 break;
             default:
-                return abort('403');
+                return abort(Response::HTTP_FORBIDDEN);
                 break;
         }
     }
@@ -163,9 +163,8 @@ class MaterialController extends Controller
             } else {
                 return response()->json(['data' => 'no response']);
             }
-        } else {
-            abort('403');
         }
+        abort(Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -295,8 +294,33 @@ class MaterialController extends Controller
                     'message' => 'error'
                 ]);
             }
-        } else {
-            abort('404');
         }
+        abort(Response::HTTP_FORBIDDEN);
+    }
+
+    public function destroy(int $id)
+    {
+        if (request()->ajax()) {
+            $material = Material::findOrFail($id);
+
+            $cantidadUso = $material->usoinfraestructuramaterial->count();
+
+            $this->authorize('destroy', $material);
+
+            if ($cantidadUso > 0) {
+                return response()->json([
+                    'material' => $material,
+                    'status' => Response::HTTP_IM_USED,
+                    'message' => 'no puedes elminiar el material de formación, está en en siendo utilizado en usos de infraestructura',
+                ], Response::HTTP_IM_USED);
+            }
+            $material->delete();
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'el material fue eliminado',
+                'route' => route('material.index')
+            ], Response::HTTP_OK);
+        }
+        abort(Response::HTTP_FORBIDDEN);
     }
 }

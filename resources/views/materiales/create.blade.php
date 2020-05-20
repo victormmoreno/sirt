@@ -6,14 +6,14 @@
       	<div class="row no-m-t no-m-b">
         	<div class="col s12 m12 l12">
         		<div class="row">
-                    <div class="col s8 m8 l9">
-                        <h5 class="left-align ">
-                            <a class="footer-text left-align " href="{{route('equipo.index')}}">
-				              	<i class="material-icons">local_library</i>
+                    <div class="col s12 m7 l9">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <a class="footer-text  " href="{{route('equipo.index')}}">
+				              	<i class="material-icons    orange-text text-darken-3">local_library</i>
 				            </a> Materiales de Formación Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
-                    <div class="col s4 m4 l3 rigth-align rigth-align show-on-large hide-on-med-and-down">
+                    <div class="col s12 m5 l3 rigth-align rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('equipo.index')}}">Materiales</a></li>
@@ -22,28 +22,28 @@
                     </div>
                 </div>
           		<div class="card">
-                
-                    
+
+
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align">Nuevo Material Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Nuevo Material Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
 				                </span>
 			                </center>
                 			<div class="divider"></div>
                 			<br/>
                             @if( $lineastecnologicas->count() == 0)
-                                
+
                                 <div class="center-align">
                                     <i class="large material-icons prefix">
                                         block
                                     </i>
-                                    
+
                                     <p>
                                         Para registrar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
-                                    
-                                    
+
+
                                 </div>
                             @else
                     			<form  action="{{route('material.store')}}" method="POST" onsubmit="return checkSubmit()">
@@ -54,7 +54,7 @@
                             @endif
               			</div>
             		</div>
-                    
+
           		</div>
         	</div>
       	</div>
