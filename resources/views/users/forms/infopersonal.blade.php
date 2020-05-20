@@ -21,7 +21,7 @@
                         </div>
                         <div class="input-field col m6 s12">
                             @if($view == 'create')
-                            <input id="txtdocumento" name="txtdocumento"  type="text" value="{{$documento}}" readonly>
+                            <input id="txtdocumento" name="txtdocumento"  type="text" value="{{isset($documento) ? $documento : ''}}" {{isset($documento) ? 'readonly' : ''}}>
                             @elseif(isset($user->documento))
                             <input id="txtdocumento" name="txtdocumento"  type="text" value="{{$user->documento}}">
                             @endif
@@ -107,12 +107,12 @@
                             <select class="" id="txtgrado_discapacidad" name="txtgrado_discapacidad" style="width: 100%" tabindex="-1" onchange="user.getGradoDiscapacidad(this)">
                                 @if(isset($user->grado_discapacidad))
                                 <option {{$user->grado_discapacidad == 0 ?'selected' : ''}} value="0">NO </option>
-                                <option {{$user->grado_discapacidad == 1 ?'selected' : ''}} value="1">SI </option>  
+                                <option {{$user->grado_discapacidad == 1 ?'selected' : ''}} value="1">SI </option>
                                 @else
                                     <option value="0">NO </option>
                                     <option value="1">SI </option>
                                 @endif
-                                
+
                             </select>
                             <label for="txtgrado_discapacidad">Algún grado de discapacidad <span class="red-text">*</span></label>
                             <small id="txtgrado_discapacidad-error" class="error red-text"></small>

@@ -142,6 +142,11 @@ Route::group(
             'as'   => 'usuario.index',
         ]);
 
+        // Route::get('/sin-actividad', [
+        //     'uses' => 'UserController@notActvity',
+        //     'as'   => 'usuario.notactvity',
+        // ]);
+
         Route::get('/getuserstalentosbydatatables/{anio}', [
             'uses' => 'UserController@getDatatablesUsersTalentosByDatatables',
             'as'   => 'usuario.getusuariobydatatables',
@@ -186,9 +191,9 @@ Route::group(
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
 
 
-        Route::get('/usuarios/consultarusuariopordocumento/{documento}', [
-            'uses' => 'UserController@queryUserByDocument',
-            'as'   => 'users.byid',
+        Route::post('/usuarios/consultarusuario', [
+            'uses' => 'UserController@querySearchUser',
+            'as'   => 'usuario.buscarusuario',
         ])->where('documento', '[0-9]+');
 
         Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
@@ -197,11 +202,11 @@ Route::group(
 
         Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
 
-        Route::get('/usuarios/estudios/{documento}', 'UserController@study')->name('usuario.study')->where('documento', '[0-9]+');;
+        Route::get('/usuarios/estudios/{documento}', 'UserController@study')->name('usuario.study')->where('documento', '[0-9]+');
 
         Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
-        Route::get('/usuarios/crear/{documento}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
+        Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
 
         Route::get('/usuarios/gestores/nodo/{id}', [
             'uses' => 'UserController@gestoresByNodo',
@@ -355,9 +360,6 @@ Route::get('/materiales/getmaterial/{id}', 'MaterialController@getMaterial')
 
 Route::resource('materiales', 'MaterialController', [
     'as' => 'materiales',
-    'except' => [
-        'destroy',
-    ]
 ])->names([
     'index'   => 'material.index',
     'create'  => 'material.create',
@@ -630,7 +632,7 @@ Route::group(
         Route::get('/notificar_ejecucion/{id}', 'ArticulacionController@notificar_ejecucion')->name('articulacion.notificar.ejecucion')->middleware('role_session:Gestor');
         Route::get('/notificar_cierre/{id}', 'ArticulacionController@notificar_cierre')->name('articulacion.notificar.cierre')->middleware('role_session:Gestor');
         Route::get('/notificar_suspendido/{id}', 'ArticulacionController@notificar_suspendido')->name('articulacion.notificar.suspension')->middleware('role_session:Gestor');
-        
+
         Route::get('/', 'ArticulacionController@index')->name('articulacion');
         Route::get('/inicio/{id}', 'ArticulacionController@inicio')->name('articulacion.inicio')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/planeacion/{id}', 'ArticulacionController@planeacion')->name('articulacion.planeacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');

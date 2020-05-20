@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class MaterialPolicy
 {
     use HandlesAuthorization;
-    
+
     /**
      * Determine whether the user can view the index materials.
      *
@@ -19,7 +19,7 @@ class MaterialPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(),User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
     }
 
     /**
@@ -70,7 +70,6 @@ class MaterialPolicy
     public function show(User $user, $material)
     {
         return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id) || session()->get('login_role') == User::IsAdministrador();
-
     }
 
 
@@ -84,7 +83,6 @@ class MaterialPolicy
     public function edit(User $user, $material)
     {
         return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
-
     }
 
     /**
@@ -97,8 +95,17 @@ class MaterialPolicy
     public function update(User $user, $material)
     {
         return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
-
     }
 
-    
+    /**
+     * Determine whether the user can destroy any material.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\Material  $material
+     * @return bool
+     */
+    public function destroy(User $user, $material)
+    {
+        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+    }
 }

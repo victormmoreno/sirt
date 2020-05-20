@@ -18,17 +18,7 @@ class NodoDatatables
 
                 return $button;
             })
-            ->addColumn('edit', function ($data) {
-                $button = '<a href="' . route("nodo.edit", $data->slug) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-
-                return $button;
-            })
-            ->addColumn('delete', function ($data) {
-                $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarNodoPorId(' . $data->id . ', event)"><i class="material-icons">delete_sweep</i></a>';
-                return $delete;
-            })
-            ->rawColumns(['detail', 'edit', 'delete'])
+            ->rawColumns(['detail'])
             ->make(true);
     }
-
 }

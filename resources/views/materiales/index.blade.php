@@ -9,8 +9,8 @@
             <div class="col s12 m12 l12">
                 <div class="row">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align">
-                            <i class="material-icons left">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <i class="material-icons left orange-text text-darken-3">
                                 local_library
                             </i>
                             Materiales de Formación
@@ -31,7 +31,7 @@
                                     <div class="row">
                                         <div class="col s12 m12 l12">
                                             <div class="center-align">
-                                                <span class="card-title center-align">
+                                                <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                                     Materiales de Formación {{ config('app.name')}}
                                                 </span>
                                             </div>
@@ -53,10 +53,9 @@
                                     </div>
 
                                 @elseif(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
-                                    <div class="row">
-                                        <div class="col s12 m12 l10">
+                                    <div class="row"><div class="col s12 m12 l10">
                                             <div class="center-align">
-                                                <span class="card-title center-align">
+                                                <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
                                                     Materiales Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
                                                     @elseif(session()->get('login_role') == App\User::IsGestor())
@@ -65,10 +64,15 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="col s12 l2">
-                                            <div class="click-to-toggle show-on-large hide-on-med-and-down">
-                                                <a href="{{route('material.create')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Material</a>
-                                            </div>
+                                        <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                            <a class="red" href="{{ route('material.create') }}">
+                                              <div class="card green">
+                                                <div class="card-content center">
+                                                  <i class="left material-icons white-text">add_circle</i>
+                                                  <span class="white-text">Nuevo Material</span>
+                                                </div>
+                                              </div>
+                                            </a>
                                         </div>
                                     </div>
 

@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use App\Repositories\Datatables\UserDatatables;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use DataTables;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -72,6 +75,54 @@ class UserController extends Controller
                 break;
         }
     }
+    //usuarios sin proyectos
+    public function notActvity()
+    {
+        // $this->authorize('index', User::class);
+
+        // $user =  DB::table('users')
+        //     ->join('talentos', 'talentos.user_id', '=', 'users.id')
+        //     ->whereNotExists(function ($query) {
+        //         $query->select('articulacion_proyecto_talento.talento_id')
+        //             ->from('articulacion_proyecto_talento')
+        //             ->whereRaw('articulacion_proyecto_talento.talento_id = talentos.id');
+        //     })
+        //     ->get();
+
+        // return Datatables::of($user)
+
+        //     ->make(true);
+
+        // return $user;
+
+        // return DataTables::eloquent($user)
+        //     ->skipPaging()
+        //     ->toJson();
+
+        // switch (session()->get('login_role')) {
+        //         // case User::IsAdministrador():
+
+        //         // case User::IsDinamizador():
+
+
+        //     case User::IsGestor():
+        //         $auth = auth()->user()->gestor->id;
+        //         $nodo = auth()->user()->gestor->nodo_id;
+
+
+        //         // $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->groupBy('users.id')
+        //         //     ->get();
+        //         // return view('users.gestor.talento.notActivity', ['view' => 'activos']);
+        //         break;
+        //     case User::IsInfocenter():
+
+        //     default:
+        //         abort('404');
+        //         break;
+        // }
+    }
+
+
 
     /*===============================================================================
     =            metodo API para consultar las ciudades por departamento            =
@@ -412,27 +463,60 @@ class UserController extends Controller
         return view('users.search');
     }
 
-    public function queryUserByDocument($document = null)
+    public function querySearchUser(Request $request)
     {
-        $user = User::where('documento', $document)->first();
 
-        if ($user == null) {
-            $user = User::onlyTrashed()->where('documento', $document)->first();
+        if ($request->input('txttype_search') == 1) {
+
+            $validator = Validator::make($request->all(), [
+                'txtsearch_user' => 'required|digits_between:6,11|numeric',
+                'txttype_search' => 'required|in:1',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'fail'   => true,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+
+            $user = User::where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            if ($user == null) {
+                $user = User::onlyTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            }
+        } else if ($request->input('txttype_search') == 2) {
+            $validator = Validator::make($request->all(), [
+                'txtsearch_user' => 'required|email',
+                'txttype_search' => 'required|in:2',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'fail'   => true,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+            $user = User::where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")
+                ->first();
+            if ($user == null) {
+                $user = User::onlyTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            }
         }
+
 
         if ($user == null) {
             return response()->json([
                 'data' => null,
-                'message' => 'error',
+                'status' => Response::HTTP_ACCEPTED,
+                'message' => 'el usuario no existe en nuestros registros',
                 'url' => route('usuario.usuarios.create'),
-            ]);
-        } else if ($user != null) {
-            return response()->json([
-                'data' => ['user' => $user, 'roles' => $user->getRoleNames()->implode(', ')],
-                'message' => 'success',
-                'url' => route('usuario.usuarios.show', $user->documento),
-            ]);
+            ], Response::HTTP_ACCEPTED);
         }
+        return response()->json([
+            'user' => $user,
+            'roles' => $user->getRoleNames()->implode(', '),
+            'message' => 'el usuario ya existe en nuestros registros',
+            'status' => Response::HTTP_OK,
+            'url' => route('usuario.usuarios.show', $user->documento),
+        ], Response::HTTP_OK);
     }
 
     public function consultaremail(Request $request)
@@ -444,7 +528,6 @@ class UserController extends Controller
                 'response' => false
             ]);
         } else {
-
             return response()->json([
                 'response' => true
             ]);
