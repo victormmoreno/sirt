@@ -7,9 +7,9 @@
         	<div class="col s12 m12 l12">
         		<div class="row">
                     <div class="col s8 m8 l9">
-                        <h5 class="left-align ">
-                            <a class="footer-text left-align " href="{{route('equipo.index')}}">
-				              	<i class="material-icons">local_library</i>
+                        <h5 class="left-align  hand-of-Sean-fonts orange-text text-darken-3">
+                            <a class="footer-text" href="{{route('equipo.index')}}">
+				              	<i class="material-icons orange-text text-darken-3">local_library</i>
 				            </a> Materiales de Formación Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
                         </h5>
                     </div>
@@ -27,7 +27,7 @@
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align">Editar Material <strong>{{$material->codigo_material}} - {{$material->nombre}}</strong> | Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Editar Material <strong>{{$material->codigo_material}} - {{$material->nombre}}</strong>
 				                </span>
 			                </center>
                 			<div class="divider"></div>
@@ -40,7 +40,7 @@
                                     </i>
                                     
                                     <p>
-                                        Para registrar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                        Para editar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
                                     
                                     
@@ -49,7 +49,7 @@
                     			<form  action="{{route('material.update', $material->id)}}" method="POST" onsubmit="return checkSubmit()">
                                     {!! method_field('PUT')!!}
     			                  	@include('materiales.form', [
-    			                  	'btnText' => 'Modificar'
+    			                  	'btnText' => 'Guardar Cambios'
     			                  	])
                     			</form>
                             @endif

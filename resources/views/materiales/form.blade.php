@@ -1,4 +1,4 @@
-<div class="col s12 m10 l10 offset-l1 m1">
+<div class="col s12 m10 l10 offset-l1 offset-m1">
 
     {!! csrf_field() !!}
     @if ($errors->any())
@@ -114,7 +114,7 @@
 		</div>
 		<div class="input-field col s12 m6 l6">
 		    <label class="active" for="txtmedida">Medida <span class="red-text">*</span></label>
-		    <select class="js-states browser-default select2Tags" tabindex="-1" style="width: 100%" name="txtmedida" id="txtmedida" onchange="getSelectMaterialMedida()">
+		    <select class="js-states browser-default select2Tags select2-hidden-accessible" tabindex="-1" style="width: 100%" name="txtmedida" id="txtmedida" onchange="getSelectMaterialMedida()">
 	            <option value="">Seleccione Medida</option>
 	            @forelse($medidas as $id => $medida)
 		            @if(isset($material->medida->id))
@@ -132,11 +132,12 @@
             </label>
             @enderror
 		</div>
+
 	</div>
 
 	<div class="row">
 
-		<div class="input-field col s12 m4 l3">
+		<div class="input-field col s12 m6 l4">
 	      	<input type="number" name="txtcantidad" id="txtcantidad" min="0" step="0.1" value="{{ isset($material) ? $material->cantidad: old('txtcantidad')}}" disabled/>
 	      	<label class="active" for="txtcantidad">Tamaño presentacion o venta/paquete <span class="red-text">*</span></label>
 	      	@error('txtcantidad')
@@ -145,7 +146,7 @@
             </label>
             @enderror
 	    </div>
-	    <div class="input-field col s12 m5 l5">
+	    <div class="input-field col s12 m6 l5">
 	      	<input type="text" name="txtnombre" id="txtnombre" value="{{ isset($material) ? $material->nombre: old('txtnombre')}}"/>
 	      	<label class="active" for="txtnombre">Nombre de Material <span class="red-text">*</span></label>
 	      	@error('txtnombre')
@@ -154,7 +155,7 @@
             </label>
             @enderror
 	    </div>
-		<div class="input-field col s12 m3 l4">
+		<div class="input-field col s12 m12 l3">
 	      	<input type="text" name="txtvalorcompra" id="txtvalorcompra" value="{{ isset($material) ? $material->valor_compra: old('txtvalorcompra')}}"/>
 	      	<label class="active" for="txtvalorcompra">Valor total compra <span class="red-text">*</span></label>
 	      	@error('txtvalorcompra')

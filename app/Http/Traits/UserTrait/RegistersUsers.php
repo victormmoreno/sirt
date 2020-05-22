@@ -16,12 +16,17 @@ trait RegistersUsers
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($document)
+    public function create($document = null)
     {
-        $user = $this->userRepository->findUserByDocument($document)->first();
-        if ($user != null) {
-            abort('404');
+        if ($document == null) {
+            $document = null;
+        } else {
+            $user = $this->userRepository->findUserByDocument($document)->first();
+            if ($user != null) {
+                abort('404');
+            }
         }
+
         $this->authorize('create', User::class);
 
         $roles = null;
