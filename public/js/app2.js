@@ -10282,35 +10282,14 @@ function graficoSeguimiento(data, name) {
             name: "TRL 8 obtenidos",
             y: data.datos.Obtenido8,
           },
-          
-          // {
-          //   name: "Proyectos en Cierre PF",
-          //   y: data.datos.CierrePF,
-          // },
-          // {
-          //   name: "Proyectos en Cierre PMV",
-          //   y: data.datos.CierrePMV,
-          // },
-          // {
-          //   name: "Proyectos Suspendidos",
-          //   y: data.datos.Suspendido,
-          // },
-          // {
-          //   name: "Articulacion con G.I",
-          //   y: data.datos.ArticulacionesGI,
-          // },
-          // {
-          //   name: "Articulacion con Empresas",
-          //   y: data.datos.ArticulacionesEmp,
-          // },
-          // {
-          //   name: "Articulacion con Emprendedores",
-          //   y: data.datos.ArticulacionesEmprendedores,
-          // },
-          // {
-          //   name: "Edts",
-          //   y: data.datos.Edts,
-          // }
+          {
+            name: "Articulaciones con G.I Inscritas",
+            y: data.datos.ArticulacionesInscritas,
+          },
+          {
+            name: "Articulaciones con G.I Cerradas",
+            y: data.datos.ArticulacionesCerradas,
+          },
         ]
       }
     ],

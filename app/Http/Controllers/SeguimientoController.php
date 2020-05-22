@@ -56,26 +56,6 @@ class SeguimientoController extends Controller
     }
   }
 
-  // /**
-  //  * Retorna array con los valores de la cantidad de proyectos de incio, planeacion y ejecucion
-  //  * @param Collection $proyectos Proyectos
-  //  * @return array
-  //  * @author dum
-  //  */
-  // private function ($proyectos)
-  // {
-  //   $inicio = 0;
-  //   $planeacion = 0;
-  //   foreach ($proyectos as $key => $value) {
-  //     if ($value->nombre == 'Inicio') {
-  //       $inicio = $value->cantidad;
-  //     } else {
-  //       $planeacion = $value->cantidad;
-  //     }
-  //   }
-  //   return array('inicio' => $inicio, 'planeacion' => $planeacion);
-  // }
-
   /**
    * Retorna array con los valores de la cantidad de trl esperado/obtenido
    * @param Collection $proyectos
@@ -116,10 +96,12 @@ class SeguimientoController extends Controller
    * @param array $trlsEsperados Valor entero de agrupacion de proyectos por trls esperados
    * @param int $cerrados Valor entero de proyectos cerrados
    * @param array $trlsObtenidos Valor entero de agrupacion de proyectos por trls obtenidos
+   * @param int $articulacionesInscritas Valor entero de articulaciones inscritas
+   * @param int $articulacionesCerradas Valor entero de articulaciones cerradas
    * @return array
    * @author dum
    */
-  private function retornarValoresDelSeguimiento($inscritos, $trlsEsperados, $cerrados, $trlsObtenidos)
+  private function retornarValoresDelSeguimiento($inscritos, $trlsEsperados, $cerrados, $trlsObtenidos, $articulacionesInscritas, $articulacionesCerradas)
   {
     $datos = array();
     $datos['Inscritos'] = $inscritos;
@@ -129,6 +111,8 @@ class SeguimientoController extends Controller
     $datos['Obtenido6'] = $trlsObtenidos['trl6'];
     $datos['Obtenido7_8'] = $trlsObtenidos['trl7_8'];
     $datos['Obtenido8'] = $trlsEsperados['trl8'];
+    $datos['ArticulacionesInscritas'] = $articulacionesInscritas;
+    $datos['ArticulacionesCerradas'] = $articulacionesCerradas;
     return $datos;
   }
 
@@ -158,11 +142,10 @@ class SeguimientoController extends Controller
     $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
     $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
-    // $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
-    // $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
-    // $articulacionEmprendedores = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmprendedor())->first()->cantidad;
+    $articulacionesInscritas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_inicio', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $articulacionesCerradas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('fases.nombre', 'Cierre')->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
 
-    $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados);
+    $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados, $articulacionesInscritas, $articulacionesCerradas);
 
     return response()->json([
       'datos' => $datos
@@ -196,11 +179,10 @@ class SeguimientoController extends Controller
     $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
     $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
-    // $articulacionGrupos = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
-    // $articulacionEmpresas = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmpresa())->first()->cantidad;
-    // $articulacionEmprendedores = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsEmprendedor())->first()->cantidad;
+    $articulacionesInscritas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_inicio', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $articulacionesCerradas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('fases.nombre', 'Cierre')->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
 
-    $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados);
+    $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados, $articulacionesInscritas, $articulacionesCerradas);
 
     return response()->json([
       'datos' => $datos
