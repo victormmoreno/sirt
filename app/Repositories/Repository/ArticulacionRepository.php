@@ -748,20 +748,22 @@ class ArticulacionRepository
 
   /**
    * Consulta articulaciones finalizadas entre dos fechas (de cierre)
+   * @param string $field Campo de fecha por el que se va a filtrar
    * @param string $fecha_inicio Primera fecha para realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
    * @return Builder
    */
-  public function consultarArticulacionesFinalizadasPorFechas_Repository($fecha_inicio, $fecha_fin)
+  public function consultarArticulacionesEntreFecha_Repository(string $field, string $fecha_inicio, string $fecha_fin)
   {
     return Articulacion::selectRaw('COUNT(articulaciones.id) AS cantidad')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-    ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    ->join('gestores AS g', 'g.id', '=', 'actividades.gestor_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-    ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
-    ->where('estado', Articulacion::IsCierre());
+    ->join('fases', 'fases.id', '=', 'articulaciones.fase_id')
+    ->whereBetween($field, [$fecha_inicio, $fecha_fin]);
   }
+
 
 
   /**

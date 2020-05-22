@@ -154,47 +154,46 @@ function graficoSeguimiento(data, name) {
     series: [
       {
         colorByPoint: true,
+        dataLabels: {
+          enabled: true
+        },
         data: [
           {
-            name: "Proyectos en Inicio",
-            y: data.datos.Inicio,
+            name: "Proyectos Inscritos",
+            y: data.datos.Inscritos,
           },
           {
-            name: "Proyectos en Planeación",
-            y: data.datos.Planeacion,
+            name: "TRL 6 esperados",
+            y: data.datos.Esperado6,
           },
           {
-            name: "Proyectos en Ejecución",
-            y: data.datos.Ejecucion,
+            name: "TRL 7 - 8 esperados",
+            y: data.datos.Esperado7_8,
           },
           {
-            name: "Proyectos en Cierre PF",
-            y: data.datos.CierrePF,
+            name: "Proyectos Cerrados",
+            y: data.datos.Cerrados,
           },
           {
-            name: "Proyectos en Cierre PMV",
-            y: data.datos.CierrePMV,
+            name: "TRL 6 obtenidos",
+            y: data.datos.Obtenido6,
           },
           {
-            name: "Proyectos Suspendidos",
-            y: data.datos.Suspendido,
+            name: "TRL 7 obtenidos",
+            y: data.datos.Obtenido7_8,
           },
           {
-            name: "Articulacion con G.I",
-            y: data.datos.ArticulacionesGI,
+            name: "TRL 8 obtenidos",
+            y: data.datos.Obtenido8,
           },
           {
-            name: "Articulacion con Empresas",
-            y: data.datos.ArticulacionesEmp,
+            name: "Articulaciones con G.I Inscritas",
+            y: data.datos.ArticulacionesInscritas,
           },
           {
-            name: "Articulacion con Emprendedores",
-            y: data.datos.ArticulacionesEmprendedores,
+            name: "Articulaciones con G.I Cerradas",
+            y: data.datos.ArticulacionesCerradas,
           },
-          {
-            name: "Edts",
-            y: data.datos.Edts,
-          }
         ]
       }
     ],

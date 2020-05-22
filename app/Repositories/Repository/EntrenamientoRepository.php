@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Entrenamiento, EntrenamientoIdea, Nodo, EstadoIdea, ArchivoEntrenamiento};
+use App\Models\{Entrenamiento, EntrenamientoIdea, Nodo, EstadoIdea, RutaModel};
 use Illuminate\Support\Facades\{DB, Storage};
 use Carbon\Carbon;
 
@@ -16,7 +16,7 @@ class EntrenamientoRepository
    */
   public function deleteArchivoEntrenamientoPorEntrenamiento($id)
   {
-    $file = ArchivoEntrenamiento::find($id);
+    $file = RutaModel::find($id);
     $file->delete();
     $filePath = str_replace('storage', 'public', $file->ruta);
     Storage::delete($filePath);
