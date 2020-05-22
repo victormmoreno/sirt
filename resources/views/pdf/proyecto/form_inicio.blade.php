@@ -96,7 +96,7 @@
             Articulado con CT+i: <b>{{$proyecto->art_cti == 0 ? 'NO' : 'SI'}}</b>
             @if ($proyecto->art_cti == 1)
             <br>
-            Tipo de discapacidad: <b>{{$proyecto->nom_act_cti}}</b>
+            Nombre del Actor CT+i: <b>{{$proyecto->nom_act_cti}}</b>
             @endif
           </td>
         </tr>
