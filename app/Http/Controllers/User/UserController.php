@@ -465,58 +465,61 @@ class UserController extends Controller
 
     public function querySearchUser(Request $request)
     {
+        if (request()->ajax()) {
 
-        if ($request->input('txttype_search') == 1) {
+            if ($request->input('txttype_search') == 1) {
 
-            $validator = Validator::make($request->all(), [
-                'txtsearch_user' => 'required|digits_between:6,11|numeric',
-                'txttype_search' => 'required|in:1',
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'fail'   => true,
-                    'errors' => $validator->errors(),
+                $validator = Validator::make($request->all(), [
+                    'txtsearch_user' => 'required|digits_between:6,11|numeric',
+                    'txttype_search' => 'required|in:1',
                 ]);
-            }
+                if ($validator->fails()) {
+                    return response()->json([
+                        'fail'   => true,
+                        'errors' => $validator->errors(),
+                    ]);
+                }
 
-            $user = User::where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-            if ($user == null) {
-                $user = User::onlyTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-            }
-        } else if ($request->input('txttype_search') == 2) {
-            $validator = Validator::make($request->all(), [
-                'txtsearch_user' => 'required|email',
-                'txttype_search' => 'required|in:2',
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'fail'   => true,
-                    'errors' => $validator->errors(),
+                $user = User::where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+                if ($user == null) {
+                    $user = User::onlyTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+                }
+            } else if ($request->input('txttype_search') == 2) {
+                $validator = Validator::make($request->all(), [
+                    'txtsearch_user' => 'required|email',
+                    'txttype_search' => 'required|in:2',
                 ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'fail'   => true,
+                        'errors' => $validator->errors(),
+                    ]);
+                }
+                $user = User::where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")
+                    ->first();
+                if ($user == null) {
+                    $user = User::onlyTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+                }
             }
-            $user = User::where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")
-                ->first();
+
+
             if ($user == null) {
-                $user = User::onlyTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+                return response()->json([
+                    'data' => null,
+                    'status' => Response::HTTP_ACCEPTED,
+                    'message' => 'el usuario no existe en nuestros registros',
+                    'url' => route('usuario.usuarios.create'),
+                ], Response::HTTP_ACCEPTED);
             }
-        }
-
-
-        if ($user == null) {
             return response()->json([
-                'data' => null,
-                'status' => Response::HTTP_ACCEPTED,
-                'message' => 'el usuario no existe en nuestros registros',
-                'url' => route('usuario.usuarios.create'),
-            ], Response::HTTP_ACCEPTED);
+                'user' => $user,
+                'roles' => $user->getRoleNames()->implode(', '),
+                'message' => 'el usuario ya existe en nuestros registros',
+                'status' => Response::HTTP_OK,
+                'url' => route('usuario.usuarios.show', $user->documento),
+            ], Response::HTTP_OK);
         }
-        return response()->json([
-            'user' => $user,
-            'roles' => $user->getRoleNames()->implode(', '),
-            'message' => 'el usuario ya existe en nuestros registros',
-            'status' => Response::HTTP_OK,
-            'url' => route('usuario.usuarios.show', $user->documento),
-        ], Response::HTTP_OK);
+        abort('403');
     }
 
     public function consultaremail(Request $request)

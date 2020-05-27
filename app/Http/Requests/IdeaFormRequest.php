@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\CreateValidationForDomainRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class IdeaFormRequest extends FormRequest
 {
@@ -37,8 +38,9 @@ class IdeaFormRequest extends FormRequest
             'txtdescripcion'     => 'required|min:1|max:2000',
             'txtobjetivo'        => 'required|min:1|max:2000',
             'txtalcance'         => 'required|min:1|max:2000',
+            'txtconvocatoria'   => 'required|in:0,1',
+            'txtnombreconvocatoria'   => Rule::requiredIf(request()->txtconvocatoria == 1) . '|min:1|max:100|nullable',
             'txtservidorvideo'   => 'nullable',
-
             'txtlinkvideo'       => ['nullable', 'url', new CreateValidationForDomainRequest, 'max:1000'],
         ];
     }
@@ -87,6 +89,10 @@ class IdeaFormRequest extends FormRequest
             'txtalcance.max'                  => 'El Alcance debe ser máximo 2000 caracteres',
 
             'txtservidorvideo.required'       => 'El Sevidor de video es obligatorio.',
+            'txtconvocatoria.required' => 'El campo es obligatorio',
+            'txtnombreconvocatoria.required' => 'El nombre de convocatoria es obligatorio',
+            'txtnombreconvocatoria.min'                 => 'El nombre de convocatoria debe ser minimo 1 caracter',
+            'txtnombreconvocatoria.max'                 => 'El nombre de convocatoria debe ser máximo 100 caracteres',
 
             'txtlinkvideo.required'           => 'El link es obligatorio.',
             'txtlinkvideo.url'                => 'El link es incorrecto',
