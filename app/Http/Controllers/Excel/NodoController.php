@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Excel;
 
 use App\Exports\Nodo\NodoExport;
-use App\Exports\Nodo\NodoShowExport;
+use App\Exports\Nodo\{NodoShowExport, NodoInfoExport};
 use App\Http\Controllers\Controller;
 use Excel;
 use Repositories\Repository\NodoRepository;
@@ -73,8 +73,8 @@ class NodoController extends Controller
     public function exportQueryAllNodo()
     {
         $query = $this->getNodoRepository()->getTeamTecnoparque()->get();
-        $this->setQuery($query);      
-        return Excel::download(new NodoExport($this->getQuery()), 'Nodos '.config('app.name').'.xls');
+        $this->setQuery($query);
+        return Excel::download(new NodoExport($this->getQuery()), 'Nodos ' . config('app.name') . '.xls');
     }
 
     /**
@@ -87,8 +87,18 @@ class NodoController extends Controller
     public function exportQueryForNodo($nodo)
     {
         $query = $this->getNodoRepository()->findNodoForShow($nodo);
-        $this->setQuery($query);
-        // return $query;
-        return Excel::download(new NodoShowExport($this->getQuery()), 'Nodo '.$query->entidad->nombre.'.xls');
+
+        $queryLineas = $query->lineas;
+        $queryLaboratorios = $query->laboratorios;
+        $queryDinamizadores = $query->dinamizador;
+        $queryInfocenters = $query->infocenter->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+        $queryIngresos = $query->ingresos->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+        $queryGestores =  $query->gestores->where('user.estado', 1)->where('user.deleted_at', null)
+            ->values()
+            ->all();
+
+        // return $queryLineas;
+
+        return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas, $queryLaboratorios), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xls');
     }
 }

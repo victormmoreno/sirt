@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports\Seguimiento;
+namespace App\Exports\Nodo;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -10,31 +10,53 @@ use Maatwebsite\Excel\Events\{AfterSheet};
 use Illuminate\Contracts\View\View;
 use App\Exports\FatherExport;
 
-class SeguimientoArticulacionesSheetExport extends FatherExport
+class NodoDinamizadorSheetExport extends FatherExport
 {
 
     private $title;
+    private $nodo;
 
-    public function __construct($query, $title)
+    public function __construct($query, $nodo, $title)
     {
         $this->setTitle($title);
+        $this->setNodo($nodo);
         $this->setQuery($query);
-        // dd($this->getQuery());
-        $this->setCount($this->getQuery()->count() + 7);
-        $this->setRangeHeadingCell('A7:P7');
+        // dd(collect($this->getNodo()));
+        $this->setCount(collect($this->getQuery())->count() + 2);
+        $this->setRangeHeadingCell('A7:G7');
     }
 
+
+
+    /**
+     * Método para aplicar estilos al archivo excel después de que se genera la hoja de excel
+     * @return array
+     * @abstract
+     * @author devjul
+     */
     public function registerEvents(): array
     {
-        $columnPar = $this->styleArrayColumnsPar();
-        $columnImPar = $this->styleArrayColumnsImPar();
-        // $styles = array('pares' => $columnPar, 'impares' => $columnImPar);
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $this->setCellsValues($event);
-                $this->mergedCells($event);
                 $this->styledCells($event);
+                $this->mergedCells($event);
                 $this->setFilters($event);
+                $event->sheet->mergeCells('D2:G2');
+                $event->sheet->mergeCells('C1:C6');
+                $event->sheet->mergeCells('D1:G1');
+                $event->sheet->mergeCells('D5:G6');
+                // $event->sheet->mergeCells('H1:J6');
+                $event->sheet->mergeCells('A1:B6');
+
+                $event->sheet->getStyle('D2:G4')->applyFromArray($this->styleArray());
+                $event->sheet->setCellValue('D3', 'Tecnoparque Nodo')->getStyle('D3')->getFont()->setBold(1);
+                $event->sheet->setCellValue('E3', 'Corrreo Elctrónico')->getStyle('E3')->getFont()->setBold(1);
+                $event->sheet->setCellValue('F3', 'Dirección')->getStyle('F3')->getFont()->setBold(1);
+                $event->sheet->setCellValue('G3', 'Telefono')->getStyle('G3')->getFont()->setBold(1);
+                $event->sheet->setCellValue('D4', $this->getNodo()->entidad->nombre);
+                $event->sheet->setCellValue('E4', $this->getNodo()->entidad->email_entidad);
+                $event->sheet->setCellValue('F4', $this->getNodo()->direccion);
+                $event->sheet->setCellValue('G4', $this->getNodo()->telefono);
             },
         ];
     }
@@ -46,27 +68,23 @@ class SeguimientoArticulacionesSheetExport extends FatherExport
      */
     private function setCellsValues(AfterSheet $event)
     {
-        $event->sheet->setCellValue('K6', 'Entregables');
+        $event->sheet->setCellValue('D2', 'NODO');
     }
-
     /**
      * Aplica estilos a las celdas
      * @param AfterSheet $event
      * @return void
-     * @author dum
+     * @author devjul
      */
     private function styledCells(AfterSheet $event)
     {
-        // Estilos para la centa de Entregables
-        $event->sheet->getStyle('K6:P6')->applyFromArray($this->styleArray());
-        $event->sheet->getStyle('K6')->applyFromArray($this->styleArrayColumnsImPar())->getFont()->setBold(1);
-        $event->sheet->getStyle('K6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
         // Estilos para los nombres de las columnas
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         // Estilos para los registros de la consulta
         $init = 'A';
-        for ($i = 0; $i < 16; $i++) {
-            $temp = $init++;
+        for ($i = 0; $i < 7; $i++) {
+            $temp        = $init++;
             $coordenadas = $temp . '7:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
             if ($i % 2 == 0) {
@@ -81,25 +99,22 @@ class SeguimientoArticulacionesSheetExport extends FatherExport
      * Funcion para la combinación de celdas
      * @param AfterSheet $event
      * @return void
-     * @author dum
+     * @author devjul
      */
     private function mergedCells(AfterSheet $event)
     {
-        // Celdas combinadas de los entregables
-        $event->sheet->mergeCells('K6:P6');
-        // Celdas combinadas hasta donde inician los entregables
-        $event->sheet->mergeCells('A1:J6');
-        // Celdas combinadas arribas de los entregables
-        $event->sheet->mergeCells('K1:P5');
+        // // Celdas combinadas hasta donde inician los entregables
+        $event->sheet->mergeCells('A1:C6');
     }
+
 
     /**
      * @abstract
      */
     public function view(): View
     {
-        return view('exports.seguimiento.articulaciones', [
-            'articulaciones' => $this->getQuery()
+        return view('exports.nodo.nodoDinamizador', [
+            'dinamizador' => $this->getQuery()
         ]);
     }
 
@@ -107,18 +122,20 @@ class SeguimientoArticulacionesSheetExport extends FatherExport
      * Asigna el nombre para la hoja de excel
      * @return string
      * @abstract
-     * @author dum
+     * @author devjul
      */
     public function title(): String
     {
-        return 'Articulacion - ' . $this->getTitle();
+        return $this->getTitle();
     }
+
+
 
     /**
      * Método para pinta imágenes en el archivo de Excel
      * @return object
      * @abstract
-     * @author dum
+     * @author devjul
      */
     public function drawings()
     {
@@ -136,10 +153,9 @@ class SeguimientoArticulacionesSheetExport extends FatherExport
         $drawing2->setResizeProportional(false);
         $drawing2->setHeight(104);
         $drawing2->setWidth(180);
-        $drawing2->setCoordinates('F1');
+        $drawing2->setCoordinates('H1');
         return [$drawing, $drawing2];
     }
-
     /**
      * Asigna un valor a $title
      * @param string $title
@@ -159,5 +175,26 @@ class SeguimientoArticulacionesSheetExport extends FatherExport
     private function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Asigna un valor a $title
+     * @param string $title
+     * @return void
+     * @author dum
+     */
+    private function setNodo($nodo)
+    {
+        $this->nodo = $nodo;
+    }
+
+    /**
+     * Retorna el valor de $title
+     * @return string
+     * @author dum
+     */
+    private function getNodo()
+    {
+        return $this->nodo;
     }
 }
