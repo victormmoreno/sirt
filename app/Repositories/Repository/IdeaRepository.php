@@ -75,6 +75,7 @@ class IdeaRepository
             "descripcion"        => $request->input('txtdescripcion'),
             "objetivo"           => $request->input('txtobjetivo'),
             "alcance"            => $request->input('txtalcance'),
+            "convocatoria"       => $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null,
             "tipo_idea"          => Idea::IsEmprendedor(),
             "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
         ]);
@@ -85,13 +86,15 @@ class IdeaRepository
 
         event(new IdeaHasReceived($idea));
 
-        $users = User::infoUserRole(['Infocenter'],['infocenter', 'infocenter.nodo'])->whereHas(
-                'infocenter.nodo', function ($query) use ($idea) {
-                    $query->where('id', $idea->nodo_id);
-            })->get();
+        $users = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
+            'infocenter.nodo',
+            function ($query) use ($idea) {
+                $query->where('id', $idea->nodo_id);
+            }
+        )->get();
 
         if (!$users->isEmpty()) {
-            Notification::send($users,new IdeaReceived($idea));
+            Notification::send($users, new IdeaReceived($idea));
         }
 
         return $idea;
@@ -157,21 +160,19 @@ class IdeaRepository
     public function getIdeaWithRelations($idea)
     {
         return $idea->with([
-              'nodo'=> function ($query) {
-                        $query->select('id','direccion','entidad_id');
-                    },
-              'nodo.entidad'=>function ($query) {
-                        $query->select('id','nombre','ciudad_id');
-                    },
-              'nodo.entidad.ciudad'=>function ($query) {
-                        $query->select('id','nombre','departamento_id');
-                    },
-              'nodo.entidad.ciudad.departamento'=>function ($query) {
-                        $query->select('id','nombre');
-                    },
-              'nodo.infocenter'
-        ])->select('id','nodo_id','apellidos_contacto','nombres_contacto','correo_contacto','nombre_proyecto','codigo_idea')->get();
-
+            'nodo' => function ($query) {
+                $query->select('id', 'direccion', 'entidad_id');
+            },
+            'nodo.entidad' => function ($query) {
+                $query->select('id', 'nombre', 'ciudad_id');
+            },
+            'nodo.entidad.ciudad' => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'nodo.entidad.ciudad.departamento' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'nodo.infocenter'
+        ])->select('id', 'nodo_id', 'apellidos_contacto', 'nombres_contacto', 'correo_contacto', 'nombre_proyecto', 'codigo_idea')->get();
     }
-
 }
