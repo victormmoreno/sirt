@@ -156,7 +156,7 @@ $cont = 0;
                                                             </td>
                                                             @if ($articulacion->fase->nombre == 'Inicio')
                                                             <td>
-                                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a>
+                                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeArticulacion_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a>
                                                             </td>
                                                             @endif
                                                         </tr>

@@ -116,6 +116,31 @@ class SeguimientoController extends Controller
     return $datos;
   }
 
+  /** 
+   * Retorna un array con los valores del seguimiento por fase actual
+   * @param int $Pinicio Cantidad de proyectos en fase inicio
+   * @param int $Pplaneacion Cantidad de proyectos en fase planeacion
+   * @param int $Pejecucion Cantidad de proyectos en fase ejecucion
+   * @param int $Pcierre Cantidad de proyectos en fase cierre
+   * @param int $
+   * @param int $
+   * @param int $
+   * @param int $
+   */
+  private function retornarValoresDelSeguimientoFases(int $Pinicio, int $Pplaneacion, int $Pejecucion, int $Pcierre, int $Ainicio, int $Aplaneacion, int $Aejecucion, int $Acierre) {
+    $datos = array();
+    $datos['ProyectosInicio'] = $Pinicio;
+    $datos['ProyectosPlaneacion'] = $Pplaneacion;
+    $datos['ProyectosEjecucion'] = $Pejecucion;
+    $datos['ProyectosCierre'] = $Pcierre;
+
+    $datos['ArticulacionesInicio'] = $Ainicio;
+    $datos['ArticulacionesPlaneacion'] = $Aplaneacion;
+    $datos['ArticulacionesEjecucion'] = $Aejecucion;
+    $datos['ArticulacionesCierre'] = $Acierre;
+    return $datos;
+  }
+
   /**
    * Consulta el seguimiento de un nodo
    * @param int $id Id del nodo
@@ -147,6 +172,86 @@ class SeguimientoController extends Controller
 
     $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados, $articulacionesInscritas, $articulacionesCerradas);
 
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
+  /**
+   * Consulta el seguimiento de un nodo, por fases actuales
+   * @param int $id Id del nodo
+   * @return Response
+   * @author dum
+   **/
+  public function seguimientoDelNodoFases(int $id)
+  {
+    $idnodo = $id;
+    if (Session::get('login_role') == User::IsDinamizador()) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
+
+    $datos = array();
+    $Pinicio = 0;
+    $Pplaneacion = 0;
+    $Pejecucion = 0;
+    $Pcierre = 0;
+    $Ainicio = 0;
+    $Aplaneacion = 0;
+    $Aejecucion = 0;
+    $Acierre = 0;
+    // Proyectos
+    $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('nodos.id', $idnodo)->first()->cantidad;
+    // Articulaciones
+    $Ainicio = $this->getArticulacionRepository()->consultarArticulacionesFase('Inicio')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Aplaneacion = $this->getArticulacionRepository()->consultarArticulacionesFase('Planeación')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Aejecucion = $this->getArticulacionRepository()->consultarArticulacionesFase('Ejecución')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Acierre = $this->getArticulacionRepository()->consultarArticulacionesFase('Cierre')->where('nodos.id', $idnodo)->first()->cantidad;
+
+
+    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Ainicio, $Aplaneacion, $Aejecucion, $Acierre);
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
+  /**
+   * Consulta el seguimiento de un nodo, por fases actuales
+   * @param int $id Id del nodo
+   * @return Response
+   * @author dum
+   **/
+  public function seguimientoDelGestorFases(int $id)
+  {
+    $idgestor = $id;
+    if (Session::get('login_role') == User::IsGestor()) {
+      $idgestor = auth()->user()->gestor->id;
+    }
+
+    $datos = array();
+    $Pinicio = 0;
+    $Pplaneacion = 0;
+    $Pejecucion = 0;
+    $Pcierre = 0;
+    $Ainicio = 0;
+    $Aplaneacion = 0;
+    $Aejecucion = 0;
+    $Acierre = 0;
+    // Proyectos
+    $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('g.id', $idgestor)->first()->cantidad;
+    $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('g.id', $idgestor)->first()->cantidad;
+    $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('g.id', $idgestor)->first()->cantidad;
+    $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('g.id', $idgestor)->first()->cantidad;
+    // Articulaciones
+    $Ainicio = $this->getArticulacionRepository()->consultarArticulacionesFase('Inicio')->where('g.id', $idgestor)->first()->cantidad;
+    $Aplaneacion = $this->getArticulacionRepository()->consultarArticulacionesFase('Planeación')->where('g.id', $idgestor)->first()->cantidad;
+    $Aejecucion = $this->getArticulacionRepository()->consultarArticulacionesFase('Ejecución')->where('g.id', $idgestor)->first()->cantidad;
+    $Acierre = $this->getArticulacionRepository()->consultarArticulacionesFase('Cierre')->where('g.id', $idgestor)->first()->cantidad;
+
+
+    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Ainicio, $Aplaneacion, $Aejecucion, $Acierre);
     return response()->json([
       'datos' => $datos
     ]);
