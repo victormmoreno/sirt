@@ -202,6 +202,16 @@ class ComiteController extends Controller
     }
   }
 
+  // public function create2()
+  // {
+  //   // session(['ideasComiteCreate' => []]);
+
+  //   if ( Session::get('login_role') == User::IsInfocenter() ) {
+  //      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
+  //     return view('comite.infocenter.create2', compact('ideas'));
+  //   }
+  // }
+
   /**
   * Store a newly created resource in storage.
   *

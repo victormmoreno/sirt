@@ -562,6 +562,7 @@ Route::group(
     function () {
         Route::get('/', 'ComiteController@index')->name('csibt');
         Route::get('/create', 'ComiteController@create')->name('csibt.create');
+        // Route::get('/create2', 'ComiteController@create2')->name('csibt.create2');
         Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
@@ -910,6 +911,8 @@ Route::group(
         Route::get('/', 'SeguimientoController@index')->name('seguimiento');
         Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
         Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoDeUnNodoFases/{id}', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoDeUnGestorFases/{id}', 'SeguimientoController@seguimientoDelGestorFases')->middleware('role_session:Dinamizador|Administrador');
     }
 );
 

@@ -140,16 +140,6 @@
                                             @error('txtnodo')
                                                 <label id="txtnodo-error" class="error" for="txtnodo">{{ $message }}</label>
                                             @enderror
-                                            {{-- <div class="row">
-                                                <div class="input-field col s2 m6 l6 offset-l8 m8 s2">
-                                                    <a class="waves-effect waves-light btn" href="" target="_blank">
-                                                        <i class="material-icons left">
-                                                            map
-                                                        </i>
-                                                        ver mapa
-                                                    </a>
-                                                </div>
-                                            </div> --}}
                                         </div>
 
                                     </div>
@@ -168,7 +158,7 @@
                                                         <span class="lever">
                                                         </span>
                                                         Si
-                                                    </input>
+                                                    
                                                 </label>
                                             </div>
 
@@ -241,7 +231,7 @@
                                                         <label align="justify" for="radio5">
                                                             5. Mi proyecto está formulado y ya comencé la ejecución, pero necesito gestionar algunos recursos para poder avanzar.
                                                         </label>
-                                                    </input>
+                                                   
                                                 </p>
                                             </div>
                                             <div class="input-field col s12 m6 l6">
@@ -445,6 +435,32 @@
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s12 m8 l8 offset-l4 m-4">
+                                                <div class="input-field col s12 m3 l3">
+                                                    <label for="txtlinkvideo" class="active">
+                                                        ¿La idea viene de una convocatoria? <span class="red-text">*</span>
+                                                    </label>
+                                                    <select class="" id="txtconvocatoria" name="txtconvocatoria"  style="width: 100%" tabindex="-1" onchange="idea.getSelectConvocatoria()">
+                                                        <option value="0" {{old('txtconvocatoria') ==  0 ? 'selected':''}}>No</option>
+                                                        <option value="1" {{old('txtconvocatoria') ==  1 ? 'selected':''}}>Si</option>
+                                                    </select>
+                                                    @error('txtconvocatoria')
+                                                    <label id="txtconvocatoria-error" class="error" for="txtconvocatoria">{{ $message }}</label>
+                                                    @enderror
+                                                </div>
+                                                <div class="input-field col s12 m4 l4">
+                                                    <label for="txtnombreconvocatoria">
+                                                        Nombre de Convocatoria 
+                                                    </label>
+                                                    <input  class="validate" id="txtnombreconvocatoria" name="txtnombreconvocatoria" type="text" value="{{ old('txtnombreconvocatoria') }}" disabled>
+                                                    @error('txtnombreconvocatoria')
+                                                        <label id="txtnombreconvocatoria-error" class="error" for="txtnombreconvocatoria">{{ $message }}</label>
+                                                    @enderror
+                                                </div>
+                                    
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12 m8 l8 offset-l4 m-4">
 
                                                 <div class="input-field col s12 m3 l3">
                                                     <select class="" id="txtservidorvideo" name="txtservidorvideo"  style="width: 100%" tabindex="-1">
@@ -468,10 +484,7 @@
                                                 <label for="txtlinkvideo" class="active">
                                                     Link del video <span class="red-text"></span>
                                                 </label>
-
                                             </div>
-                                            <div></div>
-
                                         </div>
 
                                         <br>

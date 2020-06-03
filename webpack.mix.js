@@ -55,7 +55,8 @@ mix.scripts([
     	'resources/assets/plugins/summernote/dist/summernote-lite.js',
     	'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
-		'resources/assets/js/custom.js'
+        'resources/assets/js/custom.js',
+        'resources/app/ideas/index.js',
 	],'public/js/libs.js');
 
 mix.minify('public/js/libs.js')
@@ -68,7 +69,7 @@ mix.scripts([
 		'resources/app/nodo/administrador/index.js',
 		'resources/app/ideas/infocenter/index.js',
 		'resources/app/ideas/administrador/index.js',
-		'resources/app/ideas/gestor/index.js',
+        'resources/app/ideas/gestor/index.js',
 		'resources/app/entrenamientos/index.js',
 		'resources/app/entrenamientos/administrador/index.js',
 		'resources/app/entrenamientos/infocenter/index.js',

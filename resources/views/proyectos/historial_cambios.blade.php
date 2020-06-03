@@ -22,7 +22,7 @@
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la fase del proyecto de {{$historico[$i]->fase}} a Inicio el día {{$historico[$i]  ->created_at}}.
                   @else
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
-                  {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]  ->created_at}}.
+                  {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.
                   @endif
                 @endif
               </li>

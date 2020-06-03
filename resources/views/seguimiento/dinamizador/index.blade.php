@@ -36,7 +36,15 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                 <br>
               </div>
               <div id="gestor" class="col s12 m12 l12">
-                <div class="row">
+                <div class="col s12 m12 l12">
+                  <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                    <li class="tab col s3"><a class="" href="#gestor_todo">Proyectos y AGI Inscritos - Cerrados</a></li>
+                    <li class="tab col s3"><a class="" href="#gestor_actual">Fase actual de proyectos y AGI</a></li>
+                    {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
+                  </ul>
+                  <br>
+                </div>
+                <div class="row" id="gestor_todo">
                   <div class="col s12 m4 l4">
                     <div class="input-field col s12 m12 l12">
                       <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
@@ -79,9 +87,41 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                     </div>
                   </div>
                 </div>
+                <div class="row" id="gestor_actual">
+                  <div class="col s12 m4 l4">
+                    <div class="input-field col s12 m12 l12">
+                      <select id="txtgestor_id_actual" name="txtgestor_id_actual" style="width: 100%" tabindex="-1" onchange="consultarSeguimientoDeUnGestorFase(1)">
+                        <option value="">Seleccione el Gestor</option>
+                        @foreach($gestores as $id => $nombres_gestor)
+                        <option value="{{$id}}">{{$nombres_gestor}}</option>
+                        @endforeach
+                      </select>
+                      <label for="txtgestor_id_actual">Gestor</label>
+                    </div>
+                  </div>
+                  <div class="col s12 m8 l8">
+                    <div id="graficoSeguimientoPorGestorFases_column" class="green lighten-3"
+                      style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                      <div class="row card-panel">
+                        <h5 class="center">
+                          Para consultar el seguimiento de un gestor, debes seleccionar un gestor del nodo en el campo
+                          de gestores.
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div id="tecnoparque" class="col s12 m12 l12">
-                <div class="row">
+                <div class="col s12 m12 l12">
+                  <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                    <li class="tab col s3"><a class="" href="#tecnoparque_todo">Proyectos y AGI Inscritos - Cerrados</a></li>
+                    <li class="tab col s3"><a class="" href="#tecnoparque_actual">Fase actual de proyectos y AGI</a></li>
+                    {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
+                  </ul>
+                  <br>
+                </div>
+                <div class="row" id="tecnoparque_todo">
                   <div class="col s12 m4 l4">
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
@@ -116,37 +156,19 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                     </div>
                   </div>
                 </div>
-
+                <div class="row" id="tecnoparque_actual">
+                  <div class="col s12 m12 l12">
+                    <div id="graficoSeguimientoDeUnNodoFases_column" class="green lighten-3"
+                      style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                      <div class="row card-panel">
+                        <h5 class="center">
+                          Aquí puedes ver los estados actuales de los proyectos y articulaciones con grupos de investigación.
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              {{-- <div id="linea" class="col s12 m12 l12">
-                <div class="row">
-                <div class="col s12 m4 l4">
-                <div class="input-field col s12 m12 l12">
-                <select class="js-states"  tabindex="-1" style="width: 100%" id="txtidlinea" name="txtidlinea">
-                <option value="" selected>Seleccione una Línea</option>
-
-              </select>
-            </div>
-            <div class="row">
-            <div class="input-field col s12 m6 l6">
-            <input type="text" id="fecha_inicioLinea" name="fecha_inicioLinea" class="datepicker picker__input" value="">
-            <label for="fecha_inicioLinea">Fecha Inicio</label>
-          </div>
-          <div class="input-field col s12 m6 l6">
-          <input type="text" id="fecha_finLinea" name="fecha_finLinea" class="datepicker picker__input" value="">
-          <label for="fecha_finLinea">Fecha Fin</label>
-        </div>
-      </div>
-      <center>
-      <button id="consultarLinea" class="btn">Consultar</button>
-      <button id="jsPDFLinea" class="btn red">PDF</button>
-    </center>
-  </div>
-  <div id="idSeguimientoLinea" class="col s12 m8 l8">
-  <canvas id="SeguimientoLinea" height="140"></canvas>
-</div>
-</div>
-</div> --}}
             </div>
           </div>
         </div>
@@ -155,3 +177,8 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
   </div>
 </main>
 @endsection
+@push('script')
+    <script>
+      consultarSeguimientoDeUnNodoFases(0);
+    </script>
+@endpush

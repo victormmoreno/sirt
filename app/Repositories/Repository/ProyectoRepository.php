@@ -175,7 +175,7 @@ class ProyectoRepository
    * @param string $fase Estado del proyecto que se quiere buscar
    * @param string $fecha_inicio Primera fecha oara realizar el filtro
    * @param string $fecha_fin Segunda fecha para realizar el filtro
-   * @return Collection
+   * @return Builder
    * @author dum
    */
   public function consultarProyectoCerradosEntreFecha(string $fase, string $fecha_inicio, string $fecha_fin)
@@ -188,6 +188,31 @@ class ProyectoRepository
       ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
       ->where('fases.nombre', $fase)
       ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
+  }
+
+  /**
+   * Consulta cantidad de proyecto por fase
+   * @param string $fase Fase que se va a filtrar
+   * @return Builder
+   * @author dum
+   **/
+  public function consultarProyectosFase(string $fase)
+  {
+    return Proyecto::selectRaw('count(proyectos.id) as cantidad')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores AS g', 'g.id', '=', 'actividades.gestor_id')
+    ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->where('fases.nombre', $fase)
+    ->where(function ($q) {
+      $q->where(function ($query) {
+        $query->whereYear('actividades.fecha_cierre', Carbon::now()->isoFormat('YYYY'));
+      })
+        ->orWhere(function ($query) {
+          $query->whereYear('actividades.fecha_inicio', Carbon::now()->isoFormat('YYYY'));
+        });
+    });
   }
 
   /**
