@@ -75,6 +75,7 @@ class IdeaRepository
             "descripcion"        => $request->input('txtdescripcion'),
             "objetivo"           => $request->input('txtobjetivo'),
             "alcance"            => $request->input('txtalcance'),
+            "viene_convocatoria" => $request->input('txtconvocatoria'),
             "convocatoria"       => $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null,
             "tipo_idea"          => Idea::IsEmprendedor(),
             "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
@@ -129,6 +130,9 @@ class IdeaRepository
         $idea->descripcion        = $request->input('txtdescripcion');
         $idea->objetivo           = $request->input('txtobjetivo');
         $idea->alcance            = $request->input('txtalcance');
+        //sea anadieron los campos convocatoria
+        $idea->viene_convocatoria = $request->input('txtconvocatoria');
+        $idea->convocatoria       = $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null;
 
         $idea = $idea->update();
         return $idea;
@@ -173,6 +177,6 @@ class IdeaRepository
                 $query->select('id', 'nombre');
             },
             'nodo.infocenter'
-        ])->select('id', 'nodo_id', 'apellidos_contacto', 'nombres_contacto', 'correo_contacto', 'nombre_proyecto', 'codigo_idea')->get();
+        ])->select('id', 'nodo_id', 'apellidos_contacto', 'nombres_contacto', 'correo_contacto', 'nombre_proyecto', 'codigo_idea', 'viene_convocatoria', 'convocatoria')->get();
     }
 }

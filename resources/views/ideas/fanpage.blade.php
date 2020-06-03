@@ -443,6 +443,7 @@
                                                         <option value="0" {{old('txtconvocatoria') ==  0 ? 'selected':''}}>No</option>
                                                         <option value="1" {{old('txtconvocatoria') ==  1 ? 'selected':''}}>Si</option>
                                                     </select>
+                                                    
                                                     @error('txtconvocatoria')
                                                     <label id="txtconvocatoria-error" class="error" for="txtconvocatoria">{{ $message }}</label>
                                                     @enderror
@@ -451,7 +452,7 @@
                                                     <label for="txtnombreconvocatoria">
                                                         Nombre de Convocatoria 
                                                     </label>
-                                                    <input  class="validate" id="txtnombreconvocatoria" name="txtnombreconvocatoria" type="text" value="{{ old('txtnombreconvocatoria') }}" disabled>
+                                                    <input  class="validate" id="txtnombreconvocatoria" name="txtnombreconvocatoria" type="text" value="{{ old('txtnombreconvocatoria') }}" {{ old('txtnombreconvocatoria'== null ? 'disabled':'') }}>
                                                     @error('txtnombreconvocatoria')
                                                         <label id="txtnombreconvocatoria-error" class="error" for="txtnombreconvocatoria">{{ $message }}</label>
                                                     @enderror
@@ -459,6 +460,7 @@
                                     
                                             </div>
                                         </div>
+                                        
                                         <div class="row">
                                             <div class="input-field col s12 m8 l8 offset-l4 m-4">
 
