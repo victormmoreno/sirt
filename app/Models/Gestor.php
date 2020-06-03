@@ -38,6 +38,7 @@ class Gestor extends Model
             ->join('users', 'users.id', '=', 'gestores.user_id')
             ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
             ->where('nodos.id', $id)
+            ->where('users.deleted_at', null)
             ->orderBy('users.nombres');
     }
 

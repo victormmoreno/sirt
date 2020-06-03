@@ -764,7 +764,30 @@ class ArticulacionRepository
     ->whereBetween($field, [$fecha_inicio, $fecha_fin]);
   }
 
-
+    /**
+   * Consulta cantidad de articulaciones por fase
+   * @param string $fase Fase que se va a filtrar
+   * @return Builder
+   * @author dum
+   **/
+  public function consultarArticulacionesFase(string $fase)
+  {
+    return Articulacion::selectRaw('COUNT(articulaciones.id) AS cantidad')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores AS g', 'g.id', '=', 'actividades.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('fases', 'fases.id', '=', 'articulaciones.fase_id')
+    ->where('fases.nombre', $fase)
+    ->where(function ($q) {
+      $q->where(function ($query) {
+        $query->whereYear('actividades.fecha_cierre', Carbon::now()->isoFormat('YYYY'));
+      })
+        ->orWhere(function ($query) {
+          $query->whereYear('actividades.fecha_inicio', Carbon::now()->isoFormat('YYYY'));
+        });
+    });
+  }
 
   /**
   * Cambia el gestor que está asociado a una articulación
