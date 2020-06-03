@@ -123,6 +123,33 @@
                     @enderror
                   </div>
                 </div>
+                <div class="row">
+                    <div class="input-field col s12 m8 l8 offset-l2 offset-m2 ">
+                        <div class="input-field col s12 m4 l4">
+                            <label for="txtlinkvideo" class="active">
+                                ¿La idea viene de una convocatoria? <span class="red-text">*</span>
+                            </label>
+                            <select class="" id="txtconvocatoria" name="txtconvocatoria"  style="width: 100%" tabindex="-1" onchange="idea.getSelectConvocatoria()">
+                                <option value="0" {{ $idea->viene_convocatoria == 0 ? 'selected' : '' }} >No</option>
+                                <option value="1" {{ $idea->viene_convocatoria == 1 ? 'selected' : '' }}>Si</option>
+                            </select>
+
+                            @error('txtconvocatoria')
+                            <label id="txtconvocatoria-error" class="error" for="txtconvocatoria">{{ $message }}</label>
+                            @enderror
+                        </div>
+                        <div class="input-field col s12 m8 l8">
+                            <label for="txtnombreconvocatoria">
+                                Nombre de Convocatoria
+                            </label>
+                            <input  class="validate" id="txtnombreconvocatoria" name="txtnombreconvocatoria" type="text" value="{{ old('txtnombreconvocatoria',$idea->convocatoria) }}" {{ $idea->viene_convocatoria == 0 ? 'disabled' : '' }}>
+                            @error('txtnombreconvocatoria')
+                                <label id="txtnombreconvocatoria-error" class="error" for="txtnombreconvocatoria">{{ $message }}</label>
+                            @enderror
+                        </div>
+
+                    </div>
+                </div>
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                   <a href="{{route('idea.ideas')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>

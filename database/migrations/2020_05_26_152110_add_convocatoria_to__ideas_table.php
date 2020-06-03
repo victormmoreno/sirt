@@ -15,7 +15,8 @@ class AddConvocatoriaToIdeasTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('convocatoria', 100)->nullable()->default(null)->after('alcance');
+            $table->tinyInteger('viene_convocatoria')->default(0)->after('alcance');
+            $table->string('convocatoria', 100)->nullable()->default(null)->after('viene_convocatoria');
         });
     }
 
@@ -27,6 +28,7 @@ class AddConvocatoriaToIdeasTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
+            $table->dropColumn(['viene_convocatoria']);
             $table->dropColumn(['convocatoria']);
         });
     }

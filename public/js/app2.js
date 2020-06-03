@@ -378,10 +378,45 @@ function detallesIdeaPorId(id){
         +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
         +'</div>'
         +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿La idea viene de una convocatoria? </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+vieneConvocatoria(respuesta.detalles.viene_convocatoria)+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre de Convocatoria: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+nombreConvocatoria(respuesta.detalles.viene_convocatoria,respuesta.detalles.convocatoria)+'</span>'
+        +'</div>'
+        +'</div>'
+        
       );
       $('#modal1').openModal();
     }
   })
+}
+
+function vieneConvocatoria(value){
+    if(value == 1){
+        return "Si";
+    }else{
+        return "No";
+    }
+}
+
+function nombreConvocatoria(value, convocatoria){
+    if(value == 1){
+        return convocatoria;
+    }else{
+        return "No Aplica";
+    }
 }
 
 function consultarIdeasPorNodo() {
@@ -1074,13 +1109,30 @@ csibt = {
         +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
         +'</div>'
         +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">¿La idea viene de una convocatoria? </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+vieneConvocatoria(respuesta.detalles.viene_convocatoria)+'</span>'
+        +'</div>'
+        +'</div>'
+        +'<div class="divider"></div>'
+        +'<div class="row">'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="cyan-text text-darken-3">Nombre de Convocatoria: </span>'
+        +'</div>'
+        +'<div class="col s12 m6 l6">'
+        +'<span class="black-text">'+nombreConvocatoria(respuesta.detalles.viene_convocatoria,respuesta.detalles.convocatoria)+'</span>'
+        +'</div>'
+        +'</div>'
       );
       $('#ideaProyecto').openModal();
       }
     });
   }
-
-
+    
 }
 
 $(document).ready(function() {
