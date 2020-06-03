@@ -60,6 +60,20 @@
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
+                                                            ¿La idea viene de una convocatoria?
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->idea->viene_convocatoria == 1 ? 'Si': 'No'}} 
+                                                        </p>
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Nombre de convocatoria
+                                                        </span>
+                                                        <p>
+                                                            {{$proyecto->idea->viene_convocatoria == 1 ? $proyecto->idea->convocatoria: 'No Aplica'}} 
+                                                        </p>
+                                                    </li>
+                                                    <li class="collection-item">
+                                                        <span class="title cyan-text text-darken-3">
                                                             Código del Proyecto
                                                         </span>
                                                         <p>
