@@ -65,7 +65,7 @@
                             @foreach($usoinfraestructura->actividad->nodo->equipos->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $equipo)
                                 
                                 <option value="{{$equipo->id}}">
-                                    {{$equipo->nombre}}
+                                    {{str_limit($equipo->nombre,30,"...")}}
                                 </option>
                                 
                             @endforeach
