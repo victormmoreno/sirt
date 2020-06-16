@@ -430,12 +430,12 @@
 
                 if (response.equipos.length != 0) {
                     $.each(response.equipos, function(e, equipo) {
-                        if (equipo.nombre.length > 30){
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre.substr(0,30) + '...  / ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
+                        if (equipo.nombre.length > 40){
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre.substr(0,50) + '...  / ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                         }else{
                             $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre+ '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                         }
-                        
+
                     });
                 }else{
                     $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
@@ -443,13 +443,13 @@
 
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
-                        if (material.material_nombre.length > 30){
-                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+material.material_nombre.substr(0,30)+ '... x ' +material.medida_nombre  +'</option>');
+                        if (material.material_nombre.length > 40){
+                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+material.material_nombre.substr(0,70)+ '... x ' +material.medida_nombre  +'</option>');
                         }else{
-                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
+                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
                         }
 
-                        
+
                     });
                 }else{
                     $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
@@ -590,8 +590,8 @@
 
                 if (response.equipos.length != 0) {
                     $.each(response.equipos, function(e, equipo) {
-                        if (equipo.nombre.length > 30){
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre.substr(0,30) + '...  / ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
+                        if (equipo.nombre.length > 40){
+                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre.substr(0,50) + '...  / ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                         }else{
                             $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre+ '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
                         }
@@ -602,10 +602,10 @@
 
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
-                        if (material.material_nombre.length > 30){
-                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+material.material_nombre.substr(0,30)+ '... x ' +material.medida_nombre  +'</option>');
+                        if (material.material_nombre.length > 40){
+                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+material.material_nombre.substr(0,70)+ '... x ' +material.medida_nombre  +'</option>');
                         }else{
-                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
+                            $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
                         }
                     });
                 }else{

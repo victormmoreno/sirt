@@ -27,15 +27,5 @@ class EstadoIdea extends Model
 
     public $timestamps = false;
 
-    /*===========================================================
-    =            metodo para retornar las constantes            =
-    ===========================================================*/
-
-    public static function IsOtraEps()
-    {
-        return self::OTRA_EPS;
-    }
-
-    /*=====  End of metodo para retornar las constantes  ======*/
 
 }

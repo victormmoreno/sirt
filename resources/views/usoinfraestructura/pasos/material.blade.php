@@ -38,7 +38,7 @@
                             @foreach($usoinfraestructura->actividad->nodo->materiales->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $material)
 
                                 <option value="{{$material->id}}">
-                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{str_limit($material->nombre,30 ,"...")}} x {{$material->medida->nombre}}
+                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{str_limit($material->nombre,70 ,"...")}} x {{$material->medida->nombre}}
                                 </option>
 
                             @endforeach

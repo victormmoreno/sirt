@@ -1,125 +1,144 @@
 $(document).ready(function() {
+    ideas.getIdeasForEmprendedores();
 
-  $('#ideas_emprendedores_table').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    // order: false,
-    ajax:{
-      url: "/idea",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'codigo_idea',
-        name: 'codigo_idea',
-      },
-      {
-        data: 'fecha_registro',
-        name: 'fecha_registro',
-      },
-      {
-        data: 'persona',
-        name: 'persona',
-      },
-      {
-        data: 'correo',
-        name: 'correo',
-      },
-      {
-        data: 'contacto',
-        name: 'contacto',
-      },
-      {
-        data: 'nombre_idea',
-        name: 'nombre_idea',
-      },
-      {
-        data: 'estado',
-        name: 'estado',
-      },
-      {
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        data: 'edit',
-        name: 'edit',
-        orderable: false
-      },
-      {
-        data: 'soft_delete',
-        name: 'soft_delete',
-        orderable: false
-      },
-      {
-        data: 'dont_apply',
-        name: 'dont_apply',
-        orderable: false
-      },
-
-    ],
-    initComplete: function () {
-      this.api().columns().every(function () {
-        var column = this;
-        var input = document.createElement("input");
-        $(input).appendTo($(column.footer()).empty())
-        .on('change', function () {
-          column.search($(this).val(), false, false, true).draw();
-        });
-      });
-    }
-  });
-
-  $('#tblideasempresas').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    // order: false,
-    ajax:{
-      url: "/idea/consultarIdeasEmpresasGIPorNodo/"+0,
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'codigo_idea',
-        name: 'codigo_idea',
-      },
-      {
-        data: 'fecha_registro',
-        name: 'fecha_registro',
-      },
-      {
-        data: 'nit',
-        name: 'nit',
-      },
-      {
-        data: 'razon_social',
-        name: 'razon_social',
-      },
-      {
-        data: 'nombre_idea',
-        name: 'nombre_idea',
-      },
-    ],
-    initComplete: function () {
-      this.api().columns().every(function () {
-        var column = this;
-        var input = document.createElement("input");
-        $(input).appendTo($(column.footer()).empty())
-        .on('change', function () {
-          column.search($(this).val(), false, false, true).draw();
-        });
-      });
-    }
-  });
-
+    // $('#tblideasempresas').DataTable({
+    //     language: {
+    //       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    //     },
+    //     processing: true,
+    //     serverSide: true,
+    //     // order: false,
+    //     ajax:{
+    //       url: "/idea/consultarIdeasEmpresasGIPorNodo/"+0,
+    //       type: "get",
+    //     },
+    //     columns: [
+    //       {
+    //         data: 'codigo_idea',
+    //         name: 'codigo_idea',
+    //       },
+    //       {
+    //         data: 'fecha_registro',
+    //         name: 'fecha_registro',
+    //       },
+    //       {
+    //         data: 'nit',
+    //         name: 'nit',
+    //       },
+    //       {
+    //         data: 'razon_social',
+    //         name: 'razon_social',
+    //       },
+    //       {
+    //         data: 'nombre_idea',
+    //         name: 'nombre_idea',
+    //       },
+    //     ],
+    //     initComplete: function () {
+    //       this.api().columns().every(function () {
+    //         var column = this;
+    //         var input = document.createElement("input");
+    //         $(input).appendTo($(column.footer()).empty())
+    //         .on('change', function () {
+    //           column.search($(this).val(), false, false, true).draw();
+    //         });
+    //       });
+    //     }
+    //   });
 });
+
+var ideas = {
+    getIdeasForEmprendedores: function(){
+
+        let anio = $('#selectYearIdea').val();
+        let state = $('#txtestadoIdea').val();
+        $('#ideas_emprendedores_table').dataTable().fnDestroy();
+        $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
+
+        if (anio == null || anio == '' && state == null || state == ''){
+
+        }else{
+            $('#ideas_emprendedores_table').DataTable({
+                language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                ajax:{
+                url: "/idea/datatablesideasestado/"+anio+"/"+state,
+                type: "get",
+                },
+                columns: [
+                    {
+                        data: 'codigo_idea',
+                        name: 'codigo_idea',
+                    },
+                    {
+                        data: 'fecha_registro',
+                        name: 'fecha_registro',
+                    },
+                    {
+                        data: 'persona',
+                        name: 'persona',
+                    },
+                    {
+                        data: 'correo',
+                        name: 'correo',
+                    },
+                    {
+                        data: 'contacto',
+                        name: 'contacto',
+                    },
+                    {
+                        data: 'nombre_idea',
+                        name: 'nombre_idea',
+                    },
+                    {
+                        data: 'estado',
+                        name: 'estado',
+                    },
+                    {
+                        data: 'details',
+                        name: 'details',
+                        orderable: false
+                    },
+                    {
+                        data: 'edit',
+                        name: 'edit',
+                        orderable: false
+                    },
+                    {
+                        data: 'soft_delete',
+                        name: 'soft_delete',
+                        orderable: false
+                    },
+                    {
+                        data: 'dont_apply',
+                        name: 'dont_apply',
+                        orderable: false
+                    },
+
+                ],
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                        column.search($(this).val(), false, false, true).draw();
+                        });
+                    });
+                }
+
+            });
+        }
+    }
+}
+
+
+
+
 
 function cambiarEstadoIdeaDeProyecto(id, estado) {
   Swal.fire({
@@ -157,15 +176,16 @@ function cambiarEstadoIdeaDeProyecto(id, estado) {
 
 }
 
-$('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
+
 
 function detallesIdeaPorId(id){
+
   $.ajax({
     dataType:'json',
     type:'get',
     url:"/idea/detallesIdea/"+id
   }).done(function(respuesta){
-    // console.log(respuesta);
+
     $("#titulo").empty();
     $("#detalle_idea").empty();
     if (respuesta == null) {
@@ -244,7 +264,7 @@ function detallesIdeaPorId(id){
         +'<span class="black-text">'+nombreConvocatoria(respuesta.detalles.viene_convocatoria,respuesta.detalles.convocatoria)+'</span>'
         +'</div>'
         +'</div>'
-        
+
       );
       $('#modal1').openModal();
     }
