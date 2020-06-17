@@ -478,6 +478,7 @@ Route::resource('centro-formacion', 'CentroController');
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/
+Route::get('perfil/actividades', 'User\ProfileController@activities')->name('perfil.actividades')->middleware('disablepreventback');
 Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
 Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
 Route::get('perfil', 'User\ProfileController@index')->name('perfil.index')->middleware('disablepreventback');
@@ -729,6 +730,16 @@ Route::group(
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
     }
 );
+
+// Route::group(
+//     [
+//         'prefix'     => 'actividad',
+//         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
+//     ],
+//     function () {
+//         Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
+//     }
+// );
 
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)

@@ -312,4 +312,16 @@ class UserPolicy
         }
         return true;
     }
+
+
+    /**
+     * Determine whether the user can view the activities
+     * @author julian londono
+     * @return boolean
+     */
+    public function viewActivities()
+    {
+
+        return (bool) $this->authUser->id == $this->user->id && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento());
+    }
 }
