@@ -6,15 +6,15 @@
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
         <div class="row">
-              <div class="col s8 m8 l10">
-                  <h5 class="left-align">
+              <div class="col s12 m8 l9">
+                  <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                       <i class="material-icons left">
                           lightbulb
                       </i>
                       Ideas de Proyecto
                   </h5>
               </div>
-              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+              <div class="col s12 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
                       <li class="active">Ideas de Proyecto</li>
@@ -28,7 +28,7 @@
                 <div class="row">
                   <div class="col s12 m12 l12">
                     <div class="center-align">
-                      <span class="card-title center-align">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
+                      <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                     </div>
                   </div>
                 </div>

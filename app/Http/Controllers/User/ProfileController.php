@@ -25,7 +25,6 @@ class ProfileController extends Controller
         $this->middleware(['auth', 'check_profile']);
         $this->userRepository   = $userRepository;
         $this->profileRepostory = $profileRepostory;
-
     }
 
     /**
@@ -40,7 +39,6 @@ class ProfileController extends Controller
         return view('users.profile.profile', [
             'user' => $authUser,
         ]);
-
     }
 
     public function roles()
@@ -99,7 +97,7 @@ class ProfileController extends Controller
         //buscar usuario por su id
         $user = User::find($id);
 
-        if($user == null){
+        if ($user == null) {
             $user = User::onlyTrashed()->find($id);
         }
         $this->authorize('updateProfile', $user);
@@ -118,11 +116,11 @@ class ProfileController extends Controller
             if ($user != null) {
                 //acutalizar usuario
                 $userUpdate = $this->profileRepostory->Update($request, $user);
-               
+
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'Tu perfil ha sido actualizado exitosamente.',
-                    'url' => route('login'),    
+                    'url' => route('login'),
                     'user' => $userUpdate,
                 ]);
             } else {
@@ -134,19 +132,6 @@ class ProfileController extends Controller
                 ]);
             }
         }
-
-
-
-        
-        // $userUpdated = $this->profileRepostory->Update($request, $user);
-
-        // if ($userUpdated != null) {
-        //     $this->userRepository->destroySessionUser();
-        //     return redirect()->route('login')->withSuccess('Tu perfil ha sido actualizado exitosamente.');
-        // }
-
-        // return redirect()->back()->with('error', 'error al actualizar tu perfil, intentalo de nuevo.');
-
     }
 
     public function updatePassword(ChangePasswordRequest $request)
@@ -159,7 +144,6 @@ class ProfileController extends Controller
         if ($userPasswordUpdated != null) {
             $this->userRepository->destroySessionUser();
             return redirect()->route('login')->withSuccess('Contraseña modificada, ya puedes iniciar sesión');
-
         }
 
         return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
@@ -173,7 +157,6 @@ class ProfileController extends Controller
     {
         $this->authorize('downloadCertificatedPlataform', User::class);
 
-        $user = $this->getAuthUserFindById();
 
         $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', compact('user'));
 
@@ -186,4 +169,37 @@ class ProfileController extends Controller
 
     /*=====  End of metodo para descargar certificado registro en plataforma  ======*/
 
+    /*================================================================================
+    =            metodo para mostrar las actividades realizadas por un usuario          =
+    ================================================================================*/
+
+    public function activities()
+    {
+
+        $user = User::find(auth()->user()->id);
+
+        if ($user == null) {
+            $user = User::onlyTrashed()->find(auth()->user()->id);
+        }
+
+        $this->authorize('viewActivities', $user);
+
+        if (\Session::get('login_role') == User::IsTalento()) {
+            $actividades = $user->talento->articulacionproyecto()
+                ->with([
+                    'actividad' => function ($query) {
+                        $query->orderBy('fecha_inicio', 'DESC');
+                    }
+                ])->paginate(10);
+        }
+        if (\Session::get('login_role') == User::IsGestor()) {
+
+            $actividades = $user->gestor->actividades()
+                ->with(['articulacion_proyecto.proyecto', 'articulacion_proyecto.articulacion'])
+                ->orderBy('fecha_inicio', 'DESC')->paginate(10);
+        }
+        return view('users.profile.actividad', ['user' => $user, 'actividades' => $actividades]);
+    }
+
+    /*=====  End of metodo para mostrar las actividades realizadas por un usuario  ======*/
 }
