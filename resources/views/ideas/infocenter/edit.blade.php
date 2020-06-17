@@ -7,14 +7,14 @@
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
         <div class="row">
-              <div class="col s8 m8 l10">
-                  <h5>
-                  <a class="footer-text left-align" href="{{route('idea.ideas')}}">
+              <div class="col s8 m8 l9">
+                  <h5 class="hand-of-Sean-fonts orange-text text-darken-3">
+                  <a class="footer-text left-align " href="{{route('idea.ideas')}}">
                     <i class="material-icons arrow-l">arrow_back</i>
                   </a> Ideas de Proyecto
                 </h5>
               </div>
-              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+              <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
                       <li><a href="{{route('idea.ideas')}}">Ideas de Proyecto</a></li>
@@ -26,7 +26,7 @@
           <div class="card-content">
             <br>
             <center>
-              <span class="card-title center-align">Modificar Idea de Proyecto - {{ $idea->nombre_proyecto }}</span>
+              <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Modificar Idea de Proyecto - {{ $idea->nombre_proyecto }}</span>
             </center>
             <div class="divider"></div>
             <div class="row">

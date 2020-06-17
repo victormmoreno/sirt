@@ -478,6 +478,7 @@ Route::resource('centro-formacion', 'CentroController');
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/
+Route::get('perfil/actividades', 'User\ProfileController@activities')->name('perfil.actividades')->middleware('disablepreventback');
 Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
 Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
 Route::get('perfil', 'User\ProfileController@index')->name('perfil.index')->middleware('disablepreventback');
@@ -505,13 +506,15 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+        Route::get('/datatablesideasestado/{anio}/{state}', 'IdeaController@dataTableIdeaByAnioState')
+            ->name('idea.datatablesideasporanioestado');
         // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
         Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
         Route::get('/consultarIdeasTodosPorNodo/{id}', 'IdeaController@dataTableIdeasTodosPorNodo')->name('idea.todas');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
-        Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
+        Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/', 'IdeaController@store')->name('idea.store');
@@ -727,6 +730,16 @@ Route::group(
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
     }
 );
+
+// Route::group(
+//     [
+//         'prefix'     => 'actividad',
+//         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
+//     ],
+//     function () {
+//         Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
+//     }
+// );
 
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)

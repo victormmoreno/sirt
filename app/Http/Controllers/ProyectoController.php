@@ -235,7 +235,7 @@ class ProyectoController extends Controller
 
     /**
      * Vista para subir las entregables de un proyecto en la fase de cierre
-     * 
+     *
      * @param int $id Id del proyecto
      * @return Response
      * @author dum
@@ -772,7 +772,7 @@ class ProyectoController extends Controller
 
     /**
      * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
-     * 
+     *
      * @param int $id Id del proyecto
      * @return Response
      * @author dum
@@ -790,7 +790,7 @@ class ProyectoController extends Controller
 
     /**
      * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
-     * 
+     *
      * @param int $id Id del proyecto
      * @return Response
      * @author dum
@@ -898,7 +898,7 @@ class ProyectoController extends Controller
 
     /**
      * Modifica los datos de un proyecto en el estado de planeación
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id Id del proyecto
      * @return \Illuminate\Http\Response
@@ -980,7 +980,7 @@ class ProyectoController extends Controller
 
     /**
      * Cambia los datos del proyecto en estado de cierre
-     * 
+     *
      * @param Request $request
      * @param int $id Id del proyecto
      * @author dum
@@ -1045,7 +1045,7 @@ class ProyectoController extends Controller
 
     /**
      * Cambia el estado del proyecto a suspendido
-     * 
+     *
      * @param Request $request
      * @param int $id
      * @return Response
@@ -1170,6 +1170,104 @@ class ProyectoController extends Controller
     }
 
     /*=====  End of metodo para consultar los proyectos en ejecucion de un gestor  ======*/
+
+    /**
+     * metodo para consultar el detalle de una actividad (proyecto- articulacion)
+     * @author devjul
+     */
+    // public function detailActivityByCode(string $code)
+    // {
+    //     // return Actividad::with([
+    //     //     'articulacion_proyecto.proyecto',
+    //     //     'articulacion_proyecto.articulacion',
+    //     //     'edt'
+    //     // ])
+    //     //     ->whereHas(
+    //     //         'articulacion_proyecto.proyecto',
+    //     //         function ($query) use ($id) {
+    //     //             $query->where('id', $id);
+    //     //         }
+    //     //     )
+    //     //     ->orWhereHas(
+    //     //         'articulacion_proyecto.articulacion',
+    //     //         function ($query) use ($id) {
+    //     //             $query->where('id', $id);
+    //     //         }
+    //     //     )
+    //     //     ->orWhereHas(
+    //     //         'edt',
+    //     //         function ($query) use ($id) {
+    //     //             $query->where('id', $id);
+    //     //         }
+    //     //     )
+    //     //     ->get();
+
+    //     return $actividad =  Actividad::with([
+    //         'objetivos_especificos',
+    //         'gestor' => function ($query) {
+    //             $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
+    //         },
+    //         'gestor.user' => function ($query) {
+    //             $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //                 ->orWhere('deleted_at', '!=', null);
+    //         },
+    //         'gestor.lineatecnologica' => function ($query) {
+    //             $query->select('id', 'abreviatura', 'nombre');
+    //         },
+    //         'articulacion_proyecto.proyecto',
+
+    //         // => function ($query) {
+    //         //     $query->select('id', 'articulacion_proyecto_id', 'idea_id', 'sector_id','sublinea_id',
+    //         //     'areaconocimiento_id', 'fase_id', 'estadoproyecto_id', 'alcance_proyecto','trl_esperado',
+    //         //     'trl_obtenido');
+    //         // },
+    //         'articulacion_proyecto.talentos',
+    //         // 'articulacion_proyecto.talentos' => function ($query) {
+    //         //     $query->select('id', 'user_id', 'tipo_talento_id', 'perfil_id');
+    //         // },
+
+    //         'articulacion_proyecto.talentos.user' => function ($query) {
+    //             $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //                 ->orWhere('deleted_at', '!=', null);
+    //         },
+    //         'articulacion_proyecto.proyecto.empresas',
+    //         'articulacion_proyecto.proyecto.gruposinvestigacion',
+    //         // 'articulacion_proyecto.proyecto.users_propietarios'  => function ($query) {
+    //         //     $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //         //         ->orWhere('deleted_at', '!=', null);
+    //         // },
+    //         'articulacion_proyecto.proyecto.sector',
+    //         'articulacion_proyecto.proyecto.tipoproyecto',
+    //         'articulacion_proyecto.proyecto.areaconocimiento',
+    //         'articulacion_proyecto.proyecto.fase',
+    //         'articulacion_proyecto.proyecto.sublinea',
+    //         'articulacion_proyecto.proyecto.roles',
+    //         // 'articulacion_proyecto.proyecto.users',
+    //         'articulacion_proyecto.proyecto.idea' => function ($query) {
+    //             $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
+    //         },
+    //         'articulacion_proyecto.proyecto.estadoproyecto',
+    //         'edt',
+    //         'articulacion_proyecto.articulacion',
+    //         'nodo' => function ($query) {
+    //             $query->select('id', 'entidad_id', 'direccion', 'telefono');
+    //         },
+    //         'nodo.entidad' => function ($query) {
+    //             $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+    //         }
+
+    //         // 'gestor.user',
+    //     ])->where('codigo_actividad', $code)->first();
+
+    //     // return $actividad = $actividad->usoinfraestructuras->count();
+
+    //     // response()->json([
+    //     //     'data' => [
+    //     //         'actividad' => $actividad,
+    //     //         'total_usos' => $actividad->usoinfraestructuras->count(),
+    //     //     ]
+    //     // ]);
+    // }
 
     /**
      * Asigna un valor a $proyectoRepository

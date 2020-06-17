@@ -3,9 +3,9 @@
         @if($user->genero == App\User::IsMasculino())
             <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}"></img>
         @elseif($user->genero == App\User::IsFemenino())
-            <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-female.png') }}"></img> 
+            <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-female.png') }}"></img>
         @else
-            <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-default.png') }}"></img> 
+            <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-default.png') }}"></img>
         @endif
     </div>
     <div class="left">
@@ -15,13 +15,13 @@
         <span class="mailbox-author">
             {{$user->getRoleNames()->implode(', ')}}
             <br>
-                Miembro desde {{optional($user->created_at)->isoFormat('LL')}}
+                Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
                 <br>
                     @if(isset($user->fechanacimiento))
                     {{$user->fechanacimiento->age}} años
                     @endif
-                    
-                    
+
+
                 </br>
             </br>
         </span>
