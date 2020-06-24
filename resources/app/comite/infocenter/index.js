@@ -21,22 +21,16 @@ $('.dataTables_length select').addClass('browser-default');
         name: 'fechacomite',
       },
       {
+        data: 'estadocomite',
+        name: 'estadocomite',
+      },
+      {
         data: 'observaciones',
         name: 'observaciones',
       },
       {
         data: 'details',
         name: 'details',
-        orderable: false
-      },
-      {
-        data: 'edit',
-        name: 'edit',
-        orderable: false
-      },
-      {
-        data: 'evidencias',
-        name: 'evidencias',
         orderable: false
       },
 

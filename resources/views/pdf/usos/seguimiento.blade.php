@@ -12,7 +12,7 @@
         <th>Código del proyecto</th>
         <th>Nombre del proyecto</th>
         <th>Gestor a cargo del proyecto</th>
-        <th>Línea tecnológica</th>
+        <th>Sublínea tecnológica</th>
       </tr>
     </thead>
     <tbody>
@@ -20,7 +20,7 @@
         <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
         <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
         <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
-        <td>{{ $proyecto->sublinea->nombre }}</td>
+        <td>{{ $proyecto->sublinea->linea->abreviatura }} - {{ $proyecto->sublinea->nombre }}</td>
       </tr>
     </tbody>
   </table>
@@ -83,20 +83,20 @@
             <table class="interna centered">
               <thead>
                 <tr>
-                  <th>Equipo</th>
-                  <th>Horas de Uso</th>
+                  <th style="border: none">Equipo</th>
+                  <th style="border: none">Horas de Uso</th>
                 </tr>
               </thead>
               <tbody>
                 @forelse($value->usoequipos as $equipos)
                   <tr>
-                    <td>{{$equipos->nombre}} - {{$equipos->marca}}</td>
-                    <td>{{$equipos->pivot->tiempo}}</td>
+                    <td style="border: none">{{$equipos->nombre}} - {{$equipos->marca}}</td>
+                    <td style="border: none">{{$equipos->pivot->tiempo}}</td>
                   </tr>
                 @empty
                   <tr>
-                    <td>No se usaron equipos</td>
-                    <td>No se usaron equipos</td>
+                    <td style="border: none">No se usaron equipos</td>
+                    <td style="border: none">No se usaron equipos</td>
                   </tr>
                 @endforelse
               </tbody>
@@ -106,20 +106,20 @@
             <table class="interna centered">
               <thead>
                 <tr>
-                  <th>Material</th>
-                  <th>Unidades</th>
+                  <th style="border: none">Material</th>
+                  <th style="border: none">Unidades</th>
                 </tr>
               </thead>
               <tbody>
                 @forelse($value->usomateriales as $materiales)
-                  <tr>
-                    <td>{{$materiales->nombre}}</td>
-                    <td>{{$materiales->pivot->unidad}}</td>
+                  <tr style="border: none">
+                    <td style="border: none">{{$materiales->nombre}}</td>
+                    <td style="border: none">{{$materiales->pivot->unidad}}</td>
                   </tr>
                 @empty
                   <tr>
-                    <td>No se consumieron materiales</td>
-                    <td>No se consumieron materiales</td>
+                    <td style="border: none">No se consumieron materiales</td>
+                    <td style="border: none">No se consumieron materiales</td>
                   </tr>
                 @endforelse
               </tbody>
@@ -146,6 +146,10 @@
       <div>__________________________________________________________</div>
       <small>Firma del gestor(a) - {{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}}</small>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
     <div class="column">
       <div>__________________________________________________________</div>
       <small>Firma del talento interlocutor - {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}}</small>

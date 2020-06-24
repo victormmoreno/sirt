@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\ComiteFormRequest;
+use App\Http\Requests\{ComiteAgendamientoFormRequest, ComiteRealizarFormRequest};
 use App\Repositories\Repository\{ComiteRepository, IdeaRepository};
-use App\Models\{Nodo, Idea, Comite};
-use App\Http\Controllers\PDF\PdfComiteController;
+use App\Models\{Nodo, Idea, Comite, EstadoIdea};
 use Illuminate\Support\Facades\{DB, Session, Validator};
-use Carbon\Carbon;
-use App\Events\Comite\ComiteWasRegistered;
 Use App\User;
 
 class ComiteController extends Controller
@@ -26,6 +23,38 @@ class ComiteController extends Controller
   }
 
   /**
+   * Muestra el detalle de un comité
+   * @param int $id Id del comité
+   * @return Response
+   * @author dum
+   */
+  public function detalle(int $id)
+  {
+    $comite = Comite::findOrFail($id);
+    if (Session::get('login_role') == User::IsInfocenter()) {
+      return view('comite.infocenter.detalle_agendamiento', [
+        'comite' => $comite
+      ]);
+    }
+  }
+
+  /**
+   * Formulario para calificar un comité desde el rol de infocenter.
+   * @param int $id Id del comité
+   * @return Response
+   * @author dum
+   */
+  public function realizar(int $id)
+  {
+    $comite = Comite::findOrFail($id);
+    $estados = EstadoIdea::whereIn('nombre', ['Inicio', 'Reagendamiento', 'Inhabilitado', 'Admitido'])->get();
+    return view('comite.infocenter.realizar_comite', [
+      'comite' => $comite,
+      'estados' => $estados
+    ]);
+  }
+
+  /**
   * Display a listing of the resource.
   *
   * @return \Illuminate\Http\Response
@@ -37,23 +66,9 @@ class ComiteController extends Controller
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->infocenter->nodo_id );
         return datatables()->of($csibt)
         ->addColumn('details', function ($data) {
-          $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="csibt.consultarComitesPorNodo('. $data->id .')">
-          <i class="material-icons">info</i>
-          </a>
-          ';
-          return $button;
-        })->addColumn('edit', function ($data) {
-          $edit = '<a class="btn m-b-xs" href="' . route('csibt.edit', $data->id) . '"><i class="material-icons">edit</i></a>';
-          return $edit;
-        })->addColumn('evidencias', function ($data) {
-          $button = '
-          <a class="btn blue-grey m-b-xs" href="' . route('csibt.evidencias', $data->id) . '">
-          <i class="material-icons">library_books</i>
-          </a>
-          ';
-          return $button;
-        })->rawColumns(['details', 'edit', 'evidencias'])->make(true);
+          $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+          return $details;
+        })->rawColumns(['details'])->make(true);
       }
       return view('comite.infocenter.index');
     } else if ( Session::get('login_role') == User::IsGestor() ) {
@@ -198,19 +213,101 @@ class ComiteController extends Controller
     if ( Session::get('login_role') == User::IsInfocenter() ) {
        $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
        // dd($ideas);
-      return view('comite.infocenter.create', compact('ideas'));
+      return view('comite.infocenter.create2', compact('ideas'));
     }
   }
 
-  // public function create2()
-  // {
-  //   // session(['ideasComiteCreate' => []]);
+  public function store(Request $request)
+  {
+    $req = new ComiteAgendamientoFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'state'   => 'error_form',
+        'errors' => $validator->errors(),
+      ]);
+    } else {
+      $result = $this->getComiteRepository()->store($request);
+      if ($result) {
+        return response()->json(['state' => 'registro']);
+      } else {
+        return response()->json(['state' => 'no_registro']);
+      }
+    }
+  }
 
-  //   if ( Session::get('login_role') == User::IsInfocenter() ) {
-  //      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
-  //     return view('comite.infocenter.create2', compact('ideas'));
-  //   }
-  // }
+    /**
+  * Update the specified resource in storage.
+  *
+  * @param  \Illuminate\Http\Request  $request
+  * @param  int  $id
+  * @return \Illuminate\Http\Response
+  */
+  public function updateAgendamiento(Request $request, $id)
+  {
+    if ( Session::get('login_role') == User::IsInfocenter() ) {
+      $req = new ComiteAgendamientoFormRequest;
+      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+      if ($validator->fails()) {
+        return response()->json([
+          'state'   => 'error_form',
+          'errors' => $validator->errors(),
+        ]);
+      } else {
+        $result = $this->getComiteRepository()->updateAgendamiento($request, $id);
+        if ($result) {
+          return response()->json(['state' => 'update']);
+        } else {
+          return response()->json(['state' => 'no_update']);
+        }
+      }
+    } else {
+      abort('403');
+    }
+  }
+
+  /**
+   * Guarda los datos de un comité
+   * @param Request $request
+   * @param int $id Id del comité
+   * @author dum
+   */
+  public function updateRealizado(Request $request, int $id)
+  {
+    $req = new ComiteRealizarFormRequest;
+    // dd($request->get('txtestadoidea'));
+    // exit();
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'state' => 'error_form',
+        'errors' => $validator->errors()
+      ]);
+    } else {
+      $result = $this->getComiteRepository()->updateRealizado($request, $id);
+      if ($result) {
+        return response()->json(['state' => 'registro']);
+      } else {
+        return response()->json(['state' => 'no_registro']);
+      }
+    }
+  }
+
+  /**
+   * @param int $id Id del comité
+   * @return Response
+   * @author dum
+   */
+  public function notificar_agendamientoController(int $id)
+  {
+    $result = $this->getComiteRepository()->notificar_agendamiento($id);
+    if ($result) {
+      alert()->success('Notificación Exitosa!','La citación para el comité se ha enviado con éxito.')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      alert()->error('Modificación Exitosa!','La citación para el comité no se ha enviado.')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
 
   /**
   * Store a newly created resource in storage.
@@ -218,58 +315,57 @@ class ComiteController extends Controller
   * @param  \Illuminate\Http\Request  $request
   * @return \Illuminate\Http\Response
   */
-  public function store(ComiteFormRequest $request)
-  {
+  // public function store(ComiteFormRequest $request)
+  // {
     
-    if ( session('ideasComiteCreate') == false ) {
-      alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
-      return back()->withInput();
-    } else {
-      // $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
-      $contComites = COUNT(session('ideasComiteCreate'));
-      if ( $contComites > 8 ) {
-        alert()->warning('Advertencia!','Solo se puede asociar un máximo de 8 ideas de proyectos al comité (Se puede registrar otro comité en el mismo día).')->showConfirmButton('Ok', '#3085d6');
-        return back()->withInput();
-      } else {
-        DB::transaction(function () use ($request) {
-          $codigoComite = Carbon::parse($request['txtfechacomite_create']);
-          $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
-          $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
-          $idComite = Comite::selectRaw('MAX(id+1) AS max')->get()->last();
-          $idComite->max == null ? $idComite->max = 1 : $idComite->max = $idComite->max;
-          $idComite->max = sprintf("%04d", $idComite->max);
-          $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY') . '-' .$idComite->max;
-          $comite = $this->getComiteRepository()->store($request, $codigoComite);
-          foreach (session('ideasComiteCreate') as $key => $value) {
-            $this->getComiteRepository()->storeComiteIdea($value, $comite->id);
-            $value['FechaComite'] = $comite->fechacomite;
-            if ($value['Admitido'] == 1) {
-              $pdf = PdfComiteController::printPDF($value);
-              event(new ComiteWasRegistered($value, $pdf));
-              $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'Admitido');
-            } else {
-              $pdf = PdfComiteController::printPDFNoAceptado($value);
-              event(new ComiteWasRegistered($value, $pdf));
-              $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'No Admitido');
-            }
-          }
-        });
-        session(['ideasComiteCreate' => []]);
-        alert()->success('El CSIBT ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
-        return redirect('csibt');
-      }
-    }
-  }
+  //   if ( session('ideasComiteCreate') == false ) {
+  //     alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
+  //     return back()->withInput();
+  //   } else {
+  //     // $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
+  //     $contComites = COUNT(session('ideasComiteCreate'));
+  //     if ( $contComites > 8 ) {
+  //       alert()->warning('Advertencia!','Solo se puede asociar un máximo de 8 ideas de proyectos al comité (Se puede registrar otro comité en el mismo día).')->showConfirmButton('Ok', '#3085d6');
+  //       return back()->withInput();
+  //     } else {
+  //       DB::transaction(function () use ($request) {
+  //         $codigoComite = Carbon::parse($request['txtfechacomite_create']);
+  //         $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+  //         $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
+  //         $idComite = Comite::selectRaw('MAX(id+1) AS max')->get()->last();
+  //         $idComite->max == null ? $idComite->max = 1 : $idComite->max = $idComite->max;
+  //         $idComite->max = sprintf("%04d", $idComite->max);
+  //         $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY') . '-' .$idComite->max;
+  //         $comite = $this->getComiteRepository()->store($request, $codigoComite);
+  //         foreach (session('ideasComiteCreate') as $key => $value) {
+  //           $this->getComiteRepository()->storeComiteIdea($value, $comite->id);
+  //           $value['FechaComite'] = $comite->fechacomite;
+  //           if ($value['Admitido'] == 1) {
+  //             $pdf = PdfComiteController::printPDF($value);
+  //             event(new ComiteWasRegistered($value, $pdf));
+  //             $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'Admitido');
+  //           } else {
+  //             $pdf = PdfComiteController::printPDFNoAceptado($value);
+  //             event(new ComiteWasRegistered($value, $pdf));
+  //             $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'No Admitido');
+  //           }
+  //         }
+  //       });
+  //       session(['ideasComiteCreate' => []]);
+  //       alert()->success('El CSIBT ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
+  //       return redirect('csibt');
+  //     }
+  //   }
+  // }
 
   // Muestra las evidencias/entregables de un comité
   public function evidencias($id)
   {
     if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $comite = $this->getComiteRepository()->consultarComitePorId($id)->last();
-      // dd($comite);
+      $comite = Comite::findOrFail($id);
       return view('comite.infocenter.evidencias', compact('comite'));
     } else if (Session::get('login_role') != User::IsIngreso() && Session::get('login_role') != User::IsTalento())  {
-      $comite = $this->getComiteRepository()->consultarComitePorId($id)->last();
+      $comite = Comite::findOrFail($id);
       return view('comite.evidencias', compact('comite'));
     }
   }
@@ -295,50 +391,16 @@ class ComiteController extends Controller
   * @param  int  $id
   * @return \Illuminate\Http\Response
   */
-  public function edit($id)
+  public function edit(int $id)
   {
     if ( Session::get('login_role') == User::IsInfocenter() ) {
       $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
-      $csibt = $this->getComiteRepository()->consultarComitePorId($id)->first();
-      $ideasComite = $this->getComiteRepository()->consultarIdeasDelComite($id);
-      return view('comite.infocenter.edit', [
+      $csibt = Comite::findOrFail($id);
+      // $ideasComite = $this->getComiteRepository()->consultarIdeasDelComite($id);
+      return view('comite.infocenter.edit_agendamiento', [
         'ideas' => $ideas,
-        'comite' => $csibt,
-        'ideasComite' => $ideasComite
+        'comite' => $csibt
       ]);
-    }
-  }
-
-  /**
-  * Update the specified resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function update(Request $request, $id)
-  {
-    if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $req = new ComiteFormRequest;
-      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-      if ($validator->fails()) {
-        return response()->json([
-          'fail' => true,
-          'errors' => $validator->errors(),
-        ]);
-      }
-      $result = $this->getComiteRepository()->update($request, $id);
-      if ($result) {
-        return response()->json([
-        'result' => true,
-        ]);
-      } else {
-        return response()->json([
-        'result' => false,
-        ]);
-      }
-    } else {
-      abort('403');
     }
   }
 

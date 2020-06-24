@@ -10,21 +10,21 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ComiteWasRegistered
+class AgendamientoWasRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $datosIdea;
-    public $pdf;
+    public $idea;
+    public $comite;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($datosIdea, $pdf)
+    public function __construct($idea, $comite)
     {
-        $this->datosIdea = $datosIdea;
-        $this->pdf = $pdf;
+        $this->idea = $idea;
+        $this->comite = $comite;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\EstadoIdea;
 use App\Models\Nodo;
 use App\Models\Proyecto;
 use App\Models\RutaModel;
+use App\Models\Comite;
 
 trait IdeaTrait
 {
@@ -45,7 +46,7 @@ trait IdeaTrait
   {
     return $this->belongsToMany(Comite::class, 'comite_idea')
     ->withTimestamps()
-    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones']);
+    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
   }
 
   public function nodo()
