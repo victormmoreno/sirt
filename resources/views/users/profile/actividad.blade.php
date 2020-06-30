@@ -52,13 +52,13 @@
                                                                     <div class="col s12">
                                                                         <div class="black-text">
                                                                             @if(isset($actividad->actividad->articulacion_proyecto->proyecto) && $actividad->actividad->articulacion_proyecto->proyecto != null)
-                                                                                <a href="{{route('proyecto.inicio',$actividad->actividad->articulacion_proyecto->proyecto->id)}}" class="heading-title">{{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}} </a>
-                                                                                <a href="{{route('proyecto.inicio',$actividad->actividad->articulacion_proyecto->proyecto->id)}}" class="green-text">{{route('proyecto.inicio',$actividad->actividad->articulacion_proyecto->proyecto->id)}}</a>
+                                                                                <a href="{{route('proyecto.detalle',$actividad->actividad->articulacion_proyecto->proyecto->id)}}" class="heading-title">{{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}} </a>
+                                                                                <a href="{{route('proyecto.detalle',$actividad->actividad->articulacion_proyecto->proyecto->id)}}" class="green-text">{{route('proyecto.detalle',$actividad->actividad->articulacion_proyecto->proyecto->id)}}</a>
                                                                             @elseif(isset($actividad->actividad->articulacion_proyecto->articulacion) && $actividad->actividad->articulacion_proyecto->articulacion != null)
-                                                                                <a href="{{route('articulacion.inicio',$actividad->actividad->articulacion_proyecto->articulacion->id)}}" class="heading-title">{{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}} </a>
-                                                                                <a href="{{route('articulacion.inicio',$actividad->actividad->articulacion_proyecto->articulacion->id)}}" class="green-text">{{route('articulacion.inicio',$actividad->actividad->articulacion_proyecto->articulacion->id)}}</a>
+                                                                                <a href="{{route('articulacion.detalle',$actividad->actividad->articulacion_proyecto->articulacion->id)}}" class="heading-title">{{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}} </a>
+                                                                                <a href="{{route('articulacion.detalle',$actividad->actividad->articulacion_proyecto->articulacion->id)}}" class="green-text">{{route('articulacion.detalle',$actividad->actividad->articulacion_proyecto->articulacion->id)}}</a>
                                                                             @else
-                                                                                {{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}}  
+                                                                                {{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}}
                                                                             @endif
                                                                             <p class="blue-grey-text ">{{optional($actividad->actividad->fecha_inicio)->isoFormat('LL')}}   Tecnoparque Nodo {{$actividad->actividad->nodo->entidad->nombre}}
                                                                                 {{-- <div class="right">
@@ -72,18 +72,18 @@
                                                                 @elseif(\Session::get('login_role') == App\User::IsGestor() && isset($actividad))
                                                                 <div class="col s12">
                                                                     <div class="black-text">
-                                                                        
+
                                                                         @if(isset($actividad->articulacion_proyecto->proyecto) && $actividad->articulacion_proyecto->proyecto != null)
-                                                                            <a href="{{route('proyecto.inicio',$actividad->articulacion_proyecto->proyecto->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
-                                                                            <a href="{{route('proyecto.inicio',$actividad->articulacion_proyecto->proyecto->id)}}" class="green-text">{{route('proyecto.inicio',$actividad->articulacion_proyecto->proyecto->id)}}</a>
+                                                                            <a href="{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
+                                                                            <a href="{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}" class="green-text">{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}</a>
                                                                         @elseif(isset($actividad->articulacion_proyecto->articulacion) && $actividad->articulacion_proyecto->articulacion != null)
-                                                                            <a href="{{route('articulacion.inicio',$actividad->articulacion_proyecto->articulacion->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
-                                                                            <a href="{{route('articulacion.inicio',$actividad->articulacion_proyecto->articulacion->id)}}" class="green-text">{{route('articulacion.inicio',$actividad->articulacion_proyecto->articulacion->id)}}</a>
+                                                                            <a href="{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
+                                                                            <a href="{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}" class="green-text">{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}</a>
                                                                         @else
-                                                                            {{$actividad->codigo_actividad}} - {{$actividad->nombre}}  
+                                                                            {{$actividad->codigo_actividad}} - {{$actividad->nombre}}
                                                                         @endif
-                                                                        
-                                                                        
+
+
                                                                         <p class="blue-grey-text ">{{optional($actividad->fecha_inicio)->isoFormat('LL')}}   Tecnoparque Nodo {{$actividad->nodo->entidad->nombre}}
                                                                             {{-- <div class="right">
                                                                                 <small>

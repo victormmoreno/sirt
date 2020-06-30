@@ -67,4 +67,5 @@
       </div>
     </div>
   </main>
+  @include('proyectos.modals')
 @endsection

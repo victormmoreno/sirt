@@ -7,6 +7,7 @@ function consultarArticulacionesDelGestor(anho) {
     processing: true,
     serverSide: true,
     order: [ 0, 'desc' ],
+    "lengthChange": false,
     ajax:{
       url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
       data: function (d) {
@@ -30,6 +31,12 @@ function consultarArticulacionesDelGestor(anho) {
         data: 'nombre_fase',
         name: 'nombre_fase',
       },
+      {
+            width: '8%',
+            data: 'info',
+            name: 'info',
+            orderable: false
+        },
       {
         data: 'proceso',
         name: 'proceso',

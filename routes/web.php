@@ -689,6 +689,7 @@ Route::group(
         Route::get('/notificar_cierre/{id}', 'ProyectoController@notificar_cierre')->name('proyecto.notificar.cierre')->middleware('role_session:Gestor');
         Route::get('/notificar_suspendido/{id}', 'ProyectoController@notificar_suspendido')->name('proyecto.notificar.suspension')->middleware('role_session:Gestor');
 
+        // Route::get('/informacion-proyecto/{id}', 'ProyectoController@informacionProyectoById')->name('proyecto.informacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/consultarProyectos_costos/{anho}', 'ProyectoController@proyectosCostos')->name('proyecto.costos')->middleware('role_session:Dinamizador|Gestor');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
@@ -701,7 +702,7 @@ Route::group(
         Route::get('/datatableCentroFormacionTecnoparque', 'ProyectoController@datatableCentroFormacionTecnoparque')->name('proyecto.datatable.centros');
         Route::get('/datatableIdeasConEmprendedores', 'ProyectoController@datatableIdeasConEmprendedores')->name('proyecto.datatable.ideas.emprendedores');
         Route::get('/datatableIdeasConEmpresasGrupo', 'ProyectoController@datatableIdeasConEmpresasGrupo')->name('proyecto.datatable.ideas.empresasgrupos');
-        Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho')->middleware('role_session:Administradro|Dinamizador|Gestor');
+        Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho')->middleware('role_session:Administrador|Dinamizador|Gestor|Infocenter');
         Route::get('/datatableProyectosDelNodoPorAnho/{idnodo}/{anho}', 'ProyectoController@datatableProyectosDelNodoPorAnho')->name('proyecto.datatable.proyectos.nodo.anho');
         Route::get('/detalle/{id}', 'ProyectoController@detalle')->name('proyecto.detalle')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/inicio/{id}', 'ProyectoController@inicio')->name('proyecto.inicio')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador|Infocenter');
@@ -731,15 +732,15 @@ Route::group(
     }
 );
 
-// Route::group(
-//     [
-//         'prefix'     => 'actividad',
-//         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
-//     ],
-//     function () {
-//         Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
-//     }
-// );
+Route::group(
+    [
+        'prefix'     => 'actividad',
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
+    ],
+    function () {
+        Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
+    }
+);
 
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)

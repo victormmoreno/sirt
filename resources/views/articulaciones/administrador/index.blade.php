@@ -95,6 +95,7 @@
           processing: true,
           serverSide: true,
           order: [ 0, 'desc' ],
+          "lengthChange": false,
           ajax:{
             url: "/articulacion/datatableArticulacionesDelNodo/"+id+"/"+anho,
             data: function (d) {
@@ -105,7 +106,6 @@
               d.fase = $('#fase_AdministradorTable').val(),
               d.search = $('input[type="search"]').val()
             }
-            // type: "get",
           },
           columns: [
             {
@@ -128,6 +128,12 @@
               data: 'nombre_fase',
               name: 'nombre_fase',
             },
+            {
+                width: '8%',
+                data: 'info',
+                name: 'info',
+                orderable: false
+           },
             {
               data: 'proceso',
               name: 'proceso',
