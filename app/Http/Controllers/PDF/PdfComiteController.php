@@ -9,11 +9,11 @@ use PDF;
 
 class PdfComiteController extends Controller
 {
-  public static function printPDF($informacion)
+  public static function printPDF($idea, $comite)
   {
     $nodo =\NodoHelper::returnNameNodoUsuario();
-    $informacion['nodoNombre'] = $nodo;
-    $pdf = PDF::loadView('pdf.csibt.pdf_idea_aceptada', $informacion);
+    $comite['nodoNombre'] = $nodo;
+    $pdf = PDF::loadView('pdf.csibt.pdf_idea_aceptada', ['idea' => $idea, 'comite' => $comite]);
     return $pdf->stream();
   }
 
@@ -23,13 +23,16 @@ class PdfComiteController extends Controller
   //   return $pdf->download('plantilla');
   // }
 
-  public static function printPDFNoAceptado($informacion)
+  public static function printPDFNoAceptado($idea, $comite, $extensiones)
   {
     // dd($informacion);
-    $nodo = Nodo::find( auth()->user()->infocenter->nodo_id );
-    $informacion['telefonoNodo'] = $nodo->telefono;
-    $pdf = PDF::loadView('pdf.csibt.pdf_idea_rechazada', $informacion);
-    // dd($pdf);
+    // $nodo = Nodo::find( auth()->user()->infocenter->nodo_id );
+    // $informacion['telefonoNodo'] = $nodo->telefono;
+    $pdf = PDF::loadView('pdf.csibt.pdf_idea_rechazada', [
+      'idea' => $idea,
+      'comite' => $comite,
+      'extensiones' => $extensiones
+    ]);
     return $pdf->stream();
   }
 

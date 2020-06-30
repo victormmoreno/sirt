@@ -24,7 +24,7 @@
                                 <ul class="collection">
                                     <li class="collection-item">
                                         <span class="title cyan-text text-darken-3">
-                                            Fecha del comité
+                                            Fecha en la que se realizará el comité
                                         </span>
                                         <p>
                                             {{$comite->fechacomite->isoFormat('YYYY-MM-DD')}}

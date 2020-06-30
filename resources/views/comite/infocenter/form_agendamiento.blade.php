@@ -1,4 +1,3 @@
-
 {!! csrf_field() !!}
 @php
     $existe = isset($comite) ? true : false;
@@ -30,7 +29,7 @@
     </div>
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">date_range</i>
-        <input id="txtfechacomite_create" type="text" name="txtfechacomite_create" class="datepicker" value="{{ $existe ? $comite->fechacomite->isoFormat('YYYY-MM-DD') : Carbon\Carbon::now()->toDateString()}}">
+        <input id="txtfechacomite_create" type="text" name="txtfechacomite_create" class="atepic" value="{{ $existe ? $comite->fechacomite->isoFormat('YYYY-MM-DD') : Carbon\Carbon::now()->toDateString()}}">
         <label for="txtfechacomite_create" class="active">Fecha del Comité <span class="red-text">*</span></label>
         <small id="txtfechacomite_create-error" class="error red-text"></small>
     </div>
@@ -44,10 +43,10 @@
     <div class="col s12 m12 l12">
         <div class="card-content">
             <h5>
-                <span class="red-text text-darken-2">Para registrar las ideas en el
-                    comité dar click en el botón <a
-                        class="btn-floating waves-effect waves-light red"><i
-                            class="material-icons">add</i></a></span>
+                <span class="red-text text-darken-2">
+                    Para registrar las ideas en el comité dar click en el botón <a class="btn-floating waves-effect waves-light red">
+                    <i class="material-icons">add</i></a>
+                </span>
             </h5>
             <p>Si desea agregar mas ideas de proyecto por favor seleccione..</p>
             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
@@ -80,11 +79,7 @@
                                 </div>
                             </div>
                             <center>
-                                <a onclick="addIdeaComite()"
-                                    class="indigo lighten-2 btn-large"
-                                    data-position="bottom" data-delay="50"
-                                    data-tooltip="Agregar la idea de proyecto seleccionada al comité"><i
-                                        class="material-icons left">add</i>Agregar</a>
+                                <a onclick="addIdeaComite()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al comité"><i class="material-icons left">add</i>Agregar</a>
                             </center>
                             <div class="card-content">
                                 <table class="responsive-table" style="width: 100%">

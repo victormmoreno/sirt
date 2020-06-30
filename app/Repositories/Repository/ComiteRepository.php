@@ -2,9 +2,12 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Comite, Idea, EstadoIdea, EstadoComite};
-use Illuminate\Support\Facades\DB;
-use App\Events\Comite\AgendamientoWasRegistered;
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use App\Models\{Comite, Infocenter, EstadoIdea, EstadoComite};
+use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered};
+use Illuminate\Support\Facades\{DB, Notification};
+use App\Notifications\Comite\ComiteRealizado;
+use App\Http\Controllers\PDF\PdfComiteController;
 use Carbon\Carbon;
 
 class ComiteRepository
@@ -47,14 +50,29 @@ class ComiteRepository
   public function notificar_agendamiento(int $id)
   {
     
-    $comite = Comite::findOrFail($id);
-    foreach ($comite->ideas as $key => $value) {
-      // echo $value->pivot->direccion.'<br>';
-      event(new AgendamientoWasRegistered($value, $comite));
-    }
-    // exit();
     DB::beginTransaction();
     try {
+      $comite = Comite::findOrFail($id);
+      foreach ($comite->ideas as $key => $value) {
+        event(new AgendamientoWasRegistered($value, $comite));
+      }
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  public function notificar_realizado(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $comite = Comite::findOrFail($id);
+      $dinamizadorRepository = new DinamizadorRepository;
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo(auth()->user()->infocenter->nodo_id)->get();
+      $infocenter = auth()->user()->nombres . " " . auth()->user()->apellidos;
+      Notification::send($dinamizadores, new ComiteRealizado($comite, $infocenter));
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -64,51 +82,83 @@ class ComiteRepository
   }
 
   /**
-   * Cambiar el estado a las ideas de proyectos de un comite
-   *
-   * @param Request $request
-   * @return void
+   * Envia un email con un archivo adjunto de los resultados del comité a la persona que registra la idea.
+   * @param int $id Id de la idea
+   * @param int $idComite Id del comité
+   * @return boolean
    * @author dum
    */
-  private function cambiarEstadoDeLasIdeas($request)
+  public function notificar_resultados(int $id, int $idComite)
   {
-    foreach($request->get('id_ideas') as $id => $value){
-      if ($request->get('admitido_ideas')[$id] == 'No') {
-        $this->getIdeaRepository()->updateEstadoIdea($value, 'No Admitido');
-      } else {
-        $this->getIdeaRepository()->updateEstadoIdea($value, 'Admitido');
+    DB::beginTransaction();
+    try {
+      $extensiones = "";
+      $comite = Comite::findOrFail($idComite);
+      $idea = $comite->ideas()->wherePivot('idea_id', $id)->first();
+      $infocenters = $idea->nodo->infocenter;
+      foreach ($infocenters as $key => $value) {
+        $extensiones = $extensiones . $value->extension . ", ";
       }
+      if ($idea->pivot->admitido == 1) {
+        $pdf = PdfComiteController::printPDF($idea, $comite);
+      } else {
+        $pdf = PdfComiteController::printPDFNoAceptado($idea, $comite, $extensiones);
+      }
+      event(new ComiteWasRegistered($idea, $pdf, $extensiones));
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
     }
   }
 
-  /**
-   * Retorna el array con los ideas de un comite
-   *
-   * @param Request $request
-   * @return array
-   */
-   private function arrayIdeasDeComite($request)
-   {
-     $syncData = array();
-     foreach($request->get('id_ideas') as $id => $value){
-       $admitido = 0;
-       $asistencia = 0;
+  // /**
+  //  * Cambiar el estado a las ideas de proyectos de un comite
+  //  *
+  //  * @param Request $request
+  //  * @return void
+  //  * @author dum
+  //  */
+  // private function cambiarEstadoDeLasIdeas($request)
+  // {
+  //   foreach($request->get('id_ideas') as $id => $value){
+  //     if ($request->get('admitido_ideas')[$id] == 'No') {
+  //       $this->getIdeaRepository()->updateEstadoIdea($value, 'No Admitido');
+  //     } else {
+  //       $this->getIdeaRepository()->updateEstadoIdea($value, 'Admitido');
+  //     }
+  //   }
+  // }
 
-       if ($request->get('admitido_ideas')[$id] == 'Si') {
-         $admitido = 1;
-       }
-       if ($request->get('asistencias_ideas')[$id] == 'Si') {
-         $asistencia = 1;
-       }
-       $syncData[$id] = array('idea_id' => $value,
-       'hora' => $request->get('horas_ideas')[$id],
-       'admitido' => $admitido,
-       'asistencia' => $asistencia,
-       'observaciones' => $request->get('observaciones_ideas')[$id]);
-     }
+  // /**
+  //  * Retorna el array con los ideas de un comite
+  //  *
+  //  * @param Request $request
+  //  * @return array
+  //  */
+  //  private function arrayIdeasDeComite($request)
+  //  {
+  //    $syncData = array();
+  //    foreach($request->get('id_ideas') as $id => $value){
+  //      $admitido = 0;
+  //      $asistencia = 0;
 
-     return $syncData;
-   }
+  //      if ($request->get('admitido_ideas')[$id] == 'Si') {
+  //        $admitido = 1;
+  //      }
+  //      if ($request->get('asistencias_ideas')[$id] == 'Si') {
+  //        $asistencia = 1;
+  //      }
+  //      $syncData[$id] = array('idea_id' => $value,
+  //      'hora' => $request->get('horas_ideas')[$id],
+  //      'admitido' => $admitido,
+  //      'asistencia' => $asistencia,
+  //      'observaciones' => $request->get('observaciones_ideas')[$id]);
+  //    }
+
+  //    return $syncData;
+  //  }
 
   /**
    * Modifica los datos de un agendamiento
@@ -149,7 +199,6 @@ class ComiteRepository
    */
   public function updateRealizado($request, $id)
   {
-    
     DB::beginTransaction();
     try {
       $comite = Comite::findOrFail($id);
@@ -165,12 +214,66 @@ class ComiteRepository
       $this->updateCamposPivotBoolean($comite, $request, 'txtadmitidos', 'admitido');
       // Cambiar los valores del campo observaciones a todas las ideas del comité.
       $this->updateObservacionesIdea($comite, $request);
+      // Cambia el estado de las ideas de proyecto
+      $this->updateEstadoIdeas($comite, $request);
 
       DB::commit();
       return true;
     } catch (\Throwable $th) {
       DB::rollBack();
       return false;
+    }
+  }
+
+  /**
+   * Asignar gestores a cargo de ideas de proyecto
+   * @param $request
+   * @param int $id
+   * @return boolean
+   * @author dum
+   */
+  public function updateAsignar($request, int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $comite = Comite::findOrFail($id);
+      $comite->update(['estado_comite_id' => EstadoComite::where('nombre', 'Proyectos asignados')->first()->id]);
+      $this->asignarIdeasAGestores($comite, $request);
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+
+  /**
+   * Asigna a los gestores las ideas de proyectos que se aprobaron en el comité
+   * @param Comite $comite
+   * @param $request
+   * @return void
+   * @author dum
+   */
+  private function asignarIdeasAGestores(Comite $comite, $request)
+  {
+    foreach ($comite->ideas as $key => $value) {
+      if ($value->pivot->admitido == 1) {
+        $value->update(['gestor_id' => $request->txtgestores[$key]]);
+      }
+    }
+  }
+
+  /**
+   * Cambia el estado de las ideas de proyecto según el caso.
+   * @param Comite $comite
+   * @param $request Request
+   * @return void
+   * @author dum
+   */
+  private function updateEstadoIdeas(Comite $comite, $request)
+  {
+    foreach ($comite->ideas as $key => $value) {
+      $value->update([ 'estadoidea_id' => EstadoIdea::where('nombre', $request->get('txtestadoidea')[$key])->first()->id ]);
     }
   }
   
@@ -242,17 +345,17 @@ class ComiteRepository
     ->get();
   }
 
-  //-- Consulta las ideas que se presentaron a un csibt
-  public function consultarIdeasDelComite($id)
-  {
-    return Comite::select('nombre_proyecto', 'fechacomite', 'comite_idea.observaciones', 'ideas.id', 'hora')
-    ->selectRaw('IF(admitido = 0,"No", "Si") AS admitido')
-    ->selectRaw('IF(asistencia = 0,"No", "Si") AS asistencia')
-    ->join('comite_idea', 'comite_idea.comite_id', '=', 'comites.id')
-    ->join('ideas', 'ideas.id', '=', 'comite_idea.idea_id')
-    ->where('comites.id', $id)
-    ->get();
-  }
+  // //-- Consulta las ideas que se presentaron a un csibt
+  // public function consultarIdeasDelComite($id)
+  // {
+  //   return Comite::select('nombre_proyecto', 'fechacomite', 'comite_idea.observaciones', 'ideas.id', 'hora')
+  //   ->selectRaw('IF(admitido = 0,"No", "Si") AS admitido')
+  //   ->selectRaw('IF(asistencia = 0,"No", "Si") AS asistencia')
+  //   ->join('comite_idea', 'comite_idea.comite_id', '=', 'comites.id')
+  //   ->join('ideas', 'ideas.id', '=', 'comite_idea.idea_id')
+  //   ->where('comites.id', $id)
+  //   ->get();
+  // }
 
   //-- Consulta un comité en una fecha
   public function consultarComitePorNodoYFecha($id, $fecha)

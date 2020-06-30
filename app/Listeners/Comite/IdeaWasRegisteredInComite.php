@@ -22,12 +22,12 @@ class IdeaWasRegisteredInComite
 
     /**
      * Handle the event.
-     *
+     * $event->datosIdea->gestor->user->email
      * @param  ComiteWasRegistered  $event
      * @return void
      */
     public function handle(ComiteWasRegistered $event)
     {
-        Mail::to([$event->datosIdea->correo_contacto, auth()->user()->email])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf));
+        Mail::to([$event->datosIdea->correo_contacto, $event->emailSession])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf, $event->extensiones));
     }
 }

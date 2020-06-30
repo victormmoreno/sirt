@@ -53,6 +53,7 @@ class Idea extends Model
         'convocatoria',
         'tipo_idea',
         'estadoidea_id',
+        'gestor_id'
     ];
 
     /**

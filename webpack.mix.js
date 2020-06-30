@@ -75,6 +75,8 @@ mix.scripts([
 		'resources/app/entrenamientos/infocenter/index.js',
 		'resources/app/entrenamientos/infocenter/create.js',
 		'resources/app/entrenamientos/infocenter/edit.js',
+		'resources/app/comite/todos.js',
+		'resources/app/comite/dinamizador/asignar.js',
 		'resources/app/comite/infocenter/index.js',
 		'resources/app/comite/infocenter/agendamiento.js',
 		'resources/app/comite/infocenter/realizado.js',

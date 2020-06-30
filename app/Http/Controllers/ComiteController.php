@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\{ComiteAgendamientoFormRequest, ComiteRealizarFormRequest};
+use App\Http\Requests\{ComiteAgendamientoFormRequest, ComiteRealizarFormRequest, ComiteAsignarFormRequest};
 use App\Repositories\Repository\{ComiteRepository, IdeaRepository};
-use App\Models\{Nodo, Idea, Comite, EstadoIdea};
-use Illuminate\Support\Facades\{DB, Session, Validator};
+use App\Models\{Nodo, Idea, Comite, EstadoIdea, Gestor};
+use Illuminate\Support\Facades\{Session, Validator};
 Use App\User;
 
 class ComiteController extends Controller
@@ -31,11 +31,57 @@ class ComiteController extends Controller
   public function detalle(int $id)
   {
     $comite = Comite::findOrFail($id);
-    if (Session::get('login_role') == User::IsInfocenter()) {
+    if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Agendamiento' ) {
       return view('comite.infocenter.detalle_agendamiento', [
         'comite' => $comite
       ]);
+    } else if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Realizado' ) {
+      return view('comite.infocenter.detalle_realizado', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Proyectos asignados') {
+      return view('comite.infocenter.detalle_asignado', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Agendamiento') {
+      return view('comite.dinamizador.detalle_agendamiento', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Realizado') {
+      return view('comite.dinamizador.detalle_realizado', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Proyectos asignados') {
+      return view('comite.dinamizador.detalle_asignado', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Agendamiento') {
+      return view('comite.gestor.detalle_agendamiento', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Realizado') {
+      return view('comite.gestor.detalle_realizado', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Proyectos asignados') {
+      return view('comite.gestor.detalle_asignado', [
+        'comite' => $comite
+      ]);
     }
+  }
+
+  /**
+   * Formulario para asignar las ideas de proyecto a los gestores del nodo
+   * @param int $id Id del comité
+   */
+  public function asignar(int $id)
+  {
+    $comite = Comite::findOrFail($id);
+    $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id');
+    return view('comite.dinamizador.asignar_ideas', [
+      'comite' => $comite,
+      'gestores' => $gestores
+    ]);
   }
 
   /**
@@ -76,20 +122,9 @@ class ComiteController extends Controller
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
         return datatables()->of($csibt)
         ->addColumn('details', function ($data) {
-          $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="csibt.consultarComitesPorNodo('. $data->id .')">
-          <i class="material-icons">info</i>
-          </a>
-          ';
-          return $button;
-        })->addColumn('evidencias', function ($data) {
-          $button = '
-          <a class="btn blue-grey m-b-xs" disabled>
-          <i class="material-icons">library_books</i>
-          </a>
-          ';
-          return $button;
-        })->rawColumns(['details', 'evidencias'])->make(true);
+          $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+          return $details;
+        })->rawColumns(['details'])->make(true);
       }
       return view('comite.gestor.index');
     } else if ( Session::get('login_role') == User::IsAdministrador() ) {
@@ -100,20 +135,9 @@ class ComiteController extends Controller
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->dinamizador->nodo_id );
         return datatables()->of($csibt)
         ->addColumn('details', function ($data) {
-          $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="csibt.consultarComitesPorNodo('. $data->id .')">
-          <i class="material-icons">info</i>
-          </a>
-          ';
-          return $button;
-        })->addColumn('evidencias', function ($data) {
-          $button = '
-          <a class="btn blue-grey m-b-xs" href="' . route('csibt.evidencias', $data->id) . '">
-          <i class="material-icons">library_books</i>
-          </a>
-          ';
-          return $button;
-        })->rawColumns(['details', 'evidencias'])->make(true);
+          $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+          return $details;
+        })->rawColumns(['details'])->make(true);
       }
       return view('comite.dinamizador.index');
     }
@@ -198,7 +222,7 @@ class ComiteController extends Controller
     !isset($request['ev_otros']) ? $request['ev_otros'] = 0 : $request['ev_otros'] = 1;
     $evidenciasComite = $this->getComiteRepository()->updateEvidenciasComite($request, $id);
     alert()->success('Modificación Exitosa!','Las evidencias del CSIBT se han modificado con éxito.')->showConfirmButton('Ok', '#3085d6');
-    return redirect('csibt');
+    return redirect()->route('csibt.detalle', ['id' => $id]);
   }
 
   /**
@@ -292,8 +316,33 @@ class ComiteController extends Controller
       }
     }
   }
+  /**
+   * Asigna un gestor encargado a una idea de proyecto
+   * @param Request $request
+   * @param int $id Id del comité
+   * @author dum
+   */
+  public function updateAsignarGestor(Request $request, int $id)
+  {
+    $req = new ComiteAsignarFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'state' => 'error_form',
+        'errors' => $validator->errors()
+      ]);
+    } else {
+      $result = $this->getComiteRepository()->updateAsignar($request, $id);
+      if ($result) {
+        return response()->json(['state' => 'registro']);
+      } else {
+        return response()->json(['state' => 'no_registro']);
+      }
+    }
+  }
 
   /**
+   * Envia un correo con la citación del comité a las personas que registraron las ideas de proyecto
    * @param int $id Id del comité
    * @return Response
    * @author dum
@@ -308,6 +357,50 @@ class ComiteController extends Controller
     }
     return back();
   }
+
+  /**
+   * Notifica al dinamizador de que el comité se ha calificado
+   * @param int $id Id del comité
+   * @return Response
+   * @author dum
+   */
+  public function notificar_realizadoController(int $id)
+  {
+    $result = $this->getComiteRepository()->notificar_realizado($id);
+    if ($result) {
+      alert()->success('Notificación Exitosa!','Se ha enviado al dinamizador una notificación indicando que el comité se ha realizado.')->showConfirmButton('Ok', '#3085d6');
+    } else {
+      alert()->error('Modificación Exitosa!','No se ha podido notificar al dinamizador, inténtelo de nuevo.')->showConfirmButton('Ok', '#3085d6');
+    }
+    return back();
+  }
+
+
+  /**
+   * Notifica mediante un email los resultado del comité a la persona que registró la idea.
+   * @param int $id Id de la idea
+   * @param int $idComite Id del comité
+   * @return Response
+   * @author dum
+   */
+  public function notificar_resultadoController(int $id, int $idComite)
+  {
+    $result = $this->getComiteRepository()->notificar_resultados($id, $idComite);
+    $idea = Idea::findOrFail($id);
+    if ($result) {
+      // alert()->success('Notificación Exitosa!','Se ha enviado un mensaje a la dirección: '.$idea->correo_contacto.' con los resultados del comité.')->showConfirmButton('Ok', '#3085d6');
+      return response()->json([
+        'state' => 'notifica',
+        'idea' => $idea
+        ]);
+    } else {
+      return response()->json([
+        'state' => 'no_notifica',
+        'idea' => $idea
+      ]);
+    }
+  }
+  
 
   /**
   * Store a newly created resource in storage.
@@ -341,8 +434,8 @@ class ComiteController extends Controller
   //           $this->getComiteRepository()->storeComiteIdea($value, $comite->id);
   //           $value['FechaComite'] = $comite->fechacomite;
   //           if ($value['Admitido'] == 1) {
-  //             $pdf = PdfComiteController::printPDF($value);
-  //             event(new ComiteWasRegistered($value, $pdf));
+              // $pdf = PdfComiteController::printPDF($value);
+              // event(new ComiteWasRegistered($value, $pdf));
   //             $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'Admitido');
   //           } else {
   //             $pdf = PdfComiteController::printPDFNoAceptado($value);
@@ -370,20 +463,20 @@ class ComiteController extends Controller
     }
   }
 
-  /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    if (request()->ajax()) {
-      return json_encode([
-        'ideasDelComite' => $this->getComiteRepository()->consultarIdeasDelComite($id)
-      ]);
-    }
-  }
+  // /**
+  // * Display the specified resource.
+  // *
+  // * @param  int  $id
+  // * @return \Illuminate\Http\Response
+  // */
+  // public function show($id)
+  // {
+  //   if (request()->ajax()) {
+  //     return json_encode([
+  //       'ideasDelComite' => $this->getComiteRepository()->consultarIdeasDelComite($id)
+  //     ]);
+  //   }
+  // }
 
   /**
   * Show the form for editing the specified resource.
@@ -396,7 +489,6 @@ class ComiteController extends Controller
     if ( Session::get('login_role') == User::IsInfocenter() ) {
       $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
       $csibt = Comite::findOrFail($id);
-      // $ideasComite = $this->getComiteRepository()->consultarIdeasDelComite($id);
       return view('comite.infocenter.edit_agendamiento', [
         'ideas' => $ideas,
         'comite' => $csibt

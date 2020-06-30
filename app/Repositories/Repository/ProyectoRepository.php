@@ -314,6 +314,7 @@ class ProyectoRepository
       'fecha_inicio',
       'fases.nombre AS nombre_fase'
     )
+      ->selectRaw('GROUP_CONCAT(propietarios.propietario_type SEPARATOR ",") AS propietarios')
       ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
       ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
       ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
@@ -340,6 +341,7 @@ class ProyectoRepository
       ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
       ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
       ->join('users', 'users.id', '=', 'gestores.user_id')
+      ->leftJoin('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
       ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
         $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
           $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
@@ -348,6 +350,7 @@ class ProyectoRepository
           $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
         });
       })
+      ->groupBy('codigo_actividad', 'actividades.nombre')
       ->orderBy('entidades.nombre');
   }
 

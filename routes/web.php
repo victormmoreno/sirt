@@ -564,11 +564,14 @@ Route::group(
         Route::get('/create', 'ComiteController@create')->name('csibt.create');
         Route::get('/detalle/{id}', 'ComiteController@detalle')->name('csibt.detalle')->middleware('role_session:Gestor|Dinamizador|Administrador|Infocenter');
         Route::get('/realizar/{id}', 'ComiteController@realizar')->name('csibt.realizar')->middleware('role_session:Infocenter');
+        Route::get('/asignar/{id}', 'ComiteController@asignar')->name('csibt.asignar')->middleware('role_session:Dinamizador');
         Route::get('/notificar_agendamiento/{id}', 'ComiteController@notificar_agendamientoController')->name('csibt.notificar.agendamiento')->middleware('role_session:Infocenter');
+        Route::get('/notificar_realizado/{id}', 'ComiteController@notificar_realizadoController')->name('csibt.notificar.realizado')->middleware('role_session:Infocenter');
+        Route::get('/notificar_resultado/{id}/{idComite}', 'ComiteController@notificar_resultadoController')->name('csibt.notificar.resultados')->middleware('role_session:Infocenter|Dinamizador');
         // Route::get('/create2', 'ComiteController@create2')->name('csibt.create2');
         Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
-        Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias');
+        Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias')->middleware('role_session:Infocenter|Dinamizador');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
         Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
@@ -576,8 +579,9 @@ Route::group(
         Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');
         Route::put('/{id}', 'ComiteController@updateAgendamiento')->name('csibt.agendamiento.update')->middleware('role_session:Infocenter');
         Route::put('/realizar_comite/{id}', 'ComiteController@updateRealizado')->name('csibt.realizar.store')->middleware('role_session:Infocenter');
-        
-        Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
+        Route::put('/asignar_ideas/{id}', 'ComiteController@updateAsignarGestor')->name('csibt.asignar.store')->middleware('role_session:Dinamizador');
+        Route::put('/updateEvidencias/{id}', 'ComiteController@updateEvidencias')->name('csibt.update.evidencias');
+        // Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store')->middleware('role_session:Infocenter');
         Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
         Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ComiteRealizarFormRequest extends FormRequest
+class ComiteAsignarFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,23 +24,19 @@ class ComiteRealizarFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtestadoidea.*' => 'required',
-            'txtobservacionescomite' => 'max:1000'
+            'txtgestores.*' => 'required',
         ];
     }
 
     public function messages()
     {
         $messages = [];
-      $messages = [
-        'txtobservacionescomite.max' => 'Las observaciones del comité deben ser máximo 1000 carácteres.'
-      ];
-
+    
         // dd(request());
         // exit();
-      foreach(request()->get('txtestadoidea') as $key => $val)
+      foreach(request()->get('txtgestores') as $key => $val)
       {
-        $messages['txtestadoidea.'.$key.'.required'] = 'El próximo estado de la idea de proyecto #'.($key+1).' es obligatorio.';
+        $messages['txtgestores.'.$key.'.required'] = 'El gestor a cargo de la idea de proyecto #'.($key+1).' es obligatorio.';
       }
       return $messages;
     }

@@ -14,7 +14,7 @@ class ProyectosExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 7);
-        $this->setRangeHeadingCell('A7:W7');
+        $this->setRangeHeadingCell('A7:X7');
     }
 
     /**
@@ -45,13 +45,13 @@ class ProyectosExport extends FatherExport
     }
 
     private function mergedCells(AfterSheet $event) {
-        $event->sheet->mergeCells('A1:W6');
+        $event->sheet->mergeCells('A1:X6');
     }
 
     private function styledCells(AfterSheet $event) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         $init = 'A';
-        for ($i = 0; $i < 23; $i++) {
+        for ($i = 0; $i < 24; $i++) {
             $temp = $init++;
             $coordenadas = $temp . '7:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());

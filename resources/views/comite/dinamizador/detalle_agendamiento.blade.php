@@ -33,42 +33,17 @@
                         <div class="divider"></div>
                         @include('comite.detalle_agendamiento')
                         <div class="divider"></div>
-                        <div class="row">
-                            <div class="col s12 m12 l12 center">
-                                <a href="{{route('csibt.evidencias', $comite->id)}}">
-                                  <div class="card-panel blue-grey white-text">
-                                    <i class="material-icons left">library_books</i>Evidencias del comité.
-                                  </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m4 l4">
-                                <a href="{{route('csibt.edit', $comite->id)}}">
-                                    <div class="card-panel yellow lighten-3 black-text center">
-                                        <i class="material-icons left">edit</i>Cambiar información.
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col s12 m4 l4">
-                                <a href="{{route('csibt.notificar.agendamiento', $comite->id)}}">
-                                    <div class="card-panel blue-grey lighten-3 black-text center">
-                                        <i class="material-icons left">notifications</i>Enviar citación.
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col s12 m4 l4">
-                                <a href="{{route('csibt.realizar', $comite->id)}}">
-                                    <div class="card-panel green lighten-3 black-text center">
-                                        <i class="material-icons left">check</i>Calificar comité.
-                                    </div>
-                                </a>
-                            </div>
+                        <div class="row center">
+                            <a href="{{route('csibt.evidencias', $comite->id)}}">
+                              <div class="card-panel blue-grey white-text">
+                                <i class="material-icons left">library_books</i>Evidencias del comité.
+                              </div>
+                            </a>
                         </div>
                         <div class="divider"></div>
                         <div class="row center">
                             <a href="{{route('csibt')}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
+                                <i class="material-icons left">arrow_back</i>Volver
                             </a>
                         </div>
                     </div>

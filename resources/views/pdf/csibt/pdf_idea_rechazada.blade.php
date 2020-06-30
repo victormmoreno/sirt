@@ -11,21 +11,22 @@
   </center>
   <p>
     Señor(a) <br>
-    <b>{{ $nombres_contacto }} {{ $apellidos_contacto }}</b><br>
+    <b>{{ $idea->nombres_contacto }} {{ $idea->apellidos_contacto }}</b><br>
     Cordial Saludo
   </p>
   <p style="text-align: justify">
-    Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica realizado en el mes de {{ $FechaComite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera
+    Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica realizado en el 
+    mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera
     necesario aclarar algunos puntos para poder realizar la correcta asignación de su proyecto:
-    <b>“{{ $nombre_proyecto }}”</b>. <br>Para esto le solicitamos seguir las siguientes recomendaciones:
+    <b>“{{ $idea->nombre_proyecto }}”</b>. <br>Para esto le solicitamos seguir las siguientes recomendaciones:
   </p>
-  <p style="text-align: right">
-    {{ $Observaciones }}
+  <p style="text-align: left">
+    {{ $idea->comites()->wherePivot('comite_id', $comite->id)->first()->pivot->observaciones }}
   </p>
   <p style="text-align: justify">
     Luego de seguir las recomendaciones usted podrá volver a inscribir su proyecto en Tecnoparque y el comité decidirá si se le asigna un gestor de Tecnoparque,
     quien lo contactará para iniciar con la metodología en caso de que el proyecto se admitido.
-    Cualquier información adicional la puede solicitar a los teléfonos {{ $telefonoNodo }} <b>ext.</b> {{ auth()->user()->infocenter->extension }}.
+    Cualquier información adicional la puede solicitar a los teléfonos {{ $idea->nodo->telefono }} <b>ext.</b> {{ $extensiones }}.
   </p>
   <p>
     Recuerde que además de la Asesoría Técnica para el Desarrollo de Proyectos de Base Tecnológica, la Red Tecnoparque Colombia pone a su disposición los siguientes servicios:

@@ -7,6 +7,7 @@ use App\Models\Nodo;
 use App\Models\Proyecto;
 use App\Models\RutaModel;
 use App\Models\Comite;
+use App\Models\Gestor;
 
 trait IdeaTrait
 {
@@ -40,6 +41,11 @@ trait IdeaTrait
   public function estadoIdea()
   {
     return $this->belongsTo(EstadoIdea::class, 'estadoidea_id', 'id');
+  }
+
+  public function gestor()
+  {
+    return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
   }
 
   public function comites()

@@ -47,6 +47,11 @@ class Gestor extends Model
         return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();
     }
 
+    public function ideas()
+    {
+        return $this->hasMany(Idea::class, 'gestor_id', 'id');
+    }
+
     public function nodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');

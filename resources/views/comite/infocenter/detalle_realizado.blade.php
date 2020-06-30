@@ -31,36 +31,27 @@
                             <span class="card-title center-align">Comité - {{$comite->codigo}} <b>({{$comite->estado->nombre}})</b></span>
                         </center>
                         <div class="divider"></div>
-                        @include('comite.detalle_agendamiento')
+                        @include('comite.detalle_realizado')
                         <div class="divider"></div>
                         <div class="row">
-                            <div class="col s12 m12 l12 center">
+                            <div class="col s12 m4 l4 center">
                                 <a href="{{route('csibt.evidencias', $comite->id)}}">
                                   <div class="card-panel blue-grey white-text">
                                     <i class="material-icons left">library_books</i>Evidencias del comité.
                                   </div>
                                 </a>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m4 l4">
-                                <a href="{{route('csibt.edit', $comite->id)}}">
+                            <div class="col s12 m4 l4 center">
+                                <a href="{{route('csibt.realizar', $comite->id)}}">
                                     <div class="card-panel yellow lighten-3 black-text center">
                                         <i class="material-icons left">edit</i>Cambiar información.
                                     </div>
                                 </a>
                             </div>
-                            <div class="col s12 m4 l4">
-                                <a href="{{route('csibt.notificar.agendamiento', $comite->id)}}">
+                            <div class="col s12 m4 l4 center">
+                                <a href="{{route('csibt.notificar.realizado', $comite->id)}}">
                                     <div class="card-panel blue-grey lighten-3 black-text center">
-                                        <i class="material-icons left">notifications</i>Enviar citación.
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col s12 m4 l4">
-                                <a href="{{route('csibt.realizar', $comite->id)}}">
-                                    <div class="card-panel green lighten-3 black-text center">
-                                        <i class="material-icons left">check</i>Calificar comité.
+                                        <i class="material-icons left">notifications</i>Notificar al dinamizador.
                                     </div>
                                 </a>
                             </div>
