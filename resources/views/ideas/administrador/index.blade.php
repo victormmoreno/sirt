@@ -6,15 +6,15 @@
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
         <div class="row">
-              <div class="col s8 m8 l10">
-                  <h5 class="left-align">
+              <div class="col s12 m8 l9">
+                  <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                       <i class="material-icons left">
                           lightbulb
                       </i>
                       Ideas de Proyecto
                   </h5>
               </div>
-              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+              <div class="col s12 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
                       <li class="active">Ideas de Proyecto</li>
@@ -28,7 +28,7 @@
                 <div class="row">
                   <div class="col s12 m12 l12">
                     <div class="center-align">
-                      <span class="card-title">Ideas de Tecnoparque</span>
+                    <span class="card-title hand-of-Sean-fonts orange-text text-darken-3">Ideas de {{config('app.name')}}</span>
                       <div class="divider"></div>
                     </div>
                   </div>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="divider"></div>
                 <div id="ideasProyecto">
-                    <table id="ideasEmprendedoresPorNodo_table" class="dataTable js-state browser-default" style="width: 100%">
+                    <table id="ideasEmprendedoresPorNodo_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                     <thead>
                       <tr>
                         <th width="10%">Código de la Idea</th>
@@ -68,7 +68,7 @@
                   </table>
                 </div>
                 <div id="ideasProyectoEmpresa">
-                  <table id="ideasEmpresasGIPorNodo_table" class="dataTable js-state browser-default" style="width: 100%">
+                  <table id="ideasEmpresasGIPorNodo_table" class="display responsive-table datatable-example" style="width: 100%">
                     <thead>
                       <tr>
                         <th>Código de la Idea</th>
@@ -98,35 +98,10 @@
           </div>
         </div>
       </div>
-      <div class="fixed-action-btn horizontal click-to-toggle show-on-medium-and-down hide-on-med-and-up">
-        <a class="btn-floating btn-large red">
-          <i class="material-icons">menu</i>
-        </a>
-        <ul>
-          <li>
-            <a class="btn-floating green" href="{{ route('ideas.index') }}" target="_blank">
-              <i class="material-icons">lightbulb</i>
-            </a>
-          </li>
-          {{-- <li>
-            <a class="btn-floating green" href="{{route('idea.egi')}}">
-              <i class="material-icons">business</i>
-            </a>
-          </li> --}}
-        </ul>
-      </div>
+
     </div>
   </div>
 </main>
-<!-- <div id="modal1" class="modal">
-  <div class="modal-content">
-    <h4>Modal Header</h4>
-    <p>A bunch of text</p>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-  </div>
-</div> -->
 <div id="modal1" class="modal">
   <div class="modal-content">
     <center><h4 id="titulo" class="center-aling"></h4></center>

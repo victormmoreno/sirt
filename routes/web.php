@@ -478,6 +478,7 @@ Route::resource('centro-formacion', 'CentroController');
 /*=========================================================
 =            seccion para las rutas del perfil            =
 =========================================================*/
+Route::get('perfil/actividades', 'User\ProfileController@activities')->name('perfil.actividades')->middleware('disablepreventback');
 Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
 Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
 Route::get('perfil', 'User\ProfileController@index')->name('perfil.index')->middleware('disablepreventback');
@@ -505,13 +506,15 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
+        Route::get('/datatablesideasestado/{anio}/{state}', 'IdeaController@dataTableIdeaByAnioState')
+            ->name('idea.datatablesideasporanioestado');
         // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
         Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
         Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
         Route::get('/consultarIdeasTodosPorNodo/{id}', 'IdeaController@dataTableIdeasTodosPorNodo')->name('idea.todas');
         Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
-        Route::get('detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
+        Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/', 'IdeaController@store')->name('idea.store');
@@ -568,7 +571,6 @@ Route::group(
         Route::get('/notificar_agendamiento/{id}', 'ComiteController@notificar_agendamientoController')->name('csibt.notificar.agendamiento')->middleware('role_session:Infocenter');
         Route::get('/notificar_realizado/{id}', 'ComiteController@notificar_realizadoController')->name('csibt.notificar.realizado')->middleware('role_session:Infocenter');
         Route::get('/notificar_resultado/{id}/{idComite}', 'ComiteController@notificar_resultadoController')->name('csibt.notificar.resultados')->middleware('role_session:Infocenter|Dinamizador');
-        // Route::get('/create2', 'ComiteController@create2')->name('csibt.create2');
         Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias')->middleware('role_session:Infocenter|Dinamizador');
@@ -581,7 +583,6 @@ Route::group(
         Route::put('/realizar_comite/{id}', 'ComiteController@updateRealizado')->name('csibt.realizar.store')->middleware('role_session:Infocenter');
         Route::put('/asignar_ideas/{id}', 'ComiteController@updateAsignarGestor')->name('csibt.asignar.store')->middleware('role_session:Dinamizador');
         Route::put('/updateEvidencias/{id}', 'ComiteController@updateEvidencias')->name('csibt.update.evidencias');
-        // Route::post('/addIdeaComite', 'ComiteController@addIdeaDeProyectoCreate');
         Route::post('/', 'ComiteController@store')->name('csibt.store')->middleware('role_session:Infocenter');
         Route::post('/store/{id}/filesComite', 'ArchivoComiteController@store')->name('csibt.files.store');
         Route::delete('/file/{idFile}', 'ArchivoComiteController@destroy')->name('csibt.files.destroy');
@@ -694,6 +695,7 @@ Route::group(
         Route::get('/notificar_cierre/{id}', 'ProyectoController@notificar_cierre')->name('proyecto.notificar.cierre')->middleware('role_session:Gestor');
         Route::get('/notificar_suspendido/{id}', 'ProyectoController@notificar_suspendido')->name('proyecto.notificar.suspension')->middleware('role_session:Gestor');
 
+        // Route::get('/informacion-proyecto/{id}', 'ProyectoController@informacionProyectoById')->name('proyecto.informacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/consultarProyectos_costos/{anho}', 'ProyectoController@proyectosCostos')->name('proyecto.costos')->middleware('role_session:Dinamizador|Gestor');
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
@@ -706,7 +708,7 @@ Route::group(
         Route::get('/datatableCentroFormacionTecnoparque', 'ProyectoController@datatableCentroFormacionTecnoparque')->name('proyecto.datatable.centros');
         Route::get('/datatableIdeasConEmprendedores', 'ProyectoController@datatableIdeasConEmprendedores')->name('proyecto.datatable.ideas.emprendedores');
         Route::get('/datatableIdeasConEmpresasGrupo', 'ProyectoController@datatableIdeasConEmpresasGrupo')->name('proyecto.datatable.ideas.empresasgrupos');
-        Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho')->middleware('role_session:Administradro|Dinamizador|Gestor');
+        Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho')->middleware('role_session:Administrador|Dinamizador|Gestor|Infocenter');
         Route::get('/datatableProyectosDelNodoPorAnho/{idnodo}/{anho}', 'ProyectoController@datatableProyectosDelNodoPorAnho')->name('proyecto.datatable.proyectos.nodo.anho');
         Route::get('/detalle/{id}', 'ProyectoController@detalle')->name('proyecto.detalle')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
         Route::get('/inicio/{id}', 'ProyectoController@inicio')->name('proyecto.inicio')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador|Infocenter');
@@ -733,6 +735,16 @@ Route::group(
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
+    }
+);
+
+Route::group(
+    [
+        'prefix'     => 'actividad',
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
+    ],
+    function () {
+        Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
     }
 );
 

@@ -50,6 +50,7 @@ class Idea extends Model
         'descripcion',
         'objetivo',
         'alcance',
+        'viene_convocatoria',
         'convocatoria',
         'tipo_idea',
         'estadoidea_id',
@@ -73,6 +74,8 @@ class Idea extends Model
             'fecha_sesion2',
             'hora',
             'admitido',
+            'viene_convocatoria',
+            'convocatoria',
             'fechacomite AS fecha_comite',
             'ideas.created_at AS fecha_registro'
         )
@@ -112,7 +115,9 @@ class Idea extends Model
             'ideas.id AS consecutivo',
             'ideas.codigo_idea',
             'nombre_proyecto',
-            'tipo_idea'
+            'tipo_idea',
+            'viene_convocatoria',
+            'convocatoria'
         )
             ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
             ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
@@ -139,7 +144,9 @@ class Idea extends Model
             'correo_contacto AS correo',
             'telefono_contacto AS contacto',
             'nombre_proyecto',
-            'estadosidea.nombre AS estado'
+            'estadosidea.nombre AS estado',
+            'viene_convocatoria',
+            'convocatoria'
         )
             ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
@@ -163,7 +170,9 @@ class Idea extends Model
             'correo_contacto AS correo',
             'telefono_contacto AS contacto',
             'nombre_proyecto AS nombre_idea',
-            'estadosidea.nombre AS estado'
+            'estadosidea.nombre AS estado',
+            'viene_convocatoria',
+            'convocatoria'
         )
             ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
@@ -176,8 +185,12 @@ class Idea extends Model
 
     public function scopeConsultarIdeasEmpGIDelNodo($query, $id)
     {
-        return $query->select(DB::raw("nombres_contacto AS 'nit', apellidos_contacto AS 'razon_social', ideas.id AS consecutivo, created_at AS fecha_registro, ideas.codigo_idea,
-    correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado"))
+        return $query->select(DB::raw(
+            "nombres_contacto AS 'nit', apellidos_contacto AS 'razon_social', ideas.id AS consecutivo, created_at AS fecha_registro, ideas.codigo_idea,
+    correo_contacto AS correo, telefono_contacto AS contacto, nombre_proyecto AS nombre_idea, estadosidea.nombre AS estado",
+            'viene_convocatoria',
+            'convocatoria'
+        ))
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->where('nodo_id', $id)
             ->where('tipo_idea', '!=', $this->IsEmprendedor())
@@ -201,7 +214,9 @@ class Idea extends Model
             'ideas.codigo_idea',
             'telefono_contacto',
             'ideas.id',
-            'estadosidea.nombre AS estado_idea'
+            'estadosidea.nombre AS estado_idea',
+            'viene_convocatoria',
+            'convocatoria'
         )
             ->selectRaw('IF(aprendiz_sena = 1, "Si", "No") AS aprendiz_sena')
             ->selectRaw('IF(pregunta1=1, "Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo",
@@ -245,7 +260,9 @@ class Idea extends Model
             'ideas.codigo_idea',
             'telefono_contacto',
             'ideas.id',
-            'estadosidea.nombre AS estado_idea'
+            'estadosidea.nombre AS estado_idea',
+            'viene_convocatoria',
+            'convocatoria'
         )
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_proyecto ')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')

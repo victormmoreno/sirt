@@ -9,7 +9,7 @@
                         <span class="title"><b>Paso 3</b></span>
                     @endif
                     <p>
-                        señor(a) ususario, para ingresar los equipos al uso de infraestructura debe seleccionar el equipo e ingresar el tiempo de uso (horas) y presionar el boton agregar equipo.
+                        señor(a) usuario, para ingresar los equipos al uso de infraestructura debe seleccionar el equipo e ingresar el tiempo de uso (horas) y presionar el boton agregar equipo.
                     </p>
                 </li>
             </ul>
@@ -65,7 +65,7 @@
                             @foreach($usoinfraestructura->actividad->nodo->equipos->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $equipo)
                                 
                                 <option value="{{$equipo->id}}">
-                                    {{$equipo->nombre}}
+                                    {{str_limit($equipo->nombre,50,"...")}}
                                 </option>
                                 
                             @endforeach

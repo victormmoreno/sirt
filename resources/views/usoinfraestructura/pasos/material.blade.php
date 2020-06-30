@@ -9,14 +9,14 @@
                         <span class="title"><b>Paso 4</b></span>
                     @endif
                     <p>
-                        señor(a) ususario, para ingresar los materiales de formación al uso de infraestructura debe seleccionar el material e ingresar la cantidad y presionar el boton agregar material.
+                        señor(a) usuario, para ingresar los materiales de formación al uso de infraestructura debe seleccionar el material e ingresar la cantidad y presionar el boton agregar material.
                     </p>
                 </li>
             </ul>
         </blockquote>
     </div>
 
-    <div class="col s12 m9 l9">
+    <div class="col s12 m9 l9" >
         <fieldset>
             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                 <legend>Paso 5</legend>
@@ -33,18 +33,18 @@
                 <div class="input-field col s12 m7 l7">
 
                     @if(isset($usoinfraestructura->actividad->nodo->materiales))
-                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}} onchange="getSelectMaterial()">
+                        <select class="js-states browser-default select2 " tabindex="-1" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}} onchange="getSelectMaterial()">
                             <option value="">Seleccione Material de  Formación</option>
                             @foreach($usoinfraestructura->actividad->nodo->materiales->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $material)
 
                                 <option value="{{$material->id}}">
-                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{$material->nombre}} x {{$material->medida->nombre}}
+                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{str_limit($material->nombre,70 ,"...")}} x {{$material->medida->nombre}}
                                 </option>
 
                             @endforeach
                         </select>
                     @else
-                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}} onchange="getSelectMaterial()">
+                        <select class="js-states browser-default select2 " tabindex="-1" with="100%" style="width: 100%" name="txtmaterial" id="txtmaterial" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}} onchange="getSelectMaterial()">
                             <option value="">Seleccione Material de  Formación</option>
                         </select>
 

@@ -36169,8 +36169,10 @@ var idea ={
         if(convocatoria == deconvocatoria){
             $('#txtnombreconvocatoria').removeAttr("disabled").focus().val('');
         }else if(convocatoria == noconvocatoria){
+            $('#txtnombreconvocatoria').val('');
             $('#txtnombreconvocatoria').attr("disabled", "disabled");
         }else{
+            $('#txtnombreconvocatoria').val('');
             $('#txtnombreconvocatoria').attr("disabled", "disabled");
         }
     }

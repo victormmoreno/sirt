@@ -7,13 +7,13 @@
                 <li class="collection-item">
                     <span class="title"><b>Paso 2</b></span>
                     <p>
-                        señor(a) ususario, por favor ingrese las horas de asesoria.
+                        señor(a) usuario, por favor ingrese las horas de asesoria.
                     </p>
                 </li>
                 <li class="collection-item">
                     <span class="title"><b>Paso 2</b></span>
                     <p>
-                        señor(a) ususario, si la asesoria fue acompañada por otro gestor agregue a este en la sección de gestores Asesores, pulsando el boton agregar gestor.
+                        señor(a) usuario, si la asesoria fue acompañada por otro gestor agregue a este en la sección de gestores Asesores, pulsando el boton agregar gestor.
                     </p>
                 </li>
 

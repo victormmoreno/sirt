@@ -63,11 +63,6 @@ class Gestor extends Model
         return $this->belongsTo(LineaTecnologica::class, 'lineatecnologica_id', 'id');
     }
 
-    // Relación a la tabla de articulaciones
-    public function articulaciones()
-    {
-        return $this->hasMany(Articulacion::class, 'gestor_id', 'id');
-    }
 
     public function actividades()
     {

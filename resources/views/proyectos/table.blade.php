@@ -5,7 +5,8 @@
       <th>Código de Proyecto</th>
       <th>Nombre</th>
       <th>Fase</th>
-      <th>Detalles</th>
+      <th>Información</th>
+      <th>Proceso</th>
     </tr>
   </thead>
   <tfoot>
@@ -19,6 +20,7 @@
       <th>
         <input type="text" name="nombre_fase" class="sublinea_nombre" placeholder="Buscar por Fase">
       </th>
+      <th></th>
       <th></th>
     </tr>
   </tfoot>
@@ -37,7 +39,8 @@
       <th>Nombre</th>
       <th>Sublínea</th>
       <th>Fase</th>
-      <th>Detalles</th>
+      <th>Información</th>
+      <th>Proceso</th>
     </tr>
   </thead>
   <tfoot>
@@ -58,6 +61,7 @@
         <input type="text" name="nombre_fase" id="fase_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Fase">
       </th>
       <th></th>
+      <th></th>
     </tr>
   </tfoot>
   <tbody>
@@ -75,7 +79,8 @@
       <th>Nombre</th>
       <th>Sublínea</th>
       <th>Fase</th>
-      <th>Detalles</th>
+      <th>Información</th>
+      <th>Proceso</th>
     </tr>
   </thead>
   <tfoot>
@@ -96,6 +101,7 @@
         <input type="text" name="nombre_fase" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Fase">
       </th>
       <th></th>
+      <th></th>
     </tr>
   </tfoot>
   <tbody>
@@ -112,7 +118,8 @@
       <th>Gestor</th>
       <th>Nombre</th>
       <th>Fase</th>
-      <th>Detalles</th>
+      <th>Información</th>
+      <th>Proceso</th>
     </tr>
   </thead>
   <tbody>
@@ -130,6 +137,7 @@
       <th>
         <input type="text" name="Fase" id="sublinea_nombre_tblproyectosDelTalento" placeholder="Buscar por Fase">
       </th>
+      <th></th>
       <th></th>
     </tr>
   </tfoot>

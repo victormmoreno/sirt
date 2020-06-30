@@ -7,14 +7,14 @@
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
         <div class="row">
-              <div class="col s8 m8 l10">
-                  <h5>
-                  <a class="footer-text left-align" href="{{route('idea.ideas')}}">
+              <div class="col s8 m8 l9">
+                  <h5 class="hand-of-Sean-fonts orange-text text-darken-3">
+                  <a class="footer-text left-align " href="{{route('idea.ideas')}}">
                     <i class="material-icons arrow-l">arrow_back</i>
                   </a> Ideas de Proyecto
                 </h5>
               </div>
-              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+              <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
                       <li><a href="{{route('idea.ideas')}}">Ideas de Proyecto</a></li>
@@ -26,7 +26,7 @@
           <div class="card-content">
             <br>
             <center>
-              <span class="card-title center-align">Modificar Idea de Proyecto - {{ $idea->nombre_proyecto }}</span>
+              <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Modificar Idea de Proyecto - {{ $idea->nombre_proyecto }}</span>
             </center>
             <div class="divider"></div>
             <div class="row">
@@ -122,6 +122,33 @@
                         <label id="txtalcance-error" class="error" for="txtalcance">{{ $message }}</label>
                     @enderror
                   </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m8 l8 offset-l2 offset-m2 ">
+                        <div class="input-field col s12 m4 l4">
+                            <label for="txtlinkvideo" class="active">
+                                ¿La idea viene de una convocatoria? <span class="red-text">*</span>
+                            </label>
+                            <select class="" id="txtconvocatoria" name="txtconvocatoria"  style="width: 100%" tabindex="-1" onchange="idea.getSelectConvocatoria()">
+                                <option value="0" {{ $idea->viene_convocatoria == 0 ? 'selected' : '' }} >No</option>
+                                <option value="1" {{ $idea->viene_convocatoria == 1 ? 'selected' : '' }}>Si</option>
+                            </select>
+
+                            @error('txtconvocatoria')
+                            <label id="txtconvocatoria-error" class="error" for="txtconvocatoria">{{ $message }}</label>
+                            @enderror
+                        </div>
+                        <div class="input-field col s12 m8 l8">
+                            <label for="txtnombreconvocatoria">
+                                Nombre de Convocatoria
+                            </label>
+                            <input  class="validate" id="txtnombreconvocatoria" name="txtnombreconvocatoria" type="text" value="{{ old('txtnombreconvocatoria',$idea->convocatoria) }}" {{ $idea->viene_convocatoria == 0 ? 'disabled' : '' }}>
+                            @error('txtnombreconvocatoria')
+                                <label id="txtnombreconvocatoria-error" class="error" for="txtnombreconvocatoria">{{ $message }}</label>
+                            @enderror
+                        </div>
+
+                    </div>
                 </div>
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>

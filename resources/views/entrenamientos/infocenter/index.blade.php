@@ -9,7 +9,7 @@
       <div class="col s12 m12 l12">
         <div class="row">
               <div class="col s8 m8 l10">
-                  <h5 class="left-align">
+                  <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                       <i class="material-icons left">
                           library_books
                       </i>
@@ -29,11 +29,11 @@
               <div class="col s12 m12 l12">
                 <div class="row">
                   <div class="col s12 m10 l10">
-                    <div class="center-align">
+                    <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                       <span class="card-title center-align">Entrenamientos de Tecnoparque nodo {{$nodo}}</span>
                     </div>
                   </div>
-                  <div class="col s12 m2 l2">
+                  <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
                     <a href="{{ route('entrenamientos.create') }}">
                       <div class="card green">
                         <div class="card-content center">

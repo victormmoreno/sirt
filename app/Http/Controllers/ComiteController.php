@@ -400,56 +400,6 @@ class ComiteController extends Controller
       ]);
     }
   }
-  
-
-  /**
-  * Store a newly created resource in storage.
-  *
-  * @param  \Illuminate\Http\Request  $request
-  * @return \Illuminate\Http\Response
-  */
-  // public function store(ComiteFormRequest $request)
-  // {
-    
-  //   if ( session('ideasComiteCreate') == false ) {
-  //     alert()->warning('Advertencia!','Para registrar el comité debe asociar por lo menos una idea de proyecto.')->showConfirmButton('Ok', '#3085d6');
-  //     return back()->withInput();
-  //   } else {
-  //     // $contComites = COUNT($this->getComiteRepository()->consultarComitePorNodoYFecha( auth()->user()->infocenter->nodo_id, $request->txtfechacomite_create ));
-  //     $contComites = COUNT(session('ideasComiteCreate'));
-  //     if ( $contComites > 8 ) {
-  //       alert()->warning('Advertencia!','Solo se puede asociar un máximo de 8 ideas de proyectos al comité (Se puede registrar otro comité en el mismo día).')->showConfirmButton('Ok', '#3085d6');
-  //       return back()->withInput();
-  //     } else {
-  //       DB::transaction(function () use ($request) {
-  //         $codigoComite = Carbon::parse($request['txtfechacomite_create']);
-  //         $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
-  //         $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
-  //         $idComite = Comite::selectRaw('MAX(id+1) AS max')->get()->last();
-  //         $idComite->max == null ? $idComite->max = 1 : $idComite->max = $idComite->max;
-  //         $idComite->max = sprintf("%04d", $idComite->max);
-  //         $codigoComite = 'C' . $nodo . $infocenter . '-' . $codigoComite->isoFormat('YYYY') . '-' .$idComite->max;
-  //         $comite = $this->getComiteRepository()->store($request, $codigoComite);
-  //         foreach (session('ideasComiteCreate') as $key => $value) {
-  //           $this->getComiteRepository()->storeComiteIdea($value, $comite->id);
-  //           $value['FechaComite'] = $comite->fechacomite;
-  //           if ($value['Admitido'] == 1) {
-              // $pdf = PdfComiteController::printPDF($value);
-              // event(new ComiteWasRegistered($value, $pdf));
-  //             $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'Admitido');
-  //           } else {
-  //             $pdf = PdfComiteController::printPDFNoAceptado($value);
-  //             event(new ComiteWasRegistered($value, $pdf));
-  //             $this->getIdeaRepository()->updateEstadoIdea($value['id'], 'No Admitido');
-  //           }
-  //         }
-  //       });
-  //       session(['ideasComiteCreate' => []]);
-  //       alert()->success('El CSIBT ha sido creado satisfactoriamente','Registro Exitoso.')->showConfirmButton('Ok', '#3085d6');
-  //       return redirect('csibt');
-  //     }
-  //   }
-  // }
 
   // Muestra las evidencias/entregables de un comité
   public function evidencias($id)
@@ -462,21 +412,6 @@ class ComiteController extends Controller
       return view('comite.evidencias', compact('comite'));
     }
   }
-
-  // /**
-  // * Display the specified resource.
-  // *
-  // * @param  int  $id
-  // * @return \Illuminate\Http\Response
-  // */
-  // public function show($id)
-  // {
-  //   if (request()->ajax()) {
-  //     return json_encode([
-  //       'ideasDelComite' => $this->getComiteRepository()->consultarIdeasDelComite($id)
-  //     ]);
-  //   }
-  // }
 
   /**
   * Show the form for editing the specified resource.
@@ -494,75 +429,6 @@ class ComiteController extends Controller
         'comite' => $csibt
       ]);
     }
-  }
-
-  // Métodos que manejar la sesion del comité
-  public function addIdeaDeProyectoCreate(Request $request)
-  {
-    $input = $request->all();
-
-    $idea = Idea::ConsultarIdeaId($input['Idea'])->get($input['Idea'])->last();
-
-
-    // Aquí se agregan los campos de las ideas de proyecto
-    $idea['Hora'] = $input['hora'];
-    $idea['Asistencia'] = $input['asistencia'];
-    // $idea['Observaciones'] = $input['observaciones'];
-    $input['observaciones'] == null ? $idea['Observaciones'] = '' : $idea['Observaciones'] = $input['observaciones'];
-    $idea['Admitido'] = $input['admitido'];
-
-    if (session("ideasComiteCreate") != null) {
-
-      $existe = false;
-      $dato   = null;
-
-      $ideas = session("ideasComiteCreate");
-      foreach ($ideas as $key => $value) {
-        if ($value["id"] == $input["Idea"]) {
-          $dato = $value;
-
-          unset($ideas[$key]);
-
-          $existe = true;
-        }
-      }
-
-      if (!$existe) {
-        array_push($ideas, $idea);
-      } else {
-        return json_encode(['data' => 3]);
-      }
-      session(["ideasComiteCreate" => $ideas]);
-    } else {
-      session(["ideasComiteCreate" => [$idea]] );
-    }
-
-    return json_encode(['data' => 2]);
-  }
-
-  // Devuelve los elemento de la sesion de las ideas del comité (Create)
-  public function get_ideasComiteCreate()
-  {
-    return json_encode(session("ideasComiteCreate"));
-  }
-
-  // Elimina la idea de la tabla de las ideas en el formulario para registrar un nuevo comité
-  public function get_eliminarIdeaComiteCreate($id)
-  {
-    $var = session("ideasComiteCreate");
-
-    foreach ($var as $key => $value) {
-
-      $new = $value->id;
-
-      if ($new == $id) {
-        unset($var[$key]);
-      }
-    }
-    session(["ideasComiteCreate" => $var]);
-    return json_encode([
-      'data' => 1
-    ]);
   }
 
   /**

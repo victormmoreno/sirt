@@ -16,3 +16,13 @@
     <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
   </div>
 </div>
+<div id="info_actividad_modal" class="modal modal-fixed-footer">
+    <div class="modal-content" >
+        <h4 id="actividad_titulo" class="valign-wrapper truncate center-align "></h4>
+        <div id="detalleActividad"></div>
+        
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cerrar</a>
+    </div>
+</div>
