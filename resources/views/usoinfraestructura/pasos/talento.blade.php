@@ -9,7 +9,7 @@
                         <span class="title"><b>Paso 2</b></span>
                     @endif
                     <p>
-                        señor(a) ususario, para ingresar los talentos al uso de infraestructura debe seleccionar el talento y presionar el boton agregar talento.
+                        señor(a) usuario, para ingresar los talentos al uso de infraestructura debe seleccionar el talento y presionar el boton agregar talento.
                     </p>
                 </li>     
             </ul>

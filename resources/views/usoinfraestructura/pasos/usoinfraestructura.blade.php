@@ -4,7 +4,7 @@
             <ul class="collection">
                 <li class="collection-item">
                     <span class="title"><b>Uso de Infraestructura</b></span>
-                    <p>señor(a) ususario, por favor ingrese la información que se solcita en formulario.</p>
+                    <p>señor(a) usuario, por favor ingrese la información que se solcita en formulario.</p>
                 </li>
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     <li class="collection-item">

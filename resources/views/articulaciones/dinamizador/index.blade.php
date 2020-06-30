@@ -116,7 +116,7 @@
         processing: true,
         serverSide: true,
         order: [ 0, 'desc' ],
-        // searching: false,
+        "lengthChange": false,
         ajax:{
           url: "/articulacion/datatableArticulacionesDelNodo/"+0+"/"+anho,
           data: function (d) {
@@ -143,6 +143,12 @@
         {
           data: 'nombre_fase',
           name: 'nombre_fase',
+        },
+        {
+            width: '8%',
+            data: 'info',
+            name: 'info',
+            orderable: false
         },
         {
           data: 'proceso',
@@ -172,14 +178,17 @@
     function consultarArticulacionesGestor() {
       let anho = $('#txtanho_articulaciones_Gestor').val();
       let id = $('#txtgestor_id').val();
+      
       $('#articulacionesNodo_table').dataTable().fnDestroy();
-      $('#articulacionesNodo_table').DataTable({
+      if (anho != '' && id != '') {
+        $('#articulacionesNodo_table').DataTable({
         language: {
           "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         processing: true,
         serverSide: true,
         order: [ 0, 'desc' ],
+        "lengthChange": false,
         ajax:{
           url: "/articulacion/datatableArticulacionesDelGestor/"+id+"/"+anho,
           data: function (d) {
@@ -190,7 +199,6 @@
             d.estado = $('.estado').val(),
             d.search = $('input[type="search"]').val()
           }
-          // type: "get",
         },
         columns: [
           {
@@ -210,12 +218,28 @@
           name: 'nombre_fase',
         },
         {
+            width: '8%',
+            data: 'info',
+            name: 'info',
+            orderable: false
+        },
+        {
           data: 'proceso',
           name: 'proceso',
           orderable: false
         },
         ],
       });
+      }else{
+        $('#articulacionesNodo_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
+      }
+      
     }
   </script>
 @endpush

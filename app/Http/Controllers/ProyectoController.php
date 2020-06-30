@@ -6,7 +6,7 @@ use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response};
 use App\User;
 use Alert;
 use App\Http\Controllers\CostoController;
@@ -85,7 +85,12 @@ class ProyectoController extends Controller
     private function datatableProyectos($request, $proyectos)
     {
         return datatables()->of($proyectos)
-            ->addColumn('details', function ($data) {
+            ->addColumn('info', function ($data) {
+                $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
+                <i class=\" material-icons\">info</i>
+            </a>";
+                return $button;
+            })->addColumn('details', function ($data) {
                 $details = '
       <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
         <i class="material-icons">info</i>
@@ -147,7 +152,7 @@ class ProyectoController extends Controller
                         return false;
                     });
                 }
-            })->rawColumns(['details', 'proceso', 'delete', 'download_seguimiento'])->make(true);
+            })->rawColumns(['info', 'details', 'proceso', 'delete', 'download_seguimiento'])->make(true);
     }
 
     /**
@@ -424,7 +429,7 @@ class ProyectoController extends Controller
      */
     public function index()
     {
-        // dd();
+
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 return view('proyectos.gestor.index');
@@ -453,7 +458,8 @@ class ProyectoController extends Controller
                 break;
 
             default:
-                // code...
+                return abort(Response::HTTP_FORBIDDEN);
+
                 break;
         }
     }
@@ -551,7 +557,7 @@ class ProyectoController extends Controller
                 break;
 
             default:
-                abort('403');
+                return abort(Response::HTTP_FORBIDDEN);
                 break;
         }
     }
@@ -589,7 +595,7 @@ class ProyectoController extends Controller
                     'historico' => $historico
                 ]);
             } else {
-                abort('403');
+                return abort(Response::HTTP_FORBIDDEN);
             }
         }
     }
@@ -644,7 +650,7 @@ class ProyectoController extends Controller
                     break;
 
                 default:
-                    abort('403');
+                    return abort(Response::HTTP_FORBIDDEN);
                     break;
             }
         }
@@ -703,7 +709,7 @@ class ProyectoController extends Controller
                     break;
 
                 default:
-                    # code...
+                    return abort(Response::HTTP_FORBIDDEN);
                     break;
             }
         } else {
@@ -738,7 +744,7 @@ class ProyectoController extends Controller
                     'historico' => $historico
                 ]);
             default:
-                # code...
+                return abort(Response::HTTP_FORBIDDEN);
                 break;
         }
     }
@@ -946,7 +952,7 @@ class ProyectoController extends Controller
                 return back();
             }
         } else {
-            // dd('something');
+
             $update = $this->getProyectoRepository()->setPostCierreProyectoRepository($id);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'La fase de ejecución del proyecto se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
@@ -1175,99 +1181,80 @@ class ProyectoController extends Controller
      * metodo para consultar el detalle de una actividad (proyecto- articulacion)
      * @author devjul
      */
-    // public function detailActivityByCode(string $code)
-    // {
-    //     // return Actividad::with([
-    //     //     'articulacion_proyecto.proyecto',
-    //     //     'articulacion_proyecto.articulacion',
-    //     //     'edt'
-    //     // ])
-    //     //     ->whereHas(
-    //     //         'articulacion_proyecto.proyecto',
-    //     //         function ($query) use ($id) {
-    //     //             $query->where('id', $id);
-    //     //         }
-    //     //     )
-    //     //     ->orWhereHas(
-    //     //         'articulacion_proyecto.articulacion',
-    //     //         function ($query) use ($id) {
-    //     //             $query->where('id', $id);
-    //     //         }
-    //     //     )
-    //     //     ->orWhereHas(
-    //     //         'edt',
-    //     //         function ($query) use ($id) {
-    //     //             $query->where('id', $id);
-    //     //         }
-    //     //     )
-    //     //     ->get();
+    public function detailActivityByCode(string $code)
+    {
+        if (request()->ajax()) {
+            $actividad =  Actividad::with([
+                'objetivos_especificos',
+                'gestor' => function ($query) {
+                    $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
+                },
+                'gestor.user' => function ($query) {
+                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+                        ->orWhere('deleted_at', '!=', null);
+                },
+                'gestor.lineatecnologica' => function ($query) {
+                    $query->select('id', 'abreviatura', 'nombre');
+                },
+                'articulacion_proyecto.proyecto',
 
-    //     return $actividad =  Actividad::with([
-    //         'objetivos_especificos',
-    //         'gestor' => function ($query) {
-    //             $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
-    //         },
-    //         'gestor.user' => function ($query) {
-    //             $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //                 ->orWhere('deleted_at', '!=', null);
-    //         },
-    //         'gestor.lineatecnologica' => function ($query) {
-    //             $query->select('id', 'abreviatura', 'nombre');
-    //         },
-    //         'articulacion_proyecto.proyecto',
+                'articulacion_proyecto.talentos',
 
-    //         // => function ($query) {
-    //         //     $query->select('id', 'articulacion_proyecto_id', 'idea_id', 'sector_id','sublinea_id',
-    //         //     'areaconocimiento_id', 'fase_id', 'estadoproyecto_id', 'alcance_proyecto','trl_esperado',
-    //         //     'trl_obtenido');
-    //         // },
-    //         'articulacion_proyecto.talentos',
-    //         // 'articulacion_proyecto.talentos' => function ($query) {
-    //         //     $query->select('id', 'user_id', 'tipo_talento_id', 'perfil_id');
-    //         // },
 
-    //         'articulacion_proyecto.talentos.user' => function ($query) {
-    //             $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //                 ->orWhere('deleted_at', '!=', null);
-    //         },
-    //         'articulacion_proyecto.proyecto.empresas',
-    //         'articulacion_proyecto.proyecto.gruposinvestigacion',
-    //         // 'articulacion_proyecto.proyecto.users_propietarios'  => function ($query) {
-    //         //     $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //         //         ->orWhere('deleted_at', '!=', null);
-    //         // },
-    //         'articulacion_proyecto.proyecto.sector',
-    //         'articulacion_proyecto.proyecto.tipoproyecto',
-    //         'articulacion_proyecto.proyecto.areaconocimiento',
-    //         'articulacion_proyecto.proyecto.fase',
-    //         'articulacion_proyecto.proyecto.sublinea',
-    //         'articulacion_proyecto.proyecto.roles',
-    //         // 'articulacion_proyecto.proyecto.users',
-    //         'articulacion_proyecto.proyecto.idea' => function ($query) {
-    //             $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
-    //         },
-    //         'articulacion_proyecto.proyecto.estadoproyecto',
-    //         'edt',
-    //         'articulacion_proyecto.articulacion',
-    //         'nodo' => function ($query) {
-    //             $query->select('id', 'entidad_id', 'direccion', 'telefono');
-    //         },
-    //         'nodo.entidad' => function ($query) {
-    //             $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-    //         }
+                'articulacion_proyecto.talentos.user' => function ($query) {
+                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+                        ->orWhere('deleted_at', '!=', null);
+                },
+                'articulacion_proyecto.proyecto.empresas',
+                'articulacion_proyecto.proyecto.empresas.entidad',
+                'articulacion_proyecto.proyecto.gruposinvestigacion',
+                'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
+                'articulacion_proyecto.proyecto.users_propietarios',
 
-    //         // 'gestor.user',
-    //     ])->where('codigo_actividad', $code)->first();
+                'articulacion_proyecto.proyecto.sector',
+                'articulacion_proyecto.proyecto.tipoproyecto',
+                'articulacion_proyecto.proyecto.areaconocimiento',
+                'articulacion_proyecto.proyecto.fase',
+                'articulacion_proyecto.proyecto.sublinea',
 
-    //     // return $actividad = $actividad->usoinfraestructuras->count();
 
-    //     // response()->json([
-    //     //     'data' => [
-    //     //         'actividad' => $actividad,
-    //     //         'total_usos' => $actividad->usoinfraestructuras->count(),
-    //     //     ]
-    //     // ]);
-    // }
+                'articulacion_proyecto.proyecto.idea' => function ($query) {
+                    $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
+                },
+                'articulacion_proyecto.proyecto.estadoproyecto',
+                'edt',
+                'edt.entidades',
+                'edt.areaconocimiento',
+                'edt.tipoedt',
+                'articulacion_proyecto.articulacion',
+                'articulacion_proyecto.articulacion.productos',
+                'articulacion_proyecto.articulacion.fase',
+                'articulacion_proyecto.articulacion.emprendedores',
+
+                'articulacion_proyecto.articulacion.tipoarticulacion',
+                'nodo' => function ($query) {
+                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
+                },
+                'nodo.entidad' => function ($query) {
+                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+                }
+
+            ])->where('codigo_actividad', $code)->first();
+
+
+            $costo = $this->costoController->costosDeUnaActividad($actividad->id);
+            return response()->json([
+                'data' => [
+                    'actividad' => $actividad,
+                    'costo' => $costo,
+                    'total_usos' => $actividad->usoinfraestructuras->count(),
+                ]
+            ]);
+        }
+        return abort(Response::HTTP_FORBIDDEN);
+    }
+
+
 
     /**
      * Asigna un valor a $proyectoRepository
