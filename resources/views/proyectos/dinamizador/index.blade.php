@@ -103,6 +103,7 @@
       </div>
     </div>
   </main>
+
   @include('proyectos.modals')
 @endsection
 @push('script')
@@ -148,6 +149,7 @@
         processing: true,
         serverSide: true,
         order: [ 0, 'desc' ],
+        "lengthChange": false,
         ajax:{
           url: "/proyecto/datatableProyectosDelGestorPorAnho/"+gestor+"/"+anho,
           data: function (d) {
@@ -158,7 +160,6 @@
             d.nombre_fase = $('#nombre_fase_tblproyectosDelGestorPorAnho').val(),
             d.search = $('input[type="search"]').val()
           }
-          // type: "get",
         },
         columns: [
           {
@@ -183,17 +184,18 @@
             name: 'nombre_fase',
           },
           {
+                width: '8%',
+                data: 'info',
+                name: 'info',
+                orderable: false
+           },
+          {
             width: '8%',
             data: 'proceso',
             name: 'proceso',
             orderable: false
           },
-          // {
-          //   width: '8%',
-          //   data: 'delete',
-          //   name: 'delete',
-          //   orderable: false
-          // },
+
           ],
         });
     }

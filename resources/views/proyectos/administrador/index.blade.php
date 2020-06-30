@@ -61,7 +61,7 @@
                         <label for="nodo_proyectoPorNodoYAnho">Seleccione el Nodo</label>
                       </div>
                     </div>
-                    
+
                     <div class="row center">
                       <div class="col s12 m4 l4 offset-l4">
                         <a onclick="consultarProyectosDelNodoPorAnho_Administrador();" href="javascript:void(0)">
@@ -114,7 +114,7 @@
   $("#revisado_final_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
     $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
   });
-  
+
   /**
    * Consulta los proyectos de un nodo por año (Este método es para el dinamizador)
    */
@@ -129,6 +129,7 @@
       processing: true,
       serverSide: true,
       order: [ 0, 'desc' ],
+      "lengthChange": false,
       ajax:{
         url: "/proyecto/datatableProyectosDelNodoPorAnho/"+nodo+"/"+anho_proyectos_nodo,
         data: function (d) {
@@ -163,6 +164,12 @@
         {
           data: 'nombre_fase',
           name: 'nombre_fase',
+        },
+        {
+            width: '8%',
+            data: 'info',
+            name: 'info',
+            orderable: false
         },
         {
           width: '8%',

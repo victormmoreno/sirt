@@ -9,7 +9,7 @@
                         <span class="title"><b>Paso 4</b></span>
                     @endif
                     <p>
-                        señor(a) ususario, para ingresar los materiales de formación al uso de infraestructura debe seleccionar el material e ingresar la cantidad y presionar el boton agregar material.
+                        señor(a) usuario, para ingresar los materiales de formación al uso de infraestructura debe seleccionar el material e ingresar la cantidad y presionar el boton agregar material.
                     </p>
                 </li>
             </ul>
