@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Entidad extends Model
 {
@@ -76,7 +77,7 @@ class Entidad extends Model
 
     public function setSlugAttribute($nombre)
     {
-        $this->attributes['slug'] = str_slug($nombre, '-');
+        $this->attributes['slug'] = Str::slug($nombre, '-');
     }
 
     /*===========================================
@@ -149,5 +150,4 @@ class Entidad extends Model
     }
 
     /*=====  End of scope para consultar los grupos de investigacion  ======*/
-
 }

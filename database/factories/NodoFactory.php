@@ -9,10 +9,10 @@ use Carbon\Carbon;
 $factory->define(Nodo::class, function (Faker $faker) {
 
     $centros = Entidad::has('centro')->get()->random();
-    $entidad = Entidad::all()->except($centros->id)->random();
+    // $centros = Entidad::all()->random();
+    // $entidad = Entidad::all()->except($centros->id)->random();
     return [
-        'centro_id' => $centros->id,
-        'entidad_id' => $entidad->id,
+        'centro_id' => $centros->centro->id,
         'direccion' => $faker->streetAddress,
         'telefono' => $faker->numerify('######'),
         'anho_inicio' => Carbon::now()->subYears($faker->randomDigit())->year,

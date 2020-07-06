@@ -155,6 +155,8 @@ class DatabaseSeeder extends Seeder
                 'tipo_talentos',
                 'tipo_estudio',
                 'tipo_formacion',
+                'tipos_empresas',
+                'tamanhos_empresas',
             ]);
         } else {
             echo "NO PUEDES TRUNCAR TABLAS";

@@ -2656,19 +2656,9 @@ var UserDinamizadorGestor = {
 
 
 $(document).ready(function() {
-    $('#talentoByDinamizador_table').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      "lengthChange": false,
-    });
-
-    $('#talentoByDinamizador_inactivos_table').DataTable({
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
+    userTalentoByDinamizador.consultarTalentosByTecnoparque();
+    userTalentoByDinamizador.consultarTalentosByTecnoparqueTrash();
+    
 
     $('#talentoByGestor_table').DataTable({
         language: {
@@ -3054,27 +3044,30 @@ var UserDinamizadorIngreso = {
     },
 }
 $(document).ready(function() {
-  
-  $('#talento_activosByGestor_table').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    "lengthChange": false,
-  });
 
-  $('#talento_inactivosByGestor_table').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    "lengthChange": false,
-  });
+//   $('#talento_activosByGestor_table').DataTable({
+//     language: {
+//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//     },
+//     "lengthChange": false,
+//   });
+
+    consultarTalentosByGestor();
+    consultarTalentosByGestorTrash();
+
+//   $('#talento_inactivosByGestor_table').DataTable({
+//     language: {
+//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//     },
+//     "lengthChange": false,
+//   });
 
 
 });
 
 // Ajax que muestra los usuarios talentos con proyectos  por año de un determinado gestor
 function consultarTalentosByGestor() {
-    
+
     let anho = $('#anio_proyecto_talento').val();
 
     $('#talento_activosByGestor_table').dataTable().fnDestroy();
@@ -3113,7 +3106,7 @@ function consultarTalentosByGestor() {
   }
 
   function consultarTalentosByGestorTrash() {
-    
+
     let anho = $('#anio_proyecto_talento').val();
 
     $('#talento_inactivosByGestor_table').dataTable().fnDestroy();
@@ -3148,7 +3141,7 @@ function consultarTalentosByGestor() {
         name: 'detail',
         orderable: false,
     }, ],
-    });   
+    });
 }
 var UserTalentoByGestor = {
     downloadTalento: function(state){
@@ -3173,9 +3166,9 @@ var UserTalentoByGestor = {
     },
 }
 
-  
-  
- 
+
+
+
 //Enviar formulario
 $(document).on('submit', 'form#formSearchUser', function (event) {
     event.preventDefault();

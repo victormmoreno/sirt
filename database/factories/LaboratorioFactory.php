@@ -6,7 +6,7 @@ use App\Models\{Laboratorio, Nodo};
 use Faker\Generator as Faker;
 
 $factory->define(Laboratorio::class, function (Faker $faker) {
-    $nodo = Nodo::with(['lineas'])->get()->random();
+    $nodo = Nodo::has('lineas')->get()->random();
 
     return [
         'nodo_id'              => $nodo->id,

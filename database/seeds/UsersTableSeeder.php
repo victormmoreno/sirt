@@ -18,20 +18,7 @@ class UsersTableSeeder extends Seeder
     {
 
         $roles = Role::all();
-
-        if ($roles->isEmpty()) {
-            Role::create(['name' => config('laravelpermission.roles.roleAdministrador')]);
-            Role::create(['name' => config('laravelpermission.roles.roleDinamizador')]);
-            Role::create(['name' => config('laravelpermission.roles.roleGestor')]);
-            Role::create(['name' => config('laravelpermission.roles.roleInfocenter')]);
-            Role::create(['name' => config('laravelpermission.roles.roleTalento')]);
-            Role::create(['name' => config('laravelpermission.roles.roleIngreso')]);
-            Role::create(['name' => config('laravelpermission.roles.roleDesarrollador')]);
-        }
-
-
         $ocupaciones = Ocupacion::all()->random();
-
 
         //user-prueba
         factory(App\User::class, 1)->create([
@@ -40,6 +27,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'usuario@prueba.com',
             'password' => 'tecnoparque',
             'estado' => User::IsActive(),
+            'deleted_at' => null,
         ])
             ->each(function ($user) use ($ocupaciones) {
                 $user->assignRole([Role::findByName(config('laravelpermission.roles.roleAdministrador'))]);
@@ -91,7 +79,7 @@ class UsersTableSeeder extends Seeder
 
 
         //gestores
-        factory(App\User::class, 200)->create()
+        factory(App\User::class, 300)->create()
             ->each(function ($user) use ($ocupaciones) {
                 $gestor = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleGestor'))]);
                 if ($gestor !== null) {
@@ -101,7 +89,7 @@ class UsersTableSeeder extends Seeder
             });
 
         //infocenters
-        factory(App\User::class, 20)->create()
+        factory(App\User::class, 40)->create()
             ->each(function ($user) use ($ocupaciones) {
                 $infocenter = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleInfocenter'))]);
                 if ($infocenter !== null) {
@@ -111,7 +99,7 @@ class UsersTableSeeder extends Seeder
             });
 
         //talentos
-        factory(App\User::class, 50)->create()
+        factory(App\User::class, 600)->create()
             ->each(function ($user) use ($ocupaciones) {
                 $talento = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleTalento'))]);
                 if ($talento !== null) {
