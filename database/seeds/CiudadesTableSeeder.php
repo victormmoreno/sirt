@@ -6625,6 +6625,12 @@ class CiudadesTableSeeder extends Seeder
             'departamento_id' => 32,
         ]);
 
+        Ciudad::create([
+            'id'              => 1103,
+            'nombre'          => 'Extranjero',
+            'departamento_id' => 33,
+        ]);
+
         // factory(Ciudad::class, 20)->create();
     }
 }
