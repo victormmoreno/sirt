@@ -21,13 +21,23 @@ class ContactoEntidad extends Model
         'telefono_contacto',
     ];
 
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
+    }
+
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
+
     /*=========================================
     =            asesores eloquent            =
     =========================================*/
 
     public function getNombresContactoAttribute($nombres_contacto)
     {
-        return ucwords(mb_strtolower(trim($nombres_contacto),'UTF-8'));
+        return ucwords(mb_strtolower(trim($nombres_contacto), 'UTF-8'));
     }
 
     public function getCorreoContactoAttribute($correo_contacto)
@@ -48,7 +58,7 @@ class ContactoEntidad extends Model
 
     public function setNombresContactoAttribute($nombres_contacto)
     {
-        $this->attributes['nombres_contacto'] = ucwords(mb_strtolower(trim($nombres_contacto),'UTF-8'));
+        $this->attributes['nombres_contacto'] = ucwords(mb_strtolower(trim($nombres_contacto), 'UTF-8'));
     }
     public function setCorreoContactoAttribute($correo_contacto)
     {

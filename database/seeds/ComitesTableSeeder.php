@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\Comite;
 use Illuminate\Database\Seeder;
-use App\Models\Material;
 
-class MaterialesTableSeeder extends Seeder
+class ComitesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class MaterialesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Material::class, 600)->create();
+        factory(Comite::class, 100)->create();
     }
 }

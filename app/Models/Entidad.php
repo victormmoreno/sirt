@@ -135,6 +135,11 @@ class Entidad extends Model
         return $this->hasMany(Talento::class, 'entidad_id', 'id');
     }
 
+    public function contactosentidades()
+    {
+        return $this->hasMany(ContactoEntidad::class, 'entidad_id', 'id');
+    }
+
     /*=====  End of relaciones eloquent  ======*/
 
     /*========================================================================

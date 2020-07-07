@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Material;
+use App\Models\Visitante;
 
-class MaterialesTableSeeder extends Seeder
+class VisitantesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class MaterialesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Material::class, 600)->create();
+        factory(Visitante::class, 300)->create();
     }
 }

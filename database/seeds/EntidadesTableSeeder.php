@@ -1057,15 +1057,16 @@ class EntidadesTableSeeder extends Seeder
                 });
 
             factory(Entidad::class, 100)->create()
-            ->each(function ($entidad) {
-                $entidad->empresa()->save(factory(App\Models\Empresa::class)->make());
-            });
+                ->each(function ($entidad) {
+                    $entidad->empresa()->save(factory(App\Models\Empresa::class)->make());
+                    $entidad->contactosentidades()->saveMany([factory(App\Models\ContactoEntidad::class)->make()]);
+                });
 
             factory(Entidad::class, 50)->create()
-            ->each(function ($entidad) {
-                $entidad->grupoinvestigacion()->save(factory(App\Models\GrupoInvestigacion::class)->make());
-            });
-
+                ->each(function ($entidad) {
+                    $entidad->grupoinvestigacion()->save(factory(App\Models\GrupoInvestigacion::class)->make());
+                    $entidad->contactosentidades()->saveMany([factory(App\Models\ContactoEntidad::class)->make()]);
+                });
         }
     }
 

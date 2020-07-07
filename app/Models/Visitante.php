@@ -6,45 +6,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class Visitante extends Model
 {
-  protected $table = 'visitantes';
+    protected $table = 'visitantes';
 
-  /**
-  * The attributes that are mass assignable.
-  *
-  * @var array
-  */
-  protected $fillable = [
-    'tipodocumento_id',
-    'tipovisitante_id',
-    'documento',
-    'nombres',
-    'apellidos',
-    'email',
-    'contacto',
-    'estado'
-  ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'tipodocumento_id',
+        'tipovisitante_id',
+        'documento',
+        'nombres',
+        'apellidos',
+        'email',
+        'contacto',
+        'estado'
+    ];
 
-  const IS_INACTIVE = 0;
-  const IS_ACTIVE = 1;
+    const IS_INACTIVE = 0;
+    const IS_ACTIVE = 1;
 
-  public static function IsActive()
-  {
-    return self::IS_ACTIVE;
-  }
+    public static function IsActive()
+    {
+        return self::IS_ACTIVE;
+    }
 
-  public function IsInactive()
-  {
-    return self::IS_INACTIVE;
-  }
+    public static function IsInactive()
+    {
+        return self::IS_INACTIVE;
+    }
 
-  public function tipodocumento()
-  {
-    return $this->belongsTo(TipoDocumento::class, 'tipodocumento_id', 'id');
-  }
+    public function tipodocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'tipodocumento_id', 'id');
+    }
 
-  public function tipovisitante()
-  {
-    return $this->belongsTo(TipoVisitante::class, 'tipovisitante_id', 'id');
-  }
-
+    public function tipovisitante()
+    {
+        return $this->belongsTo(TipoVisitante::class, 'tipovisitante_id', 'id');
+    }
 }

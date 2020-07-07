@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\ComiteIdea;
 use Illuminate\Database\Seeder;
-use App\Models\Material;
+use Lcobucci\JWT\Claim;
 
-class MaterialesTableSeeder extends Seeder
+class ComitesIdeasTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +13,6 @@ class MaterialesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Material::class, 600)->create();
+        factory(ComiteIdea::class, 100)->create();
     }
 }

@@ -2,21 +2,22 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Equipo;
-use App\Models\Nodo;
+use App\Models\{Equipo, Nodo};
 use Faker\Generator as Faker;
+use Carbon\Carbon;
 
 $factory->define(Equipo::class, function (Faker $faker) {
-	$nodo = Nodo::with(['lineas'])->get()->random();
+    $nodo = Nodo::has('lineas')->get()->random();
     return [
         'nodo_id'             => $nodo->id,
-        'lineatecnologica_id' => $nodo->lineas->first()->id,
+        'lineatecnologica_id' => $nodo->lineas->random()->id,
         'referencia'          => $faker->text($maxNbChars = 50),
         'nombre'              => $faker->word,
         'marca'               => $faker->word,
         'costo_adquisicion'   => $faker->numerify('########'),
         'vida_util'           => $faker->numerify('##'),
-        'anio_compra'         => $faker->date($format = 'Y',$min = 2016, $max = 'now'),
-        'horas_uso_anio'      => $faker->numerify('##'),
+        // 'anio_compra'         => $faker->date($format = 'Y', $min = 2016, $max = 'now'),
+        'anio_compra'         => Carbon::now()->subYears($faker->randomDigit())->year,
+        'horas_uso_anio'      => $faker->numerify('###'),
     ];
 });
