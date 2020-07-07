@@ -42,7 +42,6 @@ class UserFormRequest extends FormRequest
             'txtdepartamento'           => 'required',
             'txtdepartamento'           => 'required',
             'txtetnias'           => 'required',
-
             'txtdepartamentoexpedicion' => 'required',
             'txtdocumento'              => 'required|digits_between:6,11|numeric|unique:users,documento,' . request()->route('id'),
             'txtnombres'                => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
@@ -173,10 +172,6 @@ class UserFormRequest extends FormRequest
 
             'txtestrato.required'                 => 'El estrato es obligatorio.',
 
-
-
-
-
             'txtemail.required'                   => 'El correo electrónico es obligatorio.',
             'txtemail.min'                        => 'El correo electrónico debe ser minimo 1 caracter',
             'txtemail.max'                        => 'El correo electrónico debe ser máximo 100 caracteres',
@@ -306,7 +301,6 @@ class UserFormRequest extends FormRequest
             'txtbarrio'            => 'barrio',
             'txttelefono'          => 'telefono',
             'txtcelular'           => 'celular',
-            'txté'            => 'é',
             'txtotraeps'           => 'otra eps',
         ];
     }

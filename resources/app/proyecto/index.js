@@ -328,194 +328,30 @@ var infoActividad = {
                 }else if(response.data.actividad.articulacion_proyecto.articulacion !== null){
                     infoActividad.openIsArticulacion(response);
                 }
-                
+
                 $('#info_actividad_modal').openModal();
              });
 
         }else{
-            
+
         }
     },
     openIsProyect: function(response){
         $("#detalleActividad").append(`
             <table class="striped centered">
-            <TR>
-                <TH width="25%">Nodo</TH>
-                <TD width="25%">${response.data.actividad.nodo.entidad.nombre}</TD>
-                <TH width="25%" >Linea Tecnológica</TH>
-                <TD width="25%" COLSPAN=3>${response.data.actividad.gestor.lineatecnologica.abreviatura} - ${response.data.actividad.gestor.lineatecnologica.nombre}</TD>
-            </TR>
-            <TR>
-                <TH width="25%">Idea de proyecto</TH>
-                <TD width="25%">${response.data.actividad.articulacion_proyecto.proyecto.idea.codigo_idea} - ${response.data.actividad.articulacion_proyecto.proyecto.idea.nombre_proyecto}</TD>
-                <TH width="25%" >Idea inscrita por</TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.idea.nombre_completo)}</TD>
-            </TR>
-            <TR>
-                <TH width="25%">Correo</TH>
-                <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.idea.correo_contacto)} </TD>
-                <TH width="25%" >Telefono</TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.idea.telefono_contacto)}</TD>
-            </TR>
-            <TR>
-                <TH width="25%">Código Proyecto</TH>
-                <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
-                <TH width="25%" >Nombre Proyecto</TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
-            </TR>
-            <TR>
-                <TH width="16,6%">Fase</TH>
-                <TD width="16,6%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.fase.nombre)}</TD>
-                <TH width="16,6%">Fecha de Inicio </TH>
-                <TD width="16,6%">${infoActividad.showDateActivity(response.data.actividad.fecha_inicio)}</TD>
-                <TH width="16,6%">Fecha de cierre </TH>
-                <TD width="16,6%">${infoActividad.showDateActivity(response.data.actividad.fecha_cierre)}</TD>
-            </TR>
-            <TR>
-                <TH width="25%">Sublinea</TH>
-                <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.sublinea.nombre)}</TD>
-                <TH width="25%">Área de conocimiento </TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.areaconocimiento.nombre)}</TD>
-            </TR>
-            <TR>
-                <TH width="25%">Gestor</TH>
-                <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
-                <TH width="25%">Correo Electrónico</TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.gestor.user.email)}</TD>
-            </TR>
-            <TR>
-                <TH width="16,6%">TRL que se pretende realizar</TH>
-                <TD width="16,6%">${infoActividad.validateDataIsTRL(response.data.actividad.articulacion_proyecto.proyecto.trl_esperado)}</TD>
-                <TH width="16,6%">¿Recibido a través de fábrica de productividad?</TH>
-                <TD width="16,6%">${infoActividad.validateDataIsBoolean(response.data.actividad.articulacion_proyecto.proyecto.fabrica_productividad )}</TD>
-                <TH width="16,6%">¿Recibido a través del área de emprendimiento SENA?</TH>
-                <TD width="16,6%">${infoActividad.validateDataIsBoolean(response.data.actividad.articulacion_proyecto.proyecto.reci_ar_emp)}</TD>
-            </TR>
-            <TR>
-                <TH width="16,6%">¿El proyecto pertenece a la economía naranja?</TH>
-                <TD width="16,6%">${infoActividad.dataPerteneceEconomiaNaranja(response.data.actividad.articulacion_proyecto.proyecto)}</TD>
-                <TH width="16,6%">¿El proyecto está dirigido a discapacitados?</TH>
-                <TD width="16,6%">${infoActividad.dataDirigidoDiscapacitados(response.data.actividad.articulacion_proyecto.proyecto)}</TD>
-                <TH width="16,6%">¿Articulado con CT+i?</TH>
-                <TD width="16,6%">${infoActividad.dataArticuladaCTI(response.data.actividad.articulacion_proyecto.proyecto)}</TD>
-            </TR>
-            <TR>
-                <TH width="16,6%">¿TRL obtenido?</TH>
-                <TD width="16,6%">${infoActividad.validateDataIsTRL(response.data.actividad.articulacion_proyecto.proyecto.trl_obtenido)}</TD>
-                <TH width="16,6%">¿Dirigido a área de emprendimiento SENA?</TH>
-                <TD width="16,6%">${infoActividad.validateDataIsBoolean(response.data.actividad.articulacion_proyecto.proyecto.diri_ar_emp)}</TD>
-                <TH width="16,6%">Costo Aproximado del Proyecto</TH>
-                <TD width="16,6%">$ ${infoActividad.showInfoNull(response.data.costo.original.costosTotales)}</TD>
-            </TR>
+                <TR>
+                    <TH width="25%">Código Proyecto</TH>
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
+                    <TH width="25%" >Nombre Proyecto</TH>
+                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
+                </TR>
+                <TR>
+                    <TH width="25%">Gestor</TH>
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
+                    <TH width="25%">Correo Electrónico</TH>
+                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.gestor.user.email)}</TD>
+                </TR>
             </table>
-            <div class="row">
-            <div class="col s12 m6 l6">
-                <ul class="collection">
-                    <li class="collection-item">
-                        <span class="title cyan-text text-darken-3">
-                            Alcance del Proyecto
-                        </span>
-                        <p>
-                        ${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.alcance_proyecto  )}
-                        </p>
-                    </li>
-
-                    <li class="collection-item">
-                        <span class="title cyan-text text-darken-3">
-                            Primer objetivo específico
-                        </span>
-                        <p>
-                            ${infoActividad.showInfoNull(response.data.actividad.objetivos_especificos.length > 0 ? response.data.actividad.objetivos_especificos[0].objetivo : null)}
-                        </p>
-                    </li>
-
-                    <li class="collection-item">
-                        <span class="title cyan-text text-darken-3">
-                            Tercer objetivo específico
-                        </span>
-                        <p>
-                            ${infoActividad.showInfoNull(response.data.actividad.objetivos_especificos.length > 0 ? response.data.actividad.objetivos_especificos[2].objetivo : null)}
-                        </p>
-                    </li>
-
-                </ul>
-            </div>
-            <div class="col s12 m6 l6">
-                <ul class="collection">
-
-                    <li class="collection-item">
-                        <span class="title cyan-text text-darken-3">
-                            Objetivo General del Proyecto
-                        </span>
-                        <p>
-                        ${infoActividad.showInfoNull(response.data.actividad.objetivo_general)}
-                        </p>
-                    </li>
-
-                    <li class="collection-item">
-                        <span class="title cyan-text text-darken-3">
-                            Segundo objetivo específico
-                        </span>
-                        <p>
-                            ${infoActividad.showInfoNull(response.data.actividad.objetivos_especificos.length > 0 ? response.data.actividad.objetivos_especificos[1].objetivo : null)}
-                        </p>
-                    </li>
-
-                    <li class="collection-item">
-                        <span class="title cyan-text text-darken-3">
-                            Cuarto objetivo específico
-                        </span>
-                        
-                        <p>
-                        ${infoActividad.showInfoNull(response.data.actividad.objetivos_especificos.length > 0 ? response.data.actividad.objetivos_especificos[3].objetivo : null)}
-                        </p>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m6 l6">
-                    <ul class="collection">
-                        <li class="collection-item">
-                            <span class="title cyan-text text-darken-3">
-                                Evidencias Prototipo producto
-                            </span>
-                            <p>
-                                ${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.trl_prototipo)}
-                            </p>
-                        </li>
-                        <li class="collection-item">
-                            <span class="title cyan-text text-darken-3">
-                                Evidencias Pruebas documentadas
-                            </span>
-                            <p>
-                                ${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.trl_pruebas)}
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col s12 m6 l6">
-                    <ul class="collection">
-                        <li class="collection-item">
-                            <span class="title cyan-text text-darken-3">
-                                Evidencias Modelo de negocio
-                            </span>
-                            <p>
-                                ${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.trl_modelo)}
-                            </p>
-                        </li>
-                        <li class="collection-item">
-                            <span class="title cyan-text text-darken-3">
-                                Evidencias Normatividad
-                            </span>
-                            <p>
-                                ${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.trl_normatividad)}
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             <div class="right">
                 <small>
                     <b>Cantidad de usos de infraestructura:  </b>
@@ -575,7 +411,7 @@ var infoActividad = {
                                     <ul class="collection with-header">
                                         <li class="collection-header"><h5>Grupos de Investigación</h5></li>
                                         <div id="detallePropiedadGrupo"></div>
-                                        
+
                                     </ul>
                                 </div>
                             </div>
@@ -590,37 +426,19 @@ var infoActividad = {
     openIsArticulacion: function(response){
         $("#detalleActividad").append(`
             <table class="striped centered">
-            <TR>
-                <TH width="25%">Nodo</TH>
-                <TD width="25%">${response.data.actividad.nodo.entidad.nombre}</TD>
-                <TH width="25%" >Linea Tecnológica</TH>
-                <TD width="25%" COLSPAN=3>${response.data.actividad.gestor.lineatecnologica.abreviatura} - ${response.data.actividad.gestor.lineatecnologica.nombre}</TD>
-            </TR>
-            <TR>
-                <TH width="25%">Código Articulación</TH>
-                <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
-                <TH width="25%" >Nombre de Articulación</TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
-            </TR>
-            <TR>
-                <TH width="16,6%">Fase</TH>
-                <TD width="16,6%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.articulacion.fase.nombre)}</TD>
-                <TH width="16,6%">Fecha de Inicio </TH>
-                <TD width="16,6%">${infoActividad.showDateActivity(response.data.actividad.fecha_inicio)}</TD>
-                <TH width="16,6%">Fecha de cierre </TH>
-                <TD width="16,6%">${infoActividad.showDateActivity(response.data.actividad.fecha_cierre)}</TD>
-            </TR>
-            
-            <TR>
-                <TH width="25%">Gestor</TH>
-                <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
-                <TH width="25%">Correo Electrónico</TH>
-                <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.gestor.user.email)}</TD>
-            </TR>
-        
+                <TR>
+                    <TH width="25%">Código Articulación</TH>
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
+                    <TH width="25%" >Nombre de Articulación</TH>
+                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
+                </TR>
+                <TR>
+                    <TH width="25%">Gestor</TH>
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
+                    <TH width="25%">Correo Electrónico</TH>
+                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.gestor.user.email)}</TD>
+                </TR>
             </table>
-            
-            
             <div class="right">
                 <small>
                     <b>Cantidad de usos de infraestructura:  </b>
@@ -689,7 +507,7 @@ var infoActividad = {
     },
     showTalentos: function (data){
         let fila = "";
-       
+
         if(data.length > 0){
             fila = data.map(function(el){
                 return `<tr class="selected">
@@ -700,7 +518,7 @@ var infoActividad = {
                             <td>${infoActividad.showInfoNull(el.user.celular)}</td>
                         </tr>`;
             });
-            
+
         }else{
             fila = `<tr class="selected">
                         <td COLSPAN=4>No se encontraron resultados</td>
@@ -715,9 +533,9 @@ var infoActividad = {
     },
     showPropiedadIntelectualEmpresas: function(data){
         let info = "";
-       
+
         if(data.length > 0){
-            info = data.map(function(el){                
+            info = data.map(function(el){
                     return `
                         <li class="collection-item">
                         ${infoActividad.showInfoNull(el.nit)} - ${infoActividad.showInfoNull(el.entidad.nombre)}
@@ -733,9 +551,9 @@ var infoActividad = {
     },
     showPropiedadIntelectualTalentos: function(data){
         let info = "";
-       
+
         if(data.length > 0){
-            info = data.map(function(el){                
+            info = data.map(function(el){
                 return `<li class="collection-item">
                         ${infoActividad.showInfoNull(el.documento)} - ${infoActividad.showInfoNull(el.nombres)} ${infoActividad.showInfoNull(el.apellidos)}
                         </li>`;
@@ -749,11 +567,11 @@ var infoActividad = {
     },
     showPropiedadIntelectualGrupo: function(data){
         let info = "";
-       
+
         if(data.length > 0){
-            info = data.map(function(el){                
+            info = data.map(function(el){
                 return `<li class="collection-item">
-                        ${infoActividad.showInfoNull(el.codigo_grupo)} - ${infoActividad.showInfoNull(el.entidad.nombre)} 
+                        ${infoActividad.showInfoNull(el.codigo_grupo)} - ${infoActividad.showInfoNull(el.entidad.nombre)}
                         </li>`;
             });
         }else{
@@ -763,5 +581,5 @@ var infoActividad = {
         }
         document.getElementById("detallePropiedadGrupo").innerHTML = info;
     },
-    
+
 }

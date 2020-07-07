@@ -172,6 +172,11 @@ class DepartamentosTableSeeder extends Seeder
             'nombre' => 'Vichada',
         ]);
 
+        Departamento::create([
+            'id'     => 33,
+            'nombre' => 'Extranjero',
+        ]);
+
         // factory(Departamento::class, 20)->create();
     }
 }

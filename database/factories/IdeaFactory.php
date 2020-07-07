@@ -2,30 +2,31 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\Models\Idea;
-use App\Models\Nodo;
-use App\Models\EstadoIdea;
+use App\Models\{Entidad, Idea, Nodo, EstadoIdea};
 use Faker\Generator as Faker;
 
 $factory->define(Idea::class, function (Faker $faker) {
+    $entidadNodo = Entidad::has('nodo')->get()->random();
+    $estadoIdea = EstadoIdea::all()->random();
+
     return [
-        // 'fecha' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'nombres_contacto'=> $faker->firstName,
-        'apellidos_contacto'=> $faker->lastName,
-        'correo_contacto'=> $faker->unique()->safeEmail,
-        'telefono_contacto'=> $faker->numerify('######'),
-        'nombre_proyecto'=> $faker->text($maxNbChars = 45),
-        'codigo_idea'=> $faker->numerify('I########'),
-        'aprendiz_sena'=> $faker->randomElement([1, 0]),
-        'pregunta1'=> $faker->randomElement([1, 2,3,4,5,6,7,8,9]),
-        'pregunta2'=> $faker->randomElement([1, 2,3,4]),
-        'pregunta3'=> $faker->randomElement([1, 2,3,4,5,6]),
-        'descripcion'=> $faker->text($maxNbChars = 45),
-        'objetivo'=> $faker->text($maxNbChars = 45),
-        'alcance'=> $faker->text($maxNbChars = 45),
-        'tipo_idea'=> $faker->randomElement([ Idea::IS_EMPRENDEDOR, Idea::IS_GRUPOINVESTIGACION]),
-        'nodo_id'=> Nodo::join('entidades','entidades.id','nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-        'estadoidea_id'=> 1,
-    
+        'nodo_id' => $entidadNodo->nodo->id,
+        'estadoidea_id' => $estadoIdea->id,
+        'nombres_contacto' => $faker->firstName,
+        'apellidos_contacto' => $faker->lastName,
+        'correo_contacto' => $faker->unique()->freeEmail,
+        'telefono_contacto' => $faker->numerify('#######'),
+        'nombre_proyecto' => $faker->text($maxNbChars = 200),
+        'codigo_idea' => $faker->unique()->bothify('I####-######-###'),
+        'aprendiz_sena' => $faker->randomElement([1, 0]),
+        'pregunta1' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+        'pregunta2' => $faker->randomElement([1, 2, 3, 4]),
+        'pregunta3' => $faker->randomElement([1, 2, 3, 4, 5, 6]),
+        'descripcion' => $faker->text($maxNbChars = 2000),
+        'objetivo' => $faker->text($maxNbChars = 2000),
+        'alcance' => $faker->text($maxNbChars = 2000),
+        'viene_convocatoria' => $vieneConvocatoria = $faker->randomElement([1, 0]),
+        'convocatoria' => $vieneConvocatoria == 1 ? $faker->text($maxNbChars = 100) : null,
+        'tipo_idea' => Idea::IsEmprendedor(),
     ];
 });

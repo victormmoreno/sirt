@@ -1,17 +1,7 @@
 $(document).ready(function() {
-    $('#talentoByDinamizador_table').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      "lengthChange": false,
-    });
-
-    $('#talentoByDinamizador_inactivos_table').DataTable({
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
+    userTalentoByDinamizador.consultarTalentosByTecnoparque();
+    userTalentoByDinamizador.consultarTalentosByTecnoparqueTrash();
+    
 
     $('#talentoByGestor_table').DataTable({
         language: {

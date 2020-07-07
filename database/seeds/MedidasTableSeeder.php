@@ -12,6 +12,6 @@ class MedidasTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Medida::class, 10)->create();
+        factory(Medida::class, 20)->create();
     }
 }

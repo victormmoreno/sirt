@@ -21,10 +21,14 @@ class EquipoDatatables
                 return $data->vida_util + $data->anio_compra;
             })
             ->addColumn('depreciacion_por_anio', function ($data) {
-                return '$ ' . number_format(round($data->costo_adquisicion / $data->vida_util, 2));
+                if ($data->vida_util > 0 || $data->costo_adquisicion >= 0) {
+                    return '$ ' . number_format(round($data->costo_adquisicion) / $data->vida_util, 0);
+                }
+
+                return '$ ' . number_format(round($data->costo_adquisicion), 0);
             })
             ->editColumn('costo_adquisicion', function ($data) {
-                return '$ ' . number_format($data->costo_adquisicion);
+                return '$ ' . number_format(round($data->costo_adquisicion), 0);
             })
             ->editColumn('nombrelinea', function ($data) {
                 return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
@@ -46,10 +50,14 @@ class EquipoDatatables
                 return $data->vida_util + $data->anio_compra;
             })
             ->addColumn('depreciacion_por_anio', function ($data) {
-                return '$ ' . number_format(round($data->costo_adquisicion / $data->vida_util, 2));
+                if ($data->vida_util > 0 || $data->costo_adquisicion >= 0) {
+                    return '$ ' . number_format(round($data->costo_adquisicion) / $data->vida_util, 0);
+                }
+
+                return '$ ' . number_format(round($data->costo_adquisicion), 0);
             })
             ->editColumn('costo_adquisicion', function ($data) {
-                return '$ ' . number_format($data->costo_adquisicion);
+                return '$ ' . number_format(round($data->costo_adquisicion), 0);
             })
             ->editColumn('nombrelinea', function ($data) {
                 return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
