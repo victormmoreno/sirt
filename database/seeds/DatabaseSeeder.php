@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         if (app()->environment() == 'production') {
+        if (app()->environment() == 'production') {
             $this->truncateTables([
                 'gradosescolaridad',
                 'gruposanguineos',
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
                 'productos'
 
             ]);
-        }else if(app()->environment() == 'local'){
+        } else if (app()->environment() == 'local') {
             $this->truncateTables([
                 'activation_tokens',
                 'actividades',
@@ -88,6 +88,7 @@ class DatabaseSeeder extends Seeder
                 'entrenamientos',
                 'entrenamiento_idea',
                 'eps',
+                'etnias',
                 'equipos',
                 'equipo_mantenimiento',
                 'equipo_uso',
@@ -145,14 +146,19 @@ class DatabaseSeeder extends Seeder
                 'tiposedt',
                 'tiposvisitante',
                 'users',
-                'usoinfraestructuras',    
-                'uso_laboratorios',    
-                'uso_talentos',    
-                'visitantes',    
-                'websockets_statistics_entries', 
-                'productos'
+                'usoinfraestructuras',
+                'uso_laboratorios',
+                'uso_talentos',
+                'visitantes',
+                'websockets_statistics_entries',
+                'productos',
+                'tipo_talentos',
+                'tipo_estudio',
+                'tipo_formacion',
+                'tipos_empresas',
+                'tamanhos_empresas',
             ]);
-        }else{
+        } else {
             echo "NO PUEDES TRUNCAR TABLAS";
         }
 
@@ -161,7 +167,7 @@ class DatabaseSeeder extends Seeder
 
         collect(config('seeders')[app()->environment()])
             ->where('callable', true)
-            ->each(function ($seeder){
+            ->each(function ($seeder) {
                 $this->call($seeder['name']);
             });
     }

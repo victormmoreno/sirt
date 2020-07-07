@@ -12,6 +12,32 @@ class PresentacionesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Presentacion::class, 8)->create();
+
+        factory(Presentacion::class)->create([
+            'nombre' => 'lamina'
+        ]);
+        factory(Presentacion::class)->create([
+            'nombre' => 'unidad'
+        ]);
+
+        factory(Presentacion::class)->create([
+            'nombre' => 'contenedor'
+        ]);
+
+        factory(Presentacion::class)->create([
+            'nombre' => 'cartucho'
+        ]);
+
+        factory(Presentacion::class)->create([
+            'nombre' => 'kit'
+        ]);
+
+        factory(Presentacion::class)->create([
+            'nombre' => 'carrete'
+        ]);
+
+        factory(Presentacion::class)->create([
+            'nombre' => 'rollo'
+        ]);
     }
 }

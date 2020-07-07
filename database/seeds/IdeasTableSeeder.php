@@ -12,6 +12,6 @@ class IdeasTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Idea::class, 20)->create();
+        factory(Idea::class, 1500)->create();
     }
 }

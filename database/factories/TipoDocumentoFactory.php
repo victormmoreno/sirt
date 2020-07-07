@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(TipoDocumento::class, function (Faker $faker) {
     return [
+        'abreviatura' => strtoupper($faker->lexify('???')),
         'nombre'      => $faker->unique()->word,
-        'estado'      => $faker->randomElement([TipoDocumento::IsActive(), TipoDocumento::IsInactive()]),
     ];
 });

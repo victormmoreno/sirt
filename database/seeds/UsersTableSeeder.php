@@ -1,24 +1,10 @@
 <?php
 
-use App\Models\Ciudad;
-use App\Models\Entidad;
-use App\Models\Eps;
-use App\Models\Gestor;
-use App\Models\GradoEscolaridad;
-use App\Models\GrupoSanguineo;
-use App\Models\Infocenter;
-use App\Models\LineaTecnologica;
-use App\Models\Nodo;
 use App\Models\Ocupacion;
-use App\Models\Perfil;
-use App\Models\Talento;
-use App\Models\TipoDocumento;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
@@ -30,343 +16,111 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $nodo = Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first();
-        $role = Role::findByName(Role::findByName(config('laravelpermission.roles.roleAdministrador'))->first()->name);
-        $role->givePermissionTo([
-            Permission::findByName('Ver Administrador'),
-            Permission::findByName('Registrar Idea'),
-        ]);
 
-        $userAdmin = User::create([
-            'gradoescolaridad_id'  => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
-            'tipodocumento_id'     => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'    => GrupoSanguineo::all()->random()->id,
-            'eps_id'               => Eps::all()->random()->id,
-            'ciudad_id'            => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'              => 'victor',
-            'apellidos'            => 'perez',
-            'documento'            => '523422321',
-            'email'                => 'victor543@misena.edu.co',
-            'barrio'               => 'El Poblado',
-            'direccion'            => 'calle 40 #45 65',
-            'telefono'             => '413324',
-            'celular'              => '342452323',
-            'fechanacimiento'      => '1996-09-12',
-            'genero'               => User::IsMasculino(),
-            'estado'               => User::IsActive(),
-            //ultimo estudio
-            'institucion'          => 'Universidad de Antiquia',
-            'titulo_obtenido'      => 'Ingeniero Quimico',
-            'fecha_terminacion'    => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'       => Str::random(60),
-            'password'             => '123456789',
-            'estrato'              => rand(1, 6),
-        ]);
+        $roles = Role::all();
+        $ocupaciones = Ocupacion::all()->random();
 
-        $userAdmin->dinamizador()->create([
-            'user_id' => $userAdmin->id,
-            'nodo_id' => $nodo->id,
-        ]);
+        //user-prueba
+        factory(App\User::class, 1)->create([
+            'nombres' => 'usuario',
+            'apellidos' => 'de prueba',
+            'email' => 'usuario@prueba.com',
+            'password' => 'tecnoparque',
+            'estado' => User::IsActive(),
+            'deleted_at' => null,
+        ])
+            ->each(function ($user) use ($ocupaciones) {
+                $user->assignRole([Role::findByName(config('laravelpermission.roles.roleAdministrador'))]);
 
-        $userAdmin->gestor()->create([
-            'user_id'             => $userAdmin->id,
-            'nodo_id'             => $nodo->id,
-            'lineatecnologica_id' => $nodo->lineas->first()->id,
-            'honorarios'          => 4000000,
-        ]);
+                $dinamizador = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleDinamizador'))]);
+                if ($dinamizador !== null) {
+                    $user->dinamizador()->save(factory(App\Models\Dinamizador::class)->make());
+                }
+                $gestor = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleGestor'))]);
+                if ($gestor !== null) {
+                    $user->gestor()->save(factory(App\Models\Gestor::class)->make());
+                }
 
-        $userAdmin->infocenter()->create([
-            'nodo_id'   => $nodo->id,
-            'user_id'   => $userAdmin->id,
-            'extension' => 413342,
-        ]);
+                $infocenter = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleInfocenter'))]);
+                if ($infocenter !== null) {
+                    $user->infocenter()->save(factory(App\Models\Infocenter::class)->make());
+                }
 
-        $userAdmin->ingreso()->create([
-            'nodo_id' => $nodo->id,
-            'user_id' => $userAdmin->id,
-        ]);
+                $talento = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleTalento'))]);
+                if ($talento !== null) {
+                    $user->talento()->save(factory(App\Models\Talento::class)->make());
+                }
 
-        $userAdmin->talento()->create([
-            'user_id'    => $userAdmin->id,
-            'perfil_id'  => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
-            'entidad_id' => Entidad::all()->random()->id,
+                $ingreso = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleIngreso'))]);
+                if ($ingreso !== null) {
+                    $user->ingreso()->save(factory(App\Models\Ingreso::class)->make());
+                }
 
-        ]);
+                $user->assignRole([Role::findByName(config('laravelpermission.roles.roleDesarrollador'))]);
 
-        $userAdmin->assignRole([
-            Role::findByName(config('laravelpermission.roles.roleAdministrador')),
-            Role::findByName(config('laravelpermission.roles.roleDinamizador')),
-            Role::findByName(config('laravelpermission.roles.roleGestor')),
-            Role::findByName(config('laravelpermission.roles.roleInfocenter')),
-            Role::findByName(config('laravelpermission.roles.roleIngreso')),
-            Role::findByName(config('laravelpermission.roles.roleTalento')),
-        ]);
+                $user->ocupaciones()->sync($ocupaciones);
+            });
 
-        $ocupacion = Ocupacion::all()->random()->id;
+        //administradores
+        factory(App\User::class, 20)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $user->assignRole([Role::findByName(config('laravelpermission.roles.roleAdministrador'))]);
+                $user->ocupaciones()->sync($ocupaciones);
+            });
+        //dinamzadores
+        factory(App\User::class, 20)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $dinamizador = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleDinamizador'))]);
+                if ($dinamizador !== null) {
+                    $user->dinamizador()->save(factory(App\Models\Dinamizador::class)->make());
+                }
+                $user->ocupaciones()->sync($ocupaciones);
+            });
 
-        $userAdmin->ocupaciones()->attach($ocupacion);
 
-        $userDinamizador = User::create([
-            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Especializacion')->first()->id,
-            'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'             => 'juan',
-            'apellidos'           => 'Benitez',
-            'documento'           => '53244223',
-            'email'               => 'juan543@misena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => '413324',
-            'celular'             => '342452323',
-            'fechanacimiento'     => '1996-09-12',
-            'genero'              => User::IsMasculino(),
-            'estado'              => User::IsActive(),
-            //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'      => Str::random(60),
-            'password'            => '123456789',
-            'estrato'             => rand(1, 6),
-        ]);
+        //gestores
+        factory(App\User::class, 300)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $gestor = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleGestor'))]);
+                if ($gestor !== null) {
+                    $user->gestor()->save(factory(App\Models\Gestor::class)->make());
+                }
+                $user->ocupaciones()->sync($ocupaciones);
+            });
 
-        $userDinamizador->dinamizador()->create([
-            'user_id' => $userDinamizador->id,
-            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-        ]);
+        //infocenters
+        factory(App\User::class, 40)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $infocenter = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleInfocenter'))]);
+                if ($infocenter !== null) {
+                    $user->infocenter()->save(factory(App\Models\Infocenter::class)->make());
+                }
+                $user->ocupaciones()->sync($ocupaciones);
+            });
 
-        $userDinamizador->assignRole([Role::findByName(config('laravelpermission.roles.roleDinamizador'))]);
-        $userDinamizador->givePermissionTo(Permission::findByName('Registrar Idea'));
+        //talentos
+        factory(App\User::class, 600)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $talento = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleTalento'))]);
+                if ($talento !== null) {
+                    $user->talento()->save(factory(App\Models\Talento::class)->make());
+                }
+                $user->ocupaciones()->sync($ocupaciones);
+            });
 
-        $userGestorRamiro = User::create([
-            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Profesional')->first()->id,
-            'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'             => 'Ramiro Antonio',
-            'apellidos'           => 'Isaza Escobar',
-            'documento'           => 3414298,
-            'email'               => 'risazaes@misena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => null,
-            'fechanacimiento'     => '1999-01-19',
-            'genero'              => User::IsMasculino(),
-            'estado'              => User::IsActive(),
-            //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'      => Str::random(60),
-            'password'            => '123456789',
-            'estrato'             => rand(1, 6),
-        ]);
+        factory(App\User::class, 15)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $ingreso = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleIngreso'))]);
+                if ($ingreso !== null) {
+                    $user->ingreso()->save(factory(App\Models\Ingreso::class)->make());
+                }
+                $user->ocupaciones()->sync($ocupaciones);
+            });
 
-        $userGestorRamiro->gestor()->create([
-            'user_id'             => $userGestorRamiro->id,
-            'nodo_id'             => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-            'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'IND')->first()->id,
-            'honorarios'          => 4000000,
-        ]);
-        $userGestorRamiro->assignRole(Role::findByName(config('laravelpermission.roles.roleGestor')));
-
-        $userGestorJulian = User::create([
-            'gradoescolaridad_id' => 4,
-            'tipodocumento_id'    => 1,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'             => 'Julian Alberto',
-            'apellidos'           => 'Patiño',
-            'documento'           => 8102363,
-            'email'               => 'japatino@sena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => null,
-            'fechanacimiento'     => '1999-01-19',
-            'genero'              => User::IsMasculino(),
-            'estado'              => User::IsActive(),
-            //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'password'            => 8102363,
-            'estrato'             => rand(1, 6),
-        ]);
-
-        $userGestorJulian->gestor()->create([
-            'user_id'             => $userGestorJulian->id,
-            'nodo_id'             => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-            'lineatecnologica_id' => LineaTecnologica::where('abreviatura', '=', 'ETC')->first()->id,
-            'honorarios'          => 4000000,
-        ]);
-
-        $userGestorJulian->assignRole(Role::findByName(config('laravelpermission.roles.roleGestor')));
-
-        $userInfocenter = User::create([
-            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnologo')->first()->id,
-            'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'             => 'Nathalia',
-            'apellidos'           => 'Lopez',
-            'documento'           => '435442232',
-            'email'               => 'nataliainfo@misena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => '413324',
-            'celular'             => '342452323',
-            'fechanacimiento'     => '1980-09-12',
-            'genero'              => User::IsFemenino(),
-            'estado'              => User::IsActive(),
-            //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'      => Str::random(60),
-            'password'            => '123456789',
-            'estrato'             => rand(1, 6),
-        ]);
-
-        $userInfocenter->infocenter()->create([
-            'nodo_id'   => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-            'user_id'   => $userInfocenter->id,
-            'extension' => 413342,
-        ]);
-
-        $userInfocenter->assignRole(Role::findByName(config('laravelpermission.roles.roleInfocenter')));
-
-        $userIngreso = User::create([
-            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnico')->first()->id,
-            'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'             => 'Ana',
-            'apellidos'           => 'Fernandez',
-            'documento'           => '54224442',
-            'email'               => 'anafernadez@misena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => '413324',
-            'celular'             => '342452323',
-            'fechanacimiento'     => '1980-09-12',
-            'genero'              => User::IsFemenino(),
-            'estado'              => User::IsActive(),
-            //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'      => Str::random(60),
-            'password'            => '123456789',
-            'estrato'             => rand(1, 6),
-        ]);
-
-        $userIngreso->ingreso()->create([
-            'nodo_id' => Nodo::join('entidades', 'entidades.id', 'nodos.entidad_id')->where('entidades.nombre', '=', 'Medellin')->first()->id,
-            'user_id' => $userIngreso->id,
-        ]);
-
-        $userIngreso->assignRole(Role::findByName(config('laravelpermission.roles.roleIngreso')));
-
-        $userTalento = User::create([
-            'gradoescolaridad_id' => GradoEscolaridad::where('nombre', '=', 'Tecnico')->first()->id,
-            'tipodocumento_id'    => TipoDocumento::where('nombre', '=', 'Cédula de Ciudadanía')->first()->id,
-            'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-            'eps_id'              => Eps::all()->random()->id,
-            'ciudad_id'           => Ciudad::all()->random()->id,
-            'ciudad_expedicion_id' => Ciudad::all()->random()->id,
-            'nombres'             => 'Luisa',
-            'apellidos'           => 'Restrepo',
-            'documento'           => '75434533',
-            'email'               => 'luisa@misena.edu.co',
-            'barrio'              => 'El Poblado',
-            'direccion'           => 'calle 40 #45 65',
-            'telefono'            => '413324',
-            'celular'             => '342452323',
-            'fechanacimiento'     => '1980-09-12',
-            'genero'              => User::IsFemenino(),
-            'estado'              => User::IsActive(),
-            //ultimo estudio
-            'institucion'         => 'Universidad de Antiquia',
-            'titulo_obtenido'     => 'Ingeniero Quimico',
-            'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-            'remember_token'      => Str::random(60),
-            'password'            => '123456789',
-            'estrato'             => rand(1, 6),
-        ]);
-
-        $userTalento->talento()->create([
-            'user_id'    => $userTalento->id,
-            'perfil_id'  => Perfil::where('nombre', '=', 'Egresado SENA')->first()->id,
-            'entidad_id' => Entidad::all()->random()->id,
-
-        ]);
-
-        $userTalento->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
-
-        // // //
-        // factory(User::class, 2)->create();
-
-        // // $user = User::whereBetween('id', [8, 27])->get();
-
-        // $user = User::latest()->take(2)->get()->each(function ($item) {
-
-        //     $item->assignRole(Role::findByName(config('laravelpermission.roles.roleTalento')));
-
-        //     $talento = Talento::create([
-        //         "user_id"               => $item->id,
-        //         "perfil_id"             => Perfil::all()->random()->id,
-        //         "entidad_id"            => Entidad::all()->random()->id,
-        //         "universidad"           => null,
-        //         "programa_formacion"    => 'Administración de empresas',
-        //         "carrera_universitaria" => 'No Aplica',
-        //         "empresa"               => null,
-        //         "otro_tipo_talento"     => null,
-        //     ]);
-        //     $proyecto = Proyecto::create([
-        //         'idea_id'                     => Idea::all()->random()->id,
-        //         'sector_id'                   => Sector::all()->random()->id,
-        //         'sublinea_id'                 => Sublinea::all()->random()->id,
-        //         'areaconocimiento_id'         => AreaConocimiento::all()->random()->id,
-        //         'estadoproyecto_id'           => EstadoProyecto::all()->random()->id,
-        //         'gestor_id'                   => Gestor::all()->random()->id,
-        //         'entidad_id'                  => Entidad::all()->random()->id,
-        //         'nodo_id'                     => Nodo::all()->random()->id,
-        //         'tipoarticulacionproyecto_id' => TipoArticulacion::all()->random()->id,
-        //         'estadoprototipo_id'          => EstadoPrototipo::all()->random()->id,
-        //         'tipo_ideaproyecto'           => 1,
-        //         'otro_tipoarticulacion'       => 1,
-        //         'universidad_proyecto'        => 'Universidad de antiquia',
-        //         'codigo_proyecto'             => Str::random(10),
-        //         'nombre'                      => 'Andres Lopez',
-        //         'observaciones_proyecto'      => 'asdasdas',
-        //         'impacto_proyecto'            => 'asdsadasd',
-        //         'economia_naranja'            => 1,
-        //         'fecha_inicio'                => '2019-07-12',
-        //         'art_cti'                     => 1,
-        //         'nom_act_cti'                 => 1,
-        //         'diri_ar_emp'                 => 1,
-        //         'reci_ar_emp'                 => 1,
-        //         'dine_reg'                    => 1,
-        //     ]);
-
-        //     $talento->proyectos()->attach($proyecto->id, ['talento_lider' => 0]);
-        // });
-
-        // factory(Gestor::class, 5)->create();
-        // factory(Infocenter::class, 2)->create();
-
+        factory(App\User::class, 5)->create()
+            ->each(function ($user) use ($ocupaciones) {
+                $user->assignRole([Role::findByName(config('laravelpermission.roles.roleDesarrollador'))]);
+                $user->ocupaciones()->sync($ocupaciones);
+            });
     }
-
 }

@@ -8,7 +8,8 @@ return [
         'roleInfocenter'    => 'Infocenter',
         'roleTalento'       => 'Talento',
         'roleIngreso'       => 'Ingreso',
-        'roleProveedor'     => 'Proveedor',
+        // 'roleProveedor'     => 'Proveedor',
+        'roleDesarrollador'     => 'Desarrollador',
     ],
 
     'permissions' => [

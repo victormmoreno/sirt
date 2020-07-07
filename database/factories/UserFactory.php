@@ -2,15 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Ciudad;
-use App\Models\Eps;
-use App\Models\GradoEscolaridad;
-use App\Models\GrupoSanguineo;
-use App\Models\TipoDocumento;
+use App\Models\{Ciudad, Etnia, Eps, GradoEscolaridad, GrupoSanguineo, TipoDocumento};
 use App\User;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /*
@@ -28,34 +23,35 @@ $factory->define(User::class, function (Faker $faker) {
 
     return [
 
-        'gradoescolaridad_id' => GradoEscolaridad::all()->random()->id,
         'tipodocumento_id'    => TipoDocumento::all()->random()->id,
+        'gradoescolaridad_id' => GradoEscolaridad::all()->random()->id,
         'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
-        'eps_id'              => Eps::all()->random()->id,
+        'eps_id'              => $eps = Eps::all()->random()->id,
         'ciudad_id'           => Ciudad::all()->random()->id,
+        'ciudad_expedicion_id'  => Ciudad::all()->random()->id,
+        'etnia_id'           => Etnia::inRandomOrder()->first()->id,
         'nombres'             => $faker->firstName,
         'apellidos'           => $faker->lastName,
         'documento'           => $faker->unique()->numberBetween($min = 1, $max = 9000000),
-        'email'               => $faker->unique()->safeEmail,
-        'barrio'              => $faker->text($maxNbChars = 100),
+        'email'               => $faker->unique()->freeEmail,
+        'barrio'              => $faker->streetName,
         'direccion'           => $faker->address,
         'telefono'            => $faker->numerify('######'),
         'celular'             => $faker->numberBetween($min = 1, $max = 900000),
-        'fechanacimiento'     => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'genero'              => $faker->randomElement([User::IS_MASCULINO, User::IS_FEMENINO]),
-        'estado'              => $faker->boolean,
+        'fechanacimiento'     => Carbon::now()->subYears($faker->randomDigit())->subMonth($faker->randomDigit()),
+        'genero'              => $faker->randomElement([User::IsMasculino(), User::IsFemenino()]),
+        'otra_eps' => Eps::where('id', $eps)->first()->nombre ==  Eps::IsOtraEps() ? $faker->company : null,
+        'grado_discapacidad' => $gradoDiscapacidad = $faker->randomElement([1, 0]),
+        'descripcion_grado_discapacidad' => $gradoDiscapacidad == 1 ? $faker->word : null,
+        'estado'              => $estado = $faker->randomElement([User::IsActive(), User::IsInactive()]),
         'institucion'         => $faker->company,
         'titulo_obtenido'     => $faker->jobTitle,
-        'fecha_terminacion'   => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'password'            => Hash::make('123456789'),
+        'fecha_terminacion'   => Carbon::now()->subYears($faker->randomDigit()),
         'remember_token'      => Str::random(10),
-        'estrato'             => rand(1, 6),
-        'institucion'         => 'Universidad de Antiquia',
-        'titulo_obtenido'     => 'Ingeniero Quimico',
-        'fecha_terminacion'   => Carbon::now()->subYears(10)->subMonth(60),
-        'remember_token'      => Str::random(60),
-        'password'            => '123456789',
-        'estrato'             => rand(1, 6),
+        'ultimo_login'      => $faker->randomElement([Carbon::now(), null]),
+        'password'            => 'tecnoparque',
+        'estrato'             => $faker->randomElement([1, 2, 3, 4, 5, 6]),
+        'deleted_at'         => $estado == User::IsActive() ? null : Carbon::now(),
 
     ];
 });

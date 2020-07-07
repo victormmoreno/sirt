@@ -2,6 +2,7 @@
 
 use App\Models\LineaTecnologica;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class LineasTecnologicasTableSeeder extends Seeder
 {
@@ -15,28 +16,28 @@ class LineasTecnologicasTableSeeder extends Seeder
         LineaTecnologica::create([
             'abreviatura' => 'BIO',
             'nombre'      => 'Biotecnonlogía y Nanotecnología',
-            'slug'        => str_slug('Biotecnonlogía y Nanotecnología', '-'),
+            'slug'        => Str::slug('Biotecnonlogía y Nanotecnología', '-'),
             'descripcion' => '',
         ]);
 
         LineaTecnologica::create([
             'abreviatura' => 'ETC',
             'nombre'      => 'Electrónica y Telecomunicaciones',
-            'slug'        => str_slug('Electrónica y Telecomunicaciones', '-'),
+            'slug'        => Str::slug('Electrónica y Telecomunicaciones', '-'),
             'descripcion' => '',
         ]);
 
         LineaTecnologica::create([
             'abreviatura' => 'IND',
             'nombre'      => 'Ingenieria y Diseño',
-            'slug'        => str_slug('Ingenieria y Diseño', '-'),
+            'slug'        => Str::slug('Ingenieria y Diseño', '-'),
             'descripcion' => '',
         ]);
 
         LineaTecnologica::create([
             'abreviatura' => 'TV',
             'nombre'      => 'Tecnologías Virtuales',
-            'slug'        => str_slug('Tecnologías Virtuales', '-'),
+            'slug'        => Str::slug('Tecnologías Virtuales', '-'),
             'descripcion' => '',
         ]);
 
