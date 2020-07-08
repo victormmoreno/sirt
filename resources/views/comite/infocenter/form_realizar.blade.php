@@ -128,13 +128,13 @@
           <br>
           <ul class="collection">
               <li class="collection-item">
-                <b>Inhabilitado:</b> En caso de elegir este estado de idea de proyecto, la idea ya no se podrá registrar en un futuro entrenamiento/taller de fortalecimiento y/o comité.
+                <b>Inhabilitado:</b> La idea ya no se podrá registrar en un futuro entrenamiento/taller de fortalecimiento y/o comité.
               </li>
               <li class="collection-item">
-                <b>Inicio:</b> En caso de elegir este estado de idea de proyecto, la idea se puede registrar en un futuro entrenamiento/taller de fortalecimiento ó en otro comité.
+                <b>Inicio:</b> La idea se puede registrar en un futuro entrenamiento/taller de fortalecimiento ó en otro comité.
               </li>
               <li class="collection-item">
-                <b>Reagendamiento:</b> En caso de elegir este estado de idea de proyecto, la idea de puede reagendar a un próximo comité pero ya no se podrá asociar a un entrenamiento/taller de fortalecimiento.
+                <b>Reagendamiento:</b> La idea de puede reagendar a un próximo comité pero ya no se podrá asociar a un entrenamiento/taller de fortalecimiento.
               </li>
           </ul>
       </p>

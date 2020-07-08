@@ -31,7 +31,7 @@ class ComiteController extends Controller
   public function detalle(int $id)
   {
     $comite = Comite::findOrFail($id);
-    if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Agendamiento' ) {
+    if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Programado' ) {
       return view('comite.infocenter.detalle_agendamiento', [
         'comite' => $comite
       ]);
@@ -43,7 +43,7 @@ class ComiteController extends Controller
       return view('comite.infocenter.detalle_asignado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Agendamiento') {
+    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Programado') {
       return view('comite.dinamizador.detalle_agendamiento', [
         'comite' => $comite
       ]);
@@ -55,7 +55,7 @@ class ComiteController extends Controller
       return view('comite.dinamizador.detalle_asignado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Agendamiento') {
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Programado') {
       return view('comite.gestor.detalle_agendamiento', [
         'comite' => $comite
       ]);
@@ -93,7 +93,7 @@ class ComiteController extends Controller
   public function realizar(int $id)
   {
     $comite = Comite::findOrFail($id);
-    $estados = EstadoIdea::whereIn('nombre', ['Inicio', 'Reagendamiento', 'Inhabilitado', 'Admitido'])->get();
+    $estados = EstadoIdea::whereIn('nombre', ['Inicio', 'Reprogramado', 'Inhabilitado', 'Admitido'])->get();
     return view('comite.infocenter.realizar_comite', [
       'comite' => $comite,
       'estados' => $estados
@@ -236,7 +236,6 @@ class ComiteController extends Controller
 
     if ( Session::get('login_role') == User::IsInfocenter() ) {
        $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
-       // dd($ideas);
       return view('comite.infocenter.create2', compact('ideas'));
     }
   }

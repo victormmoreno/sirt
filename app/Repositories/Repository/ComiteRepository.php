@@ -132,7 +132,7 @@ class ComiteRepository
       $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', 'Convocado')->first()->id]);
       $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
       $comite->ideas()->sync($syncIdeas, true);
-      $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', 'Agendamiento')->first()->id]);
+      $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', 'Programado')->first()->id]);
       DB::commit();
       return true;
     } catch (\Exception $e) {
@@ -337,11 +337,11 @@ class ComiteRepository
       $comite = Comite::create([
         'codigo' => $codigo_comite,
         'fechacomite' => $request->input('txtfechacomite_create'),
-        'estado_comite_id' => EstadoComite::where('nombre', 'Agendamiento')->first()->id
+        'estado_comite_id' => EstadoComite::where('nombre', 'Programado')->first()->id
       ]);
       $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
       $comite->ideas()->sync($syncIdeas, false);
-      $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', 'Agendamiento')->first()->id]);
+      $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', 'Programado')->first()->id]);
       DB::commit();
       return true;
     } catch (\Throwable $th) {

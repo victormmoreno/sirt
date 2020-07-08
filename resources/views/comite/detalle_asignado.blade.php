@@ -48,7 +48,7 @@
                                     <h5 class="center">Ideas que se presentaron en el comité</h5>
                                     <div class="row">
                                         @foreach ($comite->ideas as $key => $value)
-                                        <div class="card teal lighten-3">
+                                        <div class="card light-blue lighten-4">
                                             <div class="card-content">
                                                 <span class="card-title"><h5>#{{($key+1)}} | {{$value->codigo_idea}} - {{$value->nombre_proyecto}}</h5></span>
                                                 <h5 class="center">Datos de la idea de proyecto</h5>

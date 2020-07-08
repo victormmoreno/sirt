@@ -1,15 +1,15 @@
 @component('mail::message')
-# Agendamiento para el Comité de Selección de Ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
 <b>_{{$idea->nombres_contacto }} {{$idea->apellidos_contacto }}_</b><br>
 Cordial Saludo.
 <br>
-Hemos enviado este correo para informarte la fecha y dirección donde se realizará el comité de selección de ideas.
+Se ha enviado este correo para informarte la fecha y dirección donde se realizará el comité de selección de ideas.
 <br>
 @component('mail::panel')
 	
-	<h1 class="tittle">📑 Agendamiento para el Comité de Selección de Ideas</h1>
+	<h1 class="tittle">📑 Programación para el Comité de Selección de Ideas</h1>
 	
 @endcomponent
 

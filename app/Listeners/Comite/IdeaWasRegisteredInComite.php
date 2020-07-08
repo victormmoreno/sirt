@@ -28,6 +28,10 @@ class IdeaWasRegisteredInComite
      */
     public function handle(ComiteWasRegistered $event)
     {
-        Mail::to([$event->datosIdea->correo_contacto, $event->emailSession])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf, $event->extensiones));
+        if ($event->datosIdea->gestor != null) {
+            Mail::to([$event->datosIdea->correo_contacto, $event->emailSession, $event->datosIdea->gestor->user->email])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf, $event->extensiones));
+        } else {
+            Mail::to([$event->datosIdea->correo_contacto, $event->emailSession])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf, $event->extensiones));
+        }
     }
 }

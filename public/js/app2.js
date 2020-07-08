@@ -1023,12 +1023,27 @@ function notificacionFallidaDelResultado() {
     });
 }
 $(document).on('submit', 'form#formComiteAsignarCreate', function (event) {
-$('button[type="submit"]').attr('disabled', 'disabled');
-event.preventDefault();
-var form = $(this);
-var data = new FormData($(this)[0]);
-var url = form.attr("action");
-ajaxSendFormComiteAsignar(form, data, url, 'create');
+    event.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de guardar esta información?',
+        text: "No podrás revertir estos cambios!",
+        // text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los gestores puedes cambiar esta información",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, guardar'
+    }).then((result) => {
+        if (result.value) {
+            $('button[type="submit"]').attr('disabled', 'disabled');
+            event.preventDefault();
+            var form = $(this);
+            var data = new FormData($(this)[0]);
+            var url = form.attr("action");
+            ajaxSendFormComiteAsignar(form, data, url, 'create');
+        }
+    });
 });
 
 function ajaxSendFormComiteAsignar(form, data, url, fase) {
@@ -1273,21 +1288,49 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
   });
 
 $(document).on('submit', 'form#formComiteAgendamientoCreate', function (event) { // $('button[type="submit"]').prop("disabled", true);
-$('button[type="submit"]').attr('disabled', 'disabled');
-event.preventDefault();
-var form = $(this);
-var data = new FormData($(this)[0]);
-var url = form.attr("action");
-ajaxSendFormComiteAgendamiento(form, data, url, 'create');
+    event.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de guardar esta información?',
+        // text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, guardar'
+    }).then((result) => {
+        if (result.value) {
+            $('button[type="submit"]').attr('disabled', 'disabled');
+            event.preventDefault();
+            var form = $(this);
+            var data = new FormData($(this)[0]);
+            var url = form.attr("action");
+            ajaxSendFormComiteAgendamiento(form, data, url, 'create');
+        }
+    });
 });
 
 $(document).on('submit', 'form#formComiteAgendamientoUpdate', function (event) { // $('button[type="submit"]').prop("disabled", true);
-$('button[type="submit"]').attr('disabled', 'disabled');
 event.preventDefault();
-var form = $(this);
-var data = new FormData($(this)[0]);
-var url = form.attr("action");
-ajaxSendFormComiteAgendamiento(form, data, url, 'update');
+Swal.fire({
+    title: '¿Está seguro(a) de guardar esta información?',
+    // text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí, guardar'
+  }).then((result) => {
+    if (result.value) {
+        $('button[type="submit"]').attr('disabled', 'disabled');
+        event.preventDefault();
+        var form = $(this);
+        var data = new FormData($(this)[0]);
+        var url = form.attr("action");
+        ajaxSendFormComiteAgendamiento(form, data, url, 'update');
+    }
+  })
 });
 
 // Elimina una idea de proyecto agendada en un comité
@@ -1452,13 +1495,28 @@ $("label[for='txthoraidea']").removeClass('active');
 // $("#labelobservacionesidea").removeClass('active');
 // $('input:checkbox').removeAttr('checked');
 }
-$(document).on('submit', 'form#formComiteRealizadoCreate', function (event) { // $('button[type="submit"]').prop("disabled", true);
-$('button[type="submit"]').attr('disabled', 'disabled');
-event.preventDefault();
-var form = $(this);
-var data = new FormData($(this)[0]);
-var url = form.attr("action");
-ajaxSendFormComiteRealizado(form, data, url, 'create');
+$(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
+    event.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de guardar esta información?',
+        // text: "You won't be able to revert this!",
+        text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los gestores puedes cambiar esta información",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, guardar'
+    }).then((result) => {
+        if (result.value) {
+            $('button[type="submit"]').attr('disabled', 'disabled');
+            event.preventDefault();
+            var form = $(this);
+            var data = new FormData($(this)[0]);
+            var url = form.attr("action");
+            ajaxSendFormComiteRealizado(form, data, url, 'create');
+        }
+    });
 });
 
 function ajaxSendFormComiteRealizado(form, data, url, fase) {
