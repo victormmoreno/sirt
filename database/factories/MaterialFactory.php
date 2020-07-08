@@ -2,16 +2,16 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\{Nodo, Material, TipoMaterial,CategoriaMaterial, Presentacion, Medida};
+use App\Models\{Nodo, Material, TipoMaterial, CategoriaMaterial, Presentacion, Medida};
 use Faker\Generator as Faker;
 
 $factory->define(Material::class, function (Faker $faker) {
 
-	$nodo = Nodo::with(['lineas'])->get()->random();
+    $nodo = Nodo::has('lineas')->get()->random();
 
     return [
         'nodo_id' => $nodo->id,
-        'lineatecnologica_id' => $nodo->lineas->first()->id,
+        'lineatecnologica_id' => $nodo->lineas->random()->id,
         'tipomaterial_id' => TipoMaterial::all()->random()->id,
         'categoria_material_id' => CategoriaMaterial::all()->random()->id,
         'presentacion_id' => Presentacion::all()->random()->id,
@@ -22,6 +22,6 @@ $factory->define(Material::class, function (Faker $faker) {
         'cantidad' => $faker->randomDigitNot(0),
         'valor_compra' => $faker->numerify('########'),
         'proveedor' => $faker->company,
-        'marca' =>$faker->word,
+        'marca' => $faker->word,
     ];
 });

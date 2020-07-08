@@ -122,7 +122,11 @@ class Nodo extends Model
             ->withPivot([
                 'porcentaje_linea',
             ]);
+    }
 
+    public function contactosentidades()
+    {
+        return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
     }
 
     // Consulta los nodos de tecnoparque
@@ -145,7 +149,6 @@ class Nodo extends Model
     {
         return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
-
     }
 
     /*=====  End of scope para consultar la lista de nodos  ======*/
@@ -166,7 +169,6 @@ class Nodo extends Model
         return $query->select('entidades.nombre')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->where('nodos.id', '=', $nodo_id);
-
     }
 
     /*=====  End of scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso  ======*/
@@ -191,7 +193,6 @@ class Nodo extends Model
         return $query->select('nodos.id', DB::raw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre'))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->where('nodos.id', '=', $nodo);
-
     }
 
     /*=====  End of scope para retornar el nodo del usuario autenticada  ======*/
@@ -264,11 +265,9 @@ class Nodo extends Model
      */
     public function scopeFindNodo($query, $nodo, $columns = ['*'])
     {
-        return $query->with('entidad')->whereHas('entidad',function($query) use ($nodo){
-            $query->where('slug','=', $nodo);
+        return $query->with('entidad')->whereHas('entidad', function ($query) use ($nodo) {
+            $query->where('slug', '=', $nodo);
         })->first($columns);
-
-        
     }
 
     /**
@@ -290,7 +289,6 @@ class Nodo extends Model
         } else {
             abort('404');
         }
-
     }
 
     /**

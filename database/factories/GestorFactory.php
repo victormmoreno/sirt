@@ -2,18 +2,14 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-use App\Models\Gestor;
-use App\Models\LineaTecnologica;
-use App\Models\Nodo;
-use App\Models\Rols;
-use App\User;
+use App\Models\{Nodo, Gestor};
 use Faker\Generator as Faker;
 
 $factory->define(Gestor::class, function (Faker $faker) {
+    $nodo = Nodo::has('lineas')->get()->random();
     return [
-        'user_id'             => Rols::where('nombre','=','Gestor')->get()->random()->id,
-        'nodo_id'             => Nodo::all()->random()->id,
-        'lineatecnologica_id' => LineaTecnologica::all()->random()->id,
-        'honorarios'          => $faker->numberBetween($min = 1, $max = 9000000),
+        'nodo_id'             => $nodo->id,
+        'lineatecnologica_id' => $nodo->lineas->random()->id,
+        'honorarios'          => $faker->numberBetween($min = 4000000, $max = 6500000),
     ];
 });

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RolesTableSeeder extends Seeder
 {
@@ -30,8 +30,8 @@ class RolesTableSeeder extends Seeder
         Role::create([
             'name' => config('laravelpermission.roles.roleIngreso'),
         ]);
-        // Role::create([
-        //     'name' => config('laravelpermission.roles.roleProveedor'),
-        // ]);
+        Role::create([
+            'name' => config('laravelpermission.roles.roleDesarrollador'),
+        ]);
     }
 }

@@ -18,6 +18,11 @@ class EntrenamientoIdea extends Model
         'convocado_csibt',
     ];
 
+    public function entrenamiento()
+    {
+        return $this->belongsTo(Entrenamiento::class, 'entrenamiento_id', 'id');
+    }
+
     /*========================================
     =            mutador eloquent            =
     ========================================*/
@@ -48,5 +53,4 @@ class EntrenamientoIdea extends Model
     }
 
     /*=====  End of mutador eloquent  ======*/
-
 }

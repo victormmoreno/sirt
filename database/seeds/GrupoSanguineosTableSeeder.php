@@ -13,11 +13,11 @@ class GrupoSanguineosTableSeeder extends Seeder
     public function run()
     {
         GrupoSanguineo::create([
-            'nombre' => '0-',
+            'nombre' => 'O-',
         ]);
 
         GrupoSanguineo::create([
-            'nombre' => '0+',
+            'nombre' => 'O+',
         ]);
 
         GrupoSanguineo::create([

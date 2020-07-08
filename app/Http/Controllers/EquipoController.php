@@ -95,7 +95,6 @@ class EquipoController extends Controller
      */
     public function index(EquipoDatatables $equipoDatatables)
     {
-
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
@@ -107,7 +106,6 @@ class EquipoController extends Controller
                         ->whereHas('nodo', function ($query) use ($nodo) {
                             $query->where('id', $nodo);
                         })->get();
-
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea   = auth()->user()->gestor->lineatecnologica->id;
                     $nodo    = auth()->user()->gestor->nodo->id;
@@ -124,7 +122,6 @@ class EquipoController extends Controller
             } else {
                 abort('403');
             }
-
         }
 
         switch (Session::get('login_role')) {
@@ -143,7 +140,6 @@ class EquipoController extends Controller
                 return abort('403');
                 break;
         }
-
     }
 
     /**
@@ -152,7 +148,7 @@ class EquipoController extends Controller
      * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getEquiposPorNodo(EquipoDatatables $equipoDatatables,$nodo)
+    public function getEquiposPorNodo(EquipoDatatables $equipoDatatables, $nodo)
     {
 
         if (request()->ajax()) {
@@ -168,7 +164,6 @@ class EquipoController extends Controller
             } else {
                 return response()->json(['data' => 'no response']);
             }
-
         } else {
             abort('403');
         }
@@ -190,14 +185,14 @@ class EquipoController extends Controller
                     ->where('nodo_id', $nodo)
                     ->where('lineatecnologica_id', $lineatecnologica)
                     ->get();
-                    
-                    // ->whereHas('nodo', function ($query) use ($nodo) {
-                    //     $query->where('id', $nodo);
-                    // })
-                    // ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
-                    //     $query->where('id', $lineatecnologica);
-                    // })
-                    // ->get();
+
+                // ->whereHas('nodo', function ($query) use ($nodo) {
+                //     $query->where('id', $nodo);
+                // })
+                // ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
+                //     $query->where('id', $lineatecnologica);
+                // })
+                // ->get();
             } else {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                     ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
@@ -208,11 +203,9 @@ class EquipoController extends Controller
             return response()->json([
                 'equipos' => $equipos,
             ]);
-
         } else {
             abort('403');
         }
-
     }
 
     /**
@@ -236,7 +229,6 @@ class EquipoController extends Controller
         } else {
             abort('403');
         }
-
     }
 
     /**
@@ -307,7 +299,5 @@ class EquipoController extends Controller
         }
 
         return redirect()->route('equipo.index');
-
     }
-
 }
