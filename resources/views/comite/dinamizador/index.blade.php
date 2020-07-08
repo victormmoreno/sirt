@@ -31,14 +31,14 @@
                   <span class="card-title center-align">CSIBT de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                 </center>
                 <div class="divider"></div>
-                <table class="display responsive-table datatable-example dataTable" id="comitesDelNodoGestor_table" style="width: 100%">
+                <table class="display responsive-table datatable-example dataTable" id="comitesDelNodo_table" style="width: 100%">
                   <thead>
                     <tr>
                       <th>Código del Comité</th>
                       <th>Fecha</th>
+                      <th>Estado del Comité</th>
                       <th>Observaciones</th>
-                      <th>Ideas de Proyecto</th>
-                      <th>Evidencias</th>
+                      <th style="width: 8%">Detalles</th>
                     </tr>
                   </thead>
                   <tbody>

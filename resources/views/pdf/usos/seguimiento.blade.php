@@ -12,7 +12,7 @@
         <th>Código del proyecto</th>
         <th>Nombre del proyecto</th>
         <th>Gestor a cargo del proyecto</th>
-        <th>Línea tecnológica</th>
+        <th>Sublínea tecnológica</th>
       </tr>
     </thead>
     <tbody>
@@ -20,7 +20,7 @@
         <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
         <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
         <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
-        <td>{{ $proyecto->sublinea->nombre }}</td>
+        <td>{{ $proyecto->sublinea->linea->abreviatura }} - {{ $proyecto->sublinea->nombre }}</td>
       </tr>
     </tbody>
   </table>

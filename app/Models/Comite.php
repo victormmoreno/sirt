@@ -24,6 +24,7 @@ class Comite extends Model
     'codigo',
     'fechacomite',
     'observaciones',
+    'estado_comite_id'
   ];
 
   /*=========================================
@@ -56,6 +57,11 @@ class Comite extends Model
     $this->attributes['codigo'] = trim($codigo);
   }
 
+  public function estado()
+  {
+    return $this->belongsTo(EstadoComite::class, 'estado_comite_id', 'id');
+  }
+
   public function setFechaComiteAttribute($fechacomite)
   {
     $this->attributes['fechacomite'] = Carbon::parse($fechacomite)->format('Y-m-d');
@@ -86,7 +92,7 @@ class Comite extends Model
   {
     return $this->belongsToMany(Idea::class, 'comite_idea')
     ->withTimestamps()
-    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones']);
+    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
   }
 
   /*=====  End of relaciones eloquent  ======*/

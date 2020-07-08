@@ -6,6 +6,8 @@ use App\Models\EstadoIdea;
 use App\Models\Nodo;
 use App\Models\Proyecto;
 use App\Models\RutaModel;
+use App\Models\Comite;
+use App\Models\Gestor;
 
 trait IdeaTrait
 {
@@ -41,11 +43,16 @@ trait IdeaTrait
     return $this->belongsTo(EstadoIdea::class, 'estadoidea_id', 'id');
   }
 
+  public function gestor()
+  {
+    return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+  }
+
   public function comites()
   {
     return $this->belongsToMany(Comite::class, 'comite_idea')
     ->withTimestamps()
-    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones']);
+    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
   }
 
   public function nodo()

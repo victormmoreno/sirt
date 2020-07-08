@@ -36,9 +36,9 @@
                     <tr>
                       <th>Código del Comité</th>
                       <th>Fecha</th>
+                      <th>Estado del Comité</th>
                       <th>Observaciones</th>
-                      <th>Ideas de Proyecto</th>
-                      <th>Evidencias</th>
+                      <th style="width: 8%">Detalles</th>
                     </tr>
                   </thead>
                   <tbody>

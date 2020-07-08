@@ -14,24 +14,23 @@ $(document).ready(function() {
     columns: [
       {
         data: 'codigo',
-        name: 'codigo',
+        name: 'codigo'
       },
       {
         data: 'fechacomite',
-        name: 'fechacomite',
+        name: 'fechacomite'
+      },
+      {
+        data: 'estadocomite',
+        name: 'estadocomite'
       },
       {
         data: 'observaciones',
-        name: 'observaciones',
+        name: 'observaciones'
       },
       {
         data: 'details',
         name: 'details',
-        orderable: false
-      },
-      {
-        data: 'evidencias',
-        name: 'evidencias',
         orderable: false
       },
 

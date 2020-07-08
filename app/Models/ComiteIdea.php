@@ -19,6 +19,7 @@ class ComiteIdea extends Model
         'admitido',
         'asistencia',
         'observaciones',
+        'direccion'
     ];
 
     /*=========================================
