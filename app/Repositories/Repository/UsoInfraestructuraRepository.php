@@ -203,7 +203,7 @@ class UsoInfraestructuraRepository
     /**
      * metodo retorna costo de equipos
      *
-     * @param array $request
+     * @param object $request
      * @author devjul
      */
     private function calculateCostoEquipos($request)

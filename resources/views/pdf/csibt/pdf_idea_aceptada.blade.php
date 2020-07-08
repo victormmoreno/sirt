@@ -12,18 +12,18 @@
   </center>
   <p>
     Señor(a) <br>
-    <b>{{ $nombres_contacto }} {{ $apellidos_contacto }}</b><br>
+    <b>{{ $idea->nombres_contacto }} {{ $idea->apellidos_contacto }}</b><br>
     Cordial Saludo
   </p>
   <p style="text-align: justify">
     Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica
-    realizado en el mes de {{ $FechaComite->isoFormat('MMMM [de] YYYY') }},
+    realizado en el mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }},
     La Red Tecnoparque Colombia
-    del SENA le da la Bienvenida a su nodo <b>{{$nodoNombre}}</b>. Desde ahora usted hace parte del
+    del SENA le da la Bienvenida a su nodo <b>{{$comite->nodoNombre}}</b>. Desde ahora usted hace parte del
     grupo de emprendedores innovadores de nuestra Red y recibirán de parte nuestra la
     Asesoría Técnica especializada y los servicios tecnológicos para el desarrollo de su
-    idea: <b>“{{ $nombre_proyecto }}”</b>
-    En los próximos días, el gestor asignado de Tecnoparque se pondrá en contacto con usted para generar una agenda de trabajo inicial.
+    idea: <b>“{{ $idea->nombre_proyecto }}”</b>
+    En los próximos días, el gestor {{$idea->gestor->user->nombres}} {{$idea->gestor->user->apellidos}} se pondrá en contacto con usted para generar una agenda de trabajo inicial.
 
   </p>
   <p>

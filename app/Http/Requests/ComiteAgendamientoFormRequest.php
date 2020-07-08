@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ComiteFormRequest extends FormRequest
+class ComiteAgendamientoFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class ComiteFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -25,7 +25,6 @@ class ComiteFormRequest extends FormRequest
     {
       return [
         'txtfechacomite_create' => 'required|date_format:"Y-m-d"',
-        'txtobservacionescomite' => 'max:1000',
       ];
     }
 
@@ -34,7 +33,6 @@ class ComiteFormRequest extends FormRequest
       return $messages = [
         'txtfechacomite_create.required' => 'La Fecha del Comité es obligatoria.',
         'txtfechacomite_create.date_format' => 'La Fecha del Comité no tiene un formato válido.',
-        'txtobservacionescomite.max' => 'Las Observaciones del Comité debe ser máximo 1000 caracteres',
       ];
     }
 
@@ -42,7 +40,6 @@ class ComiteFormRequest extends FormRequest
     {
       return [
         'txtfechacomite_create' => 'Fecha del Comité',
-        'txtobservacionescomite' => 'Observaciones del Comité',
       ];
     }
 }

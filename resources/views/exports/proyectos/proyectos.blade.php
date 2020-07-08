@@ -30,6 +30,7 @@
         <th>¿Articulado con CT+i?</th>
         <th>¿Nombre del actor CT+i?</th>
         <th>¿Dirigido a área de emprendimiento SENA?</th>
+        <th>Tipos de propietarios</th>
     </tr>
     </thead>
     <tbody>
@@ -58,7 +59,22 @@
           <td>{{ $value->art_cti }}</td>
           <td>{{ $value->nom_act_cti }}</td>
           <td>{{ $value->diri_ar_emp }}</td>
-
+          @php
+              $datos = explode(",", $value->propietarios)
+          @endphp
+          <td>
+            @for ($i = 0; $i < count($datos); $i++)
+                @if ($datos[$i] == "App\User")
+                  Persona, 
+                @elseif($datos[$i] == "App\Models\Empresa")
+                  Empresa, 
+                @elseif($datos[$i] == "App\Models\GrupoInvestigacion")
+                  Grupo de Investigación, 
+                @else
+                  No se encontraron datos.
+                @endif
+              @endfor
+          </td>
         </tr>
       @endforeach
 

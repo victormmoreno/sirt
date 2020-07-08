@@ -31,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Comite\ComiteWasRegistered' => [
             'App\Listeners\Comite\IdeaWasRegisteredInComite',
         ],
+        'App\Events\Comite\AgendamientoWasRegistered' => [
+            'App\Listeners\Comite\IdeaWasRegisteredInAgendamiento',
+        ],
     ];
 
     /**

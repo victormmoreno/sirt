@@ -9,23 +9,26 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Http\Controllers\PDF\PdfComiteController;
 
 class ComiteWasRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $datosIdea;
+    public $emailSession;
     public $pdf;
+    public $extensiones;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($datosIdea, $pdf)
+    public function __construct($datosIdea, $pdf, $extensiones)
     {
         $this->datosIdea = $datosIdea;
         $this->pdf = $pdf;
+        $this->extensiones = $extensiones;
+        $this->emailSession = auth()->user()->email;
     }
 
     /**

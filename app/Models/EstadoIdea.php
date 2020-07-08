@@ -13,6 +13,8 @@ class EstadoIdea extends Model
     const IS_NO_ADMITIDO  = 'No Admitido';
     const IS_NO_CONVOCADO = 'No Convocado';
     const IS_INHABILITADO = 'Inhabilitado';
+    const IS_AGENDAMIENTO = 'Agendamiento';
+    const IS_REAGENDAMIENTO = 'Reagendamiento';
 
     protected $table = 'estadosidea';
 
@@ -26,6 +28,5 @@ class EstadoIdea extends Model
     ];
 
     public $timestamps = false;
-
 
 }

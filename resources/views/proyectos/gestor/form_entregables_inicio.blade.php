@@ -48,7 +48,7 @@
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
             <input type="checkbox" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} {{ $proyecto->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
-            <label for="txtformulario_inicio">Formularios con firmas del gestor y talentos.</label>
+            <label for="txtformulario_inicio">Acta de Inicio. (se puede generar desde la plataforma)</label>
         </p>
     </div>
 </div>

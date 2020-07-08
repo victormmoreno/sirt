@@ -11,7 +11,7 @@ Cordial Saludo.
 	
 @endcomponent
 
-Hemos enviado este correo para informarte de la decisión que se dió en el Comité de Selección de Ideas de Bases Tecnológicas.
+Se ha enviado este correo para informarte de la decisión que se dió en el Comité de Selección de Ideas de Bases Tecnológicas.
 <br>
 Para conocer el resultado, debe abrir el archivo adjunto a este email.
 <br>
@@ -19,7 +19,7 @@ Para conocer el resultado, debe abrir el archivo adjunto a este email.
 @if( $datosIdea->nodo->infocenter->isEmpty())
 Para más información puede ocudir a las instalaciones de Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}} ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
 @else
-Para más información puede contactarse al telefono ☎️  <b>{{ $datosIdea->nodo->telefono}}</b> ext <b>{{ $datosIdea->nodo->infocenter->last()->extension}}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
+Para más información puede contactarse al telefono ☎️  <b>{{ $datosIdea->nodo->telefono}}</b> ext <b>{{ $extensiones }}</b>o acudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
 @endif
 
 Gracias,<br>

@@ -22,10 +22,10 @@
                 @include('articulaciones.detalle_fase_inicio')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$articulacion->fase->nombre == 'Planeación' ? 'disabled' : ''}}
+                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$articulacion->fase->nombre == 'Inicio' ? '' : 'disabled'}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    {{$articulacion->fase->nombre == 'Planeación' ? 'La articulación se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
+                    {{$articulacion->fase->nombre == 'Inicio' ? 'Aprobar fase de inicio' : 'La articulación no se encuentra en fase de Inicio'}}
                   </button>
                   <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
