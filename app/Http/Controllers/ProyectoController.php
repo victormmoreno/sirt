@@ -279,7 +279,7 @@ class ProyectoController extends Controller
     public function datatableIdeasConEmprendedores()
     {
         if (request()->ajax()) {
-            $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id)->get();
+            $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id, auth()->user()->gestor->id)->get();
             // dd($ideas);
             return datatables()->of($ideas)
                 ->addColumn('checkbox', function ($data) {
