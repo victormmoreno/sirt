@@ -109,7 +109,7 @@ class Idea extends Model
             });
     }
 
-    public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo)
+    public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo, $idgestor)
     {
         return $query->select(
             'ideas.id AS consecutivo',
@@ -127,7 +127,15 @@ class Idea extends Model
             ->where('nodos.id', $idnodo)
             ->where('comite_idea.admitido', 1)
             ->where('estadosidea.nombre', 'Admitido')
-            ->where('tipo_idea', $this->IsEmprendedor());
+            ->where('tipo_idea', $this->IsEmprendedor())
+            ->where(function ($q) use ($idgestor) {
+                $q->where(function ($query) use ($idgestor) {
+                  $query->where('gestor_id', '=', $idgestor);
+                })
+                  ->orWhere(function ($query) {
+                    $query->where('gestor_id', '=', null);
+                  });
+              });
     }
 
     public static function getAllIdeas()
