@@ -40,7 +40,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                
+
                                 <div class="col s12 l2">
                                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsInfocenter())
                                     <div class="click-to-toggle show-on-large hide-on-med-and-down">
@@ -51,11 +51,39 @@
                                         <a href="{{route('usuario.search')}}" class="waves-effect waves-light btn-large"><i class="material-icons left">add_circle</i>Nuevo Usuario</a>
                                     </div>
                                     @endif
-                                    
+
                                 </div>
                             </div>
                                 <div class="divider"></div>
                                 <br>
+                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                <div class="row">
+
+                                   <div class="right mailbox-buttons">
+                                    <span class="mailbox-title">
+                                        <p class="center">
+                                            <div class="right">
+                                                <a class="waves-effect waves-light btn m-t-xs dropdown-button " data-activates="dropdown" href="#">
+                                                    <i class="material-icons right">
+                                                        more_vert
+                                                    </i>
+                                                    Descargar
+                                                </a>
+                                                <!-- Dropdown Structure -->
+                                                <ul class="dropdown-content" id="dropdown">
+                                                    <li>
+                                                        <a onclick="downloadAdministrador.downloadAllUser(1)">Todos los usuarios habilitados</a>
+                                                    </li>
+                                                    <li>
+                                                        <a onclick="downloadAdministrador.downloadAllUser(0)">Todos los usuarios inhabilitados</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </p>
+                                    </span>
+                                </div>
+                                </div>
+                                @endif
                                 <div class="row">
                                     @forelse($roles as $role)
                                     <div class="col s12 m3 l3">
@@ -93,19 +121,19 @@
                                                 @endswitch
 
                                             </div>
-                                            
-                                          </div> 
+
+                                          </div>
                                     </div>
                                     @empty
                                         <div class="center">
                                             <i class="large material-icons  teal-text lighten-2 center">
                                                 notifications_off
                                             </i>
-                                            <p class="center-align">No se encontraron resultados</p> 
+                                            <p class="center-align">No se encontraron resultados</p>
                                         </div>
                                     @endforelse
                                 </div>
-                                
+
                         </div>
                     </div>
                 </div>

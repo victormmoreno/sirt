@@ -84,6 +84,22 @@ let downloadAdministrador = {
 
             });
         }
+    },
+    downloadAllUser: function(state){
+        if(state !== null){
+            location.href = '/usuario/excel/'+ state;
+        }else{
+            Swal.fire({
+                title: 'Error al descagar el archivo, intentalo de nuevo',
+
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+
+                confirmButtonText: 'Ok',
+
+            });
+        }
     }
 }
 
