@@ -234,60 +234,64 @@ Route::group([
     'namespace'  => 'User',
     'middleware' => 'auth',
 ], function () {
+    Route::get('/{state}', [
+        'uses' => 'UserController@exportAllUser',
+        'as'   => 'usuario.excel.alluser',
+    ])->where('state', '[0,1]+');
     Route::get('/administrador/{state}', [
         'uses' => 'AdminController@exportAdminUser',
         'as'   => 'usuario.excel.administrador',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/dinamizador/{state}/{nodo}', [
         'uses' => 'DinamizadorController@exportDinamizadorUser',
         'as'   => 'usuario.excel.dinamizador',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/dinamizador/{state}', [
         'uses' => 'DinamizadorController@exportDinamizadorUser',
         'as'   => 'usuario.excel.dinamizador.all',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/gestor/{state}/{nodo}', [
         'uses' => 'GestorController@exportGestorUser',
         'as'   => 'usuario.excel.gestor',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/gestor/{state}', [
         'uses' => 'GestorController@exportGestorUser',
         'as'   => 'usuario.excel.gestor.all',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/infocenter/{state}/{nodo}', [
         'uses' => 'InfocenterController@exportInfocenterUser',
         'as'   => 'usuario.excel.infocenter',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/infocenter/{state}', [
         'uses' => 'InfocenterController@exportInfocenterUser',
         'as'   => 'usuario.excel.infocenter.all',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/talento/{state}/{nodo}/{anio}', [
         'uses' => 'TalentoController@exportTalentoUser',
         'as'   => 'usuario.excel.talento',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/talento/{state}', [
         'uses' => 'TalentoController@exportTalentoUser',
         'as'   => 'usuario.excel.talento.all',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/ingreso/{state}/{nodo}', [
         'uses' => 'IngresoController@exportIngresoUser',
         'as'   => 'usuario.excel.ingreso',
-    ]);
+    ])->where('state', '[0,1]+');
 
     Route::get('/ingreso/{state}', [
         'uses' => 'IngresoController@exportIngresoUser',
         'as'   => 'usuario.excel.ingreso.all',
-    ]);
+    ])->where('state', '[0,1]+');
 });
 
 
