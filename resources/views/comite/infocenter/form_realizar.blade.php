@@ -134,7 +134,7 @@
                 <b>Inicio:</b> La idea se puede registrar en un futuro entrenamiento/taller de fortalecimiento ó en otro comité.
               </li>
               <li class="collection-item">
-                <b>Reagendamiento:</b> La idea de puede reagendar a un próximo comité pero ya no se podrá asociar a un entrenamiento/taller de fortalecimiento.
+                <b>Reprogramado:</b> La idea de puede reagendar a un próximo comité pero ya no se podrá asociar a un entrenamiento/taller de fortalecimiento.
               </li>
           </ul>
       </p>

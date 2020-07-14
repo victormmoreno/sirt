@@ -23,6 +23,10 @@ function consultarCsibtPorNodo() {
         name: 'fechacomite',
       },
       {
+        data: 'estadocomite',
+        name: 'estadocomite',
+      },
+      {
         data: 'observaciones',
         name: 'observaciones',
       },
@@ -31,12 +35,6 @@ function consultarCsibtPorNodo() {
         name: 'details',
         orderable: false
       },
-      {
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-
     ],
   });
 }
