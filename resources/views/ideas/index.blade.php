@@ -98,7 +98,7 @@
                     </div>
 
                 
-                  <table id="ideas_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
+                  <table id="ideasDataTable" class="display responsive-table datatable-example dataTable" style="width: 100%">
                     <thead>
                       <tr>
                         <th>Código de la Idea</th>

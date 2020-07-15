@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 use Alert;
 
-use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest, IdeaEGIFormRequest};
+use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest};
 use App\Models\{EstadoIdea, Idea, Nodo, Entidad};
 use App\Repositories\Repository\ConfiguracionRepository\ServidorVideoRepository;
 use App\Repositories\Repository\IdeaRepository;
@@ -38,10 +38,27 @@ class IdeaController extends Controller
         return view('ideas.create', ['nodos' => $nodos, 'servidorVideo' => $servidorVideo]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(IdeaFormRequest $request)
+    {
+        $idea = $this->ideaRepository->Store($request);
+        if ($idea != null) {
+            return redirect()->back()->withSuccess('success');
+        }
+        return redirect()->route('idea.create');
+    }
+
 
     //metodo index para mostrar el listado de ideas
     public function index(Request $request)
     {
+        $this->authorize('view', Idea::class);
+
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
@@ -124,20 +141,7 @@ class IdeaController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(IdeaFormRequest $request)
-    {
-        $idea = $this->ideaRepository->Store($request);
-        if ($idea != null) {
-            return redirect()->back()->withSuccess('success');
-        }
-        return redirect('idea.create');
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -147,14 +151,10 @@ class IdeaController extends Controller
      */
     public function edit($id)
     {
-        if (\Session::get('login_role') == User::Isinfocenter()) {
-            $idea = Idea::ConsultarIdeaId($id)->first();
-            $nodos = Nodo::SelectNodo()->get();
-            return view('ideas.infocenter.edit', compact('idea', 'nodos'));
-        } else {
-            alert()->error('Error!', 'No tienes permisos para realizar esta acción.')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+        $idea = $this->ideaRepository->findByid($id);
+        $this->authorize('update', $idea);
+        $nodos = Nodo::SelectNodo()->get();
+        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos]);
     }
 
     /**
@@ -168,6 +168,7 @@ class IdeaController extends Controller
     public function update(IdeaEditFormRequest $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
+        $this->authorize('update', $idea);
         $updateIdea = $this->ideaRepository->Update($request, $idea);
         if ($updateIdea == true) {
             Alert::success("La Idea se ha modificado.", 'Modificación Exitosa', "success");
@@ -175,27 +176,21 @@ class IdeaController extends Controller
             Alert::error("La Idea no se ha modificado.", 'Modificación Errónea', "error");
         }
 
-        return redirect('idea.index');
+        return redirect()->route('idea.index');
     }
 
     public function detallesIdeas($id)
     {
+        $idea = Idea::ConsultarIdeaId($id)->first();
+        $this->authorize('show', $idea);
         return response()->json([
-            'detalles' => Idea::ConsultarIdeaId($id)->first(),
+            'detalles' => $idea
         ]);
-    }
-
-    // Se muestra los detalles de una idea según su id
-    public function details($id)
-    {
-        if (request()->ajax()) {
-            $consultaIdeasEmpGI = Idea::ConsultarIdeasEmpGIDelNodo(auth()->user()->infocenter->nodo_id);
-            return datatables()->of($consultaIdeasEmpGI)->make(true);
-        }
     }
 
     public function export(Request $request, $extension = 'xlsx')
     {
+        $this->authorize('view', Idea::class);
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
@@ -234,6 +229,7 @@ class IdeaController extends Controller
     public function updateEstadoIdea($id, $estado)
     {
         $idea = Idea::ConsultarIdeaId($id)->first();
+        $this->authorize('update', $idea);
         if ($idea->estado_idea == 'Inicio') {
             $this->ideaRepository->updateEstadoIdea($id, $estado);
             return response()->json([

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use App\Models\Nodo;
@@ -32,7 +33,7 @@ class NodoHelper
     // Retorna únicamente el nombre del nodo al que pertenece el usuario
     public static function returnNameNodoUsuario()
     {
-     
+
         if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
             return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
@@ -45,5 +46,4 @@ class NodoHelper
             return 'No hay información disponible.';
         }
     }
-
 }

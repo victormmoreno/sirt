@@ -505,7 +505,6 @@ Route::group(
     function () {
         Route::get('/', 'IdeaController@index')->name('idea.index');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
-        Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
         Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
