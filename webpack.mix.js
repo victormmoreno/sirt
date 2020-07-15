@@ -67,8 +67,6 @@ mix.scripts([
     'resources/app/linea/administrador/index.js',
     'resources/app/linea/dinamizador/index.js',
     'resources/app/nodo/administrador/index.js',
-    'resources/app/ideas/index.js',
-    // 'resources/app/ideas/infocenter/index.js',
     'resources/app/entrenamientos/index.js',
     'resources/app/entrenamientos/administrador/index.js',
     'resources/app/entrenamientos/infocenter/index.js',
