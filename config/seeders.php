@@ -9,6 +9,7 @@ return [
     ],
 
     'local'      => [
+        ['name' => PermissionsTableSeeder::class, 'callable' => true],
         ['name' => RolesTableSeeder::class, 'callable' => true],
         ['name' => TipoTalentosTableSeeder::class, 'callable' => true],
         ['name' => TipoFormacionTableSeeder::class, 'callable' => true],

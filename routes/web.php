@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
 
     return view('spa');
-    // $proyecto = App\Models\Proyecto::find(455);
-    // $proyecto->users_propietarios()->attach([7]);
 })->name('/');
 
 // DB::listen(function ($query) {
@@ -25,9 +23,7 @@ Route::get('/', function () {
 
 // Route::get('email', function () {
 // return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
-// return new App\Mail\IdeaEnviadaEmprendedor(App\Models\Idea::first());
-// return new App\Mail\User\PleaseActivateYourAccount(App\User::first());
-// return new App\Mail\User\SendNotificationPassoword(App\User::first(), 'asdafasafasdf');
+
 // });
 
 /*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
@@ -49,7 +45,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 /*=======================================================
 =            rutas para activacion de cuenta            =
 =======================================================*/
-Route::get('activate/{token}', 'ActivationTokenController@activate')->name('activation');
+// Route::get('activate/{token}', 'ActivationTokenController@activate')->name('activation');
 /*=====  End of rutas para activacion de cuenta  ======*/
 
 /*===========================================================
@@ -63,9 +59,7 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepr
 /*===================================================================
 =            rutas para las funcionalidades de los nodos            =
 ===================================================================*/
-// Route::get('nodo/pdfequiponodo', 'Nodo\NodoController@pdfEquipoNodo')
-// ->name('activation')
-// ->middleware('disablepreventback');
+
 Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
 
 /*=====  End of rutas para las funcionalidades de los nodos  ======*/
@@ -84,7 +78,6 @@ Route::group(
 
         Route::get('administrador', 'AdminController@index')->name('usuario.administrador.index');
         Route::get('administrador/papelera', 'AdminController@trash')->name('usuario.administrador.indexinactivos');
-
 
         Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
         Route::get('dinamizador/getDinamizador/papelera/{id}', 'DinamizadorController@getDinanizadorTrash')->name('usuario.dinamizador.getDinanizador.papelera');
@@ -504,26 +497,19 @@ Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentr
 /*=====  End of sesccion para las rutas de ayuda  ======*/
 
 //-------------------Route group para el módulo de ideas
+Route::get('/registrar-idea', 'IdeaController@create')->name('idea.create');
 Route::group(
     [
         'prefix' => 'idea',
     ],
     function () {
-        Route::get('/', 'IdeaController@ideas')->name('idea.ideas');
-        Route::get('/datatablesideasestado/{anio}/{state}', 'IdeaController@dataTableIdeaByAnioState')
-            ->name('idea.datatablesideasporanioestado');
-        // Route::get('/egi', 'IdeaController@empresasGI')->name('idea.egi');
-        Route::get('/{idea}', 'IdeaController@details')->name('idea.details');
-        Route::get('/consultarIdeasEmprendedoresPorNodo/{id}', 'IdeaController@dataTableIdeasEmprendedoresPorNodo')->name('idea.emprendedores');
-        Route::get('/consultarIdeasEmpresasGIPorNodo/{id}', 'IdeaController@dataTableIdeasEmpresasGIPorNodo')->name('idea.empresasgi');
-        Route::get('/consultarIdeasTodosPorNodo/{id}', 'IdeaController@dataTableIdeasTodosPorNodo')->name('idea.todas');
-        Route::get('/{id}/edit', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
+        Route::get('/', 'IdeaController@index')->name('idea.index');
+        Route::get('/export', 'IdeaController@export')->name('idea.export');
+        Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
         Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Infocenter']);
         Route::post('/', 'IdeaController@store')->name('idea.store');
-        // Route::post('/egi', 'IdeaController@storeEGI')->name('idea.storeegi')->middleware(['auth', 'role_session:Infocenter']);
-        Route::post('/addIdeaDeProyectoAlComite', 'IdeaController@addIdeaDeProyectoCreate');
     }
 );
 
@@ -1048,14 +1034,6 @@ Route::group([
     Route::post('/store', 'PublicacionController@store')->name('publicacion.store');
 });
 
-
-/*===================================================================
-=            rutas para las funcionalidades de las ideas            =
-===================================================================*/
-
-Route::get('ideas', 'IdeaController@index')->name('ideas.index');
-
-/*=====  End of rutas para las funcionalidades de las ideas  ======*/
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 

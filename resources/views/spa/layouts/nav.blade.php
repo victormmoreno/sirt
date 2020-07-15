@@ -16,7 +16,7 @@
             <a href="{{route('/')}}" rel="canonical" title="Haz clic aquí para ir a la página principal">INICIO</a>
           </li>
           <li class="hide-on-med-and-down">
-            <a href="{{ route('ideas.index') }}" rel="canonical"  title="Haz clic aquí para inscribir una idea de proyecto" class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
+            <a href="{{ route('idea.create') }}" rel="canonical"  title="Haz clic aquí para inscribir una idea de proyecto" class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
           </li>
           
           
@@ -53,7 +53,7 @@
   </div>
   <ul class="sidebar-menu collapsible collapsible-accordion " data-collapsible="accordion">
 
-    <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="{{ route('ideas.index') }}" rel="canonical"><i class="material-icons">ac_unit</i> IDEAS DE PROYECTOS</a></li>
+    <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="{{ route('idea.create') }}" rel="canonical"><i class="material-icons">ac_unit</i> IDEAS DE PROYECTOS</a></li>
     <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="#objetivos"><i class="material-icons">info_outline</i>OBJETIVOS</a></li>
     <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="#tecnoparque"><i class="material-icons">info_outline</i>¿QUÉ ES TECNOPARQUE?</a></li>
     {{-- <li class="hide-on-large-only"><a href="" class="waves-effect waves-grey" ><i class="material-icons">cloud_download</i> TECNOPARQUE RA</a></li> --}}

@@ -102,21 +102,6 @@ class IdeaRepository
     }
 
 
-    public function StoreIdeaEmpGI($request)
-    {
-        $codigo_idea = $this->generarCodigoIdea($request->txttipo_idea[1], auth()->user()->infocenter->nodo_id);
-        $idea        = Idea::create([
-            "nodo_id"            => auth()->user()->infocenter->nodo_id,
-            "nombres_contacto"   => $request->input('txtnidcod'),
-            "apellidos_contacto" => $request->input('txtnombreempgi'),
-            "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
-            "codigo_idea"        => $codigo_idea,
-            "tipo_idea"          => $request->txttipo_idea[1],
-            "estadoidea_id"      => 1,
-        ]);
-
-        return $idea;
-    }
 
     public function Update($request, $idea)
     {
@@ -130,7 +115,7 @@ class IdeaRepository
         $idea->descripcion        = $request->input('txtdescripcion');
         $idea->objetivo           = $request->input('txtobjetivo');
         $idea->alcance            = $request->input('txtalcance');
-        //sea anadieron los campos convocatoria
+        //se anadieron los campos convocatoria
         $idea->viene_convocatoria = $request->input('txtconvocatoria');
         $idea->convocatoria       = $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null;
 
