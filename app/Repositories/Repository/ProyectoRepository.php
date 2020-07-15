@@ -95,8 +95,6 @@ class ProyectoRepository
       // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
       // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
       $proyecto->articulacion_proyecto->talentos()->sync([]);
-      // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
-      $proyecto->users()->sync([]);
       // Elimina el registro de la tabla de proyecto
       $padre->articulacion_proyecto->proyecto()->delete();
       // Directorio del proyecto
@@ -421,119 +419,6 @@ class ProyectoRepository
       ->where('proyectos.id', $id);
   }
 
-  // /**
-  // * Cambia el estado de la aprobacion de un proyecto de un usuario y rol
-  // * @param Request
-  // * @param int $id Id del proyecto
-  // * @return boolean
-  // * @author dum
-  // */
-  // public function updateAprobacionUsuario($request, $id)
-  // {
-  //
-  //   DB::beginTransaction();
-  //   try {
-  //     if ( $request->txtaprobacion != Proyecto::IsAceptado() && $request->txtaprobacion != Proyecto::IsNoAceptado() ) {
-  //       DB::rollback();
-  //       return false;
-  //     }
-  //     $user = auth()->user()->id;
-  //     $role = Session::get('login_role');
-  //     $role = $this->pivotAprobacionesUnica($id, $user, $role)->role_id;
-  //     $update = DB::update("UPDATE aprobaciones SET aprobacion = $request->txtaprobacion WHERE proyecto_id = $id AND user_id = $user AND role_id = $role");
-  //     $some = $this->pivotAprobaciones($id)->where('aprobacion', 0)->get();
-  //     if ( count($some) == 0 ) {
-  //       $aprobados = $this->pivotAprobaciones($id)->where('aprobacion', 1)->get();
-  //       $proyecto = Proyecto::find($id);
-  //       if ( count($aprobados) == 3 ) {
-  //         // En caso de que TODOS (Dinamizador, Gestor, Talento Líder) hayan aprobado el proyecto
-  //
-  //         // Instancia de la clase ArchivoRepository
-  //         $archivoRepo = new ArchivoRepository();
-  //
-  //         // Generar guardar el pdf del acuerdo de confidencialidad y compromiso en el servidor
-  //         $outputPdf = PdfProyectoController::printAcuerdoConfidencialidadCompromiso($this, $id);
-  //
-  //         // Guarda la ruta de los archivos en la base de datos
-  //         $fileStoraged = $archivoRepo->storeFileArticulacionProyecto($outputPdf['articulacion_proyecto_id'], $outputPdf['fase_id'], $outputPdf['ruta']);
-  //
-  //         // Cambia el estado de aprobacion del proyecto a aceptado y actualiza en acc en la base de datos
-  //         $proyecto->update([
-  //           'estado_aprobacion' => Proyecto::IsAceptado(),
-  //           'acc' => 1
-  //         ]);
-  //       } else {
-  //         // En caso de que UNO SOLO no haya aprobado el proyecto
-  //
-  //         //Cambiar el estado de la idea de proyecto según el tipo de idea de proyecto (Si es con empresa o grupo cambia a Inicio, si es con Emprendedor cambia a Admitido)
-  //         $idea = $proyecto->idea;
-  //         if ( $idea->tipo_idea == Idea::IsEmpresa() || $idea->tipo_idea == Idea::IsGrupoInvestigacion() ) {
-  //           $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Inicio');
-  //         } else {
-  //           $this->getIdeaRepository()->updateEstadoIdea($idea->id, 'Admitido');
-  //         }
-  //         $padre = $proyecto->articulacion_proyecto->actividad;
-  //         // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
-  //         // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
-  //         $proyecto->articulacion_proyecto->talentos()->sync([]);
-  //         // Elimina los datos de la tabla aprobaciones relacionados con el proyecto
-  //         $proyecto->users()->sync([]);
-  //         // Elimina el registro de la tabla de proyecto
-  //         $padre->articulacion_proyecto->proyecto()->delete();
-  //         // Elimina el registro de la tabla la tabla de articulacion_proyecto
-  //         $padre->articulacion_proyecto()->delete();
-  //         // Elimina la tabla de actividades
-  //         $padre->delete();
-  //
-  //       }
-  //     }
-  //     DB::commit();
-  //     return true;
-  //   } catch (\Exception $e) {
-  //     DB::rollback();
-  //     return false;
-  //   }
-  //
-  // }
-
-  /**
-   * Consulta un único registro de la tabla pivot (aprobaciones)
-   *
-   * @param int $id Id del proyecto
-   * @param int $user Id del usuario
-   * @param string $role Nombre del rol
-   */
-  public function pivotAprobacionesUnica($id, $user, $role)
-  {
-    return Proyecto::select('roles.name', 'role_id', 'aprobacion AS aprobacion_value')
-      ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
-      ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
-      ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
-      ->join('users', 'users.id', '=', 'aprobaciones.user_id')
-      ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
-      ->where('proyectos.id', $id)
-      ->where('roles.name', $role)
-      ->where('users.id', $user)
-      ->first();
-  }
-
-  /**
-   * Consulta los datos de la tabla pivot (aprobaciones)
-   *
-   * @param int $id
-   * @return Collection
-   * @author dum
-   */
-  public function pivotAprobaciones($id)
-  {
-    return Proyecto::select('roles.name', 'users.documento', 'users.id AS user_id')
-      ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
-      ->selectRaw('IF(aprobacion = 0, "Pendiente", IF(aprobacion = 1, "Aprobado", "No Aprobado")) AS aprobacion')
-      ->join('aprobaciones', 'aprobaciones.proyecto_id', '=', 'proyectos.id')
-      ->join('users', 'users.id', '=', 'aprobaciones.user_id')
-      ->join('roles', 'roles.id', '=', 'aprobaciones.role_id')
-      ->where('proyectos.id', $id);
-  }
   /**
    * Consulta los proyectos del talento
    *

@@ -33,7 +33,7 @@ class ArchivoController extends Controller
   }
 
   /**
-  * Método que elimina un archivo del servidor y su registro de la base de datos (archivoscharlasinformativas)
+  * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
   * @param int id Id del archivo de la charla informativa que se usará para eliminarlo del almacenamiento y de la base de datos
   * @return Response
   * @author Victor Manuel Moreno Vega
@@ -176,7 +176,7 @@ class ArchivoController extends Controller
   }
 
   /**
-  * Método que elimina un archivo del servidor y su registro de la base de datos (archivosedt)
+  * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
   * @param int id Id del archivo de la edt que se usará para eliminarlo del almacenamiento y de la base de datos
   * @return Response
   * @author Victor Manuel Moreno Vega
@@ -239,7 +239,7 @@ class ArchivoController extends Controller
   }
 
   /**
-  * Método que elimina un archivo del servidor y su registro de la base de datos (archivosentrenamiento)
+  * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
   * @param int id Id del archivo del entrenamiento que se usará para eliminarlo del almacenamiento y de la base de datos
   * @return Response
   */

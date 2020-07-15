@@ -70,6 +70,9 @@
             <th>
                 Otra Ocupación
             </th>
+            <th>
+                Roles
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -137,6 +140,23 @@
             </td>
             <td>
                 {{!empty($user->otra_ocupacion) ? $user->otra_ocupacion : 'No registra'}}
+            </td>
+            <td>
+                {{$user->getRoleNames()->implode(', ') ? : 'No registra'}}
+            </td>
+            <td>
+                @if(isset($user->dinamizador))
+                Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}
+                @elseif(isset($user->gestor))
+                Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}
+                @elseif(isset($user->infocenter))
+                Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}
+                @elseif(isset($user->ingreso))
+                Tecnoparque Nodo {{$user->ingreso->nodo->entidad->nombre}}
+                @else
+                    No aplica
+                @endif
+                
             </td>
         </tr>
         @empty

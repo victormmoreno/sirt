@@ -164,7 +164,7 @@ class Idea extends Model
             ->where('nodo_id', $id)
             // ->whereYear('ideas.created_at', Carbon::now()->isoFormat('YYYY'))
             // ->where('tipo_idea', $this->IsEmprendedor())
-            ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado', 'Reagendamiento'])
+            ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado', 'Reprogramado'])
             ->groupBy('ideas.id')
             ->orderBy('nombre_proyecto');
     }

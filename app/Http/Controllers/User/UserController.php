@@ -15,6 +15,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use DataTables;
 use Illuminate\Http\Response;
+use App\Exports\User\Administrador\UserAllExport;
+
 
 class UserController extends Controller
 {
@@ -617,5 +619,106 @@ class UserController extends Controller
         return response()->json([
             'gestores' => $gestores
         ]);
+    }
+
+    /**
+     * retorna excel con todos los usuarios
+     * @author devjul
+     */
+    public function exportAllUser($state = 1, $extension = 'xlsx')
+    {
+        $this->authorize('exportAdminUser', User::class);
+        if ($state == User::IsActive() || $state == User::IsInactive()) {
+            $user = $this->getData($state);
+            $this->setQuery($user);
+            if ($state == User::IsActive()) {
+                return (new UserAllExport($this->getQuery()))->download("usuarios-habilitados-redtecnoparque.{$extension}");
+            } else {
+                return (new UserAllExport($this->getQuery()))->download("usuarios-inhabilitados-redtecnoparque.{$extension}");
+            }
+        } else {
+            return abort('404');
+        }
+    }
+
+    /**
+     * retorna consulta de todos los usuarios
+     * @return collection
+     * @author devjul
+     */
+    private function getData($state = null)
+    {
+        $role = [User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+
+        $relations = [
+            'tipodocumento'                 => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gradoescolaridad'              => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gruposanguineo'                => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'eps'                           => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudad'                        => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudad.departamento'           => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ciudadexpedicion'              => function ($query) {
+                $query->select('id', 'nombre', 'departamento_id');
+            },
+            'ciudadexpedicion.departamento' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ocupaciones',
+            'roles',
+            'dinamizador.nodo.entidad' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'gestor.nodo.entidad' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+
+            'infocenter.nodo.entidad' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+            'ingreso.nodo.entidad' => function ($query) {
+                $query->select('id', 'nombre');
+            },
+
+
+
+        ];
+        if ($state == null) {
+            return $this->userRepository->userInfoWithRelations($role, $relations)->get();
+        } elseif ($state == 1) {
+            return $this->userRepository->userInfoWithRelations($role, $relations)->where('estado', $state)->get();
+        } elseif ($state == 0) {
+            return $this->userRepository->userInfoWithRelations($role, $relations)->where('estado', $state)->onlyTrashed()->get();
+        }
+    }
+
+    /**
+     * Asigna el valor de $query
+     * @author devjul
+     */
+    private function setQuery($query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Retorna el valor de $query
+     * @return object
+     * @author devjul
+     */
+    private function getQuery()
+    {
+        return $this->query;
     }
 }

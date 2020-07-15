@@ -306,7 +306,7 @@
                                                                         <label>
                                                                             Masculino
                                                                             @if(isset($user->genero))
-                                                                            <input type="checkbox" id="txtgenero" name="txtgenero" {{$user->genero != 1 ? 'checked' : old('txtgenero')}} disabled>
+                                                                            <input type="checkbox" id="txtgenero" name="txtgenero" {{$user->genero != 1 ? 'checked' : old('txtgenero')}}>
                                                                             @else
                                                                             <input type="checkbox" id="txtgenero" name="txtgenero" {{old('txtgenero') == 'on' ? 'checked' : ''}}>
                                                                             @endif
