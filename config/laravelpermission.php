@@ -8,81 +8,36 @@ return [
         'roleInfocenter'    => 'Infocenter',
         'roleTalento'       => 'Talento',
         'roleIngreso'       => 'Ingreso',
-        // 'roleProveedor'     => 'Proveedor',
         'roleDesarrollador'     => 'Desarrollador',
     ],
 
     'permissions' => [
         [
-            'method'   => 'user.roleAdministrador.index',
-            'name'     => 'Ver Administrador',
-            'callable' => true,
-        ],
-        [
             'method'   => 'idea.index',
-            'name'     => 'Ver Ideas',
+            'name'     => 'leer ideas',
             'callable' => true,
         ],
         [
             'method'   => 'idea.create',
-            'name'     => 'Registrar Idea',
+            'name'     => 'Registrar ideas',
             'callable' => true,
         ],
         [
             'method'   => 'idea.edit',
-            'name'     => 'Editar Idea',
+            'name'     => 'Editar ideas',
             'callable' => true,
         ],
         [
             'method'   => 'idea.delete',
-            'name'     => 'Eliminar Idea',
+            'name'     => 'Eliminar ideas',
             'callable' => true,
         ],
         [
-            'method'   => 'linea.index',
-            'name'     => 'Ver Lineas',
+            'method'   => 'idea.show',
+            'name'     => 'ver una ideas',
             'callable' => true,
         ],
-        [
-            'method'   => 'linea.create',
-            'name'     => 'Registrar Linea',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'linea.edit',
-            'name'     => 'Editar linea',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'linea.delete',
-            'name'     => 'Eliminar Linea',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'laboratorio.index',
-            'name'     => 'Ver Laboratorios',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'laboratorio.create',
-            'name'     => 'Crear Laboratorio',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'laboratorio.edit',
-            'name'     => 'Editar Laboratorio',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'laboratorio.update',
-            'name'     => 'Actualizar Laboratorio',
-            'callable' => true,
-        ],
-        [
-            'method'   => 'laboratorio.delete',
-            'name'     => 'Eliminar Laboratorio',
-            'callable' => true,
-        ],
+
 
     ],
 ];

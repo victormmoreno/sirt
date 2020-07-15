@@ -85,7 +85,7 @@
   </a>
 </li>
 <li class="no-padding">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.ideas')}}" rel="canonical" title="Ideas">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.index')}}" rel="canonical" title="Ideas">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas
   </a>
 </li>
