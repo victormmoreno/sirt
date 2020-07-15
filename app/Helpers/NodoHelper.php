@@ -32,7 +32,7 @@ class NodoHelper
     // Retorna únicamente el nombre del nodo al que pertenece el usuario
     public static function returnNameNodoUsuario()
     {
-        // $value = session()->get('login_role');
+     
         if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
             return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {

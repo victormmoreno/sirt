@@ -151,180 +151,246 @@ $(document).ready(function() {
 //     });
 // }
 $(document).ready(function() {
-    ideas.getIdeasForEmprendedores();
 
-    // $('#tblideasempresas').DataTable({
-    //     language: {
-    //       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    //     },
-    //     processing: true,
-    //     serverSide: true,
-    //     // order: false,
-    //     ajax:{
-    //       url: "/idea/consultarIdeasEmpresasGIPorNodo/"+0,
-    //       type: "get",
-    //     },
-    //     columns: [
-    //       {
-    //         data: 'codigo_idea',
-    //         name: 'codigo_idea',
-    //       },
-    //       {
-    //         data: 'fecha_registro',
-    //         name: 'fecha_registro',
-    //       },
-    //       {
-    //         data: 'nit',
-    //         name: 'nit',
-    //       },
-    //       {
-    //         data: 'razon_social',
-    //         name: 'razon_social',
-    //       },
-    //       {
-    //         data: 'nombre_idea',
-    //         name: 'nombre_idea',
-    //       },
-    //     ],
-    //     initComplete: function () {
-    //       this.api().columns().every(function () {
-    //         var column = this;
-    //         var input = document.createElement("input");
-    //         $(input).appendTo($(column.footer()).empty())
-    //         .on('change', function () {
-    //           column.search($(this).val(), false, false, true).draw();
-    //         });
-    //       });
-    //     }
-    //   });
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_year = $('#filter_year').val();
+    let filter_state = $('#filter_state').val();
+    let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
+    let filter_convocatoria = $('#filter_convocatoria').val();
+    $('#ideas_data_action_table').dataTable().fnDestroy();
+    $('#ideas_data_table').dataTable().fnDestroy();
+    if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
+        idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+        idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+    }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
+        idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+        idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+    }
+
+
+    $('#filter_idea').click(function(){
+        let filter_nodo = $('#filter_nodo').val();
+        let filter_year = $('#filter_year').val();
+        let filter_state = $('#filter_state').val();
+        let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
+        let filter_convocatoria = $('#filter_convocatoria').val();
+        $('#ideas_data_action_table').dataTable().fnDestroy();
+        $('#ideas_data_table').dataTable().fnDestroy();
+        if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
+            idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+            idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+        }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
+            idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+            idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+        }else{
+
+        }
+    });
+
+    
+
 });
 
-var ideas = {
-    getIdeasForEmprendedores: function(){
+$('#download_excel').click(function(){
+        let filter_nodo = $('#filter_nodo').val();
+        let filter_year = $('#filter_year').val();
+        let filter_state = $('#filter_state').val();
+        let filter_vieneConvocatoria = $('#filter_vieneconvocatoria').val();
+        let filter_convocatoria = $('#filter_convocatoria').val();
+        var query = {
+            filter_nodo: filter_nodo,
+            filter_year: filter_year,
+            filter_state: filter_state,
+            filter_vieneConvocatoria: filter_vieneConvocatoria,
+            filter_convocatoria: filter_convocatoria,
+        }
 
-        let anio = $('#selectYearIdea').val();
-        let state = $('#txtestadoIdea').val();
-        $('#ideas_emprendedores_table').dataTable().fnDestroy();
-        $('#ideas_emprendedores_table .dataTables_length select').addClass('browser-default');
+        var url = "/idea/export?" + $.param(query)
 
-        if (anio == null || anio == '' && state == null || state == ''){
+        window.location = url;
+    });
 
-        }else{
-            $('#ideas_emprendedores_table').DataTable({
-                language: {
+const deconvocatoria = 1;
+const noconvocatoria = 0;
+
+var idea ={
+    fill_datatatables_actions_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
+        var datatable = $('#ideas_data_action_table').DataTable({
+            language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                "lengthChange": false,
-                ajax:{
-                url: "/idea/datatablesideasestado/"+anio+"/"+state,
-                type: "get",
-                },
-                columns: [
-                    {
-                        data: 'codigo_idea',
-                        name: 'codigo_idea',
-                    },
-                    {
-                        data: 'fecha_registro',
-                        name: 'fecha_registro',
-                    },
-                    {
-                        data: 'persona',
-                        name: 'persona',
-                    },
-                    {
-                        data: 'correo',
-                        name: 'correo',
-                    },
-                    {
-                        data: 'contacto',
-                        name: 'contacto',
-                    },
-                    {
-                        data: 'nombre_idea',
-                        name: 'nombre_idea',
-                    },
-                    {
-                        data: 'estado',
-                        name: 'estado',
-                    },
-                    {
-                        data: 'details',
-                        name: 'details',
-                        orderable: false
-                    },
-                    {
-                        data: 'edit',
-                        name: 'edit',
-                        orderable: false
-                    },
-                    {
-                        data: 'soft_delete',
-                        name: 'soft_delete',
-                        orderable: false
-                    },
-                    {
-                        data: 'dont_apply',
-                        name: 'dont_apply',
-                        orderable: false
-                    },
-
-                ],
-                initComplete: function () {
-                    this.api().columns().every(function () {
-                        var column = this;
-                        var input = document.createElement("input");
-                        $(input).appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                        column.search($(this).val(), false, false, true).draw();
-                        });
-                    });
+            },
+            "lengthChange": false,
+            retrieve: true,
+            processing: true,
+            serverSide: true,
+            ajax:{
+                url: "/idea",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_year: filter_year,
+                    filter_state: filter_state,
+                    filter_vieneConvocatoria: filter_vieneConvocatoria,
+                    filter_convocatoria: filter_convocatoria,
                 }
+            },
+            columns: [
+                {
+                    data: 'codigo_idea',
+                    name: 'codigo_idea',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'persona',
+                    name: 'persona',
+                },
+                {
+                    data: 'correo_contacto',
+                    name: 'correo_contacto',
+                },
+                {
+                    data: 'telefono_contacto',
+                    name: 'telefono_contacto',
+                },
+                {
+                    data: 'nombre_proyecto',
+                    name: 'nombre_proyecto',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'details',
+                    name: 'details',
+                    orderable: false
+                },
+                {
+                    data: 'edit',
+                    name: 'edit',
+                    orderable: false
+                },
+                {
+                    data: 'soft_delete',
+                    name: 'soft_delete',
+                    orderable: false
+                },
+                {
+                    data: 'dont_apply',
+                    name: 'dont_apply',
+                    orderable: false
+                },
 
-            });
+            ],
+        });
+    },
+    fill_datatatables_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
+        var datatable = $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            retrieve: true,
+            processing: true,
+            serverSide: true,
+            ajax:{
+                url: "/idea",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_year: filter_year,
+                    filter_state: filter_state,
+                    filter_vieneConvocatoria: filter_vieneConvocatoria,
+                    filter_convocatoria: filter_convocatoria,
+                }
+            },
+            columns: [
+                {
+                    data: 'codigo_idea',
+                    name: 'codigo_idea',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'persona',
+                    name: 'persona',
+                },
+                {
+                    data: 'correo_contacto',
+                    name: 'correo_contacto',
+                },
+                {
+                    data: 'telefono_contacto',
+                    name: 'telefono_contacto',
+                },
+                {
+                    data: 'nombre_proyecto',
+                    name: 'nombre_proyecto',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'details',
+                    name: 'details',
+                    orderable: false
+                },
+
+            ],
+        });
+    },
+    getSelectConvocatoria: function (){
+        let convocatoria = $('#txtconvocatoria').val();
+        $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        if(convocatoria == deconvocatoria){
+            $('#txtnombreconvocatoria').removeAttr("disabled").focus().val('');
+        }else if(convocatoria == noconvocatoria){
+            $('#txtnombreconvocatoria').val('');
+            $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        }else{
+            $('#txtnombreconvocatoria').val('');
+            $('#txtnombreconvocatoria').attr("disabled", "disabled");
         }
     }
 }
 
 
-
-
-
 function cambiarEstadoIdeaDeProyecto(id, estado) {
-  Swal.fire({
+Swal.fire({
     title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
-    // text: "You won't be able to revert this!",
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     cancelButtonText: 'Cancelar',
     confirmButtonText: 'Sí'
-  }).then((result) => {
+}).then((result) => {
     if (result.value) {
-      $.ajax({
+    $.ajax({
         dataType:'json',
         type:'get',
         url:'/idea/updateEstadoIdea/'+id+'/'+estado,
         success: function (data) {
-          Swal.fire({
+        Swal.fire({
             title: 'El estado de la idea se ha cambiado exitosamente!',
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Sí'
-          }).then((result) => {
+        }).then((result) => {
             window.location.replace(data.route);
-          })
+        })
         },
         error: function (xhr, textStatus, errorThrown) {
-          alert("Error: " + errorThrown);
+        alert("Error: " + errorThrown);
         }
-      })
+    })
     }
-  })
+})
 
 }
 
@@ -332,19 +398,19 @@ function cambiarEstadoIdeaDeProyecto(id, estado) {
 
 function detallesIdeaPorId(id){
 
-  $.ajax({
+$.ajax({
     dataType:'json',
     type:'get',
     url:"/idea/detallesIdea/"+id
-  }).done(function(respuesta){
+}).done(function(respuesta){
 
     $("#titulo").empty();
     $("#detalle_idea").empty();
     if (respuesta == null) {
-      swal('Ups!!!', 'Ha ocurrido un error', 'warning');
+    swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
-      $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.detalles.nombre_proyecto+"");
-      $("#detalle_idea").append(
+    $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.detalles.nombre_proyecto+"");
+    $("#detalle_idea").append(
         '<div class="row">'
         +'<div class="col s12 m6 l6">'
         +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
@@ -417,10 +483,10 @@ function detallesIdeaPorId(id){
         +'</div>'
         +'</div>'
 
-      );
-      $('#modal1').openModal();
+    );
+    $('#modal1').openModal();
     }
-  })
+})
 }
 
 function vieneConvocatoria(value){
@@ -438,140 +504,6 @@ function nombreConvocatoria(value, convocatoria){
         return "No Aplica";
     }
 }
-
-function consultarIdeasPorNodo() {
-  let idNodo = $('#txtnodo').val();
-  consultarIdeasEmprendedoresPorNodo(idNodo);
-  consultarIdeasEmpresasGIPorNodo(idNodo);
-}
-
-function consultarIdeasEmprendedoresPorNodo(idNodo) {
-  $('#ideasEmprendedoresPorNodo_table').dataTable().fnDestroy();
-  $('#ideasEmprendedoresPorNodo_table').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    // order: false,
-    ajax:{
-      url: "/idea/consultarIdeasEmprendedoresPorNodo/"+idNodo,
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'codigo_idea',
-        name: 'codigo_idea',
-      },
-      {
-        data: 'fecha_registro',
-        name: 'fecha_registro',
-      },
-      {
-        data: 'persona',
-        name: 'persona',
-      },
-      {
-        data: 'correo',
-        name: 'correo',
-      },
-      {
-        data: 'contacto',
-        name: 'contacto',
-      },
-      {
-        data: 'nombre_idea',
-        name: 'nombre_idea',
-      },
-      {
-        data: 'estado',
-        name: 'estado',
-      },
-      {
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-
-    ],
-  });
-}
-
-function consultarIdeasEmpresasGIPorNodo(idNodo) {
-  $('#ideasEmpresasGIPorNodo_table').dataTable().fnDestroy();
-  $('#ideasEmpresasGIPorNodo_table').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    // order: false,
-    ajax:{
-      url: "/idea/consultarIdeasEmpresasGIPorNodo/"+idNodo,
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'codigo_idea',
-        name: 'codigo_idea',
-      },
-      {
-        data: 'fecha_registro',
-        name: 'fecha_registro',
-      },
-      {
-        data: 'nit',
-        name: 'nit',
-      },
-      {
-        data: 'razon_social',
-        name: 'razon_social',
-      },
-      {
-        data: 'nombre_idea',
-        name: 'nombre_idea',
-      },
-    ],
-  });
-}
-
-$(document).ready(function() {
-
-  consultarIdeasEmprendedoresPorNodo(0);
-  consultarIdeasEmpresasGIPorNodo(0);
-  consultaIdeasEmprendedoresTodosPorNodo(0);
-
-});
-
-function consultaIdeasEmprendedoresTodosPorNodo(idNodo) {
-  $('#tbl_TodasLasIdeasDeProyecto').dataTable().fnDestroy();
-  $('#tbl_TodasLasIdeasDeProyecto').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    // order: false,
-    ajax:{
-      url: "/idea/consultarIdeasTodosPorNodo/"+idNodo,
-      type: "get",
-    },
-    columns: [
-      { data: 'codigo_idea', name: 'codigo_idea' },
-      { data: 'fecha_registro', name: 'fecha_registro' },
-      { data: 'persona', name: 'persona' },
-      { data: 'correo', name: 'correo' },
-      { data: 'contacto', name: 'contacto' },
-      { data: 'nombre_idea', name: 'nombre_idea' },
-      { data: 'fecha_sesion1', name: 'fecha_sesion1' },
-      { data: 'fecha_sesion2', name: 'fecha_sesion2' },
-      { data: 'fecha_comite', name: 'fecha_comite' },
-      { data: 'hora', name: 'hora' },
-      { data: 'admitido', name: 'admitido' },
-    ],
-  });
-}
-
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',

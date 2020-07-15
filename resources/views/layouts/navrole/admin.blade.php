@@ -71,7 +71,7 @@
   <div class="collapsible-body">
     <ul>
       <li>
-        <a href="{{route('idea.ideas')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
+        <a href="{{route('idea.index')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
           <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
         </a>
       </li>

@@ -31,7 +31,11 @@
                 <div class="row">
                   <div class="col s12 m8 l8">
                     <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                      <span class="card-title center-align">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
+                        @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador() ))
+                            <span class="card-title center-align">Ideas de {{config('app.name')}}</span>
+                        @else
+                            <span class="card-title center-align">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
+                        @endif
                     </div>
                   </div>
                   <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
@@ -42,7 +46,17 @@
                 <div class="divider"></div>
 
                     <div class="row search-tabs-row search-tabs-header">
-                        
+                        @if((session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador()))
+                        <div class="input-field col s12 m12 l2">
+                            <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
+                            <select name="filter_nodo" id="filter_nodo">
+                                <option value="all" >todos</option>
+                                @foreach($nodos as $id => $name)
+                                    <option value="{{$id}}">{{$name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
                         <div class="input-field col s12 m12 l1">
                             <label class="active" for="filter_state">Año <span class="red-text">*</span></label>
                             <select name="filter_year" id="filter_year">
@@ -52,7 +66,7 @@
                                 <option value="all" >todos</option>
                             </select>
                         </div>
-                        <div class="input-field col s12 m12 l2">
+                        <div class="input-field col s12 m12 l1">
                             <label class="active" for="filter_state">Estado <span class="red-text">*</span></label>
                             <select name="filter_state" id="filter_state">
                                 @forelse($estadosIdeas  as $id => $name)
@@ -73,7 +87,7 @@
                           </select>
                         </div>
 
-                        <div class="input-field col s12 m12 l4">
+                        <div class="input-field col s12 m12 l3">
 
                             <input type="text" id="filter_convocatoria" placeholder="nombre de convocatoria">
                         </div>
@@ -84,7 +98,7 @@
                     </div>
 
                 
-                  <table id="ideas_data_action_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
+                  <table id="ideas_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                     <thead>
                       <tr>
                         <th>Código de la Idea</th>
@@ -95,9 +109,6 @@
                         <th>Nombre de la Idea</th>
                         <th>Estado</th>
                         <th>Detalles</th>
-                        <th>Editar</th>
-                        <th>Inhabilitar</th>
-                        <th>No aplica</th>
                       </tr>
                     </thead>
                     <tbody>

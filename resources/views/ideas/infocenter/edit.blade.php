@@ -9,7 +9,7 @@
         <div class="row">
               <div class="col s8 m8 l9">
                   <h5 class="hand-of-Sean-fonts orange-text text-darken-3">
-                  <a class="footer-text left-align " href="{{route('idea.ideas')}}">
+                  <a class="footer-text left-align " href="{{route('idea.index')}}">
                     <i class="material-icons arrow-l">arrow_back</i>
                   </a> Ideas de Proyecto
                 </h5>
@@ -17,27 +17,38 @@
               <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
-                      <li><a href="{{route('idea.ideas')}}">Ideas de Proyecto</a></li>
+                      <li><a href="{{route('idea.index')}}">Ideas de Proyecto</a></li>
                       <li class="active">Modificar</li>
                   </ol>
               </div>
           </div>
-        <div class="card stats-card">
+        <div class="card ">
           <div class="card-content">
             <br>
             <center>
-              <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Modificar Idea de Proyecto - {{ $idea->nombre_proyecto }}</span>
+              <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Modificar Idea de Proyecto - {{ $idea->codigo_idea }}</span>
             </center>
             <div class="divider"></div>
             <div class="row">
               <form action="{{ route('idea.update', $idea->id)}}" method="POST" onsubmit="return checkSubmit()">
                 {!! method_field('PUT')!!}
                 {!! csrf_field() !!}
-                <div class="card-panel red lighten-3">
-                  <div class="card-content white-text">
-                    <a class="btn-floating red"><i class="material-icons prefix">info_outline</i></a><span>Los elementos con (*) son obligatorios</span>
-                  </div>
-                </div>
+                @if ($errors->any())
+                    <div class="card red lighten-3">
+                        <div class="row">
+                            <div class="col s12 m10">
+                                <div class="card-content white-text">
+                                    <p>
+                                        <i class="material-icons left">
+                                            info_outline
+                                        </i>
+                                        Los datos marcados con * son obligatorios
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <center><span class="card-title center-align">Datos del Contacto</span> <i class="Small material-icons prefix">account_circle </i></center>
                 <div class="divider"></div>
                 <div class="row">
@@ -152,7 +163,7 @@
                 </div>
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                  <a href="{{route('idea.ideas')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                  <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
               </form>
             </div>
