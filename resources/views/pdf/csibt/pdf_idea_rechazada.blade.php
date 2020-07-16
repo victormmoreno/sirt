@@ -17,14 +17,14 @@
   <p style="text-align: justify">
     Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica realizado en el 
     mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera
-    necesario aclarar algunos puntos para poder realizar la correcta asignación de su proyecto:
-    <b>“{{ $idea->nombre_proyecto }}”</b>. <br>Para esto le solicitamos seguir las siguientes recomendaciones:
+    necesario aclarar algunos puntos para que su idea de proyecto: 
+    <b>“{{ $idea->nombre_proyecto }}”</b> sea revisada nuevamente en un próximo comité. <br>Para esto le solicitamos seguir las siguientes recomendaciones:
   </p>
   <p style="text-align: left">
     {{ $idea->comites()->wherePivot('comite_id', $comite->id)->first()->pivot->observaciones }}
   </p>
   <p style="text-align: justify">
-    Luego de seguir las recomendaciones usted podrá volver a inscribir su proyecto en Tecnoparque y el comité decidirá si se le asigna un gestor de Tecnoparque,
+    Luego de seguir las recomendaciones usted podrá solicitar una nueva citación al comité y este decidirá si se le asigna un gestor de Tecnoparque,
     quien lo contactará para iniciar con la metodología en caso de que el proyecto se admitido.
     Cualquier información adicional la puede solicitar a los teléfonos {{ $idea->nodo->telefono }} <b>ext.</b> {{ $extensiones }}.
   </p>
@@ -50,5 +50,3 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
-{{-- {{$nombre_proyecto}}
-{{$correo_contacto }} --}}

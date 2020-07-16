@@ -71,6 +71,7 @@
         <th width="10%">Horas de Asesoria Indirecta</th>
         <th>Equipos</th>
         <th>Materiales de Formación</th>
+        <th>Descripción</th>
       </tr>
     </thead>
     <tbody>
@@ -125,9 +126,13 @@
               </tbody>
             </table>
           </td>
+          <td>
+            {{$value->descripcion}}
+          </td>
         </tr>
       @empty
         <tr>
+          <td>No se registran usos de infraestructura</td>
           <td>No se registran usos de infraestructura</td>
           <td>No se registran usos de infraestructura</td>
           <td>No se registran usos de infraestructura</td>
