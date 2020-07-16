@@ -130,12 +130,12 @@ class Idea extends Model
             ->where('tipo_idea', $this->IsEmprendedor())
             ->where(function ($q) use ($idgestor) {
                 $q->where(function ($query) use ($idgestor) {
-                  $query->where('gestor_id', '=', $idgestor);
+                    $query->where('gestor_id', '=', $idgestor);
                 })
-                  ->orWhere(function ($query) {
-                    $query->where('gestor_id', '=', null);
-                  });
-              });
+                    ->orWhere(function ($query) {
+                        $query->where('gestor_id', '=', null);
+                    });
+            });
     }
 
     public static function getAllIdeas()
@@ -159,11 +159,7 @@ class Idea extends Model
             ->selectRaw("CONCAT(nombres_contacto, ' ', apellidos_contacto) AS persona")
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-            // ->join('entrenamiento_idea', 'entrenamiento_idea.idea_id', '=', 'ideas.id')
-            // ->join('entrenamientos', 'entrenamientos.id', '=', 'entrenamiento_idea.entrenamiento_id')
             ->where('nodo_id', $id)
-            // ->whereYear('ideas.created_at', Carbon::now()->isoFormat('YYYY'))
-            // ->where('tipo_idea', $this->IsEmprendedor())
             ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado', 'Reprogramado'])
             ->groupBy('ideas.id')
             ->orderBy('nombre_proyecto');
@@ -278,5 +274,51 @@ class Idea extends Model
             ->where('tipo_idea', $this->IsEmprendedor())
             ->where('nodo_id', $id)
             ->orderBy('nombre_proyecto');
+    }
+
+    public function scopeCreatedAt($query, $created_at)
+    {
+        if (!empty($created_at) && $created_at != 'all' && $created_at != null) {
+            return $query->whereYear('created_at', $created_at);
+        }
+        return $query;
+    }
+
+    public function scopeState($query, $state)
+    {
+        if (!empty($state) && $state != 'all' && $state != null) {
+            return $query->where('estadoidea_id', $state);
+        }
+        return $query;
+    }
+
+
+    public function scopeVieneConvocatoria($query, $viene_convocatoria)
+    {
+        if (!empty($viene_convocatoria) && $viene_convocatoria != 'all' && $viene_convocatoria != null) {
+            if ($viene_convocatoria == 'si') {
+                $viene_convocatoria = 1;
+            } else {
+                $viene_convocatoria = 0;
+            }
+            return $query->where('viene_convocatoria', $viene_convocatoria);
+        }
+        return $query;
+    }
+
+    public function scopeNodo($query, $nodo)
+    {
+        if (!empty($nodo) && $nodo != null && $nodo != 'all') {
+            return $query->where('nodo_id', $nodo);
+        }
+        return $query;
+    }
+
+    public function scopeConvocatoria($query, $convocatoria)
+    {
+        if (!empty($convocatoria) && $convocatoria != '' && $convocatoria != null) {
+            return $query->where('convocatoria', 'LIKE', "%$convocatoria%");
+        }
+        return $query;
     }
 }

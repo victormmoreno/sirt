@@ -14,9 +14,8 @@ class PermissionsTableSeeder extends Seeder
     {
         collect(config('laravelpermission.permissions'))
             ->where('callable', true)
-            ->each(function ($permissions){
-                // $this->call($permissions['name']);
+            ->each(function ($permissions) {
                 Permission::create(['name' => $permissions['name']]);
-        });
+            });
     }
 }

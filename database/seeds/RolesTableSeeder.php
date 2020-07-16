@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RolesTableSeeder extends Seeder
 {
@@ -12,25 +13,32 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        Role::create([
+        $roleAdmin = Role::create([
             'name' => config('laravelpermission.roles.roleAdministrador'),
         ]);
-        Role::create([
+
+
+
+        $roleDinamizador = Role::create([
             'name' => config('laravelpermission.roles.roleDinamizador'),
         ]);
-        Role::create([
+        $roleGestor = Role::create([
             'name' => config('laravelpermission.roles.roleGestor'),
         ]);
-        Role::create([
+        $roleInfocenter = Role::create([
             'name' => config('laravelpermission.roles.roleInfocenter'),
         ]);
-        Role::create([
+        $roleInfocenter->givePermissionTo(Permission::findByName('leer ideas'));
+        $roleInfocenter->givePermissionTo(Permission::findByName('Registrar ideas'));
+        $roleInfocenter->givePermissionTo(Permission::findByName('Editar ideas'));
+        $roleInfocenter->givePermissionTo(Permission::findByName('Eliminar ideas'));
+        $roleTalento = Role::create([
             'name' => config('laravelpermission.roles.roleTalento'),
         ]);
-        Role::create([
+        $roleIngreso = Role::create([
             'name' => config('laravelpermission.roles.roleIngreso'),
         ]);
-        Role::create([
+        $roleDesarrollador = Role::create([
             'name' => config('laravelpermission.roles.roleDesarrollador'),
         ]);
     }
