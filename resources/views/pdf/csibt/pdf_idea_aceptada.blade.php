@@ -23,7 +23,11 @@
     grupo de emprendedores innovadores de nuestra Red y recibirán de parte nuestra la
     Asesoría Técnica especializada y los servicios tecnológicos para el desarrollo de su
     idea: <b>“{{ $idea->nombre_proyecto }}”</b>
+    @if(isset($idea->gestor))
     En los próximos días, el gestor {{$idea->gestor->user->nombres}} {{$idea->gestor->user->apellidos}} se pondrá en contacto con usted para generar una agenda de trabajo inicial.
+    @else
+    En los próximos días, un gestor(a) de Tecnoparque se pondrá en contacto con usted para generar una agenda de trabajo inicial.
+    @endif
 
   </p>
   <p>

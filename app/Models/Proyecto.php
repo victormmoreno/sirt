@@ -169,35 +169,11 @@ class Proyecto extends Model
   }
 
   /**
-   * Relación a la tabla users
-   * @return Eloquent
-   * @author dum
-   */
-  public function users()
-  {
-    return $this->belongsToMany(User::class, 'aprobaciones')
-      ->withTimestamps()
-      ->withPivot('aprobacion');
-  }
-
-  /**
    * Relación con la tabla de ideas
    */
   public function idea()
   {
     return $this->belongsTo(Idea::class, 'idea_id', 'id');
-  }
-
-  /**
-   * Relación a la tabla de roles
-   * @return Collection
-   * @author dum
-   */
-  public function roles()
-  {
-    return $this->belongsToMany(Role::class, 'aprobaciones')
-      ->withTimestamps()
-      ->withPivot('aprobacion');
   }
 
   /* relacion a la tabla estadosproyecto */

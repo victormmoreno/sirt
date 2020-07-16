@@ -121,11 +121,6 @@ class DatabaseSeeder extends Seeder
             $this->truncateTables([
                 'activation_tokens',
                 'actividades',
-                'aprobaciones',
-                'archivoscharlasinformativas',
-                'archivoscomites',
-                'archivosedt',
-                'archivosentrenamiento',
                 'archivos_articulacion_proyecto',
                 'areasconocimiento',
                 'articulaciones',

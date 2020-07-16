@@ -33,7 +33,6 @@ $('.dataTables_length select').addClass('browser-default');
         name: 'details',
         orderable: false
       },
-
     ],
     initComplete: function () {
       this.api().columns().every(function () {
