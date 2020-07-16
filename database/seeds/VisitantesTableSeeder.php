@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Visitante;
 
+
 class VisitantesTableSeeder extends Seeder
 {
     /**
