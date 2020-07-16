@@ -138,10 +138,10 @@
                       <select class="" id="txttipoempresa_id" name="txttipoempresa_id" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione el tipo de la empresa</option>
                         @foreach($tipos as $value)
-                        @if(isset($empresa->tamanhoempresa_id))
-                        <option value="{{$value->id}}" {{ old('txttamanhoempresa_id', $empresa->tamanhoempresa_id) == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
+                        @if(isset($empresa->tipoempresa_id))
+                        <option value="{{$value->id}}" {{ old('txttipoempresa_id', $empresa->tipoempresa_id) == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
                         @else
-                        <option value="{{$value->id}}" {{ old('txttamanhoempresa_id') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
+                        <option value="{{$value->id}}" {{ old('txttipoempresa_id') == $value->id ? 'selected':'' }}>{{$value->nombre}}</option>
                         @endif
                         @endforeach
                       </select>

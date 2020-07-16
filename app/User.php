@@ -126,20 +126,6 @@ class User extends Authenticatable implements JWTSubject
     =            relaciones eloquent            =
     ===========================================*/
 
-    public function roles_aprobacion()
-    {
-        return $this->belongsToMany(Role::class, 'aprobaciones')
-            ->withTimestamps()
-            ->withPivot('aprobacion');
-    }
-
-    // public function proyectos()
-    // {
-    //     return $this->belongsToMany(Proyecto::class, 'aprobaciones')
-    //         ->withTimestamps()
-    //         ->withPivot('aprobacion');
-    // }
-
     public function proyectos()
     {
         return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();

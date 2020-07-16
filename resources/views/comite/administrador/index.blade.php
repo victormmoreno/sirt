@@ -46,9 +46,9 @@
                     <tr>
                       <th>Código del Comité</th>
                       <th>Fecha</th>
+                      <th>Estado del Comité</th>
                       <th>Observaciones</th>
-                      <th>Ideas de Proyecto</th>
-                      <th>Evidencias</th>
+                      <th style="width: 8%">Detalles</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -63,41 +63,4 @@
     </div>
   </div>
 </main>
-<div id="ideaProyecto" class="modal modal-fixed-footer">
-  <div class="modal-content">
-    <center><h4 id="titulo" class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div id="detalle_idea"></div>
-  </div>
-  <div class="modal-footer  white-text">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
-<div id="modalIdeasComite" class="modal modal-fixed-footer">
-  <div class="modal-content">
-    <center><h4 id="fechaComiteModal" class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div>
-      <table class="striped">
-        <thead>
-          <tr>
-            <th>Idea de Proyecto</th>
-            <th>Hora</th>
-            <th>Asistencia</th>
-            <th>Observaciones</th>
-            <th>Admitido</th>
-            <th>Editar Idea</th>
-            <th>Detalles de la Idea</th>
-          </tr>
-        </thead>
-        <tbody id="ideasProyectoDeUnComite">
-
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="modal-footer  white-text">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
 @endsection

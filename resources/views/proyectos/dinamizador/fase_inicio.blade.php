@@ -22,10 +22,10 @@
                 @include('proyectos.detalle_fase_inicio')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre == 'Planeación' ? 'disabled' : ''}}
+                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : ''}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Planeación' ? 'El Proyecto se encuentra en fase de Planeación' : 'Aprobar fase de inicio'}}
+                    {{$proyecto->fase->nombre != 'Inicio' ? 'El Proyecto ya no se encuentra en fase de Inicio' : 'Aprobar fase de inicio'}}
                   </button>
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar

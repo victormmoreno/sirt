@@ -103,8 +103,12 @@
                                                     <b class="black-text">
                                                         Gestor asignado a la idea de proyecto:
                                                     </b> 
-                                                    @if (isset($value->gestor->user))
+                                                    @if ($value->pivot->admitido == 1)
+                                                        @if(isset($value->gestor->user))
                                                         {{$value->gestor->user->nombres}} {{$value->gestor->user->apellidos}}
+                                                        @else
+                                                        Esta idea de proyecto no ha sido asignada a ningún gestor(a)
+                                                        @endif
                                                     @else
                                                         Esta idea de proyecto no fue aprobada en el comité.
                                                     @endif

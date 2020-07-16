@@ -16,51 +16,6 @@
             </div>
           </a>
         </div>
-        <div class="col s12 m3 l3">
-          <a href="{{ route('pdf.proyecto.acc', 39) }}" class="black-text">
-            <div class="card green lighten-3 stats-card">
-              <div class="card-content">
-                <h6>Pruebas de PDF</h6>
-              </div>
-              <div class="progress green darken-4 stats-card-progress">
-                <div class="determinate"></div>
-              </div>
-            </div>
-          </a>
-        </div>
-        {{-- <div class="col s12 m3 l3">
-          <div class="card stats-card">
-            <div class="card-content">
-              <span class="card-title">Dinamizadores</span>
-              <span class="stats-counter"><span class="counter"></span><small> Dinamizadores</small></span>
-            </div>
-            <div class="progress stats-card-progress">
-              <div class="determinate"></div>
-            </div>
-          </div>
-        </div> --}}
-        {{-- <div class="col s12 m3 l3">
-          <div class="card stats-card">
-            <div class="card-content">
-              <span class="card-title">Gestores</span>
-              <span class="stats-counter"><span class="counter"></span><small>Gestores</small></span>
-            </div>
-            <div class="progress stats-card-progress">
-              <div class="determinate"></div>
-            </div>
-          </div>
-        </div> --}}
-        {{-- <div class="col s12 m3 l3">
-          <div class="card stats-card">
-            <div class="card-content">
-              <span class="card-title">Talentos</span>
-              <span class="stats-counter"><span class="counter"></span><small>Talentos</small></span>
-            </div>
-            <div class="progress stats-card-progress">
-              <div class="determinate"></div>
-            </div>
-          </div>
-        </div> --}}
       </div>
       <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
