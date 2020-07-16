@@ -88,7 +88,7 @@
                                                     </li>
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
-                                                            Alcance del Proyecto
+                                                            Alcance de la Articulación
                                                         </span>
                                                         <p>
                                                             {{$articulacion->alcance_articulacion}}
