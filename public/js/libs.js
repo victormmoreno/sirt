@@ -36167,7 +36167,7 @@ $(document).ready(function() {
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
     let filter_convocatoria = $('#filter_convocatoria').val();
-  
+
     if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
         idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
         idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
@@ -36175,20 +36175,20 @@ $(document).ready(function() {
         idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
         idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
     }else{
-        // $('#ideas_data_action_table').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     "lengthChange": false
-        // }).clear().draw();
-        // $('#ideas_data_table').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     "lengthChange": false
-        // }).clear().draw();
+        $('#ideas_data_action_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+        $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
     }
-   
+
 
 });
 
@@ -36199,7 +36199,7 @@ $('#filter_idea').click(function(){
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
     let filter_convocatoria = $('#filter_convocatoria').val();
     $('#ideas_data_action_table').dataTable().fnDestroy();
-    
+
     $('#ideas_data_table').dataTable().fnDestroy();
     if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
         idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
@@ -36208,18 +36208,18 @@ $('#filter_idea').click(function(){
         idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
         idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
     }else{
-        // $('#ideas_data_action_table').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     "lengthChange": false
-        // }).clear().draw();
-        // $('#ideas_data_table').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     "lengthChange": false
-        // }).clear().draw();
+        $('#ideas_data_action_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+        $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
     }
 });
 
@@ -36253,6 +36253,7 @@ var idea ={
             "lengthChange": false,
             processing: true,
             serverSide: true,
+            "order": [[ 1, "desc" ]],
             ajax:{
                 url: "/idea",
                 type: "get",
@@ -36325,6 +36326,7 @@ var idea ={
             "lengthChange": false,
             processing: true,
             serverSide: true,
+            "order": [[ 1, "desc" ]],
             ajax:{
                 url: "/idea",
                 type: "get",

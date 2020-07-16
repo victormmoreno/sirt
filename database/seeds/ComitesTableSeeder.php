@@ -12,6 +12,6 @@ class ComitesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Comite::class, 100)->create();
+        factory(Comite::class, 50)->create();
     }
 }

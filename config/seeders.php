@@ -12,6 +12,7 @@ return [
         ['name' => PermissionsTableSeeder::class, 'callable' => true],
         ['name' => RolesTableSeeder::class, 'callable' => true],
         ['name' => TipoTalentosTableSeeder::class, 'callable' => true],
+        ['name' => EstadoComiteTableSeeder::class, 'callable' => true],
         ['name' => TipoFormacionTableSeeder::class, 'callable' => true],
         ['name' => TipoEstudioTableSeeder::class, 'callable' => true],
         ['name' => TipoEmpresasTableSeeder::class, 'callable' => true],
