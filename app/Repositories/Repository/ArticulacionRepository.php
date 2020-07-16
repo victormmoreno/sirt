@@ -608,7 +608,7 @@ class ArticulacionRepository
   public function consultarTotalDeArticulacionesGrupos()
   {
     return Articulacion::selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
@@ -626,7 +626,7 @@ class ArticulacionRepository
   public function consultarTotalDeArticulacionesEmpresasEmprendedores()
   {
     return Articulacion::selectRaw('count(articulaciones.id) AS cantidad')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
@@ -741,7 +741,7 @@ class ArticulacionRepository
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin])
     ->where('articulaciones.estado', Articulacion::IsCierre());
   }
@@ -846,7 +846,7 @@ class ArticulacionRepository
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->where('nodos.id', $id)
     ->whereYear('fecha_cierre', $anho)
     ->get();
@@ -889,7 +889,7 @@ class ArticulacionRepository
     ->join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.nodo_id', '=', 'nodos.id')
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'lineastecnologicas_nodos.linea_tecnologica_id')
     ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre])
     ->where('nodos.id', $id)
     ->where('lineastecnologicas.id', $idlinea)
@@ -930,7 +930,7 @@ class ArticulacionRepository
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre])
     ->where('nodos.id', $id)
     ->get();
@@ -970,7 +970,7 @@ class ArticulacionRepository
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
     ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre])
     ->where('gestores.id', $id)
     ->get();
@@ -1273,7 +1273,7 @@ class ArticulacionRepository
     ->selectRaw('IF(revisado_final = ' . ArticulacionProyecto::IsPorEvaluar() . ', "Por Evaluar", IF(revisado_final = ' . ArticulacionProyecto::IsAprobado() . ', "Aprobado",
     "No Aprobado") ) AS revisado_final')
     ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS gestor')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
@@ -1339,7 +1339,7 @@ class ArticulacionRepository
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-    ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
+    // ->join('tiposarticulaciones', 'tiposarticulaciones.id', '=', 'articulaciones.tipoarticulacion_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
     ->where('actividades.gestor_id', $id)
     ->where('articulaciones.tipoarticulacion_id', '!=', Articulacion::IsEmpresa())

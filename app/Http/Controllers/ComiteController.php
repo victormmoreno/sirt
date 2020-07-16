@@ -67,6 +67,18 @@ class ComiteController extends Controller
       return view('comite.gestor.detalle_asignado', [
         'comite' => $comite
       ]);
+    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Programado') {
+      return view('comite.administrador.detalle_agendamiento', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Realizado') {
+      return view('comite.administrador.detalle_realizado', [
+        'comite' => $comite
+      ]);
+    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Proyectos asignados') {
+      return view('comite.administrador.detalle_asignado', [
+        'comite' => $comite
+      ]);
     }
   }
 
@@ -197,20 +209,9 @@ class ComiteController extends Controller
     if (request()->ajax()) {
       return datatables()->of($this->getComiteRepository()->consultarComitesPorNodo($id))
       ->addColumn('details', function ($data) {
-        $button = '
-        <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="csibt.consultarComitesPorNodo('. $data->id .')">
-        <i class="material-icons">info</i>
-        </a>
-        ';
-        return $button;
-      })->addColumn('evidencias', function ($data) {
-        $button = '
-        <a class="btn blue-grey m-b-xs" href="' . route('csibt.evidencias', $data->id) . '">
-        <i class="material-icons">library_books</i>
-        </a>
-        ';
-        return $button;
-      })->rawColumns(['details', 'evidencias'])->make(true);
+        $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+        return $details;
+      })->rawColumns(['details'])->make(true);
     }
   }
 

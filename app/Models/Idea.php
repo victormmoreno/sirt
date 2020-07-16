@@ -160,7 +160,7 @@ class Idea extends Model
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->where('nodo_id', $id)
-            ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado', 'Reagendamiento'])
+            ->whereIn('estadosidea.nombre', ['Inicio', 'Convocado', 'Reprogramado'])
             ->groupBy('ideas.id')
             ->orderBy('nombre_proyecto');
     }
