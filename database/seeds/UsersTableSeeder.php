@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Ocupacion;
+use App\Models\Entidad;
 use App\User;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
@@ -19,31 +20,38 @@ class UsersTableSeeder extends Seeder
 
         $roles = Role::all();
         $ocupaciones = Ocupacion::all()->random();
+        $entidad = Entidad::has('nodo')->get()->first();
 
         //user-prueba
         factory(App\User::class, 1)->create([
             'nombres' => 'usuario',
             'apellidos' => 'de prueba',
-            'email' => 'usuario@prueba.com',
+            'email' => 'infotecnocolombia@gmail.com',
             'password' => 'tecnoparque',
             'estado' => User::IsActive(),
             'deleted_at' => null,
         ])
-            ->each(function ($user) use ($ocupaciones) {
+            ->each(function ($user) use ($ocupaciones, $entidad) {
                 $user->assignRole([Role::findByName(config('laravelpermission.roles.roleAdministrador'))]);
 
                 $dinamizador = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleDinamizador'))]);
                 if ($dinamizador !== null) {
-                    $user->dinamizador()->save(factory(App\Models\Dinamizador::class)->make());
+                    $user->dinamizador()->save(factory(App\Models\Dinamizador::class)->make([
+                        'nodo_id' => $entidad->nodo->id,
+                    ]));
                 }
                 $gestor = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleGestor'))]);
                 if ($gestor !== null) {
-                    $user->gestor()->save(factory(App\Models\Gestor::class)->make());
+                    $user->gestor()->save(factory(App\Models\Gestor::class)->make([
+                        'nodo_id' => $entidad->nodo->id,
+                    ]));
                 }
 
                 $infocenter = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleInfocenter'))]);
                 if ($infocenter !== null) {
-                    $user->infocenter()->save(factory(App\Models\Infocenter::class)->make());
+                    $user->infocenter()->save(factory(App\Models\Infocenter::class)->make([
+                        'nodo_id' => $entidad->nodo->id,
+                    ]));
                 }
 
                 $talento = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleTalento'))]);
@@ -53,7 +61,9 @@ class UsersTableSeeder extends Seeder
 
                 $ingreso = $user->assignRole([Role::findByName(config('laravelpermission.roles.roleIngreso'))]);
                 if ($ingreso !== null) {
-                    $user->ingreso()->save(factory(App\Models\Ingreso::class)->make());
+                    $user->ingreso()->save(factory(App\Models\Ingreso::class)->make([
+                        'nodo_id' => $entidad->nodo->id,
+                    ]));
                 }
 
                 $user->assignRole([Role::findByName(config('laravelpermission.roles.roleDesarrollador'))]);
