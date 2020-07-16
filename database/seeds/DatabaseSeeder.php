@@ -74,7 +74,6 @@ class DatabaseSeeder extends Seeder
                 'contactosentidades',
                 'costos_administrativos',
                 'departamentos',
-                'depreciaciones',
                 'dinamizador',
                 'edts',
                 'edt_entidad',

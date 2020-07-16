@@ -51,5 +51,10 @@ class AreasConocimientoTableSeeder extends Seeder
           'id' => 8,
           'nombre' => 'Industrias Creativas',
       ]);
+
+      AreaConocimiento::create([
+          'id' => 9,
+          'nombre' => 'Otro',
+      ]);
     }
 }
