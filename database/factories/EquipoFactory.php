@@ -16,7 +16,6 @@ $factory->define(Equipo::class, function (Faker $faker) {
         'marca'               => $faker->word,
         'costo_adquisicion'   => $faker->numerify('########'),
         'vida_util'           => $faker->numerify('##'),
-        // 'anio_compra'         => $faker->date($format = 'Y', $min = 2016, $max = 'now'),
         'anio_compra'         => Carbon::now()->subYears($faker->randomDigit())->year,
         'horas_uso_anio'      => $faker->numerify('###'),
     ];

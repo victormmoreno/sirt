@@ -19,8 +19,8 @@ class CreateMaterialUsoTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('usoinfraestructura_id');
             $table->unsignedInteger('material_id');
-            $table->float('costo_material',30,2);
-            $table->float('unidad');
+            $table->float('costo_material', 30, 2)->default(0);
+            $table->float('unidad')->default(0);
             $table->timestamps();
 
             $table->index(["usoinfraestructura_id"], 'fk_usoinfraestructura_material_uso1_idx');
