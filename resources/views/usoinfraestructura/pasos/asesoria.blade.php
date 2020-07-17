@@ -81,7 +81,7 @@
                                 <tr>
                                     <td></td>
                                     <td></td>
-                                    <td>Seleccione primero el tipo de uso de infraestructura.</td>
+                                    <td>Seleccione primero el tipo de asesoría y uso.</td>
                                     <td></td>
                                 </tr>
                             @endif

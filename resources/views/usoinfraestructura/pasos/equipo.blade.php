@@ -9,7 +9,7 @@
                         <span class="title"><b>Paso 3</b></span>
                     @endif
                     <p>
-                        señor(a) usuario, para ingresar los equipos al uso de infraestructura debe seleccionar el equipo e ingresar el tiempo de uso (horas) y presionar el boton agregar equipo.
+                        señor(a) usuario, para ingresar los equipos a la asesoría y uso debe seleccionar el equipo e ingresar el tiempo de uso (horas) y presionar el boton agregar equipo.
                     </p>
                 </li>
             </ul>

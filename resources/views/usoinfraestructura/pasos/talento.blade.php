@@ -9,7 +9,7 @@
                         <span class="title"><b>Paso 2</b></span>
                     @endif
                     <p>
-                        señor(a) usuario, para ingresar los talentos al uso de infraestructura debe seleccionar el talento y presionar el boton agregar talento.
+                        señor(a) usuario, para ingresar los talentos a la asesoría y uso debe seleccionar el talento y presionar el boton agregar talento.
                     </p>
                 </li>     
             </ul>
@@ -52,7 +52,7 @@
                                         </option>
                                     @else
                                         <option value="">
-                                            Seleccione primero el tipo de uso de infraestructura
+                                            Seleccione primero el tipo de asesoría y uso
                                         </option>
                                     @endif
                                     
