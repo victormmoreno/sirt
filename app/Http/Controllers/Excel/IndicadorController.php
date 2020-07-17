@@ -61,7 +61,7 @@ class IndicadorController extends Controller
       }
     } else if (Session::get('login_role') == User::IsDinamizador()) {
       $query = $this->getProyectoRepository()->consultarProyectos_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
+      $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->dd();
       $queryArticulacion = $this->getArticulacionRepository()->consultarArticulaciones_repository($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
       $queryEmpresasPropietarias = $this->getEmpresaRepository()->empresasPropietarias($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
       $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();

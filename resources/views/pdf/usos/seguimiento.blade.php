@@ -1,5 +1,5 @@
 @extends('pdf.illustrated-layout')
-@section('title-file', 'Usos de Infraestructura '. config('app.name'))
+@section('title-file', 'Asesorías y usos'. config('app.name'))
 @section('content-pdf')
   <center>
     <div class="row">
@@ -60,13 +60,13 @@
 
   <center>
     <div class="row">
-      <h5>Usos de Infraestructura</h5>
+      <h5>Asesorías y usos</h5>
     </div>
   </center>
   <table class="striped centered">
     <thead>
       <tr>
-        <th width="10%">Fecha del Uso de Infraestructura</th>
+        <th width="10%">Fecha de la Asesoría y uso</th>
         <th width="10%">Horas de Asesoria Directa</th>
         <th width="10%">Horas de Asesoria Indirecta</th>
         <th>Equipos</th>
@@ -132,12 +132,12 @@
         </tr>
       @empty
         <tr>
-          <td>No se registran usos de infraestructura</td>
-          <td>No se registran usos de infraestructura</td>
-          <td>No se registran usos de infraestructura</td>
-          <td>No se registran usos de infraestructura</td>
-          <td>No se registran usos de infraestructura</td>
-          <td>No se registran usos de infraestructura</td>
+          <td>No se registran asesorías y usos</td>
+          <td>No se registran asesorías y usos</td>
+          <td>No se registran asesorías y usos</td>
+          <td>No se registran asesorías y usos</td>
+          <td>No se registran asesorías y usos</td>
+          <td>No se registran asesorías y usos</td>
         </tr>
       @endforelse
     </tbody>

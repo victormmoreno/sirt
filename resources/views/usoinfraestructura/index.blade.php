@@ -16,13 +16,13 @@
                             <i class="material-icons left">
                                 domain
                             </i>
-                            Usos de Infraestructura
+                            Asesorías y usos
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li class="active">Uso Infraestructura </li>
+                            <li class="active">Asesoría y uso </li>
                         </ol>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                                     <div class="col s12 m12 l12">
                                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
-                                                Usos de Infraestructura {{ config('app.name')}}
+                                                Asesorías y usos {{ config('app.name')}}
                                                 <div class="divider"></div>
                                             </span>
                                         </div>
@@ -101,8 +101,8 @@
                                             <th>Fecha</th>
                                             <th>Nombre</th>
                                             <th>Fase</th>
-                                            <th>Asesoria Directa</th>
-                                            <th>Asesoria Indirecta</th>
+                                            <th>Asesoría Directa</th>
+                                            <th>Asesoría Indirecta</th>
                                             <th>Detalles</th>
                                         </thead>
                         
@@ -114,7 +114,7 @@
                                     <div class="col s12 m12 l12">
                                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
-                                                Usos de Infraestructura  Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                Asesorías y usos  Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
                                                 <div class="divider"></div>
                                             </span>
                                         </div>
@@ -171,8 +171,8 @@
                                             <th>Fecha</th>
                                             <th>Nombre</th>
                                             <th>Fase</th>
-                                            <th>Asesoria Directa</th>
-                                            <th>Asesoria Indirecta</th>
+                                            <th>Asesoría Directa</th>
+                                            <th>Asesoría Indirecta</th>
                                             <th>Detalles</th>
                                         </thead>
                                     </table>
@@ -182,7 +182,7 @@
                                     <div class="col s12 m12 l10">
                                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
-                                                Usos de Infraestructura 
+                                                Asesorías y usos 
                                             </span>
                                         </div>
                                     </div>
@@ -255,8 +255,8 @@
                                             <th>Fecha</th>
                                             <th>Nombre</th>
                                             <th>Fase</th>
-                                            <th>Asesoria Directa</th>
-                                            <th>Asesoria Indirecta</th>
+                                            <th>Asesoría Directa</th>
+                                            <th>Asesoría Indirecta</th>
                                             <th>Detalles</th>
                                         </thead>
                                     </table>

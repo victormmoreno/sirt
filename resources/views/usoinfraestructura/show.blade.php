@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Uso Infraestructura')
+@section('meta-title', 'Asesoría y uso')
 
 @section('content')
 	<main class="mn-inner inner-active-sidebar">
@@ -14,14 +14,14 @@
                                         arrow_back
                                     </i>
                                 </a>
-	                            Uso Infraestructura 
+	                            Asesoría y uso 
 	                        </h5>
 	                    </div>
 	                    <div class="col s12 m4 l4 ">
 	                        <ol class="breadcrumbs">
 	                            <li><a href="{{route('home')}}">Inicio</a></li>
-	                            <li><a href="{{route('usoinfraestructura.index')}}">Uso Infraestructura </a></li>
-	                            <li class="active">Uso Infraestructura </li>
+	                            <li><a href="{{route('usoinfraestructura.index')}}">Asesoría y uso</a></li>
+	                            <li class="active">Asesoría y uso </li>
 	                        </ol>
 	                    </div>
 	                </div>
@@ -43,7 +43,7 @@
                                                     </div>
                                                     <div class="left">
                                                         <span class="mailbox-title orange-text text-darken-3">
-	                                                        Uso Infraestructura | {{$usoinfraestructura->actividad->codigo_actividad}} - {{$usoinfraestructura->actividad->nombre}}
+	                                                        Asesoría y uso | {{$usoinfraestructura->actividad->codigo_actividad}} - {{$usoinfraestructura->actividad->nombre}}
 	                                                    </span>
 	                                                    <span class="mailbox-author">
 	                                                        <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->actividad->nodo->entidad->nombre}}, {{$usoinfraestructura->actividad->nodo->entidad->ciudad->nombre}} ({{$usoinfraestructura->actividad->nodo->entidad->ciudad->departamento->nombre}})<br/>
@@ -58,7 +58,7 @@
                                                     <span class="mailbox-title">
                                                             
                                                         <p class="center">
-                                                            Información Uso Infraestructura
+                                                            Información Asesoría y uso
                                                                 <div class="right">
                                                                     <a class="waves-effect waves-light btn m-t-xs dropdown-button " data-activates="actifiad" href="#">
                                                                         <i class="material-icons right">
@@ -256,7 +256,7 @@
                                                     <div class="col s12 m8 l8">
                                                         <div class="center">
                                                             <span class="mailbox-title green-complement-text">
-                                                                Información Uso Infraestructura
+                                                                Información Asesoría y uso
                                                             </span>
                                                             
                                                         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Uso de Infraestructura')
+@section('meta-title', 'Asesoría y uso')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -15,7 +15,7 @@
                                     arrow_back
                                 </i>
                             </a>
-                            Uso de Infraestructura
+                            Asesoría y uso
                         </h5>
                     </div>
                     <div class="col s12 m4 l4 push-m2 l2">
@@ -27,11 +27,11 @@
                             </li>
                             <li>
                                 <a href="{{route('usoinfraestructura.index')}}">
-                                    Uso de Infraestructura
+                                    Asesoría y uso
                                 </a>
                             </li>
                             <li class="active">
-                                Editar Uso de Infraestructura
+                                Editar Asesoría y uso
                             </li>
                         </ol>
                     </div>
