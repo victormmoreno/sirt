@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Nuevo Uso de Infraestructura')
+@section('meta-title', 'Nueva Asesoría y uso')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -15,7 +15,7 @@
                                     arrow_back
                                 </i>
                             </a>
-                            Uso de Infraestructura
+                            Asesoría y uso
                         </h5>
                     </div>
                     <div class="col s12 m4 l4 push-m2 l2">
@@ -27,11 +27,11 @@
                             </li>
                             <li>
                                 <a href="{{route('usoinfraestructura.index')}}">
-                                    Uso de Infraestructura
+                                    Asesoría y uso
                                 </a>
                             </li>
                             <li class="active">
-                                Nuevo Uso de Infraestructura
+                                Nueva Asesoría y uso
                             </li>
                         </ol>
                     </div>
@@ -43,7 +43,7 @@
                             <div class="row">
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Uso de Infraestructura
+                                        Nueva Asesoría y uso
                                     </span>
                                     <i class="Small material-icons prefix">
                                         domain
@@ -63,7 +63,7 @@
                             <div class="row">
                                 <center>
                                     <span class="card-title center-align">
-                                        Nuevo Uso de Infraestructura
+                                        Nueva Asesoría y uso
                                     </span>
                                     <i class="Small material-icons prefix">
                                         domain

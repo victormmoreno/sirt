@@ -248,7 +248,7 @@
                                             @enderror
                                         </div>
                                         <label for="txtlinkvideo" class="active">
-                                            Si tienes un video o un pitch adjunta la url
+                                            Si tienes un vídeo donde expliques por que tu idea es innovadora, quien es tu equipo de trabajo y por que requiere el apoyo de la Red Tecnoparque SENA.
                                         </label>
                                     </div>
                                     

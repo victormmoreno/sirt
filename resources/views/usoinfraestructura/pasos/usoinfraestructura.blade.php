@@ -3,18 +3,18 @@
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
-                    <span class="title"><b>Uso de Infraestructura</b></span>
+                    <span class="title"><b>Asesoría y uso</b></span>
                     <p>señor(a) usuario, por favor ingrese la información que se solcita en formulario.</p>
                 </li>
                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                     <li class="collection-item">
                         <span class="title"><b>Paso 1</b></span>
-                        <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos - Articulaciones)</p>
+                        <p>Por favor seleccione el tipo de asesoría y uso (Proyectos - Articulaciones)</p>
                     </li>
                 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                     <li class="collection-item">
                         <span class="title"><b>Paso 1</b></span>
-                        <p>Por favor seleccione el tipo de uso de infraestructura (Proyectos)</p>
+                        <p>Por favor seleccione el tipo de asesoría y uso (Proyectos)</p>
                     </li>
                 @endif
             </ul>
@@ -26,11 +26,11 @@
             <legend>Paso 1</legend>
             {!! csrf_field() !!}
             <p class="center card-title orange-text text-darken-3">
-               <b> Uso de Infraestructura</b> 
+               <b> Asesoría y uso</b> 
             </p>
             <div class="divider"></div>
             <h5 class="center-align">
-            <mark><i class="material-icons">info_outline</i> Seleccione a que se le hará el uso de infraestructura</mark>
+            <mark><i class="material-icons">info_outline</i> Seleccione a que se le hará la asesoría y uso</mark>
         </h5>
             <div class="row">
                 <div class="input-field col s12 m12 l12">
@@ -112,14 +112,14 @@
                         @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
                             <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
                         @else
-                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
                    
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
                             <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
                         @else
-                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
                     @endif
                     <label class="active" for="txtlinea">
@@ -158,7 +158,7 @@
                             @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
                                 <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
                             @else
-                                <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                                <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                             @endif
                         
                         <label class="active" for="txtlinea">
@@ -178,7 +178,7 @@
                         @if(isset($usoinfraestructura->actividad->gestor->user))
                             <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
                         @else
-                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de uso de infraestructura"/>
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
                     
                     <label class="active" for="txtgestor">
@@ -211,7 +211,7 @@
                             @elseif($usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsEdt())
                                 Edt
                             @else
-                                seleccione un tipo de uso de infraestructura
+                                seleccione un tipo de asesoría y uso
                             @endif
                             <span class="red-text">
                                 *
@@ -220,7 +220,7 @@
                     @else
                         <input id="txtactividad" name="txtactividad"  type="text" readonly />
                         <label for="txtactividad">
-                                seleccione un tipo de uso de infraestructura
+                                seleccione un tipo de asesoría y uso
                             <span class="red-text">
                                 *
                             </span>
