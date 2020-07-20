@@ -2,24 +2,24 @@
 
 namespace App\Console\Commands;
 
-use Artisan;
 use Illuminate\Console\Command;
+use Artisan;
 
-class QueueWorkCronJons extends Command
+class RetryingFailedJobs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'queuework:jobs';
+    protected $signature = 'queuework:retry';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Ejecuta comando php artisan queue work con tareas programadas';
+    protected $description = 'Comando para reintentar ejecutar jobs';
 
     /**
      * Create a new command instance.
@@ -38,8 +38,8 @@ class QueueWorkCronJons extends Command
      */
     public function handle()
     {
-        Artisan::call('queue:work --tries=3 --delay=3 --stop-when-empty');
+        Artisan::call('queue:retry all');
 
-        $this->info('crob jobs executed');
+        $this->info('crob jobs retried');
     }
 }
