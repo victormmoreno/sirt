@@ -28,5 +28,4 @@ class EstadoIdea extends Model
     ];
 
     public $timestamps = false;
-
 }

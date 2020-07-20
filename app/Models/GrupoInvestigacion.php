@@ -26,9 +26,7 @@ class GrupoInvestigacion extends Model
         'tipogrupo',
         'estado',
         'institucion',
-        // 'nombres_contacto',
-        // 'correo_contacto',
-        // 'telefono_contacto',
+    
     ];
 
     public function proyectos()

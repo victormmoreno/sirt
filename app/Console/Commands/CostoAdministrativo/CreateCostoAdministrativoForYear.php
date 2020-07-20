@@ -44,15 +44,14 @@ class CreateCostoAdministrativoForYear extends Command
         $nodos = Nodo::all();
 
         if (!$costos->isEmpty() && !$nodos->isEmpty()) {
-            $syncData = array();
+            $syncData = [];
             foreach ($costos as $id => $value) {
-                $syncData[$id] = array('costo_administrativo_id' => $value->id,  'anho' =>Carbon::now()->year, 'valor' => 0);
+                $syncData[$id] = ['costo_administrativo_id' => $value->id,  'anho' => Carbon::now()->year, 'valor' => 0];
             }
 
             foreach ($nodos as $key => $nodo) {
                 $nodo->costoadministrativonodo()->attach($syncData);
             }
         }
-
     }
 }

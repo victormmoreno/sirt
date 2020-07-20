@@ -17,8 +17,12 @@ class IdeasTableSeeder extends Seeder
         $entidad = Entidad::has('nodo')->whereHas('nodo', function ($query) use ($user) {
             return $query->where('id', $user->infocenter->nodo_id);
         })->first();
+        $usergestor = User::has('gestor')->whereHas('gestor', function ($query) use ($user) {
+            return $query->where('nodo_id', $user->infocenter->nodo_id);
+        })->get()->random();
         factory(Idea::class, 70)->create([
             'nodo_id' => $entidad->nodo->id,
+            'gestor_id' => $usergestor->gestor->id,
         ]);
         factory(Idea::class, 1500)->create();
     }

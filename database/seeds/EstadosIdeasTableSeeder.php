@@ -45,6 +45,12 @@ class EstadosIdeasTableSeeder extends Seeder
             'nombre'      => 'No Aplica',
         ]);
 
+        EstadoIdea::create([
+            'nombre'      => 'Programado',
+        ]);
 
+        EstadoIdea::create([
+            'nombre'      => 'Reprogramado',
+        ]);
     }
 }
