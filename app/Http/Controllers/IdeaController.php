@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 
 use Alert;
 
-use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest};
-use App\Models\{EstadoIdea, Idea, Nodo, Entidad};
+use App\Http\Requests\IdeaFormRequest;
+use App\Models\{EstadoIdea, Idea, Entidad};
 use App\Repositories\Repository\ConfiguracionRepository\ServidorVideoRepository;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
@@ -149,12 +149,13 @@ class IdeaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(ServidorVideoRepository $servidorVideoRepository, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
-        $nodos = Nodo::SelectNodo()->get();
-        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos]);
+        $nodos = $this->ideaRepository->getSelectNodo();
+        $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
+        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos, 'servidorVideo' => $servidorVideo]);
     }
 
     /**
@@ -165,7 +166,7 @@ class IdeaController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(IdeaEditFormRequest $request, $id)
+    public function update(IdeaFormRequest $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);

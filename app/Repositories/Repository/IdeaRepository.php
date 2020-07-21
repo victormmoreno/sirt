@@ -77,6 +77,8 @@ class IdeaRepository
             "alcance"            => $request->input('txtalcance'),
             "viene_convocatoria" => $request->input('txtconvocatoria'),
             "convocatoria"       => $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null,
+            "aval_empresa" => $request->input('txtavalempresa'),
+            "empresa"       => $request->input('txtavalempresa') == 1 ? $request->input('txtempresa') : null,
             "tipo_idea"          => Idea::IsEmprendedor(),
             "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
         ]);
@@ -106,18 +108,23 @@ class IdeaRepository
     public function Update($request, $idea)
     {
 
-        $idea->nodo_id            = $request->input('txtnodo_id');
-        $idea->nombres_contacto   = $request->input('txtnombres_contacto');
-        $idea->apellidos_contacto = $request->input('txtapellidos_contacto');
-        $idea->correo_contacto    = $request->input('txtcorreo_contacto');
-        $idea->telefono_contacto  = $request->input('txttelefono_contacto');
+        $idea->nodo_id            = $request->input('txtnodo');
+        $idea->nombres_contacto   = $request->input('txtnombres');
+        $idea->apellidos_contacto = $request->input('txtapellidos');
+        $idea->correo_contacto    = $request->input('txtcorreo');
+        $idea->telefono_contacto  = $request->input('txttelefono');
         $idea->nombre_proyecto    = $request->input('txtnombre_proyecto');
+        $idea->aprendiz_sena      = $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0;
+        $idea->pregunta1          = $request->input('pregunta1');
+        $idea->pregunta2          = $request->input('pregunta2');
+        $idea->pregunta3          = $request->input('pregunta3');
         $idea->descripcion        = $request->input('txtdescripcion');
         $idea->objetivo           = $request->input('txtobjetivo');
         $idea->alcance            = $request->input('txtalcance');
-        //se anadieron los campos convocatoria
         $idea->viene_convocatoria = $request->input('txtconvocatoria');
         $idea->convocatoria       = $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null;
+        $idea->aval_empresa = $request->input('txtavalempresa');
+        $idea->empresa       = $request->input('txtavalempresa') == 1 ? $request->input('txtempresa') : null;
 
         $idea = $idea->update();
         return $idea;

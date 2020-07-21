@@ -43,7 +43,7 @@
 
                     <div class="row search-tabs-row search-tabs-header">
                         
-                        <div class="input-field col s12 m12 l1">
+                        <div class="input-field col s12 m2 l1">
                             <label class="active" for="filter_state">Año <span class="red-text">*</span></label>
                             <select name="filter_year" id="filter_year">
                                 @for ($i=$year; $i >= 2016; $i--)
@@ -52,7 +52,7 @@
                                 <option value="all" >todos</option>
                             </select>
                         </div>
-                        <div class="input-field col s12 m12 l2">
+                        <div class="input-field col s12 m4 l2">
                             <label class="active" for="filter_state">Estado <span class="red-text">*</span></label>
                             <select name="filter_state" id="filter_state">
                                 @forelse($estadosIdeas  as $id => $name)
@@ -64,7 +64,7 @@
                             </select>
                         </div>
 
-                        <div class="input-field col s12 m12 l1">
+                        <div class="input-field col s12 m3 l1">
                             <label class="active" for="filter_vieneconvocatoria">Convocatoria</label>
                           <select  name="filter_vieneconvocatoria" id="filter_vieneconvocatoria">
                             <option value="all">Todas</option>
@@ -73,11 +73,10 @@
                           </select>
                         </div>
 
-                        <div class="input-field col s12 m12 l4">
-
+                        <div class="input-field col s12 m6 l4">
                             <input type="text" id="filter_convocatoria" placeholder="nombre de convocatoria">
                         </div>
-                        <div class="col s12 m12 l4 right">
+                        <div class="col s12 m6 l4 right">
                           <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_excel"><i class="material-icons">cloud_download</i>Descargar</button>
                             <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_idea"><i class="material-icons">search</i>Buscar</button>
                         </div>
