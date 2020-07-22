@@ -110,7 +110,7 @@ class IdeaController extends Controller
                     if (\Session::get('login_role') !== User::IsInfocenter()) {
                         return '';
                     } else {
-                        if ($data->estadoIdea->nombre != 'Inicio') {
+                        if ($data->estadoIdea->nombre != EstadoIdea::IsInscrito()) {
                             $delete = '<a class="btn red lighten-3 m-b-xs" disabled><i class="material-icons">delete_sweep</i></a>';
                         } else {
                             $delete = '<a class="btn red lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'Inhabilitado\')"><i class="material-icons">delete_sweep</i></a>';
@@ -118,7 +118,7 @@ class IdeaController extends Controller
                         return $delete;
                     }
                 })->addColumn('dont_apply', function ($data) {
-                    if ($data->estadoIdea->nombre != 'Inicio') {
+                    if ($data->estadoIdea->nombre != EstadoIdea::IsInscrito()) {
                         $notapply = '<a class="btn brown lighten-3 m-b-xs" disabled><i class="material-icons">thumb_down</i></a>';
                     } else {
                         $notapply = '<a class="btn brown lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'No Aplica\')"><i class="material-icons">thumb_down</i></a>';
@@ -231,7 +231,7 @@ class IdeaController extends Controller
     {
         $idea = Idea::ConsultarIdeaId($id)->first();
         $this->authorize('update', $idea);
-        if ($idea->estado_idea == 'Inicio') {
+        if ($idea->estado_idea == EstadoIdea::IsInscrito()) {
             $this->ideaRepository->updateEstadoIdea($id, $estado);
             return response()->json([
                 'route' => route('idea.index'),

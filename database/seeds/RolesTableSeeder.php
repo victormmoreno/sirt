@@ -29,9 +29,9 @@ class RolesTableSeeder extends Seeder
             'name' => config('laravelpermission.roles.roleInfocenter'),
         ]);
         $roleInfocenter->givePermissionTo(Permission::findByName('leer ideas'));
-        $roleInfocenter->givePermissionTo(Permission::findByName('Registrar ideas'));
-        $roleInfocenter->givePermissionTo(Permission::findByName('Editar ideas'));
-        $roleInfocenter->givePermissionTo(Permission::findByName('Eliminar ideas'));
+        $roleInfocenter->givePermissionTo(Permission::findByName('Registrar idea'));
+        $roleInfocenter->givePermissionTo(Permission::findByName('Editar idea'));
+        $roleInfocenter->givePermissionTo(Permission::findByName('Eliminar idea'));
         $roleTalento = Role::create([
             'name' => config('laravelpermission.roles.roleTalento'),
         ]);

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entrenamiento extends Model
 {
-    // use Notifiable;
+
     protected $table = 'entrenamientos';
 
     protected $casts = [

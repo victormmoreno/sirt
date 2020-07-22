@@ -19,22 +19,22 @@ return [
         ],
         [
             'method'   => 'idea.create',
-            'name'     => 'Registrar ideas',
+            'name'     => 'Registrar idea',
             'callable' => true,
         ],
         [
             'method'   => 'idea.edit',
-            'name'     => 'Editar ideas',
+            'name'     => 'Editar idea',
             'callable' => true,
         ],
         [
             'method'   => 'idea.delete',
-            'name'     => 'Eliminar ideas',
+            'name'     => 'Eliminar idea',
             'callable' => true,
         ],
         [
             'method'   => 'idea.show',
-            'name'     => 'ver una ideas',
+            'name'     => 'ver idea',
             'callable' => true,
         ],
 

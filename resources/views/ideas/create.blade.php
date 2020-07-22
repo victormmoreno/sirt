@@ -40,32 +40,3 @@
     </div>
 </main>
 @endsection
-
-
-
-
-{{--
-
-
-
-    <br><br><br>
-    <div class="divider">
-    </div>
-
-
-    <br>
-        <center>
-            <button class="waves-effect cyan darken-1 btn center-aling" type="submit">
-                <i class="material-icons right">
-                    done_all
-                </i>
-                Registrar Idea
-            </button>
-            <a class="waves-effect red lighten-2 btn center-aling" href="{{route('/')}}">
-                <i class="material-icons right">
-                    backspace
-                </i>
-                Cancelar
-            </a>
-        </center>
-     --}}

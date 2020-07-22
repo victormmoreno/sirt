@@ -2,15 +2,12 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\EstadoIdea;
+use App\Models\{EstadoIdea, Idea, Nodo};
 
-use App\Models\Idea;
-use App\Models\Nodo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Events\Idea\IdeaHasReceived;
-use App\Events\Idea\IdeaSend;
 use App\User;
 use App\Notifications\Idea\IdeaReceived;
 
@@ -80,7 +77,7 @@ class IdeaRepository
             "aval_empresa" => $request->input('txtavalempresa'),
             "empresa"       => $request->input('txtavalempresa') == 1 ? $request->input('txtempresa') : null,
             "tipo_idea"          => Idea::IsEmprendedor(),
-            "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IS_INICIO)->first()->id,
+            "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IsInscrito())->first()->id,
         ]);
 
         $idea->rutamodel()->create([
@@ -135,7 +132,7 @@ class IdeaRepository
     {
         return DB::update("UPDATE ideas SET estadoidea_id = (
       CASE
-      WHEN '$estadoACambiar' = 'Inicio' THEN 1
+      WHEN '$estadoACambiar' = 'Inscrito' THEN 1
       WHEN '$estadoACambiar' = 'Convocado' THEN 2
       WHEN '$estadoACambiar' = 'Admitido' THEN 3
       WHEN '$estadoACambiar' = 'No Admitido' THEN 4
@@ -143,6 +140,8 @@ class IdeaRepository
       WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
       WHEN '$estadoACambiar' = 'En Proyecto' THEN 7
       WHEN '$estadoACambiar' = 'No Aplica' THEN 8
+      WHEN '$estadoACambiar' = 'Programado' THEN 9
+      WHEN '$estadoACambiar' = 'Reprogramado' THEN 10
       END
       ) WHERE id = $idIdea ");
     }
