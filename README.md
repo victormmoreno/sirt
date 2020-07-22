@@ -16,58 +16,124 @@ Mira  **[Styde](https://styde.net/como-instalar-proyectos-existentes-de-laravel/
 
 ### Pre-requisitos 📋
 
-_Los siguientes programas son necesarios para el funcionamiento del proyecto en tu máquina local_
+_Los siguientes s son necesarios para el funcionamiento del proyecto en tu máquina local_
 
 ##### Servidor Local
 
 _Eliga el servidor local de su preferencia, el cual incluye un servidor apache y un servidor de base de datos_
 ```
+[laragon](https://laragon.org/) -recomendado para proyectos laravel
 [wamp](http://www.wampserver.com/en/)
 [xampp](https://www.apachefriends.org/es/index.html)
-[laragon](https://laragon.org/) -recomendado para proyectos laravel
-```
-
-### Instalación 🔧
-
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
-
-_Dí cómo será ese paso_
 
 ```
-Da un ejemplo
+
+##### otros softwares necesarios
+_instale node js para el manejo de paquetes javascript y el editor de código favorito_
+```
+[git](https://laragon.org/) - obligatorio
+[composer](https://laragon.org/) - manejador paquetes php - obligatorio
+[node js](https://laragon.org/) - incluye npm - Manejador de paquetes javascript
+[vs code](http://www.wampserver.com/en/) - recomendado
+[atom](https://www.apachefriends.org/es/index.html)
+
 ```
 
-_Y repite_
+## Instalación 🔧
+
+_para la conrrecta instalación del proyecto siga los siguientes pasos_
+
+_1. clonar proyecto en máquina local_
 
 ```
-hasta finalizar
+git clone https://gitlab.com/tecnoparque/gestion2020.git --optional=nombre_de_carpeta
 ```
 
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
+_e ingresa las credenciales perfil de git_
+
+_2. Instalando dependencias con Composer_
+_Lo primero que debes hacer luego de descargar un proyecto existente a tu maquina local, es instalar las dependencias del proyecto con Composer._
+
+```
+composer install
+```
+
+_De esta forma se instalarán todas las dependencias necesarias para el proyecto que fueron definidas en el archivo composer.json durante el desarrollo._
+
+_3. Archivo de configuración de Laravel_
+_Cada nuevo proyecto con Laravel, por defecto tiene un archivo .env con los datos de configuración necesarios para el mismo, cuando utilizamos un sistema de control de versiones como git, este archivo se excluye del repositorio por medidas de seguridad._
+
+_Sin embargo  existe un archivo llamado .env.example que es un ejemplo de como crear un el archivo de configuración, podemos copiar este archivo desde la consola con:_
+
+```
+cp .env.example .env
+```
+
+_4. Creando un nuevo API key_
+_Por medidas de seguridad cada proyecto de Laravel cuenta con una clave única que se crea en el archivo .env al iniciar el proyecto. En caso de que el desarrollador no te haya proporcionado están información, puedes generar una nueva API key desde la consola usando:._
+
+```
+php artisan key:generate
+```
+
+_5. Base de datos y migraciones_
+_Si el proyecto que estas instalando tiene definida una base de datos para su funcionamiento, por ejemplo MySql, debes primero crearla en tu servidor local, para Abrir el administrador de bases de datos y crear una base de datos con un nombre determinado._
+
+_Con esto habrás ingresado al sql de MySql y desde ahí creas la base de datos con_
+
+```
+CREATE DATABASE tu_base_de_datos;
+```
+
+_Posteriormente debes agregar las credenciales al archivo .env_
+```
+DB_HOST=localhost
+DB_DATABASE=tu_base_de_datos
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+_Finalmente estarás habilitado para ejecutar la migración desde la consola usando artisan_
+```
+php artisan migrate
+```
+_Para ejecutar los seeders puedes usar el siguiente flag_
+```
+php artisan db:seed
+```
+
+_6. Assets_
+_Laravel cuenta con laravel mix, una herramienta para configurar los assets de cada proyecto._
+
+_En este caso deberás seguir dos pasos mas antes de poder visualizar tu proyecto._
+
+_Primero ejecutar_
+```
+npm install
+```
+_Esto instalará todas las herramientas necesarias, posteriormente debes instalar las dependencias utilizando_
+
+_Para compilar los assets lo puedes hacer con uno de los siguientes comandos_
+```
+npm run dev
+npm run watch
+npm run production
+```
 
 ## Ejecutando las pruebas ⚙️
 
-_Explica como ejecutar las pruebas automatizadas para este sistema_
+_No hay pruebas automatizadas para este sistema_
 
-### Analice las pruebas end-to-end 🔩
 
-_Explica que verifican estas pruebas y por qué_
 
-```
-Da un ejemplo
-```
+### estilo de codificación ⌨️
 
-### Y las pruebas de estilo de codificación ⌨️
+_PSR4_
 
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
-```
 
 ## Deployment 📦
 
-_Agrega notas adicionales sobre como hacer deploy_
+_Dentro de git debe crear su propia rama de desarrollo_
 
 ## Construido con 🛠️
 
@@ -88,7 +154,7 @@ Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](ht
 _Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
 
 * **Julian Dario Londoño Raigosa** - [jlondono433](https://gitlab.com/jlondono433)
-* **Fulanito Detal**  - [Dumuzid](https://gitlab.com/Dumuzid)
+* **Victor Manuel Moreno Vega**  - [Dumuzid](https://gitlab.com/Dumuzid)
 
 También puedes mirar la lista de todos los [contribuyentes](https://gitlab.com/tecnoparque/gestion2019/-/graphs/master) quíenes han participado en este proyecto.
 
