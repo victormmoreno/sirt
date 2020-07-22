@@ -16,7 +16,7 @@ Mira  **[Styde](https://styde.net/como-instalar-proyectos-existentes-de-laravel/
 
 ### Pre-requisitos 📋
 
-_Los siguientes s son necesarios para el funcionamiento del proyecto en tu máquina local_
+_Los siguientes programas son necesarios para el funcionamiento del proyecto en tu máquina local_
 
 ##### Servidor Local
 
@@ -31,11 +31,11 @@ _Eliga el servidor local de su preferencia, el cual incluye un servidor apache y
 ##### otros softwares necesarios
 _instale node js para el manejo de paquetes javascript y el editor de código favorito_
 ```
-[git](https://laragon.org/) - obligatorio
-[composer](https://laragon.org/) - manejador paquetes php - obligatorio
-[node js](https://laragon.org/) - incluye npm - Manejador de paquetes javascript
-[vs code](http://www.wampserver.com/en/) - recomendado
-[atom](https://www.apachefriends.org/es/index.html)
+[git](https://git-scm.com/) - obligatorio
+[composer](https://getcomposer.org/) - manejador paquetes php - obligatorio
+[node js](https://nodejs.org/es/) - incluye npm - Manejador de paquetes javascript
+[vs code](https://code.visualstudio.com/) - recomendado
+[atom](https://atom.io/)
 
 ```
 
