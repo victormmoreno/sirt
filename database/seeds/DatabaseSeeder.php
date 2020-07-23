@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         if (app()->environment() == 'production') {
             $this->truncateTables([
+                'permissions',
                 'activation_tokens',
                 'actividades',
                 'aprobaciones',
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
                 'archivos_articulacion_proyecto',
                 'areasconocimiento',
                 'articulaciones',
+                'articulaciones_productos',
                 'articulacion_proyecto',
                 'articulacion_proyecto_talento',
                 'categoria_material',
@@ -50,6 +52,7 @@ class DatabaseSeeder extends Seeder
                 'equipo_mantenimiento',
                 'equipo_uso',
                 'estadosidea',
+                'publicaciones',
                 'estados_comite',
                 'estadosprototipos',
                 'estadosproyecto',
@@ -82,7 +85,7 @@ class DatabaseSeeder extends Seeder
                 'ocupaciones_users',
                 'password_resets',
                 'perfiles',
-                'permissions',
+
                 'presentaciones',
                 'presentaciones',
                 'proyectos',
@@ -149,6 +152,8 @@ class DatabaseSeeder extends Seeder
                 'equipo_mantenimiento',
                 'equipo_uso',
                 'estadosidea',
+                'propietarios',
+                'objetivos_especificos',
                 'estados_comite',
                 'estadosprototipos',
                 'estadosproyecto',
@@ -183,7 +188,6 @@ class DatabaseSeeder extends Seeder
                 'perfiles',
                 'permissions',
                 'presentaciones',
-                'presentaciones',
                 'proyectos',
                 'regionales',
                 'roles',
@@ -195,7 +199,6 @@ class DatabaseSeeder extends Seeder
                 'sublineas',
                 'talentos',
                 'tecnoacademias',
-                'tiposarticulaciones',
                 'tiposarticulaciones',
                 'tiposarticulacionesproyectos',
                 'tiposdocumentos',

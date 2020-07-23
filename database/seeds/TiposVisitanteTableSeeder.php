@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\TIpoVisitante;
+use App\Models\TipoVisitante;
 use Illuminate\Database\Seeder;
 
 class TiposVisitanteTableSeeder extends Seeder
@@ -12,83 +12,83 @@ class TiposVisitanteTableSeeder extends Seeder
      */
     public function run()
     {
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Aprendiz SENA'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Gestor T1'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Infocenter'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Instructor SENA'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Media Técnica'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Talento'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Universitario'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Visitante/Otro'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Gestor T2'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Empresario'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Soporte Sistemas- Enlace'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'SIN CARGO'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Semillero Investigador'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Empleado'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Instructor/Otra'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'SENNOVA'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Dinamizador'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Facilitador TecnoA'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Gestor Emp. SBDC'
         ]);
 
-        Tipovisitante::create([
+        TipoVisitante::create([
             'nombre'          => 'Estudiantes MediaT'
         ]);
     }

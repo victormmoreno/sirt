@@ -172,7 +172,7 @@
     },
     dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
     params: {
-      fase: 'Inicio'
+      fase: 'Inscrito'
     },
     paramName: 'nombreArchivo'
   });

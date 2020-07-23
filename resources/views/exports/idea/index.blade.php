@@ -57,6 +57,12 @@
                 Nombre de convocatoria
             </th>
             <th>
+                ¿Avalada por empresa?
+            </th>
+            <th>
+                Empresa
+            </th>
+            <th>
                 Fecha de registro
             </th>
         </tr>
@@ -111,6 +117,12 @@
             </td>
             <td>
                 {{$idea->viene_convocatoria == 1 ? $idea->convocatoria: 'No Aplica'}}
+            </td>
+            <td>
+                {{$idea->aval_empresa == 1 ? 'Si': 'No'}}
+            </td>
+            <td>
+                {{$idea->aval_empresa == 1 ? $idea->empresa: 'No Aplica'}}
             </td>
             <td>
                 {{isset($idea->created_at) ? $idea->created_at->isoFormat('DD/MM/YYYY'): 'No registra'}}

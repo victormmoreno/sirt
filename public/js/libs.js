@@ -36388,6 +36388,48 @@ var idea ={
             $('#txtnombreconvocatoria').val('');
             $('#txtnombreconvocatoria').attr("disabled", "disabled");
         }
+    },
+
+    getSelectAvalEmpresa: function (){
+        let avalaEmpresa = $('#txtavalempresa').val();
+        $('#txtempresa').attr("disabled", "disabled");
+        if(avalaEmpresa == 1){
+            $('#txtempresa').removeAttr("disabled").focus().val('');
+        }else if(avalaEmpresa == 0){
+            $('#txtempresa').val('');
+            $('#txtempresa').attr("disabled", "disabled");
+        }else{
+            $('#txtempresa').val('');
+            $('#txtempresa').attr("disabled", "disabled");
+        }
+    },
+    vieneConvocatoria: function(value){
+        if(value == 1){
+            return "Si";
+        }else{
+            return "No";
+        }
+    },
+     nombreConvocatoria: function(value, convocatoria){
+        if(value == 1){
+            return convocatoria;
+        }else{
+            return "No Aplica";
+        }
+    },
+    avalEmpresa: function(value){
+        if(value == 1){
+            return "Si";
+        }else{
+            return "No";
+        }
+    },
+    nombreEmpresa: function(value, empresa){
+        if(value == 1){
+            return empresa;
+        }else{
+            return "No Aplica";
+        }
     }
 }
 
@@ -36443,97 +36485,98 @@ $.ajax({
     swal('Ups!!!', 'Ha ocurrido un error', 'warning');
     } else {
     $("#titulo").append("<span class='cyan-text text-darken-3'>Nombre de Proyecto: </span>"+respuesta.detalles.nombre_proyecto+"");
-    $("#detalle_idea").append(
-        '<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.aprendiz_sena+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.pregunta1String+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.pregunta2String+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Descripcion: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.descripcion+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Objetivo: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.objetivo+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Alcance: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+respuesta.detalles.alcance+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">¿La idea viene de una convocatoria? </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+vieneConvocatoria(respuesta.detalles.viene_convocatoria)+'</span>'
-        +'</div>'
-        +'</div>'
-        +'<div class="divider"></div>'
-        +'<div class="row">'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="cyan-text text-darken-3">Nombre de Convocatoria: </span>'
-        +'</div>'
-        +'<div class="col s12 m6 l6">'
-        +'<span class="black-text">'+nombreConvocatoria(respuesta.detalles.viene_convocatoria,respuesta.detalles.convocatoria)+'</span>'
-        +'</div>'
-        +'</div>'
-
-    );
+    $("#detalle_idea").append(`
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">¿Aprendiz SENA?: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${respuesta.detalles.aprendiz_sena}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">¿En qué estado se encuentra la propuesta?: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${respuesta.detalles.pregunta1String}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">¿Cómo está conformado el equipo de trabajo?: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${respuesta.detalles.pregunta2String}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">Descripcion: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${respuesta.detalles.descripcion}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">Objetivo: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${respuesta.detalles.objetivo}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">Alcance: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${respuesta.detalles.alcance}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">¿La idea viene de una convocatoria? </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${idea.vieneConvocatoria(respuesta.detalles.viene_convocatoria)}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">Nombre de Convocatoria: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${idea.nombreConvocatoria(respuesta.detalles.viene_convocatoria,respuesta.detalles.convocatoria)}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">¿La idea fue avalada por una empresa? </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${idea.avalEmpresa(respuesta.detalles.aval_empresa)}</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m6 l6">
+                <span class="cyan-text text-darken-3">Nombre de la empresa: </span>
+            </div>
+            <div class="col s12 m6 l6">
+                <span class="black-text">${idea.nombreEmpresa(respuesta.detalles.aval_empresa,respuesta.detalles.empresa)}</span>
+            </div>
+        </div>`);
     $('#modal1').openModal();
     }
 })
 }
 
-function vieneConvocatoria(value){
-    if(value == 1){
-        return "Si";
-    }else{
-        return "No";
-    }
-}
 
-function nombreConvocatoria(value, convocatoria){
-    if(value == 1){
-        return convocatoria;
-    }else{
-        return "No Aplica";
-    }
-}

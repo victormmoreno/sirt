@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 
 use Alert;
 
-use App\Http\Requests\{IdeaFormRequest, IdeaEditFormRequest};
-use App\Models\{EstadoIdea, Idea, Nodo, Entidad};
+use App\Http\Requests\IdeaFormRequest;
+use App\Models\{EstadoIdea, Idea, Entidad};
 use App\Repositories\Repository\ConfiguracionRepository\ServidorVideoRepository;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
@@ -110,7 +110,7 @@ class IdeaController extends Controller
                     if (\Session::get('login_role') !== User::IsInfocenter()) {
                         return '';
                     } else {
-                        if ($data->estadoIdea->nombre != 'Inicio') {
+                        if ($data->estadoIdea->nombre != EstadoIdea::IsInscrito()) {
                             $delete = '<a class="btn red lighten-3 m-b-xs" disabled><i class="material-icons">delete_sweep</i></a>';
                         } else {
                             $delete = '<a class="btn red lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'Inhabilitado\')"><i class="material-icons">delete_sweep</i></a>';
@@ -118,7 +118,7 @@ class IdeaController extends Controller
                         return $delete;
                     }
                 })->addColumn('dont_apply', function ($data) {
-                    if ($data->estadoIdea->nombre != 'Inicio') {
+                    if ($data->estadoIdea->nombre != EstadoIdea::IsInscrito()) {
                         $notapply = '<a class="btn brown lighten-3 m-b-xs" disabled><i class="material-icons">thumb_down</i></a>';
                     } else {
                         $notapply = '<a class="btn brown lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'No Aplica\')"><i class="material-icons">thumb_down</i></a>';
@@ -149,12 +149,13 @@ class IdeaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(ServidorVideoRepository $servidorVideoRepository, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
-        $nodos = Nodo::SelectNodo()->get();
-        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos]);
+        $nodos = $this->ideaRepository->getSelectNodo();
+        $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
+        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos, 'servidorVideo' => $servidorVideo]);
     }
 
     /**
@@ -165,7 +166,7 @@ class IdeaController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(IdeaEditFormRequest $request, $id)
+    public function update(IdeaFormRequest $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
@@ -230,7 +231,7 @@ class IdeaController extends Controller
     {
         $idea = Idea::ConsultarIdeaId($id)->first();
         $this->authorize('update', $idea);
-        if ($idea->estado_idea == 'Inicio') {
+        if ($idea->estado_idea == EstadoIdea::IsInscrito()) {
             $this->ideaRepository->updateEstadoIdea($id, $estado);
             return response()->json([
                 'route' => route('idea.index'),

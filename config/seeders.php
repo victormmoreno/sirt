@@ -1,12 +1,7 @@
 <?php
 
 return [
-    'production' => [
-        ['name' => PrototiposTableSeeder::class, 'callable' => true],
-        ['name' => ServiciosTableSeeder::class, 'callable' => true],
-        ['name' => DepartamentosTableSeeder::class, 'callable' => true],
-
-    ],
+    'production' => [],
 
     'local'      => [
         ['name' => PermissionsTableSeeder::class, 'callable' => true],
