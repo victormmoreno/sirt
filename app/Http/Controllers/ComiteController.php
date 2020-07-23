@@ -105,7 +105,7 @@ class ComiteController extends Controller
   public function realizar(int $id)
   {
     $comite = Comite::findOrFail($id);
-    $estados = EstadoIdea::whereIn('nombre', ['Inicio', 'Reprogramado', 'Inhabilitado', 'Admitido'])->get();
+    $estados = EstadoIdea::whereIn('nombre', [EstadoIdea::IsInscrito(), EstadoIdea::IsReprogramado(), EstadoIdea::IsInhabilitado(), EstadoIdea::IsAdmitido()])->get();
     return view('comite.infocenter.realizar_comite', [
       'comite' => $comite,
       'estados' => $estados

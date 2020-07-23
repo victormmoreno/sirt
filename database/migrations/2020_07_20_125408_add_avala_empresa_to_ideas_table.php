@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTelefonoCelularToUsers extends Migration
+class AddAvalaEmpresaToIdeasTable extends Migration
 {
-
-    public $tableName = 'users';
+    public $tableName = 'ideas';
     /**
      * Run the migrations.
      *
@@ -16,8 +15,8 @@ class AlterTelefonoCelularToUsers extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('celular', 20)->nullable()->default(null)->after('direccion')->change();
-            $table->string('telefono', 20)->nullable()->default(null)->after('celular')->change();
+            $table->tinyInteger('aval_empresa')->default(0)->after('convocatoria');
+            $table->string('empresa', 100)->nullable()->default(null)->after('aval_empresa');
         });
     }
 
@@ -29,7 +28,7 @@ class AlterTelefonoCelularToUsers extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['celular', 'telefono']);
+            $table->dropColumn(['aval_empresa', 'empresa']);
         });
     }
 }

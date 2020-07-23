@@ -14,7 +14,7 @@ class EstadosIdeasTableSeeder extends Seeder
     {
 
         EstadoIdea::create([
-            'nombre'      => 'Inicio',
+            'nombre'      => 'Inscrito',
         ]);
 
         EstadoIdea::create([
