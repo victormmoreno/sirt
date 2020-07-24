@@ -22,7 +22,14 @@
                 @include('proyectos.detalle_fase_inicio')
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" value="send" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : ''}}
+                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                  <input type="hidden" type="text" name="decision" id="decision">
+                  <button type="submit" onclick="preguntaInicioRechazar(event)" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : ''}}
+                    class="waves-effect deep-orange darken-1 btn center-aling">
+                    <i class="material-icons right">close</i>
+                    {{$proyecto->fase->nombre != 'Inicio' ? 'El Proyecto ya no se encuentra en fase de Inicio' : 'No aprobar la fase de Inicio'}}
+                  </button>
+                  <button type="submit" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : ''}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
                     {{$proyecto->fase->nombre != 'Inicio' ? 'El Proyecto ya no se encuentra en fase de Inicio' : 'Aprobar fase de inicio'}}
@@ -60,6 +67,35 @@
   datatableArchivosDeUnProyecto_inicio();
   });
 
+  function preguntaInicioRechazar(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de no aprobar la fase de inicio de este proyecto?',
+    input: 'text',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Las observaciones deben ser obligatorias!'
+      } else {
+        $('#decision').val('rechazado');
+        $('#motivosNoAprueba').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmInicioDinamizador.submit();
+      }
+    })
+  }
+
   function preguntaInicio(e){
     e.preventDefault();
     Swal.fire({
@@ -73,6 +109,7 @@
     confirmButtonText: 'Sí!'
     }).then((result) => {
       if (result.value) {
+        $('#decision').val('aceptado');
         document.frmInicioDinamizador.submit();
       }
     })

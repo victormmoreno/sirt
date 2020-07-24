@@ -891,13 +891,24 @@ class ProyectoController extends Controller
                 }
             }
         } else {
-            $update = $this->getProyectoRepository()->updateFaseProyecto($id, 'Planeación');
-            if ($update) {
-                Alert::success('Aprobación Exitosa!', 'El proyecto ha cambiado a fase de planeación!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+            if ($request->decision == 'aceptado') {
+                $update = $this->getProyectoRepository()->updateFaseProyecto($id, 'Planeación');
+                if ($update) {
+                    Alert::success('Aprobación Exitosa!', 'El proyecto ha cambiado a fase de planeación!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Aprobación Errónea!', 'El proyecto no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             } else {
-                Alert::error('Aprobación Errónea!', 'El proyecto no se ha cambiado de fase!')->showConfirmButton('Ok', '#3085d6');
-                return back();
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Inicio');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             }
         }
     }
@@ -922,13 +933,24 @@ class ProyectoController extends Controller
                 return back();
             }
         } else {
-            $aprobar = $this->getProyectoRepository()->updateFaseProyecto($id, 'Ejecución');
-            if ($aprobar) {
-                Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+            if ($request->decision == 'aceptado') {
+                $aprobar = $this->getProyectoRepository()->updateFaseProyecto($id, 'Ejecución');
+                if ($aprobar) {
+                    Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             } else {
-                Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
-                return back();
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Planeación');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             }
         }
     }
@@ -952,14 +974,24 @@ class ProyectoController extends Controller
                 return back();
             }
         } else {
-
-            $update = $this->getProyectoRepository()->setPostCierreProyectoRepository($id);
-            if ($update) {
-                Alert::success('Modificación Exitosa!', 'La fase de ejecución del proyecto se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+            if ($request->decision == 'aceptado') {
+                $update = $this->getProyectoRepository()->setPostCierreProyectoRepository($id);
+                if ($update) {
+                    Alert::success('Modificación Exitosa!', 'La fase de ejecución del proyecto se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'La fase de ejecución del proyecto no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             } else {
-                Alert::error('Modificación Errónea!', 'La fase de ejecución del proyecto no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
-                return back();
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Ejecución');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             }
         }
     }
@@ -979,7 +1011,7 @@ class ProyectoController extends Controller
                 }
             }
         } else {
-            Alert::error('Error!', 'El talento aún no ha aprobado la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('Error!', 'El dinamizador aún no ha aprobado la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
@@ -1038,13 +1070,24 @@ class ProyectoController extends Controller
                 }
             }
         } else {
-            $update = $this->getProyectoRepository()->updateAprobacionDinamizador($id);
-            if ($update) {
-                Alert::success('Modificación Exitosa!', 'La fase de cierre se aprobó!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+            if ($request->decision == 'aceptado') {
+                $update = $this->getProyectoRepository()->updateAprobacionDinamizador($id);
+                if ($update) {
+                    Alert::success('Modificación Exitosa!', 'La fase de cierre se aprobó!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             } else {
-                Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
-                return back();
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Cierre');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             }
         }
     }

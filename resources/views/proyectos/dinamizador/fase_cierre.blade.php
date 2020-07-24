@@ -22,6 +22,8 @@
                                 @include('proyectos.detalle_fase_cierre')
                                 <div class="divider"></div>
                                 <center>
+                                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                                  <input type="hidden" type="text" name="decision" id="decision">
                                   @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1)
                                     @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
                                     <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling" disabled>
@@ -29,15 +31,23 @@
                                       Ya se ha aprobado la fase de cierre.
                                     </button>
                                     @else
+                                    <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                                      <i class="material-icons right">close</i>
+                                      No aprobar fase de cierre.
+                                    </button>
                                     <button type="submit" onclick="preguntaCierre(event)" value="send" class="waves-effect cyan darken-1 btn center-aling">
                                       <i class="material-icons right">done</i>
                                       Aprobar fase de cierre.
                                       </button>
                                     @endif
                                   @else
+                                  <button type="submit" class="waves-effect deep-orange darken-1 btn center-aling">
+                                    <i class="material-icons right">close</i>
+                                    El Dinamizador aún no ha dado su aprobación de la fase de Ejecución
+                                  </button>
                                   <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
                                       <i class="material-icons right">done</i>
-                                      El Talento aún no ha dado su aprobación de la fase de Ejecución
+                                      El Dinamizador aún no ha dado su aprobación de la fase de Ejecución
                                   </button>
                                   @endif
                                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
@@ -60,11 +70,39 @@
     datatableArchivosDeUnProyecto_cierre();
   });
 
+  function preguntaCierreRechazar(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de no aprobar la fase de cierre de este proyecto?',
+    input: 'text',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Las observaciones deben ser obligatorias!'
+      } else {
+        $('#decision').val('rechazado');
+        $('#motivosNoAprueba').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmCierreDinamizador.submit();
+      }
+    })
+  }
+
   function preguntaCierre(e){
     e.preventDefault();
     Swal.fire({
     title: '¿Está seguro(a) de aprobar la fase de cierre de este proyecto?',
-    // text: "You won't be able to revert this!",
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -73,6 +111,7 @@
     confirmButtonText: 'Sí!'
     }).then((result) => {
       if (result.value) {
+        $('#decision').val('aceptado');
         document.frmCierreDinamizador.submit();
       }
     })
