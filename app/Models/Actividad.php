@@ -49,8 +49,14 @@ class Actividad extends Model
 
     ];
 
+    /**
+     * Consulta el historico de una actividad
+     * @param int $id Id de la activdad
+     * @return Builder
+     * @author dum
+     */
     public static function consultarHistoricoActividad($id) {
-      return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'movimientos_actividades_users_roles.created_at')
+      return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'comentarios', 'movimientos_actividades_users_roles.created_at')
       ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
       ->where('actividad_id', $id)
       ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')

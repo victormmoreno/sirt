@@ -5,8 +5,9 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
+use App\Events\Proyecto\ProyectoWasntApproved;
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 
@@ -1045,6 +1046,40 @@ class ProyectoRepository
       return true;
     } catch (\Throwable $th) {
       DB::rollback();
+      return false;
+    }
+  }
+
+  /**
+   * Envia notificación y correo cuando el dinamizador no aprueba una fase del proyecto.
+   *
+   * @param Request $request
+   * @param int $id Id del proyecto
+   * @param string $fase Fase que no se está aprobando
+   * @return boolean
+   * @author dum
+   **/
+  public function noAprobarFaseProyecto($request, int $id, string $fase)
+  {
+    $proyecto = Proyecto::findOrFail($id);
+    $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'no aprobó')->first(), [
+      'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+      'user_id' => auth()->user()->id,
+      'fase_id' => Fase::where('nombre', $fase)->first()->id,
+      'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+      'comentarios' => $request->motivosNoAprueba
+    ]);
+  
+    $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+    event(new ProyectoWasntApproved($proyecto, $movimiento));
+    Notification::send($proyecto->articulacion_proyecto->actividad->gestor->user, new ProyectoNoAprobarFase($proyecto, $movimiento));
+    DB::beginTransaction();
+    try {
+
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
       return false;
     }
   }

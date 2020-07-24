@@ -61,7 +61,7 @@ class IndicadorController extends Controller
       }
     } else if (Session::get('login_role') == User::IsDinamizador()) {
       $query = $this->getProyectoRepository()->consultarProyectos_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->dd();
+      $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
       $queryArticulacion = $this->getArticulacionRepository()->consultarArticulaciones_repository($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
       $queryEmpresasPropietarias = $this->getEmpresaRepository()->empresasPropietarias($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
       $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
@@ -74,7 +74,6 @@ class IndicadorController extends Controller
       $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
       $queryTalentosPropietarios = $this->getTalentoRepository()->talentosPropietarios($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
     }
-
 
     return Excel::download(new Indicadores2020Export($query, $queryTalentos, $queryArticulacion, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios), 'Indicadores.xls');
   }

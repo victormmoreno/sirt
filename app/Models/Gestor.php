@@ -110,8 +110,4 @@ class Gestor extends Model
         return $query->with('user')->count();
     }
 
-    public function honorarios()
-    {
-        return $this->hasMany(Honorario::class, 'gestor_id', 'id');
-    }
 }

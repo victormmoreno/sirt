@@ -15,7 +15,8 @@ class Movimiento extends Model
      * @var array
      */
     protected $fillable = [
-        'movimiento'
+        'movimiento',
+        'comentarios'
     ];
 
     public function actividades_movimientos()
