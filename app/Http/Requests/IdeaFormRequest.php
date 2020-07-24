@@ -40,6 +40,8 @@ class IdeaFormRequest extends FormRequest
             'txtalcance'         => 'required|min:1|max:2000',
             'txtconvocatoria'   => 'required|in:0,1',
             'txtnombreconvocatoria'   => Rule::requiredIf(request()->txtconvocatoria == 1) . '|min:1|max:100|nullable',
+            'txtavalempresa'   => 'required|in:0,1',
+            'txtempresa'   => Rule::requiredIf(request()->txtavalempresa == 1) . '|min:1|max:100|nullable',
             'txtservidorvideo'   => 'nullable',
             'txtlinkvideo'       => ['nullable', 'url', new CreateValidationForDomainRequest, 'max:1000'],
         ];
@@ -93,6 +95,11 @@ class IdeaFormRequest extends FormRequest
             'txtnombreconvocatoria.required' => 'El nombre de convocatoria es obligatorio',
             'txtnombreconvocatoria.min'                 => 'El nombre de convocatoria debe ser minimo 1 caracter',
             'txtnombreconvocatoria.max'                 => 'El nombre de convocatoria debe ser máximo 100 caracteres',
+
+            'txavalempresa.required' => 'El campo es obligatorio',
+            'txtempresa.required' => 'El nombre de la empresa es obligatorio',
+            'txtempresa.min'                 => 'El nombre de la empresa debe ser minimo 1 caracter',
+            'txtempresa.max'                 => 'El nombre de la empresa debe ser máximo 100 caracteres',
 
             'txtlinkvideo.required'           => 'El link es obligatorio.',
             'txtlinkvideo.url'                => 'El link es incorrecto',
