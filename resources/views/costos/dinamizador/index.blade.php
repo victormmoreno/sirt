@@ -32,8 +32,6 @@
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                     <li class="tab col s3"><a class="active" href="#actividades">Actividades</a></li>
-                    <li class="tab col s3"><a class="" href="#proyectos">Proyectos Cerrados</a></li>
-                    <li class="tab col s3"><a class="" href="#proyectos_ipe">Proyectos en Inicio, Planeación o Ejecución</a></li>
                   </ul>
                   <br>
                 </div>
