@@ -20,6 +20,9 @@
                   (Este proyecto se encontraba en fase de {{$historico[$i]->fase}})
                   @elseif($historico[$i]->movimiento == 'Reversó')
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la fase del proyecto de {{$historico[$i]->fase}} a Inicio el día {{$historico[$i]  ->created_at}}.
+                  @elseif($historico[$i]->movimiento == 'no aprobó')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                  {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->created_at}} por los siguientes motivos: {{$historico[$i]->comentarios}}.
                   @else
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.

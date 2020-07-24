@@ -34,15 +34,17 @@
             </div>
         </a>
     </div>
-    <div class="col s12 m4 l4">
-        <form action="{{route('proyecto.reversar', $proyecto->id)}}" method="POST" name="frmReversarFase">
-            {!! method_field('PUT')!!}
-            @csrf
-            <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">
-                Reversar fase del proyecto a Inicio.
-            </button>
-        </form>
-    </div>
+    @if (Session::get('login_role') == App\User::IsDinamizador())
+        <div class="col s12 m4 l4">
+            <form action="{{route('proyecto.reversar', $proyecto->id)}}" method="POST" name="frmReversarFase">
+                {!! method_field('PUT')!!}
+                @csrf
+                <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">
+                    Reversar fase del proyecto a Inicio.
+                </button>
+            </form>
+        </div>
+    @endif
 </div>
     <div class="col s12 m12 l12">
         @include('proyectos.historial_cambios')

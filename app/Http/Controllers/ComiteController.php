@@ -414,6 +414,22 @@ class ComiteController extends Controller
   }
 
   /**
+   * Array con los ids de las ideas de un comité.
+   *
+   * @param Comite $csibt Description
+   * @return array
+   * @author dum
+   **/
+  public function getIdIdeasDelComiteArray(Comite $csibt)
+  {
+    $idideas = array();
+    foreach ($csibt->ideas as $key => $value) {
+      $idideas[$key] = $value->id;
+    }
+    return $idideas;
+  }
+
+  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -422,8 +438,9 @@ class ComiteController extends Controller
   public function edit(int $id)
   {
     if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
       $csibt = Comite::findOrFail($id);
+      $idideas = $this->getIdIdeasDelComiteArray($csibt);
+      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
       return view('comite.infocenter.edit_agendamiento', [
         'ideas' => $ideas,
         'comite' => $csibt

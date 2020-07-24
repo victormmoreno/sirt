@@ -22,6 +22,13 @@
                 @include('proyectos.detalle_fase_ejecucion')
                 <div class="divider"></div>
                 <center>
+                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                  <input type="hidden" type="text" name="decision" id="decision">
+                  <button type="submit" onclick="preguntaEjecucionRechazar(event)" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? '' : 'disabled'}}
+                    class="waves-effect deep-orange darken-1 btn center-aling">
+                    <i class="material-icons right">close</i>
+                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? 'No aprobar la fase de Ejecución' : 'El Proyecto ya no se encuentra en fase de Ejecución'}}
+                  </button>
                   <button type="submit" onclick="preguntaEjecucion(event)" value="send" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? '' : 'disabled'}}
                     class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
@@ -57,6 +64,36 @@
     cancelButtonColor: '#d33',
     cancelButtonText: 'Cancelar',
     confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        $('#decision').val('aceptado');
+        document.frmEjecucionDinamizador.submit();
+      }
+    })
+  }
+
+  function preguntaEjecucionRechazar(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de no aprobar la fase de ejecución de este proyecto?',
+    input: 'text',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Las observaciones deben ser obligatorias!'
+      } else {
+        $('#decision').val('rechazado');
+        $('#motivosNoAprueba').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar observaciones!'
     }).then((result) => {
       if (result.value) {
         document.frmEjecucionDinamizador.submit();
