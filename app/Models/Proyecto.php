@@ -176,12 +176,6 @@ class Proyecto extends Model
     return $this->belongsTo(Idea::class, 'idea_id', 'id');
   }
 
-  /* relacion a la tabla estadosproyecto */
-  public function estadoproyecto()
-  {
-    return $this->belongsTo(EstadoProyecto::class, 'estadoproyecto_id', 'id');
-  }
-
   public function articulacion_proyecto()
   {
     return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');

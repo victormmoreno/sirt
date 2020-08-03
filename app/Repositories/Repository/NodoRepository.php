@@ -196,8 +196,6 @@ class NodoRepository
             'centro.entidad.ciudad.departamento',
             'centro.regional',
             'lineas',
-            'laboratorios',
-            'laboratorios.lineatecnologica',
             'dinamizador',
             'dinamizador.user',
             'infocenter',

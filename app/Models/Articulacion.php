@@ -59,16 +59,6 @@ class Articulacion extends Model
       return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
-    /**
-    * Relación con la tabla de articulacion_emprendedor
-    * @return Eloquent
-    * @author dum
-    */
-    public function emprendedores()
-    {
-      return $this->hasMany(ArticulacionEmprendedor::class, 'articulacion_id');
-    }
-
     // Relacion muchos a muchos con talentos
     public function talentos()
     {

@@ -663,44 +663,6 @@ class ArticulacionController extends Controller
     }
 
     /**
-     * Consulta el detalle de la entidad asociada a la articulación
-     * @param int $id id de la articulación
-     * @return dum
-     * @author dum
-     */
-    public function consultarEntidadDeLaArticulacion($id)
-    {
-        $articulacionObj = Articulacion::findOrFail($id);
-        $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
-        $entidad = null;
-        if ($articulacionObj->tipo_articulacion == Articulacion::IsEmpresa()) {
-            $entidad = $this->empresaRepository->consultarDetallesDeUnaEmpresa($articulacionObj->articulacion_proyecto->entidad->empresa->id)->toArray();
-            $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
-        } else if ($articulacionObj->tipo_articulacion == Articulacion::IsGrupo()) {
-            $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion($articulacionObj->articulacion_proyecto->entidad->grupoinvestigacion->id)->toArray();
-            $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
-        } else {
-            $entidad = $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository($articulacionObj->articulacion_proyecto->id)->toArray();
-        }
-        return response()->json([
-            'detalles' => $entidad,
-            'articulacion' => $articulacion
-        ]);
-    }
-
-    // Consulta los detalles de los entregables de una articulacion (Solo los checkboxes)
-    public function detallesDeLosEntregablesDeUnaArticulacion($id)
-    {
-        $entregables = $this->articulacionRepository->consultaEntregablesDeUnaArticulacion($id)->last()->toArray();
-        $entregables = ArrayHelper::validarEntregablesNullDeUnArrayString($entregables);
-        $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
-        return response()->json([
-            'entregables' => $entregables,
-            'articulacion' => $articulacion,
-        ]);
-    }
-
-    /**
      * Consulta los datos de una articulación por su id
      * @param int $id Id de la articulación
      * @return Response
@@ -880,28 +842,6 @@ class ArticulacionController extends Controller
             Alert::error('Error!', 'El dinamizador aún no ha aprobado la fase de ejecución de la articulación!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-    }
-
-    /**
-     * Vista para subir y ver los entregables de una articulación*
-     * @param int $id Id de la articulacion
-     * @return Response
-     * @author Victor Manuel Moreno Vega
-     */
-    public function entregables($id)
-    {
-        $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
-        $view = "";
-        if (\Session::get('login_role') == User::IsGestor()) {
-            $view = 'articulaciones.gestor.entregables';
-        } else if (\Session::get('login_role') == User::IsDinamizador()) {
-            $view = 'articulaciones.dinamizador.entregables';
-        } else {
-            $view = 'articulaciones.administrador.entregables';
-        }
-        return view($view, [
-            'articulacion' => $articulacion
-        ]);
     }
 
     // Datatable para mostrar las articulaciones POR NODO

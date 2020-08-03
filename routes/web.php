@@ -826,40 +826,6 @@ Route::group(
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
     }
 );
-/**
- * Route group para el módulo de gráficos
- */
-
-Route::group(
-    [
-        'prefix'     => 'grafico',
-        'middleware' => ['auth', 'role_session:Gestor|Infocenter|Dinamizador|Administrador|Ingreso'],
-    ],
-    function () {
-        // Gráficos de articulaciones
-        Route::get('/', 'GraficoController@index')->name('grafico');
-        Route::get('/articulaciones', 'GraficoController@articulacionesGraficos')->name('grafico.articulacion')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/consultarArticulacionesPorNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesNodoGrafico')->name('grafico.nodo.articulacion')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarArticulacionesPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesGestorGrafico')->name('grafico.gestor.articulacion')->middleware('role_session:Dinamizador|Administrador|Gestor');
-        Route::get('/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/{idnodo}/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ArticulacionController@articulacionesLineaTecnologicaYFechaGrafico')->name('grafico.linea.articulacion')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarArticulacionesPorNodoYAnho/{id}/{anho}', 'Graficos\ArticulacionController@articulacionesPorNodoYAnho_Controller')->name('grafico.nodo.anho.articulacion')->middleware('role_session:Dinamizador|Administrador');
-        // Gráficos de edt
-        Route::get('/edts', 'GraficoController@edtsGraficos')->name('grafico.edt')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/consultarEdtsPorNodoGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsNodoGrafico')->name('grafico.edt.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarEdtsPorGestorYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsGestorGrafico')->name('grafico.edt.gestor')->middleware('role_session:Dinamizador|Administrador|Gestor');
-        Route::get('/consultarEdtsPorLineaYFecha/{id}/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Graficos\EdtController@edtsLineaGrafico')->name('grafico.edt.linea')->middleware('role_session:Dinamizador|Administrador|Gestor');
-        Route::get('/consultarEdtsPorNodoYAnho/{id}/{anho}', 'Graficos\EdtController@edtsPorNodoAnhoGrafico_Controller')->name('grafico.edt.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        // Gráficos de proyecto
-        Route::get('/proyectos', 'GraficoController@proyectosGraficos')->name('grafico.proyectos')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/consultarProyectosInscritosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosPorFechaInicioNodoYAnhoGrafico_Controller')->name('grafico.proyecto.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosInscritosConEmpresasPorMesDeUnNodo_Controller')->name('grafico.proyecto.empresas.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarProyectosInscritosPorTipoNodoYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ProyectoController@proyectosPorTipoProyectoNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarProyectosFinalzadosPorAnho/{id}/{anho}', 'Graficos\ProyectoController@proyectosFinalizadosPorNodoYAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarGestoresYLineasDeUnNodo/{id}', 'GraficoController@gestoresYLineaDelNodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarProyectosFinalizadosPorTipoNodoYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Graficos\ProyectoController@proyectosFinalizadosPorTipoProyectoNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
-    }
-
-);
 
 /**
  * Route group para la generación de excel
@@ -881,20 +847,6 @@ Route::group(
         Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
         Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
         Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorFechaYNodo_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorGestorFecha_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorFechaNodoYLinea/{id}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoFechaLinea_Controller')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelArticulacionFinalizadasPorNodoYAnho/{id}/{anho}', 'Excel\ArticulacionController@excelArticulacionFinalizadasPorNodoAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
-        // Rutas para la generacion de excel del módulo de proyectos
-        Route::get('/excelProyectosInscritosPorAnho/{id}/{anho}', 'Excel\ProyectoController@proyectosInscritosPorAnhosDeUnNodo')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelProyectosInscritosConEmpresasPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosInscritosConEmpresasPorAnhoYAnho')->name('proyecto.excel.nodo.anho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelProyectosDelGestorPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnGestorPorAnho')->name('proyecto.excel.gestor.anho')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        Route::get('/excelProyectosDelNodoPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoPorAnho')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelProyectosFinalizadosPorAnho/{id}/{anho}', 'Excel\ProyectoController@consultarProyectosDeUnNodoFinalizadosPorAnho_Controller')->middleware('role_session:Dinamizador|Administrador');
-        // Rutas para la generación de excel del módulo de seguimiento
-        Route::get('/excelSeguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/excelSeguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\SeguimientoController@consultarSeguimientoDelGestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        // Rutas para la generación de excel del módulo de indicadores
         Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@exportIndicadores2020')->middleware('role_session:Dinamizador|Administrador|Gestor')->name('indicador.export.excel');
         // Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@export')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
 
@@ -936,49 +888,6 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IndicadorController@index')->name('indicadores');
-        // Relacionado a proyectos
-        Route::get('/totalProyectosInscritos/{idnodo}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalProyectosInscritos');
-        Route::get('/totalProyectosEnEjecucion/{id}', 'IndicadorController@totalProyectosEjecucion');
-        Route::get('/totalPFFfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPFFfinalizados');
-        Route::get('/totalInscritosSena/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalInscritosSena');
-        Route::get('/totalProyectosEnEjecucionSena/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionSena');
-        Route::get('/totalPFFSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFSena');
-        Route::get('/totalCostoPFFFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoSena');
-        Route::get('/totalInscritosEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalInscritosEmpresas');
-        Route::get('/totalProyectosEnEjecucionEmpresas/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmpresas');
-        Route::get('/totalPFFfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFfinalizadosConEmpresas');
-        Route::get('/totalCostoPFFFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmpresas');
-        Route::get('/totalTalentosConProyectosEnAsocioConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConProyectosEnAsocioConEmpresas');
-        Route::get('/totalProyectosInscritosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectosInscritosEmprendedoresInvetoresOtro');
-        Route::get('/totalPFFFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPFFFinalizadosEmprendedoresInvetoresOtro');
-        Route::get('/totalProyectosEnEjecucionEmprendedoresInventoresOtros/{idnodo}', 'IndicadorController@totalProyectosEnEjecucionEmprendedoresInventoresOtros');
-        Route::get('/totalCostoPFFFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPFFFinalizadoEmprendedoresOtros');
-        Route::get('/totalPMVfinalizados/{id}/{fecha_inicio}/{fecha_fin}', 'IndicadorController@totalPMVfinalizados');
-        Route::get('/totalPMVSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVSena');
-        Route::get('/totalCostoPMVFinalizadoSena/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoSena');
-        Route::get('/totalPMVfinalizadosConEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVfinalizadosConEmpresas');
-        Route::get('/totalCostoPMVFinalizadoEmpresas/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmpresas');
-        Route::get('/totalPMVFinalizadosEmprendedoresInvetoresOtro/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalPMVFinalizadosEmprendedoresInvetoresOtro');
-        Route::get('/totalCostoPMVFinalizadoEmprendedoresOtros/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalCostoPMVFinalizadoEmprendedoresOtros');
-        Route::get('/totalProyectoConGruposInternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternos');
-        Route::get('/totalProyectoConGruposInternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposInternosFinalizados');
-        Route::get('/totalProyectoConGruposExternos/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternos');
-        Route::get('/totalProyectoConGruposExternosFinalizados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalProyectoConGruposExternosFinalizados');
-        Route::get('/totalTalentosConApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosConApoyoYProyectosAsociados');
-        Route::get('/totalTalentosSinApoyoYProyectosAsociados/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSinApoyoYProyectosAsociados');
-        // Relacionado a articulaciones
-        Route::get('/totalAsesoriasIDiEmpresasYEmprendedores/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasYEmprendedores');
-        Route::get('/totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion/{id}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresEnEjecucion');
-        Route::get('/totalAsesoriasIDiEmpresasEmprendedoresFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalAsesoriasIDiEmpresasEmprendedoresFinalizadas');
-        Route::get('/totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas/{id}/{fecha_inicio}/{fecha_cierre}/{nombre_tipo_articulacion}', 'IndicadorController@totalArticulacionesEmpresasEmprendedoresPorTipoFinalizadas');
-        // Relacionado a edts
-        Route::get('/totalEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalEdts');
-        Route::get('/totalAtendidosEnEdts/{idnodo}/{fecha_inicio}/{fecha_cierre}/{campos}', 'IndicadorController@totalAtendidosEnEdts');
-        // Relacionado a talento
-        Route::get('/totalTalentosEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEnProyecto');
-        Route::get('/totalTalentosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosSenaEnProyecto');
-        Route::get('/totalTalentosMujeresSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosMujeresSenaEnProyecto');
-        Route::get('/totalTalentosEgresadosSenaEnProyecto/{idnodo}/{fecha_inicio}/{fecha_cierre}', 'IndicadorController@totalTalentosEgresadosSenaEnProyecto');
     }
 );
 
@@ -1076,64 +985,6 @@ Route::group([
 Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->middleware('disablepreventback');
 
 /*=====  End of rutas para las funcionalidades de las sublineas  ======*/
-
-/*==========================================================================
-=            rutas para las funcionalidades de los laboratorios            =
-==========================================================================*/
-Route::get('/laboratorio/nodo/{nodo?}', 'LaboratorioController@getLaboratorioPorNodo')->name('laboratorio.nodo')->middleware('disablepreventback');
-Route::resource('laboratorio', 'LaboratorioController')->parameters([
-    'laboratorio' => 'id',
-])->middleware('disablepreventback');
-
-/*=====  End of rutas para las funcionalidades de los laboratorios  ======*/
-
-/*==============================================================================
-=            rutas para las funcionalidades de la configuracion app            =
-==============================================================================*/
-
-// Route::group([
-//     'prefix'     => 'configuracion',
-//     'middleware' => ['auth', 'role_session:Administrador'],
-// ], function () {
-//     Route::get('/', function () {
-//         return view('configuracion.index');
-//     })->name('configuracion.index');
-// }
-// );
-
-/*=====  End of rutas para las funcionalidades de la configuracion app  ======*/
-
-/**
- *
- * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
- */
-// Route::group(
-//     [
-//         'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador', 'disablepreventback'],
-//     ],
-//     function () {
-//         Route::get('intervencion/datatableIntervencionEmpresaDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesEmpresaPorGestor')->name('intervencion.datatable.gestor');
-//         Route::get('intervencion/eliminarArticulacion/{id}', 'IntervencionEmpresaController@eliminarIntervencionEmpresa')->name('intervencion.delete')->middleware('role_session:Dinamizador');
-//         Route::put('intervencion/updateEntregables/{id}', 'IntervencionEmpresaController@updateEntregables')->name('intervencion.update.entregables')->middleware('role_session:Gestor|Dinamizador');
-//         Route::get('intervencion/{id}/entregables', 'IntervencionEmpresaController@entregables')->name('intervencion.entregables');
-//         Route::get('intervencion/ajaxDetallesDeUnaArticulacion/{id}', 'IntervencionEmpresaController@detallesDeUnaIntervencion')->name('intervencion.detalle');
-//         Route::get('intervencion/datatableIntervencionesAEmpresasDelGestor/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesAempresasPorGestor')->name('intervencion.datatable');
-//         Route::get('intervencion/datatableIntervencionesDelNodo/{id}/{anho}', 'IntervencionEmpresaController@datatableIntervencionesPorNodo')->name('intervencion.datatable.nodo');
-//         Route::get('intervencion/archivosDeUnaArticulacion/{id}', 'ArchivoController@datatableArchivosDeUnaArticulacion')->name('articulacion.files');
-//         Route::resource('intervencion', 'IntervencionEmpresaController', ['except' => ['show', 'destroy']])->parameters([
-//             'intervencion' => 'id',
-//         ])->names([
-//             'create'  => 'intervencion.create',
-//             'update'  => 'intervencion.update',
-//             'edit'    => 'intervencion.edit',
-//             'destroy' => 'intervencion.destroy',
-//             'show'    => 'intervencion.show',
-//             'index'   => 'intervencion.index',
-//             'store'   => 'intervencion.store',
-//         ]);
-//     }
-// );
-
 
 Route::get('creditos', function () {
     return view('configuracion.creditos');

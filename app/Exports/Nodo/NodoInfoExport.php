@@ -20,7 +20,7 @@ class NodoInfoExport implements WithMultipleSheets
     private $queryLineas;
 
 
-    public function __construct($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas, $queryLaboratorios)
+    public function __construct($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas)
     {
         $this->setQueryNodo($query);
         $this->setQueryDinamizadores($queryDinamizadores);
@@ -28,7 +28,6 @@ class NodoInfoExport implements WithMultipleSheets
         $this->setQueryInfocenters($queryInfocenters);
         $this->setQueryIngresos($queryIngresos);
         $this->setQueryLineas($queryLineas);
-        $this->setQueryLaboratorios($queryLaboratorios);
     }
 
     /**
@@ -171,26 +170,5 @@ class NodoInfoExport implements WithMultipleSheets
     private function getQueryLineas()
     {
         return $this->queryLineas;
-    }
-
-    /**
-     * Asigna un valor a $queryLaboratorios
-     * @param Collection $queryLaboratorios
-     * @return void
-     * @author devjul
-     */
-    private function setQueryLaboratorios($queryLaboratorios)
-    {
-        $this->queryLaboratorios = $queryLaboratorios;
-    }
-
-    /**
-     * Retorna el valor de $queryLaboratorios
-     * @author devjul
-     * @return Collection
-     */
-    private function getQueryLaboratorios()
-    {
-        return $this->queryLaboratorios;
     }
 }

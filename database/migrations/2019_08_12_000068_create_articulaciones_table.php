@@ -24,7 +24,6 @@ class CreateArticulacionesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('articulacion_proyecto_id');
-            $table->unsignedInteger('tipoarticulacion_id');
             $table->tinyInteger('tipo_articulacion');
             $table->date('fecha_ejecucion')->nullable()->default(null);
             $table->string('observaciones',1000)->nullable()->default(null);
@@ -38,12 +37,6 @@ class CreateArticulacionesTable extends Migration
 
             $table->index(["tipoarticulacion_id"], 'fk_articulaciones_tiposarticulacion1_idx');
             $table->nullableTimestamps();
-
-
-            $table->foreign('tipoarticulacion_id', 'fk_articulaciones_tiposarticulacion1_idx')
-                ->references('id')->on('tiposarticulaciones')
-                ->onDelete('no action')
-                ->onUpdate('no action');
 
             $table->foreign('articulacion_proyecto_id', 'fk_articulaciones_articulacion_proyecto1_idx')
                 ->references('id')->on('articulacion_proyecto')

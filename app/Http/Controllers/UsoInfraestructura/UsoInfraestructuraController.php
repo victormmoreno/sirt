@@ -1051,7 +1051,6 @@ class UsoInfraestructuraController extends Controller
             ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
 
-        $usoinfraestructura->usolaboratorios()->sync([]);
         $usoinfraestructura->usoequipos()->sync([]);
         $usoinfraestructura->usotalentos()->sync([]);
         $usoinfraestructura->usomateriales()->sync([]);

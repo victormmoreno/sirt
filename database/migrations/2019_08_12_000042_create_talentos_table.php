@@ -24,7 +24,6 @@ class CreateTalentosTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('perfil_id');
             $table->unsignedInteger('entidad_id');
             $table->string('universidad', 200)->nullable()->default(null);
             $table->string('programa_formacion', 100)->default('No Aplica');
@@ -38,12 +37,6 @@ class CreateTalentosTable extends Migration
 
             $table->index(["user_id"], 'fk_talentos_user1_idx');
             $table->nullableTimestamps();
-
-
-            $table->foreign('perfil_id', 'fk_talento_perfil1_idx')
-                ->references('id')->on('perfiles')
-                ->onDelete('no action')
-                ->onUpdate('no action');
 
             $table->foreign('entidad_id', 'fk_talentos_entidades1_idx')
                 ->references('id')->on('entidades')

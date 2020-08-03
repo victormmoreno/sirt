@@ -28,9 +28,6 @@ class CreateProyectosTable extends Migration
             $table->unsignedInteger('sector_id');
             $table->unsignedInteger('sublinea_id');
             $table->unsignedInteger('areaconocimiento_id');
-            $table->unsignedInteger('estadoproyecto_id');
-            $table->unsignedInteger('tipoarticulacionproyecto_id');
-            $table->unsignedInteger('estadoprototipo_id');
             $table->tinyInteger('tipo_ideaproyecto')->default('0');
             $table->string('otro_tipoarticulacion', 50)->nullable()->default(null);
             $table->string('otro_estadoprototipo', 50)->nullable()->default(null);
@@ -57,8 +54,6 @@ class CreateProyectosTable extends Migration
             $table->tinyInteger('lecciones_aprendidas')->nullable()->default('0');
             $table->tinyInteger('encuesta')->nullable()->default('0');
 
-            $table->index(["estadoprototipo_id"], 'fk_proyectos_estadosprototipos1_idx');
-
             $table->index(["sector_id"], 'fk_proyectos_sectores1_idx');
 
             $table->index(["sublinea_id"], 'fk_proyectos_sublineas1_idx');
@@ -69,24 +64,11 @@ class CreateProyectosTable extends Migration
 
             $table->index(["articulacion_proyecto_id"], 'fk_proyectos_articulacion_proyecto1_idx');
 
-            $table->index(["tipoarticulacionproyecto_id"], 'fk_proyectos_tiposarticulacionesproyectos1_idx');
-
-            $table->index(["estadoproyecto_id"], 'fk_proyectos_estadosproyecto1_idx');
             $table->nullableTimestamps();
 
 
             $table->foreign('areaconocimiento_id', 'fk_proyectos_areasconocimiento1_idx')
                 ->references('id')->on('areasconocimiento')
-                ->onDelete('no action')
-                ->onUpdate('no action');
-
-            $table->foreign('estadoprototipo_id', 'fk_proyectos_estadosprototipos1_idx')
-                ->references('id')->on('estadosprototipos')
-                ->onDelete('no action')
-                ->onUpdate('no action');
-
-            $table->foreign('estadoproyecto_id', 'fk_proyectos_estadosproyecto1_idx')
-                ->references('id')->on('estadosproyecto')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
@@ -102,11 +84,6 @@ class CreateProyectosTable extends Migration
 
             $table->foreign('sublinea_id', 'fk_proyectos_sublineas1_idx')
                 ->references('id')->on('sublineas')
-                ->onDelete('no action')
-                ->onUpdate('no action');
-
-            $table->foreign('tipoarticulacionproyecto_id', 'fk_proyectos_tiposarticulacionesproyectos1_idx')
-                ->references('id')->on('tiposarticulacionesproyectos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
