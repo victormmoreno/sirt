@@ -1616,1403 +1616,6 @@ var grupoInvestigacionIndex = {
   },
 }
 
-$(document).ready(function() {
-    $('#administrador_activos_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/administrador",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, ],
-    });
-});
-
-$(document).ready(function() {
-    $('#administrador_inactivos_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/administrador/papelera",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, ],
-    });
-});
-
-let downloadAdministrador = {
-    downloadAdministrator: function(state){
-        if(state !== null){
-            location.href = '/usuario/excel/administrador/'+ state;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-
-                icon: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-    downloadAllUser: function(state){
-        if(state !== null){
-            location.href = '/usuario/excel/'+ state;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-
-                icon: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    }
-}
-
-
-$(document).ready(function() {
-    $('#dinamizador_table_activos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-
-    $('#dinamizador_table_inactivos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-
-
-
-});
-var UserAdministradorDinamizador = {
-    selectDinamizadoresPorNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#dinamizador_table_activos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#dinamizador_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "/usuario/dinamizador/getDinamizador/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },  ],
-            });
-        } else {
-            $('#dinamizador_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-    selectDinamizadoresPorNodoTrash: function() {
-        let nodo = $('#selectnodo').val();
-        $('#dinamizador_table_inactivos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#dinamizador_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "/usuario/dinamizador/getDinamizador/papelera/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },  ],
-            });
-        } else {
-            $('#dinamizador_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-
-    downloadDinamizador: function(state){
-
-        let nodo = $('#selectnodo').val();
-        if(nodo == null || nodo == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un nodo',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null && (nodo !== null || nodo !== 0)) {
-            location.href = '/usuario/excel/dinamizador/'+ state+'/'+nodo;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-    downloadAllDinamizador:function (state){
-        location.href = '/usuario/excel/dinamizador/'+ state;
-    }
-}
-
-
-
-$(document).ready(function() {
-    $('#gestor_table_activos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-
-    $('#gestor_table_inactivos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-});
-var UserAdministradorGestor = {
-    selectGestoresPorNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#gestor_table_activos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#gestor_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "/usuario/gestor/getGestor/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                }, ],
-            });
-        }else{
-            $('#gestor_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-
-
-    selectGestoresPorNodoTrash: function() {
-        let nodo = $('#selectnodo').val();
-        $('#gestor_table_inactivos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#gestor_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "/usuario/gestor/getGestor/papelera/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                }, ],
-            });
-        }else{
-            $('#gestor_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-    downloadGestor: function(state){
-
-        let nodo = $('#selectnodo').val();
-        if(nodo == null || nodo == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un nodo',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null && (nodo !== null || nodo !== 0)) {
-            location.href = '/usuario/excel/gestor/'+ state+'/'+nodo;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-    downloadAllGestor:function (state){
-        location.href = '/usuario/excel/gestor/'+ state;
-    }
-}
-
-$(document).ready(function() {
-    $('#infocenter_table_activos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-
-    $('#infocenter_table_inactivos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-});
-var UserAdministradorInfocenter = {
-    selectInfocentersForNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#infocenter_table_activos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#infocenter_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                "lengthChange": false,
-                ajax: {
-                    url: "/usuario/infocenter/getinfocenter/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                }, ],
-            });
-        }else{
-            $('#infocenter_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-
-    selectInfocentersForNodoTrash: function() {
-        let nodo = $('#selectnodo').val();
-        $('#infocenter_table_inactivos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#infocenter_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                "lengthChange": false,
-                ajax: {
-                    url: "/usuario/infocenter/getinfocenter/papelera/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                }, ],
-            });
-        }else{
-            $('#infocenter_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-    downloadInfocenter: function(state){
-
-        let nodo = $('#selectnodo').val();
-        if(nodo == null || nodo == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un nodo',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null && (nodo !== null || nodo !== 0)) {
-            location.href = '/usuario/excel/infocenter/'+ state+'/'+nodo;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-    downloadAllInfocenter:function (state){
-        location.href = '/usuario/excel/infocenter/'+ state;
-    }
-}
-$(document).ready(function() {
-  $('#talentoByDinamizador_table_activos').DataTable({
-      language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      "lengthChange": false,
-  });
-  $('#talentoByDinamizador_table_inactivos').DataTable({
-    language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    "lengthChange": false,
-});
-  
-
-});
-  
-  var usuarios = {
-    consultarTalentosByTecnoparque: function (){
-      let anho = $('#txt_anio_user').val();
-      let nodo = $('#txtnodo').val();
-
-      if(nodo == '' || nodo == null){
-        Swal.fire(
-          'Error',
-          'Por favor selecciona un nodo',
-          'error'
-        );
-      }else if(anho == '' || anho == null){
-        Swal.fire(
-          'Error',
-          'Por favor selecciona un año',
-          'error'
-        );
-      }else{
-        $('#talentoByDinamizador_table_activos').dataTable().fnDestroy();
-        $('#talentoByDinamizador_table_activos').DataTable({
-          language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-          },
-          "lengthChange": false,
-          processing: true,
-          serverSide: true,
-          order: [ 0, 'desc' ],
-          ajax:{
-            url: "/usuario/getuserstalentosbynodo/"+nodo+"/"+anho,
-            
-          },
-          columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        },  ],
-        });
-  
-      }
-      
-      
-      
-    },
-
-    consultarTalentosByTecnoparqueTrash: function (){
-      let anho = $('#txt_anio_user').val();
-      let nodo = $('#txtnodo').val();
-
-      if(nodo == '' || nodo == null){
-        Swal.fire(
-          'Error',
-          'Por favor selecciona un nodo',
-          'error'
-        );
-      }else if(anho == '' || anho == null){
-        Swal.fire(
-          'Error',
-          'Por favor selecciona un año',
-          'error'
-        );
-      }else{
-        $('#talentoByDinamizador_table_inactivos').dataTable().fnDestroy();
-        $('#talentoByDinamizador_table_inactivos').DataTable({
-          language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-          },
-          "lengthChange": false,
-          processing: true,
-          serverSide: true,
-          order: [ 0, 'desc' ],
-          ajax:{
-            url: "/usuario/getuserstalentosbynodo/papelera/"+nodo+"/"+anho,
-            
-          },
-          columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        },  ],
-        });
-      }      
-    },
-    downloadTalento: function(state){
-
-        let nodo = $('#txtnodo').val();
-        
-        let anio = $('#txt_anio_user').val();
-        if(nodo == null || nodo == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un nodo',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(anio == null || anio == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un año',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null && (nodo !== null || nodo !== 0) &&(anio !== null || anio !== 0)) {
-            location.href = '/usuario/excel/talento/'+ state+'/'+nodo+'/'+anio;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-    downloadAllTalentos:function (state){
-        location.href = '/usuario/excel/talento/'+ state;
-    }
-    
-  }
-  
-    
-    
-$(document).ready(function() {
-    $('#ingreso_table_activos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false
-    });
-
-    $('#ingreso_table_inactivos').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false
-    });
-});
-var UserAdministradorIngreso = {
-    selectIngresoForNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#ingreso_table_activos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#ingreso_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "/usuario/ingreso/getingreso/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },  ],
-            });
-        } else {
-            $('#ingreso_table_activos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-
-    selectIngresoForNodoTrash: function() {
-        let nodo = $('#selectnodo').val();
-        $('#ingreso_table_inactivos').dataTable().fnDestroy();
-        if (nodo != '') {
-            $('#ingreso_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "/usuario/ingreso/getingreso/papelera/" + nodo,
-                    type: "get",
-                },
-                columns: [{
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombre',
-                    name: 'nombre',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },  ],
-            });
-        } else {
-            $('#ingreso_table_inactivos').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false
-            }).clear().draw();
-        }
-    },
-    downloadIngreso: function(state){
-
-        let nodo = $('#selectnodo').val();
-        if(nodo == null || nodo == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un nodo',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null && (nodo !== null || nodo !== 0)) {
-            location.href = '/usuario/excel/ingreso/'+ state+'/'+nodo;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-    downloadAllIngreso:function (state){
-        location.href = '/usuario/excel/ingreso/'+ state;
-    }
-}
-$(document).ready(function() {
-    $('#gestores_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/gestor/getgestor",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, ],
-    });
-
-    $('#gestores_dinamizador_inactivos_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/gestor/getgestor/papelera",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, ],
-    });
-});
-
-var UserDinamizadorGestor = {
-    downloadGestor: function(state){
-
-        if(state !== null) {
-            location.href = '/usuario/excel/gestor/'+ state;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-}
-
-
-
-$(document).ready(function() {
-    userTalentoByDinamizador.consultarTalentosByTecnoparque();
-    userTalentoByDinamizador.consultarTalentosByTecnoparqueTrash();
-    
-
-    $('#talentoByGestor_table').DataTable({
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-    $('#talentoByGestor_inactivos_table').DataTable({
-        language: {
-          "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-    });
-
-  });
-
-  var userTalentoByDinamizador = {
-    consultarTalentosByTecnoparque: function (){
-      let anho = $('#anio_proyecto_talento').val();
-
-      $('#talentoByDinamizador_table').dataTable().fnDestroy();
-        $('#talentoByDinamizador_table').DataTable({
-          language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-          },
-          "lengthChange": false,
-          processing: true,
-          serverSide: true,
-          order: [ 0, 'desc' ],
-          ajax:{
-            url: "/usuario/getuserstalentosbydatatables/"+anho,
-
-          },
-          columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        },  ],
-        });
-    },
-    consultarTalentosByTecnoparqueTrash: function (){
-        let anho = $('#anio_proyecto_talento').val();
-
-        $('#talentoByDinamizador_inactivos_table').dataTable().fnDestroy();
-          $('#talentoByDinamizador_inactivos_table').DataTable({
-            language: {
-              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            order: [ 0, 'desc' ],
-            ajax:{
-              url: "/usuario/getuserstalentosbydatatables/papelera/"+anho,
-
-            },
-            columns: [{
-              data: 'tipodocumento',
-              name: 'tipodocumento',
-          }, {
-              data: 'documento',
-              name: 'documento',
-          }, {
-              data: 'nombre',
-              name: 'nombre',
-          }, {
-              data: 'email',
-              name: 'email',
-          }, {
-              data: 'celular',
-              name: 'celular',
-          },  {
-              data: 'detail',
-              name: 'detail',
-              orderable: false,
-          },  ],
-          });
-      },
-    getUserTalentosByGestor: function(){
-      let anho = $('#txtanho_user_talento').val();
-      let gestor = $('#txtgestor_id').val();
-
-      if(gestor == '' || gestor == null){
-        Swal.fire(
-          'Error',
-          'Por favor selecciona un gestor',
-          'error'
-        );
-      }else if(anho == '' || anho == null){
-        Swal.fire(
-          'Error',
-          'Por favor selecciona un gestor',
-          'error'
-        );
-      }else{
-        $('#talentoByGestor_table').dataTable().fnDestroy();
-        $('#talentoByGestor_table').DataTable({
-          language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-          },
-          "lengthChange": false,
-          processing: true,
-          serverSide: true,
-          order: [ 0, 'desc' ],
-          ajax:{
-            url: "/usuario/getuserstalentosbygestordatatables/"+gestor+"/"+anho,
-
-          },
-          columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        },  ],
-        });
-      }
-    },
-    getUserTalentosByGestorTrash: function(){
-        let anho = $('#txtanho_user_talento').val();
-        let gestor = $('#txtgestor_id').val();
-
-        if(gestor == '' || gestor == null){
-          Swal.fire(
-            'Error',
-            'Por favor selecciona un gestor',
-            'error'
-          );
-        }else if(anho == '' || anho == null){
-          Swal.fire(
-            'Error',
-            'Por favor selecciona un gestor',
-            'error'
-          );
-        }else{
-          $('#talentoByGestor_inactivos_table').dataTable().fnDestroy();
-          $('#talentoByGestor_inactivos_table').DataTable({
-            language: {
-              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            order: [ 0, 'desc' ],
-            ajax:{
-                url: "/usuario/getuserstalentosbygestordatatables/papelera/"+gestor+"/"+anho,
-            },
-            columns: [{
-                data: 'tipodocumento',
-                name: 'tipodocumento',
-            }, {
-                data: 'documento',
-                name: 'documento',
-            }, {
-                data: 'nombre',
-                name: 'nombre',
-            }, {
-                data: 'email',
-                name: 'email',
-            }, {
-                data: 'celular',
-                name: 'celular',
-            },  {
-                data: 'detail',
-                name: 'detail',
-                orderable: false,
-            },  ],
-        });
-        }
-    },
-    downloadTalento: function(state){
-
-        let anio = $('#anio_proyecto_talento').val();
-        if(anio == null || anio == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un año',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null &&(anio !== null || anio !== 0)) {
-            let nodo = 0;
-            location.href = '/usuario/excel/talento/'+ state+'/'+nodo+'/'+anio;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-  }
-
-$(document).ready(function() {
-    $('#infocenters_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/infocenter/getinfocenter",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        }, {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, ],
-    });
-
-    $('#infocenters_dinamizador_inactivos_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/infocenter/getinfocenter/papelera",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        }, {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        }, ],
-    });
-});
-
-var UserDinamizadorInfocenter = {
-    downloadInfocenter: function(state){
-
-        if(state !== null) {
-            location.href = '/usuario/excel/infocenter/'+ state;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-}
-$(document).ready(function() {
-    $('#ingresos_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/ingreso/getingreso",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        },  ],
-    });
-
-    $('#ingresos_dinamizador_inactivos_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        "lengthChange": false,
-        ajax: {
-            url: "/usuario/ingreso/getingreso/papelera",
-            type: "get",
-        },
-        columns: [{
-            data: 'tipodocumento',
-            name: 'tipodocumento',
-        }, {
-            data: 'documento',
-            name: 'documento',
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-        }, {
-            data: 'email',
-            name: 'email',
-        }, {
-            data: 'celular',
-            name: 'celular',
-        },  {
-            data: 'detail',
-            name: 'detail',
-            orderable: false,
-        },  ],
-    });
-});
-
-var UserDinamizadorIngreso = {
-    downloadIngreso: function(state){
-
-        if(state !== null) {
-            location.href = '/usuario/excel/ingreso/'+ state;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-}
-$(document).ready(function() {
-
-//   $('#talento_activosByGestor_table').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     "lengthChange": false,
-//   });
-
-    consultarTalentosByGestor();
-    consultarTalentosByGestorTrash();
-
-//   $('#talento_inactivosByGestor_table').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     "lengthChange": false,
-//   });
-
-
-});
-
-// Ajax que muestra los usuarios talentos con proyectos  por año de un determinado gestor
-function consultarTalentosByGestor() {
-
-    let anho = $('#anio_proyecto_talento').val();
-
-    $('#talento_activosByGestor_table').dataTable().fnDestroy();
-    $('#talento_activosByGestor_table').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      "lengthChange": false,
-      processing: true,
-      serverSide: true,
-      order: [ 0, 'desc' ],
-      ajax:{
-        url: "/usuario/getuserstalentosbydatatables/"+anho,
-      },
-      columns: [{
-        data: 'tipodocumento',
-        name: 'tipodocumento',
-    }, {
-        data: 'documento',
-        name: 'documento',
-    }, {
-        data: 'nombre',
-        name: 'nombre',
-    }, {
-        data: 'email',
-        name: 'email',
-    }, {
-        data: 'celular',
-        name: 'celular',
-    },  {
-        data: 'detail',
-        name: 'detail',
-        orderable: false,
-    }, ],
-    });
-  }
-
-  function consultarTalentosByGestorTrash() {
-
-    let anho = $('#anio_proyecto_talento').val();
-
-    $('#talento_inactivosByGestor_table').dataTable().fnDestroy();
-    $('#talento_inactivosByGestor_table').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      "lengthChange": false,
-      processing: true,
-      serverSide: true,
-      order: [ 0, 'desc' ],
-      ajax:{
-        url: "/usuario/getuserstalentosbydatatables/papelera/"+anho,
-      },
-      columns: [{
-        data: 'tipodocumento',
-        name: 'tipodocumento',
-    }, {
-        data: 'documento',
-        name: 'documento',
-    }, {
-        data: 'nombre',
-        name: 'nombre',
-    }, {
-        data: 'email',
-        name: 'email',
-    }, {
-        data: 'celular',
-        name: 'celular',
-    },  {
-        data: 'detail',
-        name: 'detail',
-        orderable: false,
-    }, ],
-    });
-}
-var UserTalentoByGestor = {
-    downloadTalento: function(state){
-
-        let anio = $('#anio_proyecto_talento').val();
-        if(anio == null || anio == 0){
-            Swal.fire({
-                title: 'Por favor selecciona un año',
-
-                confirmButtonText: 'Ok',
-            });
-        }else if(state !== null &&(anio !== null || anio !== 0)) {
-            let nodo = 0;
-            location.href = '/usuario/excel/talento/'+ state+'/'+nodo+'/'+anio;
-        }else{
-            Swal.fire({
-                title: 'Error al descagar el archivo, intentalo de nuevo',
-                confirmButtonText: 'Ok',
-
-            });
-        }
-    },
-}
-
-
-
-
 //Enviar formulario
 $(document).on('submit', 'form#formSearchUser', function (event) {
     event.preventDefault();
@@ -3059,14 +1662,13 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                 $('#response-alert').empty();
 
                 if (data.fail) {
-                    
                     Swal.fire({
-                      title: 'Registro Erróneo',
-                      html: "Estas ingresando mal los datos. " + errores,
-                      type: 'error',
-                      showCancelButton: false,
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: 'Ok'
+                        title: 'Registro Erróneo',
+                        html: "Estas ingresando mal los datos. " + errores,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
                     });
                 }
 
@@ -3076,13 +1678,10 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                         $('#response-alert').append(`
                             <div class="mailbox-list">
                                 <ul>
-                                    <li >
+                                    <li>
                                         <a  class="mail-active">
-
                                             <h4 class="center-align">no se encontraron resultados</h4>
-
                                             <a class="grey-text text-darken-3 green accent-1 center-align" href="`+data.url+`/`+search+`">Registrar nuevo usuario</a>
-
                                         </a>
                                     </li>
                                 </ul>
@@ -3215,10 +1814,9 @@ var user = {
 
 $(document).ready(function() {
     $('#txtocupaciones').select2({
-      language: "es",
-      isMultiple: true
+        language: "es",
+        isMultiple: true
     });
-
     estudios.getOtraOcupacion();
 });
 
@@ -3228,20 +1826,13 @@ var estudios = {
         let id = $(idocupacion).val();
         let nombre = $("#txtocupaciones option:selected").text();
         let resultado = nombre.match(/[A-Z][a-z]+/g);
-        
-            
-            
-       
         $('#otraocupacion').hide();
         if (resultado != null) {
-          
-
             if (resultado.includes('Otra')) {
-
-            $('#otraocupacion').show();
-          }
+                $('#otraocupacion').show();
+            }
         }
-      }
+    }
 }
 
 $(document).ready(function() {
@@ -3250,9 +1841,9 @@ $(document).ready(function() {
 });
 
 var tipoTalento = {
-    getSelectTipoTalento:function (idperfil) {
-        let valor = $(idperfil).val();
-        let nombrePerfil = $("#txttipotalento option:selected").text();
+    getSelectTipoTalento:function (tipotal) {
+        let valor = $(tipotal).val();
+        let nombreTipoTalento = $("#txttipotalento option:selected").text();
         
         if(valor == 1 || valor == 2){
 
@@ -3518,7 +2109,7 @@ var tipoTalento = {
 
 
 $(document).on('submit', 'form#formRegisterUser', function (event) {
-    // $('button[type="submit"]').prop("disabled", true);
+
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
@@ -3533,7 +2124,6 @@ $(document).on('submit', 'form#formRegisterUser', function (event) {
       dataType: 'json',
       processData: false,
       success: function (data) {
-        // $('button[type="submit"]').removeAttr('disabled');
         $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();
         if (data.fail) {
@@ -3596,7 +2186,7 @@ var createUser = {
   }
 }  
 $(document).on('submit', 'form#formEditUser', function (event) {
-    // $('button[type="submit"]').prop("disabled", true);
+    
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
@@ -3674,622 +2264,249 @@ var EditUser = {
   }
 }
 
+$(document).ready(function() {
+    let filter_role = $('#filter_rol').val();
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_state = $('#filter_state').val();
+    let filter_year = $('#filter_year').val();
+
+    $('#users_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null) && (filter_role !='' || filter_role != null) && filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesUsers(filter_nodo , filter_role, filter_state, filter_year);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_role == '' || filter_role == null || filter_role == undefined) && filter_state != '' && (filter_year == '' || filter_year == null || filter_year == undefined)){
+        UserIndex.fillDatatatablesUsers(filter_nodo = null , filter_role = null, filter_state, filter_year = null);
+    }else{
+        $('#users_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+
+    $('#mytalento_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null) && (filter_role !='' || filter_role != null) && filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_role == '' || filter_role == null || filter_role == undefined) && filter_state != '' && (filter_year == '' || filter_year == null || filter_year == undefined)){
+        UserIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role = null, filter_state, filter_year = null);
+    }else{
+        $('#mytalento_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+});
+
 var UserIndex = {
-	detailUser(id) {
-        $.ajax({
-            dataType: 'json',
-            type: 'get',
-            url: "/usuario/usuarios/" + id
-        }).done(function(respuesta) {
-            modalUser(respuesta);
+    showInputs(){
+        let filter_role = $('#filter_rol').val();
+        if(filter_role == 'Talento'){
+            $("#divyear").show();
+            $('#filter_year>option[value="all"]').attr('selected', 'selected');
+        }else{
+            $("#divyear").hide();
+            $('#filter_year>option[value="all"]').attr('selected', 'selected');
+        }
+        
+    },
+    fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
+        var datatable = $('#users_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: "/usuario",
+                type: "get",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_role: filter_role,
+                    filter_state: filter_state,
+                    filter_year: filter_year,
+                }
+            },
+            columns: [
+                {
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombrecompleto',
+                    name: 'nombrecompleto',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
+                    data: 'roles',
+                    name: 'roles'
+                }, {
+                    data: 'login',
+                    name: 'login',
+                }, {
+                    data: 'state',
+                    name: 'state',
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, 
+            ],
+        });
+    },
+    fillDatatatablesTalentos(filter_nodo ,filter_role, filter_state, filter_year){
+        var datatable = $('#mytalento_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: "/usuario/mistalentos",
+                type: "get",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_role: filter_role,
+                    filter_state: filter_state,
+                    filter_year: filter_year,
+                }
+            },
+            columns: [
+                {
+                    data: 'tipodocumento',
+                    name: 'tipodocumento',
+                }, {
+                    data: 'documento',
+                    name: 'documento',
+                }, {
+                    data: 'nombrecompleto',
+                    name: 'nombrecompleto',
+                }, {
+                    data: 'email',
+                    name: 'email',
+                }, {
+                    data: 'celular',
+                    name: 'celular',
+                },  {
+                    data: 'roles',
+                    name: 'roles'
+                }, {
+                    data: 'login',
+                    name: 'login',
+                }, {
+                    data: 'state',
+                    name: 'state',
+                }, {
+                    data: 'detail',
+                    name: 'detail',
+                    orderable: false,
+                }, 
+            ],
         });
     }
 }
 
-function modalUser(respuesta) {
-    $(".titulo_users").empty();
-    let genero = respuesta.data.user.genero == 1 ? 'Masculino' : 'Femenino';
-    let otra_eps = respuesta.data.user.otra_eps != null ? respuesta.data.user.otra_eps : 'No registra';
-    let telefono = respuesta.data.user.telefono != null ? respuesta.data.user.telefono : 'No registra';
-    let celular = respuesta.data.user.celular != null ? respuesta.data.user.celular : 'No registra';
- 
-    $(".titulo_users").append(`<div class="row">
-                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                    
-                                <div class="col s12 m12 l12">
-                                    
-                                    <div class="mailbox-view">
-                                        <div class="mailbox-view-header">
-                                            <div class="left">
-                                                
-                                                <div class="left">
-                                                    <span class="mailbox-title ">
-                                                        ` + (respuesta.data.user.nombres != null ? respuesta.data.user.nombres : 'No registra') + " " + (respuesta.data.user.apellidos != null ? respuesta.data.user.apellidos : 'No registra') + `
-                                                    </span>
+$('#filter_user').click(function(){
 
-                                                    <span class="mailbox-author black-text text-darken-2">
-                                                        
-                                                        ` + (respuesta.data.role != null ? respuesta.data.role  : 'No registra' ) + `<br>
-                                                        Miembro desde ` + (respuesta.data.user.created_at != null ? moment(respuesta.data.user.created_at).format('LL') : 'No registra') + ` <br>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            
+    let filter_role = $('#filter_rol').val();
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_state = $('#filter_state').val();
+    let filter_year = $('#filter_year').val();
 
-                                            <div class="right mailbox-buttons">
-                                                
-                                            </div>
-                                        </div>
-                                        <div class="right">
-                                            <small>` + genero + `</small>
-                                        </div>
-                                        <div class="divider mailbox-divider">
-                                        </div>
-                                        <div class="mailbox-text">
-                                            <div class="row">
-                                                <div class="col s12 m6 l6">
-                                                    <ul class="collection">
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                credit_card
-                                                            </i>
-                                                            <span class="title">
-                                                                Tipo Documento
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.tipodocumento.nombre != null ? respuesta.data.user.tipodocumento.nombre : 'No registra') + `   
-                                                            </p>
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                perm_contact_calendar
-                                                            </i>
-                                                            <span class="title">
-                                                                Fecha de Nacimiento
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.fechanacimiento != null ? moment(respuesta.data.user.fechanacimiento).format('LL') : 'No registra') + `
-                                                            </p>
-                                                            
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                credit_card
-                                                            </i>
-                                                            <span class="title">
-                                                                Ciudad Expedición documento de identidad
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.ciudadexpedicion.nombre != null ? respuesta.data.user.ciudadexpedicion.nombre : 'No registra') + `   
-                                                            </p>
-                                                        </li>
-                                                        
 
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                local_hospital
-                                                            </i>
-                                                            <div class="left">
-                                                               <span class="title">
-                                                                    Eps
-                                                                </span>
-                                                                <p>
-                                                                   ` + (respuesta.data.user.eps.nombre != null ? respuesta.data.user.eps.nombre : 'No registra') + `   
-                                                                </p> 
-                                                            </div>
-                                                           
-                                                            <div class="right">
-                                                               <span class="title">
-                                                                    Otra Eps
-                                                                </span>
-                                                                <p>
-                                                                   ` + otra_eps + ` 
-                                                                </p> 
-                                                            </div>
-                                                            
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                map
-                                                            </i>
-                                                            <div class="left">
-                                                                <span class="title">
-                                                                   Dirección
-                                                                </span>
-                                                                <p>
-                                                                    ` + (respuesta.data.user.direccion != null ? respuesta.data.user.direccion : 'No registra') + `
-                                                                </p>
-                                                            </div>
-                                                            <div class="right">
-                                                                <span class="title">
-                                                                   Barrio
-                                                                </span>
-                                                                <p>
-                                                                    ` + (respuesta.data.user.barrio != null || respuesta.data.user.barrio != ' '   ? respuesta.data.user.barrio : 'No registra') + ` 
-                                                                </p>
-                                                            </div>
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                email
-                                                            </i>
-                                                            <span class="title">
-                                                               Correo Electrónico
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.email != null ? respuesta.data.user.email : 'No registra') + `
-                                                            </p>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="col s12 m6 l6">
-                                                    <ul class="collection">
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                assignment_ind
-                                                            </i>
-                                                            <span class="title">
-                                                                Documento
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.documento != null ? respuesta.data.user.documento : 'No registra') + ` 
-                                                            </p>
-                                                            
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                details
-                                                            </i>
-                                                            <span class="title">
-                                                                Grupo Sanguineo
-                                                            </span>
-                                                            <p>
-                                                               ` + (respuesta.data.user.gruposanguineo.nombre != null ? respuesta.data.user.gruposanguineo.nombre : 'No registra') + `   
-                                                            </p>
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                credit_card
-                                                            </i>
-                                                            <span class="title">
-                                                                Deparamento Expedición documento de identidad
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.ciudadexpedicion.departamento.nombre != null ? respuesta.data.user.ciudadexpedicion.departamento.nombre : 'No registra') + `
-                                                            </p>
-                                                            
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                filter_6
-                                                            </i>
-                                                            <span class="title">
-                                                                Estrato Social
-                                                            </span>
-                                                            <p>
-                                                                ` + (respuesta.data.user.estrato != null ? respuesta.data.user.estrato : 'No registra') + `                                                                    
-                                                            </p>
-                                                            
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                map
-                                                            </i>
-                                                            <span class="title">
-                                                                Lugar de Residencia
-                                                            </span>
-                                                            <p>
-                                                                ` + ( respuesta.data.user.ciudad.nombre != null &&  respuesta.data.user.ciudad.departamento.nombre != null ?  respuesta.data.user.ciudad.nombre + ` - ` + respuesta.data.user.ciudad.departamento.nombre : 'No registra') + `
-                                                            </p>
-                                                        </li>
-                                                        <li class="collection-item avatar">
-                                                            
-                                                            <div class="center">
-                                                                <span class="title">
-                                                                   Datos contacto
-                                                                </span>
-                                                            </div>
-                                                            <div class="left">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                phone
-                                                            </i>
-                                                                <p>
-                                                                    Telefono <br>
-                                                                    ` + telefono + ` 
-                                                                </p>
-                                                            </div>
-                                                            <div class="right">
-                                                                <span class="title">
-                                                                   Celular
-                                                                </span>
-                                                                <p>
-                                                                    ` + celular + ` 
-                                                                </p>
-                                                            </div>
-                                                        </li>
+    $('#users_data_table').dataTable().fnDestroy();
 
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="right">
-                                                <small>
-                                                    Información Último Estudio
-                                                </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <div class="row">
-                                                    <div class="col s12 m6 l6">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    Institución
-                                                                </span>
-                                                                <p>
-                                                                    ` + (respuesta.data.user.institucion != null ? respuesta.data.user.institucion : 'No registra') + `
-                                                                </p>
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    Titulo obtenido
-                                                                </span>
-                                                                <p>
-                                                                     ` + (respuesta.data.user.titulo_obtenido != null ? respuesta.data.user.titulo_obtenido : 'No registra') + `
-                                                                </p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col s12 m6 l6">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    Grado de escolaridad
-                                                                </span>
-                                                                <p>
-                                                                     ` + (respuesta.data.user.gradoescolaridad.nombre != null ? respuesta.data.user.gradoescolaridad.nombre : 'No registra') + `
-                                                                </p>
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    Fecha de terminación
-                                                                </span>
-                                                                <p>
-                                                                     ` + (respuesta.data.user.fecha_terminacion != null ? moment(respuesta.data.user.fecha_terminacion).format('LL') : 'No registra') + `
-                                                                </p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`);
-    if (respuesta.data.user.dinamizador != null) {
-        $(".titulo_users").append(`<div class="row">
-                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                    
-                                <div class="col s12 m12 l12">
-                                    
-                                    <div class="mailbox-view">
-                                        
-                                        <div class="mailbox-text">
-                                            
-                                            <div class="right">
-                                                <small>
-                                                    Información Dinamizador
-                                                </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <div class="row">
-                                                    <div class="col s12 m6 l6 offset-l3 m-3">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    Nodo
-                                                                </span>
-                                                                <p>
-                                                                    Tecnoparque nodo ` + (respuesta.data.user.dinamizador.nodo.entidad.nombre != null ? respuesta.data.user.dinamizador.nodo.entidad.nombre : 'No registra') + `
-                                                                    <br>
-                                                                        <small>
-                                                                            <b>Dirección:</b>
-                                                                            ` + (respuesta.data.user.dinamizador.nodo.direccion != null ? respuesta.data.user.dinamizador.nodo.direccion : 'No registra') + `
-                                                                        </small> 
-                                                                    <br>
-                                                                </p>    
-                                                            </li>
-                                                           
-                                                        </ul>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 </div>`);
+
+    if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesUsers(filter_nodo , filter_role, filter_state, filter_year);
+        //idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesUsers(filter_nodo = null , filter_role, filter_state, filter_year);
+    }else{
+        $('#users_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+        
     }
-    if (respuesta.data.user.gestor) {
-        $(".titulo_users").append(`<div class="row">
-                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                    
-                                <div class="col s12 m12 l12">
-                                    
-                                    <div class="mailbox-view">
-                                        
-                                        <div class="mailbox-text">
-                                            
-                                            <div class="right">
-                                                <small>
-                                                    Información Gestor
-                                                </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <div class="row">
-                                                    <div class="col s12 m8 l8 offset-l2 m-2">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    <b class="teal-text darken-2">
-                                                                        Nodo del Gestor:
-                                                                    </b>
-                                                                    Tecnoparque Nodo ` + (respuesta.data.user.gestor.nodo.entidad.nombre != null ? respuesta.data.user.gestor.nodo.entidad.nombre : 'No registra') + `
-                                                                    <br> 
-                                                                    <b class="teal-text darken-2">
-                                                                        Linea del Gestor:
-                                                                    </b>
-                                                                     ` + (respuesta.data.user.gestor.lineatecnologica.nombre != null ? respuesta.data.user.gestor.lineatecnologica.nombre : 'No registra') + `
-                                                                    <br> 
-                                                                    <b class="teal-text darken-2">
-                                                                        Honorario del Gestor:
-                                                                    </b>
-                                                                    $ ` + (respuesta.data.user.gestor.honorarios != null ? respuesta.data.user.gestor.honorarios : null) + `
-                                                                </span>
-                                                                                                                                               
-                                                            </li>
-                                                           
-                                                        </ul>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 </div>`);
+    
+});
+
+$('#filter_talentos').click(function(){
+
+    let filter_role = $('#filter_rol').val();
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_state = $('#filter_state').val();
+    let filter_year = $('#filter_year').val();
+
+
+    $('#mytalento_data_table').dataTable().fnDestroy();
+
+
+    if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
+        
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role, filter_state, filter_year);
+    }else{
+        $('#mytalento_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+        
     }
-    if (respuesta.data.user.infocenter) {
-        $(".titulo_users").append(`<div class="row">
-                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                    
-                                <div class="col s12 m12 l12">
-                                    
-                                    <div class="mailbox-view">
-                                        
-                                        <div class="mailbox-text">
-                                            
-                                            <div class="right">
-                                                <small>
-                                                    Información Infocenter
-                                                </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <div class="row">
-                                                    <div class="col s12 m8 l8 offset-l2 m-2">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    <b class="teal-text darken-2">
-                                                                        Nodo del Infocenter:
-                                                                    </b>
-                                                                    ` + (respuesta.data.user.infocenter.nodo.entidad.nombre != null ? 'Tecnoparque Nodo ' + respuesta.data.user.infocenter.nodo.entidad.nombre : 'No registra') + `
-                                                                    <br> 
-                                                                    <b class="teal-text darken-2">
-                                                                        Extensión del Infocenter:
-                                                                    </b>
-                                                                     ` + (respuesta.data.user.infocenter.extension != null ? respuesta.data.user.infocenter.extension : 'No registra') + `
-                                                                    
-                                                                </span>
-                                                                                                                                               
-                                                            </li>
-                                                           
-                                                        </ul>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 </div>`);
+    
+});
+
+$('#download_users').click(function(){
+    let filter_role = $('#filter_rol').val();
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_state = $('#filter_state').val();
+    let filter_year = $('#filter_year').val();
+    var query = {
+        filter_nodo: filter_nodo,
+        filter_role: filter_role,
+        filter_state: filter_state,
+        filter_year: filter_year,
     }
-    if (respuesta.data.user.talento) {
-        let entidadTalento = respuesta.data.user.talento.entidad.nombre ? respuesta.data.user.talento.entidad.nombre : 'NO REGISTRA';
-        let universidadTalento = respuesta.data.user.talento.universidad ? respuesta.data.user.talento.universidad : 'NO REGISTRA';
-        let perfil = respuesta.data.user.talento.perfil.nombre == 'Aprendiz SENA sin apoyo de sostenimiento' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Aprendiz SENA con apoyo de sostenimiento' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Egresado SENA' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Funcionario empresa púbilca' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Estudiante Universitario de Pregrado' ? respuesta.data.user.talento.universidad ? respuesta.data.user.talento.universidad : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Estudiante Universitario de Postgrado' ? respuesta.data.user.talento.universidad ? respuesta.data.user.talento.universidad : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Funcionario microempresa' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Funcionario mediana empresa' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Funcionario grande empresa' ? respuesta.data.user.talento.empresa ? respuesta.data.user.talento.empresa : 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Emprendedor independiente' ? 'NO REGISTRA' : respuesta.data.user.talento.perfil.nombre == 'Investigador' ? entidadTalento : respuesta.data.user.talento.perfil.nombre == 'Otro' ? respuesta.data.user.talento.otro_tipo_talento ? respuesta.data.user.talento.otro_tipo_talento : 'NO REGISTRA' : 'NO REGISTRA'
-        $(".titulo_users").append(`<div class="row">
-                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                    
-                                <div class="col s12 m12 l12">
-                                    
-                                    <div class="mailbox-view">
-                                        
-                                        <div class="mailbox-text">
-                                            
-                                            <div class="right">
-                                                <small>
-                                                    Información Talento
-                                                </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <div class="row">
-                                                    <div class="col s12 m12 l12">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <div class="row">
-                                                                    <div class="col s12 m6 l6">
-                                                                        <span class="title">
-                                                                            <b class="teal-text darken-2">
-                                                                                Perfil
-                                                                            </b>
-                                                                            <br>                                                                                        
-                                                                        </span>
-                                                                        <p>
-                                                                        ` + (respuesta.data.user.talento.perfil.nombre != null ? respuesta.data.user.talento.perfil.nombre : null) + `
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="col s12 m6 l6">
-                                                                        <span class="title">
-                                                                            <b class="teal-text darken-2">
-                                                                                Entidad asociada
-                                                                            </b>
-                                                                        </span>
-                                                                        <p>
-                                                                         ` + perfil + `
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                                                                                            
-                                                            </li>  
-                                                        </ul>
-                                                    </div>
-                                                    
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 </div>`);
+
+    var url = "/usuario/export?" + $.param(query)
+    window.location = url;
+});
+
+$('#download_talentos').click(function(){
+    let filter_role = $('#filter_rol').val();
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_state = $('#filter_state').val();
+    let filter_year = $('#filter_year').val();
+    var query = {
+        filter_nodo: filter_nodo,
+        filter_role: filter_role,
+        filter_state: filter_state,
+        filter_year: filter_year,
     }
-    if (respuesta.data.user.ingreso) {
-        $(".titulo_users").append(`<div class="row">
-                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                    
-                                <div class="col s12 m12 l12">
-                                    
-                                    <div class="mailbox-view">
-                                        
-                                        <div class="mailbox-text">
-                                            
-                                            <div class="right">
-                                                <small>
-                                                    Información Ingreso
-                                                </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <div class="row">
-                                                    <div class="col s12 m6 l6 offset-l3 m-3">
-                                                        <ul class="collection">
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    assignment_ind
-                                                                </i>
-                                                                <span class="title">
-                                                                    Nodo
-                                                                </span>
-                                                                <p>
-                                                                     ` + (respuesta.data.user.ingreso.nodo.entidad.nombre != null ? 'Tecnoparque nodo' + respuesta.data.user.ingreso.nodo.entidad.nombre : 'No registra') + `
-                                                                    <br>
-                                                                        <small>
-                                                                            <b>Dirección:</b>
-                                                                            ` + (respuesta.data.user.ingreso.nodo.direccion != null ? respuesta.data.user.ingreso.nodo.direccion : 'No registra') + `
-                                                                        </small> 
-                                                                    <br>
-                                                                </p>    
-                                                            </li>
-                                                           
-                                                        </ul>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 </div>`);
-    }
-    $('.detalleUsers').openModal();
-}
+
+    var url = "/usuario/export-talentos?" + $.param(query)
+    window.location = url;
+});
+
+
+
 $(document).on('submit', 'form#formEditProfile', function (event) {
     // $('button[type="submit"]').prop("disabled", true);
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -4376,20 +2593,19 @@ var roleUserSession = {
         let nameRole = $(role).val();
         let nombre = $("#change-role option:selected").val();
         $.ajax({
-        dataType:'json',
-        type:'POST',
-        data: {
-        	'role': nombre,
-        	'_token'  : $('meta[name="csrf-token"]').attr('content'),
-        },
-        url:'/cambiar-role'
-      }).done(function(response){
+            dataType:'json',
+            type:'POST',
+            data: {
+        	    'role': nombre,
+        	    '_token'  : $('meta[name="csrf-token"]').attr('content'),
+            },
+            url:'/cambiar-role'
+        }).done(function(response){
         	if (response.role != null) {
         		location.href= response.url;
         	}else{
         		
         	}
-        	
       }); 
    }
 };

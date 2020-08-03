@@ -23,9 +23,7 @@ return [
         ['name' => SectoresTableSeeder::class, 'callable' => true],
         ['name' => ProductosTableSeeder::class, 'callable' => true],
         ['name' => PresentacionesTableSeeder::class, 'callable' => true],
-        ['name' => PerfilesTableSeeder::class, 'callable' => true],
         ['name' => OcupacionesTableSeeder::class, 'callable' => true],
-
         ['name' => LineasTecnologicasTableSeeder::class, 'callable' => true],
 
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],

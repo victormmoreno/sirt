@@ -7,7 +7,6 @@ use Alert;
 
 use App\Http\Requests\IdeaFormRequest;
 use App\Models\{EstadoIdea, Idea, Entidad};
-use App\Repositories\Repository\ConfiguracionRepository\ServidorVideoRepository;
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -24,18 +23,18 @@ class IdeaController extends Controller
     }
 
     /*========================================================================================================
-  =            metodo para mostrar el registro de ideas en la pagina principal de la aplicacion            =
-  ========================================================================================================*/
+    =            metodo para mostrar el registro de ideas en la pagina principal de la aplicacion            =
+    ========================================================================================================*/
 
     /**
      * Display a create of the resource.
      * @author devjul
      */
-    public function create(ServidorVideoRepository $servidorVideoRepository)
+    public function create()
     {
         $nodos = $this->ideaRepository->getSelectNodo();
-        $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
-        return view('ideas.create', ['nodos' => $nodos, 'servidorVideo' => $servidorVideo]);
+
+        return view('ideas.create', ['nodos' => $nodos,]);
     }
 
     /**
@@ -149,13 +148,12 @@ class IdeaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(ServidorVideoRepository $servidorVideoRepository, $id)
+    public function edit($id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
         $nodos = $this->ideaRepository->getSelectNodo();
-        $servidorVideo = $servidorVideoRepository->getAllServidorVideo();
-        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos, 'servidorVideo' => $servidorVideo]);
+        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos]);
     }
 
     /**

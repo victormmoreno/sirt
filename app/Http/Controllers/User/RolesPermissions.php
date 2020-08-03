@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Repository\UserRepository\UserRepository;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class RolesPermissions extends Controller
@@ -12,11 +10,11 @@ class RolesPermissions extends Controller
 
     public $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->userRepository = $userRepository;
     }
+
 
     public static function changeRoleSession(Request $request)
     {
@@ -30,7 +28,6 @@ class RolesPermissions extends Controller
                 session()->put('login_role', $request->get('role'));
                 $value = session()->get('login_role');
             }
-
         } else {
             $value = session()->get('login_role');
         }

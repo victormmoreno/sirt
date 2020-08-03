@@ -41,14 +41,14 @@
                                 </center>
                                 <div class="divider">
                                 </div>
-                                <div class="col s12 m12 l12">                                
+                                <div class="col s12 m12 l12">
                                     <div class="mailbox-view">
                                         <div class="mailbox-view-header">
                                             <div class="center">
                                                 <div class="center">
                                                     <i class="Small material-icons prefix green-complement-text">
                                                         supervised_user_circle
-                                                    </i>               
+                                                    </i>
                                                 </div>
                                                 <div class="center">
                                                     <span class="mailbox-title green-complement-text">Información Básica</span>
@@ -56,10 +56,10 @@
                                             </div>
                                         </div>
                                         <form id="formRegisterUser" action="{{ route('usuario.usuarios.store')}}" method="POST" onsubmit="return checkSubmit()">
-                                            @include('users.administrador.form2', [
+                                            @include('users.form', [
                                                 'btnText' => 'Guardar',
                                             ])
-                                            
+
                                         </form>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@ $(document).ready(function() {
     // @endif
 
 });
-    
+
 
 
 
@@ -106,11 +106,11 @@ var roles = {
               @else
                 $("#txtnododinamizador").val();
               @endif
-              $("#txtnododinamizador").material_select(); 
+              $("#txtnododinamizador").material_select();
         }
 
         if ($('#gestor').css('display') === 'block') {
-            
+
             @if($errors->any())
                 $('#txtnodogestor').val("{{old('txtnodogestor')}}");
                 $('#txtlinea').val("{{old('txtlinea')}}");
@@ -120,7 +120,7 @@ var roles = {
                 $("#txtlinea").val();
                 $("#txthonorario").val();
             @endif
-            
+
             $("#txtnodogestor").material_select();
             $("#txtlinea").material_select();
 
@@ -132,7 +132,7 @@ var roles = {
             @if($errors->any())
                 $('#txtnodoinfocenter').val("{{old('txtnodoinfocenter')}}");
                 $('#txtextension').val("{{old('txtextension')}}");
-            @else 
+            @else
                 $("#txtnodoinfocenter").val();
                 $("#txtextension").val();
             @endif
@@ -147,7 +147,7 @@ var roles = {
               @else
                 $("#txtnodoingreso").val();
               @endif
-              $("#txtnodoingreso").material_select(); 
+              $("#txtnodoingreso").material_select();
         }
 
         if ($('#talento').css('display') === 'block') {
@@ -157,17 +157,17 @@ var roles = {
             $("#txtregional").material_select();
             $("#txtcentroformacion").val();
             $("#txtcentroformacion").material_select();
-            
-            $("#txtuniversidad").val(); 
-            $("#txtempresa").val(); 
-            $("#txtotrotipotalento").val(); 
+
+            $("#txtuniversidad").val();
+            $("#txtempresa").val();
+            $("#txtotrotipotalento").val();
             $("#txtgrupoinvestigacion").val();
 
             $('.aprendizSena').hide();
             $('.estudianteUniversitario').hide();
             $('#funcionarioEmpresa').hide();
             $('#otroTipoTalento').hide();
-            $('.investigador').hide(); 
+            $('.investigador').hide();
         }
 
         $('#dinamizador').hide();
@@ -176,11 +176,11 @@ var roles = {
         $('#talento').hide();
         $('#ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
-        
+
             if ($(this).val() == '{{App\User::IsDinamizador()}}') {
-                
+
                 $('#dinamizador').show();
-   
+
             }else if($(this).val() == '{{App\User::IsGestor()}}'){
                 $('#gestor').show();
             }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
@@ -192,8 +192,8 @@ var roles = {
             }
 
         });
-       
-        
+
+
     }
 };
 
@@ -210,7 +210,7 @@ var linea = {
         if (response.lineasForNodo.lineas == '') {
             $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
         }else{
-            
+
             $('#txtlinea').append('<option value="">Seleccione la linea</option>');
 
             $.each(response.lineasForNodo.lineas, function(i, e) {
@@ -220,9 +220,9 @@ var linea = {
               $('#txtlinea').val("{{old('txtlinea')}}");
             @endif
         }
-        
-        
-        
+
+
+
         $('#txtlinea').material_select();
       });
     },
