@@ -33,95 +33,88 @@
         <th>Información Talento</th>
         <th>Roles</th>
         <th>Acceso sistema</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      @forelse($users as $user)
+        @forelse($users as $user)
         <tr>
             <td>
-                {{isset($user->tipodocumento)? $user->tipodocumento->nombre : 'No registra'}}
+                {{$user->present()->userTipoDocuento()}}
             </td>
             <td>
-                {{!empty($user->ciudadexpedicion) ? "{$user->ciudadexpedicion->nombre} ({$user->ciudadexpedicion->departamento->nombre})" : 'No registra'}}
+                {{$user->present()->userLugarExpedicionDocumento()}}
             </td>
             <td>
-                {{isset($user->documento) ? $user->documento : 'No registra'}}
+                {{$user->present()->userLugarExpedicionDocumento()}}
             </td>
             <td>
-                {{isset($user->nombres) && isset($user->apellidos)   ? "{$user->nombres} {$user->apellidos}": 'No Registra'}}
+                {{$user->present()->userDocumento()}}
             </td>
             <td>
-                {{isset($user->fechanacimiento) ?  $user->fechanacimiento->isoFormat('LL'): 'No registra'}} 
+                {{$user->present()->userFechaNacimiento()}} 
             </td>
             <td>
-                {{isset($user->email)? $user->email: 'No registra'}}
+                {{$user->present()->userEmail()}}
             </td>
             <td>
                 {{isset($user->celular) ? $user->celular : isset($user->telefono) ? $user->telefono : 'No registra'}}
             </td>
             <td>
-                {{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}
+                {{$user->present()->userGenero()}}
             </td>
             <td>
-                {{!empty($user->grupoSanguineo) ? $user->grupoSanguineo->nombre : 'No registra'}}
+                {{$user->present()->userGrupoSanguineo()}}
             </td>
             <td>
-                {{!empty($user->estrato) ? $user->estrato : 'No registra'}}
+                {{$user->present()->userEstrato()}}
             </td>
             <td>
-                {{!empty($user->direccion) ? $user->direccion : 'No registra'}}
+                {{$user->present()->userDireccion()}}
             </td>
             <td>
-                {{!empty($user->ciudad) ? "{$user->ciudad->nombre} ({$user->ciudad->departamento->nombre})" : 'No registra'}}
+                {{$user->present()->userLugarResidencia()}}
             </td>
             <td>
-                {{!empty($user->etnia) ? $user->etnia->nombre : 'No registra'}}
+                {{$user->present()->userEtnia()}}
             </td>
             <td>
-                {{isset($user->grado_discapacidad)  && $user->grado_discapacidad == 1 ? 'SI' : 'No '}}
+                {{$user->present()->userGradoDiscapacidad()}}
             </td>
             <td>
-                {{isset($user->descripcion_grado_discapacidad) && $user->grado_discapacidad == 1 ? $user->descripcion_grado_discapacidad : 'No registra'}}
+                {{$user->present()->userDescripcionGradoDiscapacidad()}}
             </td>
             <td>
-                {{isset($user->eps) ? $user->eps->nombre : 'No registra'}}
+                {{$user->present()->userEps()}}
             </td>
             <td>
-                {{!empty($user->otra_eps) ? $user->otra_eps : 'No Aplica'}}
+                {{$user->present()->userEps()}}
             </td>
             <td>
-                {{isset($user->gradoEscolaridad) ? $user->gradoEscolaridad->nombre : 'No registra'}}
+                {{$user->present()->userOtraEps()}}
             </td>
             <td>
-                {{!empty($user->institucion) ? $user->institucion : 'No registra'}}
+                {{$user->present()->userInstitucion()}}
             </td>
             <td>
-                {{!empty($user->titulo_obtenido) ? $user->titulo_obtenido : 'No registra'}}
+                {{$user->present()->userTituloObtenido()}}
             </td>
             <td>
-                {{!empty($user->fecha_terminacion) ? $user->fecha_terminacion->isoFormat('LL') : 'No registra'}}
+                {{$user->present()->userFechaTerminacion()}}
             </td>
             <td>
-                {{$user->getOcupacionesNames()->implode(', ') ? : 'No registra'}}
+                {{$user->present()->userOcupacionesNames()}}
             </td>
             <td>
-                {{isset($user->talento->tipotalento)? $user->talento->tipotalento->nombre : 'No registra'}}
+                {{$user->present()->userNombreTipoTalento()}}
             </td>
             <td>
-                {{isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO || $user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) && isset($user->talento->entidad->centro) ? "{$user->talento->entidad->nombre} - {$user->talento->programa_formacion}" :
-                    isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_EGRESADO_SENA) && isset($user->talento->tipoformacion) ? "{$user->talento->entidad->nombre} - {$user->talento->tipoformacion} - {$user->talento->programa_formacion}" :
-                    isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) && isset($user->talento->tipoestudio)  ? "{$user->talento->tipoestudio} - {$user->talento->universidad} - {$user->talento->carrera_universitaria}" :
-                    isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_EMPRESA) && isset($user->talento->empresa)  ? "{$user->talento->empresa}" :
-                    isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_SENA) && isset($user->talento->entidad->centro) ? " {$user->talento->entidad->nombre} - {$user->talento->dependencia}" :
-                    isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_INSTRUCTOR_SENA) && !empty($user->talento->entidad->centro) ? "{$user->talento->entidad->nombre}" :
-                    isset($user->talento->tipotalento) && ($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_EMPRENDEDOR || $user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_PROPIETARIO_EMPRESA) ? 'No Aplica':
-                'No registra'}}
+                {{$user->present()->userTipoTalento()}}
             </td>
             <td>
-                {{ $user->getRoleNames()->implode(', ')}}
+                {{ $user->present()->userRolesNames()}}
             </td>
             <td>
-                {{ $user->estado == App\User::IsActive() && $user->deleted_at == null ? 'Habilitado' : 'Inhabilitado'}}
+                {{ $user->present()->userAcceso()}}
             </td>
         </tr>
     @empty

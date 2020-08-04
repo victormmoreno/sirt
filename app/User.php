@@ -26,6 +26,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Presenters\UserPresenter;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -426,5 +427,11 @@ class User extends Authenticatable implements JWTSubject
 
 
         return $query;
+    }
+
+
+    public function present()
+    {
+        return new UserPresenter($this);
     }
 }

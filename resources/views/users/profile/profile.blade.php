@@ -452,12 +452,12 @@
                                                                                 Tipo {{App\User::IsTalento()}}:
                                                                             </b>
                                                                         </span>
-                                                                        <p>{{$user->talento->perfil->nombre ? : 'Información no disponible'}}</p>
+                                                                        <p>{{$user->present()->userNombreTipoTalento()}}</p>
                                                                         
                                                                     </div>
                                                                     <div class="col s12 m6 l6">
                                                                         
-                                                                
+                                                                        <p>{{$user->present()->userTipoTalento()}}</p>
                                                                     </div>
                                                                 </div>
                                                             </li>
