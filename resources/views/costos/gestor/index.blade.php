@@ -101,6 +101,9 @@
 @endsection
 @push('script')
   <script>
+    $( document ).ready(function() {
+      consultarProyectosDelGestor_costos('{{$yearNow}}');
+    });
     function consultarProyectosDelGestor_costos (value) {
       let anho;
       anho = value;

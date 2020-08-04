@@ -5,8 +5,6 @@ namespace App\Listeners\Comite;
 use App\Mail\Comite\SendEmailIdeaComite;
 use App\Events\Comite\ComiteWasRegistered;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class IdeaWasRegisteredInComite
 {

@@ -346,12 +346,6 @@ class UserRepository
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
 
-                // Honorario::create([
-                //     'gestor_id' => $gestor->id,
-                //     'anio' => Carbon::now()->isoFormat('YYYY'),
-                //     'valor' => $request->input('txthonorario')
-                // ]);
-
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
             if ($this->existRoleInArray($request, User::IsInfocenter())) {
@@ -652,14 +646,6 @@ class UserRepository
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
 
-                // $honorario = Honorario::where('gestor_id', $gestor->id)->where('anio', Carbon::now()->isoFormat('YYYY'))->first();
-                // if (isset($honorario)) {
-                //     $honorario->update([
-                //         'gestor_id' => $gestor->id,
-                //         'anio' => Carbon::now()->isoFormat('YYYY'),
-                //         'valor' => $request->input('txthonorario')
-                //     ]);
-                // }
             } else if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
                 $gestor = Gestor::find($userUpdated->gestor->id)->update([
                     "nodo_id"             => $request->input('txtnodogestor'),
@@ -667,14 +653,6 @@ class UserRepository
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
 
-                // $honorario = Honorario::where('gestor_id', $gestor->id)->where('anio', Carbon::now()->isoFormat('YYYY'))->first();
-                // if (isset($honorario)) {
-                //     $honorario->update([
-                //         'gestor_id' => $gestor->id,
-                //         'anio' => Carbon::now()->isoFormat('YYYY'),
-                //         'valor' => $request->input('txthonorario')
-                //     ]);
-                // }
             }
 
             //update infocenter

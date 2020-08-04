@@ -22,6 +22,13 @@
                 @include('proyectos.detalle_fase_planeacion')
                 <div class="divider"></div>
                 <center>
+                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                  <input type="hidden" type="text" name="decision" id="decision">
+                  <button type="submit" onclick="preguntaPlaneacionRechazar(event)" {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}}
+                    class="waves-effect deep-orange darken-1 btn center-aling">
+                    <i class="material-icons right">close</i>
+                    {{$proyecto->fase->nombre == 'Planeación' ? 'No aprobar la fase de Planeación' : 'El Proyecto ya no se encuentra en fase de Planeación'}}
+                  </button>
                   <button type="submit" onclick="preguntaPlaneacion(event)" value="send" {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}} class="waves-effect cyan darken-1 btn center-aling">
                       <i class="material-icons right">done</i>
                       {{$proyecto->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'El Proyecto no se encuentra en fase de Planeación'}}
@@ -59,10 +66,40 @@
     confirmButtonText: 'Sí!'
   }).then((result) => {
     if (result.value) {
+      $('#decision').val('aceptado');
       document.frmPlaneacionDinamizador.submit();
     }
   })
 }
+
+function preguntaPlaneacionRechazar(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de no aprobar la fase de planeación de este proyecto?',
+    input: 'text',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Las observaciones deben ser obligatorias!'
+      } else {
+        $('#decision').val('rechazado');
+        $('#motivosNoAprueba').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmPlaneacionDinamizador.submit();
+      }
+    })
+  }
 
   function changeToPlaneacion() {
     window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
