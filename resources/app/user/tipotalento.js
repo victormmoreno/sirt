@@ -5,9 +5,9 @@ $(document).ready(function() {
 });
 
 var tipoTalento = {
-    getSelectTipoTalento:function (idperfil) {
-        let valor = $(idperfil).val();
-        let nombrePerfil = $("#txttipotalento option:selected").text();
+    getSelectTipoTalento:function (tipotal) {
+        let valor = $(tipotal).val();
+        let nombreTipoTalento = $("#txttipotalento option:selected").text();
         
         if(valor == 1 || valor == 2){
 

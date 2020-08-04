@@ -66,8 +66,6 @@ class UserPolicy
         if (auth()->user()->id == $this->user->id) {
             return false;
         } elseif ($this->user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-
-
             return false;
         } elseif ($this->user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter(), User::IsIngreso()]) && session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
             return false;
@@ -211,100 +209,6 @@ class UserPolicy
         return false;
     }
 
-    public function indexAdministrador(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
-    }
-
-    public function exportAdminUser(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
-    }
-
-
-
-
-    public function indexDinamizador(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
-    }
-
-    public function indexGestor(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-    }
-
-    public function indexInfocenter(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-    }
-
-    public function indexIngreso(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter()) && session()->get('login_role') == User::IsInfocenter();
-    }
-
-    public function exportUsersGestor(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsGestor())
-            && session()->get('login_role') == User::IsGestor()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-    }
-
-    public function exportUsersInfocenter(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsGestor())
-            && session()->get('login_role') == User::IsGestor()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-    }
-
-    public function exportUsersTalento(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsGestor())
-            && session()->get('login_role') == User::IsGestor()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-    }
-
-    public function exportUsersIngreso(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsGestor())
-            && session()->get('login_role') == User::IsGestor()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-    }
-
     public function acceso()
     {
         if (session()->get('login_role') == User::IsInfocenter() || auth()->user()->id == $this->user->id || $this->authUser->hasAnyRole([User::IsInfocenter(), User::IsTalento(), User::IsIngreso()])) {
@@ -323,5 +227,33 @@ class UserPolicy
     {
 
         return (bool) $this->authUser->id == $this->user->id && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento());
+    }
+
+    /**
+     * Determine whether the user can view the your talentos
+     * @author julian londono
+     * @return boolean
+     */
+    public function myTalentos()
+    {
+        return (bool) session()->get('login_role') == User::IsGestor();
+    }
+
+    /**
+     * Determine whether the user can export the your talentos
+     * @author julian londono
+     * @return boolean
+     */
+    public function export(User $user)
+    {
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
+            && session()->get('login_role') == User::IsAdministrador()
+            || collect($user->getRoleNames())->contains(User::IsDinamizador())
+            && session()->get('login_role') == User::IsDinamizador()
+            || collect($user->getRoleNames())->contains(User::IsGestor())
+            && session()->get('login_role') == User::IsGestor()
+            || collect($user->getRoleNames())->contains(User::IsInfocenter())
+            && session()->get('login_role') == User::IsInfocenter();
+        return (bool) session()->get('login_role') == User::IsGestor();
     }
 }

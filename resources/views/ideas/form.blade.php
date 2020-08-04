@@ -224,24 +224,11 @@
         </div>
         <div class="row container">
             <div class="input-field col s12 m12 l12 ">
-                <div class="input-field col s12 m4 l4">
-                    <select class="" id="txtservidorvideo" name="txtservidorvideo"  style="width: 100%" tabindex="-1">
-                        <option value="">Seleccione Servidor de video</option>
-                        @foreach($servidorVideo as $id => $domain)
-                                <option value="{{$id}}" {{old('txtservidorvideo') ==  $id ? 'selected':''}}>{{$domain}}</option>
-                        @endforeach
-                    </select>
-                    @error('txtservidorvideo')
-                    <label id="txtservidorvideo-error" class="error" for="txtservidorvideo">{{ $message }}</label>
-                    @enderror
-                </div>
-                <div class="input-field col s12 m8 l8">
                     <input placeholder="Ingresa el link del video" class="validate" id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{ old('txtlinkvideo') }}" >
                     <small>la dirección de debe ser algo similar: <b>https://www.youtube.com/watch?v=J9LSfkVF2K4</b></small><br>
                     @error('txtlinkvideo')
                         <label id="txtlinkvideo-error" class="error" for="txtlinkvideo">{{ $message }}</label>
                     @enderror
-                </div>
                 <label for="txtlinkvideo" class="active">
                     Si tienes un vídeo donde expliques por que tu idea es innovadora, quien es tu equipo de trabajo y por que requiere el apoyo de la Red Tecnoparque SENA.
                 </label>

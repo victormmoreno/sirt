@@ -95,7 +95,7 @@
                         </div>
                     </div>
 
-                
+
                   <table id="ideas_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                     <thead>
                       <tr>

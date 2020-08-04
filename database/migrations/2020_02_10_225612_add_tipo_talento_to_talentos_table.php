@@ -15,7 +15,7 @@ class AddTipoTalentoToTalentosTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->unsignedInteger('tipo_talento_id')->nullable()->after('perfil_id');
+            $table->unsignedInteger('tipo_talento_id')->nullable()->after('user_id');
             $table->index(["tipo_talento_id"], 'fk_tipo_talento_id_talentos_1_idx');
 
             $table->foreign('tipo_talento_id', 'fk_tipo_talento_id_talentos_1_idx')

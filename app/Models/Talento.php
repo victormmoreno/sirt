@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Perfil;
+
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
@@ -17,7 +17,6 @@ class Talento extends Model
      */
     protected $fillable = [
         'user_id',
-        'perfil_id',
         'tipo_talento_id',
         'entidad_id',
         'universidad',
@@ -57,11 +56,6 @@ class Talento extends Model
     public function tipoestudio()
     {
         return $this->belongsTo(TipoEstudio::class, 'tipo_estudio_id', 'id');
-    }
-
-    public function perfil()
-    {
-        return $this->belongsTo(Perfil::class, 'perfil_id', 'id');
     }
 
     public function tipotalento()

@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
                 'ocupaciones',
                 'ocupaciones_users',
                 'password_resets',
-                'perfiles',
+                
 
                 'presentaciones',
                 'presentaciones',
@@ -185,7 +185,6 @@ class DatabaseSeeder extends Seeder
                 'ocupaciones',
                 'ocupaciones_users',
                 'password_resets',
-                'perfiles',
                 'permissions',
                 'presentaciones',
                 'proyectos',

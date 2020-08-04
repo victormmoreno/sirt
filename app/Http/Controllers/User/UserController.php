@@ -5,17 +5,15 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormRequest;
 use App\Http\Traits\UserTrait\RegistersUsers;
-use App\Models\{Nodo, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
+use App\Models\{Nodo, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
 use App\Repositories\Datatables\UserDatatables;
-use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use DataTables;
+use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
-use App\Exports\User\Administrador\UserAllExport;
+use App\Exports\User\UserExport;
+
 
 
 class UserController extends Controller
@@ -42,33 +40,67 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, UserDatatables $usersDatatables)
     {
         $this->authorize('index', User::class);
 
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $nodo = auth()->user()->infocenter->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
 
+        if (request()->ajax()) {
+            $users = [];
+            if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') ||  $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
+
+                $users = User::with(['tipodocumento'])
+                    ->role($request->filter_role)
+                    ->nodoUser($request->filter_role, $nodo)
+                    ->stateDeletedAt($request->filter_state)
+                    ->yearActividad($request->filter_role, $request->filter_year, $nodo)
+                    ->orderBy('users.created_at', 'desc')
+                    ->get();
+            }
+
+            return $usersDatatables->datatableUsers($users);
+        }
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
+                $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
                 return view('users.administrador.index', [
                     'roles' => $this->userRepository->getAllRoles(),
+                    'nodos' => $nodos,
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = ['Gestor', 'Infocenter', 'Ingreso', 'Talento'];
-                return view('users.administrador.index', [
-
+                $role = [User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+                return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
 
             case User::IsGestor():
-
-                return view('users.gestor.talento.index', ['view' => 'activos']);
+                $role = [User::IsTalento()];
+                return view('users.gestor.index', [
+                    'roles' => $this->userRepository->getRoleWhereInRole($role),
+                ]);
                 break;
             case User::IsInfocenter():
                 $role = [User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
-                return view('users.administrador.index', [
-
+                return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
@@ -77,53 +109,6 @@ class UserController extends Controller
                 break;
         }
     }
-    //usuarios sin proyectos
-    public function notActvity()
-    {
-        // $this->authorize('index', User::class);
-
-        // $user =  DB::table('users')
-        //     ->join('talentos', 'talentos.user_id', '=', 'users.id')
-        //     ->whereNotExists(function ($query) {
-        //         $query->select('articulacion_proyecto_talento.talento_id')
-        //             ->from('articulacion_proyecto_talento')
-        //             ->whereRaw('articulacion_proyecto_talento.talento_id = talentos.id');
-        //     })
-        //     ->get();
-
-        // return Datatables::of($user)
-
-        //     ->make(true);
-
-        // return $user;
-
-        // return DataTables::eloquent($user)
-        //     ->skipPaging()
-        //     ->toJson();
-
-        // switch (session()->get('login_role')) {
-        //         // case User::IsAdministrador():
-
-        //         // case User::IsDinamizador():
-
-
-        //     case User::IsGestor():
-        //         $auth = auth()->user()->gestor->id;
-        //         $nodo = auth()->user()->gestor->nodo_id;
-
-
-        //         // $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->groupBy('users.id')
-        //         //     ->get();
-        //         // return view('users.gestor.talento.notActivity', ['view' => 'activos']);
-        //         break;
-        //     case User::IsInfocenter():
-
-        //     default:
-        //         abort('404');
-        //         break;
-        // }
-    }
-
 
 
     /*===============================================================================
@@ -143,151 +128,6 @@ class UserController extends Controller
 
     /*=====  End of metodo API para consultar las ciudades por departamento  ======*/
 
-    /*============================================================================
-    =            metodo encargado de hacer consulta y retonar la dataables          =
-    ============================================================================*/
-
-    public function getDatatablesUsersTalentosByDatatables(Request $request, UserDatatables $usersDatatables, $anio)
-    {
-        if (request()->ajax()) {
-
-            if (session()->get('login_role') == User::IsGestor()) {
-                $auth = auth()->user()->gestor->id;
-                $nodo = auth()->user()->gestor->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            } else if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
-                    ->get();
-                return $usersDatatables->datatableUsers($request, $users);
-            } else if (session()->get('login_role') == User::IsInfocenter()) {
-                $nodo = auth()->user()->infocenter->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
-                    ->get();
-                return $usersDatatables->datatableUsers($request, $users);
-            }
-        }
-        abort('404');
-    }
-
-    public function getDatatablesUsersTalentosByDatatablesTrash(Request $request, UserDatatables $usersDatatables, $anio)
-    {
-        if (request()->ajax()) {
-
-            if (session()->get('login_role') == User::IsGestor()) {
-                $auth = auth()->user()->gestor->id;
-                $nodo = auth()->user()->gestor->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth, $anio)
-                    ->onlyTrashed()
-                    ->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            } else if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
-                    ->onlyTrashed()
-                    ->groupBy('users.id')
-                    ->get();
-                return $usersDatatables->datatableUsers($request, $users);
-            } else if (session()->get('login_role') == User::IsInfocenter()) {
-                $nodo = auth()->user()->infocenter->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
-                    ->onlyTrashed()
-                    ->groupBy('users.id')
-                    ->get();
-                return $usersDatatables->datatableUsers($request, $users);
-            }
-        }
-        abort('404');
-    }
-
-    public function getDatatablesUsersTalentosByGestorDatatables(Request $request, UserDatatables $usersDatatables, $gestor, $anio)
-    {
-        if (request()->ajax()) {
-
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            } elseif (session()->get('login_role') == User::IsInfocenter()) {
-                $nodo = auth()->user()->infocenter->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            }
-        }
-        abort('404');
-    }
-    public function getDatatablesUsersTalentosByGestorDatatablesTrash(Request $request, UserDatatables $usersDatatables, $gestor, $anio)
-    {
-        if (request()->ajax()) {
-
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)
-                    ->onlyTrashed()
-                    ->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            } elseif (session()->get('login_role') == User::IsInfocenter()) {
-                $nodo = auth()->user()->infocenter->nodo_id;
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $gestor, $anio)
-                    ->onlyTrashed()
-                    ->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            }
-        }
-        abort('404');
-    }
-
-
-    public function getDatatablesUsersTalentosByNodoDatatables(Request $request, UserDatatables $usersDatatables, $nodo, $anio)
-    {
-        if (request()->ajax()) {
-
-            if (session()->get('login_role') == User::IsAdministrador()) {
-
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            }
-        }
-        abort('404');
-    }
-
-    public function getDatatablesUsersTalentosByNodoDatatablesTrash(Request $request, UserDatatables $usersDatatables, $nodo, $anio)
-    {
-        if (request()->ajax()) {
-
-            if (session()->get('login_role') == User::IsAdministrador()) {
-
-                $users = $this->userRepository->getUsersTalentosByProject($nodo, $auth = null, $anio)
-                    ->onlyTrashed()
-                    ->groupBy('users.id')
-                    ->get();
-
-                return $usersDatatables->datatableUsers($request, $users);
-            }
-        }
-        abort('404');
-    }
-
-
-
-    /*============================================================================
-    =            metodo para mostrar todos los usuarios en datatables            =
-    ============================================================================*/
 
     /**
      * Display the specified resource.
@@ -297,13 +137,7 @@ class UserController extends Controller
      */
     public function show($documento)
     {
-
-        $user = User::where('documento', $documento)->first();
-
-        if ($user == null) {
-            $user = User::onlyTrashed()->where('documento', $documento)->firstOrFail();
-        }
-
+        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
         return view('users.show', ['user' => $user]);
     }
 
@@ -315,11 +149,8 @@ class UserController extends Controller
      */
     public function edit($documento)
     {
-        $user = User::where('documento', $documento)->first();
+        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
 
-        if ($user == null) {
-            $user = User::onlyTrashed()->where('documento', $documento)->firstOrFail();
-        }
         $this->authorize('edit', $user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
@@ -336,7 +167,6 @@ class UserController extends Controller
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
                     'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $this->userRepository->getAllNodo(),
-                    'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                     'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
                     'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
@@ -363,7 +193,6 @@ class UserController extends Controller
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
                     'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $this->userRepository->getAllNodo(),
-                    'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                     'etnias' => Etnia::pluck('nombre', 'id'),
                     'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
@@ -391,7 +220,6 @@ class UserController extends Controller
                     'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
                     'roles'             => $this->userRepository->getAllRoles(),
                     'nodos'             => $this->userRepository->getAllNodo(),
-                    'perfiles'          => $this->userRepository->getAllPerfiles(),
                     'regionales'        => $this->userRepository->getAllRegionales(),
                     'etnias' => Etnia::pluck('nombre', 'id'),
                     'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
@@ -418,13 +246,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-
-        $user = User::find($id);
-
-        if ($user == null) {
-            $user = User::onlyTrashed()->find($id);
-        }
+        $user = User::withTrashed()->find($id);
 
         $this->authorize('update', $user);
 
@@ -481,11 +303,7 @@ class UserController extends Controller
                         'errors' => $validator->errors(),
                     ]);
                 }
-
-                $user = User::where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-                if ($user == null) {
-                    $user = User::onlyTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-                }
+                $user = User::withTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
             } else if ($request->input('txttype_search') == 2) {
                 $validator = Validator::make($request->all(), [
                     'txtsearch_user' => 'required|email',
@@ -497,13 +315,8 @@ class UserController extends Controller
                         'errors' => $validator->errors(),
                     ]);
                 }
-                $user = User::where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")
-                    ->first();
-                if ($user == null) {
-                    $user = User::onlyTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-                }
+                $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
             }
-
 
             if ($user == null) {
                 return response()->json([
@@ -526,7 +339,7 @@ class UserController extends Controller
 
     public function consultaremail(Request $request)
     {
-        $user = User::where('email', $request->txtemail)->first();
+        $user = User::withTrashed()->where('email', $request->txtemail)->first();
 
         if ($user != null) {
             return response()->json([
@@ -540,38 +353,9 @@ class UserController extends Controller
     }
 
 
-    public function study($document = null)
-    {
-        $user = $this->userRepository->findUserByDocument($document)->first();
-        if ($user != null) {
-            abort('404');
-        }
-
-        switch (session()->get('login_role')) {
-            case User::IsAdministrador():
-                break;
-            case User::IsGestor():
-                return view('users.estudios', [
-                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'documento' => $document,
-                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-                ]);
-
-                break;
-            default:
-                abort('404');
-                break;
-        }
-    }
-
     public function acceso($document)
     {
-        $user = User::where('documento', $document)->first();
-
-        if ($user == null) {
-            $user = User::onlyTrashed()->where('documento', $document)->firstOrFail();
-        }
-
+        $user = User::withTrashed()->where('documento', $document)->firstOrFail();
         $this->authorize('acceso', $user);
 
         return view('users.acceso', ['user' => $user]);
@@ -580,11 +364,9 @@ class UserController extends Controller
 
     public function updateAcceso(Request $request, $documento)
     {
-        $user = User::where('documento', $documento)->first();
+        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
 
-        if ($user == null) {
-            $user = User::onlyTrashed()->where('documento', $documento)->firstOrFail();
-        }
+        $this->authorize('acceso', $user);
 
         if ($request->get('txtestado') == 'on') {
             $user->update(['estado' => 0]);
@@ -621,104 +403,99 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * retorna excel con todos los usuarios
-     * @author devjul
-     */
-    public function exportAllUser($state = 1, $extension = 'xlsx')
+    public function export(Request $request, $extension = 'xlsx')
     {
-        $this->authorize('exportAdminUser', User::class);
-        if ($state == User::IsActive() || $state == User::IsInactive()) {
-            $user = $this->getData($state);
-            $this->setQuery($user);
-            if ($state == User::IsActive()) {
-                return (new UserAllExport($this->getQuery()))->download("usuarios-habilitados-redtecnoparque.{$extension}");
-            } else {
-                return (new UserAllExport($this->getQuery()))->download("usuarios-inhabilitados-redtecnoparque.{$extension}");
+        $this->authorize('export', User::class);
+
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $nodo = auth()->user()->infocenter->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+
+        $users = [];
+        if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
+            $users = User::with(['tipodocumento'])
+                ->role($request->filter_role)
+                ->nodoUser($request->filter_role, $nodo)
+                ->stateDeletedAt($request->filter_state)
+                ->yearActividad($request->filter_role, $request->filter_year, $nodo)
+                ->orderBy('users.created_at', 'desc')
+                ->get();
+        }
+
+        return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
+    }
+
+    public function myTalentos(Request $request, UserDatatables $usersDatatables)
+    {
+
+        $this->authorize('myTalentos', User::class);
+
+        if (request()->ajax()) {
+            $users = [];
+            if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') ||  $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
+                $users = User::with(['tipodocumento'])
+                    ->role(User::IsTalento())
+                    ->stateDeletedAt($request->filter_state)
+                    ->activitiesTalento(User::IsTalento(), $request->filter_year, auth()->user()->gestor->nodo_id)
+                    ->orderBy('users.created_at', 'desc')
+                    ->get();
             }
-        } else {
-            return abort('404');
+
+            return $usersDatatables->datatableUsers($users);
         }
+
+        return view('users.gestor.talentos', [
+            'roles' => $this->userRepository->getRoleWhereInRole([User::IsTalento()]),
+        ]);
     }
 
-    /**
-     * retorna consulta de todos los usuarios
-     * @return collection
-     * @author devjul
-     */
-    private function getData($state = null)
+    public function exportMyTalentos(Request $request, $extension = 'xlsx')
     {
-        $role = [User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+        $this->authorize('export', User::class);
 
-        $relations = [
-            'tipodocumento'                 => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'gradoescolaridad'              => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'gruposanguineo'                => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'eps'                           => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'ciudad'                        => function ($query) {
-                $query->select('id', 'nombre', 'departamento_id');
-            },
-            'ciudad.departamento'           => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'ciudadexpedicion'              => function ($query) {
-                $query->select('id', 'nombre', 'departamento_id');
-            },
-            'ciudadexpedicion.departamento' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'ocupaciones',
-            'roles',
-            'dinamizador.nodo.entidad' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'gestor.nodo.entidad' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-
-            'infocenter.nodo.entidad' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'ingreso.nodo.entidad' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-
-
-
-        ];
-        if ($state == null) {
-            return $this->userRepository->userInfoWithRelations($role, $relations)->get();
-        } elseif ($state == 1) {
-            return $this->userRepository->userInfoWithRelations($role, $relations)->where('estado', $state)->get();
-        } elseif ($state == 0) {
-            return $this->userRepository->userInfoWithRelations($role, $relations)->where('estado', $state)->onlyTrashed()->get();
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $nodo = auth()->user()->infocenter->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
         }
-    }
 
-    /**
-     * Asigna el valor de $query
-     * @author devjul
-     */
-    private function setQuery($query)
-    {
-        $this->query = $query;
-    }
+        $users = [];
+        if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
+            $users = User::with(['tipodocumento'])
+                ->role(User::IsTalento())
+                ->nodoUser(User::IsTalento(), $nodo)
+                ->stateDeletedAt($request->filter_state)
+                ->activitiesTalento(User::IsTalento(), $request->filter_year, $nodo)
+                ->orderBy('users.created_at', 'desc')
+                ->get();
+        }
 
-    /**
-     * Retorna el valor de $query
-     * @return object
-     * @author devjul
-     */
-    private function getQuery()
-    {
-        return $this->query;
+        return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
     }
 }

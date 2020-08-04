@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\{Centro, Empresa, Entidad, Talento, Perfil, TipoEstudio, TipoTalento, TipoFormacion};
+use App\Models\{Centro, Empresa, Entidad, Talento, TipoEstudio, TipoTalento, TipoFormacion};
 use Faker\Generator as Faker;
 
 $factory->define(Talento::class, function (Faker $faker) {
-    $perfil = Perfil::all()->random();
+
     $tipoTalento = TipoTalento::all()->random();
     $centro = Centro::all()->random()->id;
     $noAplica = Entidad::where('nombre', 'No Aplica')->first()->id;
@@ -14,7 +14,6 @@ $factory->define(Talento::class, function (Faker $faker) {
     $tipoEstudio = TipoEstudio::all()->random()->id;
 
     return [
-        'perfil_id' => $perfil = $perfil->id,
         'tipo_talento_id' => $tipoTalento = $tipoTalento->id,
         'entidad_id' => TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ? $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO ? $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_EGRESADO_SENA ?  $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_INSTRUCTOR_SENA ?  $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_PROPIETARIO_EMPRESA ?   $noAplica : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_EMPRENDEDOR ? $noAplica : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO ?  $noAplica :
             TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_FUNCIONARIO_EMPRESA ?  $noAplica : $noAplica,
