@@ -1,5 +1,5 @@
 $(document).on('submit', 'form#formEditUser', function (event) {
-    // $('button[type="submit"]').prop("disabled", true);
+    
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);

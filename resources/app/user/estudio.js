@@ -1,9 +1,8 @@
 $(document).ready(function() {
     $('#txtocupaciones').select2({
-      language: "es",
-      isMultiple: true
+        language: "es",
+        isMultiple: true
     });
-
     estudios.getOtraOcupacion();
 });
 
@@ -13,18 +12,11 @@ var estudios = {
         let id = $(idocupacion).val();
         let nombre = $("#txtocupaciones option:selected").text();
         let resultado = nombre.match(/[A-Z][a-z]+/g);
-        
-            
-            
-       
         $('#otraocupacion').hide();
         if (resultado != null) {
-          
-
             if (resultado.includes('Otra')) {
-
-            $('#otraocupacion').show();
-          }
+                $('#otraocupacion').show();
+            }
         }
-      }
+    }
 }

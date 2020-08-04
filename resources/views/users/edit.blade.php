@@ -12,12 +12,9 @@
                 <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                              <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                                  <i class="material-icons arrow-l">
-                                      arrow_back
-                                  </i>
-                              </a>
-                            Usuarios
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                <i class="material-icons arrow-l">arrow_back</i>
+                            </a>Usuarios
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
@@ -72,10 +69,9 @@
                                         </div>
                                         <form id="formEditUser" action="{{ route('usuario.usuarios.update',$user->id)}}" method="POST" onsubmit="return checkSubmit()">
                                             {!! method_field('PUT')!!}
-                                            @include('users.administrador.form2', [
+                                            @include('users.form', [
                                                 'btnText' => 'Modificar',
                                             ])
-
                                         </form>
                                     </div>
                                 </div>
@@ -84,7 +80,8 @@
                     </div>
                 </div>
             </div>
-        </main>
+        
+</main>
 
 
 @endsection
@@ -100,15 +97,15 @@
     @if(isset($user->grado_discapacidad))
     user.getGradoDiscapacidad('{{$user->grado_discapacidad}}');
     @endif
-    
+
     @if(isset($user->eps->id))
 
     user.getOtraEsp('{{$user->eps_id}}');
     @endif
 
-    
-    
-    
+
+
+
     @if(isset($user->talento->tipotalento->id))
     tipoTalento.getSelectTipoTalento('{{$user->talento->tipotalento->id}}');
     @endif
@@ -249,8 +246,8 @@ var roles = {
 
 
 var tipoTalento = {
-    getSelectTipoTalento:function (idperfil) {
-        let valor = $(idperfil).val();
+    getSelectTipoTalento:function (idtipotalento) {
+        let valor = $(idtipotalento).val();
         let nombretipotalento = $("#txttipotalento option:selected").text();
 
         if((nombretipotalento == '{{App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO }}' ||
@@ -444,19 +441,19 @@ var tipoTalento = {
                 $('#txtcentroformacion_aprendiz').append(`<option value=`+'{{$user->talento->entidad->id}}'+`>`+'{{$user->talento->entidad->nombre}}'+`</option>`);
                 @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_aprendiz').select2('val','{{$user->talento->entidad->id}}');
-                        
+
                 @endif
             @else
-            
+
             $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
             $.each(response.centros, function(id, nombre) {
                 $('#txtcentroformacion_aprendiz').append('<option  value="'+id+'">'+nombre+'</option>');
                 @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_aprendiz').select2('val','{{$user->talento->entidad->id}}');
-                    
+
                 @endif
 
-                
+
                 $('#txtcentroformacion_aprendiz').material_select();
 
             });
@@ -517,7 +514,7 @@ var tipoTalento = {
 
                     @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_instructorSena').select2('val','{{$user->talento->entidad->id}}');
-                    
+
                     @endif
 
 
@@ -592,14 +589,14 @@ var linea = {
             $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             @if(isset($user->ciudadexpedicion->id))
                 $('#txtciudadexpedicion').select2('val','{{$user->ciudadexpedicion->id}}');
-                    
+
             @endif
           });
           $('#txtciudadexpedicion').material_select();
         });
       },
 
-      
+
     getCiudad:function(){
         let id;
         id = $('#txtdepartamento').val();
@@ -614,41 +611,41 @@ var linea = {
             $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             @if(isset($user->ciudad->id))
                 $('#txtciudad').select2('val','{{$user->ciudad->id}}');
-                    
+
             @endif
           })
-          
+
           $('#txtciudad').material_select();
         });
     },
 
       getOtraEsp:function (ideps) {
         let id = $("#txteps").val();
-       
+
         let nombre = $("#txteps option:selected").text();
-        
+
         if (nombre == '{{App\Models\Eps::OTRA_EPS }}') {
             $(".otraeps").css("display", "block");
-            
-          
-            
+
+
+
 
         }else{
             $(".otraeps").css("display", "none");
-            
+
         }
     },
-    
+
     getGradoDiscapacidad(discapacidad){
         let gradodiscapacidad = $("#txtgrado_discapacidad").val();
         if (gradodiscapacidad == 1) {
             $('.gradodiscapacidad').css("display", "block");
-             
+
         }else{
             $(".gradodiscapacidad").css("display", "none");
         }
     }
-    
+
 }
 
 </script>

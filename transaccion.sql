@@ -1464,17 +1464,6 @@ INSERT INTO `GradoEscolaridad` (`id`,`nombre`) VALUES
 (9, 'No aplica');
 
 
-INSERT INTO `Perfil` (`id`,`nombre`) VALUES
-(1,'Egresado SENA'),
-(2,'Aprendiz SENA'),
-(3,'Funcionario empresa púbilca'),
-(4, 'Estudiante Universitario de Pregrado'),
-(5, 'Estudiante Universitario de Postgrado'),
-(6, 'Funcionario microempresa'),
-(7, 'Funcionario mediana empresa'),
-(8, 'Funcionario grande empresa'),
-(9, 'Empleador independiente'),
-(10, 'Otro');
 
 INSERT INTO `EstadoProyecto` (`id`,`nombre`) VALUES
 (1,'Inicio'),

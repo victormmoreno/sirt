@@ -156,10 +156,8 @@ class IndicadorController extends Controller
     $total = $this->getProyectoRepository()->consultarTotalProyectos()->select('proyectos.id')
     ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
     ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
-    ->join('perfiles', 'perfiles.id', '=', 'talentos.perfil_id')
     ->where('nodos.id', $idnodo)
     ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])
-    ->whereIn('perfiles.nombre', ['Aprendiz SENA sin apoyo de sostenimiento', 'Aprendiz SENA con apoyo de sostenimiento'])
     ->where('talento_lider', 1)
     ->groupBy('proyectos.id')
     ->get()
@@ -205,7 +203,6 @@ class IndicadorController extends Controller
         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
       });
     })
-    ->where('perfiles.nombre', 'Egresado SENA')
     ->get()
     ->count();
     return $this->retornarValor($total);

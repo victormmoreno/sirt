@@ -21,7 +21,7 @@ class EquipoDatatables
                 return $data->vida_util + $data->anio_compra;
             })
             ->addColumn('depreciacion_por_anio', function ($data) {
-                if ($data->vida_util > 0 || $data->costo_adquisicion >= 0) {
+                if ($data->vida_util > 0) {
                     return '$ ' . number_format(round($data->costo_adquisicion) / $data->vida_util, 0);
                 }
 

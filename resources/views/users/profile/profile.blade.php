@@ -457,36 +457,7 @@
                                                                     </div>
                                                                     <div class="col s12 m6 l6">
                                                                         
-                                                                        {{-- @if($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO || 
-                                                                            $user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
-                                                                        
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_EGRESADO_SENA)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">TIPO FORMACIÓN:</b></span> {{$user->talento->tipoformacion->nombre ?: 'No registra'}}</p>
-                                                                        
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_SENA)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">DEPENDENCIA:</b></span> {{$user->talento->dependencia ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_INSTRUCTOR_SENA)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>                                                                               
-                                                                        
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO)
-                                                                        <p><span><b class="teal-text darken-2">TIPO ESTUDIO: </b></span> {{$user->talento->tipoestudio->nombre ?: 'No registra'}}</p>
-                                                                        <p><span><b class="teal-text darken-2">UNIVERSIDAD: </b></span> {{$user->talento->universidad ?: 'No registra'}}</p>
-                                                                        <p><span><b class="teal-text darken-2">CARRERA: </b></span> {{$user->talento->carrera_univeritaria ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_EMPRESA)
-                                                                        <p><span><b class="teal-text darken-2">EMPRESA:</b></span> {{$user->talento->empresa ?: 'No registra'}}</p>
-                                                                         
-                                                                        @endif --}}
+                                                                
                                                                     </div>
                                                                 </div>
                                                             </li>

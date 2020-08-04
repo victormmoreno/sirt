@@ -44,14 +44,13 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                 $('#response-alert').empty();
 
                 if (data.fail) {
-                    
                     Swal.fire({
-                      title: 'Registro Erróneo',
-                      html: "Estas ingresando mal los datos. " + errores,
-                      type: 'error',
-                      showCancelButton: false,
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: 'Ok'
+                        title: 'Registro Erróneo',
+                        html: "Estas ingresando mal los datos. " + errores,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
                     });
                 }
 
@@ -61,13 +60,10 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                         $('#response-alert').append(`
                             <div class="mailbox-list">
                                 <ul>
-                                    <li >
+                                    <li>
                                         <a  class="mail-active">
-
                                             <h4 class="center-align">no se encontraron resultados</h4>
-
                                             <a class="grey-text text-darken-3 green accent-1 center-align" href="`+data.url+`/`+search+`">Registrar nuevo usuario</a>
-
                                         </a>
                                     </li>
                                 </ul>

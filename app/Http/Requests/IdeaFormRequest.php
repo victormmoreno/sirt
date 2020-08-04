@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CreateValidationForDomainRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -42,8 +41,7 @@ class IdeaFormRequest extends FormRequest
             'txtnombreconvocatoria'   => Rule::requiredIf(request()->txtconvocatoria == 1) . '|min:1|max:100|nullable',
             'txtavalempresa'   => 'required|in:0,1',
             'txtempresa'   => Rule::requiredIf(request()->txtavalempresa == 1) . '|min:1|max:100|nullable',
-            'txtservidorvideo'   => 'nullable',
-            'txtlinkvideo'       => ['nullable', 'url', new CreateValidationForDomainRequest, 'max:1000'],
+            'txtlinkvideo'       => ['nullable', 'url', 'max:1000'],
         ];
     }
 

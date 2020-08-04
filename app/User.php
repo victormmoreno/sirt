@@ -245,12 +245,186 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeInfoUserDatatable($query)
     {
-        return $query->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
-            'users.documento', 'users.email', 'users.direccion', 'users.celular',
-            'users.telefono', 'users.estado', 'users.fechanacimiento')
+        return $query->select(
+            'users.id',
+            'tiposdocumentos.nombre as tipodocumento',
+            'users.documento',
+            'users.email',
+            'users.direccion',
+            'users.celular',
+            'users.telefono',
+            'users.estado',
+            'users.fechanacimiento'
+        )
             ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
     }
 
     /*=====  End of scope para mostrar informacion relevante en datatables  ======*/
+
+    public function scopeRole($query, $role)
+    {
+        if (!empty($role) && $role != null && $role != 'all') {
+            return $query->whereHas('roles', function ($subQuery) use ($role) {
+                $subQuery->where('name', $role);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeNodoUser($query, $role, $nodo)
+    {
+        if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento() || $role != User::IsAdministrador())) && !empty($nodo) && $nodo != null && $nodo != 'all') {
+            if ($role == User::IsDinamizador()) {
+                return $query->whereHas('dinamizador.nodo', function ($subQuery) use ($nodo) {
+                    $subQuery->where('id', $nodo);
+                });
+            }
+            if ($role == User::IsGestor()) {
+                return $query->whereHas('gestor.nodo', function ($subQuery) use ($nodo) {
+                    $subQuery->where('id', $nodo);
+                });
+            }
+
+            if ($role == User::IsInfocenter()) {
+                return $query->whereHas('infocenter.nodo', function ($subQuery) use ($nodo) {
+                    $subQuery->where('id', $nodo);
+                });
+            }
+
+            if ($role == User::IsIngreso()) {
+                return $query->whereHas('ingreso.nodo', function ($subQuery) use ($nodo) {
+                    $subQuery->where('id', $nodo);
+                });
+            }
+        }
+
+        if (session()->get('login_role') == User::IsGestor()) {
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($nodo) && $nodo != null && $nodo != 'all') {
+
+                return $query->has('talento');
+            }
+
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($nodo) && $nodo != null && $nodo == 'all') {
+
+                return $query->has('talento');
+            }
+
+            if ((!empty($role) && $role != null && $role == 'all') && !empty($nodo) && $nodo != null && $nodo != 'all') {
+
+                return $query->has('talento')
+                    ->orWhereHas('dinamizador.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    })->orWhereHas('gestor.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    })->orWhereHas('infocenter.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    })->orWhereHas('ingreso.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    });
+            }
+        } else {
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($nodo) && $nodo != null && $nodo != 'all') {
+
+                return $query->wherehas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
+                    $query->where('id', $nodo);
+                });
+            }
+
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($nodo) && $nodo != null && $nodo == 'all') {
+
+                return $query->has('talento.articulacionproyecto.actividad');
+            }
+
+            if ((!empty($role) && $role != null && $role == 'all') && !empty($nodo) && $nodo != null && $nodo != 'all') {
+
+                return $query->wherehas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
+                    $query->where('id', $nodo);
+                })
+                    ->orWhereHas('dinamizador.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    })->orWhereHas('gestor.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    })->orWhereHas('infocenter.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    })->orWhereHas('ingreso.nodo', function ($subQuery) use ($nodo) {
+                        $subQuery->where('id', $nodo);
+                    });
+            }
+        }
+
+        return $query;
+    }
+
+    public function scopeStateDeletedAt($query, $state)
+    {
+        if (!empty($state) && $state != null && $state != 'all') {
+            if ($state == 'si') {
+                $state = User::IsActive();
+                return $query->where('estado', $state);
+            } else {
+                $state = User::IsInactive();
+                return $query->where('estado', $state)->onlyTrashed();
+            }
+        }
+        return $query->withTrashed();
+    }
+
+    public function scopeYearActividad($query, $role, $year, $nodo)
+    {
+        if (session()->get('login_role') != User::IsGestor()) {
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($year) && $year != null && $year == 'all'  && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
+                return $query->has('talento.articulacionproyecto.actividad');
+            }
+
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
+                return $query->wherehas('talento.articulacionproyecto.actividad', function ($query) use ($year, $nodo) {
+                    $query->where(function ($subquery) use ($year) {
+                        $subquery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+                    })->where('nodo_id', $nodo);
+                });
+            }
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
+                return $query->wherehas('talento.articulacionproyecto.actividad', function ($query) use ($year) {
+                    $query->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+                });
+            }
+            if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year == 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
+                return $query->wherehas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
+                    $query->where('id', $nodo);
+                });
+            }
+        }
+
+        return $query;
+    }
+
+    public function scopeActivitiesTalento($query, $role, $year, $nodo)
+    {
+
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($year) && $year != null && $year == 'all'  && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
+            return $query->has('talento.articulacionproyecto.actividad');
+        }
+
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
+            return $query->wherehas('talento.articulacionproyecto.actividad', function ($query) use ($year, $nodo) {
+                $query->where(function ($subquery) use ($year) {
+                    $subquery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+                })->where('nodo_id', $nodo);
+            });
+        }
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
+            return $query->wherehas('talento.articulacionproyecto.actividad', function ($query) use ($year) {
+                $query->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+            });
+        }
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year == 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
+            return $query->wherehas('talento.articulacionproyecto.actividad.nodo', function ($query) use ($nodo) {
+                $query->where('id', $nodo);
+            });
+        }
+
+
+        return $query;
+    }
 }

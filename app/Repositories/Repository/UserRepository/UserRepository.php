@@ -19,7 +19,6 @@ use App\Models\{
     Ingreso,
     Nodo,
     Ocupacion,
-    Perfil,
     Regional,
     Talento,
     TipoDocumento
@@ -31,6 +30,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Spatie\Permission\Models\Role;
+
 
 class UserRepository
 {
@@ -187,7 +187,6 @@ class UserRepository
                 'infocenter.nodo',
                 'infocenter.nodo.entidad',
                 'talento',
-                'talento.perfil',
                 'talento.entidad',
                 'ingreso.nodo.entidad',
             ]
@@ -227,11 +226,11 @@ class UserRepository
                 'infocenter.nodo',
                 'infocenter.nodo.entidad',
                 'talento',
-                'talento.perfil',
+
                 'talento.entidad',
                 'ingreso.nodo.entidad',
             ]
-        )->where('documento', $document);
+        )->withTrashed()->where('documento', $document);
     }
 
     /*=====  End of metodo para consultar el usuario por id  ======*/
@@ -242,7 +241,7 @@ class UserRepository
 
     public function account($id)
     {
-        return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->where('id', $id)->firstOrFail();
+        return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->withTrashed()->where('id', $id)->firstOrFail();
     }
 
     /*=====  End of metodo para consultar la informacion del usuario  ======*/
@@ -303,16 +302,7 @@ class UserRepository
 
     /*=====  End of metodo para consultar las lineas por nodo  ======*/
 
-    /*============================================================================
-    =            metodo para consultar todos los perfiles del talento            =
-    ============================================================================*/
 
-    public function getAllPerfiles()
-    {
-        return Perfil::allPerfiles()->pluck('nombre', 'id');
-    }
-
-    /*=====  End of metodo para consultar todos los perfiles del talento  ======*/
 
     /*==================================================================
     =            metodo para consultar todas las regionales            =
@@ -442,8 +432,6 @@ class UserRepository
 
         $entidad = null;
 
-
-
         if (
             $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
             $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id
@@ -466,7 +454,6 @@ class UserRepository
         }
         return Talento::create([
             "user_id"               => $user->id,
-            "perfil_id"             => $request->input('txttipotalento'),
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
 
@@ -520,6 +507,12 @@ class UserRepository
     }
 
     /*=====  End of metodo para consultar el id de no aplica en la tabla entidad  ======*/
+
+    public function getIdTipoTalentoForNombre(string $tipotalento)
+    {
+        return TipoTalento::where('nombre', $tipotalento)->first()->id;
+    }
+
 
     /*=========================================================
     =            metodo para actualizar un usuario            =
@@ -820,7 +813,6 @@ class UserRepository
         }
         return Talento::find($userUpdated->talento->id)->update([
 
-            "perfil_id"             => $request->input('txttipotalento'),
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
 
@@ -851,21 +843,6 @@ class UserRepository
 
     /*=====  End of metodo para actualizar un usuario talento  ======*/
 
-    /*=================================================================
-    =            metodo para consultar el id del perfil por nombre            =
-    =================================================================*/
-
-    public function getIdPerfilForNombre(string $perfil)
-    {
-        return Perfil::where('nombre', $perfil)->first()->id;
-    }
-
-    public function getIdTipoTalentoForNombre(string $tipotalento)
-    {
-        return TipoTalento::where('nombre', $tipotalento)->first()->id;
-    }
-
-    /*=====  End of metodo para consultar el id del perfil por nombre  ======*/
 
     /*===========================================================
     =            metodo para consultar las entidades(centros) por centro            =

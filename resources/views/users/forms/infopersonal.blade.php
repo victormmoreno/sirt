@@ -132,7 +132,7 @@
                             <small id="txtfecha_nacimiento-error"  class="error red-text"></small>
                         </div>
                         <div class="input-field col s12 m6 l6">
-                            <select class="" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1" >
+                            <select class="js-states browser-default select2" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1" >
                                 <option value="">Seleccione grupo sanguíneo </option>
                                 @foreach($gruposanguineos as $value)
 
@@ -143,7 +143,7 @@
                                     @endif
                                 @endforeach
                             </select>
-                            <label for="txtgruposanguineo">Grupo Sanguíneo <span class="red-text">*</span></label>
+                            <label class="active" for="txtgruposanguineo">Grupo Sanguíneo <span class="red-text">*</span></label>
                             <small id="txtgruposanguineo-error"  class="error red-text"></small>
                         </div>
                     </div>
@@ -163,7 +163,6 @@
                             <small id="txteps-error"  class="error red-text"></small>
                         </div>
                         <div class="input-field col s12 m6 l6 otraeps"  style="display:none">
-
                             <input class="validate" id="txtotraeps" name="txtotraeps" type="text" value="{{ isset($user->otra_eps) ? $user->otra_eps : old('txtotraeps')}}">
                             <label for="txtotraeps" class="active">Otra Eps <span class="red-text">*</span></label>
                             <small id="txtotraeps-error"  class="error red-text"></small>
@@ -171,17 +170,14 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12 m6 l6">
-
-                            <select class="" id="txtestrato" name="txtestrato" style="width: 100%" tabindex="-1">
+                            <select id="txtestrato" name="txtestrato" style="width: 100%" tabindex="-1">
                                 <option value="">Seleccione estrato</option>
                                 @for($i =1; $i <= 6; $i++)
-                                @if(isset($user->estrato))
-                                <option value="{{ $i }}" {{old('txtestrato',$user->estrato) == $i ? 'selected':''}}>{{$i}}</option>
-                                @else
-                                <option value="{{ $i }}"  {{old('txtestrato') == $i ? 'selected':''}}>{{$i}}</option>
-                                @endif
-
-
+                                    @if(isset($user->estrato))
+                                    <option value="{{ $i }}" {{old('txtestrato',$user->estrato) == $i ? 'selected':''}}>{{$i}}</option>
+                                    @else
+                                    <option value="{{ $i }}"  {{old('txtestrato') == $i ? 'selected':''}}>{{$i}}</option>
+                                    @endif
                                 @endfor
                             </select>
                             <label for="txtestrato">Estrato <span class="red-text">*</span></label>
@@ -189,7 +185,7 @@
                         </div>
                         <div class="input-field col s12 m6 l6">
 
-                            <select class="" id="txtetnias" name="txtetnias" style="width: 100%" tabindex="-1">
+                            <select class="js-states browser-default select2" id="txtetnias" name="txtetnias" style="width: 100%" tabindex="-1">
                                 <option value="">Seleccione Etnia</option>
                                     @foreach($etnias as $id => $nombre)
                                         @if(isset($user->etnia->id))
@@ -199,7 +195,7 @@
                                         @endif
                                     @endforeach
                                 </select>
-                                <label for="txtetnias">Etnias <span class="red-text">*</span></label>
+                                <label class="active" for="txtetnias">Etnias <span class="red-text">*</span></label>
                                 <small id="txtetnias-error"  class="error red-text"></small>
                         </div>
                     </div>
