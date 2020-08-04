@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Usuario |' . $user->nombres. ' '. $user->apellidos)
+@section('meta-title', 'Usuario | ' . $user->present()->userFullName())
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -15,7 +15,7 @@
                                     arrow_back
                                 </i>
                             </a>
-                            Usuario | {{$user->nombres}} {{$user->apellidos}}
+                            Usuario | {{$user->present()->userFullName()}}
                         </h5>
                     </div>
                 </div>
@@ -46,15 +46,14 @@
                                                                 Nodo del Dinamizador
                                                             </span>
                                                             <p>
-                                                                Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre ? : 'No registra'}}
-                                                                <br>
-                                                                    <small>
-                                                                        <b>
-                                                                            Dirección:
-                                                                        </b>
-                                                                        {{$user->dinamizador->nodo->direccion ? : 'No registra'}}
-                                                                    </small>
-                                                                </br>
+                                                                {{$user->present()->userDinamizadorNombreNodo()}}
+                                                                <small>
+                                                                    <b>
+                                                                        Dirección:
+                                                                    </b>
+                                                                    {{$user->present()->userDinamizadorDireccionNodo()}}
+                                                                </small>
+                                                                
                                                             </p>
                                                         </li>
                                                     </ul>
@@ -74,26 +73,12 @@
                                                 <div class="col s12 m12 l12 ">
                                                     <ul class="collection">
                                                         <li class="collection-item avatar">
-                                                            <i class="material-icons circle teal darken-2">
-                                                                assignment_ind
-                                                            </i>
+                                                            <i class="material-icons circle teal darken-2">assignment_ind</i>
                                                             <span class="title">
-                                                                <b class="teal-text darken-2">
-                                                                    Nodo del {{App\User::IsGestor()}}:
-                                                                </b>
-                                                                Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}
-                                                                <br>
-                                                                    <b class="teal-text darken-2">
-                                                                        Linea del {{App\User::IsGestor()}}:
-                                                                    </b>
-                                                                    {{$user->gestor->lineatecnologica->nombre}}
-                                                                    <br>
-                                                                        <b class="teal-text darken-2">
-                                                                            Honorario del {{App\User::IsGestor()}}:
-                                                                        </b>
-                                                                        ${{ number_format($user->gestor->honorarios,0) ? : 'No registra'}}
-                                                                    </br>
-                                                                </br>
+                                                                <b class="teal-text darken-2">Nodo del {{App\User::IsGestor()}}:</b> {{$user->present()->userGestorNombreNodo()}}
+                                                                <br/>
+                                                                <b class="teal-text darken-2">Linea del {{App\User::IsGestor()}}:</b> {{$user->present()->userGestorNombreLinea()}}
+                                                                <b class="teal-text darken-2">Honorario del {{App\User::IsGestor()}}:</b> {{ $user->present()->userGestorHonorarios()}}
                                                             </span>
                                                         </li>
                                                     </ul>
@@ -121,15 +106,12 @@
                                                                 <b class="teal-text darken-2">
                                                                     Nodo del {{App\User::IsInfocenter()}}:
                                                                 </b>
-                                                                Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre ? : 'No registra'}}
-                                                                <br>
-                                                                    <b class="teal-text darken-2">
-                                                                        Extensión del {{App\User::IsInfocenter()}}:
-                                                                    </b>
-                                                                    {{$user->infocenter->extension ? : 'No registra'}}
-                                                                    <br>
-                                                                    </br>
-                                                                </br>
+                                                                {{$user->present()->userInfocenterNombreNodo()}}
+                                                                <br/>
+                                                                <b class="teal-text darken-2">
+                                                                    Extensión del {{App\User::IsInfocenter()}}:
+                                                                </b>
+                                                                {{$user->present()->userInfocenterExtension()}}   
                                                             </span>
                                                         </li>
                                                     </ul>
@@ -157,16 +139,13 @@
                                                                 <!-- Dropdown Structure -->
                                                                 <ul class="dropdown-content" id="actifiad">
                                                                     <li>
-                                                                        <a href="{{route('usuario.usuarios.edit', $user->documento)}}">
-                                                                            Cambiar Información
-                                                                        </a>
+                                                                        {!!$user->present()->userEditLink()!!}
                                                                     </li>
                                                                     @if(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(),App\User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
 
                                                                     @elseif(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(), App\User::IsGestor(),App\User::IsInfocenter(), App\User::IsIngreso() ]) && session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
 
                                                                     @else
-
                                                                     <li>
                                                                         <a href="{{route('usuario.usuarios.acceso', $user->documento)}}">
                                                                             Acceso a plataforma
@@ -184,7 +163,7 @@
                                             </div>
                                             <div class="right">
                                                 <small>
-                                                    {{{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}}
+                                                    {{$user->present()->userGenero()}}
                                                 </small>
                                             </div>
                                             <div class="divider mailbox-divider">
@@ -201,7 +180,7 @@
                                                                     Tipo Documento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->tipodocumento->nombre ? : 'No se encontraron resultados' }}
+                                                                    {{$user->present()->userTipoDocuento() }}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -212,8 +191,8 @@
                                                                     Lugar Expedición documento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->ciudadexpedicion->nombre ? : 'No se encontraron resultados' }} -
-                                                                    {{$user->ciudadexpedicion->departamento->nombre ? : 'No se encontraron resultados' }}
+                                                                    {{$user->present()->userLugarExpedicionDocumento() }} -
+                                                                    
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -224,11 +203,7 @@
                                                                     Fecha de Nacimiento
                                                                 </span>
                                                                 <p>
-                                                                    @if(isset($user->fechanacimiento))
-                                                                    {{optional($user->fechanacimiento)->isoFormat('LL')}}
-                                                                    @else
-                                                                        No registra
-                                                                    @endif
+                                                                    {{$user->present()->userFechaNacimiento()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -240,7 +215,7 @@
                                                                         Eps
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->eps->nombre ? : 'No registra'}}
+                                                                        {{$user->present()->userEps()}}
                                                                     </p>
                                                                 </div>
                                                                 @if($user->eps->nombre == App\Models\Eps::OTRA_EPS)
@@ -249,7 +224,7 @@
                                                                         Otra Eps
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->otra_eps ? : 'No registra'}}
+                                                                        {{$user->present()->userOtraEps()}}
                                                                     </p>
                                                                 </div>
                                                                 @endif
@@ -264,18 +239,18 @@
                                                                         <span class="title green-complement-text">
                                                                             Grado Discapaciadad
                                                                         </span>
-                                                                        <br>
-                                                                            {{$user->grado_discapacidad == 1 ? 'Si' : 'No'}}
-                                                                        </br>
+                                                                        <br/>
+                                                                        {{$user->present()->userGradoDiscapacidad()}}
+                                                                        
                                                                     </p>
                                                                 </div>
                                                                 @if($user->grado_discapacidad == 1)
                                                                 <div class="right">
                                                                     <span class="title green-complement-text">
-                                                                        Otra Eps
+                                                                        Discapacidad
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->descripcion_grado_discapacidad ? : 'No registra'}}
+                                                                        {{$user->present()->userDescripcionGradoDiscapacidad()}}
                                                                     </p>
                                                                 </div>
                                                                 @endif
@@ -289,7 +264,7 @@
                                                                     Correo Electrónico
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->email ?: 'No registra'}}
+                                                                    {{$user->present()->userEmail()}}
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -304,7 +279,7 @@
                                                                     Documento
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->documento ? : 'No registra'}}
+                                                                    {{$user->present()->userDocumento()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -315,7 +290,7 @@
                                                                     Grupo Sanguineo
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->grupoSanguineo->nombre ? : 'No registra'}}
+                                                                    {{$user->present()->userGrupoSanguineo()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -326,7 +301,7 @@
                                                                     Estrato Social
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->estrato ? : 'No registra'}}
+                                                                    {{$user->present()->userEstrato()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -337,30 +312,22 @@
                                                                     Etnia
                                                                 </span>
                                                                 <p>
-                                                                    @if(isset($user->etnia))
-                                                                    {{$user->etnia->nombre ? : 'No registra'}}
-                                                                    @else
-                                                                        No Registra
-                                                                    @endif
+                                                                    {{$user->present()->userEtnia()}}
                                                                 </p>
                                                             </li>
-
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
                                                                     my_location
                                                                 </i>
-
-
                                                                 <div class="left">
                                                                     <span class="title green-complement-text">
                                                                         Lugar de Residencia
                                                                     </span>
-
                                                                     <p>
-                                                                        {{$user->direccion ? : 'No registra'}}
+                                                                        {{$user->present()->userDireccion()}}
                                                                     </p>
                                                                     <p>
-                                                                        {{$user->ciudad->nombre ? : 'No registra'}} - {{$user->ciudad->departamento->nombre ? : 'No registra'}}
+                                                                        {{$user->present()->userLugarResidencia()}}
                                                                     </p>
                                                                 </div>
                                                                 <div class="right">
@@ -368,7 +335,7 @@
                                                                         Barrio
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->barrio ? : 'No registra'}}
+                                                                        {{$user->present()->userBarrio()}}
                                                                     </p>
                                                                 </div>
                                                             </li>
@@ -386,9 +353,8 @@
                                                                         <span class="title green-complement-text">
                                                                             Teléfono
                                                                         </span>
-                                                                        <br>
-                                                                            {{$user->telefono ? $user->telefono : 'No registra'}}
-                                                                        </br>
+                                                                        <br/>
+                                                                        {{$user->present()->userTelefono()}}
                                                                     </p>
                                                                 </div>
                                                                 <div class="right">
@@ -396,12 +362,12 @@
                                                                         Celular
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->celular ? $user->celular : 'No registra'}}
+                                                                        {{$user->present()->userCelular()}}
                                                                     </p>
                                                                 </div>
                                                             </li>
                                                         </ul>
-                                                      </div>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col s12 m12 l12">
@@ -414,7 +380,7 @@
                                                                     Ocupaciones
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->getOcupacionesNames()->implode(', ') ? : 'No registra'}}
+                                                                    {{$user->present()->userOcupacionesNames()}}
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -439,7 +405,7 @@
                                                                         Institución
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->institucion ? : 'No registra'}}
+                                                                        {{$user->present()->userInstitucion()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item avatar">
@@ -465,7 +431,7 @@
                                                                         Grado de escolaridad
                                                                     </span>
                                                                     <p>
-                                                                        {{$user->gradoescolaridad->nombre ? : 'No registra'}}
+                                                                        {{$user->present()->userGradoEscolaridad()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item avatar">
@@ -478,7 +444,7 @@
                                                                         </b>
                                                                     </span>
                                                                     <p>
-                                                                        {{optional($user->fecha_terminacion)->isoFormat('LL') ? : 'No registra'}}
+                                                                        {{$user->present()->userFechaTerminacion()}}
                                                                     </p>
                                                                 </li>
                                                             </ul>
@@ -507,46 +473,10 @@
                                                                                 Tipo {{App\User::IsTalento()}}:
                                                                             </b>
                                                                         </span>
-                                                                        <p>{{$user->talento->tipotalento->nombre ? : 'Información no disponible'}}</p>
-
+                                                                        <p>{{$user->present()->userNombreTipoTalento()}}</p>
                                                                     </div>
                                                                     <div class="col s12 m6 l6">
-
-                                                                        @isset($user->talento->tipotalento)
-
-                                                                        @if($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ||
-                                                                            $user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{optional($user->talento->entidad->centro)->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_EGRESADO_SENA)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">PROGRAMA DE FORMACION:</b></span> {{$user->talento->programa_formacion ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">TIPO FORMACIÓN:</b></span> {{$user->talento->tipoformacion->nombre ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_SENA)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">DEPENDENCIA:</b></span> {{$user->talento->dependencia ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_INSTRUCTOR_SENA)
-                                                                               <p><span><b class="teal-text darken-2">REGIONAL:</b></span> {{$user->talento->entidad->centro->regional->nombre ?: 'No registra'}}</p>
-                                                                               <p><span><b class="teal-text darken-2">CENTRO DE FORMACIÓN:</b></span> {{$user->talento->entidad->nombre ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO)
-                                                                        <p><span><b class="teal-text darken-2">TIPO ESTUDIO: </b></span> {{$user->talento->tipoestudio->nombre ?: 'No registra'}}</p>
-                                                                        <p><span><b class="teal-text darken-2">UNIVERSIDAD: </b></span> {{$user->talento->universidad ?: 'No registra'}}</p>
-                                                                        <p><span><b class="teal-text darken-2">CARRERA: </b></span> {{$user->talento->carrera_univeritaria ?: 'No registra'}}</p>
-
-                                                                        @elseif($user->talento->tipotalento->nombre == App\Models\TipoTalento::IS_FUNCIONARIO_EMPRESA)
-                                                                        <p><span><b class="teal-text darken-2">EMPRESA:</b></span> {{$user->talento->empresa ?: 'No registra'}}</p>
-
-                                                                        @endif
-
-                                                                        @endisset
-
+                                                                        <p>{{$user->present()->userTipoTalento()}}</p>
                                                                     </div>
                                                                 </div>
                                                             </li>

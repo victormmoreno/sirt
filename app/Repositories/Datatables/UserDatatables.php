@@ -2,8 +2,6 @@
 
 namespace App\Repositories\Datatables;
 
-use App\User;
-
 class UserDatatables
 {
 
@@ -15,31 +13,26 @@ class UserDatatables
                 return $button;
             })
             ->editColumn('tipodocumento', function ($data) {
-                return !empty($data->tipodocumento) ? $data->tipodocumento->nombre : 'No registra';
+                return $data->present()->userTipoDocuento();
             })
             ->editColumn('nombrecompleto', function ($data) {
-                return "{$data->nombres} {$data->apellidos}";
+                return $data->present()->userFullName();
             })
             ->editColumn('celular', function ($data) {
                 return !empty($data->celular) ? $data->celular : !empty($data->telefono) ?  $data->telefono : 'No Registra';
             })
             ->editColumn('roles', function ($data) {
-                return $data->getRoleNames()->implode(', ');
+                return $data->present()->userRolesNames();
             })
             ->editColumn('login', function ($data) {
                 return isset($data->ultimo_login) ? $data->ultimo_login->isoFormat('DD/MM/YYYY') : 'No Registra';
             })
             ->editColumn('state', function ($data) {
-                return $this->columnStateEdit($data);
+                return $data->present()->userAcceso();
             })
             ->rawColumns(['tipodocumento', 'nombrecompleto', 'detail', 'celular', 'roles', 'login', 'state'])
             ->make(true);
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
-
-    private function columnStateEdit($data)
-    {
-        return $data->estado == User::IsActive() && $data->deleted_at === null  ? "Habilitado" : "Inhabilitado desde: " . optional($data->deleted_at)->isoFormat('DD/MM/YYYY');
-    }
 }
