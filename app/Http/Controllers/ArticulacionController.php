@@ -659,7 +659,10 @@ class ArticulacionController extends Controller
                     $edit = '<a class="btn m-b-xs" href=' . route('articulacion.inicio', $data->id) . '><i class="material-icons">search</i></a>';
                 }
                 return $edit;
-            })->rawColumns(['info', 'proceso'])->make(true);
+            })->addColumn('download_seguimiento', function ($data) {
+                $delete = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'articulacion']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
+                return $delete;
+            })->rawColumns(['info', 'proceso', 'download_seguimiento'])->make(true);
     }
 
     /**
@@ -868,16 +871,12 @@ class ArticulacionController extends Controller
      */
     public function datatableArticulacionesPorGestor(Request $request, $id, $anho)
     {
-
-
         if (request()->ajax()) {
             if (Session::get('login_role') == User::IsGestor()) {
                 $idgestor = auth()->user()->gestor->id;
             } else {
                 $idgestor = $id;
             }
-
-
             $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($anho)->where('actividades.gestor_id', $idgestor)->get();
             return $this->datatablesArticulaciones($request, $articulaciones);
         }

@@ -860,24 +860,6 @@ class ArticulacionRepository
   }
 
   /**
-  * Consulta los entregables de las articulaciones
-  * @param int $id Id de la articulación
-  * @return Collection
-  * @author dum
-  */
-  public function consultaEntregablesDeUnaArticulacion($id)
-  {
-    return Articulacion::select(
-    'acc',
-    'acta_cierre',
-    'informe_final',
-    )
-    ->where('articulaciones.id', $id)
-    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
-    ->get();
-  }
-
-  /**
   * Modifica los datos de una articulación
   * @param Request $request
   * @param int $id Id de la articulación

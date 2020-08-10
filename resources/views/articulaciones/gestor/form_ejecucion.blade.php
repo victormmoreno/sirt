@@ -38,10 +38,10 @@
             </label>
         </p>
     </div>
-    {{-- <div class="col s6 m6 l6">
+    <div class="col s6 m6 l6">
         <h6>Para descargar el seguimiento y usos de infraestructura del proyecto, presiona el botón con el ícono <i class="far fa-file-pdf"></i></h6>
-        <a class="btn green lighten-1 m-b-xs" href="{{route('pdf.proyecto.usos', $articulacion->id)}}" target="_blank"><i class="far fa-file-pdf"></i></a>
-    </div> --}}
+        <a class="btn green lighten-1 m-b-xs" href="{{route('pdf.actividad.usos', [$articulacion->id, 'articulacion'])}}" target="_blank"><i class="far fa-file-pdf"></i></a>
+    </div>
 </div>
 @if ($articulacion->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
 <div class="row">

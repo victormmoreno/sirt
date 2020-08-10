@@ -31,6 +31,7 @@
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                     <li class="tab col s3"><a class="active" href="#gestor">Gestor</a></li>
                     <li class="tab col s3"><a class="" href="#proyectos">Proyectos</a></li>
+                    <li class="tab col s3"><a class="" href="#articulaciones">Articulaciones</a></li>
                   </ul>
                   <br>
                 </div>
@@ -71,9 +72,8 @@
                     </div>
                     <div class="col s12 m8 l8">
                       <div class="input-field">
-                        <select class="js-states" onchange="consultarProyectosSeguimiento_Gestor()" tabindex="-1" style="width: 100%" id="txtanho_proyecto_Seguimiento" name="txtanho_proyecto_Seguimiento" onchange="consultarProyectosDelGestor();">
-                          {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
-                          @for ($i=2016; $i <= $year; $i++)
+                        <select class="js-states" onchange="consultarProyectosSeguimiento_Gestor()" tabindex="-1" style="width: 100%" id="txtanho_proyecto_Seguimiento" name="txtanho_proyecto_Seguimiento">
+                          @for ($i=2016; $i <= $yearNow; $i++)
                             <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
                           @endfor
                         </select>
@@ -81,6 +81,29 @@
                       </div>
                       <div class="row">
                         @include('seguimiento.table_proyectos')
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="articulaciones" class="col s12 m12 l12">
+                  <div class="row">
+                    <div class="col s12 m4 l4">
+                      <blockquote>
+                        <h5>Aquí puedes generar un archivo PDF con detalles de los usos de infraestructuras que se realizaron en una articulación.</h5>
+                        <h5>Para generar el archivo pdf, debes seleccionar el año en que se finalizó la articulación y luego presionar el botón con el ícono <b><i class="far fa-file-pdf"></i></b> para descargar el archivo.</h5>
+                      </blockquote>
+                    </div>
+                    <div class="col s12 m8 l8">
+                      <div class="input-field">
+                        <select class="js-states" onchange="consultarArticulacionesSeguimiento_Gestor()" tabindex="-1" style="width: 100%" id="txtanho_articulacion_Seguimiento" name="txtanho_articulacion_Seguimiento">
+                          @for ($i=2016; $i <= $yearNow; $i++)
+                            <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                          @endfor
+                        </select>
+                        <label for="txtanho_articulacion_Seguimiento">Seleccione el Año</label>
+                      </div>
+                      <div class="row">
+                        @include('seguimiento.table_articulaciones')
                       </div>
                     </div>
                   </div>
@@ -97,7 +120,9 @@
   <script type="text/javascript">
   $( document ).ready(function() {
     consultarProyectosSeguimiento_Gestor();
+    consultarArticulacionesSeguimiento_Gestor();
   });
+
   function consultarProyectosSeguimiento_Gestor() {
     let anho = $('#txtanho_proyecto_Seguimiento').val();
     $('#tblproyecto_Seguimiento').dataTable().fnDestroy();
@@ -137,5 +162,43 @@
         ],
       });
     }
+
+  function consultarArticulacionesSeguimiento_Gestor() {
+    let anho = $('#txtanho_articulacion_Seguimiento').val();
+    $('#tblarticulacion_Seguimiento').dataTable().fnDestroy();
+    $('#tblarticulacion_Seguimiento').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      processing: true,
+      serverSide: true,
+      order: [ 0, 'desc' ],
+      ajax:{
+        url: "/articulacion/datatableArticulacionesDelGestor/"+{{ auth()->user()->gestor->id }}+"/"+anho,
+        data: function (d) {
+          d.search = $('input[type="search"]').val()
+        }
+      },
+      columns: [
+        {
+          width: '20%',
+          data: 'codigo_articulacion',
+          name: 'codigo_articulacion',
+        },
+        {
+          width: '60%',
+          data: 'nombre',
+          name: 'nombre',
+        },
+        {
+          width: '20%',
+          data: 'download_seguimiento',
+          name: 'download_seguimiento',
+          orderable: false
+        },
+        ],
+      });
+    }
+    
   </script>
 @endpush

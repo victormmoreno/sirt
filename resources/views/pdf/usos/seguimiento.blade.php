@@ -3,31 +3,51 @@
 @section('content-pdf')
   <center>
     <div class="row">
-      <h5>Datos del Proyecto</h5>
+      @if ($tipo_actividad == 'proyecto')
+        <h5>Datos del Proyecto</h5>
+      @else
+        <h5>Datos de la Articulación</h5>
+      @endif
     </div>
   </center>
   <table class="striped centered">
     <thead>
       <tr>
-        <th>Código del proyecto</th>
-        <th>Nombre del proyecto</th>
-        <th>Gestor a cargo del proyecto</th>
-        <th>Sublínea tecnológica</th>
+        @if ($tipo_actividad == 'proyecto')
+          <th>Código del proyecto</th>
+          <th>Nombre del proyecto</th>
+          <th>Gestor a cargo del proyecto</th>
+          <th>Sublínea tecnológica</th>
+        @else
+          <th>Código de la articulación</th>
+          <th>Nombre de la articulación</th>
+          <th>Gestor a cargo de la articulación</th>
+        @endif
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
-        <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
-        <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
-        <td>{{ $proyecto->sublinea->linea->abreviatura }} - {{ $proyecto->sublinea->nombre }}</td>
+        @if ($tipo_actividad == 'proyecto')
+          <td>{{ $actividad->articulacion_proyecto->actividad->codigo_actividad }}</td>
+          <td>{{ $actividad->articulacion_proyecto->actividad->nombre }}</td>
+          <td>{{ $actividad->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $actividad->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
+          <td>{{ $actividad->sublinea->linea->abreviatura }} - {{ $actividad->sublinea->nombre }}</td>
+        @else
+          <td>{{ $actividad->articulacion_proyecto->actividad->codigo_actividad }}</td>
+          <td>{{ $actividad->articulacion_proyecto->actividad->nombre }}</td>
+          <td>{{ $actividad->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $actividad->articulacion_proyecto->actividad->gestor->user->apellidos }}</td>
+        @endif
       </tr>
     </tbody>
   </table>
 
   <center>
     <div class="row">
-      <h5>Talentos del Proyecto</h5>
+      @if ($tipo_actividad == 'proyecto')
+        <h5>Talentos del Proyecto</h5>
+      @else
+        <h5>Talentos de la Articulación</h5>
+      @endif
     </div>
   </center>
   <table class="striped centered">
@@ -149,7 +169,7 @@
   <div class="row">
     <div class="column">
       <div>__________________________________________________________</div>
-      <small>Firma del gestor(a) - {{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}}</small>
+      <small>Firma del gestor(a) - {{$actividad->articulacion_proyecto->actividad->gestor->user->nombres}} {{$actividad->articulacion_proyecto->actividad->gestor->user->apellidos}}</small>
     </div>
     <br>
     <br>
@@ -157,7 +177,7 @@
     <br>
     <div class="column">
       <div>__________________________________________________________</div>
-      <small>Firma del talento interlocutor - {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}}</small>
+      <small>Firma del talento interlocutor - {{$actividad->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$actividad->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}}</small>
     </div>
   </div>
   <br>
