@@ -1,70 +1,38 @@
 <?php
 
 namespace App\Repositories\Datatables;
-use Illuminate\Support\{Str};
-use App\User;
+
 class UserDatatables
 {
-    
-    public function datatableUsers($request, $users)
+
+    public function datatableUsers($users)
     {
         return datatables()->of($users)
-        ->addColumn('detail', function ($data) {
-            $button = '<a href="' . route("usuario.usuarios.show", $data->documento) . '" class=" btn tooltipped green-complement  m-b-xs " data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
-            return $button;
-        })
-        ->editColumn('celular', function ($data) {
-            return !empty($data->celular) ? $data->celular : 'No registra';
-        })
-        // ->filter(function ($instance) use ($request) {
-        //         if (!empty($request->get('tipodocumento'))) {
-        //             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-        //                 return Str::contains($row['tipodocumento'], $request->get('tipodocumento')) ? true : false;
-        //             });
-        //         }
-        //         if (!empty($request->get('documento'))) {
-        //             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-        //                 return Str::contains($row['documento'], $request->get('documento')) ? true : false;
-        //             });
-        //         }
-        //         if (!empty($request->get('nombre'))) {
-        //             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-        //                 return Str::contains($row['nombre'], $request->get('nombre')) ? true : false;
-        //             });
-        //         }
-        //         if (!empty($request->get('email'))) {
-        //             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-        //                 return Str::contains($row['email'], $request->get('email')) ? true : false;
-        //             });
-        //         }
-        //         if (!empty($request->get('celular'))) {
-        //             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-        //                 return Str::contains($row['celular'], $request->get('celular')) ? true : false;
-        //             });
-        //         }
-                
-        //         if (!empty($request->get('search'))) {
-        //             $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-        //                 if (Str::contains(Str::lower($row['tipodocumento']), Str::lower($request->get('search')))) {
-        //                     return true;
-        //                 } else if (Str::contains(Str::lower($row['documento']), Str::lower($request->get('search')))) {
-        //                     return true;
-        //                 } else if (Str::contains(Str::lower($row['nombre']), Str::lower($request->get('search')))) {
-        //                     return true;
-        //                 } else if (Str::contains(Str::lower($row['email']), Str::lower($request->get('search')))) {
-        //                     return true;
-        //                 } else if (Str::contains(Str::lower($row['celular']), Str::lower($request->get('search')))) {
-        //                     return true;
-        //                 } 
-        //                 return false;
-        //             });
-        //         }
-        //     })
-            ->rawColumns(['detail', 'celular'])
+            ->addColumn('detail', function ($data) {
+                $button = '<a href="' . route("usuario.usuarios.show", $data->documento) . '" class=" btn tooltipped green-complement  m-b-xs " data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
+                return $button;
+            })
+            ->editColumn('tipodocumento', function ($data) {
+                return $data->present()->userTipoDocuento();
+            })
+            ->editColumn('nombrecompleto', function ($data) {
+                return $data->present()->userFullName();
+            })
+            ->editColumn('celular', function ($data) {
+                return !empty($data->celular) ? $data->celular : !empty($data->telefono) ?  $data->telefono : 'No Registra';
+            })
+            ->editColumn('roles', function ($data) {
+                return $data->present()->userRolesNames();
+            })
+            ->editColumn('login', function ($data) {
+                return isset($data->ultimo_login) ? $data->ultimo_login->isoFormat('DD/MM/YYYY') : 'No Registra';
+            })
+            ->editColumn('state', function ($data) {
+                return $data->present()->userAcceso();
+            })
+            ->rawColumns(['tipodocumento', 'nombrecompleto', 'detail', 'celular', 'roles', 'login', 'state'])
             ->make(true);
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
-
-    
 }

@@ -1,5 +1,5 @@
 $(document).on('submit', 'form#formRegisterUser', function (event) {
-    // $('button[type="submit"]').prop("disabled", true);
+
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
@@ -14,7 +14,6 @@ $(document).on('submit', 'form#formRegisterUser', function (event) {
       dataType: 'json',
       processData: false,
       success: function (data) {
-        // $('button[type="submit"]').removeAttr('disabled');
         $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();
         if (data.fail) {

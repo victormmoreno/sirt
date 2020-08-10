@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\{Centro, Empresa, Entidad, Talento, Perfil, TipoEstudio, TipoTalento, TipoFormacion};
+use App\Models\{Centro, Empresa, Entidad, Talento, TipoEstudio, TipoTalento, TipoFormacion};
 use Faker\Generator as Faker;
 
 $factory->define(Talento::class, function (Faker $faker) {
-    $perfil = Perfil::all()->random();
+
     $tipoTalento = TipoTalento::all()->random();
     $centro = Centro::all()->random()->id;
     $noAplica = Entidad::where('nombre', 'No Aplica')->first()->id;

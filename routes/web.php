@@ -1,9 +1,5 @@
 <?php
 
-use App\User;
-use Carbon\Carbon;
-use App\Models\Entidad;
-use App\Models\Articulacion;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -67,7 +63,8 @@ Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback')
 /*======================================================================
 =            rutas para las funcionalidades de los usuarios            =
 ======================================================================*/
-
+Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
+Route::get('usuario/export-talentos', 'User\UserController@exportMyTalentos')->name('usuario.export.talentos');
 Route::group(
     [
         'prefix'     => 'usuario',
@@ -76,104 +73,25 @@ Route::group(
     ],
     function () {
 
-        Route::get('administrador', 'AdminController@index')->name('usuario.administrador.index');
-        Route::get('administrador/papelera', 'AdminController@trash')->name('usuario.administrador.indexinactivos');
-
-        Route::get('dinamizador/getDinamizador/{id}', 'DinamizadorController@getDinanizador')->name('usuario.dinamizador.getDinanizador');
-        Route::get('dinamizador/getDinamizador/papelera/{id}', 'DinamizadorController@getDinanizadorTrash')->name('usuario.dinamizador.getDinanizador.papelera');
-        Route::get('dinamizador', 'DinamizadorController@index')->name('usuario.dinamizador.index');
-        Route::get('dinamizador/papelera', 'DinamizadorController@trash')->name('usuario.dinamizador.papelera');
-
-        Route::get('getlineanodo/{nodo}', 'GestorController@getLineaPorNodo');
-        Route::get('gestor/getGestor/{id}', 'GestorController@getGestor')->name('usuario.gestor.getGestor');
-        Route::get('gestor/getGestor/papelera/{id}', 'GestorController@getGestorTrash')->name('usuario.gestor.getGestor.papelera');
-        Route::get('gestor/getgestor', 'GestorController@getAllGestoresOfNodo')->name('usuario.gestor.getGestorofnodo');
-        Route::get('gestor/getgestor/papelera', 'GestorController@getAllGestoresOfNodoTrash')->name('usuario.gestor.getGestorofnodo.papelera');
-        Route::get('gestor', 'GestorController@index')->name('usuario.gestor.index');
-        Route::get('gestor/papelera', 'GestorController@trash')->name('usuario.gestor.papelera');
-
-        Route::get('infocenter/getinfocenter/{id}', 'InfocenterController@getInfocenterForNodo')->name('usuario.infoncenter.getinfocenter');
-        Route::get('infocenter/getinfocenter/papelera/{id}', 'InfocenterController@getInfocenterForNodoTrash')->name('usuario.infoncenter.getinfocenter.papelera');
-        Route::get('infocenter/getinfocenter', 'InfocenterController@getAllInfocentersOfNodo')->name('usuario.infocenter.getinfocenternodo');
-        Route::get('infocenter/getinfocenter/papelera', 'InfocenterController@getAllInfocentersOfNodoTrash')->name('usuario.infocenter.getinfocenternodo.papelera');
-        Route::get('infocenter', 'InfocenterController@index')->name('usuario.infocenter.index');
-        Route::get('infocenter/papelera', 'InfocenterController@trash')->name('usuario.infocenter.papelera');
-
-        Route::get('ingreso/getingreso/{id}', 'IngresoController@getIngresoForNodo')->name('usuario.ingreso.getingreso');
-        Route::get('ingreso/getingreso/papelera/{id}', 'IngresoController@getIngresoForNodoTrash')->name('usuario.ingreso.getingreso.papelera');
-        Route::get('ingreso/getingreso', 'IngresoController@getAllIngresoOfNodo')->name('usuario.ingreso.getingresonodo');
-        Route::get('ingreso/getingreso/papelera', 'IngresoController@getAllIngresoOfNodoTrash')->name('usuario.ingreso.getingresonodo.papelera');
-        Route::get('ingreso', 'IngresoController@index')->name('usuario.ingreso.index');
-        Route::get('ingreso/papelera', 'IngresoController@trash')->name('usuario.ingreso.papelera');
 
         Route::get('/talento/getTalentosDeTecnoparque', [
             'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
         ]);
 
-
         Route::get('/talento/consultarTalentoPorId/{id}', [
             'uses' => 'TalentoController@consultarUnTalentoPorId',
             'as'   => 'talento.tecnoparque.byid',
         ]);
 
-
-        Route::get('/talento/papelera', [
-            'uses' => 'TalentoController@talentosTrash',
-            'as'   => 'usuario.usuarios.talento.papelera',
-        ]);
-
-        Route::get('talento/gettalentodatatable', 'TalentoController@getUsersTalentosForDatatables')->name('usuario.talento.gettalentodatatable');
-        Route::get('talento', 'TalentoController@index')->name('usuario.talento.index');
-
-        Route::get('usuarios/allusuarios', 'UserController@getAllUsersInDatatable')->name('usuario.allusers');
         Route::get('consultarUserPorId/{id}', 'UserController@findUserById');
-
-
+        Route::get('/mistalentos', [
+            'uses' => 'UserController@myTalentos',
+            'as'   => 'usuario.mytalentos',
+        ]);
         Route::get('/', [
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',
-        ]);
-
-        // Route::get('/sin-actividad', [
-        //     'uses' => 'UserController@notActvity',
-        //     'as'   => 'usuario.notactvity',
-        // ]);
-
-        Route::get('/getuserstalentosbydatatables/{anio}', [
-            'uses' => 'UserController@getDatatablesUsersTalentosByDatatables',
-            'as'   => 'usuario.getusuariobydatatables',
-        ]);
-
-        Route::get('/getuserstalentosbydatatables/papelera/{anio}', [
-            'uses' => 'UserController@getDatatablesUsersTalentosByDatatablesTrash',
-            'as'   => 'usuario.getusuariobydatatables.papelera',
-        ]);
-
-        Route::get('/getuserstalentosbydatatables/papelera/{anio}', [
-            'uses' => 'TalentoController@getDatatablesUsersTalentosByDatatablesTrash',
-            'as'   => 'usuario.getusuariobydatatablestrash',
-        ]);
-
-
-        Route::get('/getuserstalentosbygestordatatables/{gestor}/{anio}', [
-            'uses' => 'UserController@getDatatablesUsersTalentosByGestorDatatables',
-            'as'   => 'usuario.getusuariobygestordatatables',
-        ]);
-
-        Route::get('/getuserstalentosbygestordatatables/papelera/{gestor}/{anio}', [
-            'uses' => 'UserController@getDatatablesUsersTalentosByGestorDatatablesTrash',
-            'as'   => 'usuario.getusuariobygestordatatables.papelera',
-        ]);
-
-        Route::get('/getuserstalentosbynodo/{nodo}/{anio}', [
-            'uses' => 'UserController@getDatatablesUsersTalentosByNodoDatatables',
-            'as'   => 'usuario.getusuariobygestordatatables',
-        ]);
-
-        Route::get('/getuserstalentosbynodo/papelera/{nodo}/{anio}', [
-            'uses' => 'UserController@getDatatablesUsersTalentosByNodoDatatablesTrash',
-            'as'   => 'usuario.getusuariobygestordatatables.papelera',
         ]);
 
         Route::post('/consultaremail', [
@@ -195,7 +113,6 @@ Route::group(
 
         Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
 
-        Route::get('/usuarios/estudios/{documento}', 'UserController@study')->name('usuario.study')->where('documento', '[0-9]+');
 
         Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
@@ -221,72 +138,6 @@ Route::group(
         ]);
     }
 );
-
-Route::group([
-    'prefix'     => 'usuario/excel',
-    'namespace'  => 'User',
-    'middleware' => 'auth',
-], function () {
-    Route::get('/{state}', [
-        'uses' => 'UserController@exportAllUser',
-        'as'   => 'usuario.excel.alluser',
-    ])->where('state', '[0,1]+');
-    Route::get('/administrador/{state}', [
-        'uses' => 'AdminController@exportAdminUser',
-        'as'   => 'usuario.excel.administrador',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/dinamizador/{state}/{nodo}', [
-        'uses' => 'DinamizadorController@exportDinamizadorUser',
-        'as'   => 'usuario.excel.dinamizador',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/dinamizador/{state}', [
-        'uses' => 'DinamizadorController@exportDinamizadorUser',
-        'as'   => 'usuario.excel.dinamizador.all',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/gestor/{state}/{nodo}', [
-        'uses' => 'GestorController@exportGestorUser',
-        'as'   => 'usuario.excel.gestor',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/gestor/{state}', [
-        'uses' => 'GestorController@exportGestorUser',
-        'as'   => 'usuario.excel.gestor.all',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/infocenter/{state}/{nodo}', [
-        'uses' => 'InfocenterController@exportInfocenterUser',
-        'as'   => 'usuario.excel.infocenter',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/infocenter/{state}', [
-        'uses' => 'InfocenterController@exportInfocenterUser',
-        'as'   => 'usuario.excel.infocenter.all',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/talento/{state}/{nodo}/{anio}', [
-        'uses' => 'TalentoController@exportTalentoUser',
-        'as'   => 'usuario.excel.talento',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/talento/{state}', [
-        'uses' => 'TalentoController@exportTalentoUser',
-        'as'   => 'usuario.excel.talento.all',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/ingreso/{state}/{nodo}', [
-        'uses' => 'IngresoController@exportIngresoUser',
-        'as'   => 'usuario.excel.ingreso',
-    ])->where('state', '[0,1]+');
-
-    Route::get('/ingreso/{state}', [
-        'uses' => 'IngresoController@exportIngresoUser',
-        'as'   => 'usuario.excel.ingreso.all',
-    ])->where('state', '[0,1]+');
-});
-
 
 /*========================================================================
 =            seccion para las rutas de costos administrativos            =
