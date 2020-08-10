@@ -27,7 +27,6 @@ class LineaTecnologica extends Model
         'abreviatura',
         'nombre',
         'slug',
-        'descripcion',
     ];
 
     /**
@@ -39,8 +38,6 @@ class LineaTecnologica extends Model
         'abreviatura' => 'string',
         'nombre'      => 'string',
         'slug'        => 'string',
-        'descripcion' => 'string',
-
     ];
 
     /*===========================================================================
@@ -55,10 +52,7 @@ class LineaTecnologica extends Model
     public function nodos()
     {
         return $this->belongsToMany(Nodo::class, 'lineastecnologicas_nodos')
-            ->withTimestamps()
-            ->withPivot([
-                'porcentaje_linea',
-            ]);
+            ->withTimestamps();
     }
 
     public function gestores()

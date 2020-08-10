@@ -18,11 +18,6 @@ class Articulacion extends Model
     const IS_EMPRESA     = 1; //ES UNA ARTICULACIÓN CON EMPRESA
     const IS_EMPRENDEDOR = 2; // ES UNA ARTICULACIÓN CON EMPRENDEDOR
 
-    //Constantes de campo estado
-    const IS_INICIO    = 0; // EL ESTADO DE LA ARTICULACIÓN ES INICIO
-    const IS_EJECUCION = 1; // EL ESTADO DE LA ARTICULACIÓN ES EJECUCICIÓM Ó CO-EJECUCICIÓM
-    const IS_CIERRE    = 2; // EL ESTADO DE LA ARTICULACIÓN ES CIERRE
-
     protected $table = 'articulaciones';
 
     /**
@@ -32,15 +27,9 @@ class Articulacion extends Model
      */
     protected $fillable = [
         'articulacion_proyecto_id',
-        'tipoarticulacion_id',
         'tipo_articulacion',
-        'fecha_ejecucion',
-        'observaciones',
-        'estado',
         'acc',
         'informe_final',
-        'pantallazo',
-        'otros',
         'acuerdos',
         'alcance_articulacion',
         'siguientes_investigaciones',
@@ -67,39 +56,10 @@ class Articulacion extends Model
             ->withPivot('talento_lider');
     }
 
-    // Relación a la tabla de tipos de articulación
-    public function tipoarticulacion()
-    {
-        return $this->belongsTo(TipoArticulacion::class, 'tipoarticulacion_id', 'id');
-    }
-
     public function articulacion_proyecto()
     {
         return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
     }
-
-    /*==========================================================================
-    =            scope para consultar las articulaciones por estado            =
-    ==========================================================================*/
-
-    public function scopeArticulacionesForEstado($query, int $estado)
-    {
-        $query->with([
-            'articulacion_proyecto' => function ($query) {
-                $query->select('id','actividad_id');
-            },
-            'articulacion_proyecto.actividad' => function ($query) {
-                $query->select('id','codigo_actividad','nombre')->orderBy('nombre');
-            },
-            'tipoarticulacion' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-
-        ])->select('id', 'articulacion_proyecto_id','tipoarticulacion_id','estado')
-          ->where('estado',$estado);
-    }
-
-    /*=====  End of scope para consultar las articulaciones por estado  ======*/
 
     /*====================================================================================
     =            scope para consultar articulaciones por tipo de articulacion            =
@@ -111,19 +71,6 @@ class Articulacion extends Model
     }
 
     /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
-
-
-    /*=========================================================================
-    =            scope para consultar por estado de articulaciones            =
-    =========================================================================*/
-
-    public function scopeEstadoOfArticulaciones($query, array $estado = [])
-    {
-        return $query->whereIn('estado',$estado);
-    }
-
-    /*=====  End of scope para consultar por estado de articulaciones  ======*/
-
 
     /*===================================================================
     =            scope para consultar articulaciones           =

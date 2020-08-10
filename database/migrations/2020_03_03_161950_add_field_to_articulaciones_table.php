@@ -15,10 +15,9 @@ class AddFieldToArticulacionesTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->unsignedInteger('tipoarticulacion_id')->nullable()->change();
-            $table->string('acuerdos', 1000)->nullable()->default(null)->after('observaciones');
+            $table->string('acuerdos', 1000)->nullable()->default(null)->after('tipo_articulacion');
             $table->string('alcance_articulacion', 1000)->nullable()->default(null)->after('acuerdos');
-            $table->unsignedInteger('fase_id')->nullable()->default(null)->after('tipoarticulacion_id');
+            $table->unsignedInteger('fase_id')->nullable()->default(null)->after('articulacion_proyecto_id');
 
             $table->index(["fase_id"], 'fk_articulaciones_fases1_idx');
             

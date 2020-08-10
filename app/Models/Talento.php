@@ -17,9 +17,7 @@ class Talento extends Model
      */
     protected $fillable = [
         'user_id',
-        'perfil_id',
         'tipo_talento_id',
-        'entidad_id',
         'universidad',
         'programa_formacion',
         'carrera_universitaria',
@@ -59,19 +57,9 @@ class Talento extends Model
         return $this->belongsTo(TipoEstudio::class, 'tipo_estudio_id', 'id');
     }
 
-    public function perfil()
-    {
-        return $this->belongsTo(Perfil::class, 'perfil_id', 'id');
-    }
-
     public function tipotalento()
     {
         return $this->belongsTo(TipoTalento::class, 'tipo_talento_id', 'id');
-    }
-
-    public function entidad()
-    {
-        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
     }
 
     // Métodos scope
@@ -116,10 +104,6 @@ class Talento extends Model
         $this->attributes['empresa'] = ucwords(mb_strtolower(trim($empresa), 'UTF-8'));
     }
 
-    public function setOtroTipoTalentoAttribute($otro_tipo_talento)
-    {
-        $this->attributes['otro_tipo_talento'] = ucwords(mb_strtolower(trim($otro_tipo_talento), 'UTF-8'));
-    }
 
     /*=====  End of mutadores eloquent  ======*/
 }

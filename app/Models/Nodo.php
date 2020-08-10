@@ -113,10 +113,7 @@ class Nodo extends Model
     public function lineas()
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
-            ->withTimestamps()
-            ->withPivot([
-                'porcentaje_linea',
-            ]);
+            ->withTimestamps();
     }
 
     public function contactosentidades()

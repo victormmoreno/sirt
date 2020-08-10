@@ -466,7 +466,6 @@ class UserRepository
         }
         return Talento::create([
             "user_id"               => $user->id,
-            "perfil_id"             => $request->input('txttipotalento'),
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
 
@@ -493,8 +492,6 @@ class UserRepository
 
             "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
                 $request->input('txtempresa') : null,
-            "otro_tipo_talento"     => null,
-
 
         ]);
     }
@@ -820,7 +817,6 @@ class UserRepository
         }
         return Talento::find($userUpdated->talento->id)->update([
 
-            "perfil_id"             => $request->input('txttipotalento'),
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
 
@@ -844,8 +840,6 @@ class UserRepository
 
             "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
                 $request->input('txtempresa') : null,
-            "otro_tipo_talento"     => null,
-
         ]);
     }
 

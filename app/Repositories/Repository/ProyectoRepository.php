@@ -231,7 +231,6 @@ class ProyectoRepository
       ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
       ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
       ->where('nodos.id', $id)
-      ->where('estado_aprobacion', Proyecto::IsAceptado())
       ->groupBy('meses', 'mes')
       ->orderBy('meses');
   }

@@ -132,10 +132,6 @@
               name: 'estado',
             },
             {
-              data: 'revisado_final',
-              name: 'revisado_final',
-            },
-            {
               data: 'details',
               name: 'details',
               orderable: false

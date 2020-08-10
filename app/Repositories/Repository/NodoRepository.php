@@ -93,13 +93,10 @@ class NodoRepository
             ]);
 
             if ($request->filled('txtlineas')) {
-                $porcentaje = 100 / count($request->get('txtlineas'));
-
                 $syncDataLinea = [];
                 foreach ($request->get('txtlineas') as $id => $value) {
                     $syncDataLinea[$id] = [
-                        'linea_tecnologica_id' => $value,
-                        'porcentaje_linea' => $porcentaje
+                        'linea_tecnologica_id' => $value
                     ];
                 }
 
@@ -152,14 +149,11 @@ class NodoRepository
 
             if ($request->filled('txtlineas')) {
 
-                $porcentaje =  100 / count($request->get('txtlineas'));
-
                 $syncDataLinea = [];
                 foreach ($request->get('txtlineas') as $id => $value) {
 
                     $syncDataLinea[$id] = [
-                        'linea_tecnologica_id' => $value,
-                        'porcentaje_linea' => $porcentaje
+                        'linea_tecnologica_id' => $value
                     ];
                 }
 

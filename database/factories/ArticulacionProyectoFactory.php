@@ -16,9 +16,6 @@ $factory->define(ArticulacionProyecto::class, function (Faker $faker) {
         'entidad_id' => $entidad->id,
         'aprobacion_dinamizador_ejecucion' => $faker->randomElement([1, 0]),
         'aprobacion_dinamizador_suspender' => $faker->randomElement([1, 0]),
-        'revisado_final' => $faker->randomElement([1, 0]),
-        'acta_inicio' => $faker->randomElement([1, 0]),
-        'actas_seguimiento' => $faker->randomElement([1, 0]),
         'acta_cierre' => $faker->randomElement([1, 0]),
     ];
 });

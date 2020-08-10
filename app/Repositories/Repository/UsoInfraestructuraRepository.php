@@ -342,10 +342,10 @@ class UsoInfraestructuraRepository
             },
             'actividad.nodo.entidad.ciudad.departamento',
             'actividad.articulacion_proyecto'                               => function ($query) {
-                $query->select('id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
+                $query->select('id', 'entidad_id', 'actividad_id', 'acta_cierre');
             },
             'actividad.articulacion_proyecto.proyecto'                      => function ($query) {
-                $query->select('id', 'articulacion_proyecto_id', 'sector_id', 'sublinea_id', 'areaconocimiento_id', 'estadoproyecto_id', 'tipoarticulacionproyecto_id', 'estadoprototipo_id', 'estado_aprobacion');
+                $query->select('id', 'articulacion_proyecto_id', 'sublinea_id', 'areaconocimiento_id');
             },
             'actividad.articulacion_proyecto.proyecto.fase',
         ]);
@@ -370,14 +370,14 @@ class UsoInfraestructuraRepository
             },
             'actividad.nodo.entidad.ciudad.departamento',
             'actividad.articulacion_proyecto'                               => function ($query) {
-                $query->select('id', 'entidad_id', 'actividad_id', 'revisado_final', 'acta_inicio', 'actas_seguimiento', 'acta_cierre');
+                $query->select('id', 'entidad_id', 'actividad_id', 'acta_cierre');
             },
             'actividad.articulacion_proyecto.talentos',
             'actividad.articulacion_proyecto.talentos.user'                 => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
             'actividad.articulacion_proyecto.proyecto'                      => function ($query) {
-                $query->select('id', 'articulacion_proyecto_id', 'sector_id', 'sublinea_id', 'areaconocimiento_id', 'estadoproyecto_id', 'tipoarticulacionproyecto_id', 'estadoprototipo_id', 'estado_aprobacion');
+                $query->select('id', 'articulacion_proyecto_id', 'sublinea_id', 'areaconocimiento_id');
             },
             'actividad.articulacion_proyecto.proyecto.sector'               => function ($query) {
                 $query->select('id', 'nombre');
@@ -395,7 +395,7 @@ class UsoInfraestructuraRepository
                 $query->select('id', 'nombre');
             },
             'actividad.articulacion_proyecto.articulacion'                  => function ($query) {
-                $query->select('id', 'articulacion_proyecto_id', 'tipoarticulacion_id', 'tipo_articulacion', 'fecha_ejecucion', 'observaciones', 'estado');
+                $query->select('id', 'articulacion_proyecto_id', 'tipoarticulacion_id', 'tipo_articulacion', 'observaciones', 'estado');
             },
             'actividad.articulacion_proyecto.articulacion.tipoarticulacion' => function ($query) {
                 $query->select('id', 'nombre', 'articulado_con');

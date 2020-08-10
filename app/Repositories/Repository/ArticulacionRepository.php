@@ -822,29 +822,6 @@ class ArticulacionRepository
   }
 
   /**
-  * Modifica el revisado final de una articulación
-  * @param Request $request
-  * @param int $id Id de la articulación
-  * @return boolean
-  * @author dum
-  */
-  public function updateRevisadoFinalArticulacion($request, $id)
-  {
-    DB::beginTransaction();
-    try {
-      $articulacion = Articulacion::find($id);
-      $articulacion->articulacion_proyecto()->update([
-      'revisado_final' => $request['txtrevisado_final'],
-      ]);
-      DB::commit();
-      return true;
-    } catch (\Exception $e) {
-      DB::rollback();
-      return false;
-    }
-  }
-
-  /**
   * Consulta las articulaciones de un nodo
   * @param int $id Id del nodo
   * @param string $anho Año para filtrar las articulaciones del nodo
@@ -856,7 +833,6 @@ class ArticulacionRepository
     return Articulacion::select('codigo_actividad AS codigo_articulacion',
     'actividades.nombre',
     'articulaciones.id',
-    'observaciones',
     'fecha_inicio',
     'fases.nombre AS nombre_fase',
     'entidades.nombre AS nombre_nodo',
@@ -892,13 +868,9 @@ class ArticulacionRepository
   public function consultaEntregablesDeUnaArticulacion($id)
   {
     return Articulacion::select(
-    'acta_inicio',
     'acc',
-    'actas_seguimiento',
     'acta_cierre',
     'informe_final',
-    'pantallazo',
-    'otros'
     )
     ->where('articulaciones.id', $id)
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
@@ -951,42 +923,6 @@ class ArticulacionRepository
       DB::rollback();
       return false;
     }
-  }
-
-  /**
-  * Modifica los entregables de un articulación
-  * @param Request $request
-  * @param int $id Id de la articulación
-  * @return boolean
-  * @author dum
-  */
-  public function updateEntregablesArticulacion($request, $id)
-  {
-    DB::beginTransaction();
-    try {
-      $articulacion = Articulacion::findOrFail($id);
-      $articulacion->update([
-      "acc" => $request['entregable_acuerdo_confidencialidad_compromiso'],
-      "informe_final" => $request['entregable_informe_final'],
-      "pantallazo" => $request['entregable_encuesta_satisfaccion'],
-      // "otros" => $request['entregable_otros']
-      ]);
-
-      $articulacion->articulacion_proyecto()->update([
-      "acta_inicio" => $request['entregable_acta_inicio'],
-      "actas_seguimiento" => $request['entregable_acta_seguimiento'],
-      "acta_cierre" => $request['entregable_acta_cierre'],
-      ]);
-
-      DB::commit();
-      return true;
-
-    } catch (\Exception $e) {
-
-      DB::rollback();
-      return false;
-    }
-
   }
 
   /**

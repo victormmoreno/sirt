@@ -24,7 +24,6 @@ class CreateServiciosTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 45);
-            $table->string('descripcion',1000);
 
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();

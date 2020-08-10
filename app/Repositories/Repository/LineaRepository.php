@@ -38,7 +38,7 @@ class LineaRepository
      */
     public function findLineaForShow($linea)
     {
-        return LineaTecnologica::with(['nodos', 'nodos.entidad', 'nodos.entidad.centro', 'nodos.entidad.ciudad', 'nodos.entidad.ciudad.departamento', 'sublineas'])->select('id', 'abreviatura', 'nombre', 'descripcion', 'created_at')->findOrFailLinea($linea);
+        return LineaTecnologica::with(['nodos', 'nodos.entidad', 'nodos.entidad.centro', 'nodos.entidad.ciudad', 'nodos.entidad.ciudad.departamento', 'sublineas'])->select('id', 'abreviatura', 'nombre', 'created_at')->findOrFailLinea($linea);
 
     }
 
