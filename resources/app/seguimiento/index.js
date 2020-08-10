@@ -134,50 +134,6 @@ function consultarSeguimientoDeUnNodoFases(bandera) {
   }
 };
 
-// 0 para cuando el Dinamizador consultar
-// 1 para cuando el Administrador consulta
-function generarExcelSeguimentoNodo(bandera) {
-  let id = 0;
-  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
-  let fecha_fin = $('#txtfecha_fin_Nodo').val();
-
-  if ( bandera == 1 ) {
-    id = $('#txtnodo_id').val();
-  }
-
-  if ( id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    if ( fecha_inicio > fecha_fin ) {
-      alertaFechasNoValidas();
-    } else {
-      location.href = '/excel/excelSeguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin;
-    }
-  }
-}
-
-// 0 para cuando el Dinamizador consultar
-// 1 para cuando el Gestor consulta
-function generarExcelSeguimentoDeUnGestor(bandera) {
-  let id = 0;
-  let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
-  let fecha_fin = $('#txtfecha_fin_Gestor').val();
-
-  if ( bandera == 1 ) {
-    id = $('#txtgestor_id').val();
-  }
-
-  if ( id === "" ) {
-    alertaGestorNoValido();
-  } else {
-    if ( fecha_inicio > fecha_fin ) {
-      alertaFechasNoValidas();
-    } else {
-      location.href = '/excel/excelSeguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin;
-    }
-  }
-}
-
 function graficoSeguimiento(data, name) {
   Highcharts.chart(name, {
     chart: {

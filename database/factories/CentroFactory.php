@@ -9,6 +9,5 @@ $factory->define(Centro::class, function (Faker $faker) {
     return [
         'regional_id' => Regional::all()->random()->id,
         'codigo_centro' => $faker->unique()->numerify('####'),
-        'descripcion' => $faker->text($maxNbChars = 200),
     ];
 });

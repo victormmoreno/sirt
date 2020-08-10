@@ -15,7 +15,6 @@ return [
         ['name' => TiposMaterialesTableSeeder::class, 'callable' => true],
         ['name' => TiposEdtTableSeeder::class, 'callable' => true],
         ['name' => TiposDocumentosTableSeeder::class, 'callable' => true],
-        ['name' => TiposArticulacionesTableSeeder::class, 'callable' => true],
         ['name' => TamanhoEmpresasTableSeeder::class, 'callable' => true],
         ['name' => MedidasTableSeeder::class, 'callable' => true],
         ['name' => ServidorVideosTableSeeder::class, 'callable' => true],
@@ -25,15 +24,11 @@ return [
         ['name' => PresentacionesTableSeeder::class, 'callable' => true],
         ['name' => OcupacionesTableSeeder::class, 'callable' => true],
         ['name' => LineasTecnologicasTableSeeder::class, 'callable' => true],
-
         ['name' => GradosEscolaridadTableSeeder::class, 'callable' => true],
         ['name' => SublineasTableSeeder::class, 'callable' => true],
-
         ['name' => GrupoSanguineosTableSeeder::class, 'callable' => true],
         ['name' => FasesTableSeeder::class, 'callable' => true],
         ['name' => EtniasTableSeeder::class, 'callable' => true],
-        ['name' => EstadosProyectoTableSeeder::class, 'callable' => true],
-        ['name' => EstadosPrototiposTableSeeder::class, 'callable' => true],
         ['name' => EstadosIdeasTableSeeder::class, 'callable' => true],
         ['name' => TiposArticualcionesProyectosTableSeeder::class, 'callable' => true],
         ['name' => EpsTableSeeder::class, 'callable' => true],
@@ -42,17 +37,9 @@ return [
         ['name' => CiudadesTableSeeder::class, 'callable' => true],
         ['name' => CategoriaMaterialTableSeeder::class, 'callable' => true],
         ['name' => AreasConocimientoTableSeeder::class, 'callable' => true],
-
-
         ['name' => RegionalesTableSeeder::class, 'callable' => true],
-
-
-
         ['name' => EntidadesTableSeeder::class, 'callable' => true],
         ['name' => CostosAdministrativosTableSeeder::class, 'callable' => true],
-        ['name' => LaboratoriosTableSeeder::class, 'callable' => true],
-
-
         ['name' => UsersTableSeeder::class, 'callable' => true],
         ['name' => PublicacionesTableSeeder::class, 'callable' => true],
         ['name' => VisitantesTableSeeder::class, 'callable' => true],

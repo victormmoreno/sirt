@@ -15,7 +15,6 @@
         <th>Fecha de Cierre</th>
         <th>Gestor</th>
         <th>Empresas que participan</th>
-        <th>Observaciones</th>
         <th>Empleados</th>
         <th>Instructores</th>
         <th>Aprendices</th>
@@ -36,7 +35,6 @@
           <td>{{ $value->fecha_cierre }}</td>
           <td>{{ $value->gestor }}</td>
           <td>{{ $value->empresas }}</td>
-          <td>{{ $value->observaciones }}</td>
           <td>{{ $value->empleados }}</td>
           <td>{{ $value->instructores }}</td>
           <td>{{ $value->aprendices }}</td>

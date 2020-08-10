@@ -20,8 +20,6 @@ class CreateUsoInfraestructurasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('actividad_id');
             $table->date('fecha');
-            $table->string('asesoria_directa', 45)->nullable()->default(0);
-            $table->string('asesoria_indirecta', 45)->nullable()->default(0);
             $table->string('descripcion', 2000)->nullable();
             $table->tinyInteger('estado')->default('1');
             $table->timestamps();

@@ -7,26 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ArticulacionProyecto extends Model
 {
 
-    //Constatens del campo revisado_final
-    const IS_POREVALUAR = 0;
-    const IS_APROBADO   = 1;
-    const IS_NOAPROBADO = 2;
-
-    // Retorno para las constantes del campo revisado_final
-    public static function IsPorEvaluar()
-    {
-        return self::IS_POREVALUAR;
-    }
-
-    public static function IsAprobado()
-    {
-        return self::IS_APROBADO;
-    }
-
-    public static function IsNoAprobado()
-    {
-        return self::IS_NOAPROBADO;
-    }
 
     public static function habilitarTalentos($articulacion_proyecto)
     {
@@ -47,9 +27,6 @@ class ArticulacionProyecto extends Model
         'actividad_id',
         'aprobacion_dinamizador_ejecucion',
         'aprobacion_dinamizador_suspender',
-        'revisado_final',
-        'acta_inicio',
-        'actas_seguimiento',
         'acta_cierre'
     ];
 

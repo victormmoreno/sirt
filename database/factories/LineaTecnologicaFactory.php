@@ -11,6 +11,5 @@ $factory->define(LineaTecnologica::class, function (Faker $faker) {
     return [
         'abreviatura' => strtoupper($faker->lexify('???')),
         'nombre'      => $faker->unique()->word,
-        'descripcion' => $faker->text,
     ];
 });

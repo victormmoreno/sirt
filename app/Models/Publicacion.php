@@ -38,7 +38,7 @@ class Publicacion extends Model
   // Estado que indica que la publicación está activa
   const IS_ACTIVA = 1;
 
-  // Retorno para las constantes del campo estado_aprobacion
+  // Retorno para las constantes del campo estado
   public static function IsActiva()
   {
     return self::IS_ACTIVA;

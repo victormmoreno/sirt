@@ -26,7 +26,6 @@ class CreateCentrosTable extends Migration
             $table->unsignedInteger('regional_id');
             $table->unsignedInteger('entidad_id');
             $table->string('codigo_centro', 45);
-            $table->string('descripcion', 200)->nullable()->default(null);
 
             $table->index(["entidad_id"], 'fk_centro_entidad1_idx');
 

@@ -15,8 +15,6 @@ $factory->define(Talento::class, function (Faker $faker) {
 
     return [
         'tipo_talento_id' => $tipoTalento = $tipoTalento->id,
-        'entidad_id' => TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ? $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO ? $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_EGRESADO_SENA ?  $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_INSTRUCTOR_SENA ?  $centro : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_PROPIETARIO_EMPRESA ?   $noAplica : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_EMPRENDEDOR ? $noAplica : TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO ?  $noAplica :
-            TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_FUNCIONARIO_EMPRESA ?  $noAplica : $noAplica,
         'tipo_formacion_id' => TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_EGRESADO_SENA ?  $tipoFormacion : NULL,
         'tipo_estudio_id' => TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO ?  $tipoEstudio : NULL,
         'universidad' => TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO ?  $faker->company : NULL,
@@ -26,6 +24,5 @@ $factory->define(Talento::class, function (Faker $faker) {
             TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_INSTRUCTOR_SENA ?  $faker->bs : NULL,
         'empresa' =>  TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_FUNCIONARIO_EMPRESA ?  $faker->company : null,
         'dependencia' => TipoTalento::find($tipoTalento)->nombre == TipoTalento::IS_INSTRUCTOR_SENA ?  $faker->jobTitle : null,
-        'otro_tipo_talento' => NULL,
     ];
 });

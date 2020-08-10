@@ -57,16 +57,6 @@ function detallesDeUnaIntervencion(id){
   
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Observaciones: </span>'
-          +'</div>'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="black-text">'+respuesta.detalles.observaciones+'</span>'
-          +'</div>'
-          +'</div>'
-          +'<div class="divider"></div>'
-  
-          +'<div class="row">'
-          +'<div class="col s12 m6 l6">'
           +'<span class="teal-text text-darken-3">Tipo de Articulación: </span>'
           +'</div>'
           +'<div class="col s12 m6 l6">'
@@ -84,121 +74,8 @@ function detallesDeUnaIntervencion(id){
           +'</div>'
           +'</div>'
           +'<div class="divider"></div>'
-  
-          +'<div class="row">'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Revisado Final: </span>'
-          +'</div>'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="black-text">'+respuesta.detalles.revisado_final+'</span>'
-          +'</div>'
-          +'</div>'
-          +'<div class="divider"></div>'
         );
       $('#articulacionDetalle').openModal();
-      }
-    });
-  }
-
-  function verDetallesDeLosEntregablesDeUnaIntervencionEmpresa(id) {
-    $.ajax({
-       dataType:'json',
-       type:'get',
-       url:"/articulacion/ajaxDetallesDeLosEntregablesDeUnaArticulacion/"+id,
-    }).done(function(respuesta){
-      $("#detalleDeUnaArticulacion_titulo").empty();
-      $("#detalleArticulacion_body").empty();
-      if (respuesta.entregables == null) {
-        Swal.fire(
-          'Ups!!',
-          'Ha ocurrido un error',
-          'error'
-        );
-      } else {
-        $("#detalleDeUnaArticulacion_titulo").append("<a class='btn btn-small blue-grey' target='_blank' href='/intervencion/"+respuesta.articulacion.id+"/entregables'>Ver los Archivos</a> <span class='teal-text text-darken-3'>Código de la Intervención a Empresa: </span><b>"+respuesta.articulacion.codigo_articulacion+"</b>");
-        $("#detalleArticulacion_body").append(
-          '<div class="row">'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Acta de Inicio: </span>'
-          +'</div>'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="black-text">'+respuesta.entregables.acta_inicio+'</span>'
-          +'</div>'
-          +'</div>'
-          +'<div class="divider"></div>'
-        );
-        if (respuesta.articulacion.tipo_articulacion == 'Grupo de Investigación') {
-          $("#detalleArticulacion_body").append(
-            '<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="teal-text text-darken-3">Formato de confidencialidad y compromiso firmado: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.entregables.acc+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-          );
-        }
-        $("#detalleArticulacion_body").append(
-          '<div class="row">'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Actas de Seguimiento: </span>'
-          +'</div>'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="black-text">'+respuesta.entregables.actas_seguimiento+'</span>'
-          +'</div>'
-          +'</div>'
-          +'<div class="divider"></div>'
-        );
-        $("#detalleArticulacion_body").append(
-          '<div class="row">'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Acta de Cierre: </span>'
-          +'</div>'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="black-text">'+respuesta.entregables.acta_cierre+'</span>'
-          +'</div>'
-          +'</div>'
-          +'<div class="divider"></div>'
-        );
-  
-        if (respuesta.articulacion.tipo_articulacion == 'Empresa' || respuesta.articulacion.tipo_articulacion == 'Emprendedor') {
-          $("#detalleArticulacion_body").append(
-            '<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="teal-text text-darken-3">Informe final de la asesoría: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.entregables.informe_final+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-  
-            +'<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="teal-text text-darken-3">Encuesta de satisfacción: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.entregables.pantallazo+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-          );
-        }
-  
-        $("#detalleArticulacion_body").append(
-          '<div class="row">'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Otros: </span>'
-          +'</div>'
-          +'<div class="col s12 m6 l6">'
-          +'<span class="black-text">'+respuesta.entregables.otros+'</span>'
-          +'</div>'
-          +'</div>'
-          +'<div class="divider"></div>'
-        );
-      $("#detalleArticulacion_modal").openModal();
       }
     });
   }
