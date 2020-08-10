@@ -28,79 +28,6 @@ class ArticulacionController extends Controller
   }
 
   /**
-   * Excel que genra las articulaciones de un nodo finalizadas en un año
-   *
-   * @param int $id Id del nodo
-   * @param string $anho Año para realizar la búsqueda de las articulaciones
-   * @return Response\Excel
-   * @author dum
-   */
-  public function excelArticulacionFinalizadasPorNodoAnho_Controller($id, $anho)
-  {
-    $idnodo = $id;
-    if ( Session::get('login_role') == User::IsDinamizador() ) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
-    $query = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorNodoYAnho_Repository($idnodo, $anho);
-    // dd();
-    return Excel::download(new ArticulacionesFinalizadasExport($query), 'Articulaciones.xls');
-  }
-
-  /**
-   * Excel para generar las articulaciones de una línea tecnológica por nodo y fecha
-   * @param int $id Id del nodo
-   * @param int $idlinea Id de la línea tecnológica
-   * @param string $fecha_inicio Primera fecha para realizar el filtro
-   * @param string $fecha_cierre Segunda fecha para realizar el filtro
-   * @return Response\Excel
-   * @author dum
-   */
-  public function excelArticulacionFinalizadasPorNodoFechaLinea_Controller($id, $idlinea, $fecha_inicio, $fecha_cierre)
-  {
-    $idnodo = $id;
-    if ( Session::get('login_role') == User::IsDinamizador() ) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
-    $query = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechaNodoYLinea_Repository($idnodo, $idlinea, $fecha_inicio, $fecha_cierre);
-    return Excel::download(new ArticulacionesFinalizadasExport($query), 'Articulaciones.xls');
-  }
-
-  /**
-   * Consulta la articulaciones finalizadas por gestor y fechas
-   *
-   * @param int $id Id del gestor
-   * @param string $fecha_inicio Primera fecha para realizar filtro
-   * @param string $fecha_cierre Segunda fecha para realizar filtro
-   * @return Response\Excel
-   * @author dum
-   */
-  public function excelArticulacionFinalizadasPorGestorFecha_Controller($id, $fecha_inicio, $fecha_cierre)
-  {
-    $query = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorGestorFecha_Repository($id, $fecha_inicio, $fecha_cierre);
-    return Excel::download(new ArticulacionesFinalizadasExport($query), 'Articulaciones.xls');
-  }
-
-  /**
-   * Excel que genera las articulaciones finalizadas entre dos fechas
-   *
-   * @param int $id Id del nodo
-   * @param string $fecha_inicio Primera fecha para filtrar la consulta
-   * @param string $fecha_cierre Segunda fecha para filtrar la consulta
-   * @return Response\Excel
-   * @author dum
-   */
-  public function excelArticulacionFinalizadasPorFechaYNodo_Controller($id, $fecha_inicio, $fecha_cierre)
-  {
-    $idnodo = $id;
-  
-    if ( Session::get('login_role') == User::IsDinamizador() ) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
-    $query = $this->getArticulacionRepository()->consultarArticulacionesFinalizadasPorFechaYNodo_Repository($idnodo, $fecha_inicio, $fecha_cierre);
-    return Excel::download(new ArticulacionesFinalizadasExport($query), 'Articulaciones.xls');
-  }
-
-  /**
    * Genera el excel de las articulaciones que tiene un gestor
    * @param int $id Id del gestor
    * @return Response\Excel
@@ -120,18 +47,6 @@ class ArticulacionController extends Controller
   public function articulacionesDeUnNodo($id)
   {
     return Excel::download(new ArticulacionesNodoExport($this->getArticulacionRepository(), $id), 'Articulaciones.xls');
-  }
-
-  /**
-   * Genera excel con la información de una articulación por su id
-   * @param int $id Id de la articulación
-   * @return Response\Excel
-   * @author dum
-   */
-  public function articulacionPorId($id)
-  {
-    $articulacion = $this->getArticulacionRepository()->consultarArticulacionPorId($id)->last();
-    return Excel::download(new ArticulacionesUnicaExport($this->getArticulacionRepository(), $id, $articulacion, $this->getArticulacionProyectoRepository(), $this->getGrupoInvestigacionRepository(), $this->getEmpresaRepository()), 'Articulacion ' . $articulacion->codigo_articulacion . '.xls');
   }
 
   /**

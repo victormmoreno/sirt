@@ -78,11 +78,6 @@ class Nodo extends Model
         return $this->hasMany(Ingreso::class, 'nodo_id', 'id');
     }
 
-    public function laboratorios()
-    {
-        return $this->hasMany(Laboratorio::class, 'nodo_id', 'id');
-    }
-
     public function equipos()
     {
         return $this->hasMany(Equipo::class, 'nodo_id', 'id');
@@ -118,10 +113,7 @@ class Nodo extends Model
     public function lineas()
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
-            ->withTimestamps()
-            ->withPivot([
-                'porcentaje_linea',
-            ]);
+            ->withTimestamps();
     }
 
     public function contactosentidades()
@@ -217,16 +209,6 @@ class Nodo extends Model
             throw NodoDoesNotExist::named($name);
         }
         return $nodo;
-    }
-
-    public function getLaboratorioIds(): Collection
-    {
-        return $this->laboratorios->pluck('id');
-    }
-
-    public function getLaboratorioNames(): Collection
-    {
-        return $this->laboratorios->pluck('nombres');
     }
 
     /**

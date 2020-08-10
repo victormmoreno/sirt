@@ -480,8 +480,6 @@ class UserRepository
 
             "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
                 $request->input('txtempresa') : null,
-            "otro_tipo_talento"     => null,
-
 
         ]);
     }
@@ -836,8 +834,6 @@ class UserRepository
 
             "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
                 $request->input('txtempresa') : null,
-            "otro_tipo_talento"     => null,
-
         ]);
     }
 

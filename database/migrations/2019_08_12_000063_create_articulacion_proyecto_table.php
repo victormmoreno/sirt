@@ -25,9 +25,6 @@ class CreateArticulacionProyectoTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('entidad_id');
             $table->unsignedInteger('actividad_id');
-            $table->tinyInteger('revisado_final')->default('0');
-            $table->tinyInteger('acta_inicio')->default('0');
-            $table->tinyInteger('actas_seguimiento')->default('0');
             $table->tinyInteger('acta_cierre')->default('0');
 
             $table->index(["actividad_id"], 'fk_articulacion_proyecto_actividades1_idx');

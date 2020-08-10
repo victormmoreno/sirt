@@ -18,7 +18,6 @@ class Centro extends Model
         'entidad_id',
         'ciudad_id',
         'codigo_centro',
-        'descripcion',
     ];
 
     /*=========================================
@@ -44,11 +43,6 @@ class Centro extends Model
     public function setCodigoCentroAttribute($codigo_centro)
     {
         $this->attributes['codigo_centro'] = trim($codigo_centro);
-    }
-
-    public function setDescripcionAttribute($descripcion)
-    {
-        $this->attributes['descripcion'] = ucfirst(strtolower(trim($descripcion)));
     }
 
     /*=====  End of mutador eloquent  ======*/

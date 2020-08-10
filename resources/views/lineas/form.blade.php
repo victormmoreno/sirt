@@ -70,32 +70,6 @@
             @enderror
         </div>
     </div>
-    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-        <div class="row">
-                <div class="input-field col s12 m6 l6 offset-l3 m3">
-                    <i class="material-icons prefix">
-                        done_all
-                    </i>
-                    <input class="validate" id="txtcostos" name="txtcostos" type="text" value="{{  $linea->lineastecnologicasnodos->firstWhere('nodo_id', auth()->user()->dinamizador->nodo->id)->porcentaje_linea}}"/>
-                    <label for="txtcostos">
-                        Costos Administrativos (%)
-                        <span class="red-text">
-                            *
-                        </span>
-                    </label>
-                    @error('txtcostos')
-                    <label class="error" for="txtcostos" id="txtcostos-error">
-                        {{ $message }}
-                    </label>
-                    @enderror
-                    <div class="center-align">
-                        <small class="black-text">
-                            Debe proporcionar el porcentaje, ejemplo: <b>17.3</b>
-                        </small>
-                    </div>
-                </div>
-            </div>
-    @endif
     <center>
        
         <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 

@@ -88,8 +88,6 @@
                                                                     <span class="title">
                                                                         {{$value->abreviatura}} - {{$value->nombre}}
                                                                     </span>
-                                                                    <p ><b class="cyan-text text-darken-3">Porcentaje:</b> {{$value->pivot->porcentaje_linea}} %</p>
-                                                                    
                                                                 </li>   
                                                             @empty
                                                             <div class="center">

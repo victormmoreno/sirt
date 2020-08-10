@@ -5,7 +5,9 @@ Señor(a)<br>
 <b>_{{$idea->nombres_contacto }} {{$idea->apellidos_contacto }}_</b><br>
 Cordial Saludo.
 <br>
-Se ha enviado este correo para informarte la fecha y dirección donde se realizará el comité de selección de ideas.
+Dando respuesta al registro de idea para la Red Tecnoparque tenemos el gusto de informar la fecha y dirección donde se realizará el comité de selección de ideas.
+Se dará un espacio de cinco minutos para presentar un pitch (llevar presentación o video) donde se evaluará claridad de la idea y/o la solución, grado de innovación, 
+impacto y equipo de trabajo. También se contara con un espacio de cinco minutos para preguntas del comité. 
 <br>
 @component('mail::panel')
 	

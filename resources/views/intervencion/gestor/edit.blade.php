@@ -82,31 +82,12 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="input-field col s12 m5 l5">
-                        <select id="txttipoarticulacion_id" name="txttipoarticulacion_id" class="js-states">
-                          <option value="">Primero debes seleccionar con quién se hará la Intervención</option>
-                        </select>
-                        <label for="txttipoarticulacion_id">Seleccione el Tipo de Intervención <span class="red-text">*</span></label>
-                        <small id="txttipoarticulacion_id-error" class="error red-text"></small>
-                      </div>
                       <div class="col s12 m3 l3">
                         <blockquote>
                           <ul class="collection">
                             <li class="collection-item">Debes tener en cuenta que para cerrar una Intervención, <b>el dinamizador del nodo debe haberla aprobado o no aprobado.</b></li>
                           </ul>
                         </blockquote>
-                      </div>
-                      <div class="input-field col s12 m4 l4">
-                        <select class="js-states" id="txtestado" name="txtestado" onchange="estadoArticulacion(this.value);">
-                          <option value="">Seleccione el Estado de la Intervención</option>
-                          <option value="0">Inicio</option>
-                          <option value="1">Ejecución</option>
-                          @if ($articulacion->articulacion_proyecto->revisado_final == 1)
-                            <option value="2">Cierre</option>
-                          @endif
-                        </select>
-                        <label for="txtestado">Estado de la Intervención <span class="red-text">*</span></label>
-                        <small id="txtestado-error" class="error red-text"></small>
                       </div>
                     </div>
                     <div class="row">
@@ -121,13 +102,6 @@
                           <label for="txtfecha_cierre">Fecha de Cierre de la Intervención<span class="red-text">*</span></label>
                           <small id="txtfecha_cierre-error" class="error red-text"></small>
                         </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m12 l8 offset-l2">
-                        <textarea id="txtobservaciones" name="txtobservaciones" class="materialize-textarea"></textarea>
-                        <label for="txtobservaciones">Observaciones</label>
-                        <small id="txtobservaciones-error" class="error red-text"></small>
                       </div>
                     </div>
                     <div class="divider"></div>
@@ -293,25 +267,6 @@
         })
       })
     }
-
-    // Consulta los tipos de articulaciones que se pueden realizar según el caso (Grupos de Investigación, Empresas, Emprendedores)
-    function consultarTipoArticulacion(value) {
-      $('#txttipoarticulacion_id').empty();
-      $.ajax({
-        dataType:'json',
-        type:'get',
-        url:'/articulacion/consultarTiposArticulacion/'+value,
-      }).done(function(ajax){
-        $('#txttipoarticulacion_id').append('<option value="">Seleccione el tipo de articulación</option>');
-        $.each(ajax.tiposarticulacion, function(i, e) {
-          // console.log(e.nombre);
-          $('#txttipoarticulacion_id').append('<option value="'+e.id+'">'+e.nombre+'</option>');
-        })
-        $('#txttipoarticulacion_id').val({{$articulacion->tipoarticulacion->id}});
-        $('#txttipoarticulacion_id').material_select();
-      })
-    }
-
     
     function getTipoArt() {
       return tipo;

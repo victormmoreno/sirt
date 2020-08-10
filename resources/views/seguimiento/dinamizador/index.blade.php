@@ -69,9 +69,6 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                     <div class="center col s12 m6 l6">
                       <button onclick="consultarSeguimientoDeUnGestor(1)" class="btn">Consultar</button>
                     </div>
-                    {{-- <div class="center col s12 m6 l6">
-                        <button onclick="generarExcelSeguimentoDeUnGestor(1)" class="btn green">Excel</button>
-                      </div> --}}
                   </div>
                   <div class="col s12 m8 l8">
                     <div id="graficoSeguimientoPorGestorDeUnNodo_column" class="green lighten-3"
@@ -139,9 +136,6 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                     <div class="center col s12 m6 l6">
                       <button onclick="consultarSeguimientoDeUnNodo(0)" class="btn">Consultar</button>
                     </div>
-                    {{-- <div class="center col s12 m6 l6">
-                        <button onclick="generarExcelSeguimentoNodo(0)" class="btn green">Excel</button>
-                      </div> --}}
                   </div>
                   <div class="col s12 m8 l8">
                     <div id="graficoSeguimientoDeUnNodo_column" class="green lighten-3"

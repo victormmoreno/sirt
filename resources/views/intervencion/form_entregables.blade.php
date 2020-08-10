@@ -58,15 +58,6 @@
   </div>
 @endif
 <div class="divider"></div>
-<div class="row">
-  <h5>Entregables Fase de {{ $articulacion->tipo_articulacion == 'Grupo de Investigación' ? 'Co-Ejecución' : 'Ejecución' }}</h5>
-  <div class="col s4 m4 l4">
-    <p class="p-v-xs">
-      <input type="checkbox" {{ $disabled }} name="entregable_acta_seguimiento" {{ $articulacion->actas_seguimiento == 0 ? '' : 'checked' }} id="entregable_acta_seguimiento" value="1">
-      <label for="entregable_acta_seguimiento">Actas de Seguimiento<span class="red-text">*</span></label>
-    </p>
-  </div>
-</div>
 @if ($disabled == '')
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
@@ -125,26 +116,5 @@
     </ul>
   </div>
 @endif
-
 <div class="divider"></div>
-<div class="row">
-  <h5>Revisado Final</h5>
-  <div class="col s12 m4 l4">
-    <p class="p-v-xs">
-      <input id="txtrevisadoa" {{ \Session::get('login_role') != App\User::IsDinamizador() ? 'disabled' : '' }} name="txtrevisado_final" {{ $articulacion->revisado_final == 'Por Evaluar' ? 'checked' : '' }} type="radio" value="0">
-      <label for="txtrevisadoa">Por evaluar</label>
-    </p>
-  </div>
-  <div class="col s12 m4 l4">
-    <p class="p-v-xs">
-      <input id="txtrevisadob" {{ \Session::get('login_role') != App\User::IsDinamizador() ? 'disabled' : '' }} name="txtrevisado_final" {{ $articulacion->revisado_final == 'Aprobado' ? 'checked' : '' }} type="radio" value="1">
-      <label for="txtrevisadob">Aprobado</label>
-    </p>
-  </div>
-  <div class="col s12 m4 l4">
-    <p class="p-v-xs">
-      <input id="txtrevisadoc" {{ \Session::get('login_role') != App\User::IsDinamizador() ? 'disabled' : '' }} name="txtrevisado_final" {{ $articulacion->revisado_final == 'No Aprobado' ? 'checked' : '' }} type="radio" value="2">
-      <label for="txtrevisadoc">No aprobado</label>
-    </p>
-  </div>
-</div>
+

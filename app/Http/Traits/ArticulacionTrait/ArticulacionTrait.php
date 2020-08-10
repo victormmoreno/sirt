@@ -11,22 +11,6 @@ trait ArticulacionTrait
         return self::IS_NOAPLICA;
     }
 
-    // Retorno para las constantes del campo estado
-    public static function IsInicio()
-    {
-        return self::IS_INICIO;
-    }
-
-    public static function IsEjecucion()
-    {
-        return self::IS_EJECUCION;
-    }
-
-    public static function IsCierre()
-    {
-        return self::IS_CIERRE;
-    }
-
     // Retorno de la constantes para el campo de tipo_articulacion
     public static function IsGrupo()
     {

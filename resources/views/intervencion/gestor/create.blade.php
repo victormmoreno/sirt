@@ -98,13 +98,6 @@
                     </div>
                     <div class="row">
                       <div class="input-field col s12 m6 l6">
-                        <select id="txttipoarticulacion_id" name="txttipoarticulacion_id" class="js-states">
-                          <option value="">Primero debes seleccionar con quién se hará la Intervención</option>
-                        </select>
-                        <label for="txttipoarticulacion_id">Seleccione el Tipo de Intervención <span class="red-text">*</span></label>
-                        <small id="txttipoarticulacion_id-error" class="error red-text"></small>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
                         <select class="js-states" id="txtestado" name="txtestado">
                           <option value="">Seleccione el Estado de la Intervención</option>
                           <option value="0">Inicio</option>
@@ -119,13 +112,6 @@
                         <input type="text" id="txtfecha_inicio" href="javascript:void(0)" name="txtfecha_inicio" class="datepicker __pickerinput"/>
                         <label for="txtfecha_inicio">Fecha de Inicio de la Intervención<span class="red-text">*</span></label>
                         <small id="txtfecha_inicio-error" class="error red-text"></small>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="input-field col s12 m12 l8 offset-l2">
-                        <textarea id="txtobservaciones" name="txtobservaciones" class="materialize-textarea"></textarea>
-                        <label for="txtobservaciones">Observaciones</label>
-                        <small id="txtobservaciones-error" class="error red-text"></small>
                       </div>
                     </div>
                     <div class="divider"></div>
@@ -254,24 +240,6 @@
         })
       })
     }
-
-
-    // Consulta los tipos de articulaciones que se pueden realizar según el caso (Grupos de Investigación, Empresas, Emprendedores)
-    function consultarTipoArticulacion(value) {
-      $('#txttipoarticulacion_id').empty();
-      $.ajax({
-        dataType:'json',
-        type:'get',
-        url:'/articulacion/consultarTiposArticulacion/'+value,
-      }).done(function(ajax){
-        $('#txttipoarticulacion_id').append('<option value="">Seleccione el tipo de articulación</option>');
-        $.each(ajax.tiposarticulacion, function(i, e) {
-          $('#txttipoarticulacion_id').append('<option value="'+e.id+'">'+e.nombre+'</option>');
-        })
-        $('#txttipoarticulacion_id').material_select();
-      })
-    }
-
 
     function getTipoArt() {
       return tipo;

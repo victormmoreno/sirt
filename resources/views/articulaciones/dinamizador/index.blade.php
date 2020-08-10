@@ -196,7 +196,6 @@
             d.nombre = $('.nombre').val(),
             d.tipo_articulacion = $('.tipo_articulacion').val(),
             d.nombre_completo_gestor = $('.nombre_completo_gestor').val(),
-            d.estado = $('.estado').val(),
             d.search = $('input[type="search"]').val()
           }
         },

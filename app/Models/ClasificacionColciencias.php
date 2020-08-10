@@ -14,7 +14,6 @@ class ClasificacionColciencias extends Model
 
     protected $fillable = [
         'nombre',
-        'estado',
     ];
 
     /*=========================================
