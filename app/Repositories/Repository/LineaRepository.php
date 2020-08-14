@@ -39,7 +39,6 @@ class LineaRepository
     public function findLineaForShow($linea)
     {
         return LineaTecnologica::with(['nodos', 'nodos.entidad', 'nodos.entidad.centro', 'nodos.entidad.ciudad', 'nodos.entidad.ciudad.departamento', 'sublineas'])->select('id', 'abreviatura', 'nombre', 'created_at')->findOrFailLinea($linea);
-
     }
 
     /**
@@ -52,7 +51,6 @@ class LineaRepository
     public function lineasWithRelations($relations)
     {
         return LineaTecnologica::with($relations);
-
     }
 
     /**
@@ -66,7 +64,6 @@ class LineaRepository
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),
             "slug"        => str_slug($request->input('txtnombre'), '-'),
-            "descripcion" => $request->input('txtdescripcion'),
         ]);
     }
 
@@ -82,10 +79,8 @@ class LineaRepository
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),
             "slug"        => str_slug($request->input('txtnombre'), '-'),
-            "descripcion" => $request->input('txtdescripcion'),
         ]);
 
         return $lineatecnologica;
     }
-
 }

@@ -387,18 +387,19 @@
                                                             <div class="col s12 m6 l6">
                                                                 <div class="center">
                                                                     <span class="mailbox-title green-complement-text">
-                                                                        Equipos ({{$usoinfraestructura->usoequipos->count()}})
+                                                                        Equipos ({{$equipos->count()}})
+                                                                        
                                                                     </span>
                                                                 </div>
                                                                 <div class="divider mailbox-divider"></div>
                                                                 <ul class="collection">
-                                                                    @forelse($usoinfraestructura->usoequipos as $usoequipo)
+                                                                    @forelse($equipos as $equipo)
                                                                         <li class="collection-item ">
                                                                             <p class="title">
-                                                                                <strong class="cyan-text text-darken-3">Nombre: </strong>{{$usoequipo->nombre}}
+                                                                                <strong class="cyan-text text-darken-3">Nombre: </strong>{{$equipo->nombre}}
                                                                             </p>
                                                                             <p class="title">
-                                                                                <strong class="cyan-text text-darken-3">Referencia: </strong>{{$usoequipo->referencia}}
+                                                                                <strong class="cyan-text text-darken-3">Referencia: </strong>{{$equipo->referencia}}
                                                                             </p>
                                                                         </li>
                                                                     @empty

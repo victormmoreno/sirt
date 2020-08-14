@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Datatables;
+namespace App\Datatables;
 
-class MaterialDatatables
+class MaterialDatatable
 {
     /**
      * retorna datatables con los materiales para el controlador MaterialController::index().

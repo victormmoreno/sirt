@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Datatables;
+namespace App\Datatables;
 
-class NodoDatatables
+class NodoDatatable
 {
 
     /**

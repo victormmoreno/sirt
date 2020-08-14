@@ -16,9 +16,6 @@ $(document).ready(function() {
             data: 'nombre',
             name: 'nombre',
         }, {
-            data: 'descripcion',
-            name: 'descripcion',
-        }, {
             data: 'action',
             name: 'action',
             orderable: false
