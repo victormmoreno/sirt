@@ -5,7 +5,7 @@ namespace App\Http\Controllers\UsoInfraestructura;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\{UsoInfraestructura, Actividad, Articulacion, Talento, Proyecto, Nodo, Fase, Edt, Equipo, Gestor, LineaTecnologica, Material};
-use App\Repositories\Datatables\UsoInfraestructuraDatatables;
+use App\Datatables\UsoInfraestructuraDatatable;
 use App\Repositories\Repository\UserRepository\GestorRepository;
 use App\Repositories\Repository\{ArticulacionRepository, EdtRepository, LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
 use App\User;
@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsoInfraestructuraController extends Controller
 {
@@ -33,7 +34,7 @@ class UsoInfraestructuraController extends Controller
         UsoInfraestructuraRepository $UsoInfraestructuraRepository,
         GestorRepository $gestorRepository,
         LineaRepository $lineaRepository,
-        UsoInfraestructuraDatatables $UsoInfraestructuraDatatables,
+        UsoInfraestructuraDatatable $UsoInfraestructuraDatatables,
         ProyectoRepository $proyectoRepository
 
 
@@ -248,19 +249,12 @@ class UsoInfraestructuraController extends Controller
                     ->withTrashed()
                     ->pluck('user', 'id');
 
-                // return $gestores;
                 return view('usoinfraestructura.index', [
                     'gestores' => $gestores,
                 ]);
                 break;
 
             case User::IsGestor():
-
-                // $user= auth()->user()->gestor->id;
-                // $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
-                // ->where('gestores.id', $user)
-                // // ->whereIn('fases.id', [1,2,3])
-                // ->pluck( 'nombre', 'proyectos.id');
 
                 return view('usoinfraestructura.index', [
                     'gestor_id' => auth()->user()->gestor->id,
@@ -434,6 +428,11 @@ class UsoInfraestructuraController extends Controller
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
             ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
+        $equipos = [];
+        if ($usoinfraestructura->has('usoequipos')) {
+            $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
+        }
+
         $this->authorize('show', $usoinfraestructura);
 
         $totalCostos = 0;
@@ -442,6 +441,7 @@ class UsoInfraestructuraController extends Controller
 
         return view('usoinfraestructura.show', [
             'usoinfraestructura' => $usoinfraestructura,
+            'equipos' => $equipos,
             'totalCostos' => $totalCostos,
         ]);
     }
@@ -460,7 +460,13 @@ class UsoInfraestructuraController extends Controller
             ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
 
+
         $this->authorize('edit', $usoinfraestructura);
+
+        $equipos = [];
+        if ($usoinfraestructura->has('usoequipos')) {
+            $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
+        }
 
         $date = Carbon::now()->format('Y-m-d');
 
@@ -492,6 +498,7 @@ class UsoInfraestructuraController extends Controller
                 'usoinfraestructura' => $usoinfraestructura,
                 'gestores'           => $gestores,
                 'lineastecnologicas' => $lineastecnologicas,
+                'equipos' => $equipos,
                 'date'               => $date,
 
             ]);
@@ -499,6 +506,7 @@ class UsoInfraestructuraController extends Controller
 
             return view('usoinfraestructura.edit', [
                 'usoinfraestructura' => $usoinfraestructura,
+                'equipos' => $equipos,
                 'date'               => $date,
             ]);
         }
@@ -561,7 +569,7 @@ class UsoInfraestructuraController extends Controller
                     $checkbox = '
                     <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $this->reemplezarComillas($data->articulacion_proyecto->actividad->nombre) . '\')">
                         <i class="material-icons">done_all</i>
-                      </a>';
+                    </a>';
 
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
@@ -1016,7 +1024,6 @@ class UsoInfraestructuraController extends Controller
             'id',
             'fecha_inicio'
         )->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
-
             ->where('gestor_id', $gestor)
             ->whereYear('fecha_inicio', $anio)
             ->pluck('nombre', 'id');

@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Repositories\Datatables;
+namespace App\Datatables;
 
-use App\Models\Articulacion;
-use App\Models\Edt;
-use App\User;
-
-class UsoInfraestructuraDatatables
+class UsoInfraestructuraDatatable
 {
     /**
      * retorna datatables con los usos de infraestructura para el controlador UsoInfraestrucutra::index().
@@ -23,12 +19,11 @@ class UsoInfraestructuraDatatables
                 return $data->actividad->codigo_actividad . ' - ' . $data->actividad->nombre;
             })
             ->editColumn('fase', function ($data) {
-                if(isset($data->actividad->articulacion_proyecto->proyecto->fase)){
+                if (isset($data->actividad->articulacion_proyecto->proyecto->fase)) {
                     return $data->actividad->articulacion_proyecto->proyecto->fase->nombre;
-                }else{
+                } else {
                     return 'No registra';
                 }
-                
             })
             ->editColumn('asesoria_directa', function ($data) {
 

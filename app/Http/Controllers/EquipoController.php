@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EquipoFormRequest;
-use App\Models\Equipo;
-use App\Models\Nodo;
-use App\Repositories\Datatables\EquipoDatatables;
+use App\Models\{Equipo, Entidad};
+use App\Datatables\EquipoDatatable;
 use App\Repositories\Repository\EquipoRepository;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Response;
 use Repositories\Repository\NodoRepository;
+use App\Exports\Equipo\EquipoExport;
 
 class EquipoController extends Controller
 {
@@ -93,41 +94,44 @@ class EquipoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(EquipoDatatables $equipoDatatables)
+    public function index(Request $request, EquipoDatatable $equipoDatatable)
     {
+        $this->authorize('view', Equipo::class);
+
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $linea = null;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                $linea = auth()->user()->gestor->lineatecnologica_id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
         if (request()->ajax()) {
 
-            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
-
-                if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-                    $nodo = auth()->user()->dinamizador->nodo->id;
-
-                    $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                        ->whereHas('nodo', function ($query) use ($nodo) {
-                            $query->where('id', $nodo);
-                        })->get();
-                } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
-                    $linea   = auth()->user()->gestor->lineatecnologica->id;
-                    $nodo    = auth()->user()->gestor->nodo->id;
-                    $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                        ->whereHas('nodo', function ($query) use ($nodo) {
-                            $query->where('id', $nodo);
-                        })
-                        ->whereHas('lineatecnologica', function ($query) use ($linea) {
-                            $query->where('id', $linea);
-                        })->get();
-                }
-
-                return $equipoDatatables->indexDatatable($equipos);
-            } else {
-                abort('403');
+            $equipos = [];
+            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_state') || $request->filter_state == null)) {
+                $equipos = Equipo::deletedAt($request->filter_state)
+                    ->nodoEquipo($nodo)
+                    ->lineaEquipo($linea)
+                    ->orderBy('equipos.created_at', 'desc')
+                    ->get();
             }
+            return $equipoDatatable->indexDatatable($equipos);
         }
 
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
                 return view('equipo.index', [
-                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                    'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
                 ]);
                 break;
             case User::IsDinamizador():
@@ -139,33 +143,6 @@ class EquipoController extends Controller
             default:
                 return abort('403');
                 break;
-        }
-    }
-
-    /**
-     * devolver datatables equipos por nodo.
-     *
-     * @param  int nodo
-     * @return \Illuminate\Http\Response
-     */
-    public function getEquiposPorNodo(EquipoDatatables $equipoDatatables, $nodo)
-    {
-
-        if (request()->ajax()) {
-
-            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
-
-                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })->get();
-
-                return $equipoDatatables->getEquiposPorNodoDatatables($equipos);
-            } else {
-                return response()->json(['data' => 'no response']);
-            }
-        } else {
-            abort('403');
         }
     }
 
@@ -185,14 +162,6 @@ class EquipoController extends Controller
                     ->where('nodo_id', $nodo)
                     ->where('lineatecnologica_id', $lineatecnologica)
                     ->get();
-
-                // ->whereHas('nodo', function ($query) use ($nodo) {
-                //     $query->where('id', $nodo);
-                // })
-                // ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
-                //     $query->where('id', $lineatecnologica);
-                // })
-                // ->get();
             } else {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                     ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
@@ -241,7 +210,6 @@ class EquipoController extends Controller
     {
         $this->authorize('store', Equipo::class);
 
-        //metodo para guardad
         $equipoCreate = $this->getEquipoRepository()->storeEquipo($request);
 
         if ($equipoCreate === true) {
@@ -253,6 +221,47 @@ class EquipoController extends Controller
         return redirect()->route('equipo.index');
     }
 
+
+    /**
+     * Show a the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $equipo = Equipo::with(['lineatecnologica'])->withTrashed()->find($id);
+
+        if ($equipo !== null) {
+            $anioDepreciacion = $equipo->present()->equipoAnioDepreciacion();
+            $depreciacionPorAnio = $equipo->present()->equipoDepreciacionPorAnio();
+
+            // $anioDepreciacion = $equipo->vida_util + $equipo->anio_compra;
+
+            // if ($equipo->vida_util > 0 && $equipo->costo_adquisicion > 0) {
+            //     $depreciacionPorAnio = number_format(round($equipo->costo_adquisicion) / $equipo->vida_util, 0);
+            // } else {
+            //     $depreciacionPorAnio = number_format(round($equipo->costo_adquisicion), 0);
+            // }
+
+            return response()->json([
+                'data' => [
+                    'equipo' => $equipo,
+                    'aniodepreciacion' => $anioDepreciacion,
+                    'depreciacion' => $depreciacionPorAnio
+                ],
+                'status' => 'success',
+                'statusCode' =>  Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } else {
+            return response()->json([
+                'data' => [],
+                'status' => 'recurso no encontrado',
+                'statusCode' =>  Response::HTTP_NOT_FOUND
+            ],  Response::HTTP_NOT_FOUND);
+        }
+    }
+
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -263,11 +272,11 @@ class EquipoController extends Controller
     {
 
         if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-            $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
+            $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->withTrashed()->findOrFail($id);
             $this->authorize('edit', $equipo);
             $nodo               = auth()->user()->dinamizador->nodo->id;
             $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-            // return $lineastecnologicas;
+
             return view('equipo.edit', [
                 'year'               => Carbon::now()->isoFormat('YYYY'),
                 'lineastecnologicas' => $lineastecnologicas,
@@ -287,7 +296,7 @@ class EquipoController extends Controller
      */
     public function update(EquipoFormRequest $request, $id)
     {
-        $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->findOrFail($id);
+        $equipo = $this->getEquipoRepository()->getInfoDataEquipos()->withTrashed()->findOrFail($id);
         $this->authorize('update', $equipo);
 
         $equipoUpdate = $this->getEquipoRepository()->updateEquipo($request, $equipo);
@@ -299,5 +308,92 @@ class EquipoController extends Controller
         }
 
         return redirect()->route('equipo.index');
+    }
+
+    /**
+     * delete the specified resource in detroy.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $id)
+    {
+        $equipo = Equipo::withTrashed()->findOrFail($id);
+
+        $cantidadUso = $equipo->usoinfraestructuras->count();
+        $cantidadMantenimiento = $equipo->equiposmantenimientos->count();
+
+        $this->authorize('destroy', $equipo);
+
+        if ($cantidadUso > 0 && $cantidadMantenimiento > 0) {
+            return response()->json([
+                'equipo' => $equipo,
+                'statusCode' => Response::HTTP_IM_USED,
+                'message' => 'no puedes eliminar el equipo.',
+            ], Response::HTTP_IM_USED);
+        }
+        $equipo->forceDelete();
+        return response()->json([
+            'statusCode' => Response::HTTP_OK,
+            'message' => 'el equipo fue eliminado',
+            'route' => route('equipo.index')
+        ], Response::HTTP_OK);
+    }
+    /**
+     * change state the specified resource in detroy.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeState(int $id)
+    {
+
+        $equipo = Equipo::withTrashed()->findOrFail($id);
+        $this->authorize('changeState', $equipo);
+
+        if ($equipo->trashed()) {
+            $equipo->restore();
+        } else {
+            $equipo->delete();
+        }
+        return response()->json([
+            'statusCode' => Response::HTTP_OK,
+            'message' => 'estado cambiado',
+            'route' => route('equipo.index')
+        ], Response::HTTP_OK);
+    }
+
+    public function export(Request $request, $extension = 'xlsx')
+    {
+        $this->authorize('view', Equipo::class);
+
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $linea = null;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                $linea = auth()->user()->gestor->lineatecnologica_id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+
+        $equipos = [];
+        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_state') || $request->filter_state == null)) {
+            $equipos = Equipo::deletedAt($request->filter_state)
+                ->nodoEquipo($nodo)
+                ->lineaEquipo($linea)
+                ->orderBy('equipos.created_at', 'desc')
+                ->get();
+        }
+
+        return (new EquipoExport($request, $equipos))->download("Equipos - " . config('app.name') . ".{$extension}");
     }
 }

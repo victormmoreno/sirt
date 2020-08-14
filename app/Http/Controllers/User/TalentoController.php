@@ -5,20 +5,18 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\{Talento};
 use App\Repositories\Repository\UserRepository\{TalentoRepository, UserRepository};
-use App\Repositories\Datatables\UserDatatables;
+
 
 class TalentoController extends Controller
 {
     public $talentoRepository;
     public $userRepository;
-    public $userdatables;
 
-    public function __construct(TalentoRepository $talentoRepository, UserRepository $userRepository, UserDatatables $userdatables)
+    public function __construct(TalentoRepository $talentoRepository, UserRepository $userRepository)
     {
         $this->middleware('auth');
         $this->talentoRepository = $talentoRepository;
         $this->userRepository    = $userRepository;
-        $this->userdatables = $userdatables;
     }
 
     /**

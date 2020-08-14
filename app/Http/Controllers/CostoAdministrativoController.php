@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CostoAdministrativo;
-use App\Models\Nodo;
-use App\Repositories\Datatables\CostoAdministrativoDatatables;
+use App\Datatables\CostoAdministrativoDatatable;
 use App\Repositories\Repository\CostoAdministrativoRepository;
 use App\User;
 use Carbon\Carbon;
@@ -71,7 +70,7 @@ class CostoAdministrativoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(CostoAdministrativoDatatables $costoAdministrativoDatatables)
+    public function index(CostoAdministrativoDatatable $costoAdministrativoDatatables)
     {
 
         $this->authorize('index', CostoAdministrativo::class);
@@ -86,11 +85,9 @@ class CostoAdministrativoController extends Controller
                     ->where('nodos.id', $nodo)
                     ->get();
                 return $costoAdministrativoDatatables->indexDatatable($costos);
-
             } else {
                 abort('403');
             }
-
         }
 
         switch (Session::get('login_role')) {
@@ -106,7 +103,6 @@ class CostoAdministrativoController extends Controller
                 return abort('403');
                 break;
         }
-
     }
     /**
      * devolver datatables Costo Administrativo por nodo.
@@ -114,7 +110,7 @@ class CostoAdministrativoController extends Controller
      * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getCostoAdministrativoPorNodo(CostoAdministrativoDatatables $costoAdministrativoDatatables, $nodo)
+    public function getCostoAdministrativoPorNodo(CostoAdministrativoDatatable $costoAdministrativoDatatables, $nodo)
     {
         $this->authorize('getCostoAdministrativoPorNodo', CostoAdministrativo::class);
 
@@ -129,7 +125,6 @@ class CostoAdministrativoController extends Controller
             } else {
                 return response()->json(['data' => 'no response']);
             }
-
         } else {
             abort('403');
         }
@@ -153,7 +148,6 @@ class CostoAdministrativoController extends Controller
         return view('costoadministrativo.edit', [
             'costoadministrativo' => $costoAdministrativo,
         ]);
-
     }
 
     /**
@@ -198,5 +192,4 @@ class CostoAdministrativoController extends Controller
             'txtvalor.between'  => 'El valor es debe estar entre 0 y 999999999999.99',
         ]);
     }
-
 }

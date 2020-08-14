@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MaterialesFormRequest;
 use App\Models\{CategoriaMaterial, Medida, Material, Presentacion, TipoMaterial};
-use App\Repositories\Datatables\MaterialDatatables;
+use App\Datatables\MaterialDatatable;
 use App\Repositories\Repository\{LineaRepository, MaterialRepository};
 use App\User;
 use Illuminate\Support\Facades\Session;
@@ -94,7 +94,7 @@ class MaterialController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(MaterialDatatables $materialDatatables)
+    public function index(MaterialDatatable $materialDatatable)
     {
 
         $this->authorize('index', Material::class);
@@ -119,7 +119,7 @@ class MaterialController extends Controller
                     })->orderBy('nombre')->get();
             }
 
-            return $materialDatatables->indexDatatable($materiales);
+            return $materialDatatable->indexDatatable($materiales);
         }
 
         switch (Session::get('login_role')) {
@@ -146,7 +146,7 @@ class MaterialController extends Controller
      * @param  int nodo
      * @return \Illuminate\Http\Response
      */
-    public function getMaterialesPorNodo(MaterialDatatables $materialDatatables, $nodo)
+    public function getMaterialesPorNodo(MaterialDatatable $materialDatatable, $nodo)
     {
         $this->authorize('getMaterialesPorNodo', Material::class);
 
@@ -159,7 +159,7 @@ class MaterialController extends Controller
                         $query->where('id', $nodo);
                     })->orderBy('nombre')->get();
 
-                return $materialDatatables->getMaterialesPorNodoDatatable($materiales);
+                return $materialDatatable->getMaterialesPorNodoDatatable($materiales);
             } else {
                 return response()->json(['data' => 'no response']);
             }
@@ -311,7 +311,7 @@ class MaterialController extends Controller
                 return response()->json([
                     'material' => $material,
                     'status' => Response::HTTP_IM_USED,
-                    'message' => 'no puedes elminiar el material de formación, está en en siendo utilizado en usos de infraestructura',
+                    'message' => 'no puedes eliminar el material de formación, está en en siendo utilizado en usos de infraestructura',
                 ], Response::HTTP_IM_USED);
             }
             $material->delete();

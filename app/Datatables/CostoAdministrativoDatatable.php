@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Datatables;
+namespace App\Datatables;
 
 use App\Models\CostoAdministrativo;
 
-class CostoAdministrativoDatatables
+class CostoAdministrativoDatatable
 {
     /**
      * retorna datatables con los costos administrativos para el controlador CostoAdministrativoController::index().
@@ -62,5 +62,4 @@ class CostoAdministrativoDatatables
             ->rawColumns(['edit', 'costosadministrativospordia', 'costosadministrativosporhora'])
             ->make(true);
     }
-
 }

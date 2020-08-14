@@ -54,22 +54,6 @@
             </input>
         </div>
     </div>
-    <div class="row">
-        <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
-            <i class="material-icons prefix">
-                speaker_notes
-            </i>
-            <textarea class="materialize-textarea" id="txtdescripcion" length="2000" maxlength="2000" name="txtdescripcion">
-                {{ isset($linea->descripcion) ? $linea->descripcion : old('txtdescripcion')}}
-            </textarea>
-            <label for="txtdescripcion">
-                Descripción
-            </label>
-            @error('txtdescripcion')
-                <label id="txtdescripcion-error" class="error" for="txtdescripcion">{{ $message }}</label>
-            @enderror
-        </div>
-    </div>
     <center>
        
         <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
