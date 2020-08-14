@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Nodo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NodoFormRequest;
 use App\Models\Nodo;
-use App\Pdf\Nodo\NodoPdf;
-use App\Repositories\Datatables\NodoDatatables;
+use App\Datatables\NodoDatatable;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -76,7 +75,7 @@ class NodoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(NodoDatatables $nodoDatatables)
+    public function index(NodoDatatable $nodoDatatable)
     {
 
         $this->authorize('index', Nodo::class);
@@ -84,7 +83,7 @@ class NodoController extends Controller
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
                 if (request()->ajax()) {
-                    return $nodoDatatables->indexDatatable($this->getNodoRepository()->getAlltNodo());
+                    return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
                 }
                 return view('nodos.index');
 
@@ -251,8 +250,4 @@ class NodoController extends Controller
         return $nodo;
     }
 
-    public function pdfEquipoNodo(NodoPdf $nodoPdf)
-    {
-        return $nodoPdf->downloadPdfEquipoNodo();
-    }
 }

@@ -169,25 +169,21 @@ Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministra
 /*===============================================
 =            seccion para los equipo            =
 ===============================================*/
+Route::get('/equipos/export', 'EquipoController@export')->name('equipo.export');
 Route::get('/equipos/getequiposporlinea/{nodo}/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
     ->name('equipo.getequiposporlinea');
 
-Route::get('/equipos/getequipospornodo/{nodo}', 'EquipoController@getEquiposPorNodo')
-    ->name('equipo.getequipospornodo');
-
+Route::get('/equipos/cambiar-estado/{id}/', 'EquipoController@changeState')
+    ->name('equipo.cambiar-estado');
 Route::resource('equipos', 'EquipoController', [
     'as' => 'equipos',
-    'except' => [
-        'destroy',
-        'show',
-    ]
 ])->names([
     'index'   => 'equipo.index',
     'create'  => 'equipo.create',
     'store'   => 'equipo.store',
     'show'    => 'equipo.show',
-    'update'  => 'equipo.update',
     'edit'    => 'equipo.edit',
+    'update'  => 'equipo.update',
     'destroy' => 'equipo.destroy',
 ])
     ->parameters([

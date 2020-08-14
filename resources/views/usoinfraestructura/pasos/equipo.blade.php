@@ -114,8 +114,8 @@
                         </tr>
                     </thead>
                     <tbody id="detallesUsoInfraestructura">
-                        @if(isset($usoinfraestructura->usoequipos))
-                            @forelse ($usoinfraestructura->usoequipos as $key => $equipo)
+                        @if(isset( $equipos))
+                            @forelse ($equipos as $key => $equipo)
                                     
                                     <tr id="filaEquipo{{$equipo->id}}">
                                         <td>

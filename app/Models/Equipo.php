@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Presenters\EquipoPresenter;
+
 
 class Equipo extends Model
 {
+    use SoftDeletes;
     /**
      * define el nombre de la tabla.
      * @var string
@@ -160,4 +164,42 @@ class Equipo extends Model
             ]);
     }
 
+    /*SCOPES*/
+
+    public function scopeDeletedAt($query, String $state)
+    {
+        if (!empty($state) && $state != null && $state != 'all') {
+            if ($state == 'si') {
+                return $query;
+            } else {
+                return $query->onlyTrashed();
+            }
+        }
+        return $query->withTrashed();
+    }
+
+    public function scopeNodoEquipo($query, $nodo)
+    {
+        if (isset($nodo) && $nodo != null && $nodo != 'all') {
+            return $query->whereHas('nodo',  function ($subquery) use ($nodo) {
+                $subquery->where('id', $nodo);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeLineaEquipo($query, $linea)
+    {
+        if (isset($linea) && $linea != null && $linea != 'all') {
+            return $query->whereHas('lineatecnologica',  function ($subquery) use ($linea) {
+                $subquery->where('id', $linea);
+            });
+        }
+        return $query;
+    }
+
+    public function present()
+    {
+        return new EquipoPresenter($this);
+    }
 }

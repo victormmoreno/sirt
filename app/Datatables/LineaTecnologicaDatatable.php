@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories\Datatables;
+namespace App\Datatables;
 
 use App\Models\LineaTecnologica;
 use DataTables;
 
-class LineaTecnologicaDatatables
+class LineaTecnologicaDatatable
 {
     /**
      * retorna datatables con las linea tecnologicas para el controlador LineaController::index().
@@ -13,6 +13,7 @@ class LineaTecnologicaDatatables
      */
     public function indexDatatable()
     {
+
         return DataTables::eloquent(LineaTecnologica::select(['id', 'nombre', 'slug', 'abreviatura', 'descripcion']))
             ->addColumn('action', function ($data) {
                 $button = '<a href="' . route("lineas.edit", $data->slug) . '" class="waves-effect waves-light btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';

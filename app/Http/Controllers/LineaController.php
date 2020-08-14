@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Alert;
 use App\Http\Requests\LineaFormRequest;
 use App\Models\LineaTecnologica;
-use App\Repositories\Datatables\LineaTecnologicaDatatables;
+use App\Datatables\LineaTecnologicaDatatable;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -22,7 +22,6 @@ class LineaController extends Controller
             'role_session:Administrador|Dinamizador|Gestor|Talento',
         ])->except('getAllLineasForNodo');
         $this->setLineaRepository($lineaRepository);
-
     }
 
     /**
@@ -68,12 +67,12 @@ class LineaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(LineaTecnologicaDatatables $lineaTecnologicaDatatables)
+    public function index(LineaTecnologicaDatatable $lineaTecnologicaDatatable)
     {
         $this->authorize('index', LineaTecnologica::class);
 
         if (request()->ajax()) {
-            return $lineaTecnologicaDatatables->indexDatatable();
+            return $lineaTecnologicaDatatable->indexDatatable();
         }
         return view('lineas.index');
     }
@@ -157,11 +156,9 @@ class LineaController extends Controller
 
         if ($linea != null) {
             Alert::success('Modificación Exitosa', "La Linea {$linea->nombre} ha sido  modificado exitosamente.", "success");
-
         } else {
             Alert::error("La Linea no se ha modificado.", 'Modificación Errónea', "error");
         }
         return redirect('lineas');
     }
-
 }
