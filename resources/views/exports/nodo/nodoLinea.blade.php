@@ -10,7 +10,6 @@
         <th>Abreviatura</th>
         <th>Nombre</th>
         <th>Descripcion</th>
-        <th>Porcentaje</th>
     </tr>
     </thead>
     <tbody>
@@ -25,9 +24,6 @@
             </td>
             <td>
                 {{isset($linea)? $linea->descripcion: 'No registra'}}
-            </td>
-            <td>
-                {{!empty($linea->pivot->porcentaje_linea) ?  $linea->pivot->porcentaje_linea : 'No registra'}}
             </td>
             
           

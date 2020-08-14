@@ -27,11 +27,4 @@ class Sector extends Model
     return $this->hasMany(Empresa::class, 'sector_id', 'id');
   }
 
-  /**
-   * Relacion a la tabla de proyectos
-   */
-  public function proyectos()
-  {
-    return $this->hasMany(Proyecto::class, 'sector_id', 'id');
-  }
 }

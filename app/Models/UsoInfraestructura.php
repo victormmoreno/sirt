@@ -114,13 +114,6 @@ class UsoInfraestructura extends Model
         return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
     }
 
-    public function usolaboratorios()
-    {
-        return $this->belongsToMany(Laboratorio::class, 'uso_laboratorios', 'usoinfraestructura_id', 'laboratorio_id')
-            ->withTimestamps()
-            ->withPivot('tiempo');
-    }
-
     public function usoequipos()
     {
         return $this->belongsToMany(Equipo::class, 'equipo_uso', 'usoinfraestructura_id','equipo_id')

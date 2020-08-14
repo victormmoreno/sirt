@@ -126,7 +126,6 @@ mix.scripts([
     'resources/app/graficos/index.js',
     'resources/app/seguimiento/index.js',
     'resources/app/costos/index.js',
-    'resources/app/indicadores/index.js',
 'resources/app/publicacion/index.js',
 'resources/app/publicacion/form.js'
 

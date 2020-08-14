@@ -46,7 +46,6 @@
                                 <thead>
                                     <th width="15%">Abreviatura</th>
                                     <th width="30%">Linea</th>
-                                    <th width="40%">Descripcion</th>
                                     <th width="40%">Detalles</th>
                                     <th width="15%">Editar</th>
                                 </thead>

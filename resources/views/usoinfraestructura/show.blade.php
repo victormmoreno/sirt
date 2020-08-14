@@ -137,20 +137,6 @@
                                                                                 <strong class="cyan-text text-darken-3">Fase del Proyecto:</strong>
                                                                                 {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase->nombre : 'No registra' }}
                                                                             </p>
-                                                                        @elseif(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion != null)
-                                                                            {{-- <p>
-                                                                                <strong class="cyan-text text-darken-3">Tipo Articulación:</strong>
-                                                                                {{$usoinfraestructura->actividad->articulacion_proyecto->articulacion->tipoarticulacion->nombre}}
-                                                                            </p> --}}
-
-                                                                            @if(isset($usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion) && $usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion != null)
-                                                                                    <p>
-                                                                                    <strong class="cyan-text text-darken-3">Fecha de Ejecucíon :</strong>
-                                                                                    {{optional($usoinfraestructura->actividad->articulacion_proyecto->articulacion->fecha_ejecucion)->isoformat('LL')}}
-                                                                                </p>
-                                                                            @endif
-
-
                                                                     @endif
 
                                                                     @elseif(isset($usoinfraestructura->actividad->edt) && $usoinfraestructura->actividad->edt != null)

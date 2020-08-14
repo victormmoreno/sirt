@@ -659,45 +659,10 @@ class ArticulacionController extends Controller
                     $edit = '<a class="btn m-b-xs" href=' . route('articulacion.inicio', $data->id) . '><i class="material-icons">search</i></a>';
                 }
                 return $edit;
-            })->rawColumns(['info', 'proceso'])->make(true);
-    }
-
-    /**
-     * Consulta el detalle de la entidad asociada a la articulación
-     * @param int $id id de la articulación
-     * @return dum
-     * @author dum
-     */
-    public function consultarEntidadDeLaArticulacion($id)
-    {
-        $articulacionObj = Articulacion::findOrFail($id);
-        $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
-        $entidad = null;
-        if ($articulacionObj->tipo_articulacion == Articulacion::IsEmpresa()) {
-            $entidad = $this->empresaRepository->consultarDetallesDeUnaEmpresa($articulacionObj->articulacion_proyecto->entidad->empresa->id)->toArray();
-            $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
-        } else if ($articulacionObj->tipo_articulacion == Articulacion::IsGrupo()) {
-            $entidad = $this->grupoInvestigacionRepository->consultarDetalleDeUnGrupoDeInvestigacion($articulacionObj->articulacion_proyecto->entidad->grupoinvestigacion->id)->toArray();
-            $entidad = ArrayHelper::validarDatoNullDeUnArray($entidad);
-        } else {
-            $entidad = $this->articulacionProyectoRepository->consultarTalentosDeUnaArticulacionProyectoRepository($articulacionObj->articulacion_proyecto->id)->toArray();
-        }
-        return response()->json([
-            'detalles' => $entidad,
-            'articulacion' => $articulacion
-        ]);
-    }
-
-    // Consulta los detalles de los entregables de una articulacion (Solo los checkboxes)
-    public function detallesDeLosEntregablesDeUnaArticulacion($id)
-    {
-        $entregables = $this->articulacionRepository->consultaEntregablesDeUnaArticulacion($id)->last()->toArray();
-        $entregables = ArrayHelper::validarEntregablesNullDeUnArrayString($entregables);
-        $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last()->toArray();
-        return response()->json([
-            'entregables' => $entregables,
-            'articulacion' => $articulacion,
-        ]);
+            })->addColumn('download_seguimiento', function ($data) {
+                $delete = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'articulacion']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
+                return $delete;
+            })->rawColumns(['info', 'proceso', 'download_seguimiento'])->make(true);
     }
 
     /**
@@ -882,28 +847,6 @@ class ArticulacionController extends Controller
         }
     }
 
-    /**
-     * Vista para subir y ver los entregables de una articulación*
-     * @param int $id Id de la articulacion
-     * @return Response
-     * @author Victor Manuel Moreno Vega
-     */
-    public function entregables($id)
-    {
-        $articulacion = $this->articulacionRepository->consultarArticulacionPorId($id)->last();
-        $view = "";
-        if (\Session::get('login_role') == User::IsGestor()) {
-            $view = 'articulaciones.gestor.entregables';
-        } else if (\Session::get('login_role') == User::IsDinamizador()) {
-            $view = 'articulaciones.dinamizador.entregables';
-        } else {
-            $view = 'articulaciones.administrador.entregables';
-        }
-        return view($view, [
-            'articulacion' => $articulacion
-        ]);
-    }
-
     // Datatable para mostrar las articulaciones POR NODO
     public function datatableArticulacionesPorNodo(Request $request, $id, $anho)
     {
@@ -928,16 +871,12 @@ class ArticulacionController extends Controller
      */
     public function datatableArticulacionesPorGestor(Request $request, $id, $anho)
     {
-
-
         if (request()->ajax()) {
             if (Session::get('login_role') == User::IsGestor()) {
                 $idgestor = auth()->user()->gestor->id;
             } else {
                 $idgestor = $id;
             }
-
-
             $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($anho)->where('actividades.gestor_id', $idgestor)->get();
             return $this->datatablesArticulaciones($request, $articulaciones);
         }
@@ -1113,23 +1052,4 @@ class ArticulacionController extends Controller
         }
     }
 
-
-    /*===========================================================================
-  =            metodo para consultar las articulaciones por gestor            =
-  ===========================================================================*/
-
-    public function ArticulacionForGestor($id, int $tipoArticulacion = 0)
-    {
-        $articulaciones = Articulacion::articulacionesForEstado($tipoArticulacion)->EstadoOfArticulaciones([
-            Articulacion::IsInicio(),
-            Articulacion::IsEjecucion(),
-            Articulacion::IsCierre()
-        ])->get();
-
-        return response()->json([
-            'articulaciones' => $articulaciones,
-        ]);
-    }
-
-    /*=====  End of metodo para consultar las articulaciones por gestor  ======*/
 }

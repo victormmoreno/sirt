@@ -8,7 +8,6 @@ use App\Models\LineaTecnologica;
 use App\Datatables\LineaTecnologicaDatatable;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
-use Illuminate\Http\Request;
 
 class LineaController extends Controller
 {

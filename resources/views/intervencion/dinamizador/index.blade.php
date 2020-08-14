@@ -157,10 +157,6 @@
           name: 'estado',
         },
         {
-          data: 'revisado_final',
-          name: 'revisado_final',
-        },
-        {
           width: '5%',
           data: 'details',
           name: 'details',
@@ -243,10 +239,6 @@
           width: '15%',
           data: 'estado',
           name: 'estado',
-        },
-        {
-          data: 'revisado_final',
-          name: 'revisado_final',
         },
         {
           data: 'details',

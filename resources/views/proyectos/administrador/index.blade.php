@@ -111,10 +111,6 @@
     $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
   });
 
-  $("#revisado_final_tblproyectosDelNodoPorAnho_Administrador").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho_Administrador').DataTable().draw();
-  });
-
   /**
    * Consulta los proyectos de un nodo por año (Este método es para el dinamizador)
    */
@@ -138,7 +134,6 @@
           d.nombre = $('#nombre_tblproyectosDelNodoPorAnho_Administrador').val(),
           d.sublinea_nombre = $('#sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador').val(),
           d.estado_nombre = $('#estado_nombre_tblproyectosDelNodoPorAnho_Administrador').val(),
-          d.revisado_final = $('#revisado_final_tblproyectosDelNodoPorAnho_Administrador').val(),
           d.search = $('input[type="search"]').val()
         }
         // type: "get",

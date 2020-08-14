@@ -88,18 +88,17 @@ class ProyectoController extends Controller
             ->addColumn('info', function ($data) {
                 $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
                 <i class=\" material-icons\">info</i>
-            </a>";
-                return $button;
-            })->addColumn('details', function ($data) {
-                $details = '
-      <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
-        <i class="material-icons">info</i>
-      </a>
-      ';
+                </a>";
+                    return $button;
+                })->addColumn('details', function ($data) {
+                            $details = '
+                <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
+                    <i class="material-icons">info</i>
+                </a>';
                 return $details;
             })->addColumn('download_seguimiento', function ($data) {
-                $delete = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.proyecto.usos', $data->id) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
-                return $delete;
+                $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
+                return $seguimiento;
             })->addColumn('delete', function ($data) {
                 $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarProyectoPorId_event(' . $data->id . ', event)"><i class="material-icons">delete_sweep</i></a>';
                 return $delete;

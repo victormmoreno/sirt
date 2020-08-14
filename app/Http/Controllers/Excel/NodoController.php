@@ -89,7 +89,6 @@ class NodoController extends Controller
         $query = $this->getNodoRepository()->findNodoForShow($nodo);
 
         $queryLineas = $query->lineas;
-        $queryLaboratorios = $query->laboratorios;
         $queryDinamizadores = $query->dinamizador;
         $queryInfocenters = $query->infocenter->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
         $queryIngresos = $query->ingresos->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
@@ -99,6 +98,6 @@ class NodoController extends Controller
 
         // return $queryLineas;
 
-        return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas, $queryLaboratorios), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xls');
+        return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xls');
     }
 }
