@@ -15,9 +15,6 @@ $(document).ready(function() {
         }, {
             data: 'nombre',
             name: 'nombre',
-        }, {
-            data: 'descripcion',
-            name: 'descripcion',
         }, 
         {
             data: 'show',

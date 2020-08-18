@@ -9,7 +9,7 @@ use App\Models\{Nodo, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, E
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
-use App\Repositories\Datatables\UserDatatables;
+use App\Datatables\UserDatatable;
 use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
 use App\Exports\User\UserExport;
@@ -40,7 +40,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, UserDatatables $usersDatatables)
+    public function index(Request $request, UserDatatable $usersDatatables)
     {
         $this->authorize('index', User::class);
 
@@ -370,8 +370,6 @@ class UserController extends Controller
 
         if ($request->get('txtestado') == 'on') {
             $user->update(['estado' => 0]);
-
-
             $user->delete();
             return redirect()->back()->withSuccess('Acceso de usuario modificado');
         } else {
@@ -439,7 +437,7 @@ class UserController extends Controller
         return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
     }
 
-    public function myTalentos(Request $request, UserDatatables $usersDatatables)
+    public function myTalentos(Request $request, UserDatatable $usersDatatables)
     {
 
         $this->authorize('myTalentos', User::class);

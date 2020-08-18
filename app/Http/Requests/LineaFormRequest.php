@@ -35,7 +35,6 @@ class LineaFormRequest extends FormRequest
         return [
             'txtabreviatura' => 'required|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ&_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ&_-]*)*)+$/|min:1|max:3|unique:lineastecnologicas,abreviatura,' . $this->route->parameter('linea'),
             'txtnombre'      => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ&_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ&_-]*)*)+$/|min:1|max:45|unique:lineastecnologicas,nombre,' . $this->route->parameter('linea'),
-            'txtdescripcion' => 'nullable|max:2000',
         ];
     }
 
@@ -52,8 +51,6 @@ class LineaFormRequest extends FormRequest
             'txtnombre.max'           => 'El nombre debe ser máximo 45 caracteres',
             'txtnombre.regex'         => 'El campo nombre sólo debe contener letras, números o el carácter &',
             'txtnombre.unique'        => 'El nombre ingresado ya está en uso',
-            'txtdescripcion.max'      => 'La descripción debe ser máximo 2000 caracteres',
-
         ];
     }
 
@@ -62,7 +59,6 @@ class LineaFormRequest extends FormRequest
         return [
             'txtabreviatura' => 'abreviatura',
             'txtnombre'      => 'nombre',
-            'txtdescripcion' => 'descripción',
         ];
     }
 }
