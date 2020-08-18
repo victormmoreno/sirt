@@ -36,7 +36,7 @@
     </div>
     @if (Session::get('login_role') == App\User::IsDinamizador())
         <div class="col s12 m4 l4">
-            <form action="{{route('proyecto.reversar', $proyecto->id)}}" method="POST" name="frmReversarFase">
+            <form action="{{route('proyecto.reversar', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
                 {!! method_field('PUT')!!}
                 @csrf
                 <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">

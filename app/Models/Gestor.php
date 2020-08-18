@@ -42,6 +42,13 @@ class Gestor extends Model
             ->orderBy('users.nombres');
     }
 
+    public function comites()
+    {
+        return $this->belongsToMany(Comite::class, 'comite_gestor')
+            ->withTimestamps()
+            ->withPivot(['hora_inicio', 'hora_fin']);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();

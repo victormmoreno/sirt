@@ -25,6 +25,39 @@
                 <div class="col s12 m12 l12">
                     @include('proyectos.historial_cambios')
                 </div>
+                <div class="col s12 m12 l12">
+                    @if ($proyecto->fase->nombre == 'Cierre')
+                        @if(Session::get('login_role') == App\User::IsAdministrador())
+                        <div class="col s12 m3 l3">
+                            <form action="{{route('proyecto.reversar', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
+                                {!! method_field('PUT')!!}
+                                @csrf
+                                <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">
+                                    Reversar fase del proyecto a Inicio.
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col s12 m3 l3">
+                            <form action="{{route('proyecto.reversar', [$proyecto->id, 'Planeación'])}}" method="POST" name="frmReversarFasePlaneacion">
+                                {!! method_field('PUT')!!}
+                                @csrf
+                                <button type="submit" onclick="preguntaReversarPlaneacion(event)" value="send" class="btn-flat">
+                                    Reversar fase del proyecto a Planeación.
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col s12 m3 l3">
+                            <form action="{{route('proyecto.reversar', [$proyecto->id, 'Ejecución'])}}" method="POST" name="frmReversarFaseEjecucion">
+                                {!! method_field('PUT')!!}
+                                @csrf
+                                <button type="submit" onclick="preguntaReversarEjecucion(event)" value="send" class="btn-flat">
+                                    Reversar fase del proyecto a Ejecución.
+                                </button>
+                            </form>
+                        </div>
+                        @endif
+                    @endif
+                </div>
                 <div id="inicio" class="col s12 m12 l12">
                     @include('proyectos.detalle_fase_inicio')
                 </div>

@@ -72,19 +72,6 @@ $(document).ready(function() {
       } );
     },
   });
-
-  // datatableEmpresas.columns().every( function () {
-  //   var that = this;
-  //
-  //   $( 'input', this.footer() ).on( 'keyup change', function () {
-  //     if ( that.search() !== this.value ) {
-  //       that
-  //       .search( this.value )
-  //       .draw();
-  //     }
-  //   } );
-  // } );
-
   $('#empresasDeTecnoparque_tableNoGestor').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

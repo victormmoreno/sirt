@@ -4,11 +4,12 @@ namespace App\Repositories\Repository;
 
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Models\{Comite, EstadoIdea, EstadoComite};
-use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered};
+use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered, GestoresWereRegistered};
 use Illuminate\Support\Facades\{DB, Notification};
 use App\Notifications\Comite\ComiteRealizado;
 use App\Http\Controllers\PDF\PdfComiteController;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 class ComiteRepository
 {
@@ -42,6 +43,21 @@ class ComiteRepository
     }
 
     /**
+     * Une los correos de los gestores de un comité en un array
+     * @param Comite $comite
+     * @return array
+     * @author dum
+     **/
+    private function getEmailGestoresDelComite(Comite $comite)
+    {
+        $emails = array(0 => auth()->user()->email);
+        foreach ($comite->gestores as $key => $gestor) {
+            $emails[$key+1] = $gestor->user->email;
+        }
+        return $emails;
+    }
+
+    /**
      * Envía el correo con los datos del agendamiento
      * @param int $id Id del comité
      * @return boolean
@@ -49,10 +65,11 @@ class ComiteRepository
      */
     public function notificar_agendamiento(int $id)
     {
-
+        
         DB::beginTransaction();
         try {
             $comite = Comite::findOrFail($id);
+            event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
             foreach ($comite->ideas as $key => $value) {
                 event(new AgendamientoWasRegistered($value, $comite));
             }
@@ -333,6 +350,7 @@ class ComiteRepository
         DB::beginTransaction();
         try {
             $syncIdeas = array();
+            $syncGestores = array();
             $codigo_comite = $this->generarCodigoComite($request);
             $comite = Comite::create([
                 'codigo' => $codigo_comite,
@@ -340,7 +358,9 @@ class ComiteRepository
                 'estado_comite_id' => EstadoComite::where('nombre', 'Programado')->first()->id
             ]);
             $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
+            $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $comite->ideas()->sync($syncIdeas, false);
+            $comite->gestores()->sync($syncGestores, false);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             DB::commit();
             return true;
@@ -361,6 +381,21 @@ class ComiteRepository
         $syncData = array();
         foreach ($request->get('ideas') as $id => $value) {
             $syncData[$id] = array('hora' => $request->horas[$id], 'direccion' => $request->direcciones[$id], 'idea_id' => $value);
+        }
+        return $syncData;
+    }
+
+    /**
+     * Retorna un array con los datos de los gestores que se van a presentar en el comité
+     * @param $request Datos del formulario
+     * @return array
+     * @author dum
+     **/
+    private function arraySyncGestoresAgendamiento($request)
+    {
+        $syncData = array();
+        foreach ($request->get('gestores') as $id => $value) {
+            $syncData[$id] = array('hora_inicio' => $request->horas_inicio[$id], 'hora_fin' => $request->horas_fin[$id], 'gestor_id' => $value);
         }
         return $syncData;
     }
