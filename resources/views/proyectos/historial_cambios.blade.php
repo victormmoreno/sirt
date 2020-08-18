@@ -19,7 +19,7 @@
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el gestor del proyecto el día {{$historico[$i]->created_at}}
                   (Este proyecto se encontraba en fase de {{$historico[$i]->fase}})
                   @elseif($historico[$i]->movimiento == 'Reversó')
-                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la fase del proyecto de {{$historico[$i]->fase}} a Inicio el día {{$historico[$i]  ->created_at}}.
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el proyecto de la fase {{$historico[$i]->fase}} a {{$historico[$i]->comentarios}} el día {{$historico[$i]->created_at}}.
                   @elseif($historico[$i]->movimiento == 'no aprobó')
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->created_at}} por los siguientes motivos: {{$historico[$i]->comentarios}}.

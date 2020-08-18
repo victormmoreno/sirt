@@ -13,6 +13,22 @@ function addIdeaComite() {
     }
 }
 
+
+function addGestorComite() {
+    let id = $('#txtidgestor').val();
+    let hora_inicio = $('#txthorainiciogestor').val();
+    let hora_fin = $('#txthorafingestor').val();
+    if (id == 0 || hora_inicio == '' || hora_fin == '') {
+        datosIncompletosGestorAgendamiento();
+    } else {
+        if (noRepeatGestoresAgendamiento(id) == false) {
+            gestorYaSeEncuentraAsociadoAgendamiento();
+        } else {
+            pintarGestorEnLaTabla(id, hora_inicio, hora_fin);
+        }
+    }
+}
+
 $('#txthoraidea').bootstrapMaterialDatePicker({
     time:true,
     date:false,
@@ -22,7 +38,30 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     language: 'es',
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
-  });
+});
+  
+$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+    time:true,
+    date:false,
+    shortTime:true,
+    format: 'HH:mm',
+    language: 'es',
+    weekStart : 1, cancelText : 'Cancelar',
+    okText: 'Guardar'
+});
+ 
+$('#txthorainiciogestor').bootstrapMaterialDatePicker({ 
+    time:true,
+    date:false,
+    shortTime: true,
+    format: 'HH:mm',
+    language: 'es',
+    weekStart : 1, cancelText : 'Cancelar',
+    okText: 'Guardar'
+ }).on('change', function(e, time)
+ {
+    $('#txthorafingestor').bootstrapMaterialDatePicker('setMinDate', time);
+});
 
 $(document).on('submit', 'form#formComiteAgendamientoCreate', function (event) { // $('button[type="submit"]').prop("disabled", true);
     event.preventDefault();
@@ -73,6 +112,11 @@ Swal.fire({
 // Elimina una idea de proyecto agendada en un comité
 function eliminarIdeaDelAgendamiento(index) {
     $('#ideaAsociadaAgendamiento' + index).remove();
+}
+
+// Elimina un gestor agendada en un comité
+function eliminarGestorDelAgendamiento(index) {
+    $('#gestorAsociadoAgendamiento' + index).remove();
 }
 
 function ajaxSendFormComiteAgendamiento(form, data, url, fase) {
@@ -163,6 +207,19 @@ $.ajax({
 });
 }
 
+function pintarGestorEnLaTabla(id, hora_inicio, hora_fin) {
+$.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/usuario/consultarUserPorId/' + id
+}).done(function (ajax) {
+    let fila = prepararFilaEnLaTablaDeGestores(ajax, hora_inicio, hora_fin);
+    $('#tblGestoresComiteCreate').append(fila);
+    gestorSeAsocioAlAgendamiento();
+    reiniciarCamposGestorAgendamiento();
+});
+}
+
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
 let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' + 
@@ -170,6 +227,17 @@ let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
     '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+    '</tr>';
+return fila;
+}
+
+function prepararFilaEnLaTablaDeGestores(ajax, hora_inicio, hora_fin) {
+let idGestor = ajax.user.gestor.id;
+let fila = '<tr class="selected" id=gestorAsociadoAgendamiento' + idGestor + '>' + 
+    '<td><input type="hidden" name="gestores[]" value="' + idGestor + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' +
+    '<td><input type="hidden" name="horas_inicio[]" value="' + hora_inicio + '">' + hora_inicio + '</td>' +
+    '<td><input type="hidden" name="horas_fin[]" value="' + hora_fin + '">' + hora_fin + '</td>' +
+    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorDelAgendamiento(' + idGestor + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
     '</tr>';
 return fila;
 }
@@ -185,6 +253,17 @@ Swal.fire({
 })
 }
 
+function datosIncompletosGestorAgendamiento() {
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    type: 'error',
+    title: 'Estás ingresando mal los datos del gestor'
+})
+}
+
 function ideaSeAsocioAlAgendamiento() {
 Swal.fire({
           toast: true,
@@ -196,6 +275,17 @@ Swal.fire({
         })
 }
 
+function gestorSeAsocioAlAgendamiento() {
+Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          type: 'success',
+          title: 'El gestor se asoció con éxito al comité'
+        })
+}
+
 function ideaYaSeEncuentraAsociadaAgendamiento() {
 Swal.fire({
     toast: true,
@@ -204,6 +294,17 @@ Swal.fire({
     timer: 1500,
     type: 'warning',
     title: 'La idea de proyecto ya se encuentra asociada al comité!'
+});
+}
+
+function gestorYaSeEncuentraAsociadoAgendamiento() {
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500,
+    type: 'warning',
+    title: 'El gestor ya se encuentra asociado en este comité!'
 });
 }
 
@@ -221,6 +322,19 @@ for (x = 0; x < a.length; x ++) {
 return retorno;
 }
 
+function noRepeatGestoresAgendamiento(id) {
+let idGestor = id;
+let retorno = true;
+let a = document.getElementsByName("gestores[]");
+for (x = 0; x < a.length; x ++) {
+    if (a[x].value == idGestor) {
+        retorno = false;
+        break;
+    }
+}
+return retorno;
+}
+
 function reiniciarCamposAgendamiento() {
 $("#txtideaproyecto").val('0');
 $("#txtideaproyecto").select2();
@@ -229,6 +343,13 @@ $("#txtobservacionesidea").val('');
 $('#txtdireccion').val('');
 $("label[for='txtdireccion']").removeClass('active');
 $("label[for='txthoraidea']").removeClass('active');
-// $("#labelobservacionesidea").removeClass('active');
-// $('input:checkbox').removeAttr('checked');
+}
+
+function reiniciarCamposGestorAgendamiento() {
+$("#txtidgestor").val('0');
+$("#txtidgestor").select2();
+$('#txthorainiciogestor').val('');
+$("label[for='txthorainiciogestor']").removeClass('active');
+$('#txthorafingestor').val('');
+$("label[for='txthorafingestor']").removeClass('active');
 }

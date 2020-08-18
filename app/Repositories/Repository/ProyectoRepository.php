@@ -639,38 +639,37 @@ class ProyectoRepository
   }
 
   /**
-   * Reversa la fase de un proyecto a Inicio
+   * Reversa la fase de un proyecto
    *
-   * @param int $id Id del proyecto
+   * @param Proyecto $proyecto Proyecto
+   * @param string $fase Fase a la que se reversa el proyecto
    * @return boolean
    * @author dum
    **/
-  public function reversarProyecto(int $id)
+  public function reversarProyecto(Proyecto $proyecto, string $fase)
   {
     DB::beginTransaction();
     try {
-
-      $proyecto = Proyecto::findOrFail($id);
 
       $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Reversó')->first(), [
         'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
         'user_id' => auth()->user()->id,
         'fase_id' => $proyecto->fase_id,
-        'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+        'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+        'comentarios' => $fase
       ]);
 
       $proyecto->update([
-        'fase_id' => Fase::where('nombre', 'Inicio')->first()->id
+        'fase_id' => Fase::where('nombre', $fase)->first()->id
       ]);
 
       $proyecto->articulacion_proyecto()->update([
-        'aprobacion_dinamizador_ejecucion' => 0,
         'aprobacion_dinamizador_suspender' => 0
       ]);
 
-      $proyecto->articulacion_proyecto->actividad()->update([
-        'aprobacion_dinamizador' => 0
-      ]);
+      if ($fase == 'Inicio' || $fase == 'Planeación' || $fase == 'Ejecución') {
+        $this->reversarAInicioPlaneacionEjecucion($proyecto);
+      }
 
       DB::commit();
       return true;
@@ -678,6 +677,24 @@ class ProyectoRepository
       DB::rollBack();
       return false;
     }
+  }
+
+  /**
+   * Reversa un proyecto a la fase de inicio ó planeación
+   *
+   * @param Proyecto $proyecto
+   * @return void
+   * @author dum
+   **/
+  private function reversarAInicioPlaneacionEjecucion(Proyecto $proyecto)
+  {
+    $proyecto->articulacion_proyecto()->update([
+      'aprobacion_dinamizador_ejecucion' => 0
+    ]);
+
+    $proyecto->articulacion_proyecto->actividad()->update([
+      'aprobacion_dinamizador' => 0
+    ]);
   }
 
   /**

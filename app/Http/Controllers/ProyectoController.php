@@ -1180,24 +1180,51 @@ class ProyectoController extends Controller
      *
      * @param Request $request
      * @param int $id Id del proyecto
+     * @param string $fase Fase a la que se va a reversar el proyecto
      * @return Response
      * @author dum
      **/
-    public function updateReversar(Request $request, int $id)
+    public function updateReversar(Request $request, int $id, string $fase)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if ($proyecto->fase->nombre == 'Inicio') {
-            Alert::warning('El proyecto ya se encuentra en fase de Inicio!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+        if ($proyecto->fase->nombre == $fase) {
+            Alert::warning('El proyecto ya se encuentra en fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            $update = $this->getProyectoRepository()->reversarProyecto($id);
-            // dd($update);
-            if ($update) {
-                Alert::success('La fase del proyecto se ha reversado a Inicio!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+            if ($proyecto->fase->nombre == 'Planeación' && $fase == 'Inicio') {
+                $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                if ($update) {
+                    Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             } else {
-                Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
-                return back();
+                if ($proyecto->fase->nombre == 'Ejecución' && $fase == 'Planeación') {
+                    $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                    if ($update) {
+                        Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                        return redirect('proyecto');
+                    } else {
+                        Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                        return back();
+                    }
+                } else {
+                    if ($proyecto->fase->nombre == 'Cierre' && $fase == 'Ejecución') {
+                        $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                        if ($update) {
+                            Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                            return redirect('proyecto');
+                        } else {
+                            Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                            return back();
+                        }
+                    } else {
+                        Alert::warning('El proyecto no se puede reversar a la fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                        return back();
+                    }
+                }
             }
         }
     }

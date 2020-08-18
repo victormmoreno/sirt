@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{ComiteAgendamientoFormRequest, ComiteRealizarFormRequest, ComiteAsignarFormRequest};
-use App\Repositories\Repository\{ComiteRepository, IdeaRepository};
+use App\Repositories\Repository\{ComiteRepository, UserRepository\GestorRepository};
 use App\Models\{Nodo, Idea, Comite, EstadoIdea, Gestor};
 use Illuminate\Support\Facades\{Session, Validator};
 Use App\User;
@@ -13,12 +13,12 @@ class ComiteController extends Controller
 {
 
   private $comiteRepository;
-  private $ideaRepository;
+  private $gestorRepository;
 
-  public function __construct(ComiteRepository $comiteRepository, IdeaRepository $ideaRepository)
+  public function __construct(ComiteRepository $comiteRepository, GestorRepository $gestorRepository)
   {
     $this->setComiteRepository($comiteRepository);
-    $this->setIdeaRepository($ideaRepository);
+    $this->setGestorRepository($gestorRepository);
     $this->middleware('auth');
   }
 
@@ -233,11 +233,13 @@ class ComiteController extends Controller
   */
   public function create()
   {
-    // session(['ideasComiteCreate' => []]);
-
     if ( Session::get('login_role') == User::IsInfocenter() ) {
        $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
-      return view('comite.infocenter.create2', compact('ideas'));
+       $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( auth()->user()->infocenter->nodo_id )->get();
+      return view('comite.infocenter.create2', [
+        'ideas' => $ideas,
+        'gestores' => $gestores
+      ]);
     }
   }
 
@@ -441,9 +443,11 @@ class ComiteController extends Controller
       $csibt = Comite::findOrFail($id);
       $idideas = $this->getIdIdeasDelComiteArray($csibt);
       $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
+      $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( auth()->user()->infocenter->nodo_id )->get();
       return view('comite.infocenter.edit_agendamiento', [
         'ideas' => $ideas,
-        'comite' => $csibt
+        'comite' => $csibt,
+        'gestores' => $gestores
       ]);
     }
   }
@@ -472,25 +476,25 @@ class ComiteController extends Controller
   }
 
   /**
-   * Asigna un valor a $ideaRepository
+   * Asigna un valor a $gestorRepository
    *
-   * @param IdeaRepository
+   * @param GestorRepository
    * @return void
    * @author dum
    */
-  private function setIdeaRepository(IdeaRepository $ideaRepository)
+  private function setGestorRepository(GestorRepository $gestorRepository)
   {
-    $this->ideaRepository =  $ideaRepository;
+    $this->gestorRepository =  $gestorRepository;
   }
 
   /**
-   * Retorna el valor de $ideaRepository
+   * Retorna el valor de $gestorRepository
    *
-   * @return IdeaRepository
+   * @return GestorRepository
    * @author dum
    */
-  private function getIdeaRepository()
+  private function getGestorRepository()
   {
-    return $this->ideaRepository;
+    return $this->gestorRepository;
   }
 }

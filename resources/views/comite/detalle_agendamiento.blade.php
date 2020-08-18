@@ -60,6 +60,33 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col s12 m10 l10 offset-m2 offset-l2">
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <div class="card-panel green lighten-5">
+                                        <h5 class="center">Gestores que se agendaron para el comité</h5>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 60%">Gestor</th>
+                                                    <th style="width: 20%">Desde</th>
+                                                    <th style="width: 20%">Hasta</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($comite->gestores as $key => $value2)
+                                                    <tr>
+                                                    <td>{{$value2->user->documento}} - {{$value2->user->nombres}} {{$value2->user->apellidos}}</td>
+                                                    <td>{{$value2->pivot->hora_inicio}}</td>
+                                                    <td>{{$value2->pivot->hora_fin}}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="divider mailbox-divider"></div>
