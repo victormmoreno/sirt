@@ -196,7 +196,7 @@ $("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
 function preguntaReversar(e){
   e.preventDefault();
   Swal.fire({
-  title: '¿Está seguro(a) de reversar este proyecto a la fase de inicio?',
+  title: '¿Está seguro(a) de reversar este proyecto a la fase de Inicio?',
   type: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
@@ -206,6 +206,40 @@ function preguntaReversar(e){
   }).then((result) => {
     if (result.value) {
       document.frmReversarFase.submit();
+    }
+  })
+}
+
+function preguntaReversarPlaneacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de reversar este proyecto a la fase de Planeación?',
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmReversarFasePlaneacion.submit();
+    }
+  })
+}
+
+function preguntaReversarEjecucion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de reversar este proyecto a la fase de Ejecución?',
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmReversarFaseEjecucion.submit();
     }
   })
 }

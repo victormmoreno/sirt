@@ -91,6 +91,13 @@ class Comite extends Model
     ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
   }
 
+  public function gestores()
+  {
+    return $this->belongsToMany(Gestor::class, 'comite_gestor')
+    ->withTimestamps()
+    ->withPivot(['hora_inicio', 'hora_fin']);
+  }
+
   /*=====  End of relaciones eloquent  ======*/
 
 

@@ -113,6 +113,83 @@
     </div>
 </div>
 <div class="divider"></div>
+<center>
+    <span class="card-title center-align">Gestores</span>
+    <i class="Small material-icons prefix">info</i>
+</center>
+<div class="row">
+    <div class="col s12 m12 l12">
+        <div class="card-content">
+            <h5>
+                <span class="red-text text-darken-2">
+                    Para registrar los gestores en el comité dar click en el botón <a class="btn-floating waves-effect waves-light red">
+                    <i class="material-icons">add</i></a>
+                </span>
+            </h5>
+            <p>Si desea agregar mas gestores de tecnoparque por favor seleccione..</p>
+            <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+                <li>
+                    <div class="collapsible-header active blue-grey lighten-1">
+                        <i class="material-icons">lightbulb</i>Seleccione los gestores que estarán presentes en el comité
+                    </div>
+                    <div class="collapsible-body">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="input-field col s12 m4 l4">
+                                    <select id="txtidgestor" class="js-states browser-default select2" style="width: 100%;" name="txtidgestor">
+                                        <option value="0">Seleccione los gestores que estarán presenten en el comité</option>
+                                        @foreach ($gestores as $key => $gestor)
+                                        <option value="{{$gestor->id}}">{{$gestor->documento}} - {{$gestor->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="#txtidgestor" class="active">Gestores de Tecnoparque <span class="red-text">*</span></label>
+                                </div>
+                                <div class="input-field col s12 m4 l4">
+                                    <i class="material-icons prefix">access_time</i>
+                                    <input id="txthorainiciogestor" type="text" class="pickertime" name="txthorainiciogestor">
+                                    <label for="txthorainiciogestor">Hora de Inicio <span class="red-text">*</span></label>
+                                </div>
+                                <div class="input-field col s12 m4 l4">
+                                    <i class="material-icons prefix">access_time</i>
+                                    <input id="txthorafingestor" type="text" class="pickertime" name="txthorafingestor">
+                                    <label for="txthorafingestor">Hora de Fin <span class="red-text">*</span></label>
+                                </div>
+                            </div>
+                            <center>
+                                <a onclick="addGestorComite()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar el gestor seleccionado al comité"><i class="material-icons left">add</i>Agregar</a>
+                            </center>
+                            <div class="card-content">
+                                <table class="responsive-table" style="width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 70%">Nombre del gestor</th>
+                                            <th style="width: 10%">Hora de Inicio</th>
+                                            <th style="width: 10%">Hora de Fin</th>
+                                            <th style="width: 10%">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblGestoresComiteCreate">
+                                        @if ($existe)
+                                            @foreach ($comite->gestores as $key => $value2)
+                                                <tr class="selected" id="gestorAsociadoAgendamiento{{$value2->id}}">
+                                                    <td><input type="hidden" name="gestores[]" value="{{$value2->id}}">{{$value2->user->documento}} - {{$value2->user->nombres}} {{$value2->user->apellidos}}</td>
+                                                    <td><input type="hidden" name="horas_inicio[]" value="{{$value2->pivot->hora_inicio}}">{{$value2->pivot->hora_inicio}}</td>
+                                                    <td><input type="hidden" name="horas_fin[]" value="{{$value2->pivot->hora_fin}}">{{$value2->pivot->hora_fin}}</td>
+                                                    <td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorDelAgendamiento('{{$value2->id}}')"><i class="material-icons">delete_sweep</i></a></td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="divider"></div>
 <div class="row">
     <center>
         <button type="submit" class="btn waves-effect cyan darken-1 center-aling"><i
