@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Usuarios')
+@section('meta-title', 'Asesoria y Usos' )
 
 @section('content')
 @php
@@ -10,19 +10,19 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <div class="row no-m-t no-m-b">
+                <div class="row">
                     <div class="col s8 m8 l10">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <i class="material-icons left">
-                                supervised_user_circle
+                                domain
                             </i>
-                            Talentos
+                            Asesorías y usos
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li class="active">Usuarios</li>
+                            <li class="active">Asesoría y uso </li>
                         </ol>
                     </div>
                 </div>
@@ -34,24 +34,20 @@
                                     <ul>
                                         <li>
                                             <a href="{{{route('usuario.index')}}}">
-                                                Todos los talentos
+                                                Todas las asesorias y usos
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{{route('usuario.mytalentos')}}}">
-                                                Mis talentos
+                                                asesorias y usos por gestor
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view">
-                                    <div class="mailbox-view-header">
-                                        <span class="card-title hand-of-Sean-fonts orange-text text-darken-3">Talentos de {{config('app.name')}}</span>
-                                        <div class="right mailbox-buttons">
-                                            <div class=" show-on-large hide-on-med-and-down">
-                                                <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons">add_circle</i> Nuevo usuario</a>
-                                            </div>
-                                        </div>
+                                    <div class="mailbox-view-header center-align ">
+                                        <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">Asesorias y usos de {{config('app.name')}}</span>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -62,23 +58,23 @@
                         <div class=" mailbox-view mailbox-text">
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
                                 <div class="input-field col s12 m2 l2">
-                                    <label class="active" for="filter_rol">Rol <span class="red-text">*</span></label>
-                                    <select  name="filter_rol" id="filter_rol">
-
-                                        @forelse($roles as $id => $name)
-                                            <option value="{{$name}}">{{$name}}</option>
-                                        @empty
-                                        <option>No se encontraron Resultados</option>
-                                        @endforelse
+                                    <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
+                                    <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
                                         <option value="all" >todos</option>
+                                        @forelse($nodos as $id => $name)
+                                            <option value="{{$id}}">{{$name}}</option>
+                                        @empty
+                                            <option>No se encontraron Resultados</option>
+                                        @endforelse
                                     </select>
                                 </div>
 
                                 <div class="input-field col s12 m2 l2">
-                                    <label class="active" for="filter_state">Acceso sistema <span class="red-text">*</span></label>
-                                    <select name="filter_state" id="filter_state">
-                                        <option value="si" >Habilitados</option>
-                                        <option value="no" >Inhabilitados</option>
+                                    <label class="active" for="filter_year">Año actividad <span class="red-text">*</span></label>
+                                    <select class="js-states browser-default select2"  name="filter_year" id="filter_year" >
+                                        @for ($i=$year; $i >= 2016; $i--)
+                                            <option value="{{$i}}" >{{$i}}</option>
+                                        @endfor
                                         <option value="all" >todos</option>
                                     </select>
                                 </div>
@@ -89,31 +85,20 @@
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_user"><i class="material-icons">search</i>Buscar</button>
                                 </div>
                             </div>
-                            <table id="users_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
+                            <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table">
                                 <thead>
-                                <tr>
-                                    <th>Tipo Documento</th>
-                                    <th>Documento</th>
-                                    <th>Usuario</th>
-                                    <th>Correo</th>
-                                    <th>Celular</th>
-                                    <th>Roles</th>
-                                    <th>Último Login</th>
-                                    <th>Acceso sistema</th>
-                                    <th>Detalles</th>
-                                </tr>
+                                    <th>Fecha</th>
+                                    <th>Gestor</th>
+                                    <th width="60%">Nombre</th>
+                                    <th>Fase</th>
+                                    <th width="15%">Asesoría Directa</th>
+                                    <th width="15%">Asesoría Indirecta</th>
+                                    <th width="15%">Detalles</th>
                                 </thead>
-                                <tbody>
 
-                                </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
-                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
-                         <i class="material-icons">add_circle</i>
-                    </a>
                 </div>
             </div>
         </div>

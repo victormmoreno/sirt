@@ -272,9 +272,6 @@ Route::group([
 
     //consultas que se utlizan para el uso de infraestructura
 
-    Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
-        ->name('usoinfraestructura.projectsforuser');
-
 
     Route::get('usoinfraestructura/talentosporproyecto/{id}', 'UsoInfraestructuraController@talentosPorProyecto')->name('usoinfraestructura.talentosporproyecto');
 
@@ -291,8 +288,6 @@ Route::group([
     Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
         ->name('usoinfraestructura.edtsforuser');
 
-    Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
-        ->name('usoinfraestructura.usoinfraestructurapornodo');
 
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
         ->name('usoinfraestructura.projectsforuser');
@@ -301,9 +296,6 @@ Route::group([
 
     Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
         ->name('usoinfraestructura.actividadesporgestor');
-
-    Route::get('usoinfraestructura/actividades/datatable/{gestor}/{anio}/{actividad}', 'UsoInfraestructuraController@getDatatableInfoActividad')
-        ->name('usoinfraestructura.actividadesdatatable');
 
     Route::delete('usoinfraestructura/{id}', 'UsoInfraestructuraController@destroy')
         ->name('usoinfraestructura.destroy');

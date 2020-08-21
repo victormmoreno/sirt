@@ -2,16 +2,14 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\{Articulacion, Fase, TipoArticulacion};
-use Carbon\Carbon;
-
+use App\Models\{Articulacion, Fase};
 use Faker\Generator as Faker;
 
 $factory->define(Articulacion::class, function (Faker $faker) {
-    $tipoArticulacion = TipoArticulacion::all()->random();
+
     $fase = Fase::all()->random();
     return [
-        'tipo_articulacion' => $faker->randomElement([TipoArticulacion::IsGrupo(), TipoArticulacion::IsEmpresaEmprendedor()]),
+        'tipo_articulacion' => $faker->randomElement([Articulacion::IsGrupo(), Articulacion::IsEmpresa(), Articulacion::IsEmprendedor()]),
         'acc' => $faker->randomElement([1, null]),
         'informe_final' => $faker->randomElement([1, null]),
         'acuerdos' => $faker->randomElement([$faker->text($maxNbChars = 1000), null]),

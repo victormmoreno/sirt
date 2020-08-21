@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Uso Infraestructura ' )
+@section('meta-title', 'Asesoria y Usos' )
 
 @section('content')
 @php
@@ -26,11 +26,26 @@
                         </ol>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card mailbox-content">
                     <div class="card-content">
-                        <div class="row">
-                            
-                            
+                        <div class="col s12 m12 l12">
+                            <div class="mailbox-options">
+                                <ul>
+                                    <li>
+                                        <a href="">
+                                            Todas las asesorias y usos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{{route('usuario.mytalentos')}}}">
+                                            Mis talentos
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                                 <div class="row">
                                     <div class="col s12 m12 l12">
@@ -41,11 +56,9 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col s12 l2">
-                                    </div>
-                
+                                    
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col s12 m3 l3">
                                         <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -55,13 +68,13 @@
                                                 <option value="{{$id}}">{{$nodo}}</option>
                                             @endforeach
                                         </select>
-                                        
+
                                     </div>
                                     <div class="col s12 m3 l3">
                                         <label class="active" for="selectGestor">Gestor <span class="red-text">*</span></label>
                                         <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectGestor">
                                             <option value="">Seleccione primero un nodo</option>
-                                            
+
                                         </select>
                                     </div>
                                     <div class="col s12 m3 l3">
@@ -77,7 +90,7 @@
                                         <label class="active" for="selectActivity">Actividad <span class="red-text">*</span></label>
                                         <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectActivity" >
                                             <option value="">primero seleccciona nodo, gestor y año</option>
-                                            
+
                                         </select>
                                     </div>
                                 </div>
@@ -103,13 +116,13 @@
                                             <th>Fase</th>
                                             <th>Asesoría Directa</th>
                                             <th>Asesoría Indirecta</th>
-                                            <th>Detalles</th>
+                                            <th width="15%">Detalles</th>
                                         </thead>
-                        
+
                                     </table>
                                 </div>
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                
+
                                 <div class="row">
                                     <div class="col s12 m12 l12">
                                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
@@ -120,7 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col s12 m4 l4">
                                         <label class="active" for="selectGestor">Gestor <span class="red-text">*</span></label>
@@ -164,7 +177,7 @@
                                 </div>
                                 <div class="divider"></div>
                                 <br>
-                                
+
                                 <div class="row">
                                     <table class="display responsive-table" id="usoinfraestructura_dinamizador_table">
                                         <thead>
@@ -182,11 +195,11 @@
                                     <div class="col s12 m12 l10">
                                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             <span class="card-title center-align">
-                                                Asesorías y usos 
+                                                Asesorías y usos
                                             </span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
                                         <a class="red" href="{{ route('usoinfraestructura.create') }}">
                                           <div class="card green">
@@ -218,9 +231,9 @@
                                             {{-- @foreach($proyectos as $id => $proyecto)
                                               <option value="{{$id}}">{{$proyecto}}</option>
                                             @endforeach --}}
-                                        </select>       
+                                        </select>
                                     </div>
-                                    
+
                                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                                         <div class="col s12 m12 l12">
                                             <label class="active" for="selecProyecto">Proyecto <span class="red-text">*</span></label>
@@ -229,7 +242,7 @@
                                                 @foreach($proyectos as $id => $proyecto)
                                                 <option value="{{$id}}">{{$proyecto}}</option>
                                                 @endforeach
-                                            </select>       
+                                            </select>
                                         </div>
                                     @endif
                                 </div>
@@ -261,7 +274,7 @@
                                         </thead>
                                     </table>
                                 </div>
-                            @endif 
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\UsoInfraestructuraPresenter;
 
 class UsoInfraestructura extends Model
 {
@@ -65,9 +66,9 @@ class UsoInfraestructura extends Model
      */
     public static function deleteUsoMateriales($actividad)
     {
-      foreach ($actividad->usoinfraestructuras as $key => $value) {
-        $value->usomateriales()->sync([]);
-      }
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usomateriales()->sync([]);
+        }
     }
 
     /**
@@ -78,9 +79,9 @@ class UsoInfraestructura extends Model
      */
     public static function deleteUsoTalentos($actividad)
     {
-      foreach ($actividad->usoinfraestructuras as $key => $value) {
-        $value->usotalentos()->sync([]);
-      }
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usotalentos()->sync([]);
+        }
     }
 
     /**
@@ -91,9 +92,9 @@ class UsoInfraestructura extends Model
      */
     public static function deleteUsoEquipos($actividad)
     {
-      foreach ($actividad->usoinfraestructuras as $key => $value) {
-        $value->usoequipos()->sync([]);
-      }
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usoequipos()->sync([]);
+        }
     }
 
     /**
@@ -104,9 +105,9 @@ class UsoInfraestructura extends Model
      */
     public static function deleteUsoGestores($actividad)
     {
-      foreach ($actividad->usoinfraestructuras as $key => $value) {
-        $value->usogestores()->sync([]);
-      }
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usogestores()->sync([]);
+        }
     }
 
     public function actividad()
@@ -116,7 +117,7 @@ class UsoInfraestructura extends Model
 
     public function usoequipos()
     {
-        return $this->belongsToMany(Equipo::class, 'equipo_uso', 'usoinfraestructura_id','equipo_id')
+        return $this->belongsToMany(Equipo::class, 'equipo_uso', 'usoinfraestructura_id', 'equipo_id')
             ->withTimestamps()
             ->withPivot([
                 'tiempo',
@@ -127,7 +128,7 @@ class UsoInfraestructura extends Model
 
     public function usomateriales()
     {
-        return $this->belongsToMany(Material::class, 'material_uso', 'usoinfraestructura_id','material_id')
+        return $this->belongsToMany(Material::class, 'material_uso', 'usoinfraestructura_id', 'material_id')
             ->withTimestamps()
             ->withPivot([
                 'costo_material',
@@ -144,7 +145,7 @@ class UsoInfraestructura extends Model
 
     public function usogestores()
     {
-        return $this->belongsToMany(Gestor::class, 'gestor_uso', 'usoinfraestructura_id','gestor_id')
+        return $this->belongsToMany(Gestor::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
             ->withTimestamps()
             ->withPivot([
                 'asesoria_directa',
@@ -163,10 +164,7 @@ class UsoInfraestructura extends Model
         return ucwords(strtolower(trim($descripcion)));
     }
 
-    public function scopeUsoInfraestructuraWithRelations($query, array $relations)
-    {
-        return $query->with($relations);
-    }
+
 
     public static function TipoUsoInfraestructura($tipo_usoinfraestructura)
     {
@@ -179,5 +177,41 @@ class UsoInfraestructura extends Model
         } else {
             return 'No registra';
         }
+    }
+
+    public function scopeUsoInfraestructuraWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
+
+    public function scopeNodoUso($query, $nodo)
+    {
+        if (isset($nodo) && $nodo != null && $nodo != 'all') {
+            return $query->whereHas('actividad.nodo',  function ($subquery) use ($nodo) {
+                $subquery->where('id', $nodo);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeYearActividad($query, $year)
+    {
+        if (!empty($year) && $year != null && $year == 'all') {
+            return $query->has('actividad');
+        }
+
+        if ((!empty($year) && $year != null && $year != 'all')) {
+            return $query->wherehas('actividad', function ($query) use ($year) {
+                $query->where(function ($subquery) use ($year) {
+                    $subquery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+                });
+            });
+        }
+        return $query;
+    }
+
+    public function present()
+    {
+        return new UsoInfraestructuraPresenter($this);
     }
 }
