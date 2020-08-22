@@ -12,6 +12,25 @@ use App\Models\Gestor;
 trait IdeaTrait
 {
 
+    /*===============================================================
+    =            metodos para conocer los tipos de ideas            =
+    ===============================================================*/
+    public static function IsEmprendedor()
+    {
+        return self::IS_EMPRENDEDOR;
+    }
+
+    public static function IsEmpresa()
+    {
+        return self::IS_EMPRESA;
+    }
+
+    public static function IsGrupoInvestigacion()
+    {
+        return self::IS_GRUPOINVESTIGACION;
+    }
+
+
     /**
      * Relación a la tabla de proyectos
      */
