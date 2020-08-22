@@ -68,19 +68,27 @@
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <th style="width: 60%">Gestor</th>
-                                                    <th style="width: 20%">Desde</th>
-                                                    <th style="width: 20%">Hasta</th>
+                                                    <th colspan="1" style="width: 60%">Gestor</th>
+                                                    <th colspan="1" style="width: 20%">Desde</th>
+                                                    <th colspan="1" style="width: 20%">Hasta</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($comite->gestores as $key => $value2)
+                                                @if ($comite->gestores->isEmpty())
                                                     <tr>
-                                                    <td>{{$value2->user->documento}} - {{$value2->user->nombres}} {{$value2->user->apellidos}}</td>
-                                                    <td>{{$value2->pivot->hora_inicio}}</td>
-                                                    <td>{{$value2->pivot->hora_fin}}</td>
+                                                        <td>No se han encontrado resultados</td>
+                                                        <td>No se han encontrado resultados</td>
+                                                        <td>No se han encontrado resultados</td>
                                                     </tr>
-                                                @endforeach
+                                                @else
+                                                    @foreach ($comite->gestores as $key => $value2)
+                                                        <tr>
+                                                            <td colspan="1">{{$value2->user->documento}} - {{$value2->user->nombres}} {{$value2->user->apellidos}}</td>
+                                                            <td colspan="1">{{$value2->pivot->hora_inicio}}</td>
+                                                            <td colspan="1">{{$value2->pivot->hora_fin}}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
