@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 use App\Presenters\UsoInfraestructuraPresenter;
 
 class UsoInfraestructura extends Model
@@ -184,11 +185,26 @@ class UsoInfraestructura extends Model
         return $query->with($relations);
     }
 
-    public function scopeNodoUso($query, $nodo)
+    public function scopeNodoActividad($query, $nodo)
     {
         if (isset($nodo) && $nodo != null && $nodo != 'all') {
             return $query->whereHas('actividad.nodo',  function ($subquery) use ($nodo) {
                 $subquery->where('id', $nodo);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeUserActividad($query, $user)
+    {
+        if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
+
+            return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                $subquery->where('id', $user);
+            });
+        } else if ((session()->has('login_role') && session()->get('login_role') == User::IsTalento()) && (!empty($user) && $user != null && $user != 'all')) {
+            return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
+                $subquery->where('id', $user);
             });
         }
         return $query;

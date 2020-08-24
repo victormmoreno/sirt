@@ -6875,29 +6875,31 @@ var usoinfraestructuraIndex = {
                 {
                     data: 'fecha',
                     name: 'fecha',
+                    width: '10%',
                 }, {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',
+                    width: '20%',
                 },{
                     data: 'actividad',
                     name: 'actividad',
-                    width: '50%',
+                    width: '45%',
                 }, {
                     data: 'fase',
                     name: 'fase',
-                    width: '15%',
+                    width: '10%',
                 },  {
                     data: 'asesoria_directa',
                     name: 'asesoria_directa',
-                    width: '15%',
+                    width: '5%',
                 },  {
                     data: 'asesoria_indirecta',
                     name: 'asesoria_indirecta',
-                    width: '15%',
+                    width: '5%',
                 },  {
                     data: 'detail',
                     name: 'detail',
-                    width: '15%',
+                    width: '5%',
                     orderable: false,
                 }, 
             ],
@@ -6951,6 +6953,37 @@ var usoinfraestructuraIndex = {
     }
 }
 
+$('#filter_usoinfraestructura').click(function(){
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_year = $('#filter_year').val();
+
+    $('#usoinfraestructa_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo ,  filter_year);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_year = null);
+    }else{
+        $('#usoinfraestructa_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+    
+});
+
+$('#download_usoinfraestructura').click(function(){
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_year = $('#filter_year').val();
+    var query = {
+        filter_nodo: filter_nodo,
+        filter_year: filter_year,
+    }
+
+    var url = "/usoinfraestructura/export?" + $.param(query)
+    window.location = url;
+});
 function datatableVisitantesPorNodo_Ingreso() {
   $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();
   $('#visitantesRedTecnoparque_table').DataTable({

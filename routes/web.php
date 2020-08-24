@@ -253,6 +253,8 @@ Route::resource('mantenimientos', 'MantenimientoController', [
 =            seccion para las rutas de uso de infraestructa            =
 ======================================================================*/
 
+Route::get('usoinfraestructura/export', 'UsoInfraestructura\UsoInfraestructuraController@export')->name('usoinfraestructura.export');
+
 Route::group([
     'namespace'  => 'UsoInfraestructura',
     'middleware' => 'disablepreventback',

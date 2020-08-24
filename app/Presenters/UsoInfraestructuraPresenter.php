@@ -43,6 +43,11 @@ class UsoInfraestructuraPresenter extends Presenter
         return $this->uso->has('actividad.nodo.entidad') ? "Tecnparque Nodo {$this->uso->actividad->nodo->entidad->nombre}" : 'No Registra';
     }
 
+    public function actividadLinea()
+    {
+        return $this->uso->has('actividad.gestor.lineatecnologica') ? "{$this->uso->actividad->gestor->lineatecnologica->abreviatura} - {$this->uso->actividad->gestor->lineatecnologica->nombre}" : 'No Registra';
+    }
+
     public function gestorEncargado()
     {
         return $this->uso->has('actividad.gestor.user') ? $this->uso->actividad->gestor->user->present()->userFullName() : 'No Registra';
@@ -86,5 +91,38 @@ class UsoInfraestructuraPresenter extends Presenter
             }
             return $this->uso->usogestores->sum('pivot.asesoria_indirecta') . ' horas';
         }
+    }
+
+    public function usoGestores()
+    {
+        return $this->uso->has('usogestores.user') ? $this->uso->usogestores->map(function ($item, $key) {
+            return $item->user->present()->userTipoDocuento() . ' - ' . $item->user->present()->userFullName() . '- ' . "Asesoria Directa: {$item->pivot->asesoria_directa}, Asesoria Indirecta: {$item->pivot->asesoria_indirecta}";
+        })->implode(', ') : 'No Registra';
+    }
+
+    public function usoTalentos()
+    {
+        return $this->uso->has('usotalentos.user') ? $this->uso->usotalentos->map(function ($item, $key) {
+            return $item->user->present()->userTipoDocuento() . ' - ' . $item->user->present()->userFullName();
+        })->implode(', ') : 'No Registra';
+    }
+
+    public function usoMateriales()
+    {
+        return $this->uso->has('usomateriales') ? $this->uso->usomateriales->map(function ($item, $key) {
+            return $item->codigo_material . ' - ' . $item->nombre;
+        })->implode(', ') : 'No Registra';
+    }
+
+    public function usoEquipos()
+    {
+        if ($this->uso->has('usoequipos')) {
+            $equipos = $this->uso->usoequipos()->withTrashed()->get();
+
+            return $equipos->map(function ($item, $key) {
+                return $item->referencia . ' - ' . $item->present()->equipoNombre();
+            })->implode(', ');
+        }
+        return 'No Registra';
     }
 }

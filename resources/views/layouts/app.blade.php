@@ -60,7 +60,6 @@
         </div>
         <div class="left-sidebar-hover">
         </div>
-        @include('sweetalert::alert')
         <script src="{{ asset('js/app.js') }}">
         </script>
         <script src="{{ asset('js/libs.js') }}">
@@ -68,6 +67,5 @@
         <script src="{{ asset('js/app2.js') }}">
         </script>
         @stack('script')
-    @include('sweetalert::alert')
     </body>
 </html>

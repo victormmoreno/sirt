@@ -28,266 +28,86 @@
                 </div>
                 <div class="card mailbox-content">
                     <div class="card-content">
-                        <div class="col s12 m12 l12">
-                            <div class="mailbox-options">
-                                <ul>
-                                    <li>
-                                        <a href="">
-                                            Todas las asesorias y usos
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{{route('usuario.mytalentos')}}}">
-                                            Mis talentos
-                                        </a>
-                                    </li>
-                                </ul>
+                        <div class="row no-m-t no-m-b">
+                            <div class="col s12 m12 l12">
+                                {{-- <div class="mailbox-options">
+                                    <ul>
+                                        <li>
+                                            <a href="{{{route('usuario.index')}}}">
+                                                Todas las asesorias y usos
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{{route('usuario.mytalentos')}}}">
+                                                asesorias y usos por gestor
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div> --}}
+                                <div class="mailbox-view">
+                                    <div class="mailbox-view-header center-align ">
+                                        <div class="row no-m-t no-m-b">
+                                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                                <div class="col s12 m12 l12">
+                                                    <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">
+                                                        Asesorias y usos de Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                    </span>  
+                                                </div>
+                                            @else
+                                                <div class="col s12 m8 l8">
+                                                    <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">
+                                                        Asesorias y usos de Infraestructura 
+                                                    </span>  
+                                                </div>
+                                                <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
+                                                    <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}} </a>
+                                                </div>
+                                            @endif
+                                        </div>                                    
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="divider">
+                        </div>
+                        <div class=" mailbox-view mailbox-text">
+                            <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
+                                
 
-
-                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
-                                <div class="row">
-                                    <div class="col s12 m12 l12">
-                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                            <span class="card-title center-align">
-                                                Asesorías y usos {{ config('app.name')}}
-                                                <div class="divider"></div>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
+                                <div class="input-field col s12 m2 l2">
+                                    <label class="active" for="filter_year">Año actividad <span class="red-text">*</span></label>
+                                    <select class="js-states browser-default select2"  name="filter_year" id="filter_year" >
+                                        @for ($i=$year; $i >= 2016; $i--)
+                                            <option value="{{$i}}" >{{$i}}</option>
+                                        @endfor
+                                        <option value="all" >todos</option>
+                                    </select>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col s12 m3 l3">
-                                        <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectnodo" onchange="UsoInfraestructuraAdministrador.queryGestoresByNodo()">
-                                            <option value="">Seleccione nodo</option>
-                                            @foreach($nodos as $id => $nodo)
-                                                <option value="{{$id}}">{{$nodo}}</option>
-                                            @endforeach
-                                        </select>
 
-                                    </div>
-                                    <div class="col s12 m3 l3">
-                                        <label class="active" for="selectGestor">Gestor <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectGestor">
-                                            <option value="">Seleccione primero un nodo</option>
+                                <div class="col s12 m6 l4 offset-m3 right">
+                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
+                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Buscar</button>
+                                </div>
+                            </div>
+                            <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
+                                <thead>
+                                    <th width="10%">Fecha</th>
+                                    <th width="20%">Gestor</th>
+                                    <th width="45%">Nombre</th>
+                                    <th width="10%">Fase</th>
+                                    <th width="5%">Asesoría Directa</th>
+                                    <th width="5%">Asesoría Indirecta</th>
+                                    <th width="5%">Detalles</th>
+                                </thead>
 
-                                        </select>
-                                    </div>
-                                    <div class="col s12 m3 l3">
-                                        <label class="active" for="selectYear">Año <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectYear" onchange="UsoInfraestructuraAdministrador.queryActivitiesByGestor()">
-                                            <option value="" selected>Seleccione Año</option>
-                                            @for ($i=2016; $i <= $year; $i++)
-                                                <option value="{{$i}}" >{{$i}}</option>
-                                                @endfor
-                                        </select>
-                                    </div>
-                                    <div class="col s12 m3 l3">
-                                        <label class="active" for="selectActivity">Actividad <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectActivity" >
-                                            <option value="">primero seleccciona nodo, gestor y año</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col s12 m4 l4 offset-l4">
-                                        <a onclick="UsoInfraestructuraAdministrador.ListActividadesPorGestor()" href="javascript:void(0)">
-                                            <div class="card blue">
-                                                <div class="card-content center flow-text">
-                                                    <i class="left material-icons white-text small">search</i>
-                                                    <span class="white-text">Consultar Uso de Infraestructura</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="divider"></div>
-                                <br>
-                                <div class="row">
-                                    <table class="display responsive-table" id="usoinfraestructura_administrador_table">
-                                        <thead>
-                                            <th>Fecha</th>
-                                            <th>Nombre</th>
-                                            <th>Fase</th>
-                                            <th>Asesoría Directa</th>
-                                            <th>Asesoría Indirecta</th>
-                                            <th width="15%">Detalles</th>
-                                        </thead>
-
-                                    </table>
-                                </div>
-                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-
-                                <div class="row">
-                                    <div class="col s12 m12 l12">
-                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                            <span class="card-title center-align">
-                                                Asesorías y usos  Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
-                                                <div class="divider"></div>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col s12 m4 l4">
-                                        <label class="active" for="selectGestor">Gestor <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectGestor">
-                                            <option value="">Seleccione Gestor</option>
-                                            @foreach($gestores as $id => $gestor)
-                                                <option value="{{$id}}">{{$gestor}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col s12 m4 l4">
-                                        <label class="active" for="selectYear">Año <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectYear" onchange="usoinfraestructura.queryActivitiesByGestor()">
-                                            <option value="" selected>Seleccione Año</option>
-                                            @for ($i=2016; $i <= $year; $i++)
-                                                <option value="{{$i}}" >{{$i}}</option>
-                                                @endfor
-                                        </select>
-                                    </div>
-                                    <div class="col s12 m4 l4">
-                                        <label class="active" for="selectActivity">Actividad <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectActivity" >
-                                            <option value="">primero seleccciona gestor y año</option>
-                                            {{-- @foreach($nodos as $id => $nodo)
-                                                <option value="{{$id}}">{{$nodo}}</option>
-                                            @endforeach --}}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col s12 m4 l4 offset-l4">
-                                        <a onclick="usoinfraestructura.ListActividadesPorGestor()" href="javascript:void(0)">
-                                            <div class="card blue">
-                                                <div class="card-content center flow-text">
-                                                    <i class="left material-icons white-text small">search</i>
-                                                    <span class="white-text">Consultar Uso de Infraestructura</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="divider"></div>
-                                <br>
-
-                                <div class="row">
-                                    <table class="display responsive-table" id="usoinfraestructura_dinamizador_table">
-                                        <thead>
-                                            <th>Fecha</th>
-                                            <th>Nombre</th>
-                                            <th>Fase</th>
-                                            <th>Asesoría Directa</th>
-                                            <th>Asesoría Indirecta</th>
-                                            <th>Detalles</th>
-                                        </thead>
-                                    </table>
-                                </div>
-                            @else
-                                <div class="row">
-                                    <div class="col s12 m12 l10">
-                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                            <span class="card-title center-align">
-                                                Asesorías y usos
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-                                        <a class="red" href="{{ route('usoinfraestructura.create') }}">
-                                          <div class="card green">
-                                            <div class="card-content center">
-                                              <i class="left material-icons white-text">add</i>
-                                              <span class="white-text">Nuevo Uso de Infraestructura</span>
-                                            </div>
-                                          </div>
-                                        </a>
-                                      </div>
-                                </div>
-                                <div class="divider"></div>
-                                <br>
-                                <div class="row">
-                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                    <div class="col s12 m6 l6">
-                                        <label class="active" for="selectYear">Año <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectYear" onchange="UsoInfraestructuraGestor.queryActivitiesByGestor({{$gestor_id}})">
-                                            <option value="" selected>Seleccione Año</option>
-                                            @for ($i=2016; $i <= $year; $i++)
-                                                <option value="{{$i}}" >{{$i}}</option>
-                                                @endfor
-                                        </select>
-                                    </div>
-                                    <div class="col s12 m6 l6">
-                                        <label class="active" for="selectActivity">Actividad <span class="red-text">*</span></label>
-                                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selectActivity" >
-                                            <option value="">Seleccione Actividad</option>
-                                            {{-- @foreach($proyectos as $id => $proyecto)
-                                              <option value="{{$id}}">{{$proyecto}}</option>
-                                            @endforeach --}}
-                                        </select>
-                                    </div>
-
-                                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                                        <div class="col s12 m12 l12">
-                                            <label class="active" for="selecProyecto">Proyecto <span class="red-text">*</span></label>
-                                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" id="selecProyecto" onchange="usoinfraestructuraIndex.selectProyectListDatatables()">
-                                                <option value="">Seleccione Proyecto</option>
-                                                @foreach($proyectos as $id => $proyecto)
-                                                <option value="{{$id}}">{{$proyecto}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    @endif
-                                </div>
-                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                <div class="row">
-                                    <div class="col s12 m4 l4 offset-l4">
-                                        <a onclick="UsoInfraestructuraGestor.ListActividadesPorGestor({{$gestor_id}})" href="javascript:void(0)">
-                                            <div class="card blue">
-                                                <div class="card-content center flow-text">
-                                                    <i class="left material-icons white-text small">search</i>
-                                                    <span class="white-text">Consultar Uso de Infraestructura</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="divider"></div>
-                                <br>
-                                @endif
-                                <div class="row">
-                                    <table class="display responsive-table" id="usoinfraestructura_table">
-                                        <thead>
-                                            <th>Fecha</th>
-                                            <th>Nombre</th>
-                                            <th>Fase</th>
-                                            <th>Asesoría Directa</th>
-                                            <th>Asesoría Indirecta</th>
-                                            <th>Detalles</th>
-                                        </thead>
-                                    </table>
-                                </div>
-                            @endif
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento())
-        <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-
-            <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Uso de Infraestructura">
-                 <i class="material-icons">add</i>
-            </a>
-        </div>
-        @endif
     </div>
 </main>
 

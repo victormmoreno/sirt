@@ -30,7 +30,7 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                <div class="mailbox-options">
+                                {{-- <div class="mailbox-options">
                                     <ul>
                                         <li>
                                             <a href="{{{route('usuario.index')}}}">
@@ -43,7 +43,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> --}}
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align ">
                                         <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">Asesorias y usos de {{config('app.name')}}</span>
@@ -82,18 +82,18 @@
 
                                 <div class="col s12 m6 l4 offset-m3 right">
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_user"><i class="material-icons">search</i>Buscar</button>
+                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Buscar</button>
                                 </div>
                             </div>
-                            <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table">
+                            <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
                                 <thead>
-                                    <th>Fecha</th>
-                                    <th>Gestor</th>
-                                    <th width="60%">Nombre</th>
-                                    <th>Fase</th>
-                                    <th width="15%">Asesoría Directa</th>
-                                    <th width="15%">Asesoría Indirecta</th>
-                                    <th width="15%">Detalles</th>
+                                    <th width="10%">Fecha</th>
+                                    <th width="20%">Gestor</th>
+                                    <th width="45%">Nombre</th>
+                                    <th width="10%">Fase</th>
+                                    <th width="5%">Asesoría Directa</th>
+                                    <th width="5%">Asesoría Indirecta</th>
+                                    <th width="5%">Detalles</th>
                                 </thead>
 
                             </table>

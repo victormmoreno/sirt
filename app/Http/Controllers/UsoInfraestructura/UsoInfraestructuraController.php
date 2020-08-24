@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\UsoInfraestructura\UsoInfraestructuraExport;
 
 
 class UsoInfraestructuraController extends Controller
@@ -211,24 +212,26 @@ class UsoInfraestructuraController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
-                $linea = null;
+                $user = null;
 
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $user = null;
 
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
+                $user = auth()->user()->gestor->id;
                 break;
             case User::IsTalento():
+                $nodo = null;
+                $user = auth()->user()->talento->id;
 
                 break;
             default:
                 return abort('403');
                 break;
         }
-        $year = 2020;
-
 
 
 
@@ -237,8 +240,9 @@ class UsoInfraestructuraController extends Controller
             $usos = [];
 
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
-                $usos = UsoInfraestructura::nodoUso($nodo)
-                    ->yearActividad($year)
+                $usos = UsoInfraestructura::nodoActividad($nodo)
+                    ->yearActividad($request->filled('filter_year'))
+                    ->userActividad($user)
                     ->orderBy('usoinfraestructuras.created_at', 'desc')
                     ->get();
             }
@@ -254,37 +258,18 @@ class UsoInfraestructuraController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                $nodo               = auth()->user()->dinamizador->nodo->id;
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
-                    $query->where('id', $nodo);
-                })->get();
-
-
-                $gestores = User::select('gestores.id')
-                    ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as user')
-                    ->join('gestores', 'gestores.user_id', 'users.id')
-                    ->where('gestores.nodo_id', $nodo)
-                    ->role('Gestor')
-                    ->withTrashed()
-                    ->pluck('user', 'id');
-
-                return view('usoinfraestructura.index', [
-                    'gestores' => $gestores,
-                ]);
+                return view('usoinfraestructura.index');
                 break;
 
             case User::IsGestor():
 
-                return view('usoinfraestructura.index', [
-                    'gestor_id' => auth()->user()->gestor->id,
-                ]);
+                return view('usoinfraestructura.index');
 
                 break;
             case User::IsTalento():
                 $user = auth()->user()->id;
                 $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
                     ->where('user_talento.id', $user)
-                    // ->whereIn('fases.id', [1,2,3])
                     ->pluck('nombre', 'proyectos.id');
 
                 return view('usoinfraestructura.index', [
@@ -299,9 +284,6 @@ class UsoInfraestructuraController extends Controller
 
 
 
-        if (request()->ajax()) {
-            // return $this->indexDatatable($usoinfraestructura);
-        }
 
         return view('usoinfraestructura.index', [
             'nodos' => Nodo::selectNodo()->pluck('nodos', 'id'),
@@ -1020,5 +1002,46 @@ class UsoInfraestructuraController extends Controller
             'usoinfraestructura' => 'success',
             'route' => route('usoinfraestructura.index')
         ]);
+    }
+
+    public function export(Request $request, $extension = 'xlsx')
+    {
+        $this->authorize('index', UsoInfraestructura::class);
+
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $user = null;
+
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                $user = null;
+
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                $user = auth()->user()->gestor->id;
+                break;
+            case User::IsTalento():
+                $nodo = null;
+                $user = auth()->user()->talento->id;
+
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+
+        $usos = [];
+
+        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
+            $usos = UsoInfraestructura::nodoActividad($nodo)
+                ->yearActividad($request->filled('filter_year'))
+                ->userActividad($user)
+                ->orderBy('usoinfraestructuras.created_at', 'desc')
+                ->get();
+        }
+
+        return (new UsoInfraestructuraExport($request, $usos))->download("Usos de infraestructura - " . config('app.name') . ".{$extension}");
     }
 }
