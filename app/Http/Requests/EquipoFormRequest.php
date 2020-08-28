@@ -26,8 +26,8 @@ class EquipoFormRequest extends FormRequest
         return [
             'txtlineatecnologica' => 'required',
             'txtreferencia'       => 'required|min:1|max:45',
-            'txtnombre'           => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ\/_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_\/-]*)*)+$/',
-            'txtmarca'            => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_\/-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_\/-]*)*)+$/',
+            'txtnombre'           => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
+            'txtmarca'            => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
             'txtcostoadquisicion' => 'required|between:0,999999999999.99|numeric',
             'txtvida_util'        => 'required|integer|min:1',
             'txtaniocompra'       => 'required|date_format:"Y"',
