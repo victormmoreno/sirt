@@ -296,8 +296,8 @@ Route::group([
     Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
         ->name('usoinfraestructura.projectsforuser.projects');
 
-    Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
-        ->name('usoinfraestructura.actividadesporgestor');
+    Route::get('usoinfraestructura/actividades/{anio}', 'UsoInfraestructuraController@activitiesByAnio')
+        ->name('usoinfraestructura.actividadesanio');
 
     Route::delete('usoinfraestructura/{id}', 'UsoInfraestructuraController@destroy')
         ->name('usoinfraestructura.destroy');

@@ -195,16 +195,49 @@ class UsoInfraestructura extends Model
         return $query;
     }
 
-    public function scopeUserActividad($query, $user)
+    public function scopeActividad($query, $actividad, $user)
     {
         if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
-
-            return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
-                $subquery->where('id', $user);
-            });
+            if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
+                return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                    $subquery->where('id', $user);
+                })->whereHas('actividad',  function ($subquery) use ($actividad) {
+                    $subquery->where('id', $actividad);
+                });
+            } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
+                return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                    $subquery->where('id', $user);
+                });
+            }
         } else if ((session()->has('login_role') && session()->get('login_role') == User::IsTalento()) && (!empty($user) && $user != null && $user != 'all')) {
-            return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
-                $subquery->where('id', $user);
+            if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
+                return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
+                    $subquery->where('id', $user);
+                })->whereHas('actividad',  function ($subquery) use ($actividad) {
+                    $subquery->where('id', $actividad);
+                });
+            } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
+                return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
+                    $subquery->where('id', $user);
+                });
+            }
+        }
+
+
+        return $query;
+    }
+
+    public function scopeGestorActividad($query, $gestor)
+    {
+        if (!empty($gestor) && $gestor != null && $gestor == 'all') {
+            return $query->has('actividad.gestor');
+        }
+
+        if ((!empty($gestor) && $gestor != null && $gestor != 'all')) {
+            return $query->wherehas('actividad.gestor', function ($query) use ($gestor) {
+                $query->where(function ($subquery) use ($gestor) {
+                    $subquery->where('id', $gestor);
+                });
             });
         }
         return $query;

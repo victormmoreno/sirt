@@ -47,25 +47,32 @@
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align ">
                                         <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">Asesorias y usos de {{config('app.name')}}</span>
-                                        
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="divider">
                         </div>
                         <div class=" mailbox-view mailbox-text">
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
-                                    <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
+                                    <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo" onchange="usoinfraestructuraIndex.queryGestoresByNodo()">
                                         <option value="all" >todos</option>
                                         @forelse($nodos as $id => $name)
                                             <option value="{{$id}}">{{$name}}</option>
                                         @empty
                                             <option>No se encontraron Resultados</option>
                                         @endforelse
+                                    </select>
+                                </div>
+                                <div class="input-field col s12 m4 l4">
+                                    <label class="active" for="filter_gestor">Gestor Asesor <span class="red-text">*</span></label>
+                                    <select class="js-states browser-default select2" name="filter_gestor" id="filter_gestor" >
+                                        
+                                        <option value="" >Seleccione primero el nodo</option>
                                     </select>
                                 </div>
 
@@ -81,7 +88,7 @@
 
 
                                 <div class="col s12 m6 l4 offset-m3 right">
-                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
+                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Buscar</button>
                                 </div>
                             </div>

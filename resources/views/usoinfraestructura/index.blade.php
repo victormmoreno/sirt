@@ -73,21 +73,40 @@
                         </div>
                         <div class=" mailbox-view mailbox-text">
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
-                                
-
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_year">Año actividad <span class="red-text">*</span></label>
-                                    <select class="js-states browser-default select2"  name="filter_year" id="filter_year" >
+                                    <select name="filter_year" id="filter_year" @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento())) onchange="usoinfraestructuraIndex.queryActivitiesByAnio()" @endif>
                                         @for ($i=$year; $i >= 2016; $i--)
                                             <option value="{{$i}}" >{{$i}}</option>
                                         @endfor
                                         <option value="all" >todos</option>
                                     </select>
                                 </div>
+                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                
+                                <div class="input-field col s12 m4 l4">
+                                    <label class="active" for="filter_gestor">Gestor Asesor <span class="red-text">*</span></label>
+                                    <select name="filter_gestor" id="filter_gestor">
+                                        <option value="all" >todos</option>
+                                        @foreach($gestores as $id => $gestor)
+                                            <option value="{{$id}}">{{$gestor}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endif
 
+                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
+                                
+                                <div class="input-field col s12 m4 l4">
+                                    <label class="active" for="filter_actividad">Actividad <span class="red-text">*</span></label>
+                                    <select name="filter_actividad" id="filter_actividad">
+                                        <option value="all" >Todas</option>
+                                    </select>
+                                </div>
+                                @endif
 
                                 <div class="col s12 m6 l4 offset-m3 right">
-                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
+                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Buscar</button>
                                 </div>
                             </div>

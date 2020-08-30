@@ -212,44 +212,47 @@ class UsoInfraestructuraController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
+                $gestor = $request->filter_gestor;
                 $user = null;
-
+                $actividad = null;
+                break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $gestor = $request->filter_gestor;
                 $user = null;
-
+                $actividad = null;
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->id;
+                $gestor = auth()->user()->gestor->id;
+                $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
                 $nodo = null;
                 $user = auth()->user()->talento->id;
-
+                $gestor = null;
+                $actividad = $request->filter_actividad;
                 break;
             default:
                 return abort('403');
                 break;
         }
 
-
-
         if ($request->ajax()) {
 
             $usos = [];
 
-            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
+            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
                 $usos = UsoInfraestructura::nodoActividad($nodo)
-                    ->yearActividad($request->filled('filter_year'))
-                    ->userActividad($user)
+                    ->yearActividad($request->filter_year)
+                    ->actividad($actividad, $user)
+                    ->gestorActividad($gestor)
                     ->orderBy('usoinfraestructuras.created_at', 'desc')
                     ->get();
             }
             return $usoDatatable->indexDatatable($usos);
         }
-
-
 
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
@@ -258,7 +261,15 @@ class UsoInfraestructuraController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                return view('usoinfraestructura.index');
+                $gestores = User::select('gestores.id as idgestor', 'users.id')
+                    ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as user')
+                    ->join('gestores', 'gestores.user_id', 'users.id')
+                    ->where('gestores.nodo_id', $nodo)
+                    ->role(User::IsGestor())
+                    ->withTrashed()
+                    ->pluck('user', 'idgestor');
+
+                return view('usoinfraestructura.index', ['gestores' => $gestores]);
                 break;
 
             case User::IsGestor():
@@ -968,20 +979,56 @@ class UsoInfraestructuraController extends Controller
     }
 
 
-    public function activitiesByGestor($gestor = null, $anio = null)
+    public function activitiesByAnio($anio = null)
     {
+        $activities = [];
+        if (Session::get('login_role') == User::IsGestor()) {
+            $gestor = auth()->user()->gestor->id;
+            if ((!empty($anio) && $anio != null && $anio != 'all')) {
 
-        $activities =  Actividad::select(
-            'id',
-            'fecha_inicio'
-        )->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
-            ->where('gestor_id', $gestor)
-            ->whereYear('fecha_inicio', $anio)
-            ->pluck('nombre', 'id');
+                $activities =  Actividad::select('id')
+                    ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+                    ->whereHas('gestor', function ($query) use ($gestor) {
+                        $query->where('id', $gestor);
+                    })
+                    ->where(function ($query) use ($anio) {
+                        $query->whereYear('fecha_inicio', $anio)->orWhereYear('fecha_cierre', $anio);
+                    })
+                    ->pluck('nombre', 'id');
+            } elseif ((!empty($anio) && $anio != null && $anio == 'all')) {
+                $activities =  Actividad::select('id')
+                    ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+                    ->whereHas('gestor', function ($query) use ($gestor) {
+                        $query->where('id', $gestor);
+                    })
+                    ->pluck('nombre', 'id');
+            }
+        } elseif (Session::get('login_role') == User::IsTalento()) {
+            $user = auth()->user()->id;
+            if ((!empty($anio) && $anio != null && $anio != 'all')) {
+                $activities =  Actividad::select('id')
+                    ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+                    ->where(function ($query) use ($user) {
+                        $query->whereHas('articulacion_proyecto.talentos.user', function ($subquery) use ($user) {
+                            $subquery->where('id', $user);
+                        });
+                    })->where(function ($query) use ($anio) {
+                        $query->whereYear('fecha_inicio', $anio)->orWhereYear('fecha_cierre', $anio);
+                    })->pluck('nombre', 'id');
+            } elseif ((!empty($anio) && $anio != null && $anio == 'all')) {
+                $activities =  Actividad::select('id')
+                    ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+                    ->where(function ($query) use ($user) {
+                        $query->whereHas('articulacion_proyecto.talentos.user', function ($subquery) use ($user) {
+                            $subquery->where('id', $user);
+                        });
+                    })->pluck('nombre', 'id');
+            }
+        }
 
         return response()->json([
             'actividades' => $activities
-        ], 201);
+        ], 200);
     }
 
 
@@ -1011,21 +1058,27 @@ class UsoInfraestructuraController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
+                $gestor = $request->filter_gestor;
                 $user = null;
-
+                $actividad = null;
+                break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $gestor = $request->filter_gestor;
                 $user = null;
-
+                $actividad = null;
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->id;
+                $gestor = auth()->user()->gestor->id;
+                $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
                 $nodo = null;
                 $user = auth()->user()->talento->id;
-
+                $gestor = null;
+                $actividad = $request->filter_actividad;
                 break;
             default:
                 return abort('403');
@@ -1034,10 +1087,11 @@ class UsoInfraestructuraController extends Controller
 
         $usos = [];
 
-        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
+        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
             $usos = UsoInfraestructura::nodoActividad($nodo)
-                ->yearActividad($request->filled('filter_year'))
-                ->userActividad($user)
+                ->yearActividad($request->filter_year)
+                ->actividad($actividad, $user)
+                ->gestorActividad($gestor)
                 ->orderBy('usoinfraestructuras.created_at', 'desc')
                 ->get();
         }
