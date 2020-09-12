@@ -253,6 +253,8 @@ Route::resource('mantenimientos', 'MantenimientoController', [
 =            seccion para las rutas de uso de infraestructa            =
 ======================================================================*/
 
+Route::get('usoinfraestructura/export', 'UsoInfraestructura\UsoInfraestructuraController@export')->name('usoinfraestructura.export');
+
 Route::group([
     'namespace'  => 'UsoInfraestructura',
     'middleware' => 'disablepreventback',
@@ -272,9 +274,6 @@ Route::group([
 
     //consultas que se utlizan para el uso de infraestructura
 
-    Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
-        ->name('usoinfraestructura.projectsforuser');
-
 
     Route::get('usoinfraestructura/talentosporproyecto/{id}', 'UsoInfraestructuraController@talentosPorProyecto')->name('usoinfraestructura.talentosporproyecto');
 
@@ -291,19 +290,14 @@ Route::group([
     Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
         ->name('usoinfraestructura.edtsforuser');
 
-    Route::get('usoinfraestructura/usoinfraestructurapornodo/{id}', 'UsoInfraestructuraController@getUsoInfraestructuraForNodo')
-        ->name('usoinfraestructura.usoinfraestructurapornodo');
 
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
         ->name('usoinfraestructura.projectsforuser');
     Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
         ->name('usoinfraestructura.projectsforuser.projects');
 
-    Route::get('usoinfraestructura/actividades/{gestor}/{anio}', 'UsoInfraestructuraController@activitiesByGestor')
-        ->name('usoinfraestructura.actividadesporgestor');
-
-    Route::get('usoinfraestructura/actividades/datatable/{gestor}/{anio}/{actividad}', 'UsoInfraestructuraController@getDatatableInfoActividad')
-        ->name('usoinfraestructura.actividadesdatatable');
+    Route::get('usoinfraestructura/actividades/{anio}', 'UsoInfraestructuraController@activitiesByAnio')
+        ->name('usoinfraestructura.actividadesanio');
 
     Route::delete('usoinfraestructura/{id}', 'UsoInfraestructuraController@destroy')
         ->name('usoinfraestructura.destroy');

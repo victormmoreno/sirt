@@ -15,7 +15,7 @@ class AddInfoToTalantosTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->unsignedInteger('tipo_formacion_id')->nullable()->after('entidad_id');
+            $table->unsignedInteger('tipo_formacion_id')->nullable()->after('empresa');
             $table->unsignedInteger('tipo_estudio_id')->nullable()->after('tipo_formacion_id');
 
             $table->index(["tipo_formacion_id"], 'fk_tipo_formacion_id_talentos_1_idx');

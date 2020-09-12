@@ -249,10 +249,11 @@ class UserPresenter extends Presenter
 
     public function centroFormacionTalento()
     {
-        if ($this->user->has('talento.entidad')) {
+        if ($this->user->has('talento.entidad') && isset($this->user->talento->entidad)) {
             return $this->user->talento->entidad->nombre;
         }
-        return $this->message('No Registra');;
+
+        return $this->message('No Registra');
     }
 
     public function programaFormacionTalento()

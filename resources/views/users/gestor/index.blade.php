@@ -43,7 +43,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </div> 
+                                </div>
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <span class="card-title hand-of-Sean-fonts orange-text text-darken-3">Talentos de {{config('app.name')}}</span>
@@ -56,6 +56,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="divider">
                         </div>
                         <div class=" mailbox-view mailbox-text">

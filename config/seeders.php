@@ -30,7 +30,6 @@ return [
         ['name' => FasesTableSeeder::class, 'callable' => true],
         ['name' => EtniasTableSeeder::class, 'callable' => true],
         ['name' => EstadosIdeasTableSeeder::class, 'callable' => true],
-        ['name' => TiposArticualcionesProyectosTableSeeder::class, 'callable' => true],
         ['name' => EpsTableSeeder::class, 'callable' => true],
         ['name' => ClasificacionesColcienciasTableSeeder::class, 'callable' => true],
         ['name' => DepartamentosTableSeeder::class, 'callable' => true],
