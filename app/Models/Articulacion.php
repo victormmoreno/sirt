@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Articulacion extends Model
 {
 
-  use ArticulacionTrait;
+    use ArticulacionTrait;
 
     // Constante para la entidad de no aplica
     const IS_NOAPLICA = 1;
@@ -38,14 +38,14 @@ class Articulacion extends Model
 
     public function productos()
     {
-      return $this->belongsToMany(Producto::class, 'articulaciones_productos')
-      ->withTimestamps()
-      ->withPivot('logrado');
+        return $this->belongsToMany(Producto::class, 'articulaciones_productos')
+            ->withTimestamps()
+            ->withPivot('logrado');
     }
 
     public function fase()
     {
-      return $this->belongsTo(Fase::class, 'fase_id', 'id');
+        return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
     // Relacion muchos a muchos con talentos
@@ -67,7 +67,7 @@ class Articulacion extends Model
 
     public function scopeArticulacionesForTipoArticulacion($query, int $tipoArticulacion)
     {
-        $query->where('tipo_articulacion',$tipoArticulacion);
+        $query->where('tipo_articulacion', $tipoArticulacion);
     }
 
     /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
@@ -82,5 +82,4 @@ class Articulacion extends Model
     }
 
     /*=====  End of scope para consultar por estado de proyecto  ======*/
-
 }

@@ -8,7 +8,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Idea::class, function (Faker $faker) {
 
-
     $userinfocenter = User::has('infocenter')->get()->random();
     $usergestor = User::has('gestor')->whereHas('gestor', function ($query) use ($userinfocenter) {
         return $query->where('nodo_id', $userinfocenter->infocenter->nodo_id);
@@ -38,7 +37,6 @@ $factory->define(Idea::class, function (Faker $faker) {
         'convocatoria' => $vieneConvocatoria == 1 ? $faker->text($maxNbChars = 100) : null,
         'aval_empresa' => $avalEmpresa = $faker->randomElement([1, 0]),
         'empresa' => $avalEmpresa == 1 ? $faker->company : null,
-        'tipo_idea' => Idea::IsEmprendedor(),
         'gestor_id' => $estado == EstadoIdea::where('nombre', 'Admitido')->first()->id ? $usergestor->gestor->id : $estado == EstadoIdea::where('nombre', 'En Proyecto')->first()->id ? $usergestor->gestor->id : null,
     ];
 });

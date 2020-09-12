@@ -18,6 +18,7 @@ class Talento extends Model
     protected $fillable = [
         'user_id',
         'tipo_talento_id',
+        'entidad_id',
         'universidad',
         'programa_formacion',
         'carrera_universitaria',
@@ -51,6 +52,12 @@ class Talento extends Model
     {
         return $this->belongsTo(TipoFormacion::class, 'tipo_formacion_id', 'id');
     }
+
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
+    }
+
 
     public function tipoestudio()
     {

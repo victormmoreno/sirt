@@ -39,7 +39,7 @@
                             <option value="">Seleccione tipo de talento</option>
                             @foreach($tipotalentos as $id => $nombre)
                                 @if(isset($user->talento->tipotalento->id))
-                                <option value="{{$id}}" {{old('txttipotalento',$user->talento->perfil->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                <option value="{{$id}}" {{old('txttipotalento',$user->talento->tipotalento->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
                                 @else
                                     <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
                                 @endif
