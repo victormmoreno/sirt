@@ -6652,99 +6652,10 @@ var selectCostoAdministrativoNodo = {
         
     },
 }
-$
-
-var UsoInfraestructuraAdministrador = {
-    
-    
-
-    
-}
-
-
-var usoinfraestructura = {
-    
-    queryActivitiesByGestor: function(){
-        let gestor = $('#selectGestor').val();
-        let anho = $('#selectYear').val();
-
-        if (gestor == null || gestor == ''){
-              
-              $('#selectYear').empty();
-              $('#selectActivity').empty();
-          }
-          else if(anho == null || anho == ''){
-              $('#selectActivity').empty();
-          }else{
-            $.ajax({
-                type: 'GET',
-                url: '/usoinfraestructura/actividades/'+ gestor + '/' + anho,
-                contentType: false,
-                dataType: 'json',
-                processData: false,
-                success: function (data) {
-                    $('#selectActivity').empty();
-                    $('#selectActivity').append('<option value="">Seleccione la Actividad</option>')
-                    $.each(data.actividades, function(i, e) {
-                        $('#selectActivity').append('<option  value="'+i+'">'+e+'</option>');
-                    });
-                
-                    $('#selectActivity').material_select();
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        }
-
-    }
-
-}
-
-
-var UsoInfraestructuraGestor = {
-    queryActivitiesByGestor: function(gestor){
-
-        let anho = $('#selectYear').val();
-
-
-
-        if(anho == null || anho == ''){
-
-            $('#selectActivity').empty();
-            $('#selectActivity').append('<option value="">Seleccione una Actividad</option>');
-        }
-        else{
-            $.ajax({
-                type: 'GET',
-                url: '/usoinfraestructura/actividades/'+ gestor + '/' + anho,
-                contentType: false,
-                dataType: 'json',
-                processData: false,
-                success: function (data) {
-
-                  $('#selectActivity').empty();
-                  $('#selectActivity').append('<option value="">Seleccione la Actividad</option>');
-                  $.each(data.actividades, function(i, e) {
-                    $('#selectActivity').append('<option  value="'+i+'">'+e+'</option>');
-                  });
-
-                  $('#selectActivity').material_select();
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        }
-
-    },
-    
-}
-
-
 $(document).ready(function() {
 
     usoinfraestructuraIndex.queryActivitiesByAnio();
+   
 
     let filter_nodo = $('#filter_nodo').val();
     let filter_year = $('#filter_year').val();
@@ -6765,19 +6676,6 @@ $(document).ready(function() {
         }).clear().draw();
     }
 
-    // $('#mytalento_data_table').dataTable().fnDestroy();
-    // if((filter_nodo != '' || filter_nodo != null) && (filter_role !='' || filter_role != null) && filter_state != '' && filter_year !=''){
-    //     usoinfraestructuraIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
-    // }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_role == '' || filter_role == null || filter_role == undefined) && filter_state != '' && (filter_year == '' || filter_year == null || filter_year == undefined)){
-    //     usoinfraestructuraIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role = null, filter_state, filter_year = null);
-    // }else{
-    //     $('#mytalento_data_table').DataTable({
-    //         language: {
-    //             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    //         },
-    //         "lengthChange": false
-    //     }).clear().draw();
-    // }
 });
 
 var usoinfraestructuraIndex = {
@@ -6848,7 +6746,7 @@ var usoinfraestructuraIndex = {
                 dataType: 'json',
                 processData: false,
                 success: function (data) {
-                    
+
                     $('#filter_gestor').empty();
                     $('#filter_gestor').append('<option value="all">todos</option>');
                     $.each(data.gestores, function(i, e) {
@@ -6863,14 +6761,14 @@ var usoinfraestructuraIndex = {
         }
     },
     queryActivitiesByAnio: function(){
-       
+
         let anio = $('#filter_year').val();
-    
+
         if (anio == null || anio == '' || anio == undefined){
-            
+
             $('#filter_actividad').empty();
             $('#filter_actividad').append('<option value="">Seleccione un año</option>');
-        
+
         }else{
             $.ajax({
                 type: 'GET',
@@ -6974,7 +6872,6 @@ $('#download_usoinfraestructura').click(function(){
         filter_gestor: filter_gestor,
         filter_actividad: filter_actividad,
     }
-
     var url = "/usoinfraestructura/export?" + $.param(query)
     window.location = url;
 });

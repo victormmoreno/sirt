@@ -30,20 +30,7 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                {{-- <div class="mailbox-options">
-                                    <ul>
-                                        <li>
-                                            <a href="{{{route('usuario.index')}}}">
-                                                Todas las asesorias y usos
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{{route('usuario.mytalentos')}}}">
-                                                asesorias y usos por gestor
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div> --}}
+                                
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align ">
                                         <div class="row no-m-t no-m-b">
@@ -85,8 +72,8 @@
                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
                                 
                                 <div class="input-field col s12 m4 l4">
-                                    <label class="active" for="filter_gestor">Gestor Asesor <span class="red-text">*</span></label>
-                                    <select name="filter_gestor" id="filter_gestor">
+                                    
+                                    <select class="js-states browser-default select2" name="filter_gestor" id="filter_gestor" >
                                         <option value="all" >todos</option>
                                         @foreach($gestores as $id => $gestor)
                                             <option value="{{$id}}">{{$gestor}}</option>
@@ -125,6 +112,14 @@
                         </div>
                     </div>
                 </div>
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()|| session()->get('login_role') == App\User::IsTalento() ))
+                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
+                        <i class="material-icons">add_circle</i>
+                    </a>
+                
+                </div>
+                @endif
             </div>
         </div>
     </div>

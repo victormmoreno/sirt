@@ -60,18 +60,18 @@
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo" onchange="usoinfraestructuraIndex.queryGestoresByNodo()">
-                                        <option value="all" >todos</option>
+                                        
                                         @forelse($nodos as $id => $name)
                                             <option value="{{$id}}">{{$name}}</option>
                                         @empty
                                             <option>No se encontraron Resultados</option>
                                         @endforelse
+                                        <option value="all" >todos</option>
                                     </select>
                                 </div>
                                 <div class="input-field col s12 m4 l4">
                                     <label class="active" for="filter_gestor">Gestor Asesor <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2" name="filter_gestor" id="filter_gestor" >
-                                        
                                         <option value="" >Seleccione primero el nodo</option>
                                     </select>
                                 </div>

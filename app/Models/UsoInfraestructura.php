@@ -220,9 +220,12 @@ class UsoInfraestructura extends Model
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
+            } elseif ((!empty($actividad) && $actividad == null && $actividad != 'all')) {
+                return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
+                    $subquery->where('id', $user);
+                });
             }
         }
-
 
         return $query;
     }
@@ -242,6 +245,7 @@ class UsoInfraestructura extends Model
         }
         return $query;
     }
+
 
     public function scopeYearActividad($query, $year)
     {
