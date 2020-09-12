@@ -16,9 +16,11 @@
   </p>
   <p style="text-align: justify">
     Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica realizado en el 
-    mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera
-    necesario aclarar algunos puntos para que su idea de proyecto: 
-    <b>“{{ $idea->nombre_proyecto }}”</b> sea revisada nuevamente en un próximo comité. <br>Para esto le solicitamos seguir las siguientes recomendaciones:
+    mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera la No aceptación del proyecto <b>“{{ $idea->nombre_proyecto }}”</b>.
+    Para esto le solicitamos seguir las siguientes recomendaciones.
+    <br>
+    <br>
+    Lo invitamos seguir las siguientes recomendaciones y observaciones:
   </p>
   <p style="text-align: left">
     {{ $idea->comites()->wherePivot('comite_id', $comite->id)->first()->pivot->observaciones }}

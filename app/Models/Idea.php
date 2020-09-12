@@ -13,6 +13,14 @@ class Idea extends Model
 
     use IdeaTrait;
 
+        /*=================================================================
+    =            constantes para conocer los tipos de idea            =
+    =================================================================*/
+
+    const IS_EMPRENDEDOR        = 1;
+    const IS_EMPRESA            = 2;
+    const IS_GRUPOINVESTIGACION = 3;
+
     protected $table = 'ideas';
 
     protected $appends = ['nombre_completo'];
