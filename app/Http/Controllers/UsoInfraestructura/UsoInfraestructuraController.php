@@ -236,7 +236,7 @@ class UsoInfraestructuraController extends Controller
                 break;
             case User::IsDinamizador():
                 $nodo               = auth()->user()->dinamizador->nodo->id;
-                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
+                $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
                     $query->where('id', $nodo);
                 })->get();
 
@@ -299,7 +299,7 @@ class UsoInfraestructuraController extends Controller
 
         $this->authorize('getUsoInfraestructuraForNodo', UsoInfraestructura::class);
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
-        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
+        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')->whereHas('actividad.nodo', function ($query) use ($nodo) {
             $query->where('id', $nodo);
         })->get();
 
@@ -426,7 +426,7 @@ class UsoInfraestructuraController extends Controller
 
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
         $equipos = [];
         if ($usoinfraestructura->has('usoequipos')) {
@@ -457,7 +457,7 @@ class UsoInfraestructuraController extends Controller
 
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
 
 
@@ -522,7 +522,7 @@ class UsoInfraestructuraController extends Controller
     {
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
 
         $this->authorize('update', $usoinfraestructura);
@@ -992,7 +992,7 @@ class UsoInfraestructuraController extends Controller
         $relations = $this->getUsoInfraestructuraRepository()->getDataIndex();
         if (Session::get('login_role') == User::IsTalento()) {
             $user = auth()->user()->id;
-            $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
                 ->whereHas('actividad.articulacion_proyecto.talentos.user', function ($query) use ($user) {
                     $query->where('id', $user);
                 })
@@ -1002,7 +1002,7 @@ class UsoInfraestructuraController extends Controller
                 ->get();
         } else if (Session::get('login_role') == User::IsGestor()) {
             $user = auth()->user()->id;
-            $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            $usoinfraestructura =  $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
                 ->whereHas('actividad.gestor.user', function ($query) use ($user) {
                     $query->where('id', $user);
                 })
@@ -1038,7 +1038,7 @@ class UsoInfraestructuraController extends Controller
     {
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
             ->whereHas('actividad', function ($query) use ($gestor, $anio, $actividad) {
                 $query->where('id', $actividad)->whereYear('fecha_inicio', $anio)->where('gestor_id', $gestor);
             })->get();
@@ -1055,7 +1055,7 @@ class UsoInfraestructuraController extends Controller
     {
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'asesoria_directa', 'asesoria_indirecta', 'descripcion', 'estado', 'created_at')
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
             ->findOrFail($id);
 
         $usoinfraestructura->usoequipos()->sync([]);

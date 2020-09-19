@@ -379,19 +379,10 @@ class UsoInfraestructuraRepository
             'actividad.articulacion_proyecto.proyecto'                      => function ($query) {
                 $query->select('id', 'articulacion_proyecto_id', 'sublinea_id', 'areaconocimiento_id');
             },
-            'actividad.articulacion_proyecto.proyecto.sector'               => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'actividad.articulacion_proyecto.proyecto.tipoproyecto'         => function ($query) {
-                $query->select('id', 'nombre');
-            },
             'actividad.articulacion_proyecto.proyecto.areaconocimiento'     => function ($query) {
                 $query->select('id', 'nombre');
             },
             'actividad.articulacion_proyecto.proyecto.sublinea'             => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'actividad.articulacion_proyecto.proyecto.estadoproyecto'       => function ($query) {
                 $query->select('id', 'nombre');
             },
             'actividad.articulacion_proyecto.articulacion'                  => function ($query) {

@@ -58,9 +58,9 @@ class EmpresaFormRequest extends FormRequest
 
       'direccion.max' => 'La Dirección de la Empresa deben ser máximo de 100 caracteres.',
 
-      'txtdepartamento' => 'El Departamento de la Empresa es obligatorio.',
+      'txtdepartamento.required' => 'El Departamento de la Empresa es obligatorio.',
 
-      'txtciudad_id' => 'La Ciudad de la Empresa es obligatoria.',
+      'txtciudad_id.required' => 'La Ciudad de la Empresa es obligatoria.',
 
       'txtsector.required' => 'El Sector de la Empresa es obligatorio.',
 

@@ -234,8 +234,8 @@ class ComiteController extends Controller
   public function create()
   {
     if ( Session::get('login_role') == User::IsInfocenter() ) {
-       $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
-       $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( auth()->user()->infocenter->nodo_id )->get();
+      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
+      $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( auth()->user()->infocenter->nodo_id )->get();
       return view('comite.infocenter.create2', [
         'ideas' => $ideas,
         'gestores' => $gestores
@@ -243,6 +243,67 @@ class ComiteController extends Controller
     }
   }
 
+  /**
+   * Formulario para cambiar el gestor de una idea de proyecto que fue aprobada en el comité
+   * 
+   * @param Idea $idea
+   * @param Comite $comite
+   * @return Response
+   */
+  public function cambiar_idea_gestor(Idea $idea, Comite $comite)
+  {
+    if ($idea->nodo_id != auth()->user()->dinamizador->nodo_id) {
+      alert()->error('Error!','Esta idea de proyecto no pertenece a tu nodo.')->showConfirmButton('Ok', '#3085d6');
+      return back(); 
+    } else {
+      $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id');
+      return view('comite.dinamizador.update_gestor', [
+      'idea' => $idea,
+      'comite' => $comite,
+      'gestores' => $gestores]);
+    }
+  }
+
+  /**
+   * Cambiar el gestor de una idea de proyecto
+   *
+   * @param Request $request
+   * @param Idea $idea Idea
+   * @param Comite $comite Comité
+   * @return Response
+   * @author dum
+   **/
+  public function updateGestor(Request $request, Idea $idea, Comite $comite)
+  {
+    $messages = [
+      'txtgestor_id.required' => 'El Gestor es obligatorio.',
+    ];
+
+    $validator = Validator::make($request->all(), [
+        'txtgestor_id' => 'required',
+    ], $messages);
+
+    if ($validator->fails()) {
+        return back()
+            ->withErrors($validator)
+            ->withInput();
+    }
+    $update = $this->getComiteRepository()->updateGestorIdea($request, $idea);
+    if ($update) {
+      alert()->success('Se ha cambiado el gestor de la idea de proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+      return redirect(route('csibt.detalle', $comite->id));
+    } else {
+      alert()->error('No se ha cambiado el gestor de la idea de proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    }
+  }
+
+  /**
+   * Registra el agenadamiento de un comité
+   * 
+   * @param Request $request
+   * @return \Illuminate\Http\Response
+   */
   public function store(Request $request)
   {
     $req = new ComiteAgendamientoFormRequest;
@@ -346,16 +407,18 @@ class ComiteController extends Controller
   /**
    * Envia un correo con la citación del comité a las personas que registraron las ideas de proyecto
    * @param int $id Id del comité
+   * @param int $id Idea de la idea
+   * @param string $rol Indica a que tipo de usuario se les va a enviar la notificación
    * @return Response
    * @author dum
    */
-  public function notificar_agendamientoController(int $id)
+  public function notificar_agendamientoController(int $id = null, int $idea = null, string $rol = null)
   {
-    $result = $this->getComiteRepository()->notificar_agendamiento($id);
+    $result = $this->getComiteRepository()->notificar_agendamiento($id, $idea, $rol);
     if ($result) {
       alert()->success('Notificación Exitosa!','La citación para el comité se ha enviado con éxito.')->showConfirmButton('Ok', '#3085d6');
     } else {
-      alert()->error('Modificación Exitosa!','La citación para el comité no se ha enviado.')->showConfirmButton('Ok', '#3085d6');
+      alert()->error('Modificación Errónea!','La citación para el comité no se ha enviado.')->showConfirmButton('Ok', '#3085d6');
     }
     return back();
   }

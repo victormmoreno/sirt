@@ -58,10 +58,17 @@ $('#txthorainiciogestor').bootstrapMaterialDatePicker({
     language: 'es',
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
- }).on('change', function(e, time)
- {
-    $('#txthorafingestor').bootstrapMaterialDatePicker('setMinDate', time);
-});
+ });
+ 
+$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+    time:true,
+    date:false,
+    shortTime: true,
+    format: 'HH:mm',
+    language: 'es',
+    weekStart : 1, cancelText : 'Cancelar',
+    okText: 'Guardar'
+ });
 
 $(document).on('submit', 'form#formComiteAgendamientoCreate', function (event) { // $('button[type="submit"]').prop("disabled", true);
     event.preventDefault();

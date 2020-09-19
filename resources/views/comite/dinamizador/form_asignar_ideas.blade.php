@@ -47,11 +47,14 @@
             <table class="responsive-table striped" style="width: 100%">
                 <thead>
                     <tr>
-                        <th style="width: 30%">
+                        <th style="width: 20%">
                             Idea de Proyecto
                         </th>
                         <th style="width: 10%">
                             ¿Admitido?
+                        </th>
+                        <th style="width: 30%">
+                            Oservaciones del comité
                         </th>
                         <th style="width: 40%">
                             <a class="modal-trigger" href="#modalGestores"><i class="material-icons left">help</i></a>Gestores a cargo de la idea
@@ -65,9 +68,10 @@
                             <td>
                                 {{$value->pivot->admitido == 1 ? 'Si' : 'No'}}
                             </td>
+                            <td>{{ $value->pivot->observaciones }}</td>
                             <td>
                                 <label for="txtgestor_id{{$value->id}}">Gestor a cargo <span class="red-text">*</span></label>
-                                <select id="txtgestor_id{{$value->id}}" class="js-states" style="width: 100%;" name="txtgestores[]" onchange="setEstadoIdeaProyecto({{$value->id}})">
+                                <select id="txtgestor_id{{$value->id}}" class="js-states browser-default select2" style="width: 100%;" name="txtgestores[]" onchange="setEstadoIdeaProyecto({{$value->id}})">
                                     @if ($value->pivot->admitido == 1)
                                         <option value="">Seleccione el gestor a cargo de la idea de proyecto</option>
                                         @foreach($gestores as $id => $nombres_gestor)
