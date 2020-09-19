@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Models\{Comite, EstadoIdea, EstadoComite};
+use App\Models\{Comite, EstadoIdea, EstadoComite, Idea};
 use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered, GestoresWereRegistered};
 use Illuminate\Support\Facades\{DB, Notification};
 use App\Notifications\Comite\ComiteRealizado;
@@ -60,19 +60,40 @@ class ComiteRepository
     /**
      * Envía el correo con los datos del agendamiento
      * @param int $id Id del comité
+     * @param int $idea Id de la idea
+     * @param string $rol Se indica a que tipo de usuario se le va a enviar la notificación (gestores/talentos)
      * @return boolean
      * @author dum
      */
-    public function notificar_agendamiento(int $id)
+    public function notificar_agendamiento(int $id = null, int $idea = null, string $rol = null)
     {
         
         DB::beginTransaction();
         try {
             $comite = Comite::findOrFail($id);
-            event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
-            foreach ($comite->ideas as $key => $value) {
-                event(new AgendamientoWasRegistered($value, $comite));
+
+            if ($rol == 'todos') {
+                // La notificación se le enviará a todos los participantes, tanto talentos como gestores
+                event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
+                foreach ($comite->ideas as $key => $value) {
+                    event(new AgendamientoWasRegistered($value, $comite));
+                }
+            } else if ($rol == 'talentos') {
+                // La notificación solo se enviará a los talentos
+                if ($idea == -1) {
+                    // Cuando se trata de todas las ideas de proyecto
+                    foreach ($comite->ideas as $key => $value) {
+                        event(new AgendamientoWasRegistered($value, $comite));
+                    }
+                } else {
+                    // Cuando se trata de solo una idea de proyecto
+                    $idea = Idea::findOrFail($idea);
+                    event(new AgendamientoWasRegistered($idea, $comite));
+                }
+            } else {
+                event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
             }
+            
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -366,6 +387,27 @@ class ComiteRepository
             return true;
         } catch (\Throwable $th) {
             DB::rollback();
+            return false;
+        }
+    }
+
+    /**
+     * Cambia el gestor de una idea de proyecto
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateGestorIdea($request, Idea $idea)
+    {
+        try {
+            $idea->update([
+                'gestor_id' => $request->txtgestor_id
+            ]);
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
             return false;
         }
     }

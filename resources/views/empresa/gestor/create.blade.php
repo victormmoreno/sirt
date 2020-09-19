@@ -160,6 +160,7 @@
 <script>
   $(document).ready(function() {
     @if($errors->any())
+    console.log('error');
     EmpresaCreate.getCiudad();
     @endif
   });
@@ -180,11 +181,7 @@
           $('#txtciudad_id').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
         })
         @if($errors->any())
-        $('#txtciudad_id').val({
-          {
-            old('txtciudad_id')
-          }
-        });
+        $('#txtciudad_id').val({{old('txtciudad_id')}});
         @endif
         $('#txtciudad_id').material_select();
       });

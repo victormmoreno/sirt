@@ -575,6 +575,7 @@ class ArticulacionRepository
       'fecha_inicio',
       'fases.nombre AS nombre_fase'
     )
+    ->selectRaw('GROUP_CONCAT(productos.nombre SEPARATOR ",") AS producto_a_alcanzar')
     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
     ->selectRaw('if(fases.nombre = "Cierre" || fases.nombre = "Suspendido", fecha_cierre, "La articulación no se ha cerrado") AS fecha_cierre')
     ->selectRaw('concat(entidades.nombre, " - ", gruposinvestigacion.codigo_grupo) AS grupo')
@@ -588,6 +589,8 @@ class ArticulacionRepository
     ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', '=', 'entidades.id')
     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
     ->join('users', 'users.id', '=', 'gestores.user_id')
+    ->leftJoin('articulaciones_productos', 'articulaciones_productos.articulacion_id', '=', 'articulaciones.id')
+    ->leftJoin('productos', 'productos.id', '=', 'articulaciones_productos.producto_id')
     ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
       $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
@@ -596,6 +599,7 @@ class ArticulacionRepository
         $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
       });
     })
+    ->groupBy('codigo_actividad', 'actividades.nombre')
     ->orderBy('n.nombre');
   }
 

@@ -19,7 +19,7 @@ class UserDatatable
                 return $data->present()->userFullName();
             })
             ->editColumn('celular', function ($data) {
-                return !empty($data->celular) ? $data->celular : !empty($data->telefono) ?  $data->telefono : 'No Registra';
+                return !empty($data->celular) ? $data->celular : 'No Registra';
             })
             ->editColumn('roles', function ($data) {
                 return $data->present()->userRolesNames();

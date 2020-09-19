@@ -34,25 +34,6 @@ class ArticulacionController extends Controller
     }
 
     /**
-     * Elimina una articulación de la base de datos
-     *
-     * @param int $id Id de la articulación
-     * @return Response
-     * @author dum
-     */
-    public function eliminarArticulación(int $id)
-    {
-        if (Session::get('login_role') == User::IsDinamizador()) {
-            $delete = $this->articulacionRepository->eliminarArticulacion_Repository($id);
-            return response()->json([
-                'retorno' => $delete
-            ]);
-        } else {
-            abort('403');
-        }
-    }
-
-    /**
      * Modifica los datos de una articulación en la fase de inicio
      *
      * @param Request $request
