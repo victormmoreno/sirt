@@ -16,21 +16,21 @@ class ModifyProyectosTable extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             // Nuevos campos
-            $table->string('alcance_proyecto', 1000)->nullable()->default(null)->after('otro_areaconocimiento');
             $table->string('tipo_economianaranja', 100)->nullable()->default(null)->after('economia_naranja');
-            $table->tinyInteger('dirigido_discapacitados')->default('0')->after('evidencia_trl');
-            $table->string('tipo_discapacitados', 100)->nullable()->default(null)->after('dirigido_discapacitados');
+            $table->unsignedInteger('fase_id')->nullable()->after('areaconocimiento_id');
             $table->string('otro_areaconocimiento', 100)->nullable()->default(null)->after('fase_id');
+            $table->string('alcance_proyecto', 1000)->nullable()->default(null)->after('otro_areaconocimiento');
             $table->tinyInteger('trl_esperado')->default('0')->after('alcance_proyecto');
             $table->tinyInteger('trl_obtenido')->nullable()->default('0')->after('trl_esperado');
-            $table->unsignedInteger('fase_id')->nullable()->after('areaconocimiento_id');
+            $table->tinyInteger('dirigido_discapacitados')->default('0')->after('trl_obtenido');
+            $table->string('tipo_discapacitados', 100)->nullable()->default(null)->after('dirigido_discapacitados');
             // Nuevas llaves
             $table->index(["fase_id"], 'fk_proyectos_fases1_idx');
-            
+
             $table->foreign('fase_id', 'fk_proyectos_fases1_idx')
-            ->references('id')->on('fases')
-            ->onDelete('no action')
-            ->onUpdate('no action');
+                ->references('id')->on('fases')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 

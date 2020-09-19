@@ -39,7 +39,6 @@ mix.scripts([
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/plugins/jquery-validation/jquery.validate.js',
-		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
 		'resources/assets/plugins/font-awesome/js/all.js',
@@ -115,9 +114,6 @@ mix.scripts([
     'resources/app/materiales/dinamizador/index.js',
     'resources/app/materiales/gestor/index.js',
     'resources/app/costoadministrativo/administrador/index.js',
-    'resources/app/usoinfraestructura/administrador/index.js',
-    'resources/app/usoinfraestructura/dinamizador/index.js',
-    'resources/app/usoinfraestructura/gestor/index-gestor.js',
     'resources/app/usoinfraestructura/index.js',
     'resources/app/visitante/index.js',
     'resources/app/ingreso/index.js',
@@ -133,9 +129,6 @@ mix.scripts([
 
 mix.minify('public/js/app2.js')
     mix.version();
-
-
-// mix.copy('node_modules/sweetalert2/dist/','public/sweetalert2/');
 
 
 mix.browserSync({

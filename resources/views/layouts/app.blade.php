@@ -68,6 +68,5 @@
         <script src="{{ asset('js/app2.js') }}">
         </script>
         @stack('script')
-    @include('sweetalert::alert')
     </body>
 </html>
