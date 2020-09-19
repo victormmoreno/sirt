@@ -16,6 +16,7 @@
         <th>Fecha de inicio de la articulación</th>
         <th>Fase actual de la articulación</th>
         <th>Fecha de cierre de la articulación</th>
+        <th>Productos a alcanzar</th>
     </tr>
     </thead>
     <tbody>
@@ -30,6 +31,7 @@
           <td>{{ $value->fecha_inicio }}</td>
           <td>{{ $value->nombre_fase }}</td>
           <td>{{ $value->fecha_cierre }}</td>
+          <td>{{ $value->producto_a_alcanzar == null ? 'No hay información disponible' : $value->producto_a_alcanzar }}</td>
         </tr>
       @endforeach
     </tbody>

@@ -123,6 +123,17 @@
                                                 </div>
                                             </a>
                                             @endif
+                                            @if ($value->pivot->admitido == 1)
+                                                @if (\Session::get('login_role') == App\User::IsDinamizador())
+                                                <a href="{{route('comite.cambiar.asignacion', [$value, $comite])}}">
+                                                    <div class="card-panel yellow lighten-3 black-text center">
+                                                        <i class="material-icons left">edit</i>
+                                                        Cambiar asignación del gestor.
+                                                        <i class="material-icons right">edit</i>
+                                                    </div>
+                                                </a>
+                                                @endif
+                                            @endif
                                           </div>
                                         @endforeach
                                     </div>

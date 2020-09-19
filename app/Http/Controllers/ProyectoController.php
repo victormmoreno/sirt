@@ -1268,8 +1268,6 @@ class ProyectoController extends Controller
                 'articulacion_proyecto.proyecto',
 
                 'articulacion_proyecto.talentos',
-
-
                 'articulacion_proyecto.talentos.user' => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
                         ->orWhere('deleted_at', '!=', null);
@@ -1279,18 +1277,13 @@ class ProyectoController extends Controller
                 'articulacion_proyecto.proyecto.gruposinvestigacion',
                 'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
                 'articulacion_proyecto.proyecto.users_propietarios',
-
-                'articulacion_proyecto.proyecto.sector',
-                'articulacion_proyecto.proyecto.tipoproyecto',
+                'articulacion_proyecto.proyecto',
                 'articulacion_proyecto.proyecto.areaconocimiento',
                 'articulacion_proyecto.proyecto.fase',
                 'articulacion_proyecto.proyecto.sublinea',
-
-
                 'articulacion_proyecto.proyecto.idea' => function ($query) {
                     $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
                 },
-                'articulacion_proyecto.proyecto.estadoproyecto',
                 'edt',
                 'edt.entidades',
                 'edt.areaconocimiento',
@@ -1298,9 +1291,6 @@ class ProyectoController extends Controller
                 'articulacion_proyecto.articulacion',
                 'articulacion_proyecto.articulacion.productos',
                 'articulacion_proyecto.articulacion.fase',
-                'articulacion_proyecto.articulacion.emprendedores',
-
-                'articulacion_proyecto.articulacion.tipoarticulacion',
                 'nodo' => function ($query) {
                     $query->select('id', 'entidad_id', 'direccion', 'telefono');
                 },
