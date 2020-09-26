@@ -426,7 +426,7 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'empresa',
-        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor'],
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento'],
     ],
     function () {
         Route::get('/', 'EmpresaController@index')->name('empresa');
@@ -784,6 +784,14 @@ Route::group([
     Route::post('/store', 'PublicacionController@store')->name('publicacion.store');
 });
 
+//-------------------------------- Route group para el módulo de migración
+Route::group([
+    'prefix' => 'migracion',
+    'middleware' => ['auth']
+], function () {
+    Route::get('/', 'MigracionController@index')->name('migracion.index')->middleware('role_session:Desarrollador');
+    Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store')->middleware('role_session:Desarrollador');
+});
 
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 

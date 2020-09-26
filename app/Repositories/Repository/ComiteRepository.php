@@ -400,6 +400,7 @@ class ComiteRepository
      **/
     public function updateGestorIdea($request, Idea $idea)
     {
+        DB::beginTransaction();
         try {
             $idea->update([
                 'gestor_id' => $request->txtgestor_id
