@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col s8 m8 l9">
                         <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('laboratorio.index')}}">
+                            <a class="footer-text left-align" href="{{route('costoadministrativo.index')}}">
                                 <i class="material-icons arrow-l">
                                     arrow_back
                                 </i>

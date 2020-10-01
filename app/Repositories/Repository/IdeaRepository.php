@@ -41,7 +41,7 @@ class IdeaRepository
      * @param int $idnodo Indica a que nodo se va a registrar la idea.
      * @return string
      */
-    private function generarCodigoIdea($tipo, $idnodo)
+    public function generarCodigoIdea($tipo, $idnodo)
     {
         $anho                       = Carbon::now()->isoFormat('YYYY');
         $tecnoparque                = sprintf("%02d", $idnodo);
