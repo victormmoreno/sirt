@@ -16,14 +16,13 @@ class MigracionProyectosImport implements WithMultipleSheets
     {
         DB::beginTransaction();
         try {
-            // $empresas = new EmpresasImport();
             $resp = [
                 'Ideas' => new IdeasImport($this->nodo),
                 'Empresas' => new EmpresasImport(),
                 'Talentos' => new TalentosImport(),
                 'Grupos' => new GruposInvestigacionImport(),
-                // 'Gestores' => new FirstSheetImport(),
-                // 'Proyectos' => new SecondSheetImport(),
+                'Gestores' => new GestoresImport($this->nodo),
+                'Proyectos' => new ProyectosImport($this->nodo)
             ];
             DB::commit();
             return $resp;

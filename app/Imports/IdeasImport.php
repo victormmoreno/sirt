@@ -128,7 +128,7 @@ class IdeasImport implements ToCollection, WithHeadingRow
             "viene_convocatoria" => $row['convocatoria'] == 'SI' ? 1 : 0,
             "convocatoria" => $row['nombre_convocatoria'],
             "tipo_idea" => Idea::IsEmprendedor(),
-            "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsInhabilitado())->first()->id
+            "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsProyecto())->first()->id
         ]);
     }
 

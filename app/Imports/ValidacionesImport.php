@@ -29,7 +29,7 @@ class ValidacionesImport
             return true;
         }
         catch (\Exception $err) {
-            session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $err . ' en el registro de la fila #' . ($i+2));
+            session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $err->getMessage() . ' en el registro de la fila #' . ($i+2));
             return false;
         }
     }
@@ -49,5 +49,20 @@ class ValidacionesImport
             return false;
         }
         return true;
+    }
+
+    public function validarGenero($genero, $i, $hoja)
+    {
+        if ($genero != 'MASCULINO' && $genero != 'FEMENINO') {
+            session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": El género ' . $genero . ' en el registro de la fila #' . ($i+2) . ' no es válido (MASCULINO O FEMENINO).');
+            return false;
+        }
+        return true;
+    }
+
+    public function errorValidacionCorreo($email, $i, $documento_registrado, $hoja)
+    {
+        session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": El correo ' . $email . ' en el registro de la fila #' . ($i+2) . ' ya se encuentra asociado al usuario con número de cédula: '.$documento_registrado.' (No se permite la duplicación de correos).');
+        return false;
     }
 }
