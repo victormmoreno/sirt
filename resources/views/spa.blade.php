@@ -16,7 +16,7 @@
 		                    <h1 class="truncate tooltipped" data-position="bottom" data-delay="50" data-tooltip="RED TECNOPARQUE COLOMBIA" >RED TECNOPARQUE COLOMBIA</h1>
 		                    <img class="responsive-img" style="width: 100%; height: 500px;" src="{{asset('img/Inicio.jpg')}}" alt="RED TECNOPARQUE COLOMBIA" title="RED TECNOPARQUE COLOMBIA" />
 		                  </div>
-						
+
 		                </div>
 		              </div>
 		            </div>
@@ -109,7 +109,7 @@
 
 		                    <img class="responsive-img img-home" style="width: 100%; height: 500px; background-color: rgba(0,0,0,0.8);" src="{{asset('img/tecno.jpg')}}" alt="Lineas - Servicios" title="Lineas - Servicios">
 		                  </div>
-		                  
+
 		                </div>
 		              </div>
 		            </div>
@@ -120,5 +120,5 @@
  		</main>
 
 
-   
+
 @endsection

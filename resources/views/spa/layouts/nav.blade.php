@@ -11,22 +11,24 @@
             <img class="hide-on-med-and-down"  width="200px" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" title="{{config('app.name')}}"></img>
           </a>
         </div>
-        <ul class=" col s8 m8 l7 ">
+        <ul>
+        <!--<ul class=" col s8 m8 l7 ">-->
           <li class="hide-on-med-and-down">
             <a href="{{route('/')}}" rel="canonical" title="Haz clic aquí para ir a la página principal">INICIO</a>
           </li>
           <li class="hide-on-med-and-down">
             <a href="{{ route('idea.create') }}" rel="canonical"  title="Haz clic aquí para inscribir una idea de proyecto" class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
           </li>
-          
-          
+
+
           <li class="hide-on-med-and-down"><a href="#objetivos" title="Haz clic aquí para ver los objetivos">OBJETIVOS</a></li>
           <li class="hide-on-med-and-down"><a href="#tecnoparque" title="Haz clic aquí para ver que es tecnnoparque">¿QUÉ ES TECNOPARQUE? </a></li>
           {{-- <li class="hide-on-med-and-down"><a href="" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Descarga TECNOPARQUE RA"> TECNOPARQUE RA</a></li> --}}
           <li class="hide-on-med-and-down"><a href="{{route('creditos')}}" rel="canonical" title="Haz clic aquí para ver los créditos"> CRÉDITOS</a></li>
         </ul>
-        <ul class="col s2 m1 l2 nav-right-menu">
+        <ul>
           <li class="hide-on-med-and-down"><a href="{{ route('login') }}" rel="canonical" title="Haz clic aquí para iniciar sesión" class="waves-effect waves-light btn">{{ __('Login') }}</a></li>
+          <li class="hide-on-med-and-down"><a href="{{ route('persona.create') }}" rel="canonical" title="Haz clic aquí para registrarse" class="waves-effect waves-light btn">REGISTRARSE</a></li>
         </ul>
 
       </div>
@@ -69,4 +71,4 @@
   </div>
 </div>
 </aside>
-      
+

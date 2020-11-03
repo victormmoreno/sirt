@@ -39,13 +39,13 @@
                                   </div>
                                   <br>
                                   <br>
-                                  
                                   <div class="col s12 m12 l12">
                                       <div class="divider" style="background:#008981;"></div>
                                         <a class="footer-text left-align" href="{{route('/')}}">
                                             <i class="material-icons arrow-l">arrow_back</i>
                                         </a>INICIAR SESIÓN
                                   </div>
+                                </div>
                               </div>
                             </span>
                             <div class="row">
@@ -53,7 +53,7 @@
                                 @csrf
                                 <div class="input-field col s12">
                                   <i class="material-icons prefix">mail</i>
-                                  
+
                                   <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email" autofocus placeholder="Ingresa tu correo">
                                   <label for="email" class="active">{{ __('E-Mail Address') }}</label>
                                   @error('email')
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="input-field col s12">
                                   <i class="material-icons prefix">lock_outline</i>
-                                  
+
                                   <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="current-password" value="{{ old('password') }}" placeholder="Ingresa tu contraseña">
                                   <label for="password" class="active">{{ __('Password') }}</label>
                                   @error('password')
@@ -84,13 +84,13 @@
 
                                 <div class="col s12 center-align m-t-sm">
 
-                                  
+
                                   <button type="submit" id="login-btn" class="waves-effect waves-light btn center-align">
                                         <i class="material-icons left">fingerprint</i>
                                                 {{ __('Login') }}
                                             </button>
                                   <br><br>
-                                  
+
                                   @if (Route::has('password.request'))
                                         <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}

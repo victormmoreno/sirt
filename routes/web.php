@@ -839,3 +839,11 @@ Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->midd
 Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
+
+
+//-----------------------Ruta para registro usuario nuevo---------------------------------
+
+Route::get('/registrar-persona', 'UserController@create')->name('persona.create');
+
+//-----------------------Fin ruta registro usuario nuevo-----------------------------------
+
