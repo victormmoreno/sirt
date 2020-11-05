@@ -2,15 +2,10 @@
 @section('meta-tittle', 'Inicio')
 @section('meta-content', 'Inicio')
 @section('content-spa')
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Registro</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/estiloRegistro.css') }}">
 
-<body class="cuerpo">
+{!! csrf_field() !!}
+
+<main class="mn-inner no-p">
     <div class="row">
         <div class="col s12 m12 l12">
             <h4 class="card-title center-align">Registro usuario</h4>
@@ -30,12 +25,8 @@
                     <i class="material-icons prefix">
                         library_books
                     </i>
-                    <select class="" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
+                    <select name="txttipo_documento" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione tipo documento</option>
-                        <option>Cédula de Ciudadanía</option>
-                        <option>Cédula de Extranjería</option>
-                        <option>Registro Civil</option>
-                        <option>Tarjeta de Identidad</option>
                     </select>
                 </div>
                 <div class="input-field col s12 m6 l6">
@@ -213,10 +204,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <br>
         </div>
     </div>
-</body>
-</html>
+</main>
+
 @endsection
 

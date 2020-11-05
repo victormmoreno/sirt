@@ -67,7 +67,7 @@
                     @enderror
                 </div>
             </div>
-         
+
             <div class="row">
                 <div class="input-field col s12 m12 l12 offset-l6 offset-m6 offset-s6  pull-l1 pull-m1 pull-s1">
                     <div class="switch m-b-md">
@@ -104,7 +104,7 @@
                     <option value="">Seleccione Nodo</option>
                         @foreach($nodos as $nodo)
                             @if(isset($idea->nodo->id))
-                                <option value="{{$nodo->id}}" {{old('txtnodo',$idea->nodo->id) ==  $nodo->id ? 'selected':''}}>{{$nodo->nodos}}</option> 
+                                <option value="{{$nodo->id}}" {{old('txtnodo',$idea->nodo->id) ==  $nodo->id ? 'selected':''}}>{{$nodo->nodos}}</option>
                             @else
                             <option value="{{$nodo->id}}"  {{ old('txtnodo') == $nodo->id ? 'selected':'' }}>
                                 {{$nodo->nodos}}
@@ -521,4 +521,3 @@
         </div>
     </div>
 </div>
-    

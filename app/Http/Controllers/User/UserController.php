@@ -18,7 +18,6 @@ use App\Exports\User\UserExport;
 
 class UserController extends Controller
 {
-
     use RegistersUsers;
 
     public $userRepository;
@@ -496,4 +495,17 @@ class UserController extends Controller
 
         return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
     }
+
+    /*=====  Método para controlar el formulario usuarios nuevos  ======*/
+    public function create()
+    {
+        return view('registro_usuarios.form',[
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'regionales'        => $this->userRepository->getAllRegionales(),
+            'view' => 'create'
+        ]);
+    }
+
+    /*=====  Fin Método para controlar el formulario usuarios nuevos  ======*/
 }

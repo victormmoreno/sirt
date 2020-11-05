@@ -843,7 +843,7 @@ Route::get('creditos', function () {
 
 //-----------------------Ruta para registro usuario nuevo---------------------------------
 
-Route::get('/registrar-persona', 'UserController@create')->name('persona.create');
+Route::get('/registro-usuario', 'User\UserController@create')->name('persona.create');
 
 //-----------------------Fin ruta registro usuario nuevo-----------------------------------
 

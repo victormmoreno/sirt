@@ -1,5 +1,0 @@
-@extends('register.layout')
-
-
-
-
