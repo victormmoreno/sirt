@@ -846,4 +846,3 @@ Route::get('creditos', function () {
 Route::get('/registro-usuario', 'User\UserController@create')->name('persona.create');
 
 //-----------------------Fin ruta registro usuario nuevo-----------------------------------
-

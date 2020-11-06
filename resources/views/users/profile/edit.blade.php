@@ -39,12 +39,12 @@
                                                 </div>
                                             </div>
                                             <div class="divider mailbox-divider">
-                                            </div>                                           
+                                            </div>
                                             <div class="mailbox-text">
                                                 <form action="{{ route('perfil.update',$user->id)}}" id="formEditProfile" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
-                                                    
+
                                                     <div class="row">
                                                         <div class="col s12 m3 l3">
                                                             <blockquote>
@@ -61,7 +61,7 @@
                                                             </blockquote>
                                                         </div>
                                                         <div class="col s12 m9 l9">
-                                                            
+
                                                             <div class="row">
                                                                 <div class="col m6">
                                                                     <div class="row">
@@ -158,12 +158,12 @@
                                                                             <select class="" id="txtgrado_discapacidad" name="txtgrado_discapacidad" style="width: 100%" tabindex="-1" onchange="user.getGradoDiscapacidad(this)">
                                                                                 @if(isset($user->grado_discapacidad))
                                                                                 <option {{$user->grado_discapacidad == 0 ?'selected' : ''}} value="0">NO </option>
-                                                                                <option {{$user->grado_discapacidad == 1 ?'selected' : ''}} value="1">SI </option>  
+                                                                                <option {{$user->grado_discapacidad == 1 ?'selected' : ''}} value="1">SI </option>
                                                                                 @else
                                                                                     <option value="0">NO </option>
                                                                                     <option value="1">SI </option>
                                                                                 @endif
-                                                                                
+
                                                                             </select>
                                                                             <label for="txtgrado_discapacidad">Algún grado de discapacidad <span class="red-text">*</span></label>
                                                                             <small id="txtgrado_discapacidad-error" class="error red-text"></small>
@@ -186,7 +186,6 @@
                                                                             <select class="" id="txtgruposanguineo" name="txtgruposanguineo" style="width: 100%" tabindex="-1" >
                                                                                 <option value="">Seleccione grupo sanguíneo </option>
                                                                                 @foreach($gruposanguineos as $value)
-                                                
                                                                                     @if(isset($user->grupoSanguineo->id))
                                                                                         <option value="{{$value->id}}" {{old('txtgruposanguineo',$user->grupoSanguineo->id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                                                                     @else
@@ -229,15 +228,15 @@
                                                                                 @else
                                                                                 <option value="{{ $i }}"  {{old('txtestrato') == $i ? 'selected':''}}>{{$i}}</option>
                                                                                 @endif
-                                                
-                                                
+
+
                                                                                 @endfor
                                                                             </select>
                                                                             <label for="txtestrato">Estrato <span class="red-text">*</span></label>
                                                                             <small id="txtestrato-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m6 l6">
-                                                
+
                                                                             <select class="" id="txtetnias" name="txtetnias" style="width: 100%" tabindex="-1">
                                                                                 <option value="">Seleccione Etnia</option>
                                                                                     @foreach($etnias as $id => $nombre)
@@ -254,7 +253,7 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="input-field col s12 m6 l6">
-                                                
+
                                                                             <input class="validate" id="txtbarrio" name="txtbarrio" type="text"  value="{{ isset($user->barrio) ? $user->barrio : old('txtbarrio')}}">
                                                                             <label for="txtbarrio">Barrio <span class="red-text">*</span></label>
                                                                             <small id="txtbarrio-error"  class="error red-text"></small>
@@ -277,8 +276,8 @@
                                                                             <small id="txtcelular-error"  class="error red-text"></small>
                                                                         </div>
                                                                     </div>
-                                                                    
-                                                
+
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -292,7 +291,7 @@
                                                                     <li class="collection-item">
                                                                         <span class="title"><b>Genero</b></span>
                                                                         <p>No puedes modificar el genero para hacerlo  acuda a las instalaciones del nodo más cercano.</p>
-                                                                        
+
                                                                     </li>
                                                                 </ul>
                                                             </blockquote>
@@ -316,9 +315,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                         </div>
-                                                         
+
                                                     </div>
                                                     <div class="divider mailbox-divider"></div>
                                                     <div class="row">
@@ -328,30 +327,30 @@
                                                                     <li class="collection-item">
                                                                         <span class="title"><b>Ocupaciones</b></span>
                                                                         <p>Puedes seleccionar varias ocupaciones si es el caso de que las tenga, sino seleccione una</p>
-                                                                        
+
                                                                     </li>
                                                                 </ul>
                                                             </blockquote>
                                                             <div class="row">
                                                             <div class="input-field col s12 m12 l12">
-                                                                
+
                                                                 <select class="js-states browser-default selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple onchange="ocupacion.getOtraOcupacion(this)">
-                                                                    
+
                                                                     @foreach($ocupaciones as $id => $nombre)
-                                                                        
+
                                                                         <option value="{{$id}}" {{collect(old('txtocupaciones',$user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : ''  }} >{{$nombre}}</option>
-                                                                    
+
                                                                     @endforeach
                                                                 </select>
                                                                 <label for="txtocupaciones" class="active">Ocupación <span class="red-text">*</span></label>
                                                                 <small id="txtocupaciones-error"  class="error red-text"></small>
-                                                                
+
                                                             </div>
                                                             <div class="input-field col s12 m12 l12" id="otraocupacion">
                                                                 <input class="validate" id="txtotra_ocupacion" name="txtotra_ocupacion" type="text"  value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('txtotra_ocupacion')}}">
                                                                 <label for="txtotra_ocupacion" class="active">¿Cuál? <span class="red-text">*</span></label>
                                                                 <small id="txtotra_ocupacion-error"  class="error red-text"></small>
-                                                                
+
                                                             </div>
                                                         </div>
                                                         </div>
@@ -361,7 +360,7 @@
                                                                 <div class="center">
                                                                     <i class="Small material-icons prefix green-complement-text">
                                                                         supervised_user_circle
-                                                                    </i>               
+                                                                    </i>
                                                                 </div>
                                                                 <div class="center">
                                                                     <span class="mailbox-title green-complement-text">Último estudio</span>
@@ -376,7 +375,7 @@
                                                                 </i>
                                                                 <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion')}}">
                                                                 <label for="txtinstitucion">Institución <span class="red-text">*</span></label>
-                                                                <small id="txtinstitucion-error"  class="error red-text"></small>  
+                                                                <small id="txtinstitucion-error"  class="error red-text"></small>
                                                             </div>
                                                             <div class="input-field col s12 m6 l6 ">
                                                                 <i class="material-icons prefix">
@@ -408,15 +407,15 @@
                                                                 <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fecha_terminacion) ? optional($user->fecha_terminacion)->toDateString() : old('txtfechaterminacion')}}">
                                                                 <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
                                                                 <small id="txtfechaterminacion-error"  class="error red-text"></small>
-                                                                
+
                                                             </div>
                                                         </div>
 
-                                                        
-                                                        
+
+
                                                         </div>
                                                     </div>
-                                                        
+
                                                     <div class="divider mailbox-divider">
                                                     </div>
                                                     <div class="right">
@@ -441,8 +440,8 @@
 
 @push('script')
 <script>
-$(document).ready(function() {  
-    
+$(document).ready(function() {
+
     $('.selectMultipe').select2({
       language: "es",
     });
@@ -467,7 +466,7 @@ var ocupacion = {
         let resultado = nombre.match(/[A-Z][a-z]+/g);
         @if($errors->any())
             $('#otraocupacion').hide();
-           
+
               if (resultado != null  && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
                   $('#otraocupacion').show();
               }
@@ -477,10 +476,10 @@ var ocupacion = {
               if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
                   $('#otraocupacion').show();
               }
-          }     
+          }
     }
 };
-    
+
 
 var user = {
     getCiudadExpedicion:function(){
@@ -497,14 +496,14 @@ var user = {
             $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             @if(isset($user->ciudadexpedicion->id))
                 $('#txtciudadexpedicion').select2('val','{{$user->ciudadexpedicion->id}}');
-                    
+
             @endif
           });
           $('#txtciudadexpedicion').material_select();
         });
       },
 
-      
+
     getCiudad:function(){
         let id;
         id = $('#txtdepartamento').val();
@@ -519,10 +518,10 @@ var user = {
             $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             @if(isset($user->ciudad->id))
                 $('#txtciudad').select2('val','{{$user->ciudad->id}}');
-                    
+
             @endif
           })
-          
+
           $('#txtciudad').material_select();
         });
     },
@@ -530,29 +529,29 @@ var user = {
       getOtraEsp:function (ideps) {
         let id = $(ideps).val();
         let nombre = $("#txteps option:selected").text();
-        
+
         if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
-           
+
             $(".otraeps").css("display", "none");
-          
-            
+
+
 
         }else{
-            
+
             $(".otraeps").css("display", "block");
         }
     },
-    
+
     getGradoDiscapacidad(){
         let discapacidad = $('#txtgrado_discapacidad').val();
         if (discapacidad == 1) {
             $('.gradodiscapacidad').css("display", "block");
-             
+
         }else{
             $(".gradodiscapacidad").css("display", "none");
         }
     }
-    
+
 }
 
 

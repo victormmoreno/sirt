@@ -502,7 +502,7 @@ class UserController extends Controller
         return view('registro_usuarios.form',[
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'regionales'        => $this->userRepository->getAllRegionales(),
+            'ciudades'          => $this->userRepository->getAllCiudades(),
             'view' => 'create'
         ]);
     }
