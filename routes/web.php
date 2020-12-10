@@ -4,9 +4,41 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
-
     return view('spa');
 })->name('/');
+
+
+Route::get('politica-de-confidencialidad', function () {
+
+    return view('seguridad.terminos');
+})->name('terminos');
+
+// Authentication Routes...
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+// Registration Routes...
+Route::get('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContratorInformation')->name('user.contractor.confirm');
+Route::get('registro', 'Auth\RegisterController@showRegistrationForm')->name('registro');
+Route::post('registro', 'Auth\RegisterController@register')->name('register.request');
+
+
+// Password Reset Routes...
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
+// Email Verification Routes...
+//Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+//Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
+//Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+
+
+//verificar usuario no registrado
+Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
+
 
 // DB::listen(function ($query) {
 // echo "<pre>{$query->sql}</pre>";
@@ -24,11 +56,6 @@ Route::get('/', function () {
 
 /*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
 
-/*===================================================================================
-=            rutas modulos de login registro, recuperacion de contraseña            =
-===================================================================================*/
-Auth::routes(['register' => false]);
-/*=====  End of rutas modulos de login registro, recuperacion de contraseña  ======*/
 
 /*================================================================
 =            ruta para cambiar la session del usuario            =
@@ -63,6 +90,7 @@ Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback')
 /*======================================================================
 =            rutas para las funcionalidades de los usuarios            =
 ======================================================================*/
+Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
 Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
 Route::get('usuario/export-talentos', 'User\UserController@exportMyTalentos')->name('usuario.export.talentos');
 Route::group(
@@ -94,6 +122,8 @@ Route::group(
             'as'   => 'usuario.index',
         ]);
 
+        
+
         Route::post('/consultaremail', [
             'uses' => 'UserController@consultaremail',
             'as'   => 'usuario.consultaremail',
@@ -107,7 +137,7 @@ Route::group(
             'as'   => 'usuario.buscarusuario',
         ])->where('documento', '[0-9]+');
 
-        Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
+
 
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 

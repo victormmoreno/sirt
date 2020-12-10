@@ -8,11 +8,11 @@
   <i class="material-icons {!! setActiveRouteActiveIcon('costos-administrativos') !!}">settings_input_svideo</i>Costos Administrativos
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('usuario')}}">
+{{-- <li class="no-padding {{setActiveRoute('usuario')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
     <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
   </a>
-</li>
+</li> --}}
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica

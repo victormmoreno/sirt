@@ -86,7 +86,7 @@ class ResetPasswordController extends Controller
     {
         $user->password = $password;
 
-        $user->setRememberToken(Str::random(60));
+        // $user->setRememberToken(Str::random(60));
 
         $user->save();
 
@@ -97,6 +97,5 @@ class ResetPasswordController extends Controller
         return redirect('login');
 
     }
-
      
 }

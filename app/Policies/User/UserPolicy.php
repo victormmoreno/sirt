@@ -229,31 +229,4 @@ class UserPolicy
         return (bool) $this->authUser->id == $this->user->id && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento());
     }
 
-    /**
-     * Determine whether the user can view the your talentos
-     * @author julian londono
-     * @return boolean
-     */
-    public function myTalentos()
-    {
-        return (bool) session()->get('login_role') == User::IsGestor();
-    }
-
-    /**
-     * Determine whether the user can export the your talentos
-     * @author julian londono
-     * @return boolean
-     */
-    public function export(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsGestor())
-            && session()->get('login_role') == User::IsGestor()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
-        return (bool) session()->get('login_role') == User::IsGestor();
-    }
 }

@@ -15,6 +15,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        'App\Events\User\UserWasRegistered' => [
+            // 'App\Listeners\User\SendActivationLink',
+            'App\Listeners\User\SendWelcomeEmail',
+        ],
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],
@@ -24,10 +28,7 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Idea\IdeaHasReceived' => [
             'App\Listeners\Idea\IdeaHasBeenReceived'
         ],
-        'App\Events\User\UserWasRegistered' => [
-            // 'App\Listeners\User\SendActivationLink',
-            'App\Listeners\User\SendNotificationPasswordEmail',
-        ],
+        
         'App\Events\Comite\ComiteWasRegistered' => [
             'App\Listeners\Comite\IdeaWasRegisteredInComite',
         ],

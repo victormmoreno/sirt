@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormRequest;
-use App\Http\Traits\UserTrait\RegistersUsers;
 use App\Models\{Nodo, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
@@ -19,13 +18,13 @@ use App\Exports\User\UserExport;
 class UserController extends Controller
 {
 
-    use RegistersUsers;
 
     public $userRepository;
 
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
+        $this->middleware('auth')->except('getCiudad');
     }
 
     public function findUserById(int $id)
@@ -391,7 +390,7 @@ class UserController extends Controller
         $gestores = User::select('gestores.id')
             ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
             ->join('gestores', 'gestores.user_id', 'users.id')
-            ->role('Gestor')
+            ->role(User::IsGestor())
             ->where('gestores.nodo_id', $nodo)
             ->withTrashed()
             ->pluck('nombre', 'id');
@@ -461,39 +460,5 @@ class UserController extends Controller
         ]);
     }
 
-    public function exportMyTalentos(Request $request, $extension = 'xlsx')
-    {
-        $this->authorize('export', User::class);
 
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $nodo = $request->filter_nodo;
-                break;
-            case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                break;
-            case User::IsGestor():
-                $nodo = auth()->user()->gestor->nodo_id;
-                break;
-            case User::IsInfocenter():
-                $nodo = auth()->user()->infocenter->nodo_id;
-                break;
-            default:
-                return abort('403');
-                break;
-        }
-
-        $users = [];
-        if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
-            $users = User::with(['tipodocumento'])
-                ->role(User::IsTalento())
-                ->nodoUser(User::IsTalento(), $nodo)
-                ->stateDeletedAt($request->filter_state)
-                ->activitiesTalento(User::IsTalento(), $request->filter_year, $nodo)
-                ->orderBy('users.created_at', 'desc')
-                ->get();
-        }
-
-        return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
-    }
 }

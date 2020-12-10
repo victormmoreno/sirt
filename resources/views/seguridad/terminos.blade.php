@@ -1,0 +1,34 @@
+@extends('spa.layouts.app')
+
+@section('meta-tittle', 'Políticas de confidencialidad')
+@section('meta-content', 'Políticas de confidencialidad')
+@section('content-spa')
+<main class="mn-inner inner-active-sidebar no-padding">
+	<div class="section white">
+		<div class="container">
+            <div class="row  no-m-t no-m-b">
+				<div class="col s12 m12 l12 ">
+                    <h5 class="text-primarycolor center hand-of-Sean-fonts orange-text text-darken-3">Términos de uso y política de confidencialidad de los datos.</h5>
+                    <div class="divider"></div>
+                </div>
+                <div class="col s12 m12 l12 ">
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime, reiciendis labore? Dolor officia possimus ducimus. Porro rerum explicabo suscipit. Temporibus provident a obcaecati? Ad earum, eum perspiciatis in nam cumque! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad, error in asperiores odit culpa reiciendis similique quisquam illo ab dolores quod beatae laborum commodi temporibus. Odio quasi officia consectetur repellendus.</p>
+                    
+                </div>
+            </div> 
+        </div>
+    </div>
+</main>
+@endsection
