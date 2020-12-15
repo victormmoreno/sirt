@@ -1,51 +1,23 @@
 
 <div class="row">
-    <div class="col s12 m3 l3">
-        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-            <div class="divider mailbox-divider"></div>
-            <blockquote>
-                <ul class="collection">
-                    <li class="collection-item">
-                        <span class="title"><b>Talento</b></span>
-                        <p>Por favor seleccione el tipo de talento e ingrese los campos que aparecen</p>
-                    </li>
-
-                </ul>
-            </blockquote>
-        @endif
-    </div>
-    <div class="col s12 m9 l9">
-        <div class="divider mailbox-divider"></div>
-        <div >
+    <div class="col s12 m12 l12">
+        <div>
             <div class="mailbox-view-header">
                 <div class="center">
-                    <div class="center">
-                        <i class="Small material-icons prefix green-complement-text">
-                            supervised_user_circle
-                        </i>
-                    </div>
-                    <div class="center">
-                        <span class="mailbox-title green-complement-text">Información Talento</span>
-                    </div>
+                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Información talento</h5>
                 </div>
             </div>
-            <div class="divider mailbox-divider"></div>
             <div class="row">
                 <div class="input-field col s12 m4 l4 ">
                     <select class="js-states browser-default select2 select2-hidden-accessible" id="txttipotalento" name="txttipotalento" style="width: 100%" tabindex="-1" onchange="tipoTalento.getSelectTipoTalento(this)">
-                        @if(isset($user->talento->tipotalento->id) && ((session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())))
-                            <option value="{{$user->talento->tipotalento->id}}" selected>{{$user->talento->tipotalento->nombre}}</option>
-                        @else
-                            <option value="">Seleccione tipo de talento</option>
-                            @foreach($tipotalentos as $id => $nombre)
-                                @if(isset($user->talento->tipotalento->id))
-                                <option value="{{$id}}" {{old('txttipotalento',$user->talento->tipotalento->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                @else
-                                    <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                @endif
-
-                            @endforeach
-                        @endif
+                        <option value="">Seleccione tipo de talento</option>
+                        @foreach($tipotalentos as $id => $nombre)
+                            @if(isset($user->talento->tipotalento->id))
+                            <option value="{{$id}}" {{old('txttipotalento',$user->talento->tipotalento->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                            @else
+                                <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                            @endif
+                        @endforeach
                     </select>
                     <label for="txttipotalento" class="active">Tipo Talento <span class="red-text">*</span></label>
                     <small id="txttipotalento-error"  class="error red-text"></small>
@@ -59,28 +31,19 @@
                     <div class="row aprendizSena" style="display:none">
                         <div class="input-field col s12 m12 l12"  >
                             <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_aprendiz" name="txtregional_aprendiz" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionAprendiz()" >
-                                @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                <option value="">Seleccione regional</option>
+                                @foreach($regionales as $id => $nombre)
                                     @if(isset($user->talento->entidad->centro->regional->id))
-                                        <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
+                                        <option value="{{$id}}" {{old('txtregional_aprendiz',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
                                     @else
-                                        <option value="">No se encontraron resultados</option>
+                                        <option value="{{$id}}" {{old('txtregional_aprendiz') ==$id ? 'selected':''}}>{{$nombre}}</option>
                                     @endif
-                                @else
-                                    <option value="">Seleccione regional</option>
-                                    @foreach($regionales as $id => $nombre)
-                                        @if(isset($user->talento->entidad->centro->regional->id))
-                                            <option value="{{$id}}" {{old('txtregional_aprendiz',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                        @else
-                                            <option value="{{$id}}" {{old('txtregional_aprendiz') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                        @endif
-                                    @endforeach
-                                @endif
+                                @endforeach
                             </select>
                             <label for="txtregional_aprendiz" class="active">Regional <span class="red-text">*</span></label>
                             <small id="txtregional_aprendiz-error"  class="error red-text"></small>
                         </div>
                         <div class="input-field col s12 m12 l12">
-
                             <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_aprendiz" name="txtcentroformacion_aprendiz" style="width: 100%" tabindex="-1" >
                                 <option value="">Seleccione Primero la regional</option>
                             </select>
@@ -89,7 +52,7 @@
                         </div>
                         <div class="input-field col s12 m12 l12 ">
 
-                            <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                            <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}" >
                             <label for="txtprogramaformacion_aprendiz">Programa de Formación <span class="red-text">*</span></label>
                             <small id="txtprogramaformacion_aprendiz-error"  class="error red-text"></small>
                         </div>

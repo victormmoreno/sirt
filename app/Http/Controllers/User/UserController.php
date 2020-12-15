@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UsersRequests\UserFormRequest;
+use App\Http\Requests\UsersRequests\UserFormEditRequest;
 use App\Models\{Nodo, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
@@ -249,7 +249,7 @@ class UserController extends Controller
 
         $this->authorize('update', $user);
 
-        $req       = new UserFormRequest;
+        $req       = new UserFormEditRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
 
 
@@ -280,83 +280,14 @@ class UserController extends Controller
         }
     }
 
-
-    public function userSearch()
-    {
-        return view('users.search');
-    }
-
-    public function querySearchUser(Request $request)
-    {
-        if (request()->ajax()) {
-
-            if ($request->input('txttype_search') == 1) {
-
-                $validator = Validator::make($request->all(), [
-                    'txtsearch_user' => 'required|digits_between:6,11|numeric',
-                    'txttype_search' => 'required|in:1',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json([
-                        'fail'   => true,
-                        'errors' => $validator->errors(),
-                    ]);
-                }
-                $user = User::withTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-            } else if ($request->input('txttype_search') == 2) {
-                $validator = Validator::make($request->all(), [
-                    'txtsearch_user' => 'required|email',
-                    'txttype_search' => 'required|in:2',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json([
-                        'fail'   => true,
-                        'errors' => $validator->errors(),
-                    ]);
-                }
-                $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-            }
-
-            if ($user == null) {
-                return response()->json([
-                    'data' => null,
-                    'status' => Response::HTTP_ACCEPTED,
-                    'message' => 'el usuario no existe en nuestros registros',
-                    'url' => route('usuario.usuarios.create'),
-                ], Response::HTTP_ACCEPTED);
-            }
-            return response()->json([
-                'user' => $user,
-                'roles' => $user->getRoleNames()->implode(', '),
-                'message' => 'el usuario ya existe en nuestros registros',
-                'status' => Response::HTTP_OK,
-                'url' => route('usuario.usuarios.show', $user->documento),
-            ], Response::HTTP_OK);
-        }
-        abort('403');
-    }
-
-    public function consultaremail(Request $request)
-    {
-        $user = User::withTrashed()->where('email', $request->txtemail)->first();
-
-        if ($user != null) {
-            return response()->json([
-                'response' => false
-            ]);
-        } else {
-            return response()->json([
-                'response' => true
-            ]);
-        }
-    }
+   
 
 
     public function acceso($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
         $this->authorize('acceso', $user);
-
+        
         return view('users.acceso', ['user' => $user]);
     }
 
@@ -367,18 +298,25 @@ class UserController extends Controller
 
         $this->authorize('acceso', $user);
 
-        if ($request->get('txtestado') == 'on') {
-            $user->update(['estado' => 0]);
-            $user->delete();
-            return redirect()->back()->withSuccess('Acceso de usuario modificado');
-        } else {
-            $user->update([
-                'estado' => 1,
-            ]);
-
-            $user->restore();
-            return redirect()->back()->withSuccess('Acceso de usuario modificado');
+        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso))){
+            if ($request->get('txtestado') == 'on') {
+                $user->update(['estado' => 0]);
+                $user->delete();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            } else {
+                $user->update([
+                    'estado' => 1,
+                ]);
+    
+                $user->restore();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            }
+           
+        }else{
+            return redirect()->back()->withError('No puedes cambiar el estado a este usuario. Primero asigna un rol y un nodo');
         }
+
+        
 
 
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
@@ -458,6 +396,61 @@ class UserController extends Controller
         return view('users.gestor.talentos', [
             'roles' => $this->userRepository->getRoleWhereInRole([User::IsTalento()]),
         ]);
+    }
+
+    public function userSearch()
+    {
+        return view('users.search');
+    }
+
+    public function querySearchUser(Request $request)
+    {
+        if (request()->ajax()) {
+
+            if ($request->input('txttype_search') == 1) {
+
+                $validator = Validator::make($request->all(), [
+                    'txtsearch_user' => 'required|digits_between:6,11|numeric',
+                    'txttype_search' => 'required|in:1',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'fail'   => true,
+                        'errors' => $validator->errors(),
+                    ]);
+                }
+                $user = User::withTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            } else if ($request->input('txttype_search') == 2) {
+                $validator = Validator::make($request->all(), [
+                    'txtsearch_user' => 'required|email',
+                    'txttype_search' => 'required|in:2',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'fail'   => true,
+                        'errors' => $validator->errors(),
+                    ]);
+                }
+                $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            }
+
+            if ($user == null) {
+                return response()->json([
+                    'data' => null,
+                    'status' => Response::HTTP_ACCEPTED,
+                    'message' => 'el usuario no existe en nuestros registros',
+                    'url' => route('registro'),
+                ], Response::HTTP_ACCEPTED);
+            }
+            return response()->json([
+                'user' => $user,
+                'roles' => $user->getRoleNames()->implode(', '),
+                'message' => 'el usuario ya existe en nuestros registros',
+                'status' => Response::HTTP_OK,
+                'url' => route('usuario.usuarios.show', $user->documento),
+            ], Response::HTTP_OK);
+        }
+        abort('403');
     }
 
 

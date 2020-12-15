@@ -10,26 +10,38 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NewContractor extends Notification implements ShouldQueue
 {
     use Queueable;
-    private $user;
+    public $user_form;
+    public $user_to;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user_form, $user_to)
     {
-        $this->setUser($user);
+        $this->setUserFrom($user_form);
+        $this->setUserTo($user_to);
     }
 
-    public function setUser($user)
+    public function setUserFrom($user_form)
     {
-        $this->user = $user;
+        $this->user_form = $user_form;
     }
 
-    public function getUser()
+    public function setUserTo($user_to)
     {
-        return $this->user;
+        $this->user_to = $user_to;
+    }
+
+    public function getUserFrom()
+    {
+        return $this->user_form;
+    }
+
+    public function getUserTo()
+    {
+        return $this->user_to;
     }
 
     /**
@@ -52,10 +64,8 @@ class NewContractor extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject(config('app.name') . ' | Nuevo contratista' . config('app.name'))
-            ->greeting('Hola señor dinamizador')
-        ->line('Hemos enviado este correo para informarte que el usuario '. $this->getUser()->nombres.' '.$this->getUser()->apellidos. ' está solicitando acceso por primera vez al aplicaivo.');
-        // ->markdown('emails.users.auth.new-contractor');
+            ->subject('Nuevo contratista ' . $this->getUserFrom()->present()->nodoContratista() . config('app.name'))
+            ->markdown('emails.users.auth.new-contractor', ['user_form' => $this->getUserFrom(), 'user_to' => $this->getUserTo()]);
     }
 
     /**
@@ -67,10 +77,10 @@ class NewContractor extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'link'  => route('usuario.usuarios.edit', $this->getUser()->documento),
+            'link'  => route('user.contractor.confirm.request', $this->getUserFrom()->documento),
             'icon'  => 'lightbulb',
             'color' => 'cyan',
-            'autor' => "Nuevo contatista | {$this->getUser()->nombres} {$this->getUser()->apellidos}",
+            'autor' => "Nuevo contratista | {$this->getUserFrom()->nombres} {$this->getUserFrom()->apellidos}",
             'text'  => "El contratista está haciendo una petición de registro en el nodo.",
         ];
     }

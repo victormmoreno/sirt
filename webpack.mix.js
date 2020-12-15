@@ -131,6 +131,7 @@ mix.minify('public/js/app2.js')
     mix.version();
 
 mix.scripts([
+    'resources/app/auth/verifyUser.js',
     'resources/app/auth/register.js',
     ],'public/js/web.js');
 

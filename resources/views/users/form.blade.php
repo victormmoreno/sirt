@@ -172,7 +172,7 @@
     </div>
     <div class="col s12 m8 l9">
         <div class="divider mailbox-divider"></div>
-
+        
         @include('users.forms.infopersonal')
         @include('users.forms.estudios')
         
@@ -190,7 +190,7 @@
 
         
 
-        <center>
+        <div class="col s12 center-align m-t-sm">
             <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button>
             <a class="waves-effect red lighten-2 btn center-aling " href="{{route('usuario.index')}}">
                 <i class="material-icons right">
@@ -198,7 +198,7 @@
                 </i>
                 Cancelar
             </a>
-        </center>
+        </div>
     </div>
 </div>
 

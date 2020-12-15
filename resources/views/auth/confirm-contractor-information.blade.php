@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', ' | ' . $user->nombres. ' '. $user->apellidos)
+@section('meta-title', $user->nombres. ' '. $user->apellidos)
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -13,7 +13,7 @@
                             <i class="material-icons left ">
                                 supervised_user_circle
                             </i>
-                            Usuarios | Perfil
+                            Usuario | Confirmar información
                         </h5>
                     </div>
                 </div>
@@ -23,14 +23,42 @@
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m12 l12">
-                                        
+
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
-                                                @include('users.profile.nav.header')
+                                                <div class="left">
+                                                    <div class="left">
+                                                        @if($user->genero == App\User::IsMasculino())
+                                                            <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}"></img>
+                                                        @elseif($user->genero == App\User::IsFemenino())
+                                                            <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-female.png') }}"></img>
+                                                        @else
+                                                            <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-default.png') }}"></img>
+                                                        @endif
+                                                    </div>
+                                                    <div class="left">
+                                                        <span class="mailbox-title">
+                                                            {{$user->present()->userFullName()}}
+                                                        </span>
+                                                        <span class="mailbox-author">
+                                                            Tipo contrato: {{$user->present()->tipoContratista()}}
+                                                            <br>
+                                                                Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
+                                                                <br>
+                                                            @if(isset($user->fechanacimiento))
+                                                            {{$user->fechanacimiento->age}} años
+                                                            @endif
+                                                            {{-- {{$user->contratista->tipo_contratista}} --}}
+                                                        </span>
+                                                    </div>
+                                                </div>
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                         <p class="center">
-                                                            Cambia o recupera su contraseña
+                                                            {{$user->present()->userFullName()}} está solicitando acceso al nodo {{$user->present()->nodoContratista()}}.
+                                                        </p>
+                                                        <p class="center-align">
+                                                            Ingrese los datos solicitados y darás acesso al usuario.
                                                         </p>
                                                     </span>
                                                 </div>
@@ -41,7 +69,7 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('perfil.contraseña')}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('user.contractor.confirm', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
                                                     <div class="row">
@@ -49,36 +77,30 @@
                                                             <div class="col s12 m12 l12">
                                                                 <ul class="collection with-header">
                                                                     <li class="collection-header center"><h6><b>Roles</b></h6></li>
-                                                            
+
                                                                     @forelse($roles as  $name)
                                                                         <li class="collection-item">
                                                                             <p class="p-v-xs">
                                                                                 @switch( \Session::get('login_role'))
                                                                                     @case(App\User::IsAdministrador())
                                                                                         @if(isset($user))
-                                                                                            <input type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)" {{  $name == App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : '' }}>
+                                                                                            <input type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
                                                                                         @else
                                                                                             <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
                                                                                         @endif
                                                                                     @break
                                                                                     @case(App\User::IsDinamizador())
                                                                                         @if(isset($user))
-                                                                                            <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' :  $name == App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                                            <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
                                                                                         @else
                                                                                             <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
                                                                                         @endif
                                                                                     @break
-                                                                                    {{-- @case(App\User::IsGestor())
-                                                                                        @if(isset($user))
-                                                                                            <input type="checkbox" name="role[]"  {{$name == App\User::IsTalento() ? 'checked' : ''  }}  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name !== App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} {{$name === App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                        @else
-                                                                                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name === App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : ''}} {{\Session::get('login_role') == App\User::IsGestor() ? 'checked' : '' }}  onchange="roles.getRoleSeleted(this)">
-                                                                                        @endif
-                                                                                    @break --}}
+                                                                                    
                                                                                     @default
                                                                                     @break
                                                                                 @endswitch
-                                                            
+
                                                                                 <label for="test-{{$name}}">{{$name}}</label>
                                                                             </p>
                                                                         </li>
@@ -92,11 +114,11 @@
                                                                     </div>
                                                                 @enderror
                                                                 <small id="role-error" class="error red-text"></small>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                         <div class="col s12 m9 l9 ">
-                                                            
-                                                        
+
+
                                                             @if(session()->has('status') || session()->has('error'))
                                                                 <div class="center">
                                                                     <div class="card  {{session('status') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
@@ -112,15 +134,20 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                
+
                                                             @endif
+                                                            <div class="row">
+                                                                <div class="input-field col s12 m12 l12 valign-wrapper selectRole" style="display:block">
+                                                                    <h5><- Selecciona los roles</h5>
+                                                                </div>
+                                                            </div>
                                                             <div class="row">
                                                                 <div id="dinamizador" class="input-field col s12 m6 l6 offset-l3 offset-m3">
                                                                     <div  class="card mailbox-content">
                                                                         <div class="card-content">
                                                                             <span class="card-title activator grey-text text-darken-4 center-align">Información Dinamizador</span>
                                                                             <div class="input-field col s12 m12 l12">
-                                                                                
+
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
                                                                                 " tabindex="-1">
                                                                                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
@@ -135,7 +162,7 @@
                                                                                     @else
                                                                                         @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
                                                                                             <option value="{{$user->dinamizador->nodo->id}}" selected>Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}</option>
-                                                            
+
                                                                                         @endif
                                                                                     @endif
                                                                                 </select>
@@ -143,7 +170,7 @@
                                                                                 <small id="role-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
-                                                                        
+
                                                                     </div>
                                                                 </div>
                                                                 <div id="gestor" class="input-field col s12 m6 l6 offset-l3 offset-m3">
@@ -227,7 +254,7 @@
                                                                                         @endif
                                                                                 </select>
                                                                                 <label for="txtnodoinfocenter" class="active">Nodo Infocenter<span class="red-text">*</span></label>
-                                                                
+
                                                                                 <small id="txtnodoinfocenter-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m12 l12">
@@ -267,7 +294,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
+                                                            <div id="section-talento" class="row">
                                                                 <div class="input-field col s12 m4 l4 ">
                                                                     <select class="js-states browser-default select2 select2-hidden-accessible" id="txttipotalento" name="txttipotalento" style="width: 100%" tabindex="-1" onchange="tipoTalento.getSelectTipoTalento(this)">
                                                                         @if(isset($user->talento->tipotalento->id) && ((session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())))
@@ -280,7 +307,7 @@
                                                                                 @else
                                                                                     <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
                                                                                 @endif
-                                                
+
                                                                             @endforeach
                                                                         @endif
                                                                     </select>
@@ -317,7 +344,7 @@
                                                                             <small id="txtregional_aprendiz-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m12 l12">
-                                                
+
                                                                             <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_aprendiz" name="txtcentroformacion_aprendiz" style="width: 100%" tabindex="-1" >
                                                                                 <option value="">Seleccione Primero la regional</option>
                                                                             </select>
@@ -325,7 +352,7 @@
                                                                             <small id="txtcentroformacion_aprendiz-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m12 l12 ">
-                                                
+
                                                                             <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                                             <label for="txtprogramaformacion_aprendiz">Programa de Formación <span class="red-text">*</span></label>
                                                                             <small id="txtprogramaformacion_aprendiz-error"  class="error red-text"></small>
@@ -355,7 +382,7 @@
                                                                             <small id="txtregional_egresado-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m12 l12">
-                                                
+
                                                                             <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_egresado" name="txtcentroformacion_egresado" style="width: 100%" tabindex="-1" >
                                                                                 <option value="">Seleccione Primero la regional</option>
                                                                             </select>
@@ -363,7 +390,7 @@
                                                                             <small id="txtcentroformacion_egresado-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m12 l12 ">
-                                                
+
                                                                             <input class="validate" id="txtprogramaformacion_egresado" name="txtprogramaformacion_egresado" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_egresado')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                                             <label for="txtprogramaformacion_egresado">Programa de Formación <span class="red-text">*</span></label>
                                                                             <small id="txtprogramaformacion_egresado-error"  class="error red-text"></small>
@@ -391,7 +418,7 @@
                                                                             <small id="txttipoformacion-error"  class="error red-text"></small>
                                                                         </div>
                                                                     </div>
-                                                
+
                                                                     <div class="row funcionarioSena" style="display:none">
                                                                         <div class="input-field col s12 m12 l12" >
                                                                             <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_funcionarioSena" name="txtregional_funcionarioSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionFuncionarioSena()" >
@@ -423,9 +450,9 @@
                                                                             <small id="txtcentroformacion_funcionarioSena-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m12 l12">
-                                                
+
                                                                             <input class="validate" id="txtdependencia" name="txtdependencia" type="text"  value="{{ isset($user->talento->dependencia) ? $user->talento->dependencia : old('txtdependencia')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
-                                                
+
                                                                             <label for="txtdependencia">Dependencia</label>
                                                                             <small id="txtdependencia-error"  class="error red-text"></small>
                                                                         </div>
@@ -454,14 +481,14 @@
                                                                             <small id="txtregional_instructorSena-error"  class="error red-text"></small>
                                                                         </div>
                                                                         <div class="input-field col s12 m12 l12">
-                                                
+
                                                                             <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_instructorSena" name="txtcentroformacion_instructorSena" style="width: 100%" tabindex="-1">
                                                                                 <option value="">Seleccione Primero la regional</option>
                                                                             </select>
                                                                             <label for="txtcentroformacion_instructorSena" class="active">Centro de formación <span class="red-text">*</span></label>
                                                                             <small id="txtcentroformacion_instructorSena-error"  class="error red-text"></small>
                                                                         </div>
-                                                
+
                                                                     </div>
                                                                     <div class="row otherUser"></div>
                                                                         <div class="row universitario" style="display:none">
@@ -487,13 +514,13 @@
                                                                                 <label for="txttipoestudio">Tipo Estudio <span class="red-text">*</span></label>
                                                                                 <small id="txttipoestudio-error"  class="error red-text"></small>
                                                                             </div>
-                                                
+
                                                                             <div class="input-field col s12 m12 l12" >
                                                                                 <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad : old('txtuniversidad')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                                                 <label for="txtuniversidad">Universidad <span class="red-text">*</span></label>
                                                                                 <small id="txtuniversidad-error"  class="error red-text"></small>
                                                                             </div>
-                                                
+
                                                                             <div class="input-field col s12 m12 l12" >
                                                                                 <input class="validate" id="txtcarrera" name="txtcarrera" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrera')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                                                 <label for="txtcarrera">Nombre de la Carrera <span class="red-text">*</span></label>
@@ -501,8 +528,8 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="row funcionarioEmpresa" style="display:none">
-                                                
-                                                
+
+
                                                                             <div class="input-field col s12 m12 l12" >
                                                                                 <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                                                 <label for="txtempresa">Nombre de la Empresa <span class="red-text">*</span></label>
@@ -510,7 +537,7 @@
                                                                             </div>
                                                                         </div>
                                                                 </div>
-                                                
+
                                                             </div>
                                                         </div>
                                                         <div class="col s12 m8 l8 offset-l4 offset-m4">
@@ -525,10 +552,10 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-                                                        
-                                                        
+
+
                                                     </div>
-                                                    
+
                                                 </form>
                                             </div>
                                         </div>
@@ -546,13 +573,13 @@
 @push('script')
 <script>
 $(document).ready(function() {
-        
+
     roles.getRoleSeleted();
     @if(isset($user->talento->tipotalento->id))
     tipoTalento.getSelectTipoTalento('{{$user->talento->tipotalento->id}}');
     @endif
 
-    
+
 });
 
 
@@ -562,6 +589,7 @@ $(document).ready(function() {
 var roles = {
     getRoleSeleted:function (idrol) {
         let role = $(idrol).val();
+
         if($('#dinamizador').css('display') === 'block')
         {
             @if($errors->any())
@@ -570,6 +598,7 @@ var roles = {
             $("#txtnododinamizador").val();
             @endif
             $("#txtnododinamizador").material_select();
+            
         }
 
         if ($('#gestor').css('display') === 'block') {
@@ -613,7 +642,7 @@ var roles = {
             $("#txtnodoingreso").material_select();
         }
 
-        if ($('#talento').css('display') === 'block') {
+        if ($('#section-talento').css('display') === 'block') {
             $("#txtperfil").val();
             $("#txtperfil").material_select();
             $("#txtregional").val();
@@ -636,27 +665,42 @@ var roles = {
         $('#dinamizador').hide();
         $('#gestor').hide();
         $('#infocenter').hide();
-        $('#talento').hide();
+        $('#section-talento').hide();
         $('#ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
-
-            if ($(this).val() == '{{App\User::IsDinamizador()}}') {
-
+            if ($(this).val() == '{{App\User::IsAdministrador()}}') {
+                roles.hideSelectRole();
+            }else if ($(this).val() == '{{App\User::IsDinamizador()}}') {
+                roles.hideSelectRole();
                 $('#dinamizador').show();
 
             }else if($(this).val() == '{{App\User::IsGestor()}}'){
+                roles.hideSelectRole();
                 $('#gestor').show();
             }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
+                roles.hideSelectRole();
                 $('#infocenter').show();
             }else if($(this).val() == '{{App\User::IsTalento()}}'){
-                $('#talento').show();
+                roles.hideSelectRole();
+                $('#section-talento').show();
             }else if($(this).val() == '{{App\User::IsIngreso()}}'){
+                roles.hideSelectRole();
                 $('#ingreso').show();
+            }else{
+                roles.showSelectRole();
             }
-
+                
+            
+            
         });
+        
 
-
+    },
+    hideSelectRole: function(){
+        $(".selectRole").css("display", "none");
+    },
+    showSelectRole: function(){
+        $(".selectRole").css("display", "block");
     }
 };
 
@@ -833,11 +877,9 @@ var tipoTalento = {
 
     hideAprendizSena: function(){
         $(".aprendizSena").css("display", "none");
-        // $(".aprendizSena").hide();
 
     },
     hideEgresadoSena: function(){
-        // $(".egresadoSena").css("display", "none");
         $(".egresadoSena").hide();
 
     },

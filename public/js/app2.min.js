@@ -1765,7 +1765,6 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             contentType: false,
             processData: false,
             success: function (data) {
-
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 $('#response-alert').empty();
@@ -1781,16 +1780,15 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                     });
                 }
 
-
                 if(data.status == 202){
                     if(type == 1){
                         $('#response-alert').append(`
                             <div class="mailbox-list">
                                 <ul>
                                     <li>
-                                        <a  class="mail-active">
+                                        <a class="mail-active">
                                             <h4 class="center-align">no se encontraron resultados</h4>
-                                            <a class="grey-text text-darken-3 green accent-1 center-align" href="`+data.url+`/`+search+`">Registrar nuevo usuario</a>
+                                            <a class="grey-text text-darken-3 green accent-1 center-align" href="`+data.url+`">Registrar nuevo usuario</a>
                                         </a>
                                     </li>
                                 </ul>
@@ -1800,13 +1798,10 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                         $('#response-alert').append(`
                             <div class="mailbox-list">
                                 <ul>
-                                    <li >
-                                        <a  class="mail-active">
-
+                                    <li>
+                                        <a class="mail-active">
                                             <h4 class="center-align">no se encontraron resultados</h4>
-
-                                            <a class="grey-text text-darken-3 green accent-1 center-align" href="`+data.url+`">Registrar nuevo usuario</a>
-
+                                            <a target="_blank" class="grey-text text-darken-3 green accent-1 center-align" href="`+data.url+`">Registrar nuevo usuario</a>
                                         </a>
                                     </li>
                                 </ul>
@@ -2593,21 +2588,7 @@ $('#download_users').click(function(){
     window.location = url;
 });
 
-$('#download_talentos').click(function(){
-    let filter_role = $('#filter_rol').val();
-    let filter_nodo = $('#filter_nodo').val();
-    let filter_state = $('#filter_state').val();
-    let filter_year = $('#filter_year').val();
-    var query = {
-        filter_nodo: filter_nodo,
-        filter_role: filter_role,
-        filter_state: filter_state,
-        filter_year: filter_year,
-    }
 
-    var url = "/usuario/export-talentos?" + $.param(query)
-    window.location = url;
-});
 
 
 

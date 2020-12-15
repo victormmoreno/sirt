@@ -19,7 +19,8 @@ Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Registration Routes...
-Route::get('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContratorInformation')->name('user.contractor.confirm');
+Route::get('usuario/confirm/{documento}', 'Auth\RegisterController@showConfirmContratorInformationForm')->name('user.contractor.confirm.request');
+Route::put('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContratorInformation')->name('user.contractor.confirm');
 Route::get('registro', 'Auth\RegisterController@showRegistrationForm')->name('registro');
 Route::post('registro', 'Auth\RegisterController@register')->name('register.request');
 
@@ -121,29 +122,10 @@ Route::group(
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',
         ]);
-
-        
-
-        Route::post('/consultaremail', [
-            'uses' => 'UserController@consultaremail',
-            'as'   => 'usuario.consultaremail',
-        ]);
-
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
-
-
-        Route::post('/usuarios/consultarusuario', [
-            'uses' => 'UserController@querySearchUser',
-            'as'   => 'usuario.buscarusuario',
-        ])->where('documento', '[0-9]+');
-
-
-
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
-        Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
-
-
+        
         Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
         Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
@@ -153,11 +135,16 @@ Route::group(
             'as'   => 'usuario.gestores.nodo',
         ]);
 
+        Route::post('/usuarios/consultarusuario', [
+            'uses' => 'UserController@querySearchUser',
+            'as'   => 'usuario.buscarusuario',
+        ])->where('documento', '[0-9]+');
+
+        
+        Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
 
         Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
-        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index', 'create'])->names([
-            'create'  => 'usuario.usuarios.create',
-            'store'  => 'usuario.usuarios.store',
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index', 'create', 'store'])->names([
             'update'  => 'usuario.usuarios.update',
             'edit'    => 'usuario.usuarios.edit',
             'destroy' => 'usuario.usuarios.destroy',

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use App\Models\{Contratista, TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion, Talento, Entidad};
 use App\Repositories\Repository\UserRepository\UserRepository;
-use App\Http\Requests\UsersRequests\UserFormRequest;
+use App\Http\Requests\UsersRequests\{UserFormRequest, ConfirmUserRequest};
 use Illuminate\Support\Facades\DB;
 use App\Events\User\UserWasRegistered;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
@@ -53,7 +53,7 @@ class RegisterController extends Controller
 
     public function __construct(UserRepository $userRepository)
     {
-        $this->middleware('guest')->except('confirmContratorInformation');
+        $this->middleware('guest')->except(['confirmContratorInformation', 'showConfirmContratorInformationForm']);
         $this->userRepository = $userRepository;
     }
     /**
@@ -167,14 +167,17 @@ class RegisterController extends Controller
                 Contratista::create([
                     "user_id"   => $user->id,
                     "nodo_id"   => $request->input('txtnodo'),
-                    "tipo_contratista"   => $request->input('txttipocontratista') == 'contratista' ? $request['txttipocontratista'] = 1 : $request['txttipocontratista'] = 0, //1 contratista. 0 planta
+                    "tipo_contratista"   => $request->input('txttipocontratista') == "contratista" ?  1 : $request['txttipocontratista'] = 0, //1 contratista. 0 planta
                 ]);
 
                 $dinamizadorRepository = new DinamizadorRepository;
 
-                $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->get();
+                $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->first();
 
-                Notification::send($dinamizadores, new NewContractor($user));
+                if($dinamizador != null){
+                    Notification::send($dinamizador, new NewContractor($user, $dinamizador));
+                }
+                
             }
 
             DB::commit();
@@ -317,6 +320,7 @@ class RegisterController extends Controller
     {
         return TipoTalento::where('nombre', $tipotalento)->first()->id;
     }
+
     protected function programaFormacion($request){
         if($request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) || $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)){
             return $request->input('txtprogramaformacion_aprendiz');
@@ -325,22 +329,43 @@ class RegisterController extends Controller
         }else{
             return null;
         }
-
     }
 
-    public function confirmContratorInformation(int $documento){
+    public function showConfirmContratorInformationForm(int $documento){
 
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        
-
-        // $this->authorize('acceso', $user);
+        $this->authorize('confirmContratorInformation', $user);
         return view('auth.confirm-contractor-information', [
             'user' => $user,
             'roles' => $this->userRepository->getRoleWhereNotInRole([User::IsDesarrollador() ]),
             'nodos'             => $this->userRepository->getAllNodo(),
             'lineas' => LineaTecnologica::pluck('nombre', 'id'),
+            'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
         ]);
-
-        
     }
+
+    public function confirmContratorInformation(Request $request, int $documento){
+
+        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+        $this->authorize('confirmContratorInformation', $user);
+
+        $req = new ConfirmUserRequest;
+
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            
+            return response()->json([
+                'data' => $request->all() 
+            ]); 
+        }   
+
+    }
+
 }
