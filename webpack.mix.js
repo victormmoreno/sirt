@@ -119,13 +119,18 @@ mix.scripts([
     'resources/app/graficos/index.js',
     'resources/app/seguimiento/index.js',
     'resources/app/costos/index.js',
-'resources/app/publicacion/index.js',
-'resources/app/publicacion/form.js'
+    'resources/app/publicacion/index.js',
+    'resources/app/publicacion/form.js'
 
 	],'public/js/app2.js');
 
 mix.minify('public/js/app2.js')
     mix.version();
+
+mix.scripts([
+    'resources/app/auth/verifyUser.js',
+    'resources/app/auth/register.js',
+    ],'public/js/web.js');
 
 
 mix.browserSync({

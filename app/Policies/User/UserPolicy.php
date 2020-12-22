@@ -256,4 +256,19 @@ class UserPolicy
             && session()->get('login_role') == User::IsInfocenter();
         return (bool) session()->get('login_role') == User::IsGestor();
     }
+
+
+    /**
+     * Determine whether the user can view the rol.
+     * @author julian londono
+     * @return boolean
+     */
+    public function confirmContratorInformation(User $authUser, User $user)
+    {
+        return (bool) ((collect($authUser->getRoleNames())->contains(User::IsAdministrador())
+            && session()->get('login_role') == User::IsAdministrador())
+            || (collect($authUser->getRoleNames())->contains(User::IsDinamizador())
+            && session()->get('login_role') == User::IsDinamizador())) && ( isset($user->contratista) && $user->estado == User::IsInactive());
+    }
+
 }

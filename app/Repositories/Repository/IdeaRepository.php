@@ -100,8 +100,6 @@ class IdeaRepository
         return $idea;
     }
 
-
-
     public function Update($request, $idea)
     {
 
