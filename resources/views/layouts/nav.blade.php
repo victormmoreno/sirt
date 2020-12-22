@@ -187,6 +187,8 @@
                   Talento de Tecnoparque
                 @elseif (\Session::get('login_role') == App\User::IsAdministrador())
                   Administrador de Tecnoparque
+                @elseif (\Session::get('login_role') == App\User::IsEmprendimiento())
+                  Gestor de Emprendimiento
                 @else
                   Desarrollador de Tecnoparque
                 @endif
@@ -286,6 +288,12 @@
 
     @include('layouts.navrole.desarrollador')
     @break
+
+    @case(App\User::IsArticulador())
+
+    @include('layouts.navrole.articulador')
+    @break
+
     @default
     @endswitch
   </ul>

@@ -56,6 +56,7 @@ mix.scripts([
 		'resources/assets/js/alpha.js',
         'resources/assets/js/custom.js',
         'resources/app/ideas/index.js',
+        'resources/app/ideas/create.js',
 	],'public/js/libs.js');
 
 mix.minify('public/js/libs.js')
@@ -79,6 +80,7 @@ mix.scripts([
     'resources/app/comite/gestor/index.js',
     'resources/app/comite/administrador/index.js',
     'resources/app/empresa/index.js',
+    'resources/app/empresa/form.js',
     'resources/app/grupoinvestigacion/index.js',
     'resources/app/user/search.js',
     'resources/app/user/infopersonal.js',
@@ -122,8 +124,8 @@ mix.scripts([
     'resources/app/graficos/index.js',
     'resources/app/seguimiento/index.js',
     'resources/app/costos/index.js',
-'resources/app/publicacion/index.js',
-'resources/app/publicacion/form.js'
+    'resources/app/publicacion/index.js',
+    'resources/app/publicacion/form.js'
 
 	],'public/js/app2.js');
 

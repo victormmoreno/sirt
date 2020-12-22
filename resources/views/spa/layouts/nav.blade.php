@@ -14,15 +14,9 @@
         <ul class=" col s8 m8 l7 ">
           <li class="hide-on-med-and-down">
             <a href="{{route('/')}}" rel="canonical" title="Haz clic aquí para ir a la página principal">INICIO</a>
-          </li>
-          <li class="hide-on-med-and-down">
-            <a href="{{ route('idea.create') }}" rel="canonical"  title="Haz clic aquí para inscribir una idea de proyecto" class="hide-on-med-and-down">IDEAS DE PROYECTOS</a>
-          </li>
-          
-          
+          </li>          
           <li class="hide-on-med-and-down"><a href="#objetivos" title="Haz clic aquí para ver los objetivos">OBJETIVOS</a></li>
           <li class="hide-on-med-and-down"><a href="#tecnoparque" title="Haz clic aquí para ver que es tecnnoparque">¿QUÉ ES TECNOPARQUE? </a></li>
-          {{-- <li class="hide-on-med-and-down"><a href="" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Descarga TECNOPARQUE RA"> TECNOPARQUE RA</a></li> --}}
           <li class="hide-on-med-and-down"><a href="{{route('creditos')}}" rel="canonical" title="Haz clic aquí para ver los créditos"> CRÉDITOS</a></li>
         </ul>
         <ul class="col s2 m1 l2 nav-right-menu">

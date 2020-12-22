@@ -165,6 +165,7 @@ class ProyectoRepository
     ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
     ->join('gestores AS g', 'g.id', '=', 'a.gestor_id')
     ->join('nodos', 'nodos.id', '=', 'a.nodo_id')
+    ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
     ->whereBetween($field_date, [$fecha_inicio, $fecha_cierre])
     ->groupBy($field);
   }

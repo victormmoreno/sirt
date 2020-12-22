@@ -25,6 +25,8 @@ class NodoHelper
             return 'Infocenter nodo ' . Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsIngreso() && isset(auth()->user()->ingreso->nodo_id)) {
             return 'Ingreso nodo ' . Nodo::userNodo(auth()->user()->ingreso->nodo_id)->first()->nombre;
+        } else if (\Session::get('login_role') == User::IsArticulador() && isset(auth()->user()->gestor->nodo_id)) {
+            return 'Articulador del nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else {
             return 'No hay información disponible.';
         }
