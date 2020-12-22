@@ -7,6 +7,7 @@
         <title>{{config('app.name')}} | @yield('title', config('app.name'))</title>
 
         <!-- Fonts -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">

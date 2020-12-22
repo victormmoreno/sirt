@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <ul class="collapsible" data-collapsible="accordion">
     <li>
         <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Ver historial de

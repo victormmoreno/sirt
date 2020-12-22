@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 {!! csrf_field() !!}
 @if($errors->any())
 <div class="card red lighten-3">

@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="modal" id="gruposDeInvestigacion_ArticulacionInicio_modal">
   <div class="modal-content">
     <div class="row">

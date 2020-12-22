@@ -3,6 +3,7 @@
 @section('meta-title', 'Registro de Ideas')
 @section('meta-content', 'Registro de Ideas')
 @section('content-spa')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner no-p">
     <div class="content">
         <div class="row no-m-t no-m-b">

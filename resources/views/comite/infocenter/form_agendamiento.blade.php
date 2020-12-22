@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 {!! csrf_field() !!}
 @php
     $existe = isset($comite) ? true : false;

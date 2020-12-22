@@ -18,7 +18,6 @@ use App\Exports\User\UserExport;
 class UserController extends Controller
 {
 
-
     public $userRepository;
 
     public function __construct(UserRepository $userRepository)
@@ -429,4 +428,17 @@ class UserController extends Controller
         }
         abort('403');
     }
+
+    /*=====  Método para controlar el formulario usuarios nuevos  ======*/
+    public function create()
+    {
+        return view('registro_usuarios.form',[
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ciudades'          => $this->userRepository->getAllCiudades(),
+            'view' => 'create'
+        ]);
+    }
+
+    /*=====  Fin Método para controlar el formulario usuarios nuevos  ======*/
 }

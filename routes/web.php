@@ -859,3 +859,31 @@ Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->midd
 Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
+
+
+//-----------------------Ruta para registro usuario nuevo---------------------------------
+
+Route::get('/registro-usuario', 'User\UserController@create')->name('persona.create');
+
+//-----------------------Fin ruta registro usuario nuevo-----------------------------------
+
+//-----------------------Ruta para sección de noticias---------------------------------
+
+Route::get('/spa', ['as' => 'spa','uses' => 'NoticiasController@spa']);
+
+Route::group([
+    'prefix' => 'noticias',
+    'middleware' => ['auth']
+], function () {
+
+    Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Administrador');
+    Route::get('/create', 'NoticiasController@create')->name('noticias.create');
+    Route::post('/', 'NoticiasController@store')->name('noticias.store');
+    Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Administrador');
+    Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Administrador');
+    Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
+
+
+});
+
+//-----------------------Fin ruta sección noticias-----------------------------------
