@@ -58,6 +58,11 @@ class Nodo extends Model
         return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
     }
 
+    public function contratista()
+    {
+        return $this->hasMany(Contratista::class, 'nodo_id', 'id');
+    }
+
     public function dinamizador()
     {
         return $this->hasOne(Dinamizador::class, 'nodo_id', 'id');

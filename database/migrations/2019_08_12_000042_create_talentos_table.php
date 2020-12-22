@@ -24,7 +24,7 @@ class CreateTalentosTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('entidad_id');
+            $table->unsignedInteger('entidad_id')->nullable()->default(null);
             $table->string('universidad', 200)->nullable()->default(null);
             $table->string('programa_formacion', 100)->default('No Aplica');
             $table->string('carrera_universitaria', 100)->default('No Aplica');
