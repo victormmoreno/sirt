@@ -15,7 +15,8 @@ return [
 
     'password' => 'Las contraseñas deben coincidir y contener al menos 6 caracteres',
     'reset'    => 'Tu contraseña ha sido cambiada exitosamente.',
-    'sent'     => 'Si su dirección de correo electrónico existe en nuestros registros, recibirá un enlace de recuperación de contraseña en su dirección de correo electrónico en unos minutos.',
+    'resetEmail'    => 'Tu correo ha sido cambiado exitosamente.',
+    'sent'     => 'El proceso de restablecimiento de contraseña ha sido exitoso. En unos minutos le enviaremos a :email un enlace para   recuperación de contraseña.',
     'token'    => 'El token de recuperación de contraseña es inválido.',
-    'user'     => 'No podemos encontrar ningún usuario con ese correo electrónico o estás inhabilitado para acceder.',
+    'user'     => 'No podemos encontrar ningún usuario con estas credenciales o estás inhabilitado para acceder.',
 ];

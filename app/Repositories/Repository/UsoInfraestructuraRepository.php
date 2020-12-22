@@ -218,10 +218,10 @@ class UsoInfraestructuraRepository
             $equipo = Equipo::with(['equiposmantenimientos', 'lineatecnologica', 'nodo'])->where('id', $value)->first();
 
             if (($anioActual - $equipo->anio_compra) < $equipo->vida_util) {
-                if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0) {
+                if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
                     $depreciacionEquipo[$id] = 0;
                 } else {
-                    $depreciacionEquipo[$id] = round(($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
+                    $depreciacionEquipo[$id] = ($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id];
                 }
             } else {
                 $depreciacionEquipo[$id] = 0;
@@ -232,7 +232,7 @@ class UsoInfraestructuraRepository
 
             if (isset($equiposmantenimiento)) {
                 //formula para calcular el valor del mantenimiento del equipo * tiempo uso infraestructura
-                $mantenimientoEquipo = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (int) $request->get('tiempouso')[$id]);
+                $mantenimientoEquipo = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id]);
             } else {
                 $mantenimientoEquipo = 0;
             }
