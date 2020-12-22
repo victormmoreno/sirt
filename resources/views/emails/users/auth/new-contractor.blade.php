@@ -8,7 +8,7 @@ Hola,
 
 Cordial Saludo.
 
-Hemos enviado este correo para informarte que el usuario {{$user_form->nombres}} {{$user_form->apellidos}} está solicitando acceso por primera vez al aplicaivo.
+Hemos enviado este correo para informarte que el usuario {{$user_form->nombres}} {{$user_form->apellidos}} está solicitando acceso por primera vez al aplicativo.
 
 <br>
 @component('mail::button', ['url' => route('user.contractor.confirm.request', $user_form->documento)])

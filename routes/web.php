@@ -40,6 +40,9 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 //verificar usuario no registrado
 Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
 
+//Change Email Routes...
+Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
+Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
 
 // DB::listen(function ($query) {
 // echo "<pre>{$query->sql}</pre>";

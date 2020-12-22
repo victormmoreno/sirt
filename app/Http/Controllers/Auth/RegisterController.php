@@ -16,7 +16,7 @@ use App\Http\Requests\UsersRequests\{UserFormRequest, ConfirmUserRequest};
 use Illuminate\Support\Facades\DB;
 use App\Events\User\UserWasRegistered;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Notifications\User\NewContractor;
+use App\Notifications\User\{NewContractor, RoleAssignedOfficer};
 
 
 
@@ -341,6 +341,10 @@ class RegisterController extends Controller
             'nodos'             => $this->userRepository->getAllNodo(),
             'lineas' => LineaTecnologica::pluck('nombre', 'id'),
             'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
+            'regionales'        => $this->userRepository->getAllRegionales(),
+            'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
+            'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
+            'lineas' => LineaTecnologica::pluck('nombre', 'id'),
         ]);
     }
 
@@ -361,9 +365,26 @@ class RegisterController extends Controller
             ]);
         } else {
             
-            return response()->json([
-                'data' => $request->all() 
-            ]); 
+            if ($user != null) {
+                $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
+
+                if($userUpdate != null){
+                    Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
+                }
+
+                return response()->json([
+                    'state'   => 'success',
+                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
+                    'url' => route('usuario.index'),
+                    'user' => $userUpdate,
+                ]);
+            } else {
+                return response()->json([
+                    'state'   => 'error',
+                    'message' => 'El Usuario no se ha modificado',
+                    'url' => false
+                ]);
+            }
         }   
 
     }

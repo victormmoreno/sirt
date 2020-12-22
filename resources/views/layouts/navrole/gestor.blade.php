@@ -3,11 +3,11 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('usuario')}}">
+<li class="no-padding {{setActiveRoute('usuario')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Talentos">
     <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Talentos
   </a>
-</li> --}}
+</li>
 
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
@@ -19,11 +19,6 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones con Grupos de Investigación
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('intervencion')}}">
-  <a href="{{ route('intervencion.index') }}" class="{{setActiveRouteActivePage('intervencion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{setActiveRouteActiveIcon('intervencion')}}">autorenew</i>Intervención a Empresas
-  </a>
-</li> --}}
 <li class="{!! setActiveRoute('edt') !!}">
   <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}" rel="canonical" title="EDT's">
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">hearing</i>EDT's

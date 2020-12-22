@@ -5,12 +5,13 @@ namespace App\Http\Requests\UsersRequests;
 use App\Models\{TipoTalento};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\User;
 
 
 class ConfirmUserRequest extends FormRequest
 {
 
-    /**
+     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -29,105 +30,91 @@ class ConfirmUserRequest extends FormRequest
     {
 
         return [
-            
-            'txttipocontratista'        => Rule::requiredIf(request()->txttipousuario == "contratista") . '|nullable|'  .  Rule::in(['contratista', 'planta']),
-            'txttipotalento'                 => Rule::requiredIf(request()->txttipousuario == "talento") . '|nullable',
-
-            'txtregional_aprendiz'               => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'role'                      => 'required',
+            'txtnododinamizador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsDinamizador())) . '|nullable',
+            'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
+            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
+            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
+            'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
+            'txtextension'              => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',
+            'txttipotalento'                 => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
+            'txtnodoingreso'            => Rule::requiredIf(collect(request()->role)->contains(User::IsIngreso())) . '|nullable',
+            'txtregional_aprendiz'               => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
                     request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id)) . '|nullable',
 
 
 
-            'txtregional_egresado'               => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtregional_egresado'               => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id)) . '|nullable',
 
-            'txtregional_funcionarioSena'               => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtregional_funcionarioSena'               => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id)) . '|nullable',
 
-            'txtregional_instructorSena'               => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtregional_instructorSena'               => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id)) . '|nullable',
 
 
-            'txtcentroformacion_aprendiz'        => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtcentroformacion_aprendiz'        => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
                     request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id)) . '|nullable',
 
 
-            'txtcentroformacion_egresado'        => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtcentroformacion_egresado'        => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id)) . '|nullable',
 
-            'txtcentroformacion_funcionarioSena'        => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtcentroformacion_funcionarioSena'        => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id)) . '|nullable',
 
-            'txtcentroformacion_instructorSena'        => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtcentroformacion_instructorSena'        => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id)) . '|nullable',
 
 
-            'txtprogramaformacion_aprendiz'      => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtprogramaformacion_aprendiz'      => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
                     request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id)) . '|nullable|min:1|max:100',
 
 
-            'txtprogramaformacion_egresado'      => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtprogramaformacion_egresado'      => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id)) . '|nullable|min:1|max:100',
 
 
-            'txttipoformacion' => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txttipoformacion' => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id)) . '|nullable',
 
 
-            'txtdependencia' => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtdependencia' => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id)) . '|nullable',
 
-            'txttipoestudio'            => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txttipoestudio'            => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO)->first()->id)) . '|nullable',
 
-            'txtuniversidad'            => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtuniversidad'            => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO)->first()->id)) . '|nullable|min:1|max:200',
 
 
 
-            'txtcarrera'   => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtcarrera'   => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO)->first()->id)) . '|nullable|min:1|max:100',
 
-
-            'txtempresa'                => Rule::requiredIf(request()->txttipousuario == "talento" &&
+            'txtempresa'                => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_EMPRESA)->first()->id)) . '|nullable|min:1|max:200',
+
+
         ];
     }
 
     public function messages()
     {
         return $messages = [
-            
+            'role.required'                       => 'Por favor seleccione al menos un rol',
+            'txtnododinamizador.required'         => 'El nodo del dinamizador es obligatorio.',
+            'txtnodogestor.required'              => 'El nodo del gestor es obligatorio.',
+            'txtlinea.required'                   => 'La linea es obligatoria.',
 
-            'txtdependencia.required'                 => 'Por favor digite cual dependencia',
-            'txtdependencia.min'                      => 'La dependencia debe ser minimo 1 caracter',
-            'txtdependencia.max'                      => 'La dependencia debe ser minimo 45 caracteres',
-            'txtdependencia.regex'                    => 'El formato del campo La dependencia eso es incorrecto',
-
-            'txtnodo.required'         => 'El nodo es obligatorio.',
-            'txttipocontratista.required'         => 'El tipo de contratista es obligatorio.',
-
-            'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
-            'txtotra_ocupacion.regex'             => 'Sólo se permiten caracteres alfabeticos',
-
-            'txtocupaciones.required'             => 'seleccione al menos una ocupación',
-
-            'txtinstitucion.required'             => 'La institución es obligatoria.',
-            'txtinstitucion.min'                  => 'La institución  debe ser minimo 1 caracter',
-            'txtinstitucion.max'                  => 'La institución  debe ser minimo 100 caracteres',
-            'txtinstitucion.regex'                => 'El formato del campo institución es incorrecto',
-
-            'txttitulo.required'                  => 'El titulo es obligatorio.',
-            'txttitulo.min'                       => 'El titulo  debe ser minimo 1 caracter',
-            'txttitulo.max'                       => 'El titulo  debe ser minimo 200 caracteres',
-            'txttitulo.regex'                     => 'El formato del campo titulo es incorrecto',
-
-            'txtfechaterminacion.required'        => 'La fecha de terminación es obligatoria.',
-            'txtfechaterminacion.date'            => 'La fecha de terminación no es una fecha válida.',
-            'txtfechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
+            'txthonorario.required'               => 'El honorario es obligatorio.',
+            'txthonorario.regex'                  => 'El formato del campo honorario es incorrecto',
+            'txthonorario.digits_between'         => 'El honorario debe tener entre 6 y 7 digitos',
 
             'txtgrupoinvestigacion.required'      => 'El grupo de investigación es obligatoria.',
             'txtotrotipotalento.required'         => 'El otro tipo de talento es obligatorio.',
@@ -159,7 +146,15 @@ class ConfirmUserRequest extends FormRequest
             'txtregional_egresado.required'                => 'La regional es obligatoria.',
             'txtregional_funcionarioSena.required'                => 'La regional es obligatoria.',
             'txtregional_instructorSena.required'                => 'La regional es obligatoria.',
-            'txtremember.required' => 'Acepta los términos de uso.'
+
+            'txtnodoingreso.required'             => 'El nodo es obligatorio.',
+            'txttipotalento.required'                  => 'El tipo de talento es obligatorio.',
+            'txttipoestudio.required'                  => 'El tipo de estudio es obligatorio.',
+
+            'txtextension.required'               => 'La extensión es obligatoria.',
+            'txtextension.numeric'                => 'La extensión debe ser numérica',
+            'txtextension.digits_between'         => 'La extensión debe tener entre 6 y 7 digitos',
+            'txtnodoinfocenter.required'          => 'El nodo del infocenter es obligatorio',
         ];
     }
 

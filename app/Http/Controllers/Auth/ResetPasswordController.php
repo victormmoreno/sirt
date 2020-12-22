@@ -97,5 +97,4 @@ class ResetPasswordController extends Controller
         return redirect('login');
 
     }
-     
 }

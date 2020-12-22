@@ -73,7 +73,6 @@ class UserController extends Controller
                     ->orderBy('users.created_at', 'desc')
                     ->get();
             }
-
             return $usersDatatables->datatableUsers($users);
         }
         switch (session()->get('login_role')) {
@@ -108,8 +107,6 @@ class UserController extends Controller
                 break;
         }
     }
-
-
     /*===============================================================================
     =            metodo API para consultar las ciudades por departamento            =
     ===============================================================================*/
@@ -149,11 +146,9 @@ class UserController extends Controller
     public function edit($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-
         $this->authorize('edit', $user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-
                 return view('users.edit', [
                     'etnias' => Etnia::pluck('nombre', 'id'),
                     'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
@@ -180,8 +175,6 @@ class UserController extends Controller
                     $nodo = [];
                     return redirect()->route('home');
                 }
-
-
                 return view('users.edit', [
                     'user'              => $user,
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
@@ -198,7 +191,6 @@ class UserController extends Controller
                     'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
                     'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
                     'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-
                     'view' => 'edit'
                 ]);
                 break;
@@ -227,9 +219,7 @@ class UserController extends Controller
                     'lineas' => LineaTecnologica::pluck('nombre', 'id'),
                     'view' => 'edit'
                 ]);
-
                 break;
-
             default:
                 abort('404');
                 break;
@@ -262,7 +252,6 @@ class UserController extends Controller
         } else {
             if ($user != null) {
                 $userUpdate = $this->userRepository->Update($request, $user);
-
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
@@ -274,20 +263,18 @@ class UserController extends Controller
                     'state'   => 'error',
                     'message' => 'El Usuario no se ha modificado',
                     'url' => false
-
                 ]);
             }
         }
     }
 
-   
+
 
 
     public function acceso($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
         $this->authorize('acceso', $user);
-        
         return view('users.acceso', ['user' => $user]);
     }
 
@@ -305,20 +292,14 @@ class UserController extends Controller
                 return redirect()->back()->withSuccess('Acceso de usuario modificado');
             } else {
                 $user->update([
-                    'estado' => 1,
+                    'estado' => User::IsActive(),
                 ]);
-    
                 $user->restore();
                 return redirect()->back()->withSuccess('Acceso de usuario modificado');
             }
-           
         }else{
             return redirect()->back()->withError('No puedes cambiar el estado a este usuario. Primero asigna un rol y un nodo');
         }
-
-        
-
-
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
     }
 
@@ -389,7 +370,6 @@ class UserController extends Controller
                     ->orderBy('users.created_at', 'desc')
                     ->get();
             }
-
             return $usersDatatables->datatableUsers($users);
         }
 
@@ -406,9 +386,7 @@ class UserController extends Controller
     public function querySearchUser(Request $request)
     {
         if (request()->ajax()) {
-
             if ($request->input('txttype_search') == 1) {
-
                 $validator = Validator::make($request->all(), [
                     'txtsearch_user' => 'required|digits_between:6,11|numeric',
                     'txttype_search' => 'required|in:1',
@@ -433,7 +411,6 @@ class UserController extends Controller
                 }
                 $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
             }
-
             if ($user == null) {
                 return response()->json([
                     'data' => null,
@@ -452,6 +429,4 @@ class UserController extends Controller
         }
         abort('403');
     }
-
-
 }

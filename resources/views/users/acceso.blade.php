@@ -87,11 +87,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                
                                                             @endif
-                                                            
-                            
-                                                            
                                                             <div class="row ">
                                                                 <div class="center">
                                                                     <div class="input-field col s12 m12 l12 offset-l6 offset-m12">
