@@ -1,0 +1,226 @@
+@media screen and (max-width: 520px) {
+    /*Home*/
+    .logo-tecno {
+        display: none;
+    }
+    #home {
+        height: 300px;
+    }
+    .conte-home-escritorio {
+        display: none;
+    }
+    .bacg-home-celular {
+        display: block;
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+    }
+    #Cel-home-slider {
+        width: 500%;
+        height: 100%;
+        animation: slider_cel 15s infinite alternate ease;
+    }
+    @keyframes slider_cel {
+        10% {
+            margin-left: 0px;
+        }
+        28% {
+            margin-left: 0px;
+        }
+        30% {
+            margin-left: -100%;
+        }
+    }
+    #Cel-home-slider li {
+        width: 20%;
+        float: left;
+    }
+    #Cel-home-slider li img {
+        width: 100%;
+    }
+    #nodo-img-3 {
+        height: 100%;
+        background-color: tomato;
+    }
+    #nodo-img-4 {
+        height: 100%;
+        background-color: black;
+    }
+    #nodo-img-5 {
+        height: 100%;
+        background-color: red;
+    }
+    .logo-tecno-cel {
+        width: 400px;
+        height: 200px;
+        position: absolute;
+        top: 46px;
+        left: 27px;
+        display: block;
+    }
+    .tex-logo-cel {
+        color: white;
+        position: absolute;
+        font-size: 2em;
+    }
+    .red-cel {
+        top: 10px;
+        left: 39px;
+        opacity: 0;
+    }
+    .tecno-cel {
+        top: 10px;
+        left: 118px;
+        opacity: 0;
+    }
+    .colom-cel {
+        top: 128px;
+        left: 103px;
+        opacity: 0;
+    }
+    /*====================================*/
+    /* Nodos movil */
+    .TEX-NODOS {
+        display: none;
+    }
+    .titulos-regionales-movil {
+        width: 100%;
+    }
+    .titulos-ciudades-nodos-movil,
+    .contenido-nodo {
+        width: 95%;
+    }
+    .nodos-movil-mapa {
+        margin-top: 20px;
+        width: 400px;
+        height: 200px;
+    }
+    #cont-nodos {
+        display: none;
+    }
+    /*====================================*/
+    /*¿Que es tecnoparque?*/
+    #slideshow {
+        display: none;
+    }
+    #slideshow-cel {
+        display: block;
+    }
+    #slideshow-tab {
+        display: none;
+    }
+    #slideshow-cel,
+    .slider-cel,
+    .slider-cel li img {
+        width: 100%;
+        height: 680px;
+    }
+    .paginacion-cel {
+        width: 30%;
+        height: 30px;
+    }
+    /*====================================*/
+    /*Charla Informativa*/
+    #video {
+        height: 80vh;
+    }
+    #charla {
+        width: 80%;
+        height: 300px;
+        margin-top: 100px;
+    }
+    /*====================================*/
+    /* lineas */
+    #lineas {
+        display: unset;
+    }
+    #lineas-texto {
+        max-width: 400px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    #caja-iconos {
+        width: 100%;
+        height: unset;
+        position: inherit;
+        padding-bottom: 50px;
+    }
+    #iconos {
+        height: unset;
+        display: inherit;
+    }
+    .w-cajas-iconos {
+        width: 100%;
+        height: 50vh;
+        padding: 30px;
+    }
+    .w-descripcion-lineas {
+        width: 100%;
+        position: inherit;
+    }
+    .caja-descripcion-text {
+        width: 80%;
+    }
+    /*====================================*/
+    /* Nodos movil */
+    .titulos-regionales-movil {
+        width: 100%;
+    }
+    .titulos-ciudades-nodos-movil,
+    .contenido-nodo {
+        width: 95%;
+    }
+    .nodos-movil-mapa {
+        margin-top: 20px;
+        height: 300px;
+    }
+    /*-----noticias----*/
+    .boton-escritorio {
+        display: none;
+    }
+
+    .botones {
+        position: absolute;
+        width: 300px;
+        display: none;
+        padding-top: 5px;
+    }
+    .botones button {
+        width: 250px;
+        height: 100px;
+        margin-left: 10px;
+        padding: 2px;
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+    .not-cel {
+        display: block;
+        width: 50px;
+        position: absolute;
+        top: 100px;
+    }
+    .contenedor-principal {
+        width: 900%;
+        height: 600px;
+        padding-top: 20PX;
+    }
+    .conte-general img {
+        width: 400px;
+        height: 200px;
+        margin-top: 5px;
+        margin-left: 5%;
+    }
+
+    .cont-tituloNoticia {
+        min-height: 100px;
+    }
+    .cont-textNoticia {
+        min-height: 200px;
+    }
+    .cont-tituloNoticia h3 {
+        font-size: 1.2em;
+    }
+    .cont-textNoticia p {
+        font-size: 1em;
+    }
+}
