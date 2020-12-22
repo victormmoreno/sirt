@@ -1,5 +1,5 @@
 <header class="mn-header navbar-fixed">
-    <nav class="cyan darken-1 bs-n">
+    <nav class="grey darken-1">
       <div class="nav-wrapper row">
         <section class="material-design-hamburger navigation-toggle ">
           <a href="javascript:void(0)" data-activates="slide-out" class="button-collapse show-on-medium-and-down material-design-hamburger__icon">

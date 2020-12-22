@@ -3,6 +3,7 @@
 @php
   $disabled = $articulacion->articulacion_proyecto->actividad->aprobacion_dinamizador == 1 ? 'disabled' : '';
 @endphp
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_articulacion" disabled

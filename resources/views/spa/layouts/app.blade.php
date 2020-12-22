@@ -11,7 +11,7 @@
         <link href="{{config('app.url')}}" rel="canonical"/>
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
-
+        @stack('style')
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
@@ -46,6 +46,7 @@
         </div>
         <script  src="{{ asset('js/app.js') }}"></script>
         <script  src="{{ asset('js/libs.js') }}"></script>
+        @stack('script')
         @include('sweetalert::alert')
     </body>
 </html>

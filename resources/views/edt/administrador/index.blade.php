@@ -3,6 +3,7 @@
 @section('meta-content', 'Eventos de Divulgación Tecnológica')
 @section('meta-keywords', 'Eventos de Divulgación Tecnológica')
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
   @php
   $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
   @endphp

@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="card mailbox-content">

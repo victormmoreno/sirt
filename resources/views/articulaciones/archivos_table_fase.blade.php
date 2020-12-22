@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <table class="display responsive-table datatable-example dataTable {{$fase}}" style="width: 100%" id="archivosDeUnaArticulacion">
     <thead>
         <tr>

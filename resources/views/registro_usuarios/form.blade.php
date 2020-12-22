@@ -75,11 +75,11 @@
                             <i class="material-icons prefix">
                                 map
                             </i>
-                            <select name="txtdpto" id="txtdpto" style="width: 100%" tabindex="-1">
+                            <select name="txtdpto" style="width: 100%" tabindex="-1">
                                 <option value="">Seleccione departamento</option>
                                 @foreach($departamentos as $value)
-                                    @if(isset($user->ciudadexpedicion->departamento_id))
-                                        <option value="{{$value->id}}" {{old('txtdpto',$user->ciudadexpedicion->departamento_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
+                                    @if(isset($user->departamento->id))
+                                        <option value="{{$value->id}}" {{old('txtdpto',$user->departamento->id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                     @else
                                         <option value="{{$value->id}}" {{old('txtdpto') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                     @endif
@@ -92,7 +92,7 @@
                             <i class="material-icons prefix">
                                 domain
                             </i>
-                            <select name="txtciudad" id="txtciudad" style="width: 100%" tabindex="-1">
+                            <select name="txtciudad_residencia" style="width: 100%" tabindex="-1">
                                 <option value="">Seleccione ciudad</option>
                                 @foreach($ciudades as $value)
                                     @if(isset($user->ciudad->id))
@@ -138,6 +138,7 @@
                                 @enderror
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="input-field col s12 m6 l6">
                                 <i class="material-icons prefix">
@@ -271,3 +272,6 @@
 </div>
 
 @endsection
+
+
+

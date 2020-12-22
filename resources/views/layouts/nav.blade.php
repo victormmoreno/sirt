@@ -1,5 +1,5 @@
 <header class="mn-header navbar-fixed">
-  <nav class="cyan darken-1">
+  <nav class="grey darken-1">
     <div class="nav-wrapper row">
       <section class="material-design-hamburger navigation-toggle">
         <a class="button-collapse show-on-large material-design-hamburger__icon" data-activates="slide-out" href="#">
@@ -9,7 +9,7 @@
       </section>
       <div class="header-title col s2 m2 l2">
         <a href="{{route('home')}}">
-          <img class="chapter-title " height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px"/>
+          <img class="chapter-title " src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px">
         </a>
       </div>
       <ul class="right col s10 m10 l10 nav-right-menu">
@@ -36,8 +36,8 @@
             @endif
           </a>
         </li>
-        
-        
+
+
         <li>
           <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
             @guest
@@ -65,7 +65,7 @@
                 </b>
                 {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
                 <br>
-                
+
                 @if(auth()->user()->fechanacimiento != null || isset(auth()->user()->fechanacimiento))
                 <b>
                   Edad:

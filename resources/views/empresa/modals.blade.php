@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div id="detalleDeUnaEmpresaTecnoparque" class="modal">
   <div class="modal-content">
     <center><h4 id="modalDetalleDeUnaEmpresaTecnoparque_titulo" class="center-aling"></h4></center>
