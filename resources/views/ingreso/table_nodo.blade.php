@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <table id="ingresosDeUnNodo_table" class="display responsive-table datatable-example dataTable">
   <thead>
     <tr>

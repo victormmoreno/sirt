@@ -5,6 +5,7 @@
 @section('meta-keywords', 'Inicio Sesión')
 
 @section('content-auth')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="mn-content valign-wrapper" id="app">
     <main class="mn-inner container">
         <div class="valign">
@@ -82,12 +83,12 @@
                                         </button>
                                         <br><br>
                                         @if (Route::has('registro'))
-                                        ¿Aún no tienes cuenta? 
+                                        ¿Aún no tienes cuenta?
                                         <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('registro') }}">
                                             Registrate
                                         </a>
                                         <br>
-                                        @endif      
+                                        @endif
                                         @if (Route::has('password.request'))
                                             <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('password.request') }}">
                                                 {{ __('Forgot Your Password?') }}

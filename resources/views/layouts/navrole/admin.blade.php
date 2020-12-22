@@ -123,6 +123,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('noticias')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('noticias')}}" href="{{url('noticias')}}" title="Noticias">
+        <i class="material-icons {{setActiveRouteActiveIcon('noticias')}}">local_library</i>Noticias
+    </a>
+</li>
 {{-- <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('visitante'), setActiveRouteActivePage('ingreso') }} {{ setActiveRoutePadding('visitante'), setActiveRoutePadding('ingreso') }}">
     <i class="material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">directions_walk</i>Ingresos

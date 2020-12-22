@@ -3,6 +3,7 @@
 @section('meta-tittle', 'Inicio')
 @section('meta-content', 'Inicio')
 @section('content-spa')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 
 <main class="mn-inner no-p">
 		    <div class="cyan darken-1">

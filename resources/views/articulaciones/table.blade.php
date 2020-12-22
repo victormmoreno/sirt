@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 @if (Session::get('login_role') == App\User::IsGestor())
   <table id="articulacionesGestor_table" class="display responsive-table datatable-example dataTable">
     <thead>

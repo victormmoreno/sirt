@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
 @php \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = '' @endphp

@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 
 <div class="col s12 m8 l8 offset-l2 m2">
     <div class="divider mailbox-divider"></div>

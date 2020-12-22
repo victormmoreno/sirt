@@ -8,11 +8,11 @@
         </title>
         <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description"/>
         <meta content="{{ csrf_token()}}" name="csrf-token"/>
-     
+
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
-
+        @stack('style')
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
@@ -29,7 +29,7 @@
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
-        
+
 
     </head>
     <body class="white">
@@ -65,13 +65,14 @@
             </div>
 
         </div>
-        @include('sweetalert::alert')
+
         <script src="{{ asset('js/app.js') }}">
         </script>
         <script src="{{ asset('js/libs.js') }}">
         </script>
         <script src="{{ asset('js/web.js') }}">
         </script>
-        @stack('script')    
+        @include('sweetalert::alert')
+        @stack('script')
     </body>
 </html>

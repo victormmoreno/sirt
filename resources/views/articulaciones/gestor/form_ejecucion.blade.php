@@ -1,5 +1,6 @@
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="row">
     <h5 class="center">Entregables de la fase de ejecución</h5>
 </div>

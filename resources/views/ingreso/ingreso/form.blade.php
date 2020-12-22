@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="row">
   <div class="input-field col s11 m11 l11">
     <input name="txtdocumento"  id="txtdocumento" type="text" value="{{ isset($ingreso) ? $visitanteIng->documento : '' }}">

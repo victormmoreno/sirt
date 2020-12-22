@@ -9,6 +9,7 @@
         <link href="{{config('app.url')}}" rel="canonical"/>
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
         
 
        <meta name="title" content="@yield('meta-title',   config('app.name') )" />
