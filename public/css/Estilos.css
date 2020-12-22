@@ -1,0 +1,788 @@
+/*====================================*/
+
+
+/* Universales*/
+
+* {
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 auto;
+}
+
+
+/*====================================*/
+
+
+/* Fuentes*/
+
+@font-face {
+    font-family: "JosefinSans-Bold";
+    src: url(../Fuentes/JosefinSans-Bold.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-BoldItalic";
+    src: url(../Fuentes/JosefinSans-BoldItalic.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-Italic";
+    src: url(../Fuentes/JosefinSans-Italic.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-Light";
+    src: url(../Fuentes/JosefinSans-Light.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-LightItalic";
+    src: url(../Fuentes/JosefinSans-LightItalic.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-Regular";
+    src: url(../Fuentes/JosefinSans-Regular.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-SemiBold";
+    src: url(../Fuentes/JosefinSans-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-SemiBoldItalic";
+    src: url(../Fuentes/JosefinSans-SemiBoldItalic.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-Thin";
+    src: url(../Fuentes/JosefinSans-Thin.ttf);
+}
+
+@font-face {
+    font-family: "JosefinSans-ThinItalic";
+    src: url(../Fuentes/JosefinSans-SemiBoldItalic.ttf);
+}
+
+
+/*====================================*/
+
+
+/*Generalidades*/
+
+a,
+button {
+    cursor: pointer;
+}
+
+h1 {
+    font-family: "JosefinSans-Bold";
+}
+
+
+/*=============Home=======================*/
+
+#home {
+    width: 100%;
+    height: 100vh;
+}
+
+.conte-home-escritorio {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.bacg-home-celular {
+    display: none;
+}
+
+.bacg-home {
+    width: 20%;
+    height: 100vh;
+}
+
+.nodo1 {
+    background: url(../Img/edificio-bogota.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: none;
+}
+
+.nodo2 {
+    background: url(../Img/edificio-medellín.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: none;
+}
+
+.nodo3 {
+    background: url(../Img/edificio-socorro.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: none;
+}
+
+.nodo4 {
+    background: url(../Img/edificio-pereira.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: none;
+}
+
+.nodo5 {
+    background: url(../Img/edificio-cucuta.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: none;
+}
+
+.logo-tecno {
+    width: 600px;
+    height: 300px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+}
+
+.tex-logo {
+    color: white;
+    position: absolute;
+    font-size: 3.5em;
+}
+
+.red-textl {
+    top: 0px;
+    left: 18px;
+    opacity: 0;
+}
+
+.tecno {
+    top: 0px;
+    left: 160px;
+    opacity: 0;
+}
+
+.colom {
+    top: 230px;
+    left: 143px;
+    opacity: 0;
+}
+
+.logo-tecno-cel {
+    display: none;
+}
+
+
+/*¿Que es tecnoparque?*/
+
+#slideshow {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: block;
+}
+
+#slideshow-cel {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: none;
+}
+
+#slideshow-tab {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: none;
+}
+
+.slider-escritorio {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+
+.slider-escritorio li,
+ul {
+    width: 100%;
+}
+
+.slider-escritorio li img {
+    width: 100%;
+    height: 100vh;
+}
+
+.paginacion {
+    position: absolute;
+    width: 7%;
+    height: 30px;
+    top: 95%;
+    right: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.paginacion-cel {
+    position: absolute;
+    width: 7%;
+    height: 30px;
+    top: 95%;
+    right: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.paginacion-tab {
+    position: absolute;
+    width: 7%;
+    height: 30px;
+    top: 95%;
+    right: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.paginacion li {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.paginacion-cel li {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.paginacion-tab li {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+
+/*====================================*/
+
+
+/*Charla Informativa*/
+
+#video {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+#fondo-titulo-video {
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    color: #FF6B00;
+    padding: 25px;
+}
+
+#titulo-seccion-video {
+    display: none;
+    margin-top: 1%;
+}
+
+#charla {
+    width: 80%;
+    max-width: 800px;
+    height: 400px;
+    background: red;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+}
+
+
+/*====================================*/
+
+
+/* lineas */
+
+#lineas {
+    width: 100%;
+    height: 100vh;
+    background: white;
+    display: flex;
+}
+
+#caja-texto {
+    height: 100vh;
+    flex-basis: 50%;
+}
+
+#caja-texto-2 {
+    height: 0%;
+    background: #FF6B00;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+#lineas-texto {
+    max-width: 500px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+#lineas-texto hr {
+    width: 0%;
+    height: 3px;
+    margin-left: 0px;
+    background: white;
+}
+
+#caja-iconos {
+    width: 50%;
+    position: relative;
+}
+
+#iconos {
+    width: 50%;
+    height: 100%;
+    opacity: 0;
+    margin-left: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.w-cajas-iconos {
+    width: 100%;
+    height: 25vh;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#caja-icono1 {
+    background-color: #FF6B00;
+    overflow: auto;
+    overflow: hidden;
+}
+
+#caja-icono2 {
+    overflow: auto;
+    overflow: hidden;
+}
+
+#caja-icono3 {
+    background-color: #FF6B00;
+    overflow: auto;
+    overflow: hidden;
+}
+
+#icono1 {
+    background: url(../Img/Biotecnologia.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+#icono2 {
+    background: url(../Img/Electronica.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+#icono3 {
+    background: url(../Img/Tecnologias-Virtuales.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+#icono4 {
+    background: url(../Img/Ingenieria.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+#caja-icono4 {
+    overflow: auto;
+    overflow: hidden;
+}
+
+.iconos-blancos {
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+.iconos-naranjas {
+    width: 100%;
+    height: 100%;
+    background: #FF6B00;
+}
+
+#icono1,
+#icono2 {
+    margin-left: -150%;
+}
+
+#icono3,
+#icono4 {
+    margin-right: -150%;
+}
+
+.w-descripcion-lineas {
+    width: 50%;
+    background-color: white;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0px 0px 15px gray;
+}
+
+.titulos-descripcion-lineas {
+    color: #FF6B00;
+}
+
+.w-descripcion-lineas hr {
+    width: 60%;
+    height: 5px;
+    margin-left: 0px;
+    background-color: #FF6B00;
+}
+
+.descripcion-lineas-p {
+    color: gray;
+}
+
+#descripcion-linea1,
+#descripcion-linea2,
+#descripcion-linea3,
+#descripcion-linea4 {
+    display: none;
+}
+
+
+/*====================================*/
+
+
+/*-----noticias-----*/
+
+.not-cel {
+    display: none;
+}
+
+#noticia {
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+    position: relative;
+}
+
+.presentNoti {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.boton-escritorio,
+.botones {
+    width: 30%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #565656;
+    padding-top: 100px;
+}
+
+.botones {
+    display: none;
+}
+
+.botones button,
+.boton-escritorio button {
+    width: 350px;
+    height: 75px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 3px solid white;
+    outline: none;
+    color: white;
+    margin-left: 25px;
+    padding: 5px;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.contenedor-principal {
+    width: 70%;
+    height: 100vh;
+    padding-top: 50PX;
+}
+
+.conte-general img {
+    width: 600px;
+    height: 300px;
+    margin-top: 5px;
+    margin-left: 5%;
+}
+
+.contenidoOculto{
+    display: none;
+}
+
+.cont-tituloNoticia {
+    width: 90%;
+    height: 75px;
+}
+
+.conte-general h3 {
+    color: #FF6B00;
+}
+
+.cont-textNoticia {
+    margin-top: 10px;
+    width: 90%;
+    height: 150px;
+}
+
+/*-----Nodos-----*/
+
+#Nodos {
+    width: 100%;
+    height: 100vh;
+    padding-top: 0px;
+    position: relative;
+}
+
+#cont-nodos {
+    width: 1200px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: row;
+}
+
+.caja-mapa {
+    width: 500px;
+    height: 500px;
+}
+
+.mapa {
+    width: 550px;
+    height: 550px;
+    background: url(../Img/mapa-colombia-tecno.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: relative;
+}
+
+.circulo-nodos {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: solid 2px white;
+    position: absolute;
+}
+
+.cirnodo1 {
+    top: 194px;
+    left: 120px;
+    background: white;
+}
+
+.cirnodo2 {
+    top: 242px;
+    left: 166px;
+    background: #ff6c00;
+}
+
+.cirnodo3 {
+    top: 94px;
+    left: 189px;
+    background: #ff6c00;
+}
+
+.cirnodo4 {
+    top: 323px;
+    left: 77px;
+    background: #ff6c00;
+}
+
+.cirnodo5 {
+    top: 240px;
+    left: 108px;
+    background: #ff6c00;
+}
+
+.cirnodo6 {
+    top: 234px;
+    left: 129px;
+    background: #ff6c00;
+}
+
+.cirnodo7 {
+    top: 275px;
+    left: 129px;
+    background: #ff6c00;
+}
+
+.cirnodo8 {
+    top: 287px;
+    left: 88px;
+    background: #ff6c00;
+}
+
+.cirnodo9 {
+    top: 327px;
+    left: 118px;
+    background: #ff6c00;
+}
+
+.cirnodo10 {
+    top: 156px;
+    left: 202px;
+    background: #ff6c00;
+}
+
+.cirnodo11 {
+    top: 191px;
+    left: 187px;
+    background: #ff6c00;
+}
+
+.cirnodo12 {
+    top: 78px;
+    left: 140px;
+    background: #ff6c00;
+}
+
+.caja-InfoNodos {
+    width: 500px;
+    height: 550px;
+    padding-top: 30px;
+}
+
+.Info-nodos {
+    width: 500px;
+    min-height: 550px;
+    border: #ff6c00 solid 4px;
+    border-radius: 50px;
+    padding: 20px;
+}
+
+.dire-telf {
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+}
+
+.direc {
+    width: 300px;
+    height: 80px;
+}
+
+.telf {
+    width: 200px;
+    height: 80px;
+}
+
+.caja-lineas {
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+}
+
+.lineas-1,
+.lineas-2 {
+    width: 250px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tex-lienas {
+    width: 230px;
+    height: 50px;
+    margin-left: 0%;
+}
+
+.contenedor-circulos {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.opcionNodos {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    border: solid 2px #ff6c00;
+}
+
+.antioquia1,
+.huila1,
+.nor-santa1 {
+    background: #ff6c00;
+}
+
+.antioquia2,
+.huila2,
+.huila3,
+.nor-santa2 {
+    background: white;
+}
+
+.bogota,
+.Cazuca,
+.rionegro,
+.valledupar,
+.Popayan,
+.pereira,
+.manizales,
+.lagranja,
+.cali,
+.angostura,
+.neiva,
+.pitalito,
+.Cucuta,
+.Ocaña,
+.Socorro,
+.Bucaramanga,
+.atlanti {
+    display: none;
+}
+
+.TEX-NODOS {
+    position: absolute;
+    bottom: 100px;
+    left: -30px;
+    opacity: 0;
+}
+
+
+/* Nodos movil */
+
+#nodos-movil {
+    display: none;
+}
