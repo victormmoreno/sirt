@@ -1191,7 +1191,7 @@ class ProyectoController extends Controller
             Alert::warning('El proyecto ya se encuentra en fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            if (($proyecto->fase->nombre == 'Planeación' && $fase == 'Inicio')) {
+            if ($proyecto->fase->nombre == 'Suspendido') {
                 $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
                 if ($update) {
                     Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
@@ -1201,7 +1201,7 @@ class ProyectoController extends Controller
                     return back();
                 }
             } else {
-                if (($proyecto->fase->nombre == 'Ejecución' && $fase == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase == 'Inicio')) {
+                if (($proyecto->fase->nombre == 'Planeación' && $fase == 'Inicio')) {
                     $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
                     if ($update) {
                         Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
@@ -1211,7 +1211,7 @@ class ProyectoController extends Controller
                         return back();
                     }
                 } else {
-                    if (($proyecto->fase->nombre == 'Cierre' && $fase == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase == 'Inicio')) {
+                    if (($proyecto->fase->nombre == 'Ejecución' && $fase == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase == 'Inicio')) {
                         $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
                         if ($update) {
                             Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
@@ -1221,8 +1221,19 @@ class ProyectoController extends Controller
                             return back();
                         }
                     } else {
-                        Alert::warning('El proyecto no se puede reversar a la fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
-                        return back();
+                        if (($proyecto->fase->nombre == 'Cierre' && $fase == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase == 'Inicio')) {
+                            $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                            if ($update) {
+                                Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                                return redirect('proyecto');
+                            } else {
+                                Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                                return back();
+                            }
+                        } else {
+                            Alert::warning('El proyecto no se puede reversar a la fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                            return back();
+                        }
                     }
                 }
             }

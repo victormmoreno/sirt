@@ -176,23 +176,16 @@ class EmpresaRepository
     ->get();
   }
 
-  // Consulta los detalles de una empresa
-  public function consultarDetallesDeUnaEmpresa($id)
+  /**
+   * Consulta los detalles de una empresa
+   * @param $param Valor del parámetro por el que se va a filtrar
+   * @param $field Nombre del campo por el que se va a filtrar
+   * @return Builder
+   * @author dum
+   */
+  public function consultarDetallesDeUnaEmpresa($param, $field)
   {
-    return Empresa::select('nit',
-    'direccion',
-    'entidades.nombre AS nombre_empresa',
-    'empresas.id',
-    'empresas.entidad_id',
-    'email_entidad')
-    ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
-    ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
-    ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
-    ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
-    ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-    ->where('empresas.id', $id)
-    ->get()
-    ->last();
+    return Empresa::where($field, $param)->with('sector', 'tipoempresa', 'tamanhoempresa', 'entidad', 'entidad.ciudad');
   }
 
 }

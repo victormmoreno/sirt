@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\{Actividad, AreaConocimiento, Fase, ArticulacionProyecto, GrupoInvestigacion, Proyecto, Sublinea, Idea, Empresa};
+use App\Models\{Actividad, AreaConocimiento, Fase, ArticulacionProyecto, GrupoInvestigacion, Proyecto, Sublinea, Idea, Empresa, Entidad};
 use App\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\{DB};
@@ -34,8 +34,21 @@ class ProyectosImport implements ToCollection, WithHeadingRow
                 $row['documento_gestor'] = str_replace(' ', '', $row['documento_gestor']);
                 $row['documento_gestor'] = ltrim(rtrim($row['documento_gestor']));
                 $row['talento_duenho'] = str_replace(' ', '', $row['talento_duenho']);
+                $row['talentos_ejecutores'] = str_replace(' ', '', $row['talentos_ejecutores']);
                 $row['empresa_duenha'] = str_replace(' ', '', $row['empresa_duenha']);
                 $row['grupo_investigacion_duenho'] = str_replace(' ', '', $row['grupo_investigacion_duenho']);
+                $row['trl_esperado'] = ltrim(rtrim($row['trl_esperado']));
+                $row['trl_obtenido'] = ltrim(rtrim($row['trl_obtenido']));
+                // Mayúsculas
+                $row['cumplio_primer_objetivo'] = strtoupper($row['cumplio_primer_objetivo']);
+                $row['cumplio_segundo_objetivo'] = strtoupper($row['cumplio_segundo_objetivo']);
+                $row['cumplio_tercer_objetivo'] = strtoupper($row['cumplio_tercer_objetivo']);
+                $row['cumplio_cuarto_objetivo'] = strtoupper($row['cumplio_cuarto_objetivo']);
+                $row['area_emprendiemiento_sena'] = strtoupper($row['area_emprendiemiento_sena']);
+                $row['economia_naranja'] = strtoupper($row['economia_naranja']);
+                $row['proyecto_dirigido_discapacitados'] = strtoupper($row['proyecto_dirigido_discapacitados']);
+                $row['articulado_cti'] = strtoupper($row['articulado_cti']);
+                $row['fabrica_productividad'] = strtoupper($row['fabrica_productividad']);
 
                 // Validar número de documento del gestor
                 $gestor = User::where('documento', $row['documento_gestor'])->withTrashed()->first();
@@ -48,7 +61,24 @@ class ProyectosImport implements ToCollection, WithHeadingRow
                 if (!$validacion) {
                     return $validacion;
                 }
+                $validacion = $this->validaciones->validarCelda($row['fecha_inicio'], $key, 'Fecha de inicio', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                $validacion = $this->validaciones->validarCelda($row['fecha_cierre'], $key, 'Fecha de cierre', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
                 $validacion = $this->validaciones->validarTamanhoCelda($row['nombre_proyecto'], $key, 'Nombre del proyecto', 500, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+
+                $validacion = $this->validaciones->validarTamanhoCelda($row['actor_cti'], $key, 'Actor CT+i', 50, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                $validacion = $this->validaciones->validarTamanhoCelda($row['tipo_discapacitado'], $key, 'Tipo de discapacidad', 100, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
@@ -144,19 +174,34 @@ class ProyectosImport implements ToCollection, WithHeadingRow
                 }
 
                 $talentos = explode(',', $row['talentos_ejecutores']);
+                // dd($talentos);
                 
                 $actividad = Actividad::where('codigo_actividad', $row['codigo_proyecto'])->first();
+                $idea_id = $this->getIdeaProyecto($row['codigo_idea'], $key);
+                $entidad_id = Entidad::where('nombre', 'No Aplica')->get()->last()->id;
                 
                 if ($actividad == null) {
                     // Registrar nuevo proyecto
-                    $entidad_id = Entidad::where('nombre', 'No Aplica')->last()->id;
-                    $idea_id = $this->getIdeaProyecto($row['codigo_idea'], $key);
                     $codigo_actividad = $this->generarCodigoDeProyecto($row['codigo_proyecto'], $sublinea, $gestor, $row['fecha_inicio']);
-                    $this->registrarNuevoProyecto($codigo_actividad, $row, $gestor, $entidad_id, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                    $actividad = $this->registrarNuevaActividad($codigo_actividad, $row, $gestor);
+                    $articulacion_proyecto = $this->registrarArticulacionProyecto($actividad, $entidad_id);
+                    $this->registrarNuevoProyecto($actividad, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
                 } else {
                     // Actualizar proyecto existente
-                    $idea_id = $this->getIdeaProyecto($row['codigo_idea'], $key);
-                    $this->actualizarProyectoExistente($actividad, $row, $gestor, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                    if ($this->nodo == $actividad->nodo_id) {
+                        $this->actualizarActividadExistente($actividad, $gestor, $row);
+                        if ($actividad->articulacion_proyecto == null) {
+                            $this->registrarArticulacionProyecto($actividad, $entidad_id);
+                        }
+                        if ($actividad->articulacion_proyecto->proyecto == null) {
+                            $this->registrarNuevoProyecto($actividad, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                        } else {
+                            $this->actualizarProyectoExistente($actividad, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                        }
+                    } else {
+                        session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El código de proyecto '.$row['codigo_proyecto'].' en el registro de la fila #' . ($key+2) . ' ya se encuentra registrado en un proyecto del nodo '.$actividad->nodo->entidad->nombre.' 
+                        (Se recomienda cambiar el código de los proyecto, ya que la base de datos no permite códigos duplicados).');
+                    }
                 }
             }
             DB::commit();
@@ -176,10 +221,12 @@ class ProyectosImport implements ToCollection, WithHeadingRow
             for ($i=0; $i < count($talentos_ejecutores) ; $i++) { 
                 $talento_temporal = User::where('documento', $talentos_ejecutores[$i])->withTrashed()->first();
                 if ($talento_temporal != null) {
-                    if ($talentos_ejecutores[$i] == $talento_lider) {
-                        $talentos[$i] = array('talento_lider' => 1, 'talento_id' => $talento_temporal->talento->id);
-                    } else {
-                        $talentos[$i] = array('talento_lider' => 0, 'talento_id' => $talento_temporal->talento->id);
+                    if ($talento_temporal->talento != null) {
+                        if ($talentos_ejecutores[$i] == $talento_lider) {
+                            $talentos[$i] = array('talento_lider' => 1, 'talento_id' => $talento_temporal->talento->id);
+                        } else {
+                            $talentos[$i] = array('talento_lider' => 0, 'talento_id' => $talento_temporal->talento->id);
+                        }
                     }
                 }
             }
@@ -267,15 +314,6 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         return $trl_esperado;
     }
 
-    // private function validarTrl($trl, $i, $tipo)
-    // {
-    //     if ($trl != 'TRL 6' && $trl != 'TRL 7' && $trl != 'TRL 8' && $trl != 'TRL 7 - TRL 8') {
-    //         session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El trl '.$tipo.' ' . $trl . ' en el registro de la fila #' . ($i+2) . ' no es válido (TRL 6 o TRL 7 - TRL 8).');
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
     private function getIdeaProyecto($codigo_idea, $key)
     {
         $idea_id = null;
@@ -283,11 +321,11 @@ class ProyectosImport implements ToCollection, WithHeadingRow
             $idea_id = Idea::where('codigo_idea', '#0000')->first()->id;
         } else {
             $idea = Idea::where('codigo_idea', $codigo_idea)->first();
-            $validacion = $this->validaciones->validarQuery($idea, $codigo_idea, $key, 'Código de la idea', $this->hoja);
-            if (!$validacion) {
-                return $validacion;
+            if ($idea == null) {
+                $idea_id = Idea::where('codigo_idea', '#0000')->first()->id;
+            } else {
+                $idea_id = $idea->id;
             }
-            $idea_id = $idea->id;
         }
         return $idea_id;
     }
@@ -308,12 +346,9 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         }
         return $codigo_proyecto;
     }
-
-    private function registrarNuevoProyecto($codigo_actividad, $row, $user_gestor, $entidad_id, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
+    private function registrarNuevaActividad($codigo_actividad, $row, $user_gestor)
     {
-        $trl_esperado = $this->getTrlEsperado($row['trl_esperado']);
-        $trl_obtenido = $this->getTrlObtenido($row['trl_obtenido']);
-        $actividad = Actividad::create([
+        return Actividad::create([
             'gestor_id' => $user_gestor->gestor->id,
             'nodo_id' => $this->nodo,
             'codigo_actividad' => $codigo_actividad,
@@ -323,59 +358,67 @@ class ProyectosImport implements ToCollection, WithHeadingRow
             'conclusiones' => $row['conclusiones'],
             'objetivo_general' => $row['objetivo_general']
           ]);
-      
-          $articulacion_proyecto = ArticulacionProyecto::create([
+    }
+
+    private function registrarArticulacionProyecto($actividad, $entidad_id)
+    {
+        return ArticulacionProyecto::create([
             'entidad_id' => $entidad_id,
             'actividad_id' => $actividad->id
           ]);
-      
-          $proyecto = Proyecto::create([
-            'articulacion_proyecto_id' => $articulacion_proyecto->id,
-            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
-            'idea_id' => $idea_id,
-            'areaconocimiento_id' => $area_conocimiento_id,
-            'otro_areaconocimiento' => $row['otra_area_conocimento'],
-            'sublinea_id' => $sublinea_id,
-            'trl_esperado' => $trl_esperado,
-            'reci_ar_emp' => $row['area_emprendiemiento_sena'] == 'SI' ? 1 : 0,
-            'economia_naranja' => $row['economia_naranja'] == 'SI' ? 1 : 0,
-            'tipo_economianaranja' => $row['economia_naranja'] == 'SI' ? $row['tipo_economia_naranja'] : null,
-            'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
-            'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
-            'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
-            'nom_act_cti' => $row['actor_cti'] == 'SI' ? $row[''] : null,
-            'alcance_proyecto' => $row['alcance_proyecto'],
-            'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
-            'trl_obtenido' => $trl_obtenido,
-            'trl_prototipo' => $row['prototipo_producto'],
-            'trl_modelo' => $row['modelo_negocio'],
-            'trl_pruebas' => $row['pruebas_documentadas'],
-            'trl_normatividad' => $row['evidencias_normatividad']
-          ]);
-      
+    }
+
+    private function registrarNuevoProyecto($actividad, $row, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
+    {
+        $trl_esperado = $this->getTrlEsperado($row['trl_esperado']);
+        $trl_obtenido = $this->getTrlObtenido($row['trl_obtenido']);
+
+        $proyecto = Proyecto::create([
+          'articulacion_proyecto_id' => $actividad->articulacion_proyecto->id,
+          'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+          'idea_id' => $idea_id,
+          'areaconocimiento_id' => $area_conocimiento_id,
+          'otro_areaconocimiento' => $row['otra_area_conocimento'],
+          'sublinea_id' => $sublinea_id,
+          'trl_esperado' => $trl_esperado,
+          'reci_ar_emp' => $row['area_emprendiemiento_sena'] == 'SI' ? 1 : 0,
+          'economia_naranja' => $row['economia_naranja'] == 'SI' ? 1 : 0,
+          'tipo_economianaranja' => $row['economia_naranja'] == 'SI' ? $row['tipo_economia_naranja'] : null,
+          'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
+          'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
+          'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
+          'nom_act_cti' => $row['articulado_cti'] == 'SI' ? $row['actor_cti'] : null,
+          'alcance_proyecto' => $row['alcance_proyecto'],
+          'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
+          'trl_obtenido' => $trl_obtenido,
+          'trl_prototipo' => $row['prototipo_producto'],
+          'trl_modelo' => $row['modelo_negocio'],
+          'trl_pruebas' => $row['pruebas_documentadas'],
+          'trl_normatividad' => $row['evidencias_normatividad']
+        ]);
       
           $syncData = array();
           $syncData = $this->obtenerTalentosProyecto($talentos, $row['talento_interlocutor']);
           
-          $articulacion_proyecto->talentos()->sync($syncData, false);
+          $actividad->articulacion_proyecto->talentos()->sync($syncData, false);
           
           $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['primer_objetivo'],
+            'objetivo' => $row['primer_objetivo'] == null ? 'No registra' : $row['primer_objetivo'],
             'cumplido' => $row['cumplio_primer_objetivo'] == 'SI' ? 1 : 0
           ]);
     
           $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['segundo_objetivo'],
+            'objetivo' => $row['segundo_objetivo'] == null ? 'No registra' : $row['segundo_objetivo'],
             'cumplido' => $row['cumplio_segundo_objetivo'] == 'SI' ? 1 : 0
           ]);
     
           $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['tercer_objetivo'],
+            'objetivo' => $row['tercer_objetivo'] == null ? 'No registra' : $row['tercer_objetivo'],
             'cumplido' => $row['cumplio_tercer_objetivo'] == 'SI' ? 1 : 0
           ]);
     
           $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['cuarto_objetivo'],
+            'objetivo' => $row['cuarto_objetivo'] == null ? 'No registra' : $row['cuarto_objetivo'],
             'cumplido' => $row['cumplio_cuarto_objetivo'] == 'SI' ? 1 : 0
           ]);
 
@@ -392,12 +435,9 @@ class ProyectosImport implements ToCollection, WithHeadingRow
           $proyecto->gruposinvestigacion()->attach($grupos_duenhos);
     }
 
-    private function actualizarProyectoExistente($actividad, $row, $user_gestor, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
+    private function actualizarActividadExistente($actividad, $user_gestor, $row)
     {
-        $trl_esperado = $this->getTrlEsperado($row['trl_esperado']);
-        $trl_obtenido = $this->getTrlObtenido($row['trl_obtenido']);
-        
-        $actividad->update([
+        return $actividad->update([
             'gestor_id' => $user_gestor->gestor->id,
             // 'nodo_id' => $this->nodo,
             'nombre' => $row['nombre_proyecto'],
@@ -406,6 +446,14 @@ class ProyectosImport implements ToCollection, WithHeadingRow
             'conclusiones' => $row['conclusiones'],
             'objetivo_general' => $row['objetivo_general']
         ]);
+    }
+
+    private function actualizarProyectoExistente($actividad, $row, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
+    {
+        $trl_esperado = $this->getTrlEsperado($row['trl_esperado']);
+        $trl_obtenido = $this->getTrlObtenido($row['trl_obtenido']);
+        
+
             
         $actividad->articulacion_proyecto->proyecto->update([
               'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
@@ -420,7 +468,7 @@ class ProyectosImport implements ToCollection, WithHeadingRow
               'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
               'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
               'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
-              'nom_act_cti' => $row['actor_cti'] == 'SI' ? $row[''] : null,
+              'nom_act_cti' => $row['actor_cti'] == 'SI' ? $row['actor_cti'] : null,
               'alcance_proyecto' => $row['alcance_proyecto'],
               'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
               'trl_obtenido' => $trl_obtenido,
@@ -439,12 +487,12 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         // Primero objetivo especifico
         if ($actividad->objetivos_especificos->get(0) == null) {
             $actividad->objetivos_especificos()->create([
-                'objetivo' => $row['primer_objetivo'],
+                'objetivo' => $row['primer_objetivo'] == null ? 'No registra' : $row['primer_objetivo'],
                 'cumplido' => $row['cumplio_primer_objetivo'] == 'SI' ? 1 : 0
             ]);
         } else {
             $actividad->objetivos_especificos->get(0)->update([
-                'objetivo' => $row['primer_objetivo'],
+                'objetivo' => $row['primer_objetivo'] == null ? 'No registra' : $row['primer_objetivo'],
                 'cumplido' => $row['cumplio_primer_objetivo'] == 'SI' ? 1 : 0
             ]);
         }
@@ -452,12 +500,12 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         // Segundo objetivo específico
         if ($actividad->objetivos_especificos->get(1) == null) {
             $actividad->objetivos_especificos()->create([
-                'objetivo' => $row['segundo_objetivo'],
+                'objetivo' => $row['segundo_objetivo'] == null ? 'No registra' : $row['segundo_objetivo'],
                 'cumplido' => $row['cumplio_segundo_objetivo'] == 'SI' ? 1 : 0
                 ]);
         } else {
             $actividad->objetivos_especificos->get(1)->update([
-                'objetivo' => $row['segundo_objetivo'],
+                'objetivo' => $row['segundo_objetivo'] == null ? 'No registra' : $row['segundo_objetivo'],
                 'cumplido' => $row['cumplio_segundo_objetivo'] == 'SI' ? 1 : 0
             ]);
         }
@@ -465,12 +513,12 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         // Tercer objetivo específico
         if ($actividad->objetivos_especificos->get(2) == null) {
             $actividad->objetivos_especificos()->create([
-                'objetivo' => $row['tercer_objetivo'],
+                'objetivo' => $row['tercer_objetivo'] == null ? 'No registra' : $row['tercer_objetivo'],
                 'cumplido' => $row['cumplio_tercer_objetivo'] == 'SI' ? 1 : 0
                 ]);
         } else {
             $actividad->objetivos_especificos->get(2)->update([
-                'objetivo' => $row['tercer_objetivo'],
+                'objetivo' => $row['tercer_objetivo'] == null ? 'No registra' : $row['tercer_objetivo'],
                 'cumplido' => $row['cumplio_tercer_objetivo'] == 'SI' ? 1 : 0
             ]);
         }
@@ -478,12 +526,12 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         // Cuarto objetivo específico
         if ($actividad->objetivos_especificos->get(3) == null) {
             $actividad->objetivos_especificos()->create([
-                'objetivo' => $row['cuarto_objetivo'],
+                'objetivo' => $row['cuarto_objetivo'] == null ? 'No registra' : $row['cuarto_objetivo'],
                 'cumplido' => $row['cumplio_cuarto_objetivo'] == 'SI' ? 1 : 0
                 ]);
         } else {
             $actividad->objetivos_especificos->get(3)->update([
-                'objetivo' => $row['cuarto_objetivo'],
+                'objetivo' => $row['cuarto_objetivo'] == null ? 'No registra' : $row['cuarto_objetivo'],
                 'cumplido' => $row['cumplio_cuarto_objetivo'] == 'SI' ? 1 : 0
             ]);
         }

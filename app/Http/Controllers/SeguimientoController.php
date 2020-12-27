@@ -110,7 +110,7 @@ class SeguimientoController extends Controller
     $datos['Cerrados'] = $cerrados;
     $datos['Obtenido6'] = $trlsObtenidos['trl6'];
     $datos['Obtenido7_8'] = $trlsObtenidos['trl7_8'];
-    $datos['Obtenido8'] = $trlsEsperados['trl8'];
+    $datos['Obtenido8'] = $trlsObtenidos['trl8'];
     $datos['ArticulacionesInscritas'] = $articulacionesInscritas;
     $datos['ArticulacionesCerradas'] = $articulacionesCerradas;
     return $datos;
@@ -164,7 +164,7 @@ class SeguimientoController extends Controller
     $trlEsperados = $this->getProyectoRepository()->consultarTrl('trl_esperado', 'fecha_inicio', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
     $inscritos = $this->getProyectoRepository()->consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
     $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
-    $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
+    $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('fases.nombre', 'Cierre')->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
     $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
     $articulacionesInscritas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_inicio', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
@@ -281,7 +281,7 @@ class SeguimientoController extends Controller
     $trlEsperados = $this->getProyectoRepository()->consultarTrl('trl_esperado', 'fecha_inicio', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->get();
     $inscritos = $this->getProyectoRepository()->consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
     $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
-    $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->get();
+    $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('fases.nombre', 'Cierre')->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
     $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
     $articulacionesInscritas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_inicio', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;

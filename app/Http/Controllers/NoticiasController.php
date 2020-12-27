@@ -49,7 +49,8 @@ class NoticiasController extends Controller
             'Descripcion' => 'required|string|max:300'
         ];
 
-        $Mensaje=["required"=>'El campo :attribute es requerido'];
+        $Mensaje=["required"=>'El campo :attribute es requerido',
+        "dimensions" => "El campo debe tener las siguientes dimensiones :width x :height"];
         $this->validate($request,$campos,$Mensaje);
 
         //Se agregan todos los datos, excepto el token que funciona como seguridad de datos en Laravel

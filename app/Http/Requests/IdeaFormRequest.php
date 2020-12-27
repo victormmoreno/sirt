@@ -25,100 +25,70 @@ class IdeaFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtnodo'            => 'required',
-            'txtnombres'         => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtapellidos'       => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtcorreo'          => 'required|email|min:1|max:100',
-            'txttelefono'        => 'required|digits_between:6,11|numeric',
-            'txtnombre_proyecto' => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_!@#$&()-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_!@#$&()-]*)*)+$/',
-            'pregunta1'          => 'required',
-            'pregunta2'          => 'required',
-            'pregunta3'          => 'required',
-            'txtdescripcion'     => 'required|min:1|max:2000',
-            'txtobjetivo'        => 'required|min:1|max:2000',
-            'txtalcance'         => 'required|min:1|max:2000',
-            'txtconvocatoria'   => 'required|in:0,1',
-            'txtnombreconvocatoria'   => Rule::requiredIf(request()->txtconvocatoria == 1) . '|min:1|max:100|nullable',
-            'txtavalempresa'   => 'required|in:0,1',
-            'txtempresa'   => Rule::requiredIf(request()->txtavalempresa == 1) . '|min:1|max:100|nullable',
-            'txtlinkvideo'       => ['nullable', 'url', 'max:1000'],
+            'txtnombre_proyecto' => 'required|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_!@#$&()-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_!@#$&()-]*)*)+$/',
+            'txtdescripcion' => 'nullable|max:3400',
+            'txtsi_producto_parecido' => Rule::requiredIf(request()->txtproducto_parecido == 1) . '|max:2100|nullable',
+            'txtsi_reemplaza' => Rule::requiredIf(request()->txtreemplaza == 1) . '|max:2100|nullable',
+            'txtproblema' => 'max:3400|nullable',
+            'txtnecesidades' => 'max:3400|nullable',
+            'txtquien_compra' => 'max:1400|nullable',
+            'txtquien_usa' => 'max:1400|nullable',
+            'txtdistribucion' => 'max:1400|nullable',
+            'txtquien_entrega' => 'max:1400|nullable',
+            'txttipo_packing' => Rule::requiredIf(request()->txtpacking == 1) . '|max:1400|nullable',
+            'txtmedio_venta' => 'max:2100|nullable',
+            'txtvalor_clientes' => 'max:2100|nullable',
+            'txtsi_requisitos_legales' => Rule::requiredIf(request()->txtrequisitos_legales == 1) . '|max:2100|nullable',
+            'txtsi_requiere_certificaciones' => Rule::requiredIf(request()->txtrequiere_certificaciones == 1) . '|max:2100|nullable',
+            'txtforma_juridica' => 'max:1400|nullable',
+            'txtlinkvideo' => 'nullable|url|max:1000',
+            'txtversion_beta' => 'nullable|max:200',
+            'txtcantidad_prototipos' => 'nullable|max:2100',
+            'txtsi_recursos_necesarios' => Rule::requiredIf(request()->txtrecursos_necesarios == 1) . '|max:2100|nullable',
+            'txtnodo' => 'required',
+            'txtconvocatoria' => Rule::requiredIf(request()->txtviene_convocatoria == 1) . '|max:100|nullable',
+            'txtempresa' => Rule::requiredIf(request()->txtaval_empresa == 1) . '|min:1|max:100|nullable'
         ];
     }
 
     public function messages()
     {
         return $messages = [
-            'txtnodo.required'                => 'El Nodo es obligatorio.',
-
-            'txtnombres.required'             => 'Los Nombres son obligatorios.',
-            'txtnombres.min'                  => 'Los Nombres deben ser minimo 1 caracter',
-            'txtnombres.max'                  => 'Los Nombres deben ser máximo 45 caracteres',
-            'txtnombres.regex'                => 'El formato del campo Nombres es incorrecto',
-
-            'txtapellidos.required'           => 'Los Apellidos son obligatorios.',
-            'txtapellidos.min'                => 'Los Apellidos deben ser minimo 1 caracter',
-            'txtapellidos.max'                => 'Los Apellidos deben ser máximo 45 caracteres',
-            'txtapellidos.regex'              => 'El formato del campo Apellidos es incorrecto',
-
-            'txtcorreo.required'              => 'El Correo Electrónico es obligatorio.',
-            'txtcorreo.min'                   => 'El Correo Electrónico debe ser minimo 1 caracter',
-            'txtcorreo.max'                   => 'El Correo Electrónico debe ser máximo 100 caracteres',
-            'txtcorreo.email'                 => 'El Correo Electrónico no es un correo válido',
-
-            'txttelefono.required'            => 'El Telefono es obligatorio.',
-            'txttelefono.numeric'             => 'El Telefono debe ser numérico',
-            'txttelefono.min'                 => 'El Telefono debe ser minimo 6 caracteres',
-            'txttelefono.max'                 => 'El Telefono debe ser máximo 11 caracteres',
-            'txttelefono.digits_between'      => 'El Telefono debe tener entre 6 y 11 digitos',
-
-            'txtnombre_proyecto.required'     => 'El Nombre de Proyecto es obligatorio.',
-            'txtnombre_proyecto.min'          => 'El Nombre de Proyecto debe ser minimo 1 caracter',
-            'txtnombre_proyecto.required.max' => 'El Nombre de Proyecto debe ser máximo 200 caracteres',
-            'txtnombre_proyecto.regex'        => 'El formato del campo Nombre de Proyecto es incorrecto',
-
-            'txtdescripcion.required'         => 'La Descripcion es obligatoria.',
-            'txtdescripcion.min'              => 'La Descripcion debe ser minimo 1 caracter',
-            'txtdescripcion.max'              => 'La Descripcion debe ser máximo 2000 caracteres',
-
-            'txtobjetivo.required'            => 'El Objetivo es obligatorio.',
-            'txtobjetivo.min'                 => 'El Objetivo debe ser minimo 1 caracter',
-            'txtobjetivo.max'                 => 'El Objetivo debe ser máximo 2000 caracteres',
-
-            'txtalcance.required'             => 'El Alcance es obligatorio.',
-            'txtalcance.min'                  => 'El Alcance debe ser minimo 1 caracter',
-            'txtalcance.max'                  => 'El Alcance debe ser máximo 2000 caracteres',
-
-            'txtservidorvideo.required'       => 'El Sevidor de video es obligatorio.',
-            'txtconvocatoria.required' => 'El campo es obligatorio',
-            'txtnombreconvocatoria.required' => 'El nombre de convocatoria es obligatorio',
-            'txtnombreconvocatoria.min'                 => 'El nombre de convocatoria debe ser minimo 1 caracter',
-            'txtnombreconvocatoria.max'                 => 'El nombre de convocatoria debe ser máximo 100 caracteres',
-
-            'txavalempresa.required' => 'El campo es obligatorio',
-            'txtempresa.required' => 'El nombre de la empresa es obligatorio',
-            'txtempresa.min'                 => 'El nombre de la empresa debe ser minimo 1 caracter',
-            'txtempresa.max'                 => 'El nombre de la empresa debe ser máximo 100 caracteres',
-
-            'txtlinkvideo.required'           => 'El link es obligatorio.',
-            'txtlinkvideo.url'                => 'El link es incorrecto',
-            'txtlinkvideo.max'                => 'El link debe ser máximo 1000 caracteres',
-            'txtlinkvideo.regex'              => 'El formato del campo link es incorrecto',
-
+            'txtnombre_proyecto.required' => 'El nombre de proyecto es obligatorio.',
+            'txtnombre_proyecto.required.max' => 'El nombre de proyecto debe ser máximo 200 caracteres.',
+            'txtnombre_proyecto.regex' => 'El formato del campo nombre de proyecto es incorrecto. (No usar :regex).',
+            'txtdescripcion.max' => 'La descripcion debe ser máximo :max caracteres.',
+            'txtsi_producto_parecido.required' => 'El campo indicando como su producto o servicio mejora el que está actualmente en el país o su región es obligatorio.',
+            'txtsi_producto_parecido.max' => 'El campo indicando como su producto o servicio mejora el que está actualmente en el país o su región debe ser máximo :max caracteres.',
+            'txtsi_reemplaza.required' => 'El campo indicando cuál es esa solución, producto o servicio que reemplaza es obligatorio.',
+            'txtsi_reemplaza.max' => 'El campo indicando cuál es esa solución, producto o servicio que reemplaza debe ser máximo :max caracteres.',
+            'txtproblema.max' => 'El campo indicando cuál es problema que estan ayudando a solucionar a los clientes debe ser máximo :max caracteres.',
+            'txtnecesidades.max' => 'El campo indicando cuáles son las necesidades de los clientes que se satisfacen debe ser máximo :max caracteres.',
+            'txtquien_compra.max' => 'El campo indicando quién comprará la solución, producto o servicio ser máximo :max caracteres.',
+            'txtquien_usa.max' => 'El campo indicando quien usará la solución, producto o servicio debe ser máximo :max caracteres.',
+            'txtdistribucion.max' => 'El campo indicando cuales son los canales de distribución de los productos/servicios debe ser máximo :max caracteres.',
+            'txtquien_entrega.max' => 'El campo indicando quién va a entregar el producto/servicio debe ser máximo :max caracteres.',
+            'txttipo_packing.required' => 'El campo indicando que tipo de packing se requiere es obligatorio.',
+            'txttipo_packing.max' => 'El campo indicando que tipo de packing se requiere debe ser máximo :max caracteres.',
+            'txtmedio_venta.max' => 'El campo indicando cuál será el medio de venta del producto/servicio debe ser máximo :max caracteres.',
+            'txtvalor_clientes.max' => 'El campo indicando cuanto es el valor que están dispuestos a pagar los cliente por el producto/servicio debe ser máximo :max caracteres.',
+            'txtsi_requisitos_legales.required' => 'El campo indicando cuales son los requisitos legales a considerar en los países en donde se va a vender es obligatorio.',
+            'txtsi_requisitos_legales.max' => 'El campo indicando cuales son los requisitos legales a considerar en los países en donde se va a vender debe ser máximo :max caracteres.',
+            'txtsi_requiere_certificaciones.required' => 'El campo indicando si se requieren certificaciones o permisos especiales es obligatorio.',
+            'txtsi_requiere_certificaciones.max' => 'Este campo indicando si se requieren certificaciones o permisos especiales debe ser máximo :max caracteres.',
+            'txtforma_juridica.max' => 'El campo indicando cuál es la forma jurídica que tendrá el negocio debe ser máximo :max caracteres.',
+            'txtlinkvideo.max' => 'El link del video debe ser máximo :max caracteres.',
+            'txtlinkvideo.url' => 'El link del video debe ser una url válida.',
+            'txtversion_beta.max' => 'El campo indicando si existe versión beta debe ser máximo :max caracteres.',
+            'txtcantidad_prototipos.max' => 'El campo indicando cuales y cuantos protitipos se necesitan desarrollar debe ser máximo :max caracteres.',
+            'txtsi_recursos_necesarios.required' => 'El campo indicando si se dispone de recursos para el desarrollo de los prototipos necesarios es obligatorio.',
+            'txtsi_recursos_necesarios.max' => 'El campo indicando si se dispone de recursos para el desarrollo de los prototipos necesarios debe ser máximo :max caracteres.',
+            'txtnodo.required' => 'El nodo es obligatorio.',
+            'txtconvocatoria.required' => 'El nombre de la convocatoria es obligatorio.',
+            'txtconvocatoria.max' => 'El nombre de la convocatoria debe ser máximo :max caracteres.',
+            'txtempresa.required' => 'El nombre de la empresa que avala es obligatorio.',
+            'txtempresa.max' => 'El nombre de la empresa que avala debe ser máximo :max caracteres.'
         ];
     }
 
-    public function attributes()
-    {
-        return [
-            'txtnodo'            => 'Nodo',
-            'txtnombres'         => 'Nombres',
-            'txtapellidos'       => 'Apellidos',
-            'txtcorreo'          => 'Correo Electrónico',
-            'txttelefono'        => 'Telefono',
-            'txtnombre_proyecto' => 'Nombre de Proyecto',
-            'txtdescripcion'     => 'Descripcion',
-            'txtobjetivo'        => 'Objetivo',
-            'txtalcance'         => 'Alcance',
-        ];
-    }
 }

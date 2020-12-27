@@ -164,28 +164,5 @@
     EmpresaCreate.getCiudad();
     @endif
   });
-
-  var EmpresaCreate = {
-    getCiudad: function() {
-      let id;
-      id = $('#txtdepartamento').val();
-      $.ajax({
-        dataType: 'json',
-        type: 'get',
-        url: '/usuario/getciudad/' + id
-      }).done(function(response) {
-        $('#txtciudad_id').empty();
-        $('#txtciudad_id').append('<option value="">Seleccione la Ciudad</option>')
-        $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
-          $('#txtciudad_id').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
-        })
-        @if($errors->any())
-        $('#txtciudad_id').val({{old('txtciudad_id')}});
-        @endif
-        $('#txtciudad_id').material_select();
-      });
-    },
-  }
 </script>
 @endpush

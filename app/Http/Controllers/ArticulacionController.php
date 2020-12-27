@@ -437,6 +437,14 @@ class ArticulacionController extends Controller
                 ]);
                 break;
 
+            case User::IsInfocenter():
+                return view('articulaciones.infocenter.fase_inicio', [
+                    'productos' => $productos,
+                    'articulacion' => $articulacion,
+                    'historico' => $historico
+                ]);
+                break;
+
             case User::IsAdministrador():
                 return view('articulaciones.administrador.fase_inicio', [
                     'productos' => $productos,
@@ -473,6 +481,11 @@ class ArticulacionController extends Controller
                 ]);
             } else if (Session::get('login_role') == User::IsDinamizador()) {
                 return view('articulaciones.dinamizador.fase_planeacion', [
+                    'articulacion' => $articulacion,
+                    'historico' => $historico
+                ]);
+            } else if (Session::get('login_role') == User::IsInfocenter()) {
+                return view('articulaciones.infocenter.fase_planeacion', [
                     'articulacion' => $articulacion,
                     'historico' => $historico
                 ]);
@@ -515,6 +528,12 @@ class ArticulacionController extends Controller
                         'historico' => $historico
                     ]);
                     break;
+                case User::IsInfocenter():
+                    return view('articulaciones.infocenter.fase_ejecucion', [
+                        'articulacion' => $articulacion,
+                        'historico' => $historico
+                    ]);
+                    break;
 
                 case User::IsAdministrador():
                     return view('articulaciones.administrador.fase_ejecucion', [
@@ -553,6 +572,14 @@ class ArticulacionController extends Controller
 
                 case User::IsDinamizador():
                     return view('articulaciones.dinamizador.fase_cierre', [
+                        'articulacion' => $articulacion,
+                        'costo' => $costo,
+                        'historico' => $historico
+                    ]);
+                    break;
+
+                case User::IsInfocenter():
+                    return view('articulaciones.infocenter.fase_cierre', [
                         'articulacion' => $articulacion,
                         'costo' => $costo,
                         'historico' => $historico
@@ -834,6 +861,8 @@ class ArticulacionController extends Controller
         if (request()->ajax()) {
             if (\Session::get('login_role') == User::IsDinamizador()) {
                 $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo(auth()->user()->dinamizador->nodo_id, $anho)->get();
+            } else if (\Session::get('login_role') == User::IsInfocenter()) {
+                $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo(auth()->user()->infocenter->nodo_id, $anho)->get();
             } else {
                 $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnNodo($id, $anho)->get();
             }
@@ -879,6 +908,11 @@ class ArticulacionController extends Controller
             case User::IsDinamizador():
                 return view('articulaciones.dinamizador.index', [
                     'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+                ]);
+                break;
+            case User::IsInfocenter():
+                return view('articulaciones.infocenter.index', [
+                    'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->pluck('nombres_gestor', 'id'),
                 ]);
                 break;
             case User::IsGestor():

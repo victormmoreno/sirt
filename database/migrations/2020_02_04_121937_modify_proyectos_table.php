@@ -20,7 +20,7 @@ class ModifyProyectosTable extends Migration
             $table->unsignedInteger('fase_id')->nullable()->after('areaconocimiento_id');
             $table->string('otro_areaconocimiento', 100)->nullable()->default(null)->after('fase_id');
             $table->string('alcance_proyecto', 1000)->nullable()->default(null)->after('otro_areaconocimiento');
-            $table->tinyInteger('trl_esperado')->default('0')->after('alcance_proyecto');
+            $table->tinyInteger('trl_esperado')->nullable()->default('0')->after('alcance_proyecto');
             $table->tinyInteger('trl_obtenido')->nullable()->default('0')->after('trl_esperado');
             $table->tinyInteger('dirigido_discapacitados')->default('0')->after('trl_obtenido');
             $table->string('tipo_discapacitados', 100)->nullable()->default(null)->after('dirigido_discapacitados');
