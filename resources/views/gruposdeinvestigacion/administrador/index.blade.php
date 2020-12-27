@@ -3,6 +3,7 @@
 @section('meta-content', 'Grupos de Investigación')
 @section('meta-keywords', 'Grupos de Investigación')
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
   <div class="content">
     <div class="row no-m-t no-m-b">

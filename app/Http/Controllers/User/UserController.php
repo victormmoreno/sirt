@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UsersRequests\UserFormRequest;
-use App\Http\Traits\UserTrait\RegistersUsers;
+use App\Http\Requests\UsersRequests\UserFormEditRequest;
 use App\Models\{Nodo, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
@@ -19,13 +18,12 @@ use App\Exports\User\UserExport;
 class UserController extends Controller
 {
 
-    use RegistersUsers;
-
     public $userRepository;
 
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
+        $this->middleware('auth')->except('getCiudad');
     }
 
     public function findUserById(int $id)
@@ -74,7 +72,6 @@ class UserController extends Controller
                     ->orderBy('users.created_at', 'desc')
                     ->get();
             }
-
             return $usersDatatables->datatableUsers($users);
         }
         switch (session()->get('login_role')) {
@@ -109,8 +106,6 @@ class UserController extends Controller
                 break;
         }
     }
-
-
     /*===============================================================================
     =            metodo API para consultar las ciudades por departamento            =
     ===============================================================================*/
@@ -150,11 +145,9 @@ class UserController extends Controller
     public function edit($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-
         $this->authorize('edit', $user);
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-
                 return view('users.edit', [
                     'etnias' => Etnia::pluck('nombre', 'id'),
                     'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
@@ -181,8 +174,6 @@ class UserController extends Controller
                     $nodo = [];
                     return redirect()->route('home');
                 }
-
-
                 return view('users.edit', [
                     'user'              => $user,
                     'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
@@ -199,7 +190,6 @@ class UserController extends Controller
                     'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
                     'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
                     'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-
                     'view' => 'edit'
                 ]);
                 break;
@@ -228,9 +218,7 @@ class UserController extends Controller
                     'lineas' => LineaTecnologica::pluck('nombre', 'id'),
                     'view' => 'edit'
                 ]);
-
                 break;
-
             default:
                 abort('404');
                 break;
@@ -250,7 +238,7 @@ class UserController extends Controller
 
         $this->authorize('update', $user);
 
-        $req       = new UserFormRequest;
+        $req       = new UserFormEditRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
 
 
@@ -263,7 +251,6 @@ class UserController extends Controller
         } else {
             if ($user != null) {
                 $userUpdate = $this->userRepository->Update($request, $user);
-
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
@@ -275,89 +262,18 @@ class UserController extends Controller
                     'state'   => 'error',
                     'message' => 'El Usuario no se ha modificado',
                     'url' => false
-
                 ]);
             }
         }
     }
 
 
-    public function userSearch()
-    {
-        return view('users.search');
-    }
-
-    public function querySearchUser(Request $request)
-    {
-        if (request()->ajax()) {
-
-            if ($request->input('txttype_search') == 1) {
-
-                $validator = Validator::make($request->all(), [
-                    'txtsearch_user' => 'required|digits_between:6,11|numeric',
-                    'txttype_search' => 'required|in:1',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json([
-                        'fail'   => true,
-                        'errors' => $validator->errors(),
-                    ]);
-                }
-                $user = User::withTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-            } else if ($request->input('txttype_search') == 2) {
-                $validator = Validator::make($request->all(), [
-                    'txtsearch_user' => 'required|email',
-                    'txttype_search' => 'required|in:2',
-                ]);
-                if ($validator->fails()) {
-                    return response()->json([
-                        'fail'   => true,
-                        'errors' => $validator->errors(),
-                    ]);
-                }
-                $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-            }
-
-            if ($user == null) {
-                return response()->json([
-                    'data' => null,
-                    'status' => Response::HTTP_ACCEPTED,
-                    'message' => 'el usuario no existe en nuestros registros',
-                    'url' => route('usuario.usuarios.create'),
-                ], Response::HTTP_ACCEPTED);
-            }
-            return response()->json([
-                'user' => $user,
-                'roles' => $user->getRoleNames()->implode(', '),
-                'message' => 'el usuario ya existe en nuestros registros',
-                'status' => Response::HTTP_OK,
-                'url' => route('usuario.usuarios.show', $user->documento),
-            ], Response::HTTP_OK);
-        }
-        abort('403');
-    }
-
-    public function consultaremail(Request $request)
-    {
-        $user = User::withTrashed()->where('email', $request->txtemail)->first();
-
-        if ($user != null) {
-            return response()->json([
-                'response' => false
-            ]);
-        } else {
-            return response()->json([
-                'response' => true
-            ]);
-        }
-    }
 
 
     public function acceso($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
         $this->authorize('acceso', $user);
-
         return view('users.acceso', ['user' => $user]);
     }
 
@@ -368,20 +284,21 @@ class UserController extends Controller
 
         $this->authorize('acceso', $user);
 
-        if ($request->get('txtestado') == 'on') {
-            $user->update(['estado' => 0]);
-            $user->delete();
-            return redirect()->back()->withSuccess('Acceso de usuario modificado');
-        } else {
-            $user->update([
-                'estado' => 1,
-            ]);
-
-            $user->restore();
-            return redirect()->back()->withSuccess('Acceso de usuario modificado');
+        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso))){
+            if ($request->get('txtestado') == 'on') {
+                $user->update(['estado' => 0]);
+                $user->delete();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            } else {
+                $user->update([
+                    'estado' => User::IsActive(),
+                ]);
+                $user->restore();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            }
+        }else{
+            return redirect()->back()->withError('No puedes cambiar el estado a este usuario. Primero asigna un rol y un nodo');
         }
-
-
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
     }
 
@@ -391,7 +308,7 @@ class UserController extends Controller
         $gestores = User::select('gestores.id')
             ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
             ->join('gestores', 'gestores.user_id', 'users.id')
-            ->role('Gestor')
+            ->role(User::IsGestor())
             ->where('gestores.nodo_id', $nodo)
             ->withTrashed()
             ->pluck('nombre', 'id');
@@ -452,7 +369,6 @@ class UserController extends Controller
                     ->orderBy('users.created_at', 'desc')
                     ->get();
             }
-
             return $usersDatatables->datatableUsers($users);
         }
 
@@ -461,39 +377,68 @@ class UserController extends Controller
         ]);
     }
 
-    public function exportMyTalentos(Request $request, $extension = 'xlsx')
+    public function userSearch()
     {
-        $this->authorize('export', User::class);
-
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $nodo = $request->filter_nodo;
-                break;
-            case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                break;
-            case User::IsGestor():
-                $nodo = auth()->user()->gestor->nodo_id;
-                break;
-            case User::IsInfocenter():
-                $nodo = auth()->user()->infocenter->nodo_id;
-                break;
-            default:
-                return abort('403');
-                break;
-        }
-
-        $users = [];
-        if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
-            $users = User::with(['tipodocumento'])
-                ->role(User::IsTalento())
-                ->nodoUser(User::IsTalento(), $nodo)
-                ->stateDeletedAt($request->filter_state)
-                ->activitiesTalento(User::IsTalento(), $request->filter_year, $nodo)
-                ->orderBy('users.created_at', 'desc')
-                ->get();
-        }
-
-        return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
+        return view('users.search');
     }
+
+    public function querySearchUser(Request $request)
+    {
+        if (request()->ajax()) {
+            if ($request->input('txttype_search') == 1) {
+                $validator = Validator::make($request->all(), [
+                    'txtsearch_user' => 'required|digits_between:6,11|numeric',
+                    'txttype_search' => 'required|in:1',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'fail'   => true,
+                        'errors' => $validator->errors(),
+                    ]);
+                }
+                $user = User::withTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            } else if ($request->input('txttype_search') == 2) {
+                $validator = Validator::make($request->all(), [
+                    'txtsearch_user' => 'required|email',
+                    'txttype_search' => 'required|in:2',
+                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'fail'   => true,
+                        'errors' => $validator->errors(),
+                    ]);
+                }
+                $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
+            }
+            if ($user == null) {
+                return response()->json([
+                    'data' => null,
+                    'status' => Response::HTTP_ACCEPTED,
+                    'message' => 'el usuario no existe en nuestros registros',
+                    'url' => route('registro'),
+                ], Response::HTTP_ACCEPTED);
+            }
+            return response()->json([
+                'user' => $user,
+                'roles' => $user->getRoleNames()->implode(', '),
+                'message' => 'el usuario ya existe en nuestros registros',
+                'status' => Response::HTTP_OK,
+                'url' => route('usuario.usuarios.show', $user->documento),
+            ], Response::HTTP_OK);
+        }
+        abort('403');
+    }
+
+    /*=====  Método para controlar el formulario usuarios nuevos  ======*/
+    public function create()
+    {
+        return view('registro_usuarios.form',[
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ciudades'          => $this->userRepository->getAllCiudades(),
+            'view' => 'create'
+        ]);
+    }
+
+    /*=====  Fin Método para controlar el formulario usuarios nuevos  ======*/
 }

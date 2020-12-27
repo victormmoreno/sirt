@@ -6,6 +6,7 @@
 
 @section('content-auth')
 
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="mn-content valign-wrapper" id="app">
     <main class="mn-inner container">
         <div class="valign">
@@ -65,7 +66,7 @@
                                         <input autocomplete="email" autofocus="" class="validate @error('email') is-invalid @enderror" id="email" name="email" type="email" value="{{ old('email') }}">
                                         <label for="email">
                                             {{ __('E-Mail Address') }}
-                                         </label>
+                                        </label>
                                         @error('email')
                                             <label id="email-error" class="error" for="email">{{ $message }}</label>
                                         @enderror

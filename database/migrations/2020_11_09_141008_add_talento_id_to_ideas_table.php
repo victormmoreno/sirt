@@ -16,20 +16,14 @@ class AddTalentoIdToIdeasTable extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->unsignedInteger('talento_id')->nullable();
-            $table->unsignedInteger('empresa_id')->nullable();
 
             $table->index(["talento_id"], 'fk_talentos_ideas1_idx');
-            $table->index(["empresa_id"], 'fk_empresas_ideas1_idx');
 
             $table->foreign('talento_id', 'fk_talentos_ideas1_idx')
             ->references('id')->on('talentos')
             ->onDelete('no action')
             ->onUpdate('no action');
 
-            $table->foreign('empresa_id', 'fk_empresas_ideas1_idx')
-            ->references('id')->on('empresas')
-            ->onDelete('no action')
-            ->onUpdate('no action');
         });
     }
 
@@ -41,8 +35,8 @@ class AddTalentoIdToIdeasTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropIndex(['fk_talentos_ideas1_idx', 'fk_empresas_ideas1_idx']);
-            $table->dropColumn(['talento_id', 'empresa_id']);
+            $table->dropIndex(['fk_talentos_ideas1_idx']);
+            $table->dropColumn(['talento_id']);
         });
     }
 }

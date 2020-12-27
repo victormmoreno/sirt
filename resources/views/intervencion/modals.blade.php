@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div id="articulacionDetalle" class="modal">
   <div class="modal-content">
     <center>

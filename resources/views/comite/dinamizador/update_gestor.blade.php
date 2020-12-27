@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('meta-title', 'CSIBT')
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
   <div class="content">
     <div class="row no-m-t no-m-b">

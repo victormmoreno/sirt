@@ -3,6 +3,7 @@
 @section('meta-content', 'Proyectos de Base Tecnológica')
 @section('meta-keywords', 'Proyectos de Base Tecnológica')
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
   @php
   $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
   @endphp

@@ -6,6 +6,7 @@
   @php
   $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
   @endphp
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">

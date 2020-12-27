@@ -2,6 +2,7 @@
 
 @section('meta-title','Incio')
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
   <div class="middle-content">
     <div class="row no-m-t no-m-b">

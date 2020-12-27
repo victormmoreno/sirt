@@ -25,7 +25,7 @@
                 </div>
               </div>
               <br/>
-              <form id="frmIdeas_Inicio" action="{{ route('idea.store') }}" method="POST">
+              <form id="frmIdea_Inicio" action="{{ route('idea.store') }}" method="POST">
               @include('ideas.talento.form_inicio', [
               'btnText' => 'Guardar'])
               </form>

@@ -223,20 +223,6 @@ $('#download_users').click(function(){
     window.location = url;
 });
 
-$('#download_talentos').click(function(){
-    let filter_role = $('#filter_rol').val();
-    let filter_nodo = $('#filter_nodo').val();
-    let filter_state = $('#filter_state').val();
-    let filter_year = $('#filter_year').val();
-    var query = {
-        filter_nodo: filter_nodo,
-        filter_role: filter_role,
-        filter_state: filter_state,
-        filter_year: filter_year,
-    }
 
-    var url = "/usuario/export-talentos?" + $.param(query)
-    window.location = url;
-});
 
 

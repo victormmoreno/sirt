@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div id="detalleEdt_modal" class="modal ">
   <div class="modal-content">
     <center><h4 id="detalleEdt_titulo" class="center-aling"></h4></center>

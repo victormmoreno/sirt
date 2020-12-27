@@ -4968,7 +4968,7 @@ small {
 .btn, .btn-large {
   text-decoration: none;
   color: #fff;
-  background-color: #26a69a;
+  background-color: #757575;
   text-align: center;
   letter-spacing: .5px;
   transition: .2s ease-out;
@@ -4976,7 +4976,7 @@ small {
 }
 
 .btn:hover, .btn-large:hover {
-  background-color: #2bbbad;
+  background-color: #FF6B00;
 }
 
 .btn-floating {
@@ -15480,7 +15480,7 @@ li.active .nav-drop-icon {
 @media (max-width: 600px) {
     .side-nav .sidenav-logo a {
         height: 56px;
-|        padding: 8px 0 7px 24px;
+       padding: 8px 0 7px 24px;
     }
 }
 
@@ -18200,6 +18200,13 @@ select {
     display: block;
     position: absolute;
 }
+
+.vertical-line{ border-right:2px solid black;  }
+        @media screen and (max-width: 600px) {
+            .vertical-line{
+                border-right:0px solid white;
+            }
+        }
 
 
 

@@ -6,7 +6,7 @@ use App\Events\User\UserWasRegistered;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\User\PleaseActivateYourAccount;
+use App\Mail\User\Auth\PleaseActivateYourAccount;
 
 class SendActivationLink
 {

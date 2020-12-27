@@ -88,7 +88,10 @@ class UserPresenter extends Presenter
 
     public function userEtnia()
     {
-        return $this->user->has('etnia') && $this->user->etnia->nombre != null ? $this->user->etnia->nombre : 'No Registra';
+        if($this->user->has('etnia') && isset($this->user->etnia)){
+            return $this->user->etnia->nombre;  
+        }
+        return 'No Registra';
     }
 
     public function userAcceso()
@@ -310,5 +313,21 @@ class UserPresenter extends Presenter
             return $this->user->talento->empresa;
         }
         return $this->message('No Registra');
+    }
+
+    public function tipoContratista()
+    {
+        if ($this->user->has('contratista') && isset($this->user->contratista->tipo_contratista) && $this->user->contratista->tipo_contratista == 1) {
+            return "Contratista";
+        }else{
+            return "Planta";
+        }
+    }
+
+    public function nodoContratista()
+    {
+        if ($this->user->has('contratista') && isset($this->user->contratista->nodo)) {
+            return $this->user->contratista->nodo->entidad->nombre;
+        }
     }
 }

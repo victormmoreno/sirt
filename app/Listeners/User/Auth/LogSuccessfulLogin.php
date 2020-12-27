@@ -18,7 +18,6 @@ class LogSuccessfulLogin
     {
         $this->request = $request;
     }
-
     /**
      * Handle the event.
      *
@@ -27,9 +26,7 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event)
     {
-
         DB::beginTransaction();
-
         try {
             $event->user->ultimo_login = Carbon::now()->format('Y-m-d H:i:s');
             $event->user->save();

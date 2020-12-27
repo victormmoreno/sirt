@@ -8,11 +8,11 @@
         </title>
         <meta content="@yield('meta-content', 'Tecnoparque Red Colombia')" name="description"/>
         <meta content="{{ csrf_token()}}" name="csrf-token"/>
-        <link href="{{config('app.url')}}" rel="canonical"/>
+
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
         @stack('style')
-
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
@@ -30,23 +30,48 @@
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
 
+
     </head>
     <body class="white">
         <div id="app">
 
             <div class="mn-content">
                 @include('spa.layouts.nav')
-
-                 @yield('content-spa')
-
-                 @include('spa.layouts.footer')
-                <div class="left-sidebar-hover">
+                @yield('content-spa')
+                <div class="modal valign-wrapper" id="loadingModal" style="width: 20%">
+                    <div class="modal-content">
+                        <center>
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle">
+                                        </div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle">
+                                        </div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </center>
+                    </div>
                 </div>
+                @include('spa.layouts.footer')
+                <div class="left-sidebar-hover"></div>
             </div>
 
         </div>
-        <script  src="{{ asset('js/app.js') }}"></script>
-        <script  src="{{ asset('js/libs.js') }}"></script>
+
+        <script src="{{ asset('js/app.js') }}">
+        </script>
+        <script src="{{ asset('js/libs.js') }}">
+        </script>
+        <script src="{{ asset('js/web.js') }}">
+        </script>
         @include('sweetalert::alert')
         @stack('script')
     </body>

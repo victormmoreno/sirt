@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 use Alert;
 
-use App\Http\Requests\{IdeaFormRequest, EmpresaFormRequest};
+use App\Http\Requests\{IdeaFormRequest};
 use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa};
 use App\Repositories\Repository\IdeaRepository;
 use App\User;
@@ -61,16 +61,6 @@ class IdeaController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            if ($request->bandera_empresa == 1) {
-                $req2 = new EmpresaFormRequest;
-                $validarEmpresa = Validator::make($request->all(), $req2->rules(), $req2->messages());
-                if ($validarEmpresa->fails()) {
-                    return response()->json([
-                        'state'   => 'error_form',
-                        'errors' => $validarEmpresa->errors(),
-                    ]);
-                }
-            }
             $result = $this->ideaRepository->Store($request);;
             if ($result) {
                 return response()->json(['state' => 'registro']);
@@ -95,6 +85,28 @@ class IdeaController extends Controller
 
             return view('ideas.index', ['nodos' => $nodos, 'estadosIdeas' => $estadosIdeas]);
         }
+    }
+
+    public function datatableIdeasTalento(Request $request)
+    {
+        // $ideas = Idea::with(['estadoIdea']);
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)->get();
+        // dd($ideas);
+        return $this->datatableIdeas($request, $ideas);
+    }
+
+    private function datatableIdeas($request, $ideas)
+    {
+        return datatables()->of($ideas)
+        ->editColumn('estado', function ($data) {
+            return $data->estadoIdea->nombre;
+        })
+        ->addColumn('info', function ($data) {
+            $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"\">
+            <i class=\" material-icons\">info</i>
+            </a>";
+                return $button;
+        })->rawColumns(['info'])->make(true);
     }
 
 

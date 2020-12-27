@@ -6,6 +6,7 @@
 
 @section('content-auth')
 
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
  <div class="mn-content valign-wrapper" id="app">
         <main class="mn-inner container">
             <div class="valign">
@@ -33,31 +34,26 @@
                                     @csrf
                                     <input type="hidden" name="token" value="{{ $token }}">
                                     <div class="input-field col s12">
-                                      <i class="material-icons prefix">mail</i>
-                                      <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}"autocomplete="email" autofocus>
-                                      
-                                      <label for="email" >{{ __('E-Mail Address') }}</label>
-                                      @error('email')
-                                       <label id="email-error" class="error" for="email">{{ $message }}</label>
-                                     @enderror
-                                    </div>
-                                    <div class="input-field col s12">
-                                      <i class="material-icons prefix">lock_outline</i>
-                                      <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
-                                     
-                                      <label for="password" >{{ __('Password') }}</label>
-                                      @error('password')
-                                            <label id="password-error" class="error" for="password">{{ $message }}</label>
+                                        <i class="material-icons prefix">mail</i>
+                                        <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}"autocomplete="email" autofocus>
+                                        
+                                        <label for="email" >{{ __('E-Mail Address') }}</label>
+                                        @error('email')
+                                        <label id="email-error" class="error" for="email">{{ $message }}</label>
                                         @enderror
                                     </div>
-
                                     <div class="input-field col s12">
-                                      <i class="material-icons prefix">lock_outline</i>
-                                      
-                                      <input id="password-confirm" type="password" class="validate" name="password_confirmation"  autocomplete="new-password">
-                                     
-                                      <label for="password-confirm">{{ __('Confirm Password') }}</label>
-                                      
+                                        <i class="material-icons prefix">lock_outline</i>
+                                        <input id="password" type="password" class="validate @error('password') is-invalid @enderror" name="password"  autocomplete="new-password">
+                                        <label for="password" >{{ __('Password') }}</label>
+                                        @error('password')
+                                                <label id="password-error" class="error" for="password">{{ $message }}</label>
+                                        @enderror
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">lock_outline</i>
+                                        <input id="password-confirm" type="password" class="validate" name="password_confirmation"  autocomplete="new-password">
+                                        <label for="password-confirm">{{ __('Confirm Password') }}</label>
                                     </div>
                                     <div class="col s12 center-align m-t-sm">
                                         <button type="submit" class="btn btn-primary">
@@ -66,10 +62,10 @@
                                         </button>
                                         <br><br>
                                         <small>¿No recibió un correo electrónico de confirmación? <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('password.request') }}">solicita uno nuevo</a>,
-                                          <b>¿Ya estas registrado?</b> 
-                                          <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('login') }}">
-                                            {{{__('Login')}}}
-                                          </a>
+                                            <b>¿Ya estas registrado?</b> 
+                                            <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('login') }}">
+                                                {{{__('Login')}}}
+                                            </a>
                                         </small>
                                         <div class="divider" style="background:#008981;"></div>
                                         <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('/') }}">

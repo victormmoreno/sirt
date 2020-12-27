@@ -138,7 +138,7 @@
 	<div class="row">
 
 		<div class="input-field col s12 m6 l4">
-	      	<input type="number" name="txtcantidad" id="txtcantidad" min="0" step="0.1" value="{{ isset($material) ? $material->cantidad: old('txtcantidad')}}" disabled/>
+	      	<input type="number" name="txtcantidad" id="txtcantidad" min="0" step="0.1" value="{{ isset($material) ? $material->cantidad: old('txtcantidad')}}"/>
 	      	<label class="active" for="txtcantidad">Tamaño presentacion o venta/paquete <span class="red-text">*</span></label>
 	      	@error('txtcantidad')
             <label class="error" for="txtcantidad" id="txtcantidad-error">

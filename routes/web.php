@@ -4,9 +4,45 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
-
     return view('spa');
 })->name('/');
+
+
+Route::get('politica-de-confidencialidad', function () {
+
+    return view('seguridad.terminos');
+})->name('terminos');
+
+// Authentication Routes...
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+// Registration Routes...
+Route::get('usuario/confirm/{documento}', 'Auth\RegisterController@showConfirmContratorInformationForm')->name('user.contractor.confirm.request');
+Route::put('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContratorInformation')->name('user.contractor.confirm');
+Route::get('registro', 'Auth\RegisterController@showRegistrationForm')->name('registro');
+Route::post('registro', 'Auth\RegisterController@register')->name('register.request');
+
+
+// Password Reset Routes...
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
+// Email Verification Routes...
+//Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+//Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
+//Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+
+
+//verificar usuario no registrado
+Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
+
+//Change Email Routes...
+Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
+Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
 
 // DB::listen(function ($query) {
 // echo "<pre>{$query->sql}</pre>";
@@ -24,11 +60,6 @@ Route::get('/', function () {
 
 /*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
 
-/*===================================================================================
-=            rutas modulos de login registro, recuperacion de contraseña            =
-===================================================================================*/
-Auth::routes(['register' => false]);
-/*=====  End of rutas modulos de login registro, recuperacion de contraseña  ======*/
 
 /*================================================================
 =            ruta para cambiar la session del usuario            =
@@ -63,6 +94,7 @@ Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback')
 /*======================================================================
 =            rutas para las funcionalidades de los usuarios            =
 ======================================================================*/
+Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
 Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
 Route::get('usuario/export-talentos', 'User\UserController@exportMyTalentos')->name('usuario.export.talentos');
 Route::group(
@@ -93,27 +125,10 @@ Route::group(
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',
         ]);
-
-        Route::post('/consultaremail', [
-            'uses' => 'UserController@consultaremail',
-            'as'   => 'usuario.consultaremail',
-        ]);
-
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
-
-
-        Route::post('/usuarios/consultarusuario', [
-            'uses' => 'UserController@querySearchUser',
-            'as'   => 'usuario.buscarusuario',
-        ])->where('documento', '[0-9]+');
-
-        Route::get('getciudad/{departamento?}', 'UserController@getCiudad');
-
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
-        Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
-
-
+        
         Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
         Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
@@ -123,11 +138,16 @@ Route::group(
             'as'   => 'usuario.gestores.nodo',
         ]);
 
+        Route::post('/usuarios/consultarusuario', [
+            'uses' => 'UserController@querySearchUser',
+            'as'   => 'usuario.buscarusuario',
+        ])->where('documento', '[0-9]+');
+
+        
+        Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
 
         Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
-        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index', 'create'])->names([
-            'create'  => 'usuario.usuarios.create',
-            'store'  => 'usuario.usuarios.store',
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index', 'create', 'store'])->names([
             'update'  => 'usuario.usuarios.update',
             'edit'    => 'usuario.usuarios.edit',
             'destroy' => 'usuario.usuarios.destroy',
@@ -346,6 +366,7 @@ Route::group(
     function () {
         Route::get('/', 'IdeaController@index')->name('idea.index');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
+        Route::get('/datatableIdeasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Infocenter']);
         Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
@@ -839,3 +860,31 @@ Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->midd
 Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
+
+
+//-----------------------Ruta para registro usuario nuevo---------------------------------
+
+Route::get('/registro-usuario', 'User\UserController@create')->name('persona.create');
+
+//-----------------------Fin ruta registro usuario nuevo-----------------------------------
+
+//-----------------------Ruta para sección de noticias---------------------------------
+
+Route::get('/spa', ['as' => 'spa','uses' => 'NoticiasController@spa']);
+
+Route::group([
+    'prefix' => 'noticias',
+    'middleware' => ['auth']
+], function () {
+
+    Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Administrador');
+    Route::get('/create', 'NoticiasController@create')->name('noticias.create');
+    Route::post('/', 'NoticiasController@store')->name('noticias.store');
+    Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Administrador');
+    Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Administrador');
+    Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
+
+
+});
+
+//-----------------------Fin ruta sección noticias-----------------------------------

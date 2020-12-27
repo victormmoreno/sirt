@@ -25,7 +25,6 @@ mix.styles([
 		'resources/assets/plugins/materialize-clockpicker-master/dist/css/materialize.clockpicker.css',
 		'resources/assets/plugins/bootstrap-datapicker/css/bootstrap-material-datetimepicker.css',
 		'resources/assets/plugins/dropzone/dropzone.css',
-		'resources/assets/plugins/dropzone/basic.min.css',
 		'resources/assets/plugins/summernote/dist/summernote-lite.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
@@ -68,6 +67,8 @@ mix.scripts([
     'resources/app/linea/dinamizador/index.js',
     'resources/app/nodo/administrador/index.js',
     'resources/app/entrenamientos/index.js',
+    'resources/app/ideas/talento/form.js',
+    'resources/app/ideas/talento/index.js',
     'resources/app/entrenamientos/administrador/index.js',
     'resources/app/entrenamientos/infocenter/index.js',
     'resources/app/entrenamientos/infocenter/create.js',
@@ -104,8 +105,6 @@ mix.scripts([
     'resources/app/edt/gestor/form.js',
     'resources/app/edt/gestor/index.js',
     'resources/app/edt/index.js',
-    'resources/app/laboratorio/administrador/index.js',
-    'resources/app/laboratorio/dinamizador/index.js',
     'resources/app/costoadministrativo/dinamizador/index.js',
     'resources/app/costoadministrativo/dinamizador/index.js',
     'resources/app/equipos/index.js',
@@ -126,11 +125,15 @@ mix.scripts([
     'resources/app/costos/index.js',
     'resources/app/publicacion/index.js',
     'resources/app/publicacion/form.js'
-
 	],'public/js/app2.js');
 
 mix.minify('public/js/app2.js')
     mix.version();
+
+mix.scripts([
+    'resources/app/auth/verifyUser.js',
+    'resources/app/auth/register.js',
+    ],'public/js/web.js');
 
 
 mix.browserSync({

@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('meta-title', 'Usuarios')
-
 @section('content')
 @php
   $year = Carbon\Carbon::now()->year;
@@ -41,11 +39,12 @@
                                         </div>
                                     </div>
                                     <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{session()->has('login_role') === App\User::IsInfocenter() ? 'Filtrar Usuario' :' Nuevo usuario'}} </a>
+                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Usuario</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="divider"></div>
                         <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
                             <div class="input-field col s12 m2 l2">
@@ -102,8 +101,8 @@
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsInfocenter() ? 'Filtrar Usuario' :' Nuevo usuario'}}">
-                        <i class="material-icons">add_circle</i>
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
+                        <i class="material-icons">search</i>
                     </a>
                 </div>
             </div>

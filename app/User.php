@@ -19,7 +19,8 @@ use App\Models\{
     Role,
     Movimiento,
     Talento,
-    TipoDocumento
+    TipoDocumento,
+    Contratista,
 };
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -208,6 +209,11 @@ class User extends Authenticatable implements JWTSubject
     public function dinamizador()
     {
         return $this->hasOne(Dinamizador::class, 'user_id', 'id');
+    }
+
+    public function contratista()
+    {
+        return $this->hasOne(Contratista::class, 'user_id', 'id');
     }
 
     public function infocenter()

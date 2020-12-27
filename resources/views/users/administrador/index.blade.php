@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('meta-title', 'Usuarios')
-
 @section('content')
 @php
   $year = Carbon\Carbon::now()->year;
@@ -41,7 +39,7 @@
                                         </div>
                                     </div>
                                     <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons">add_circle</i> Nuevo usuario</a>
+                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Usuario</a>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +61,7 @@
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                 <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
-                                    <option value="all" >todos</option>
+                                    {{-- <option value="all" >todos</option> --}}
                                     @forelse($nodos as $id => $name)
                                         <option value="{{$id}}">{{$name}}</option>
                                     @empty
@@ -75,7 +73,6 @@
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_state">Acceso sistema <span class="red-text">*</span></label>
                                 <select name="filter_state" id="filter_state">
-
                                     <option value="si" >Habilitados</option>
                                     <option value="no" >Inhabilitados</option>
                                     <option value="all" >todos</option>
@@ -90,35 +87,34 @@
                                     <option value="all" >todos</option>
                                 </select>
                             </div>
-
                             <div class="col s12 m8 l4 offset-s6 offset-m6 right">
-                              <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
+                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_user"><i class="material-icons">search</i>Buscar</button>
                             </div>
                         </div>
                         <table id="users_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                             <thead>
-                              <tr>
-                                <th>Tipo Documento</th>
-                                <th>Documento</th>
-                                <th>Usuario</th>
-                                <th>Correo</th>
-                                <th>Celular</th>
-                                <th>Roles</th>
-                                <th>Último Login</th>
-                                <th>Acceso sistema</th>
-                                <th>Detalles</th>
-                              </tr>
+                                <tr>
+                                    <th>Tipo Documento</th>
+                                    <th>Documento</th>
+                                    <th>Usuario</th>
+                                    <th>Correo</th>
+                                    <th>Celular</th>
+                                    <th>Roles</th>
+                                    <th>Último Login</th>
+                                    <th>Acceso sistema</th>
+                                    <th>Detalles</th>
+                                </tr>
                             </thead>
                             <tbody>
 
                             </tbody>
-                          </table>
+                        </table>
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
-                         <i class="material-icons">add_circle</i>
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
+                        <i class="material-icons">search</i>
                     </a>
                 </div>
             </div>

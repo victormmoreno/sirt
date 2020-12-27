@@ -17,13 +17,10 @@
             <br>
                 Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
                 <br>
-                    @if(isset($user->fechanacimiento))
-                    {{$user->fechanacimiento->age}} años
-                    @endif
+            @if(isset($user->fechanacimiento))
+            {{$user->fechanacimiento->age}} años
+            @endif
 
-
-                </br>
-            </br>
         </span>
     </div>
 </div>

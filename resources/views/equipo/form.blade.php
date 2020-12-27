@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="col s12 m10 l10 offset-l1 m1">
 
     {!! csrf_field() !!}
