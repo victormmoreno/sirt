@@ -25,52 +25,42 @@ class EmpresaFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
-            'nit' => 'required|numeric|digits_between:6,45|unique:empresas,nit,' . $this->route('id'),
-            'email_entidad' => 'email|nullable|min:7|max:200',
-            'direccion' => 'max:100|nullable',
-            'txtdepartamento' => 'required',
-            'txtciudad_id' => 'required',
-            'txtsector' => 'required',
-            'txttamanhoempresa_id' => 'required',
-            'txttipoempresa_id' => 'required',
-            'fecha_creacion' => 'date_format:Y-m-d|nullable',
-            'codigo_ciiu' => 'max:15|nullable',
+            'txtnit_empresa' => 'required|numeric|digits_between:9,9|unique:empresas,nit,' . $this->route('id'),
+            'txtcodigo_ciiu_empresa' => 'max:15|nullable',
+            'txtnombre_empresa' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
+            'txtfecha_creacion_empresa' => 'date_format:Y-m-d|nullable',
+            'txtsector_empresa' => 'required',
+            'txtemail_entidad' => 'email|nullable|min:7|max:200',
+            'txtdireccion_empresa' => 'max:100|nullable',
+            'txtdepartamento_empresa' => 'required',
+            'txtciudad_id_empresa' => 'required',
+            'txttamanhoempresa_id_empresa' => 'required',
+            'txttipoempresa_id_empresa' => 'required',
         ];
     }
 
     public function messages()
     {
         return $messages = [
-            'nombre.required' => 'El Nombre de la Empresa es obligatorio.',
-            'nombre.min' => 'El Nombre de la Empresa debe ser mínimo de 1 caracter.',
-            'nombre.max' => 'El Nombre de la Empresa debe ser máximo de 300 caracteres.',
-            'nombre.regex' => 'El formate del campo Nombre de la Empresa es incorrecto.',
-
-            'nit.required' => 'El Nit de la Empresa es obligatorio.',
-            'nit.numeric' => 'El Nit de la Empresa debe ser numérico (Sin puntos ni número de verificación).',
-            'nit.unique' => 'El Nit de la Empresa ya se encuentra registrado.',
-            'nit.digits_between' => 'El Nit de la Empresa debe tener entre 6 y 45 digitos.',
-
-            'email_entidad.email' => 'El formato del campo Email de la Empresa es incorrecto.',
-            'email_entidad.min' => 'El Email de la Empresa debe ser minimo de 7 caracteres.',
-            'email_entidad.max' => 'El Email de la Empresa debe ser máximo de 200 caracteres.',
-
-            'direccion.max' => 'La Dirección de la Empresa deben ser máximo de 100 caracteres.',
-
-            'txtdepartamento' => 'El Departamento de la Empresa es obligatorio.',
-
-            'txtciudad_id' => 'La Ciudad de la Empresa es obligatoria.',
-
-            'txtsector.required' => 'El Sector de la Empresa es obligatorio.',
-
-            'txttamanhoempresa_id.required' => 'El Tamaño de la Empresa es obligatorio.',
-
-            'txttipoempresa_id.required' => 'El Tipo de la Empresa es obligatorio.',
-
-            'date_format.date_format' => 'La fecha de creación no tiene un formato válido (Y-m-d).',
-
-            'codigo_ciiu.max' => 'El código CIIU de la empresa debe ser máximo de 15 carácteres.',
+            'txtnombre_empresa.required' => 'El nombre de la empresa es obligatorio.',
+            'txtnombre_empresa.min' => 'El nombre de la empresa debe ser mínimo de 1 caracter.',
+            'txtnombre_empresa.max' => 'El nombre de la empresa debe ser máximo de 300 caracteres.',
+            'txtnombre_empresa.regex' => 'El formate del campo nombre de la empresa es incorrecto.',
+            'txtnit_empresa.required' => 'El nit de la empresa es obligatorio.',
+            'txtnit_empresa.numeric' => 'El nit de la empresa debe ser numérico (Sin puntos ni número de verificación).',
+            'txtnit_empresa.unique' => 'El nit de la empresa ya se encuentra registrado.',
+            'txtnit_empresa.digits_between' => 'El nit de la empresa debe tener entre 6 y 45 digitos.',
+            'txtemail_entidad.email' => 'El formato del email de la empresa es incorrecto.',
+            'txtemail_entidad.min' => 'El email de la empresa debe ser mínimo de 7 caracteres.',
+            'txtemail_entidad.max' => 'El email de la empresa debe ser máximo de 200 caracteres.',
+            'txtdireccion_empresa.max' => 'La dirección de la empresa deben ser máximo de 100 caracteres.',
+            'txtdepartamento_empresa.required' => 'El departamento de la Empresa es obligatorio.',
+            'txtciudad_id_empresa.required' => 'La ciudad de la empresa es obligatoria.',
+            'txtsector_empresa.required' => 'El sector de la empresa es obligatorio.',
+            'txttamanhoempresa_id_empresa.required' => 'El tamaño de la empresa es obligatorio.',
+            'txttipoempresa_id_empresa.required' => 'El tipo de la empresa es obligatorio.',
+            'txtfecha_creacion_empresa.date_format' => 'La fecha de creación no tiene un formato válido (Y-m-d).',
+            'txtcodigo_ciiu_empresa.max' => 'El código CIIU de la empresa debe ser máximo de 15 carácteres.',
         ];
     }
 

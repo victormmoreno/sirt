@@ -35,69 +35,144 @@ class IdeaRepository
             ->last();
     }
 
+    public function consultarIdeasDeProyecto()
+    {
+        return Idea::with(['estadoIdea']);
+    }
+
     /**
      * Función que genera el código de una idea de proyecto
      * @param int $tipo Indica que tipo de idea de proyecto es.
      * @param int $idnodo Indica a que nodo se va a registrar la idea.
      * @return string
      */
-    public function generarCodigoIdea($tipo, $idnodo)
+    public function generarCodigoIdea($idnodo)
     {
-        $anho                       = Carbon::now()->isoFormat('YYYY');
-        $tecnoparque                = sprintf("%02d", $idnodo);
-        $id                         = Idea::selectRaw('MAX(id+1) AS max')->get()->last();
+        $anho = Carbon::now()->isoFormat('YYYY');
+        $tecnoparque = sprintf("%02d", $idnodo);
+        $user = sprintf("%05d", auth()->user()->id);
+        $id = Idea::selectRaw('MAX(id+1) AS max')->get()->last();
         $id->max == null ? $id->max = 1 : $id->max = $id->max;
-        $id->max                    = sprintf("%04d", $id->max);
-        $codigo_idea                = 'I' . $anho . '-' . $tecnoparque . $tipo . '-' . $id->max;
+        $id->max = sprintf("%04d", $id->max);
+        $codigo_idea = 'I' . $anho . '-' . $tecnoparque . $user . '-' . $id->max;
         return $codigo_idea;
     }
 
     public function Store($request)
     {
+        DB::beginTransaction();
+        try {
+            $producto_parecido = 1;
+            $si_producto_parecido = $request->input('txtsi_producto_parecido');
+            $reemplaza = 1;
+            $si_reemplaza = $request->input('txtsi_reemplaza');
+            $packing = 1;
+            $tipo_packing = $request->input('txttipo_packing');
+            $requisitos_legales = 1;
+            $si_requisitos_legales = $request->input('txtsi_requisitos_legales');
+            $requiere_certificaciones = 1;
+            $si_requiere_certificaciones = $request->input('txtsi_requiere_certificaciones');
+            $recursos_necesarios = 1;
+            $si_recursos_necesarios = $request->input('txtsi_recursos_necesarios');
+            $viene_convocatoria = 1;
+            $convocatoria = $request->input('txtconvocatoria');
+            $aval_empresa = 1;
+            $empresa = $request->input('empresa');
 
-        $codigo_idea = $this->generarCodigoIdea(Idea::IsEmprendedor(), $request->input('txtnodo'));
-
-        $idea = Idea::create([
-            "nodo_id"            => $request->input('txtnodo'),
-            "nombres_contacto"   => $request->input('txtnombres'),
-            "apellidos_contacto" => $request->input('txtapellidos'),
-            "correo_contacto"    => $request->input('txtcorreo'),
-            "telefono_contacto"  => $request->input('txttelefono'),
-            "nombre_proyecto"    => $request->input('txtnombre_proyecto'),
-            "codigo_idea"        => $codigo_idea,
-            "aprendiz_sena"      => $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0,
-            "pregunta1"          => $request->input('pregunta1'),
-            "pregunta2"          => $request->input('pregunta2'),
-            "pregunta3"          => $request->input('pregunta3'),
-            "descripcion"        => $request->input('txtdescripcion'),
-            "objetivo"           => $request->input('txtobjetivo'),
-            "alcance"            => $request->input('txtalcance'),
-            "viene_convocatoria" => $request->input('txtconvocatoria'),
-            "convocatoria"       => $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null,
-            "aval_empresa" => $request->input('txtavalempresa'),
-            "empresa"       => $request->input('txtavalempresa') == 1 ? $request->input('txtempresa') : null,
-            "tipo_idea"          => Idea::IsEmprendedor(),
-            "estadoidea_id"      => EstadoIdea::where('nombre', '=', EstadoIdea::IsInscrito())->first()->id,
-        ]);
-
-        $idea->rutamodel()->create([
-            'ruta' => $request->input('txtlinkvideo'),
-        ]);
-
-        event(new IdeaHasReceived($idea));
-
-        $users = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
-            'infocenter.nodo',
-            function ($query) use ($idea) {
-                $query->where('id', $idea->nodo_id);
+            if ($request->input('txtproducto_parecido') === null) {
+                $producto_parecido = 0;
+                $si_producto_parecido = null;
             }
-        )->get();
 
-        if (!$users->isEmpty()) {
-            Notification::send($users, new IdeaReceived($idea));
+            if ($request->input('txtreemplaza') === null) {
+                $reemplaza = 0;
+                $si_reemplaza = null;
+            }
+
+            if ($request->input('txtpacking') === null) {
+                $packing = 0;
+                $tipo_packing = null;
+            }
+
+            if ($request->input('txtrequisitos_legales') === null) {
+                $requisitos_legales = 0;
+                $si_requisitos_legales = null;
+            }
+
+            if ($request->input('txtrequiere_certificaciones') === null) {
+                $requiere_certificaciones = 0;
+                $si_requiere_certificaciones = null;
+            }
+
+            if ($request->input('txtrecursos_necesarios') === null) {
+                $recursos_necesarios = 0;
+                $si_recursos_necesarios = null;
+            }
+
+            if ($request->input('txtviene_convocatoria') === null) {
+                $viene_convocatoria = 0;
+                $convocatoria = null;
+            }
+
+            if ($request->input('txtaval_empresa') === null) {
+                $aval_empresa = 0;
+                $empresa = null;
+            }
+
+            $codigo_idea = $this->generarCodigoIdea($request->input('txtnodo'));
+
+            $idea = Idea::create([
+                "nombre_proyecto" => $request->input('txtnombre_proyecto'),
+                "descripcion" => $request->input('txtdescripcion'),
+                "producto_parecido" => $producto_parecido,
+                "si_producto_parecido" => $si_producto_parecido,
+                "reemplaza" => $reemplaza,
+                "si_reemplaza" => $si_reemplaza,
+                "pregunta1" => $request->input('pregunta1'),
+                "problema" => $request->input('txtproblema'),
+                "necesidades" => $request->input('txtnecesidades'),
+                "quien_compra" => $request->input('txtquien_compra'),
+                "quien_usa" => $request->input('txtquien_usa'),
+                "distribucion" => $request->input('txtdistribucion'),
+                "quien_entrega" => $request->input('txtquien_entrega'),
+                "packing" => $packing,
+                "tipo_packing" => $tipo_packing,
+                "medio_venta" => $request->input('txtmedio_venta'),
+                "valor_clientes" => $request->input('txtvalor_clientes'),
+                "pregunta2" => $request->input('pregunta2'),
+                "requisitos_legales" => $requisitos_legales,
+                "si_requisitos_legales" => $si_requisitos_legales,
+                "requiere_certificaciones" => $requiere_certificaciones,
+                "si_requiere_certificaciones" => $si_requiere_certificaciones,
+                "forma_juridica" => $request->input('txtforma_juridica'),
+                "version_beta" => $request->input('txtversion_beta'),
+                "cantidad_prototipos" => $request->input('txtcantidad_prototipos'),
+                "recursos_necesarios" => $recursos_necesarios,
+                "si_recursos_necesarios" => $si_recursos_necesarios,
+                "nodo_id" => $request->input('txtnodo'),
+                "pregunta3" => $request->input('pregunta3'),
+                "viene_convocatoria" => $viene_convocatoria,
+                "convocatoria" => $convocatoria,
+                "aval_empresa" => $aval_empresa,
+                "empresa" => $empresa,
+                "codigo_idea" => $codigo_idea,
+                "tipo_idea" => Idea::IsEmprendedor(),
+                "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsInscrito())->first()->id,
+                "talento_id" => auth()->user()->talento->id
+            ]);
+
+            $idea->rutamodel()->create([
+                'ruta' => $request->input('txtlinkvideo'),
+            ]);
+
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollback();
+            return false;
         }
 
-        return $idea;
     }
 
     public function Update($request, $idea)

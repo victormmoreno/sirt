@@ -21,7 +21,7 @@
     </tfoot>
   </table>
 @endif
-@if (Session::get('login_role') == App\User::IsDinamizador())
+@if (Session::get('login_role') == App\User::IsDinamizador() || Session::get('login_role') == App\User::IsInfocenter())
   <table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable">
     <thead>
       <tr>

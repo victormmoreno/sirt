@@ -38,7 +38,7 @@ class UserPresenter extends Presenter
 
     public function userLugarExpedicionDocumento()
     {
-        return $this->user->has('ciudadexpedicion') ? "{$this->user->ciudadexpedicion->nombre} - {$this->user->ciudadexpedicion->departamento->nombre}" : 'No se encontraron resultados';
+        return $this->user->ciudadexpedicion != null ? "{$this->user->ciudadexpedicion->nombre} - {$this->user->ciudadexpedicion->departamento->nombre}" : 'No se encontraron resultados';
     }
 
     public function userFechaNacimiento()
@@ -106,7 +106,7 @@ class UserPresenter extends Presenter
 
     public function userLugarResidencia()
     {
-        return $this->user->has('ciudad') ? "{$this->user->ciudad->nombre} ({$this->user->ciudad->departamento->nombre})" : 'No Registra';
+        return $this->user->ciudad != null ? "{$this->user->ciudad->nombre} - {$this->user->ciudad->departamento->nombre}" : 'No Registra';
     }
 
     public function userBarrio()
@@ -269,7 +269,7 @@ class UserPresenter extends Presenter
 
     public function tipoFormacionTalento()
     {
-        if ($this->user->has('talento.tipoformacion')) {
+        if ($this->user->talento->tipoformacion != null) {
             return $this->user->talento->tipoformacion->nombre;
         }
         return $this->message('No Registra');
@@ -285,7 +285,7 @@ class UserPresenter extends Presenter
 
     public function tipoEstudio()
     {
-        if ($this->user->has('talento.tipoestudio') && isset($this->user->talento->tipoestudio)) {
+        if ($this->user->talento->tipoestudio != null) {
             return $this->user->talento->tipoestudio->nombre;
         }
         return $this->message('No Registra');

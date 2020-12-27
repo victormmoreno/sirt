@@ -48,7 +48,7 @@ class CreateUsersTable extends Migration
             $table->dateTime('ultimo_login')->nullable()->default(null);
             $table->string('password')->nullable()->default(null);
             $table->tinyInteger('estrato')->nullable()->default(null);
-            $table->string('otra_ocupacion', 45)->nullable()->default(null);
+            $table->string('otra_ocupacion', 100)->nullable()->default(null);
 
             $table->index(["ciudad_id"], 'fk_users_ciudad1_idx');
 

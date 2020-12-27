@@ -69,6 +69,11 @@ trait UsersTrait
         return self::IS_INGRESO;
     }
 
+    public static function IsArticulador()
+    {
+        return self::IS_ARTICULADOR;
+    }
+
     public static function IsProveedor()
     {
         return self::IS_PROVEEDOR;

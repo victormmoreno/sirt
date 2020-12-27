@@ -18,7 +18,7 @@ class IdeaPolicy
      */
     public function viewAny(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter()]);
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter(), User::IsInicial()]);
     }
 
     /**
@@ -30,7 +30,7 @@ class IdeaPolicy
      */
     public function view(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter()]);
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter(), User::IsInicial()]);
     }
 
     /**
