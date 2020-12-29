@@ -442,7 +442,7 @@
                         @endif
                     @endforeach
                 </select>
-                <label class="active" for="txteps" >Esp <span class="red-text">*</span></label>
+                <label class="active" for="txteps" >Eps <span class="red-text">*</span></label>
                 <small id="txteps-error"  class="error red-text"></small>
             </div>
             <div class="input-field col l6 m10 s12 offset-m1 otraeps"  style="display:none">

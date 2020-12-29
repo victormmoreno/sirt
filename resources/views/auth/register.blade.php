@@ -207,7 +207,7 @@
                                                     @endif
                                                 @endforeach
                                             </select>
-                                            <label class="active" for="txteps" >Esp <span class="red-text">*</span></label>
+                                            <label class="active" for="txteps" >Eps <span class="red-text">*</span></label>
                                             <small id="txteps-error"  class="error red-text"></small>
                                         </div>
                                         <div class="input-field col s12 m6 l6 otraeps"  style="display:none">
@@ -239,7 +239,7 @@
                                     <div class="row center">
                                         <div class="input-field col s12 m12 l12 ">
                                             <div class="switch m-b-md">
-                                                <label class="active">Genero*</label>
+                                                <label class="active">Genero<span class="red-text">*</span></label>
                                                 <label>
                                                     Masculino
                                                     @if(isset($user->genero))
