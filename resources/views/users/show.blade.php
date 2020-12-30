@@ -153,7 +153,6 @@
                                                                     </li>
                                                                     @endif
 
-
                                                                 </ul>
                                                             </div>
                                                         </p>
@@ -230,6 +229,17 @@
                                                                 @endif
                                                             </li>
                                                             <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    map
+                                                                </i>
+                                                                <span class="title green-complement-text">
+                                                                    Etnia
+                                                                </span>
+                                                                <p>
+                                                                    {{$user->present()->userEtnia()}}
+                                                                </p>
+                                                            </li>
+                                                            <li class="collection-item avatar">
 
                                                                 <div class="left">
                                                                     <i class="material-icons circle teal darken-2">
@@ -267,6 +277,7 @@
                                                                     {{$user->present()->userEmail()}}
                                                                 </p>
                                                             </li>
+                                                            
                                                         </ul>
                                                     </div>
                                                     <div class="col s12 m6 l6">
@@ -306,13 +317,24 @@
                                                             </li>
                                                             <li class="collection-item avatar">
                                                                 <i class="material-icons circle teal darken-2">
-                                                                    map
+                                                                    account_balance_wallet
                                                                 </i>
                                                                 <span class="title green-complement-text">
-                                                                    Etnia
+                                                                    ¿Madre Cabeza de familia?
                                                                 </span>
                                                                 <p>
-                                                                    {{$user->present()->userEtnia()}}
+                                                                    {{$user->present()->userMujerCabezaFamilia()}}
+                                                                </p>
+                                                            </li>
+                                                            <li class="collection-item avatar">
+                                                                <i class="material-icons circle teal darken-2">
+                                                                    account_balance_wallet
+                                                                </i>
+                                                                <span class="title green-complement-text">
+                                                                    ¿Desplazado(a) por violencia?
+                                                                </span>
+                                                                <p>
+                                                                    {{$user->present()->userDesplazadoPorViolencia()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -386,7 +408,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                 <div class="right">
+                                                <div class="right">
                                                     <small>
                                                         Información Último Estudio
                                                     </small>

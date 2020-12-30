@@ -211,6 +211,8 @@ class RegisterController extends Controller
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
             "genero"               => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "mujerCabezaFamilia"            => $request->input('txtmadrecabezafamilia'),
+            "desplazadoPorViolencia"            => $request->input('txtdesplazadoporviolencia'),
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "estado"               => $this->stateUser($request),
             "institucion"          => $request->input('txtinstitucion'),
@@ -224,7 +226,6 @@ class RegisterController extends Controller
 
     protected function storeTalento($request, $user)
     {
-
         $entidad = null;
 
         if (
