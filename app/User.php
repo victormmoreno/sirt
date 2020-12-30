@@ -81,6 +81,8 @@ class User extends Authenticatable implements JWTSubject
         'celular',
         'fechanacimiento',
         'genero',
+        'mujerCabezaFamilia',
+        'desplazadoPorViolencia',
         'estado',
         'institucion',
         'titulo_obtenido',
