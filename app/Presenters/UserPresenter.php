@@ -31,6 +31,14 @@ class UserPresenter extends Presenter
         return $this->user->genero == User::IsMasculino() ? 'Masculino' : 'Femenino';
     }
 
+    public function userMujerCabezaFamilia(){
+        return $this->user->mujerCabezaFamilia == 1 ? 'Si' : 'No';
+    }
+
+    public function userDesplazadoPorViolencia(){
+        return $this->user->desplazadoPorViolencia == 1 ? 'Si' : 'No';
+    }
+
     public function userTipoDocuento()
     {
         return $this->user->has('tipodocumento') ? $this->user->tipodocumento->nombre : 'No se encontraron resultados';
