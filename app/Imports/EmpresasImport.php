@@ -10,9 +10,16 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class EmpresasImport implements ToCollection, WithHeadingRow
 {
+    public $validaciones;
+    public $hoja = 'Empresas';
 
+    public function __construct()
+    {
+        $this->validaciones = new ValidacionesImport;
+    }
     public function collection(Collection $rows)
     {
+        
         // El encabezado para migrar las empresas debe ser el siguiente
         // NIT(SIN PUNTOS NI CODIGO DE VERIFICACIÓN) - CÓDIGO CIIU - NOMBRE - FECHA DE CREACIÓN - SECTOR DE LA EMPRESA - TAMAÑO EMPRESA - TIPO EMPESA - CORREO EMPRESA - DEPARTAMENTO - CIUDAD - DIRECCION
         // Entidades: ciudad_id, nombre, slug, email_entidad
@@ -25,6 +32,9 @@ class EmpresasImport implements ToCollection, WithHeadingRow
                 $querySector = Sector::where('nombre', $row['sector'])->first();
                 $queryTipo = TipoEmpresa::where('nombre', $row['tipo'])->first();
                 $queryTamanho = TamanhoEmpresa::where('nombre', $row['tamanho'])->first();
+
+                $queryTipo = $queryTipo == null ? null : $queryTipo->id;
+                $queryTamanho = $queryTamanho == null ? null : $queryTamanho->id;
                 
                 $vCiudad = $this->validarCiudad($queryCiudad, $row['ciudad'], $key);
                 if (!$vCiudad) {
@@ -34,14 +44,22 @@ class EmpresasImport implements ToCollection, WithHeadingRow
                 if (!$vSector) {
                     return $vSector;
                 }
-                $vTipo = $this->validarTipo($queryTipo, $row['tipo'], $key);
-                if (!$vTipo) {
-                    return $vTipo;
+                $validacion = $this->validaciones->validarFecha($row['fecha_creacion'], $key, 'Fecha de creación', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
                 }
-                $vTamanho = $this->validarTamanho($queryTamanho, $row['tamanho'], $key);
-                if (!$vTamanho) {
-                    return $vTamanho;
+                $validacion = $this->validaciones->validarTamanhoCelda($row['direccion'], $key, 'Dirección de la empresa', 100, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
                 }
+                // $vTipo = $this->validarTipo($queryTipo, $row['tipo'], $key);
+                // if (!$vTipo) {
+                //     return $vTipo;
+                // }
+                // $vTamanho = $this->validarTamanho($queryTamanho, $row['tamanho'], $key);
+                // if (!$vTamanho) {
+                //     return $vTamanho;
+                // }
                 
                 $empresa = Empresa::where('nit', $nit)->first();
                 if ($empresa == null) {
@@ -63,8 +81,8 @@ class EmpresasImport implements ToCollection, WithHeadingRow
     {
         $empresa->update([
             'sector_id' => $querySector->id,
-            'tipoempresa_id' => $queryTipo->id,
-            'tamanhoempresa_id' => $queryTamanho->id,
+            'tipoempresa_id' => $queryTipo,
+            'tamanhoempresa_id' => $queryTamanho,
             'direccion' => $row['direccion'],
             'fecha_creacion' => $row['fecha_creacion'],
             'codigo_ciiu' => $row['ciiu']
@@ -87,8 +105,8 @@ class EmpresasImport implements ToCollection, WithHeadingRow
         Empresa::create([
             'entidad_id' => $entidad->id,
             'sector_id' => $querySector->id,
-            'tipoempresa_id' => $queryTipo->id,
-            'tamanhoempresa_id' => $queryTamanho->id,
+            'tipoempresa_id' => $queryTipo,
+            'tamanhoempresa_id' => $queryTamanho,
             'nit' => $nit,
             'direccion' => $row['direccion'],
             'fecha_creacion' => $row['fecha_creacion'],
@@ -109,24 +127,6 @@ class EmpresasImport implements ToCollection, WithHeadingRow
     {
         if ($querySector == null) {
             session()->put('errorMigracion', 'Error en la hoja de "Empresas": El sector ' . $nombre_sector . ' en el registro de la fila #' . ($i+2) . ' no existe en la base de datos');
-            return false;
-        }
-        return true;
-    }
-
-    private function validarTipo($queryTipo, $nombre_tipo, $i)
-    {
-        if ($queryTipo == null) {
-            session()->put('errorMigracion', 'Error en la hoja de "Empresas": El tipo de empresa ' . $nombre_tipo . ' en el registro de la fila #' . ($i+2) . ' no existe en la base de datos');
-            return false;
-        }
-        return true;
-    }
-
-    private function validarTamanho($queryTamanho, $nombre_tamanho, $i)
-    {
-        if ($queryTamanho == null) {
-            session()->put('errorMigracion', 'Error en la hoja de "Empresas": El tamaño de la empresa ' . $nombre_tamanho . ' en el registro de la fila #' . ($i+2) . ' no existe en la base de datos');
             return false;
         }
         return true;

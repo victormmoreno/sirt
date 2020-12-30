@@ -85,6 +85,9 @@ class HomeController extends Controller
           return view('home.desarrollador');
           break;
 
+        case 'Articulador':
+          return view('home.home');
+          break;
         default:
           return view('home.home');
           break;

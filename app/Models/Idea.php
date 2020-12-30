@@ -55,7 +55,31 @@ class Idea extends Model
         'empresa',
         'tipo_idea',
         'estadoidea_id',
-        'gestor_id'
+        'gestor_id',
+        'talento_id',
+        'producto_parecido',
+        'si_producto_parecido',
+        'reemplaza',
+        'si_reemplaza',
+        'problema',
+        'quien_compra',
+        'quien_usa',
+        'necesidades',
+        'distribucion',
+        'quien_entrega',
+        'packing',
+        'tipo_packing',
+        'medio_venta',
+        'valor_clientes',
+        'requisitos_legales',
+        'si_requisitos_legales',
+        'requiere_certificaciones',
+        'si_requiere_certificaciones',
+        'forma_juridica',
+        'version_beta',
+        'cantidad_prototipos',
+        'recursos_necesarios',
+        'si_recursos_necesarios'
     ];
 
     /**

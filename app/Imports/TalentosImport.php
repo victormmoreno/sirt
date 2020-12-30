@@ -41,9 +41,16 @@ class TalentosImport implements ToCollection, WithHeadingRow
             {
                 $row['correo'] = str_replace(' ', '', $row['correo']);
                 $row['correo'] = ltrim(rtrim($row['correo']));
+                // Mayúsculas
+                $row['genero'] = strtoupper($row['genero']);
                 // Validar documento
                 $documento = str_replace(' ', '', $row['documento']);
+                $row['documento'] = str_replace(' ', '', $row['documento']);
                 $vDocumento = $this->validaciones->validarCelda($documento, $key, 'Número de documento', $this->hoja);
+                if (!$vDocumento) {
+                    return $vDocumento;
+                }
+                $vDocumento = $this->validaciones->validarTamanhoCelda($documento, $key, 'Número de documento', 11, $this->hoja);
                 if (!$vDocumento) {
                     return $vDocumento;
                 }
@@ -52,12 +59,6 @@ class TalentosImport implements ToCollection, WithHeadingRow
                 $vTipoDocumento = $this->validaciones->validarQuery($queryTipoDocumento, $row['tipo_documento'], $key, 'Tipo de documento', $this->hoja);
                 if (!$vTipoDocumento) {
                     return $vTipoDocumento;
-                }
-                // Validar ciudad de expedición
-                $queryCiudadExpedicion = Ciudad::where('nombre', $row['ciudad_expedicion'])->first();
-                $vCiudadExpedicion = $this->validaciones->validarQuery($queryCiudadExpedicion, $row['ciudad_expedicion'], $key, 'Ciudad de expedición', $this->hoja);
-                if (!$vCiudadExpedicion) {
-                    return $vCiudadExpedicion;
                 }
                 // Validar nombres y apellidos
                 $vNombres = $this->validaciones->validarCelda($row['nombres'], $key, 'Nombres', $this->hoja);
@@ -90,13 +91,6 @@ class TalentosImport implements ToCollection, WithHeadingRow
                 if (!$vEps) {
                     return $vEps;
                 }
-                // Validar ciudad de residencia
-                $queryCiudadResidencia = Ciudad::where('nombre', $row['ciudad_residencia'])->first();
-                $vCiudadResidencia = $this->validaciones->validarQuery($queryCiudadResidencia, $row['ciudad_residencia'], $key, 'Ciudad de residencia', $this->hoja);
-                if (!$vCiudadResidencia) {
-                    return $vCiudadResidencia;
-                }
-
                 // Validar correo electrónico
                 $vCorreo = $this->validaciones->validarCelda($row['correo'], $key, 'Correo electrónico', $this->hoja);
                 if (!$vCorreo) {
@@ -109,10 +103,6 @@ class TalentosImport implements ToCollection, WithHeadingRow
                 }
                 // Validar grado de escolaridad
                 $queryGradoEscolaridad = GradoEscolaridad::where('nombre', $row['grado_escolaridad'])->first();
-                // $vGradoEscolaridad = $this->validarQuery($queryGradoEscolaridad, $row['grado_escolaridad'], $key, 'Grado de escolaridad');
-                // if (!$vGradoEscolaridad) {
-                //     return $vGradoEscolaridad;
-                // }
                 // Validar tipo de talento
                 $queryTipoTalento = TipoTalento::where('nombre', $row['tipo_talento'])->first();
                 $vTipoTalento = $this->validaciones->validarQuery($queryTipoTalento, $row['tipo_talento'], $key, 'Tipo de talento', $this->hoja);
@@ -121,21 +111,9 @@ class TalentosImport implements ToCollection, WithHeadingRow
                 }
                 // Validar tipo de formación
                 $queryTipoFormacion = TipoFormacion::where('nombre', $row['tipo_formacion'])->first();
-                // if ($queryTipoTalento->nombre == 'Egresado SENA') {
-                //     $vTipoFormacion = $this->validarQuery($queryTipoFormacion, $row['tipo_formacion'], $key, 'Tipo de formación');
-                //     if (!$vTipoFormacion) {
-                //         return $vTipoFormacion;
-                //     }
-                // }
 
                 // Validar tipo de estudio
                 $queryTipoEstudioUniversidad = TipoEstudio::where('nombre', $row['tipo_estudio_universidad'])->first();
-                // if ($queryTipoTalento->nombre == 'Estudiante Universitario') {
-                //     $vTipoEstudioUniversidad = $this->validarQuery($queryTipoEstudioUniversidad, $row['tipo_formacion'], $key, 'Tipo de estudio universitario');
-                //     if (!$vTipoEstudioUniversidad) {
-                //         return $vTipoEstudioUniversidad;
-                //     }
-                // }
 
                 $user = User::where('documento', $documento)->withTrashed()->first();
                 $user_email = User::where('email', $row['correo'])->withTrashed()->first();
@@ -153,7 +131,7 @@ class TalentosImport implements ToCollection, WithHeadingRow
                     if ($user_email == null) {
                         // en caso de que el correo no se encuentra registrado
                         // Registrar nueva talento
-                        $user = $this->registrarUser($row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $queryCiudadResidencia, $queryCiudadExpedicion, $ocupaciones[1]);
+                        $user = $this->registrarUser($row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $ocupaciones[1]);
                         $user->ocupaciones()->sync($ocupaciones[0], false);
                         $this->registrarTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
                     } else {
@@ -163,12 +141,17 @@ class TalentosImport implements ToCollection, WithHeadingRow
                     }
                 } else {
                     // El usuario existe - Cambia información
-                    if ($user_email != null && $user_email->documento == $documento) {
+                    if ($user != null && $user->documento == $documento && $user->email = $row['correo']) {
                         // Permite actualizar la información porque el correo le pertenece a la persona
                         // Cambia la información actual
-                        $this->updateUser($user, $row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $queryCiudadResidencia, $queryCiudadExpedicion, $ocupaciones[1]);
+                        $this->updateUser($user, $row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $ocupaciones[1]);
                         $user->ocupaciones()->sync($ocupaciones[0], true);
-                        $this->updateTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
+                        if ($user->talento == null) {
+                            $this->registrarTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
+                        } else {
+                            $this->updateTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
+                        }
+                        // $this->updateTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
                     } else {
                         // No permite actualizar la información porque el correo se encuentra asociado a otra persona
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user->documento, $this->hoja);
@@ -218,15 +201,17 @@ class TalentosImport implements ToCollection, WithHeadingRow
         return [$ocupaciones_foraneas, $otra_ocupacion];
     }
 
-    private function updateUser($user, $row, $tipo_documento, $grado_escolaridad, $grupo_sanguineo, $eps, $ciudad_residencia, $ciudad_expedicion, $otra_ocupacion)
+    private function updateUser($user, $row, $tipo_documento, $grado_escolaridad, $grupo_sanguineo, $eps, $otra_ocupacion)
     {
+        $ciudad_expedicion = Ciudad::where('nombre', $row['ciudad_expedicion'])->first();
+        $ciudad_residencia = Ciudad::where('nombre', $row['ciudad_residencia'])->first();
         return $user->update([
             "tipodocumento_id" => $tipo_documento->id,
             "gradoescolaridad_id" => $grado_escolaridad == null ? null : $grado_escolaridad->id,
             "gruposanguineo_id" => $grupo_sanguineo->id,
             "eps_id" => $eps->id,
-            "ciudad_id" => $ciudad_residencia->id,
-            "ciudad_expedicion_id" => $ciudad_expedicion->id,
+            "ciudad_id" => $ciudad_residencia == null ? null : $ciudad_residencia->id,
+            "ciudad_expedicion_id" => $ciudad_expedicion == null ? null : $ciudad_expedicion->id,
             "nombres" => $row['nombres'],
             "apellidos" => $row['apellidos'],
             "email" => $row['correo'],
@@ -363,15 +348,17 @@ class TalentosImport implements ToCollection, WithHeadingRow
         ]);
     }
 
-    private function registrarUser($row, $tipo_documento, $grado_escolaridad, $grupo_sanguineo, $eps, $ciudad_residencia, $ciudad_expedicion, $otra_ocupacion)
+    private function registrarUser($row, $tipo_documento, $grado_escolaridad, $grupo_sanguineo, $eps, $otra_ocupacion)
     {
+        $ciudad_expedicion = Ciudad::where('nombre', $row['ciudad_expedicion'])->first();
+        $ciudad_residencia = Ciudad::where('nombre', $row['ciudad_residencia'])->first();
         return User::create([
             "tipodocumento_id" => $tipo_documento->id,
             "gradoescolaridad_id" => $grado_escolaridad == null ? null : $grado_escolaridad->id,
             "gruposanguineo_id" => $grupo_sanguineo->id,
             "eps_id" => $eps->id,
-            "ciudad_id" => $ciudad_residencia->id,
-            "ciudad_expedicion_id" => $ciudad_expedicion->id,
+            "ciudad_id" => $ciudad_residencia == null ? null : $ciudad_residencia->id,
+            "ciudad_expedicion_id" => $ciudad_expedicion == null ? null : $ciudad_expedicion->id,
             "nombres" => $row['nombres'],
             "apellidos" => $row['apellidos'],
             "documento" => $row['documento'],

@@ -73,4 +73,14 @@ class Empresa extends Model
     {
         return $this->belongsTo(Sector::class, 'sector_id', 'id');
     }
+    // Relación a la tabla tipo de empresa
+    public function tipoempresa()
+    {
+        return $this->belongsTo(TipoEmpresa::class, 'tipoempresa_id', 'id');
+    }
+    // Relación a la tabla tipo de empresa
+    public function tamanhoempresa()
+    {
+        return $this->belongsTo(TamanhoEmpresa::class, 'tamanhoempresa_id', 'id');
+    }
 }
