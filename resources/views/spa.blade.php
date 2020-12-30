@@ -10,14 +10,9 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('fontAwesome/css/all.min.css') }}">
 @endpush
 @section('content-spa')
-
-
-
-
 <main class="mn-inner no-p">
     <div class="content">
         <!---Home-->
-
     <section id="home">
         <div class="conte-home-escritorio">
             <div class="bacg-home nodo1"></div>
@@ -34,15 +29,9 @@
                 <li>
                     <img src="{{ asset('img/nodo-ocaña.jpg') }}" id="home-ocaña">
                 </li>
-                <li id="nodo-img-3">
-
-                </li>
-                <li id="nodo-img-4">
-
-                </li>
-                <li id="nodo-img-5">
-
-                </li>
+                <li id="nodo-img-3"></li>
+                <li id="nodo-img-4"></li>
+                <li id="nodo-img-5"></li>
                 <li></li>
                 <li></li>
             </ul>
@@ -66,9 +55,7 @@
     <!--------------------------------------------------------->
 
     <!--- ¿Qué es tecnoparques? -->
-
     <section id="slideshow">
-
         <ul class="slider-escritorio">
 
             <li>
@@ -139,7 +126,7 @@
 
         </div>
 
-        <iframe id="charla" width="560" height="315" src="https://www.youtube-nocookie.com/embed/Cex2ZgzbqMw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="charla" width="560" height="315" src="//www.youtube.com/embed/7kmYdTS9rro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 
