@@ -40,7 +40,7 @@
                                     </div>
                                     <br><br>
                                     <div class="col s12 m12 l12">
-                                        <div class="divider" style="background:#008981;"></div>
+                                        <div class="divider"></div>
                                         <a class="footer-text left-align" href="{{route('/')}}">
                                             <i class="material-icons arrow-l">arrow_back</i>
                                         </a>INICIAR SESIÓN
@@ -84,13 +84,13 @@
                                         <br><br>
                                         @if (Route::has('registro'))
                                         ¿Aún no tienes cuenta?
-                                        <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('registro') }}">
+                                        <a class="m-t-sm  orange-text text-darken-3  center-align" href="{{ route('registro') }}">
                                             Registrate
                                         </a>
                                         <br>
                                         @endif
                                         @if (Route::has('password.request'))
-                                            <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('password.request') }}">
+                                            <a class="m-t-sm  orange-text text-darken-3  center-align" href="{{ route('password.request') }}">
                                                 {{ __('Forgot Your Password?') }}
                                             </a>
                                         @endif

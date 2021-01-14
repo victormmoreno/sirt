@@ -191,6 +191,7 @@ class UserFormRequest extends FormRequest
             'txtotraeps.min'                      => 'La otra eps debe ser minimo 1 caracter',
             'txtotraeps.max'                      => 'La otra eps debe ser minimo 45 caracteres',
             'txtotraeps.regex'                    => 'El formato del campo otra eps es incorrecto',
+            'txtgrado_discapacidad' => 'El grado de discapacidad es obligatorio',
 
             'txtmadrecabezafamilia.required'                  => 'El campo es obligatorio.',
             'txtdesplazadoporviolencia.required'                  => 'El campo es obligatorio.',

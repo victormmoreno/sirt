@@ -1,5 +1,4 @@
 @extends('spa.layouts.app')
-
 @section('meta-title', 'Red Tecnoparque Colombia')
 @section('meta-content', 'Inicio')
 @push('style')
@@ -12,7 +11,7 @@
 @section('content-spa')
 <main class="mn-inner no-p">
     <div class="content">
-        <!---Home-->
+    <!---Home-->
     <section id="home">
         <div class="conte-home-escritorio">
             <div class="bacg-home nodo1"></div>
@@ -41,31 +40,22 @@
             <h1 class="tex-logo tecno">TECNOPARQUE</h1>
             <h1 class="tex-logo colom">COLOMBIA</h1>
         </div>
-
         <div class="logo-tecno-cel">
             <h1 class="tex-logo-cel red-cel">RED</h1>
             <h1 class="tex-logo-cel tecno-cel">TECNOPARQUE</h1>
             <h1 class="tex-logo-cel colom-cel">COLOMBIA</h1>
         </div>
     </section>
-
-
-
-
     <!--------------------------------------------------------->
-
     <!--- ¿Qué es tecnoparques? -->
     <section id="slideshow">
         <ul class="slider-escritorio">
-
             <li>
                 <img src="{{ asset('img/QueEsTecnoparque.jpg') }}" alt="QueEsTecnoparque" id="img-1">
             </li>
-
             <li>
                 <img src="{{ asset('img/NuestrosServicios.jpg') }}" alt="ServiciosTecnoparque" id="img-2">
             </li>
-
             <li>
                 <img src="{{ asset('img/objetivos.jpg') }}" alt="ObjetivosTecnoparque" id="img-3">
             </li>
@@ -73,18 +63,14 @@
         <ol class="paginacion">
         </ol>
     </section>
-
     <section id="slideshow-tab">
-
         <ul class="slider-tab">
             <li>
                 <img src="{{ asset('img/objetivos.jpg') }}" alt="ObjetivosTecnoparque" id="img-3">
             </li>
-
             <li>
                 <img src="{{ asset('img/NuestrosServicios.jpg') }}" alt="ServiciosTecnoparque" id="img-2">
             </li>
-
             <li>
                 <img src="{{ asset('img/QueEsTecnoparque.jpg') }}" alt="QueEsTecnoparque" id="img-1">
             </li>
@@ -92,11 +78,8 @@
         <ol class="paginacion-tab">
         </ol>
     </section>
-
     <section id="slideshow-cel">
-
         <ul class="slider-cel">
-
             <li>
                 <img src="{{ asset('img/QueEsTecnoparque-cel.jpg') }}" alt="QueEsTecnoparque" id="img-1">
             </li>
@@ -106,78 +89,41 @@
             <li>
                 <img src="{{ asset('img/objetivos-cel.jpg') }}" alt="ObjetivosTecnoparque" id="img-3">
             </li>
-
         </ul>
         <ol class="paginacion-cel">
         </ol>
     </section>
-
-
-
     <!--------------------------------------------------------->
-
     <!--Charla informativa-->
-
     <section id="video">
-
         <div id="fondo-titulo-video">
-
             <h1 id="titulo-seccion-video">Charla informativa</h1>
-
         </div>
-
         <iframe id="charla" width="560" height="315" src="//www.youtube.com/embed/7kmYdTS9rro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
-
     </section>
-
     <!--------------------------------------------------------->
-
     <!--Lineas-->
-
     <section id="lineas">
-
         <div id="caja-texto">
-
             <div id="caja-texto-2">
-
                 <div id="lineas-texto">
-
                     <h1>líneas</h1>
-
                     <hr>
-
                     <p>Tecnoparque se especializa en 4 líneas sustentadas en tecnologías emergentes, en las oportunidades del sector productivo y la política del gobierno. <br> Los usuarios pueden acceder gratuitamente a asesoría especializada de gestores
                         expertos en las 4 líneas tecnológicas además de acceso a infraestructura y laboratorios con equipos de alta tecnología, convirtiendo a Tecnoparque en un actor clave en los ecosistemas de Ciencia Tecnología e Innovación en el país.
                     </p>
-
                 </div>
-
             </div>
-
         </div>
-
         <div id="caja-iconos">
-
             <div id="iconos">
-
-
-
                 <div id="caja-icono1" class="w-cajas-iconos">
-
                     <div id="icono1" class="iconos-blancos"></div>
-
                 </div>
-
                 <div id="descripcion-linea1" class="w-descripcion-lineas">
-
                     <div class="caja-descripcion-text">
-
                         <h5 id="titulo-descripcion-linea1" class="titulos-descripcion-lineas">Biotecnología y Nanotecnología</h5>
-
                         <hr>
-
                         <p class="descripcion-lineas-p"> • Biotecnología industrial</p>
 
                         <p class="descripcion-lineas-p"> • Microbiología agrícola y pecuaria</p>
@@ -199,12 +145,8 @@
                         <p class="descripcion-lineas-p"> • Agroindustria no alimentaria</p>
 
                         <p class="descripcion-lineas-p"> • Nanotecnología</p>
-
                     </div>
-
                 </div>
-
-
                 <div id="caja-icono2" class="w-cajas-iconos">
 
                     <div id="icono2" class="iconos-naranjas"></div>
@@ -693,7 +635,7 @@
                         </div>
                     </div>
                 </div>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3986.1896772932128!2d-76.61511715034123!3d2.4438025577578535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3003172ee1b737%3A0x2846201d404c9acd!2sCasa%20Rosada%20-%20E.S.E.%20Popay%C3%A1n!5e0!3m2!1ses!2sco!4v1604524920972!5m2!1ses!2sco"
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1020461.8375583054!2d-77.1814625!3d2.4473781!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30033e8846ea19%3A0x60b53b7d5c39a2fa!2sBiblioteca%20Parque%20Inform%C3%A1tico%20de%20Ciencia%2C%20Arte%20y%20Tecnolog%C3%ADa!5e0!3m2!1ses-419!2sco!4v1610571016722!5m2!1ses-419!2sco"  
                     width="400" height="200" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
 
             </div>
