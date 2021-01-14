@@ -5,7 +5,6 @@
 @section('meta-keywords', 'Reestablecer Contraseña')
 
 @section('content-auth')
-
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
  <div class="mn-content valign-wrapper" id="app">
         <main class="mn-inner container">
@@ -24,13 +23,13 @@
                                         <br>
                                         <br>
                                         <div class="col s12 m12 l12">
-                                            <div class="divider" style="background:#008981;"></div>
+                                            <div class="divider"></div>
                                             {{ __('Reset Password') }}
                                         </div>
                                     </div>
                                 </span>
                                 <div class="row">
-                                  <form   method="POST" action="{{ route('password.update') }}" onsubmit="return checkSubmit()">
+                                    <form   method="POST" action="{{ route('password.update') }}" onsubmit="return checkSubmit()">
                                     @csrf
                                     <input type="hidden" name="token" value="{{ $token }}">
                                     <div class="input-field col s12">
@@ -61,14 +60,14 @@
                                             {{ __('Reset Password') }}
                                         </button>
                                         <br><br>
-                                        <small>¿No recibió un correo electrónico de confirmación? <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('password.request') }}">solicita uno nuevo</a>,
+                                        <small>¿No recibió un correo electrónico de confirmación? <a class="m-t-sm orange-text text-darken-3 center-align" href="{{ route('password.request') }}">solicita uno nuevo</a>,
                                             <b>¿Ya estas registrado?</b> 
-                                            <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('login') }}">
+                                            <a class="m-t-sm orange-text text-darken-3 center-align" href="{{ route('login') }}">
                                                 {{{__('Login')}}}
                                             </a>
                                         </small>
-                                        <div class="divider" style="background:#008981;"></div>
-                                        <a class="m-t-sm  darken-text text-darken-2 center-align" style="color: #008987" href="{{ route('/') }}">
+                                        <div class="divider"></div>
+                                        <a class="m-t-sm orange-text text-darken-3 center-align" href="{{ route('/') }}">
                                             Inicio
                                         </a>
                                     </div>
