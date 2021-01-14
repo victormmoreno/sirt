@@ -576,7 +576,7 @@ nav .nav-wrapper ul li span.badge {
     height: 1px;
     margin: 8px 0;
     overflow: hidden;
-    background-color: #EEEEEE;
+    background-color: #fc7323;
 }
 
 
@@ -3569,8 +3569,11 @@ body.search-app .search-input input:-ms-input-placeholder {
 .signin-page {
     height: 100%;
     width: 100%;
-    background: url('/img/Tecnoparque_Fondo.jpg') no-repeat;
-    background-size: cover;
+    background-image: url('/img/Tecnoparque_Fondo.jpg'); /* The image used */
+    background-color: #fd7e14; /* Used if the image is unavailable */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
 }
 
 

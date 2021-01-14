@@ -254,7 +254,7 @@
             }
 
             .bg-color-template {
-                background-color: #009891;
+                background-color: #fd7e14;
             }
 
 
@@ -275,7 +275,7 @@
             }
 
             .bg-purple-light {
-                background-color: #a779e9;
+                background-color: #fd7e14;
             }
 
             .bg-no-repeat {

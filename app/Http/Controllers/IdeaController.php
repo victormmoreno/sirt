@@ -89,9 +89,7 @@ class IdeaController extends Controller
 
     public function datatableIdeasTalento(Request $request)
     {
-        // $ideas = Idea::with(['estadoIdea']);
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)->get();
-        // dd($ideas);
         return $this->datatableIdeas($request, $ideas);
     }
 

@@ -6974,7 +6974,7 @@ var selectCostoAdministrativoNodo = {
 $(document).ready(function() {
 
     usoinfraestructuraIndex.queryActivitiesByAnio();
-   
+
 
     let filter_nodo = $('#filter_nodo').val();
     let filter_year = $('#filter_year').val();
@@ -7119,7 +7119,7 @@ var usoinfraestructuraIndex = {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'si, elminar uso',
+            confirmButtonText: 'si, eliminar uso',
             cancelButtonText: 'No, cancelar',
         }).then((result) => {
             if (result.value) {

@@ -45,7 +45,7 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        return view('auth.passwords.email2', [
+        return view('auth.passwords.email', [
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
         ]);
     }
