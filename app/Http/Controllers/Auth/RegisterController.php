@@ -127,11 +127,17 @@ class RegisterController extends Controller
                 //envio de email con contraseña
                 event(new UserWasRegistered($user, $password));
 
+                $message = "";
 
+                if($request->input('txttipousuario') == 'talento'){
+                    $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name').", ahora puedes acceder a registrar tu idea.";
+                }else{
+                    $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name') . ", ahora debes esperar a que validemos tu información.";
+                }
 
                 return response()->json([
                     'state'   => 'success',
-                    'message' => 'El Usuario ha sido creado satisfactoriamente',
+                    'message' => $message,
                     'url' => route('login'),
                     'user' => $user,
                 ]);

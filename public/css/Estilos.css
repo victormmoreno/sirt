@@ -107,35 +107,35 @@ h1 {
 }
 
 .nodo1 {
-    background: url(../Img/edificio-bogota.jpg);
+    background: url(../img/edificio-bogota.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: none;
 }
 
 .nodo2 {
-    background: url(../Img/edificio-medellín.jpg);
+    background: url(../img/edificio-medellín.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: none;
 }
 
 .nodo3 {
-    background: url(../Img/edificio-socorro.jpg);
+    background: url(../img/edificio-socorro.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: none;
 }
 
 .nodo4 {
-    background: url(../Img/edificio-pereira.jpg);
+    background: url(../img/edificio-pereira.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: none;
 }
 
 .nodo5 {
-    background: url(../Img/edificio-cucuta.jpg);
+    background: url(../img/edificio-cucuta.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: none;
@@ -390,28 +390,28 @@ ul {
 }
 
 #icono1 {
-    background: url(../Img/Biotecnologia.png);
+    background: url(../img/Biotecnologia.png);
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
 }
 
 #icono2 {
-    background: url(../Img/Electronica.png);
+    background: url(../img/Electronica.png);
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
 }
 
 #icono3 {
-    background: url(../Img/Tecnologias-Virtuales.png);
+    background: url(../img/Tecnologias-Virtuales.png);
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
 }
 
 #icono4 {
-    background: url(../Img/Ingenieria.png);
+    background: url(../img/Ingenieria.png);
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
