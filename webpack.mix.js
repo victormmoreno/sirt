@@ -138,7 +138,7 @@ mix.scripts([
 
 mix.browserSync({
 
-        proxy: 'http://gestion2020.test',
+        proxy: 'http://gestion2021.test',
         files: [
             'app/**/*',
             'resources/views/**/*',

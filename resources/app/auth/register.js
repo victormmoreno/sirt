@@ -394,17 +394,25 @@ $(document).on('submit', 'form#formRegisterUser', function (event) {
             if (data.state == 'success' && data.url != false) {
                 Swal.fire({
                     title: 'Registro Exitoso',
-                    text: `Bienvenido(a) `+data.user.nombres+ ` ` +data.user.apellidos+` a la Red Tecnoparque Colombia, desde ahora puedes acceder a los servicios de la Red.`,
+                    icon: 'success',
                     type: 'success',
+                    html: data.message,
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
-                    footer: '<p class="red-text">Hemos enviado un correo electrónico a ' + data.user.email + '  con las instrucciones para acceder al aplicativo.</p>'
+                    backdrop: true,
+                    allowOutsideClick: false,
+                    footer: '<p class="red-text">Hemos enviado un correo electrónico  a ' + data.user.email + ' con las credenciales de ingreso a la plataforma.</p>'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setTimeout(function(){
+                            window.location.href = data.url;
+                        }, 50);
+                    }
+                    setTimeout(function(){
+                        window.location.href = data.url;
+                    }, 50);
                 });
-                
-                setTimeout(function(){
-                    window.location.href = data.url;
-                }, 3000);
             }
         },
     });
