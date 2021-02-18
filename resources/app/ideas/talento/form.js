@@ -8,6 +8,9 @@ $(document).ready(function () {
     divRecursos = $('#recursos_content');
     divConvocatoria = $('#convocatoria_content');
     divAvalEmpresa = $('#avalEmpresa_content');
+    divBuscarEmpresa = $('#buscarEmpresa_content');
+    divRegistrarEmpresa = $('#registrarEmpresa_content');
+    divEmpresaRegistrada = $('#consultarEmpresa_content');
     // Ocultar contenedores
     divProductoParecido.hide();
     divReemplaza.hide();
@@ -17,7 +20,80 @@ $(document).ready(function () {
     divRecursos.hide();
     divConvocatoria.hide();
     divAvalEmpresa.hide();
+    divBuscarEmpresa.hide();
+    divRegistrarEmpresa.hide();
+    divEmpresaRegistrada.hide();
+
+    showInput_ProductoParecido();
+    showInput_Reemplaza();
+    showInput_Packing();
+    showInput_RequisitosLegales();
+    showInput_Certificaciones();
+    showInput_Recursos();
+    showInput_Convocatoria();
+    showInput_AvalEmpresa();
+    showInput_BuscarEmpresa();
 });
+
+function consultarEmpresaTecnoparque() {
+    let nit = $('#txtnit').val();
+    let field = 'nit';
+    if (nit.length != 9) {
+        Swal.fire({
+            title: 'Advertencia!',
+            text: "El nit de la empresa debe tener 9 dígitos!",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+    } else {
+        if (nit == "") {
+          Swal.fire({
+            title: 'Advertencia!',
+            text: "Digite el nit de la empresa!",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+        } else {
+          $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
+            success: function (response) {
+                // console.log(response.empresa.entidad.nombre);
+              if (response.empresa == null) {
+                divEmpresaRegistrada.hide();
+                divRegistrarEmpresa.show();
+                $('#txtnit_empresa').val(nit);
+                $("label[for='txtnit_empresa']").addClass('active');
+              } else {
+                asignarValoresFRMIdeas(response);
+                divEmpresaRegistrada.show();
+                divRegistrarEmpresa.hide();
+              }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+              alert("Error: " + errorThrown);
+            }
+          })
+        }
+    }
+}
+
+function asignarValoresFRMIdeas(response) {
+    $('#txtnombre_empresa_det').val(response.empresa.entidad.nombre);
+    $("label[for='txtnombre_empresa_det']").addClass('active');
+    $('#txttipo_empresa_det').val(response.empresa.tipoempresa.nombre);
+    $("label[for='txttipo_empresa_det']").addClass('active');
+    $('#txttamanho_empresa_det').val(response.empresa.tamanhoempresa.nombre);
+    $("label[for='txttamanho_empresa_det']").addClass('active');
+    $('#txtsector_empresa_det').val(response.empresa.sector.nombre);
+    $("label[for='txtsector_empresa_det']").addClass('active');
+    $('#txtnit_empresa').val(response.empresa.nit);
+  }
 
 // Enviar formulario para registrar la idea de proyecto
 $(document).on('submit', 'form#frmIdea_Inicio', function (event) { // $('button[type="submit"]').prop("disabled", true);
@@ -26,10 +102,20 @@ $(document).on('submit', 'form#frmIdea_Inicio', function (event) { // $('button[
     var form = $(this);
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
-    ajaxSendFormIdea(form, data, url, 'create');
+    ajaxSendFormIdea(form, data, url);
 });
 
-function ajaxSendFormIdea(form, data, url, fase) {
+// Enviar formulairo para cambiar los datos de una idea de proyecto
+$(document).on('submit', 'form#frmIdea_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormIdea(form, data, url);
+});
+
+function ajaxSendFormIdea(form, data, url) {
     $.ajax({
         type: form.attr('method'),
         url: url,
@@ -60,6 +146,28 @@ function pintarMensajeIdeaForm(title, text, type) {
         confirmButtonText: 'Ok'
     });
 }
+
+function aceptacionNoConfidencialidad(e){
+    e.preventDefault();
+    Swal.fire({
+    title: 'Por favor, leer atentamente',
+    html: "La Red Tecnoparque SENA, se reserva la Aceptación o NO de esta idea postulada. Igualmente, teniendo en cuenta las resoluciones de Propiedad Intelectual de la C.A.N.,"+ 
+    "Las leyes colombianas, La SIC, la DNDA; se establece que las <b>ideas no son protegidas</b> por derechos de autor, registro de propiedad intelectual, marcas, diseños industriales o "+
+    "patentes, por lo cual se establece que la socialización acá realizada, <b>no representa compromiso institucional</b>, si en otro momento o en otro comité, otro usuario o empresa "+
+    "proponga o desarrolle de manera libre y autónoma de sus actos, una idea igual o parecida a la acá propuesta.<br>"+
+    "¿Acpeta estas condiciones?",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'No',
+    confirmButtonText: 'Sí, acepto!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmEnviarIdeaTalento.submit();
+      }
+    })
+  }
 
 function mensajesIdeaForm(data) {
     let title = "error";
@@ -127,6 +235,14 @@ function showInput_RequisitosLegales() {
         divRequisitosLegales.show();
     } else {
         divRequisitosLegales.hide();
+    }
+}
+
+function showInput_BuscarEmpresa() {
+    if ($('#txtidea_empresa').is(':checked')) {
+        divBuscarEmpresa.show();
+    } else {
+        divBuscarEmpresa.hide();
     }
 }
 

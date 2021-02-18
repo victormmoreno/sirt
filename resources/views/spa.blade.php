@@ -138,8 +138,7 @@
             <h1 id="titulo-seccion-video">Charla informativa</h1>
 
         </div>
-
-        <iframe id="charla" width="560" height="315" src="https://www.youtube-nocookie.com/embed/Cex2ZgzbqMw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="charla" width="560" height="315" src="https://www.youtube.com/embed/7kmYdTS9rro" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 

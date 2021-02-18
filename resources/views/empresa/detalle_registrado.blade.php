@@ -1,5 +1,3 @@
-<div id="divEmpresaRegistrada" class="card-panel green lighten-5">
-  <h4 class="center">Empresa registrada</h4>
   <div class="divider"></div>
   <div class="row">
     <div class="input-field col s12 m6 l6">
@@ -17,8 +15,7 @@
       <label class="active" for="txttamanho_empresa_det">Tamaño de la empresa</label>
     </div>
     <div class="input-field col s12 m6 l6">
-      <input type="email" id="txtsector_empresa_det" disabled>
+      <input type="text" id="txtsector_empresa_det" disabled>
       <label class="active" for="txtsector_empresa_det">Sector de la empresa</label>
     </div>
   </div>
-</div>

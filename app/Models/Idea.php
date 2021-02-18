@@ -44,6 +44,7 @@ class Idea extends Model
         'codigo_idea',
         'aprendiz_sena',
         'pregunta1',
+        'empresa_id',
         'pregunta2',
         'pregunta3',
         'descripcion',
@@ -79,7 +80,7 @@ class Idea extends Model
         'version_beta',
         'cantidad_prototipos',
         'recursos_necesarios',
-        'si_recursos_necesarios'
+        'si_recursos_necesarios',
     ];
 
     /**

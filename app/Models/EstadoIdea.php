@@ -17,6 +17,7 @@ class EstadoIdea extends Model
     const IS_NO_APLICA = 'No Aplica';
     const IS_PROGRAMADO = 'Programado';
     const IS_REPROGRAMADO = 'Reprogramado';
+    const IS_ENVIADO = 'Enviado';
 
     protected $table = 'estadosidea';
 
@@ -79,5 +80,10 @@ class EstadoIdea extends Model
     public static function IsReprogramado()
     {
         return self::IS_REPROGRAMADO;
+    }
+
+    public static function IsEnviado()
+    {
+        return self::IS_ENVIADO;
     }
 }

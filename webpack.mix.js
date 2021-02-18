@@ -69,6 +69,7 @@ mix.scripts([
     'resources/app/entrenamientos/index.js',
     'resources/app/ideas/talento/form.js',
     'resources/app/ideas/talento/index.js',
+    'resources/app/ideas/articulador/index.js',
     'resources/app/entrenamientos/administrador/index.js',
     'resources/app/entrenamientos/infocenter/index.js',
     'resources/app/entrenamientos/infocenter/create.js',

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 
 use Alert;
 
-use App\Http\Requests\{IdeaFormRequest};
+use App\Http\Requests\{EmpresaFormRequest, IdeaFormRequest};
 use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa};
-use App\Repositories\Repository\IdeaRepository;
+use App\Repositories\Repository\{IdeaRepository, EmpresaRepository};
 use App\User;
 use Illuminate\Support\Facades\{Session, Validator};
 use Illuminate\Http\Request;
@@ -17,9 +17,10 @@ class IdeaController extends Controller
 {
     public $ideaRepository;
 
-    public function __construct(IdeaRepository $ideaRepository)
+    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository)
     {
         $this->ideaRepository = $ideaRepository;
+        $this->empresaRepository = $empresaRepository;
         $this->middleware('auth');
     }
 
@@ -53,6 +54,21 @@ class IdeaController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->input('txtidea_empresa') == 1) {
+            // Idea con empresa
+            $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($request->input('txtnit'), 'nit')->first();
+            if ($empresa == null) {
+                $req_empresa = new EmpresaFormRequest;
+                $validar_empresa = Validator::make($request->all(), $req_empresa->rules(), $req_empresa->messages());
+                if ($validar_empresa->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'errors' => $validar_empresa->errors(),
+                ]);
+                }
+            }
+        }
+
         $req = new IdeaFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -80,9 +96,10 @@ class IdeaController extends Controller
             return view('ideas.infocenter.index', ['estadosIdeas' => $estadosIdeas]);
         } else if (\Session::get('login_role') == User::IsTalento()) {
             return view('ideas.talento.index');
+        } else if (\Session::get('login_role') == User::IsArticulador()) {
+            return view('ideas.articulador.index');
         } else {
             $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
-
             return view('ideas.index', ['nodos' => $nodos, 'estadosIdeas' => $estadosIdeas]);
         }
     }
@@ -90,8 +107,16 @@ class IdeaController extends Controller
     public function datatableIdeasTalento(Request $request)
     {
         // $ideas = Idea::with(['estadoIdea']);
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)->get();
-        // dd($ideas);
+        if (Session::get('login_role') == User::IsTalento()) {
+            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)->get();
+        } else {
+            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)
+            ->whereHas('estadoIdea', 
+            function ($query){
+                $query->where('nombre', EstadoIdea::IsEnviado());
+            }
+            )->get();
+        }
         return $this->datatableIdeas($request, $ideas);
     }
 
@@ -100,13 +125,21 @@ class IdeaController extends Controller
         return datatables()->of($ideas)
         ->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
-        })
-        ->addColumn('info', function ($data) {
-            $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"\">
-            <i class=\" material-icons\">info</i>
-            </a>";
-                return $button;
-        })->rawColumns(['info'])->make(true);
+        })->editColumn('nombre_talento', function ($data) {
+            return $data->talento->user->nombres . " " . $data->talento->user->apellidos;
+        })->editColumn('nodo', function ($data) {
+            return $data->nodo->entidad->nombre;
+        })->addColumn('info', function ($data) {
+            $info = '<a class="btn light-blue m-b-xs modal-trigger" href='.route('idea.detalle', $data->id).'>
+            <i class="material-icons">info</i>
+            </a>';
+                return $info;
+        })->addColumn('edit', function ($data) {
+            $edit = '<a class="btn light-blue m-b-xs modal-trigger" href='.route('idea.edit', $data->id).'>
+            <i class="material-icons">edit</i>
+            </a>';
+                return $edit;
+        })->rawColumns(['info', 'edit'])->make(true);
     }
 
 
@@ -120,9 +153,15 @@ class IdeaController extends Controller
     public function edit($id)
     {
         $idea = $this->ideaRepository->findByid($id);
+        // dd($idea->talento->id);
         $this->authorize('update', $idea);
         $nodos = $this->ideaRepository->getSelectNodo();
-        return view('ideas.infocenter.edit', ['idea' => $idea, 'nodos' => $nodos]);
+        return view('ideas.talento.edit', ['idea' => $idea, 
+        'nodos' => $nodos,
+        'departamentos' => Departamento::all(),
+        'sectores' => Sector::all(),
+        'tamanhos' => TamanhoEmpresa::all(),
+        'tipos' => TipoEmpresa::all()]);
     }
 
     /**
@@ -133,27 +172,75 @@ class IdeaController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(IdeaFormRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
-        $updateIdea = $this->ideaRepository->Update($request, $idea);
-        if ($updateIdea == true) {
-            Alert::success("La Idea se ha modificado.", 'Modificación Exitosa', "success");
-        } else {
-            Alert::error("La Idea no se ha modificado.", 'Modificación Errónea', "error");
+
+        if ($request->input('txtidea_empresa') == 1) {
+            // Idea con empresa
+            $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($request->input('txtnit'), 'nit')->first();
+            if ($empresa == null) {
+                $req_empresa = new EmpresaFormRequest;
+                $validar_empresa = Validator::make($request->all(), $req_empresa->rules(), $req_empresa->messages());
+                if ($validar_empresa->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'errors' => $validar_empresa->errors(),
+                ]);
+                }
+            }
         }
 
-        return redirect()->route('idea.index');
+        $req = new IdeaFormRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $result = $this->ideaRepository->Update($request, $idea);
+            if ($result) {
+                return response()->json(['state' => 'update']);
+            } else {
+                return response()->json(['state' => 'no_update']);
+            }
+        }
     }
 
-    public function detallesIdeas($id)
+    /**
+     * Envia la idea al nodo donde se registró
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id Id de la idea
+     * @return \Illuminate\Http\Response
+     * @author dum
+     **/
+    public function enviarIdeaAlNodo(Request $request, $id)
     {
-        $idea = Idea::ConsultarIdeaId($id)->first();
+        $idea = $this->ideaRepository->findByid($id);
+        $this->authorize('update', $idea);
+        $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
+        if ($update) {
+            Alert::success('Envio exitoso!', 'La idea se ha enviado al nodo exitosamente!')->showConfirmButton('Ok', '#3085d6');
+            return redirect('idea');
+        } else {
+            Alert::error('Envio erróneo!', 'La idea no se ha enviado al nodo!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+    }
+
+    public function detalle($id)
+    {
+        $idea = $this->ideaRepository->findByid($id);
+        // dd($idea->empresa_relation);
         $this->authorize('show', $idea);
-        return response()->json([
-            'detalles' => $idea
-        ]);
+        if (Session::get('login_role') == User::IsTalento()) {
+            return view('ideas.talento.show', ['idea' => $idea]);
+        } else {
+            return view('ideas.articulador.show', ['idea' => $idea]);
+        }
     }
 
     public function export(Request $request, $extension = 'xlsx')

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
-      <input type="text" name="txtnit_empresa" id="txtnit_empresa" value="" {{$vista == 'ideas' ? 'disabled' : ''}}>
+      <input type="text" name="txtnit_empresa" id="txtnit_empresa" value="" {{$vista == 'ideas' ? 'readonly' : ''}}>
       <label for="txtnit_empresa">Nit de la Empresa (Sin puntos ni dígito de verificación) <span class="red-text">*</span></label>
       <small id="txtnit_empresa-error" class="error red-text"></small>
     </div>
@@ -85,3 +85,14 @@
       <small id="txttipoempresa_id_empresa-error" class="error red-text"></small>
     </div>
   </div>
+  {{-- <div class="divider"></div>
+  <center>
+    <span class="card-title center-align">Sedes</span>
+  </center>
+  <div class="row">
+    <div class="input-field col s12 m8 l8">
+      <input type="text" name="txtnombre_sede[]" id="txtnombre_sede" value="">
+      <label for="txtnombre_sede">Nombre de la sede</label>
+      <small id="txtnombre_sede-error" class="error red-text"></small>
+    </div>
+  </div> --}}

@@ -2,8 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{EstadoIdea, Idea, Nodo};
-
+use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Gestor};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -37,7 +36,7 @@ class IdeaRepository
 
     public function consultarIdeasDeProyecto()
     {
-        return Idea::with(['estadoIdea']);
+        return Idea::with(['estadoIdea', 'nodo', 'nodo.entidad']);
     }
 
     /**
@@ -58,76 +57,137 @@ class IdeaRepository
         return $codigo_idea;
     }
 
+    /**
+     * Asigna los valores de los campos que se registran dependiendo de un valor
+     * 
+     * @param Request $request
+     * @author dum
+     * @return array
+     */
+    private function valoresCondicionales($request)
+    {
+        $producto_parecido = 1;
+        $si_producto_parecido = $request->input('txtsi_producto_parecido');
+        $reemplaza = 1;
+        $si_reemplaza = $request->input('txtsi_reemplaza');
+        $packing = 1;
+        $tipo_packing = $request->input('txttipo_packing');
+        $requisitos_legales = 1;
+        $si_requisitos_legales = $request->input('txtsi_requisitos_legales');
+        $requiere_certificaciones = 1;
+        $si_requiere_certificaciones = $request->input('txtsi_requiere_certificaciones');
+        $recursos_necesarios = 1;
+        $si_recursos_necesarios = $request->input('txtsi_recursos_necesarios');
+        $viene_convocatoria = 1;
+        $convocatoria = $request->input('txtconvocatoria');
+        $aval_empresa = 1;
+        $empresa = $request->input('empresa');
+
+        if ($request->input('txtproducto_parecido') === null) {
+            $producto_parecido = 0;
+            $si_producto_parecido = null;
+        }
+
+        if ($request->input('txtreemplaza') === null) {
+            $reemplaza = 0;
+            $si_reemplaza = null;
+        }
+
+        if ($request->input('txtpacking') === null) {
+            $packing = 0;
+            $tipo_packing = null;
+        }
+
+        if ($request->input('txtrequisitos_legales') === null) {
+            $requisitos_legales = 0;
+            $si_requisitos_legales = null;
+        }
+
+        if ($request->input('txtrequiere_certificaciones') === null) {
+            $requiere_certificaciones = 0;
+            $si_requiere_certificaciones = null;
+        }
+
+        if ($request->input('txtrecursos_necesarios') === null) {
+            $recursos_necesarios = 0;
+            $si_recursos_necesarios = null;
+        }
+
+        if ($request->input('txtviene_convocatoria') === null) {
+            $viene_convocatoria = 0;
+            $convocatoria = null;
+        }
+
+        if ($request->input('txtaval_empresa') === null) {
+            $aval_empresa = 0;
+            $empresa = null;
+        }
+
+        return [
+            'producto_parecido' => $producto_parecido,
+            'si_producto_parecido' => $si_producto_parecido,
+            'reemplaza' => $reemplaza,
+            'si_reemplaza' => $si_reemplaza,
+            'packing' => $packing,
+            'tipo_packing' => $tipo_packing,
+            'requisitos_legales' => $requisitos_legales,
+            'si_requisitos_legales' => $si_requisitos_legales,
+            'requiere_certificaciones' => $requiere_certificaciones,
+            'si_requiere_certificaciones' => $si_requiere_certificaciones,
+            'recursos_necesarios' => $recursos_necesarios,
+            'si_recursos_necesarios' => $si_recursos_necesarios,
+            'viene_convocatoria' => $viene_convocatoria,
+            'convocatoria' => $convocatoria,
+            'aval_empresa' => $aval_empresa,
+            'empresa' => $empresa
+        ];
+    }
+
     public function Store($request)
     {
         DB::beginTransaction();
         try {
-            $producto_parecido = 1;
-            $si_producto_parecido = $request->input('txtsi_producto_parecido');
-            $reemplaza = 1;
-            $si_reemplaza = $request->input('txtsi_reemplaza');
-            $packing = 1;
-            $tipo_packing = $request->input('txttipo_packing');
-            $requisitos_legales = 1;
-            $si_requisitos_legales = $request->input('txtsi_requisitos_legales');
-            $requiere_certificaciones = 1;
-            $si_requiere_certificaciones = $request->input('txtsi_requiere_certificaciones');
-            $recursos_necesarios = 1;
-            $si_recursos_necesarios = $request->input('txtsi_recursos_necesarios');
-            $viene_convocatoria = 1;
-            $convocatoria = $request->input('txtconvocatoria');
-            $aval_empresa = 1;
-            $empresa = $request->input('empresa');
-
-            if ($request->input('txtproducto_parecido') === null) {
-                $producto_parecido = 0;
-                $si_producto_parecido = null;
+            
+            $valoresCondicionales = $this->valoresCondicionales($request);
+            $empresa_id = null;
+            // dd($request->input('txtnit_empresa'));
+            if ($request->input('txtidea_empresa') == 1) {
+                $empresa_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
+                if ($empresa_detalle == null) {
+                    // Registro de una nueva empresa
+                    $entidad = Entidad::create([
+                        'ciudad_id'     => $request->input('txtciudad_id_empresa'),
+                        'nombre'        => $request->input('txtnombre_empresa'),
+                        'slug'          => str_slug($request->input('txtnombre_empresa') . str_random(7), '-'),
+                        'email_entidad' => $request->input('txtemail_entidad'),
+                        ]);
+                        
+                    $empresa = Empresa::create([
+                        'entidad_id' => $entidad->id,
+                        'sector_id'  => $request->input('txtsector_empresa'),
+                        'nit'        => $request->input('txtnit_empresa'),
+                        'direccion'  => $request->input('txtdireccion_empresa'),
+                        'tipoempresa_id'  => $request->input('txttipoempresa_id_empresa'),
+                        'tamanhoempresa_id'  => $request->input('txttamanhoempresa_id_empresa'),
+                        'fecha_creacion'  => $request->input('txtfecha_creacion_empresa'),
+                        'codigo_ciiu'  => $request->input('txtcodigo_ciiu_empresa'),
+                        ]);
+                        $empresa_id = $empresa->id;
+                } else {
+                        $empresa_id = $empresa_detalle->id;
+                }
             }
-
-            if ($request->input('txtreemplaza') === null) {
-                $reemplaza = 0;
-                $si_reemplaza = null;
-            }
-
-            if ($request->input('txtpacking') === null) {
-                $packing = 0;
-                $tipo_packing = null;
-            }
-
-            if ($request->input('txtrequisitos_legales') === null) {
-                $requisitos_legales = 0;
-                $si_requisitos_legales = null;
-            }
-
-            if ($request->input('txtrequiere_certificaciones') === null) {
-                $requiere_certificaciones = 0;
-                $si_requiere_certificaciones = null;
-            }
-
-            if ($request->input('txtrecursos_necesarios') === null) {
-                $recursos_necesarios = 0;
-                $si_recursos_necesarios = null;
-            }
-
-            if ($request->input('txtviene_convocatoria') === null) {
-                $viene_convocatoria = 0;
-                $convocatoria = null;
-            }
-
-            if ($request->input('txtaval_empresa') === null) {
-                $aval_empresa = 0;
-                $empresa = null;
-            }
-
+            // dd($empresa_id);
+        
             $codigo_idea = $this->generarCodigoIdea($request->input('txtnodo'));
-
+        
             $idea = Idea::create([
                 "nombre_proyecto" => $request->input('txtnombre_proyecto'),
                 "descripcion" => $request->input('txtdescripcion'),
-                "producto_parecido" => $producto_parecido,
-                "si_producto_parecido" => $si_producto_parecido,
-                "reemplaza" => $reemplaza,
-                "si_reemplaza" => $si_reemplaza,
+                "producto_parecido" => $valoresCondicionales['producto_parecido'],
+                "si_producto_parecido" => $valoresCondicionales['si_producto_parecido'],
+                "reemplaza" => $valoresCondicionales['reemplaza'],
+                "si_reemplaza" => $valoresCondicionales['si_reemplaza'],
                 "pregunta1" => $request->input('pregunta1'),
                 "problema" => $request->input('txtproblema'),
                 "necesidades" => $request->input('txtnecesidades'),
@@ -135,32 +195,33 @@ class IdeaRepository
                 "quien_usa" => $request->input('txtquien_usa'),
                 "distribucion" => $request->input('txtdistribucion'),
                 "quien_entrega" => $request->input('txtquien_entrega'),
-                "packing" => $packing,
-                "tipo_packing" => $tipo_packing,
+                "packing" => $valoresCondicionales['packing'],
+                "tipo_packing" => $valoresCondicionales['tipo_packing'],
                 "medio_venta" => $request->input('txtmedio_venta'),
                 "valor_clientes" => $request->input('txtvalor_clientes'),
                 "pregunta2" => $request->input('pregunta2'),
-                "requisitos_legales" => $requisitos_legales,
-                "si_requisitos_legales" => $si_requisitos_legales,
-                "requiere_certificaciones" => $requiere_certificaciones,
-                "si_requiere_certificaciones" => $si_requiere_certificaciones,
+                "requisitos_legales" => $valoresCondicionales['requisitos_legales'],
+                "si_requisitos_legales" => $valoresCondicionales['si_requisitos_legales'],
+                "requiere_certificaciones" => $valoresCondicionales['requiere_certificaciones'],
+                "si_requiere_certificaciones" => $valoresCondicionales['si_requiere_certificaciones'],
                 "forma_juridica" => $request->input('txtforma_juridica'),
                 "version_beta" => $request->input('txtversion_beta'),
                 "cantidad_prototipos" => $request->input('txtcantidad_prototipos'),
-                "recursos_necesarios" => $recursos_necesarios,
-                "si_recursos_necesarios" => $si_recursos_necesarios,
+                "recursos_necesarios" => $valoresCondicionales['recursos_necesarios'],
+                "si_recursos_necesarios" => $valoresCondicionales['si_recursos_necesarios'],
                 "nodo_id" => $request->input('txtnodo'),
                 "pregunta3" => $request->input('pregunta3'),
-                "viene_convocatoria" => $viene_convocatoria,
-                "convocatoria" => $convocatoria,
-                "aval_empresa" => $aval_empresa,
-                "empresa" => $empresa,
+                "viene_convocatoria" => $valoresCondicionales['viene_convocatoria'],
+                "convocatoria" => $valoresCondicionales['convocatoria'],
+                "aval_empresa" => $valoresCondicionales['aval_empresa'],
+                "empresa" => $valoresCondicionales['empresa'],
                 "codigo_idea" => $codigo_idea,
                 "tipo_idea" => Idea::IsEmprendedor(),
                 "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsInscrito())->first()->id,
-                "talento_id" => auth()->user()->talento->id
+                "talento_id" => auth()->user()->talento->id,
+                "empresa_id" => $empresa_id
             ]);
-
+        
             $idea->rutamodel()->create([
                 'ruta' => $request->input('txtlinkvideo'),
             ]);
@@ -175,29 +236,114 @@ class IdeaRepository
 
     }
 
+    public function enviarIdeaAlNodo($request, $idea)
+    {
+        DB::beginTransaction();
+        try {
+            
+            // Cambia el estado de la idea
+            $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsEnviado())->first()->id]);
+            //Enviar correo al talento que inscribió la idea de proyecto
+            event(new IdeaHasReceived($idea));
+            // Busca los articuladores del nodo
+            $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
+                'gestor.nodo',
+                function ($query) use ($idea) {
+                    $query->where('id', $idea->nodo_id);
+                }
+            )->get();
+            // Envia un correo a los articuladores del nodo
+            if (!$users->isEmpty()) {
+                Notification::send($users, new IdeaReceived($idea));
+            }
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
     public function Update($request, $idea)
     {
+        DB::beginTransaction();
+        try {
+            $valoresCondicionales = $this->valoresCondicionales($request);
 
-        $idea->nodo_id            = $request->input('txtnodo');
-        $idea->nombres_contacto   = $request->input('txtnombres');
-        $idea->apellidos_contacto = $request->input('txtapellidos');
-        $idea->correo_contacto    = $request->input('txtcorreo');
-        $idea->telefono_contacto  = $request->input('txttelefono');
-        $idea->nombre_proyecto    = $request->input('txtnombre_proyecto');
-        $idea->aprendiz_sena      = $request->input('txtaprendiz_sena') == 'on' ? $request['txtaprendiz_sena'] = 1 : $request['txtaprendiz_sena'] = 0;
-        $idea->pregunta1          = $request->input('pregunta1');
-        $idea->pregunta2          = $request->input('pregunta2');
-        $idea->pregunta3          = $request->input('pregunta3');
-        $idea->descripcion        = $request->input('txtdescripcion');
-        $idea->objetivo           = $request->input('txtobjetivo');
-        $idea->alcance            = $request->input('txtalcance');
-        $idea->viene_convocatoria = $request->input('txtconvocatoria');
-        $idea->convocatoria       = $request->input('txtconvocatoria') == 1 ? $request->input('txtnombreconvocatoria') : null;
-        $idea->aval_empresa = $request->input('txtavalempresa');
-        $idea->empresa       = $request->input('txtavalempresa') == 1 ? $request->input('txtempresa') : null;
+            $empresa_id = null;
+            // dd($request->input('txtnit_empresa'));
+            if ($request->input('txtidea_empresa') == 1) {
+                $empresa_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
+                if ($empresa_detalle == null) {
+                    // Registro de una nueva empresa
+                    $entidad = Entidad::create([
+                        'ciudad_id'     => $request->input('txtciudad_id_empresa'),
+                        'nombre'        => $request->input('txtnombre_empresa'),
+                        'slug'          => str_slug($request->input('txtnombre_empresa') . str_random(7), '-'),
+                        'email_entidad' => $request->input('txtemail_entidad'),
+                        ]);
+                        
+                    $empresa = Empresa::create([
+                        'entidad_id' => $entidad->id,
+                        'sector_id'  => $request->input('txtsector_empresa'),
+                        'nit'        => $request->input('txtnit_empresa'),
+                        'direccion'  => $request->input('txtdireccion_empresa'),
+                        'tipoempresa_id'  => $request->input('txttipoempresa_id_empresa'),
+                        'tamanhoempresa_id'  => $request->input('txttamanhoempresa_id_empresa'),
+                        'fecha_creacion'  => $request->input('txtfecha_creacion_empresa'),
+                        'codigo_ciiu'  => $request->input('txtcodigo_ciiu_empresa'),
+                        ]);
+                        $empresa_id = $empresa->id;
+                } else {
+                        $empresa_id = $empresa_detalle->id;
+                }
+            }
 
-        $idea = $idea->update();
-        return $idea;
+            $idea->update([
+                "nombre_proyecto" => $request->input('txtnombre_proyecto'),
+                "descripcion" => $request->input('txtdescripcion'),
+                "producto_parecido" => $valoresCondicionales['producto_parecido'],
+                "si_producto_parecido" => $valoresCondicionales['si_producto_parecido'],
+                "reemplaza" => $valoresCondicionales['reemplaza'],
+                "si_reemplaza" => $valoresCondicionales['si_reemplaza'],
+                "pregunta1" => $request->input('pregunta1'),
+                "problema" => $request->input('txtproblema'),
+                "necesidades" => $request->input('txtnecesidades'),
+                "quien_compra" => $request->input('txtquien_compra'),
+                "quien_usa" => $request->input('txtquien_usa'),
+                "distribucion" => $request->input('txtdistribucion'),
+                "quien_entrega" => $request->input('txtquien_entrega'),
+                "packing" => $valoresCondicionales['packing'],
+                "tipo_packing" => $valoresCondicionales['tipo_packing'],
+                "medio_venta" => $request->input('txtmedio_venta'),
+                "valor_clientes" => $request->input('txtvalor_clientes'),
+                "pregunta2" => $request->input('pregunta2'),
+                "requisitos_legales" => $valoresCondicionales['requisitos_legales'],
+                "si_requisitos_legales" => $valoresCondicionales['si_requisitos_legales'],
+                "requiere_certificaciones" => $valoresCondicionales['requiere_certificaciones'],
+                "si_requiere_certificaciones" => $valoresCondicionales['si_requiere_certificaciones'],
+                "forma_juridica" => $request->input('txtforma_juridica'),
+                "version_beta" => $request->input('txtversion_beta'),
+                "cantidad_prototipos" => $request->input('txtcantidad_prototipos'),
+                "recursos_necesarios" => $valoresCondicionales['recursos_necesarios'],
+                "si_recursos_necesarios" => $valoresCondicionales['si_recursos_necesarios'],
+                "nodo_id" => $request->input('txtnodo'),
+                "pregunta3" => $request->input('pregunta3'),
+                "viene_convocatoria" => $valoresCondicionales['viene_convocatoria'],
+                "convocatoria" => $valoresCondicionales['convocatoria'],
+                "aval_empresa" => $valoresCondicionales['aval_empresa'],
+                "empresa" => $valoresCondicionales['empresa'],
+                "empresa_id" => $empresa_id
+            ]);
+            $idea->rutamodel()->update([
+                'ruta' => $request->input('txtlinkvideo'),
+            ]);
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return false;
+        }
     }
 
     // Cambiar el estado de una idea según el parametro que se le envia, (el parametro es el NOMBRE DEL ESTADO DE IDEAS)
@@ -221,7 +367,8 @@ class IdeaRepository
 
     public function findByid($id)
     {
-        return Idea::findOrFail($id);
+        return Idea::find($id);
+        // return Idea::where('id', $id)->first();
     }
 
 

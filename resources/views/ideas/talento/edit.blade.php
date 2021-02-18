@@ -1,0 +1,49 @@
+@extends('layouts.app')
+@section('meta-title', 'Ideas de Proyecto')
+@section('content')
+<main class="mn-inner inner-active-sidebar">
+  <div class="content">
+    <div class="row no-m-t no-m-b">
+      <div class="col s12 m12 l12">
+        <h5>
+          <a class="footer-text left-align" href="{{route('idea.index')}}">
+            <i class="material-icons arrow-l">arrow_back</i>
+          </a> Ideas de Proyecto
+        </h5>
+        <div class="card">
+          <div class="card-content">
+            <div class="row">
+              <br>
+              <center>
+                <span class="card-title center-align"><b>Modificar idea de proyecto - {{ $idea->codigo_idea }}</b></span>
+              </center>
+              <div class="divider"></div>
+              <div class="card-panel red lighten-3">
+                <div class="card-content white-text">
+                  <a class="btn-floating red"><i class="material-icons left">info_outline</i></a>
+                  <span>Los elementos con (*) son obligatorios</span>
+                </div>
+              </div>
+              <br/>
+              <form id="frmIdea_Update" action="{{ route('idea.update', $idea) }}" method="POST">
+                {!! method_field('PUT')!!}
+              @include('ideas.talento.form_inicio', [
+              'btnText' => 'Modificar'])
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+@endsection
+@push('script')
+    <script>
+      $(document).ready(function () {
+        @if($idea->empresa_id != null)
+        consultarEmpresaTecnoparque();
+        @endif
+      });
+    </script>
+@endpush

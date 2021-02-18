@@ -48,6 +48,11 @@ class Talento extends Model
         return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();
     }
 
+    public function idea()
+    {
+      return $this->belongsTo(Idea::class, 'talento_id', 'id');
+    }
+
     public function tipoformacion()
     {
         return $this->belongsTo(TipoFormacion::class, 'tipo_formacion_id', 'id');

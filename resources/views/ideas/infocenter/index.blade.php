@@ -41,9 +41,7 @@
 
                 </div>
                 <div class="divider"></div>
-
                     <div class="row search-tabs-row search-tabs-header">
-                        
                         <div class="input-field col s12 m2 l1">
                             <label class="active" for="filter_state">Año <span class="red-text">*</span></label>
                             <select name="filter_year" id="filter_year">

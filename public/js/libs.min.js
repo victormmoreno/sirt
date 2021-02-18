@@ -36582,54 +36582,7 @@ divIngresarEmpresaIdea.hide();
 divRegistrarEmpresa.hide();
 divEmpresaRegistrada.hide();
 
-function consultarEmpresaTecnoparque() {
-  let nit = $('#txtnit').val();
-  let field = 'nit';
-  if (nit == "") {
-    Swal.fire({
-      title: 'Advertencia!',
-      text: "Digite el nit de la empresa!",
-      type: 'warning',
-      showCancelButton: false,
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Ok'
-    })
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
-      success: function (response) {
-          // console.log(response.empresa.entidad.nombre);
-        if (response.empresa == null) {
-          divEmpresaRegistrada.hide();
-          divRegistrarEmpresa.show();
-          $('#txtnit_empresa').val(nit);
-          $("label[for='txtnit_empresa']").addClass('active');
-        } else {
-          asignarValoresFRMIdeas(response);
-          divEmpresaRegistrada.show();
-          divRegistrarEmpresa.hide();
-        }
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      }
-    })
-  }
-}
 
-
-function asignarValoresFRMIdeas(response) {
-  $('#txtnombre_empresa_det').val(response.empresa.entidad.nombre);
-  $("label[for='txtnombre_empresa_det']").addClass('active');
-  $('#txttipo_empresa_det').val(response.empresa.tipoempresa.nombre);
-  $("label[for='txttipo_empresa_det']").addClass('active');
-  $('#txttamanho_empresa_det').val(response.empresa.tamanhoempresa.nombre);
-  $("label[for='txttamanho_empresa_det']").addClass('active');
-  $('#txtsector_empresa_det').val(response.empresa.sector.nombre);
-  $("label[for='txtsector_empresa_det']").addClass('active');
-}
 
 function banderaEmpresaIdea() {
   if ($('#bandera_empresa').is(':checked')) {
