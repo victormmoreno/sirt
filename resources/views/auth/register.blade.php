@@ -207,7 +207,7 @@
                                                     @endif
                                                 @endforeach
                                             </select>
-                                            <label class="active" for="txteps" >Esp <span class="red-text">*</span></label>
+                                            <label class="active" for="txteps" >Eps <span class="red-text">*</span></label>
                                             <small id="txteps-error"  class="error red-text"></small>
                                         </div>
                                         <div class="input-field col s12 m6 l6 otraeps"  style="display:none">
@@ -236,10 +236,38 @@
                                             <small id="txtdiscapacidad-error"  class="error red-text"></small>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="input-field col s12 m6 l6">
+                                            <select class="" id="txtmadrecabezafamilia" name="txtmadrecabezafamilia" style="width: 100%" tabindex="-1">
+                                                @if(isset($user->mujerCabezaFamilia))
+                                                <option {{$user->mujerCabezaFamilia == 0 ?'selected' : ''}} value="0">NO </option>
+                                                <option {{$user->mujerCabezaFamilia == 1 ?'selected' : ''}} value="1">SI </option>
+                                                @else
+                                                    <option value="0">NO </option>
+                                                    <option value="1">SI </option>
+                                                @endif
+                                            </select>
+                                            <label for="txtmadrecabezafamilia">¿Madre Cabeza de familia?<span class="red-text">*</span></label>
+                                            <small id="txtmadrecabezafamilia-error" class="error red-text"></small>
+                                        </div>
+                                        <div class="input-field col s12 m6 l6">
+                                            <select class="" id="txtdesplazadoporviolencia" name="txtdesplazadoporviolencia" style="width: 100%" tabindex="-1">
+                                                @if(isset($user->mujerCabezaFamilia))
+                                                <option {{$user->mujerCabezaFamilia == 0 ?'selected' : ''}} value="0">NO </option>
+                                                <option {{$user->mujerCabezaFamilia == 1 ?'selected' : ''}} value="1">SI </option>
+                                                @else
+                                                    <option value="0">NO </option>
+                                                    <option value="1">SI </option>
+                                                @endif
+                                            </select>
+                                            <label for="txtdesplazadoporviolencia">¿Desplazado(a) por violencia?<span class="red-text">*</span></label>
+                                            <small id="txtdesplazadoporviolencia-error" class="error red-text"></small>
+                                        </div>
+                                    </div>
                                     <div class="row center">
                                         <div class="input-field col s12 m12 l12 ">
                                             <div class="switch m-b-md">
-                                                <label class="active">Genero*</label>
+                                                <label class="active">Genero<span class="red-text">*</span></label>
                                                 <label>
                                                     Masculino
                                                     @if(isset($user->genero))

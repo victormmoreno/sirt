@@ -36157,7 +36157,7 @@ function checkSubmit() {
 $(document).ready(function() {
 
     let filter_nodo = $('#filter_nodo').val();
-    let filter_year = $('#filter_year').val();
+    let filter_year = $('#filter_year_ideas').val();
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
     let filter_convocatoria = $('#filter_convocatoria').val();
@@ -36188,7 +36188,7 @@ $(document).ready(function() {
 
 $('#filter_idea').click(function(){
     let filter_nodo = $('#filter_nodo').val();
-    let filter_year = $('#filter_year').val();
+    let filter_year = $('#filter_year_ideas').val();
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
     let filter_convocatoria = $('#filter_convocatoria').val();
@@ -36219,7 +36219,7 @@ $('#filter_idea').click(function(){
 
 $('#download_excel').click(function(){
         let filter_nodo = $('#filter_nodo').val();
-        let filter_year = $('#filter_year').val();
+        let filter_year = $('#filter_year_ideas').val();
         let filter_state = $('#filter_state').val();
         let filter_vieneConvocatoria = $('#filter_vieneconvocatoria').val();
         let filter_convocatoria = $('#filter_convocatoria').val();

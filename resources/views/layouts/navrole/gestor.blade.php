@@ -79,11 +79,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
   </a>
 </li>
-<li class="no-padding">
+{{-- <li class="no-padding">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.index')}}" rel="canonical" title="Ideas">
     <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas
   </a>
-</li>
+</li> --}}
 <li class="no-padding">
   <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}" rel="canonical" title="CSIBT's">
     <i class="material-icons {{setActiveRouteActiveIcon('csibt')}}">gavel</i>CSIBT's

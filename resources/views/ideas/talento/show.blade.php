@@ -19,30 +19,7 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                  <div class="col s12 m3 l3">
-                    <ul class="collection with-header">
-                      <li class="collection-header"><h5>Opciones</h5></li>
-                      <li class="collection-item">
-                        <form action="{{route('idea.enviar', $idea->id)}}" method="POST" name="frmEnviarIdeaTalento">
-                          {!! method_field('PUT')!!}
-                          @csrf
-                          <a href="" onclick="aceptacionNoConfidencialidad(event)">
-                            <div class="card-panel green accent-3 black-text center">
-                              Enviar proyecto al nodo {{$idea->nodo->entidad->nombre}}.
-                            </div>
-                          </a>
-                        </form>
-                      </li>
-                      <li class="collection-item">
-                        <a href="{{route('idea.edit', $idea->id)}}">
-                          <div class="card-panel teal lighten-2 black-text center">
-                            Cambiar información de la idea.
-                          </div>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col s12 m9 l9">
+                  <div class="col s12 m12 l12">
                     @include('ideas.detalle')
                   </div>
                   <center>

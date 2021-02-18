@@ -226,6 +226,19 @@ class IdeaRepository
                 'ruta' => $request->input('txtlinkvideo'),
             ]);
 
+            event(new IdeaHasReceived($idea));
+            // Busca los articuladores del nodo
+            $users = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
+                'infocenter.nodo',
+                function ($query) use ($idea) {
+                    $query->where('id', $idea->nodo_id);
+                }
+            )->get();
+            // Envia un correo a los articuladores del nodo
+            if (!$users->isEmpty()) {
+                Notification::send($users, new IdeaReceived($idea));
+            }
+
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -236,33 +249,33 @@ class IdeaRepository
 
     }
 
-    public function enviarIdeaAlNodo($request, $idea)
-    {
-        DB::beginTransaction();
-        try {
+    // public function enviarIdeaAlNodo($request, $idea)
+    // {
+    //     DB::beginTransaction();
+    //     try {
             
-            // Cambia el estado de la idea
-            $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsEnviado())->first()->id]);
-            //Enviar correo al talento que inscribió la idea de proyecto
-            event(new IdeaHasReceived($idea));
-            // Busca los articuladores del nodo
-            $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
-                'gestor.nodo',
-                function ($query) use ($idea) {
-                    $query->where('id', $idea->nodo_id);
-                }
-            )->get();
-            // Envia un correo a los articuladores del nodo
-            if (!$users->isEmpty()) {
-                Notification::send($users, new IdeaReceived($idea));
-            }
-            DB::commit();
-            return true;
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return false;
-        }
-    }
+    //         // Cambia el estado de la idea
+    //         $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsEnviado())->first()->id]);
+    //         //Enviar correo al talento que inscribió la idea de proyecto
+    //         event(new IdeaHasReceived($idea));
+    //         // Busca los articuladores del nodo
+    //         $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
+    //             'gestor.nodo',
+    //             function ($query) use ($idea) {
+    //                 $query->where('id', $idea->nodo_id);
+    //             }
+    //         )->get();
+    //         // Envia un correo a los articuladores del nodo
+    //         if (!$users->isEmpty()) {
+    //             Notification::send($users, new IdeaReceived($idea));
+    //         }
+    //         DB::commit();
+    //         return true;
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+    //         return false;
+    //     }
+    // }
 
     public function Update($request, $idea)
     {

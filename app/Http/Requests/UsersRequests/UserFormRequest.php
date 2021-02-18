@@ -47,6 +47,8 @@ class UserFormRequest extends FormRequest
             'txtfecha_nacimiento'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'                => 'required',
             'txtgrado_discapacidad'    => 'required',
+            'txtmadrecabezafamilia'                => 'required',
+            'txtdesplazadoporviolencia'                => 'required',
             'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('id'),
             'txtbarrio'                 => 'required|min:1|max:100',
@@ -189,10 +191,10 @@ class UserFormRequest extends FormRequest
             'txtotraeps.min'                      => 'La otra eps debe ser minimo 1 caracter',
             'txtotraeps.max'                      => 'La otra eps debe ser minimo 45 caracteres',
             'txtotraeps.regex'                    => 'El formato del campo otra eps es incorrecto',
+            'txtgrado_discapacidad' => 'El grado de discapacidad es obligatorio',
 
-
-            'txtgrado_discapacidad.required'                  => 'El grado de discapacidad es obligatorio.',
-
+            'txtmadrecabezafamilia.required'                  => 'El campo es obligatorio.',
+            'txtdesplazadoporviolencia.required'                  => 'El campo es obligatorio.',
 
             'txtdiscapacidad.required'                 => 'Por favor digite cual grado de discapacidad',
             'txtdiscapacidad.min'                      => 'El grado de discapacidad debe ser minimo 1 caracter',

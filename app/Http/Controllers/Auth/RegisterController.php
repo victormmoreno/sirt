@@ -127,11 +127,17 @@ class RegisterController extends Controller
                 //envio de email con contraseña
                 event(new UserWasRegistered($user, $password));
 
+                $message = "";
 
+                if($request->input('txttipousuario') == 'talento'){
+                    $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name').", ahora puedes acceder a registrar tu idea.";
+                }else{
+                    $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name') . ", ahora debes esperar a que validemos tu información.";
+                }
 
                 return response()->json([
                     'state'   => 'success',
-                    'message' => 'El Usuario ha sido creado satisfactoriamente',
+                    'message' => $message,
                     'url' => route('login'),
                     'user' => $user,
                 ]);
@@ -211,6 +217,8 @@ class RegisterController extends Controller
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
             "genero"               => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "mujerCabezaFamilia"            => $request->input('txtmadrecabezafamilia'),
+            "desplazadoPorViolencia"            => $request->input('txtdesplazadoporviolencia'),
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "estado"               => $this->stateUser($request),
             "institucion"          => $request->input('txtinstitucion'),
@@ -224,7 +232,6 @@ class RegisterController extends Controller
 
     protected function storeTalento($request, $user)
     {
-
         $entidad = null;
 
         if (

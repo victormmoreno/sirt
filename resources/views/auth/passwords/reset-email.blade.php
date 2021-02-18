@@ -38,7 +38,7 @@
                                     <br>
                                         <br>
                                             <div class="col s12 m12 l12">
-                                                <div class="divider" style="background:#008981;">
+                                                <div class="divider">
                                                 </div>
                                                 <a class="footer-text left-align" href="{{route('login')}}">
                                                     <i class="material-icons arrow-l">
