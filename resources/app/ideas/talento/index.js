@@ -1,5 +1,4 @@
 function consultarIdeasDelTalento () {
-
     $('#tbl_IdeasDelTalento').dataTable().fnDestroy();
     $('#tbl_IdeasDelTalento').DataTable({
       language: {
@@ -19,8 +18,8 @@ function consultarIdeasDelTalento () {
           name: 'codigo_idea',
         },
         {
-          data: 'created_at',
-          name: 'created_at',
+          data: 'nodo',
+          name: 'nodo',
         },
         {
           data: 'nombre_proyecto',
@@ -36,12 +35,12 @@ function consultarIdeasDelTalento () {
           name: 'info',
           orderable: false
         },
-        // {
-        //   width: '8%',
-        //   data: 'proceso',
-        //   name: 'proceso',
-        //   orderable: false
-        // },
+        {
+          width: '8%',
+          data: 'edit',
+          name: 'edit',
+          orderable: false
+        },
       ],
     });
 }

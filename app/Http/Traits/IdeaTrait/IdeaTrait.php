@@ -7,7 +7,9 @@ use App\Models\Nodo;
 use App\Models\Proyecto;
 use App\Models\RutaModel;
 use App\Models\Comite;
+use App\Models\Talento;
 use App\Models\Gestor;
+use App\Models\Empresa;
 
 trait IdeaTrait
 {
@@ -47,6 +49,16 @@ trait IdeaTrait
     public function gestor()
     {
         return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id', 'id');
+    }
+
+    public function talento()
+    {
+        return $this->belongsTo(Talento::class, 'talento_id', 'id');
     }
 
     public function comites()

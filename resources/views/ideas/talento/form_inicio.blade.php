@@ -5,6 +5,96 @@
 <div class="card">
     <div class="card-content">
         <div class="row">
+            <div class="col s12 m4 l4">
+                <div class="card-panel grey lighten-1 black-text center">
+                    <i class="material-icons left">info_outline</i>
+                    Antes de empezar a registrar la idea de proyecto, es importante saber en que nodo se va a presentar.
+                  </div>
+            </div>
+            <div class="input-field col s12 m8 l8">
+                <i class="material-icons prefix">
+                    domain
+                </i>
+                <select id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
+                    <option value="">Seleccione Nodo</option>
+                        @foreach($nodos as $nodo)
+                            @if($existe)
+                                @if ($idea->nodo_id == $nodo->id)
+                                <option value="{{$nodo->id}}" selected>{{$nodo->nodos}}</option> 
+                                @else
+                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option> 
+                                @endif
+                            @else
+                            <option value="{{$nodo->id}}">
+                                {{$nodo->nodos}}
+                            </option>
+                            @endif
+                        @endforeach
+                </select>
+                <label class="truncate" for="txtnodo">Seleccione el nodo donde se presentará la idea <span class="red-text">*</span></label>
+                <small id="txtnodo-error" class="error red-text"></small>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <h4 class="card-title center-align">Información de la empresa</h4>
+            </div>
+        </div>
+        <div class="row">
+            <span class="black-text text-black">¿Esta idea será desarrollada por una empresa?</span>
+            <div class="switch m-b-md">
+                <label>
+                    No
+                    @if ($existe)
+                        @if ($idea->empresa_id != null)
+                        <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" checked value="1" onchange="showInput_BuscarEmpresa()">
+                        @else
+                        <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
+                        @endif
+                    @else
+                    <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
+                    @endif
+                    <span class="lever"></span>
+                    Si
+                </label>
+            </div>
+        </div>
+        <div class="row" id="buscarEmpresa_content">
+            <div class="input-field col s8 m8 l8">
+                @if ($existe)
+                    @if ($idea->empresa_id != null)
+                    <input type="text" id="txtnit" name="txtnit" value="{{ $idea->company->nit }}">
+                    @else
+                    <input type="text" id="txtnit" name="txtnit" value="">
+                    @endif
+                @else
+                <input type="text" id="txtnit" name="txtnit" value="">
+                @endif
+                <label for="txtnit">Nit de la empresa (Sin puntos) <span class="red-text">*</span></label>
+                <small id="txtnit-error" class="error red-text"></small>
+            </div>
+            <div class="col s4 m4 l4">
+                <a href="javascript:void(0)" onclick="consultarEmpresaTecnoparque()">
+                    <div class="card-panel blue lighten-2 black-text center">
+                      Consultar empresa.
+                      <i class="material-icons right">search</i>
+                    </div>
+                  </a>
+            </div>
+        </div>
+        <div class="card-panel amber lighten-4" id="registrarEmpresa_content">
+            <h4 class="center">Registrar una nueva empresa</h4>
+            <div class="divider"></div>
+            @include('empresa.form', ['vista' => 'ideas'])
+        </div>
+        <div class="card-panel green lighten-5" id="consultarEmpresa_content">
+            <div class="divider"></div>
+            <h4 class="center">Empresa registrada</h4>
+            @include('empresa.detalle_registrado')
+        </div>
+        <div class="divider"></div>
+        <div class="row">
             <div class="col s12 m12 l12">
                 <h4 class="card-title center-align">Descripción de la idea</h4>
             </div>
@@ -448,7 +538,7 @@
                 <textarea class="materialize-textarea" id="txtvalor_clientes" length="2100" name="txtvalor_clientes"></textarea>
                 @endif
                 <label for="txtvalor_clientes">
-                    ¿Por qué valor están dispuestos a pagar nuestros clientes? 
+                    ¿Por qué valor están dispuestos a pagar nuestros clientes?
                 </label>
                 <small id="txtvalor_clientes-error" class="error red-text"></small>
             </div>
@@ -635,7 +725,7 @@
                     ondemand_video
                 </i>
                 @if ($existe)
-                <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="Error">
+                <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{$idea->rutamodel->ruta}}">
                 @else
                 <input id="txtlinkvideo" name="txtlinkvideo" type="text">
                 @endif
@@ -667,22 +757,6 @@
                 </label>
                 <small id="txtversion_beta-error" class="error red-text"></small>
             </div>
-            <div class="input-field col s12 m6 l6">
-                <i class="material-icons prefix">
-                    add_box
-                </i>
-                @if ($existe)
-                <textarea class="materialize-textarea" id="txtcantidad_prototipos" length="2100" name="txtcantidad_prototipos">{{ $idea->cantidad_prototipos }}</textarea>
-                @else
-                <textarea class="materialize-textarea" id="txtcantidad_prototipos" length="2100" name="txtcantidad_prototipos"></textarea>
-                @endif
-                <label for="txtcantidad_prototipos">
-                    ¿Cuáles y cuántos prototipos necesita desarrollar con la Red Tecnoparques?  
-                </label>
-                <small id="txtcantidad_prototipos-error" class="error red-text"></small>
-            </div>
-        </div>
-        <div class="row">
             <div class="col s12 m6 l6">
                 <div class="row">
                     <span class="black-text text-black">
@@ -717,28 +791,21 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="input-field col s12 m6 l6">
                 <i class="material-icons prefix">
-                    domain
+                    add_box
                 </i>
-                <select id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
-                    <option value="">Seleccione Nodo</option>
-                        @foreach($nodos as $nodo)
-                            @if($existe)
-                                @if ($idea->nodo_id == $nodo->id)
-                                <option value="{{$nodo->id}}" selected>{{$nodo->nodos}}</option> 
-                                @else
-                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option> 
-                                @endif
-                            @else
-                            <option value="{{$nodo->id}}">
-                                {{$nodo->nodos}}
-                            </option>
-                            @endif
-                        @endforeach
-                </select>
-                <label class="truncate" for="txtnodo">Seleccione el nodo donde se presentará la idea <span class="red-text">*</span></label>
-                <small id="txtnodo-error" class="error red-text"></small>
+                @if ($existe)
+                <textarea class="materialize-textarea" id="txtcantidad_prototipos" length="2100" name="txtcantidad_prototipos">{{ $idea->cantidad_prototipos }}</textarea>
+                @else
+                <textarea class="materialize-textarea" id="txtcantidad_prototipos" length="2100" name="txtcantidad_prototipos"></textarea>
+                @endif
+                <label for="txtcantidad_prototipos">
+                    ¿Cuáles y cuántos prototipos necesita desarrollar con la Red Tecnoparques?  
+                </label>
+                <small id="txtcantidad_prototipos-error" class="error red-text"></small>
             </div>
         </div>
         <div class="row">
@@ -887,7 +954,7 @@
                 <div class="row" id="convocatoria_content">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                        <input id="txtconvocatoria" name="txtconvocatoria" type="text" value="{{ $idea->convocatoria }}"">
+                        <input id="txtconvocatoria" name="txtconvocatoria" type="text" value="{{ $idea->convocatoria }}">
                         @else
                         <input id="txtconvocatoria" name="txtconvocatoria" type="text">
                         @endif
@@ -935,7 +1002,7 @@
         <center>
             <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
                 <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
-                {{isset($btnText) ? $btnText : 'error'}}
+                {{$btnText}}
             </button>   
             <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
                 <i class="material-icons right">backspace</i>Cancelar
