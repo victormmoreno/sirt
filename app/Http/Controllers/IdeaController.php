@@ -281,27 +281,27 @@ class IdeaController extends Controller
         }
     }
 
-    /**
-     * Envia la idea al nodo donde se registró
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id Id de la idea
-     * @return \Illuminate\Http\Response
-     * @author dum
-     **/
-    public function enviarIdeaAlNodo(Request $request, $id)
-    {
-        $idea = $this->ideaRepository->findByid($id);
-        $this->authorize('update', $idea);
-        $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
-        if ($update) {
-            Alert::success('Envio exitoso!', 'La idea se ha enviado al nodo exitosamente!')->showConfirmButton('Ok', '#3085d6');
-            return redirect('idea');
-        } else {
-            Alert::error('Envio erróneo!', 'La idea no se ha enviado al nodo!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-    }
+    // /**
+    //  * Envia la idea al nodo donde se registró
+    //  *
+    //  * @param \Illuminate\Http\Request $request
+    //  * @param int $id Id de la idea
+    //  * @return \Illuminate\Http\Response
+    //  * @author dum
+    //  **/
+    // public function enviarIdeaAlNodo(Request $request, $id)
+    // {
+    //     $idea = $this->ideaRepository->findByid($id);
+    //     $this->authorize('update', $idea);
+    //     $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
+    //     if ($update) {
+    //         Alert::success('Envio exitoso!', 'La idea se ha enviado al nodo exitosamente!')->showConfirmButton('Ok', '#3085d6');
+    //         return redirect('idea');
+    //     } else {
+    //         Alert::error('Envio erróneo!', 'La idea no se ha enviado al nodo!')->showConfirmButton('Ok', '#3085d6');
+    //         return back();
+    //     }
+    // }
 
     public function detalle($id)
     {

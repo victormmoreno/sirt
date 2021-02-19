@@ -14,7 +14,7 @@
         "browser-sync": "^2.26.12",
         "browser-sync-webpack-plugin": "^2.2.2",
         "cross-env": "^5.2.1",
-        "javascript-obfuscator": "^2.6.0",
+        "javascript-obfuscator": "^2.10.3",
         "jquery": "^3.5.1",
         "laravel-mix": "^5.0.7",
         "lodash": "^4.17.20",
