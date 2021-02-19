@@ -117,4 +117,11 @@ class Gestor extends Model
         return $query->with('user')->count();
     }
 
+    public function scopeGestoresNodo($query, array $relations)
+    {
+        if (isset($relations)) {
+            return $query->with($relations);
+        }
+        return $query;
+    }
 }

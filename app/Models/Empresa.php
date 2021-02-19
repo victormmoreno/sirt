@@ -22,9 +22,6 @@ class Empresa extends Model
         'tamanhoempresa_id',
         'fecha_creacion',
         'codigo_ciiu',
-        // 'nombre_contacto',
-        // 'correo_contacto',
-        // 'telefono_contacto',
     ];
 
     /*=========================================
@@ -83,4 +80,8 @@ class Empresa extends Model
     {
         return $this->belongsTo(TamanhoEmpresa::class, 'tamanhoempresa_id', 'id');
     }
+    // public function ideas()
+    // {
+    //   return $this->hasMany(Idea::class, 'empresa_id', 'id');
+    // }
 }

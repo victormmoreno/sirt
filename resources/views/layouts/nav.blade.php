@@ -187,8 +187,8 @@
                   Talento de Tecnoparque
                 @elseif (\Session::get('login_role') == App\User::IsAdministrador())
                   Administrador de Tecnoparque
-                @elseif (\Session::get('login_role') == App\User::IsEmprendimiento())
-                  Gestor de Emprendimiento
+                @elseif (\Session::get('login_role') == App\User::IsArticulador())
+                  Articulador
                 @else
                   Desarrollador de Tecnoparque
                 @endif

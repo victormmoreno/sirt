@@ -42,7 +42,7 @@ class IdeaPolicy
      */
     public function update(User $user, Idea $idea)
     {
-        return (bool) $user->hasAnyRole([User::IsInfocenter()]) && $user->infocenter->nodo_id == $idea->nodo->id;
+        return (bool) $user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id;
     }
 
     /**
@@ -54,8 +54,7 @@ class IdeaPolicy
      */
     public function show(User $user, Idea $idea)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter()]);
-    }
+        return (bool) ($user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id) || ($user->hasAnyRole([User::IsInfocenter()]) && $user->infocenter->nodo_id == $idea->nodo->id) || ($user->hasAnyRole([User::IsArticulador()]) && $user->gestor->nodo_id == $idea->nodo_id);    }
 
     /**
      * Determine whether the user can restore the idea.
