@@ -54,7 +54,7 @@ class UserFormEditRequest extends FormRequest
             'txtbarrio'                 => 'required|min:1|max:100',
             'txtdireccion'              => 'required|min:1|max:200',
             'txttelefono'               => 'nullable|digits_between:6,11|numeric',
-            'txtcelular'                => 'nullable|digits_between:10,11|numeric',
+            'txtcelular'                => 'required|digits_between:10,11|numeric',
             'txtinstitucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txttitulo'                 => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfechaterminacion'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
@@ -187,6 +187,7 @@ class UserFormEditRequest extends FormRequest
             'txttelefono.numeric'                 => 'El teléfono debe ser numérico',
             'txttelefono.digits_between'          => 'El teléfono debe tener entre 6 y 11 digitos',
 
+            'txtcelular.required'                  => 'El celular es obligatorio.',
             'txtcelular.numeric'                  => 'El celular debe ser numérico',
             'txtcelular.digits_between'           => 'El celular debe tener entre 10 y 11 digitos',
 
