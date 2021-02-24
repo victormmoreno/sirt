@@ -1765,8 +1765,6 @@
                 width="400" height="200" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
 
         </div>
-
-        <!------------------------------------------------------------------------------------------------------------------>
     </section>
 
     </div>
@@ -1775,6 +1773,15 @@
 
 </main>
 
+<div id="area_trabajo_divNoticiaPrincipal" style="background-color: rgba(0, 0, 0, 0.4);z-index: 100000;position: absolute; width: 100%; height: 1215px;"> <div> 
+    <span style="float:right; z-index:1000; position: fixed; right: 0; margin-right: 55px; margin-top: -70px; cursor: pointer;"> <img height="30" class="modal-close" src="{{asset('img/close.png')}}" title="Cerrar" width="29"> </span> 
+     <span style="display: block; text-align: center; margin-top: 100px;"> 
+        <a target="_blank" href=""> 
+            <img src="{{asset('img/infografia.jpeg')}}"> 
+        </a> 
+    </span> 
+</div>
+ </div>
 
 
 @endsection
@@ -1782,4 +1789,9 @@
 @push('script')
 <script type="text/javascript" src="{{ asset('Jquery/InteractividadJquery.js') }}"></script>
 <script src="{!! asset('js/pruebaJS.js') !!}"></script>
+<script>
+$(document).ready(function(){
+    $('#area_trabajo_divNoticiaPrincipal').openModal();
+});
+</script>
 @endpush

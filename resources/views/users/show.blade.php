@@ -61,10 +61,15 @@
                                             </div>
                                             @endif
 
-                                            @if(isset($user->gestor) && collect($user->getRoleNames())->contains(App\User::IsGestor()))
+                                            @if(isset($user->gestor) && (collect($user->getRoleNames())->contains(App\User::IsGestor()) || collect($user->getRoleNames())->contains(App\User::IsArticulador())))
                                             <div class="right zurich-bt-fonts green-complement-text">
                                                 <small>
-                                                    Información {{App\User::IsGestor()}}
+                                                    @if(collect($user->getRoleNames())->contains(App\User::IsGestor())))
+                                                        Información {{App\User::IsGestor()}}
+                                                    @else
+                                                        Información {{App\User::IsArticulador()}}
+                                                    @endif
+                                                    
                                                 </small>
                                             </div>
                                             <div class="divider mailbox-divider">
@@ -75,10 +80,12 @@
                                                         <li class="collection-item avatar">
                                                             <i class="material-icons circle teal darken-2">assignment_ind</i>
                                                             <span class="title">
-                                                                <b class="teal-text darken-2">Nodo del {{App\User::IsGestor()}}:</b> {{$user->present()->userGestorNombreNodo()}}
+                                                                <b class="teal-text darken-2">Nodo:</b> {{$user->present()->userGestorNombreNodo()}}
                                                                 <br/>
-                                                                <b class="teal-text darken-2">Linea del {{App\User::IsGestor()}}:</b> {{$user->present()->userGestorNombreLinea()}}
-                                                                <b class="teal-text darken-2">Honorario del {{App\User::IsGestor()}}:</b> {{ $user->present()->userGestorHonorarios()}}
+                                                                @if(collect($user->getRoleNames())->contains(App\User::IsGestor())))
+                                                                <b class="teal-text darken-2">Linea</b> {{$user->present()->userGestorNombreLinea()}}
+                                                                @endif
+                                                                <b class="teal-text darken-2">Honorario: </b> {{ $user->present()->userGestorHonorarios()}}
                                                             </span>
                                                         </li>
                                                     </ul>

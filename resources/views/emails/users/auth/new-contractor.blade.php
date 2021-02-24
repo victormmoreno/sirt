@@ -1,14 +1,20 @@
 @component('mail::message')
-# Nuevo contratista | {{config('app.name')}}
+# Nuevo funcionario | {{config('app.name')}}
 
 
-Hola, 
+Hola,
 {{$user_to->nombres}} {{$user_to->apellidos}}<br>
 {{$user_to->getRoleNames()->implode(', ')}} {{config('app.name')}}.
 
 Cordial Saludo.
 
 Hemos enviado este correo para informarte que el usuario {{$user_form->nombres}} {{$user_form->apellidos}} está solicitando acceso por primera vez al aplicativo.
+
+{{-- @component('mail::table')
+	| Solicitud realizada a |
+	|-----------------------|
+	| {{$user_to->contratista->nodo->entidad->nombre}}  | 
+@endcomponent --}}
 
 <br>
 @component('mail::button', ['url' => route('user.contractor.confirm.request', $user_form->documento)])

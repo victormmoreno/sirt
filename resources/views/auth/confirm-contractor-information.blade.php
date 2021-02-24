@@ -176,7 +176,7 @@
                                                                 <div id="gestor" class="input-field col s12 m6 l6 offset-l3 offset-m3">
                                                                     <div  class="card mailbox-content">
                                                                         <div class="card-content">
-                                                                            <span class="card-title activator grey-text text-darken-4 center-align">Información Gestor</span>
+                                                                            <span class="gestorarticulador card-title activator grey-text text-darken-4 center-align">Información Gestor</span>
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
                                                                                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
@@ -485,10 +485,7 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-
-
                                                     </div>
-
                                                 </form>
                                             </div>
                                         </div>
@@ -607,9 +604,26 @@ var roles = {
                 roles.hideSelectRole();
                 $('#dinamizador').show();
 
-            }else if($(this).val() == '{{App\User::IsGestor()}}'){
+            }else if($(this).val() == '{{App\User::IsGestor()}}' ){
                 roles.hideSelectRole();
+                $('#gestor').hide();
+                $("label[for*='txtnodogestor']").html("Nodo Gestor");
+                $("span[class*='gestorarticulador']").html("Información Gestor");
+                $("label[for*='txtlinea']").html("Línea Gestor");
+                $("label[for*='txthonorario']").html("Honorario gestor");
+                $('#test-Articulador').prop('checked', false);
+                $('#test-Gestor').prop('checked', true);
                 $('#gestor').show();
+            }else if($(this).val() == '{{App\User::IsArticulador()}}'){
+                roles.hideSelectRole();
+                $('#gestor').hide();
+                $("label[for*='txtnodogestor']").html("Nodo Articulador");
+                $("span[class*='gestorarticulador']").html("Información Articulador");
+                $("label[for*='txtlinea']").html("Línea Articulador");
+                $("label[for*='txthonorario']").html("Honorario Articulador");
+                $('#test-Articulador').prop('checked', true);
+                $('#test-Gestor').prop('checked', false);
+                $('#gestor').show()
             }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
                 roles.hideSelectRole();
                 $('#infocenter').show();

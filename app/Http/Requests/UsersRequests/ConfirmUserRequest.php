@@ -32,9 +32,9 @@ class ConfirmUserRequest extends FormRequest
         return [
             'role'                      => 'required',
             'txtnododinamizador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsDinamizador())) . '|nullable',
-            'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
-            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
-            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
+            'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtextension'              => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',
             'txttipotalento'                 => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
@@ -109,7 +109,7 @@ class ConfirmUserRequest extends FormRequest
         return $messages = [
             'role.required'                       => 'Por favor seleccione al menos un rol',
             'txtnododinamizador.required'         => 'El nodo del dinamizador es obligatorio.',
-            'txtnodogestor.required'              => 'El nodo del gestor es obligatorio.',
+            'txtnodogestor.required'              => 'El nodo es obligatorio.',
             'txtlinea.required'                   => 'La linea es obligatoria.',
 
             'txthonorario.required'               => 'El honorario es obligatorio.',

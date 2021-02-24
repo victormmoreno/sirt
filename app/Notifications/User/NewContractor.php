@@ -64,7 +64,7 @@ class NewContractor extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Nuevo contratista ' . $this->getUserFrom()->present()->nodoContratista() . config('app.name'))
+            ->subject('Nuevo funcionario ' . $this->getUserFrom()->present()->nodoContratista() . config('app.name'))
             ->markdown('emails.users.auth.new-contractor', ['user_form' => $this->getUserFrom(), 'user_to' => $this->getUserTo()]);
     }
 
@@ -80,8 +80,8 @@ class NewContractor extends Notification implements ShouldQueue
             'link'  => route('user.contractor.confirm.request', $this->getUserFrom()->documento),
             'icon'  => 'lightbulb',
             'color' => 'cyan',
-            'autor' => "Nuevo contratista | {$this->getUserFrom()->nombres} {$this->getUserFrom()->apellidos}",
-            'text'  => "El contratista está haciendo una petición de registro en el nodo.",
+            'autor' => "Nuevo funcionario | {$this->getUserFrom()->nombres} {$this->getUserFrom()->apellidos}",
+            'text'  => "{$this->getUserFrom()->nombres} {$this->getUserFrom()->apellidos} está haciendo una petición de registro en el aplicativo",
         ];
     }
 }
