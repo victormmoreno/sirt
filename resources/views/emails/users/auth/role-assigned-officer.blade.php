@@ -4,7 +4,7 @@
 <br>
 Hola, 
 {{$user->nombres}} {{$user->apellidos}}<br>
-{{$user->getRoleNames()->implode(', ')}} {{config('app.name')}}.
+{{$user->getRoleNames()->implode(', ')}} {{$user->present()->userGestorNombreNodo()}}
 
 Cordial Saludo.
 

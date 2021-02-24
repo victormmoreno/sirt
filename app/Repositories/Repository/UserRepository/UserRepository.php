@@ -978,6 +978,7 @@ class UserRepository
 
     private function SyncInfoRolesUser($request, $userUpdated){
 
+        $userdinamizador = null;
         if ($request->filled('txtnododinamizador')) {
             $userdinamizador = User::whereHas('dinamizador.nodo', function ($query) use ($request) {
                 $query->where('id', $request->txtnododinamizador);
@@ -1001,7 +1002,7 @@ class UserRepository
         }
 
         if ($newRole != null && $this->roleIsAssigned($newRole, User::IsDinamizador()) && !isset($userUpdated->dinamizador) && $this->notExistRoleInArray($request, $userUpdated, User::IsDinamizador())) {
-            if ($userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
+            if ($userdinamizador !== null && $userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
                 $userdinamizador->each(function ($item) {
                     if ($item->hasRole(User::IsDinamizador()) && $item->roles->count() == 1) {
 
@@ -1024,16 +1025,15 @@ class UserRepository
             }
         }
 
-        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsGestor()) && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
+        if ($newRole != null && ($this->roleIsAssigned($newRole, User::IsGestor()) || $this->roleIsAssigned($newRole, User::IsArticulador())  ) && !isset($userUpdated->gestor) && ($this->notExistRoleInArray($request, $userUpdated, User::IsGestor()) || $this->notExistRoleInArray($request, $userUpdated, User::IsArticulador()))) {
 
-            if ($request->filled('txtnodogestor')) {
                 Gestor::create([
                     "user_id"             => $userUpdated->id,
                     "nodo_id"             => $request->input('txtnodogestor'),
                     "lineatecnologica_id" => $request->input('txtlinea'),
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
-            }
+            
         }
 
         if ($newRole != null && $this->roleIsAssigned($newRole, User::IsInfocenter()) && !isset($userUpdated->infocenter) && $this->notExistRoleInArray($request, $userUpdated, User::IsInfocenter())) {
@@ -1057,7 +1057,7 @@ class UserRepository
         //update dinamizador
         if (isset($userUpdated->dinamizador->id) && !$this->roleIsAssigned($removeRole, User::IsDinamizador())) {
 
-            if ($userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo() && $userUpdated->dinamizador->nodo->id == $request->input('txtnododinamizador')) {
+            if ($userdinamizador !== null  && $userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo() && $userUpdated->dinamizador->nodo->id == $request->input('txtnododinamizador')) {
                 $userdinamizador->each(function ($item) {
 
                     if ($item->hasRole(User::IsDinamizador()) && $item->roles->count() == 1) {
@@ -1074,21 +1074,23 @@ class UserRepository
                     "user_id" => $userUpdated->id,
                     "nodo_id" => $request->input('txtnododinamizador'),
                 ]);
-            } else {
-                Dinamizador::find($userUpdated->dinamizador->id)->update([
-                    "nodo_id" => $request->input('txtnododinamizador'),
-                ]);
+            } 
+            
+            else {
+                // Dinamizador::find($userUpdated->dinamizador->id)->update([
+                //     "nodo_id" => $request->input('txtnododinamizador'),
+                // ]);
             }
         }
 
         //update gestor
-        if (isset($userUpdated->gestor) && $this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
+        if (isset($userUpdated->gestor) && ($this->roleIsAssigned($removeRole, User::IsGestor()) || $this->roleIsAssigned($removeRole, User::IsArticulador())) && $request->filled('txtnodogestor')) {
             $gestor = Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
                 "lineatecnologica_id" => $request->input('txtlinea'),
                 "honorarios"          => $request->input('txthonorario'),
             ]);
-        } else if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
+        } else if (isset($userUpdated->gestor) && (!$this->roleIsAssigned($removeRole, User::IsGestor()) || !$this->roleIsAssigned($removeRole, User::IsArticulador())) && $request->filled('txtnodogestor')) {
             $gestor = Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
                 "lineatecnologica_id" => $request->input('txtlinea'),

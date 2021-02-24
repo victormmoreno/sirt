@@ -128,7 +128,7 @@ var ocupacion = {
 
 var roles = {
     getRoleSeleted:function (idrol) {
-        let role = $(idrol).val();
+        
         if($('#dinamizador').css('display') === 'block')
         {
             @if($errors->any())
@@ -189,8 +189,23 @@ var roles = {
             if ($(this).val() == 'Dinamizador') {
 
                 $('#dinamizador').show();
-            }else if($(this).val() == 'Gestor'){
+            }else if($(this).val() == 'Gestor' ){
+               
+                $('#gestor').hide();
+                $("label[for*='txtnodogestor']").html("Nodo Gestor");
+                $("label[for*='txtlinea']").html("Línea Gestor");
+                $("label[for*='txthonorario']").html("Honorario gestor");
+                $('#test-Articulador').prop('checked', false);
+                $('#test-Gestor').prop('checked', true);
                 $('#gestor').show();
+            }else if($(this).val() == 'Articulador' ){
+                $('#gestor').hide();
+                $("label[for*='txtnodogestor']").html("Nodo Articulador");
+                $("label[for*='txtlinea']").html("Línea Articulador");
+                $("label[for*='txthonorario']").html("Honorario Articulador");
+                $('#test-Articulador').prop('checked', true);
+                $('#test-Gestor').prop('checked', false);
+                $('#gestor').show()
             }else if($(this).val() == 'Infocenter'){
                 $('#infocenter').show();
             }else if($(this).val() == 'Talento'){

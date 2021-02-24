@@ -87,7 +87,7 @@
                                         </div>
                                         <div class="input-field col s12 m6 l6">
                                             <input class="validate" id="txtcelular" name="txtcelular" type="tel"  value="{{ isset($user->celular) ? $user->celular : old('txtcelular')}}">
-                                            <label for="txtcelular">Celular</label>
+                                            <label for="txtcelular">Celular <span class="red-text">*</span></label>
                                             <small id="txtcelular-error"  class="error red-text"></small>
                                         </div>
                                     </div>
@@ -357,7 +357,7 @@
                             <div class="row center">
                                 <div class="col s12 m12 l12">
                                     <div class="divider mailbox-divider"></div>
-                                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Otros datos</h5>
+                                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Tipo de usuario</h5>
                                     <p class="p-v-xs">
                                         <input checked="" class="txttipousuario" id="txttalento" name="txttipousuario" type="radio" value="talento" onchange="user.checkedTypeUser()" {{ isset($idea->pregunta1) && $idea->pregunta1 == 1 ? 'checked' : old('pregunta1') == 1 ? 'checked':''}}/>
                                         <label align="justify" for="txttalento" class="black-text text-black">
@@ -367,7 +367,7 @@
                                     <p class="p-v-xs">
                                         <input class="txttipousuario" id="txtcontratista" name="txttipousuario" type="radio" value="contratista" onchange="user.checkedTypeUser()" {{ isset($idea->pregunta2) && $idea->pregunta2 == 2 ? 'checked' : old('pregunta2') == 2 ? 'checked':''}}/>
                                         <label align="justify" for="txtcontratista" class="black-text text-black">
-                                            Soy contratista de la Red Tecnoparque Colombia.
+                                            Soy funcionario de la Red Tecnoparque Colombia.
                                         </label>
                                     </p>
                                     <small id="txttipousuario-error" class="error red-text"></small>
@@ -627,7 +627,7 @@
                             <!-- contratista -->
                             <div class="row contratista">
                                 <div class="col s12 m8 l8 offset-l2 offset-m2">
-                                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Información Contratista Red Tecnoparque Colombia</h5>
+                                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Información funcionario Red Tecnoparque Colombia</h5>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="row">
                                         <div class="input-field col s12 m8 l8 offset-l2 offset-m2">
