@@ -60,7 +60,7 @@
                         @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                             <option value="">Seleccione Nodo</option>
                             @foreach($nodos as $id => $nodo)
-                                @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
+                                @if(isset($user->dinamizador->nodo->id) && (collect($user->roles)->contains('name',App\User::IsGestor()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
                                     <option value="{{$id}}" {{old('txtnodogestor',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
                                 @else
                                     <option value="{{$id}}" {{old('txtnodogestor') ==  $id ? 'selected':''}}>{{$nodo}}</option>
@@ -68,7 +68,7 @@
                             @endforeach
                         @endif
                         
-                        @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsGestor()))
+                        @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  (collect($user->roles)->contains('name',App\User::IsGestor()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
                         <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
 
                         @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
@@ -82,12 +82,12 @@
             </div>
             <div class="input-field col s12 m12 l12">
                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtlinea" name="txtlinea" style="width: 100%" tabindex="-1">
-                    @if(isset($user->gestor->lineatecnologica->id) && session()->get('login_role') == App\User::IsGestor() && collect($user->roles)->contains('name',App\User::IsGestor()))
+                    @if(isset($user->gestor->lineatecnologica->id) && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador()) && (collect($user->roles)->contains('name',App\User::IsGestor()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
 
                     <option value="{{$user->gestor->lineatecnologica->id}}" selected>{{$user->gestor->lineatecnologica->nombre}}</option>
                     @else
                         @foreach($lineas as $id => $linea)
-                            @if(isset($user->gestor->lineatecnologica->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
+                            @if(isset($user->gestor->lineatecnologica->id) && (collect($user->roles)->contains('name',App\User::IsGestor()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
                                 <option value="{{$id}}" {{old('txtlinea',$user->gestor->lineatecnologica->id) ==  $id ? 'selected':''}} >{{$linea}}</option>
                             @else
                                 <option value="{{$id}}" {{old('txtlinea') ==  $id ? 'selected':''}}>{{$linea}}</option>

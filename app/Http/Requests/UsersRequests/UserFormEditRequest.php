@@ -62,9 +62,9 @@ class UserFormEditRequest extends FormRequest
             'txtotra_ocupacion'         => Rule::requiredIf(collect(request()->txtocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'role'                      => 'required',
             'txtnododinamizador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsDinamizador())) . '|nullable',
-            'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
-            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
-            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
+            'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtextension'              => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',
             'txttipotalento'                 => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
@@ -215,7 +215,7 @@ class UserFormEditRequest extends FormRequest
 
             'role.required'                       => 'Por favor seleccione al menos un rol',
             'txtnododinamizador.required'         => 'El nodo del dinamizador es obligatorio.',
-            'txtnodogestor.required'              => 'El nodo del gestor es obligatorio.',
+            'txtnodogestor.required'              => 'El nodo  es obligatorio.',
             'txtlinea.required'                   => 'La linea es obligatoria.',
 
             'txthonorario.required'               => 'El honorario es obligatorio.',
