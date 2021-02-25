@@ -19,14 +19,38 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                  <div class="col s12 m12 l12">
-                    @include('ideas.detalle')
-                  </div>
+                <div class="col s12 m3 l3">
+                  <ul class="collection with-header">
+                    <li class="collection-header"><h5>Opciones</h5></li>
+                    <li class="collection-item">
+                      <form action="{{route('idea.enviar', $idea->id)}}" method="POST" id="frmEnviarIdeaTalento" name="frmEnviarIdeaTalento">
+                        {!! method_field('PUT')!!}
+                        <input type="hidden" value="{{$idea}}" name="txtidea_id">
+                        @csrf
+                        <a href="" onclick="confirmacionPostulacion(event)">
+                          <div class="card-panel light-blue lighten-2 black-text center">
+                            Postular proyecto al nodo {{$idea->nodo->entidad->nombre}}.
+                          </div>
+                        </a>
+                      </form>
+                    </li>
+                    <li class="collection-item">
+                      <a href="{{route('idea.edit', $idea->id)}}">
+                        <div class="card-panel teal lighten-2 black-text center">
+                          Cambiar información de la idea.
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col s12 m8 l8">
+                  @include('ideas.detalle')
                   <center>
                     <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                      <i class="material-icons right">backspace</i>Cancelar
+                      <i class="material-icons right">backspace</i>Volver
                     </a>
                   </center>
+                </div>
               </div>
             </div>
           </div>
@@ -36,3 +60,24 @@
   </div>
 </main>
 @endsection
+@push('script')
+    <script>
+  function confirmacionPostulacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de postular esta idea de proyecto?',
+    text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmEnviarIdeaTalento.submit();
+      }
+    })
+  }
+    </script>
+@endpush

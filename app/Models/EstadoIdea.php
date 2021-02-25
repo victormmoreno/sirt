@@ -7,17 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class EstadoIdea extends Model
 {
 
-    const IS_INSCRITO    = 'Inscrito';
-    const IS_CONVOCADO    = 'Convocado';
-    const IS_ADMITIDO     = 'Admitido';
-    const IS_NO_ADMITIDO  = 'No Admitido';
+    const IS_EN_REGISTRO = 'En registro';
+    const IS_CONVOCADO = 'Convocado';
+    const IS_ADMITIDO = 'Admitido';
+    const IS_RECHAZADO_COMITE  = 'Rechazado por comité';
     const IS_NO_CONVOCADO = 'No Convocado';
     const IS_INHABILITADO = 'Inhabilitado';
-    const IS_PROYECTO = 'En Proyecto';
+    const IS_PBT = 'En PBT';
     const IS_NO_APLICA = 'No Aplica';
     const IS_PROGRAMADO = 'Programado';
     const IS_REPROGRAMADO = 'Reprogramado';
-    const IS_ENVIADO = 'Enviado';
+    const IS_POSTULADO = 'Postulado';
+    const IS_RECHAZADO_ARTICULADOR = 'Rechazado por articulador';
 
     protected $table = 'estadosidea';
 
@@ -32,9 +33,9 @@ class EstadoIdea extends Model
 
     public $timestamps = false;
 
-    public static function IsInscrito()
+    public static function IsRegistro()
     {
-        return self::IS_INSCRITO;
+        return self::IS_EN_REGISTRO;
     }
 
     public static function IsConvocado()
@@ -47,14 +48,14 @@ class EstadoIdea extends Model
         return self::IS_ADMITIDO;
     }
 
-    public static function IsNoAdmitido()
+    public static function IsRechazadoComite()
     {
-        return self::IS_NO_ADMITIDO;
+        return self::IS_RECHAZADO_COMITE;
     }
 
     public static function IsNoConvocado()
     {
-        return self::IS_NO_ADMITIDO;
+        return self::IS_NO_CONVOCADO;
     }
 
     public static function IsInhabilitado()
@@ -62,9 +63,9 @@ class EstadoIdea extends Model
         return self::IS_INHABILITADO;
     }
 
-    public static function IsProyecto()
+    public static function IsPBT()
     {
-        return self::IS_PROYECTO;
+        return self::IS_PBT;
     }
 
     public static function IsNoAplica()
@@ -82,8 +83,13 @@ class EstadoIdea extends Model
         return self::IS_REPROGRAMADO;
     }
 
-    public static function IsEnviado()
+    public static function IsPostulado()
     {
-        return self::IS_ENVIADO;
+        return self::IS_POSTULADO;
+    }
+
+    public static function IsRechazadoArticulador()
+    {
+        return self::IS_RECHAZADO_ARTICULADOR;
     }
 }

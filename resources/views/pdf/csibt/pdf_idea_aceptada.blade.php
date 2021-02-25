@@ -12,7 +12,7 @@
   </center>
   <p>
     Señor(a) <br>
-    <b>{{ $idea->nombres_contacto }} {{ $idea->apellidos_contacto }}</b><br>
+    <b>{{ $idea->talento->user->nombres }} {{ $idea->talento->user->apellidos }}</b><br>
     Cordial Saludo
   </p>
   <p style="text-align: justify">

@@ -2,7 +2,7 @@
 # Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
-<b>_{{$idea->nombres_contacto }} {{$idea->apellidos_contacto }}_</b><br>
+<b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
 Cordial Saludo.
 <br>
 Dando respuesta al registro de idea para la Red Tecnoparque tenemos el gusto de informar la fecha y dirección donde se realizará el comité de selección de ideas.

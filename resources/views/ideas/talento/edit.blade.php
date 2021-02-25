@@ -36,6 +36,7 @@
       </div>
     </div>
   </div>
+  @include('ideas.modals')
 </main>
 @endsection
 @push('script')

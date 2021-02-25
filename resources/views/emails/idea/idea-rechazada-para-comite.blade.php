@@ -1,13 +1,24 @@
 @component('mail::message')
-# Su idea fue postulada | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Se le ha convocado para presentarse en un taller de fortalecimiento | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
 <b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
 Cordial Saludo.
 
-{{-- <p align="justify">El <b>SENA</b> te da la bienvenida a su programa {{config('app.name')}}, ahora podrás acceder a los servicios que la red ofrece para tí.</p> --}}
+<p align="justify">El tecnoparque <b>{{$idea->nodo->entidad->nombre}}</b> te ha convocado a un taller de fortalecimiento.</p>
 
-Ha recibido este mensaje porque hemos recibido tu postulación de tu idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>
+Ha recibido este mensaje porque tecnoparque nodo {{$idea->nodo->entidad->nombre}} ha considerado que su idea aún no está lista para pasar por el comité de ideas.<br>
+
+<b>¿Qué significa esto?</b> Tecnoparque {{$idea->nodo->entidad->nombre}} ha considerado que según la información diligenciada en el formulario de registro de idea, 
+considera que aún no está preparado para citarse a un comité. <br>
+
+<b>¿Cuál es el siguiente paso a seguir?</b> En los próximo días se pondrá en contacto con usted una persona para ayudarle a fortalecer su idea de proyecto, esto con el fin de 
+que puedas volver a postular tu idea y tener mas posibilidades de que sea aceptada para presentarse al comité. <br> 
+
+A continuación verás los motivos por los cuales el experto de tecnoparque consideró que su idea aún no está lista para pasar por un comité de ideas y debido a esto, 
+se le ha convocado a un taller de fortalecimiento. <br>
+
+{{$motivos}}
 
 @component('mail::panel')
 	

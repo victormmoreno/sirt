@@ -21,7 +21,7 @@ function enviarNotificacionResultadosCSIBT(idea, comite) {
 function notificacionExitosaDelResultado(data) {
     Swal.fire({
         title: 'Notificación Exitosa!',
-        text: "Se ha enviado un mensaje a la dirección: " + data.idea.correo_contacto + " con los resultados del comité.",
+        text: "Se ha enviado un mensaje a la dirección: " + data.idea + " con los resultados del comité.",
         type: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
@@ -33,7 +33,7 @@ function notificacionFallidaDelResultado() {
     Swal.fire({
         title: 'Notificación Fallida!',
         text: "No se ha logrado enviar una mensaje con los resultados del comité al talento.",
-        type: 'success',
+        type: 'error',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
