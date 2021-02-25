@@ -105,7 +105,7 @@ class ComiteController extends Controller
   public function realizar(int $id)
   {
     $comite = Comite::findOrFail($id);
-    $estados = EstadoIdea::whereIn('nombre', [EstadoIdea::IsInscrito(), EstadoIdea::IsReprogramado(), EstadoIdea::IsInhabilitado(), EstadoIdea::IsAdmitido()])->get();
+    $estados = EstadoIdea::whereIn('nombre', [EstadoIdea::IsReprogramado(), EstadoIdea::IsAdmitido(), EstadoIdea::IsRechazadoComite()])->get();
     return view('comite.infocenter.realizar_comite', [
       'comite' => $comite,
       'estados' => $estados
@@ -456,12 +456,12 @@ class ComiteController extends Controller
       // alert()->success('Notificación Exitosa!','Se ha enviado un mensaje a la dirección: '.$idea->correo_contacto.' con los resultados del comité.')->showConfirmButton('Ok', '#3085d6');
       return response()->json([
         'state' => 'notifica',
-        'idea' => $idea
+        'idea' => $idea->talento->user->email
         ]);
     } else {
       return response()->json([
         'state' => 'no_notifica',
-        'idea' => $idea
+        'idea' => $idea->talento->user->email
       ]);
     }
   }

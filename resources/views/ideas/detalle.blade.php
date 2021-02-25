@@ -10,7 +10,7 @@
                                     <div class="col s12 m12 l12">
                                         <div class="center">
                                             <span class="mailbox-title">
-                                                Descripción de la idea
+                                                Estado de la idea de proyecto - {{$idea->estadoIdea->nombre}}
                                             </span>
                                         </div>
                                         <div class="divider mailbox-divider"></div>
@@ -76,6 +76,31 @@
                                                     </div>
 
                                                 </li>
+                                            </ul>
+                                            <ul class="collection with-header">
+                                                <li class="collection-header"><h5>Información de la aceptación del acuerdo de no confidencialidad de la idea</h5></li>
+                                                <li class="collection-item">
+                                                    <span class="title cyan-text text-darken-3">
+                                                        ¿El talento aceptó el acuerdo de no confidencialidad de la idea?
+                                                    </span>
+                                                    <p>
+                                                        @if ($idea->acuerdo_no_confidencialidad == 0)
+                                                            No.
+                                                        @else
+                                                            Si.
+                                                        @endif
+                                                    </p>
+                                                </li>
+                                                @if ($idea->acuerdo_no_confidencialidad == 1)
+                                                    <li class="collection-item">
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Fecha en la que aceptó el acuerdo
+                                                        </span>
+                                                        <p>
+                                                            {{$idea->fecha_acuerdo_no_confidencialidad}}
+                                                        </p>
+                                                    </li>
+                                                @endif
                                             </ul>
                                             <ul class="collection with-header">
                                                 <li class="collection-header"><h5>Empresa con la que se registra la idea de proyecto</h5></li>
@@ -287,11 +312,10 @@
                                                                     Link de un video presentado la plataforma
                                                                 </span>
                                                                 <p>
-                                                                    {{$idea->rutamodel->ruta}}
-                                                                    @if ($idea->rutamodel->ruta == null)
+                                                                    @if ($idea->rutamodel == null)
                                                                         No hay información disponible
                                                                     @else
-                                                                        {{$idea->forma_juridica}}
+                                                                        {{$idea->rutamodel->ruta}}
                                                                     @endif    
                                                                 </p>
                                                             </li>

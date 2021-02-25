@@ -202,16 +202,16 @@ if (data.state == 'no_update') {
 };
 
 function pintarIdeaEnLaTabla(id, hora, direccion) {
-$.ajax({
-    dataType: 'json',
-    type: 'get',
-    url: '/idea/detallesIdea/' + id
-}).done(function (ajax) {
-    let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
-    $('#tblIdeasComiteCreate').append(fila);
-    ideaSeAsocioAlAgendamiento();
-    reiniciarCamposAgendamiento();
-});
+    $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/idea/detallesIdea/' + id
+    }).done(function (ajax) {
+        let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
+        $('#tblIdeasComiteCreate').append(fila);
+        ideaSeAsocioAlAgendamiento();
+        reiniciarCamposAgendamiento();
+    });
 }
 
 function pintarGestorEnLaTabla(id, hora_inicio, hora_fin) {

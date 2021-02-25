@@ -32,7 +32,7 @@ class AddVulnerabilidadToUsersTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['mujerCabezaFamilia'], 'desplazadoPorViolencia');
+            $table->dropColumn(['mujerCabezaFamilia', 'desplazadoPorViolencia']);
         });
     }
 }

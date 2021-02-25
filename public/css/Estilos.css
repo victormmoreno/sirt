@@ -588,7 +588,7 @@ ul {
 .mapa {
     width: 550px;
     height: 550px;
-    background: url(../Img/mapa-colombia-tecno.gif);
+    background: url(../img/mapa-colombia-tecno.gif);
     background-repeat: no-repeat;
     background-size: contain;
     position: relative;

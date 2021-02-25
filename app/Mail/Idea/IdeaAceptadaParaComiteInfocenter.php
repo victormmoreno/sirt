@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Idea;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class IdeaEnviadaEmprendedor extends Mailable implements ShouldQueue
+class IdeaAceptadaParaComiteInfocenter extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-
-    public $subject = 'Idea Postulada';
+    public $subject = 'Se ha aceptado una idea para comité';
     public $idea;
+
 
     /**
      * Create a new message instance.
@@ -22,7 +22,6 @@ class IdeaEnviadaEmprendedor extends Mailable implements ShouldQueue
     public function __construct($idea)
     {
         $this->idea = $idea;
-
     }
 
     /**
@@ -32,7 +31,6 @@ class IdeaEnviadaEmprendedor extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->from(config('mail.from.address'), config('mail.from.name'))
-                ->markdown('emails.idea.Idea-enviada-emprendedor');
+        return $this->from(config('mail.from.address'), config('mail.from.name'))->markdown('emails.idea.idea-aceptada-para-comite-infocenter');
     }
 }

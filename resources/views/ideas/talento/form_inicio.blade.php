@@ -35,6 +35,29 @@
                 <small id="txtnodo-error" class="error red-text"></small>
             </div>
         </div>
+        <div class="row">
+            <div class="card-panel grey lighten-1 black-text center">
+                <i class="material-icons left">info_outline</i>
+                A su vez, es importante para nosotros saber si usted está de acuerdo con el acuerdo de no confidencialidad de la idea.
+            </div>
+        </div>
+        <div class="row center">
+            <div class="form-check">
+                @if ($existe)
+                    @if ($idea->acuerdo_no_confidencialidad == 1)
+                    <input class="form-check-input" type="checkbox" name="txtacuerdo_no_confidencialidad" id="txtacuerdo_no_confidencialidad" checked value="1">
+                    @else
+                    <input class="form-check-input" type="checkbox" name="txtacuerdo_no_confidencialidad" id="txtacuerdo_no_confidencialidad" value="1">
+                    @endif
+                @else
+                <input class="form-check-input" type="checkbox" name="txtacuerdo_no_confidencialidad" id="txtacuerdo_no_confidencialidad" value="1">
+                @endif
+                <label class="form-check-label black-text text-black" for="txtacuerdo_no_confidencialidad">
+                    Acepto el <a class="m-t-sm blue-text text-light-blue accent-4 center-align modal-trigger" href="#modalAcuerdoNoConfidencialidad">acuerdo de no confidencialidad de la idea.</a>
+                </label>
+            </div>
+            <small id="txtacuerdo_no_confidencialidad-error" class="error red-text"></small>
+        </div>
         <div class="divider"></div>
         <div class="row">
             <div class="col s12 m12 l12">
@@ -725,7 +748,11 @@
                     ondemand_video
                 </i>
                 @if ($existe)
-                <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{$idea->rutamodel->ruta}}">
+                    @if ($idea->rutamodel == null)
+                        <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="">
+                    @else
+                        <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{$idea->rutamodel->ruta}}">
+                    @endif
                 @else
                 <input id="txtlinkvideo" name="txtlinkvideo" type="text">
                 @endif

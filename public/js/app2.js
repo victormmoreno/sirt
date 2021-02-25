@@ -365,28 +365,6 @@ function pintarMensajeIdeaForm(title, text, type) {
     });
 }
 
-function aceptacionNoConfidencialidad(e){
-    e.preventDefault();
-    Swal.fire({
-    title: 'Por favor, leer atentamente',
-    html: "La Red Tecnoparque SENA, se reserva la Aceptación o NO de esta idea postulada. Igualmente, teniendo en cuenta las resoluciones de Propiedad Intelectual de la C.A.N.,"+ 
-    "Las leyes colombianas, La SIC, la DNDA; se establece que las <b>ideas no son protegidas</b> por derechos de autor, registro de propiedad intelectual, marcas, diseños industriales o "+
-    "patentes, por lo cual se establece que la socialización acá realizada, <b>no representa compromiso institucional</b>, si en otro momento o en otro comité, otro usuario o empresa "+
-    "proponga o desarrolle de manera libre y autónoma de sus actos, una idea igual o parecida a la acá propuesta.<br>"+
-    "¿Acpeta estas condiciones?",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'No',
-    confirmButtonText: 'Sí, acepto!'
-    }).then((result) => {
-      if (result.value) {
-        document.frmEnviarIdeaTalento.submit();
-      }
-    })
-  }
-
 function mensajesIdeaForm(data) {
     let title = "error";
     let text = "error";
@@ -1002,7 +980,7 @@ function enviarNotificacionResultadosCSIBT(idea, comite) {
 function notificacionExitosaDelResultado(data) {
     Swal.fire({
         title: 'Notificación Exitosa!',
-        text: "Se ha enviado un mensaje a la dirección: " + data.idea.correo_contacto + " con los resultados del comité.",
+        text: "Se ha enviado un mensaje a la dirección: " + data.idea + " con los resultados del comité.",
         type: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
@@ -1014,7 +992,7 @@ function notificacionFallidaDelResultado() {
     Swal.fire({
         title: 'Notificación Fallida!',
         text: "No se ha logrado enviar una mensaje con los resultados del comité al talento.",
-        type: 'success',
+        type: 'error',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1462,16 +1440,16 @@ if (data.state == 'no_update') {
 };
 
 function pintarIdeaEnLaTabla(id, hora, direccion) {
-$.ajax({
-    dataType: 'json',
-    type: 'get',
-    url: '/idea/detallesIdea/' + id
-}).done(function (ajax) {
-    let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
-    $('#tblIdeasComiteCreate').append(fila);
-    ideaSeAsocioAlAgendamiento();
-    reiniciarCamposAgendamiento();
-});
+    $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/idea/detallesIdea/' + id
+    }).done(function (ajax) {
+        let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
+        $('#tblIdeasComiteCreate').append(fila);
+        ideaSeAsocioAlAgendamiento();
+        reiniciarCamposAgendamiento();
+    });
 }
 
 function pintarGestorEnLaTabla(id, hora_inicio, hora_fin) {
