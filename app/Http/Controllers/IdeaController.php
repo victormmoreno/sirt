@@ -104,6 +104,12 @@ class IdeaController extends Controller
             case User::IsInfocenter():
                 $nodo = auth()->user()->infocenter->nodo_id;
                 break;
+            case User::IsTalento():
+                $nodo = null;
+                break;
+            case User::IsArticulador():
+                $nodo = null;
+                break;
             default:
                 return abort('403');
                 break;
@@ -142,7 +148,7 @@ class IdeaController extends Controller
                     if (\Session::get('login_role') !== User::IsInfocenter()) {
                         return '';
                     } else {
-                        if ($data->estadoIdea->nombre != EstadoIdea::IsInscrito()) {
+                        if ($data->estadoIdea->nombre != EstadoIdea::IsRegistro()) {
                             $delete = '<a class="btn red lighten-3 m-b-xs" disabled><i class="material-icons">delete_sweep</i></a>';
                         } else {
                             $delete = '<a class="btn red lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'Inhabilitado\')"><i class="material-icons">delete_sweep</i></a>';
@@ -150,7 +156,7 @@ class IdeaController extends Controller
                         return $delete;
                     }
                 })->addColumn('dont_apply', function ($data) {
-                    if ($data->estadoIdea->nombre != EstadoIdea::IsInscrito()) {
+                    if ($data->estadoIdea->nombre != EstadoIdea::IsRegistro()) {
                         $notapply = '<a class="btn brown lighten-3 m-b-xs" disabled><i class="material-icons">thumb_down</i></a>';
                     } else {
                         $notapply = '<a class="btn brown lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'No Aplica\')"><i class="material-icons">thumb_down</i></a>';
@@ -162,9 +168,13 @@ class IdeaController extends Controller
                 })->rawColumns(['created_at', 'estado', 'persona', 'details', 'edit', 'soft_delete', 'dont_apply'])->make(true);
         }
 
-        $estadosIdeas = EstadoIdea::orderBy('id')->pluck('nombre', 'id');
-
+        
         if (\Session::get('login_role') == User::IsInfocenter()) {
+            $estadosIdeas = EstadoIdea::orderBy('id')->whereNotIn('nombre', [
+                EstadoIdea::IsNoConvocado(),
+                EstadoIdea::IsInhabilitado(),
+                EstadoIdea::IsNoAplica()
+            ])->pluck('nombre', 'id');
             return view('ideas.infocenter.index', ['estadosIdeas' => $estadosIdeas]);
         } else if (\Session::get('login_role') == User::IsTalento()) {
             return view('ideas.talento.index');
@@ -172,20 +182,76 @@ class IdeaController extends Controller
             return view('ideas.articulador.index');
         } else {
             $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
+            $estadosIdeas = EstadoIdea::orderBy('id')->pluck('nombre', 'id');
             return view('ideas.index', ['nodos' => $nodos, 'estadosIdeas' => $estadosIdeas]);
+        }
+
+    }
+
+    public function aceptarPostulacionIdea($id)
+    {
+        $idea = $this->ideaRepository->findByid($id);
+        $this->authorize('show', $idea);
+        // dd($id);
+        $update = $this->ideaRepository->aceptarPostulacion($idea);
+        if ($update) {
+            Alert::success('Postulación aceptada!', 'La postulación de la idea se ha aceptado en el nodo!')->showConfirmButton('Ok', '#3085d6');
+            return redirect('idea');
+        } else {
+            Alert::error('Postulación errónea!', 'La postulación de la idea no se ha aceptado al nodo!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+    }
+
+    public function detallesIdeas($id)
+    {
+        // dd($id);
+        $idea = Idea::findOrFail($id);
+        // dd($idea);
+        // $this->authorize('show', $idea);
+        return response()->json([
+            'detalles' => $idea
+        ]);
+    }
+
+    /**
+     * Rechaza la postulación de la idea de proyecto en el nodo
+     * 
+     * @param int $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     * 
+     **/    
+    public function rechazarPostulacionIdea(Request $request, $id)
+    {
+        // dd($request->txtmotivosRechazo);
+        // exit();
+        $idea = $this->ideaRepository->findByid($id);
+        $this->authorize('show', $idea);
+        // dd($id);
+        $update = $this->ideaRepository->rechazarPostulacion($idea, $request);
+        if ($update) {
+            Alert::success('Postulación rechazada!', 'La postulación de la idea se ha rechazado en el nodo, se le ha enviado una notificación al talento!')->showConfirmButton('Ok', '#3085d6');
+            return redirect('idea');
+        } else {
+            Alert::error('Postulación errónea!', 'La postulación de la idea no se ha aceptado al nodo!')->showConfirmButton('Ok', '#3085d6');
+            return back();
         }
     }
 
     public function datatableIdeasTalento(Request $request)
     {
-        // $ideas = Idea::with(['estadoIdea']);
         if (Session::get('login_role') == User::IsTalento()) {
-            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)->get();
+            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+            ->whereHas('estadoIdea', 
+            function ($query){
+                $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRechazadoComite()]);
+            })->get();
         } else {
             $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)
             ->whereHas('estadoIdea', 
             function ($query){
-                $query->where('nombre', EstadoIdea::IsEnviado());
+                $query->where('nombre', EstadoIdea::IsPostulado());
             }
             )->get();
         }
@@ -207,7 +273,7 @@ class IdeaController extends Controller
             </a>';
                 return $info;
         })->addColumn('edit', function ($data) {
-            $edit = '<a class="btn light-blue m-b-xs modal-trigger" href='.route('idea.edit', $data->id).'>
+            $edit = '<a class="btn m-b-xs modal-trigger" href='.route('idea.edit', $data->id).'>
             <i class="material-icons">edit</i>
             </a>';
                 return $edit;
@@ -281,27 +347,35 @@ class IdeaController extends Controller
         }
     }
 
-    // /**
-    //  * Envia la idea al nodo donde se registró
-    //  *
-    //  * @param \Illuminate\Http\Request $request
-    //  * @param int $id Id de la idea
-    //  * @return \Illuminate\Http\Response
-    //  * @author dum
-    //  **/
-    // public function enviarIdeaAlNodo(Request $request, $id)
-    // {
-    //     $idea = $this->ideaRepository->findByid($id);
-    //     $this->authorize('update', $idea);
-    //     $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
-    //     if ($update) {
-    //         Alert::success('Envio exitoso!', 'La idea se ha enviado al nodo exitosamente!')->showConfirmButton('Ok', '#3085d6');
-    //         return redirect('idea');
-    //     } else {
-    //         Alert::error('Envio erróneo!', 'La idea no se ha enviado al nodo!')->showConfirmButton('Ok', '#3085d6');
-    //         return back();
-    //     }
-    // }
+    /**
+     * Envia la idea al nodo donde se registró
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id Id de la idea
+     * @return \Illuminate\Http\Response
+     * @author dum
+     **/
+    public function enviarIdeaAlNodo(Request $request, $id)
+    {
+        $idea = $this->ideaRepository->findByid($id);
+        if ($idea->estadoIdea->nombre != EstadoIdea::IsRegistro()) {
+            Alert::warning('Postulación erróneo!', 'Para postular la idea al nodo, esta debe estar en el estado de "En registro"!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        
+        if ($idea->acuerdo_no_confidencialidad == 0) {
+            Alert::warning('Postulación erróneo!', 'Para postular la idea al nodo, se debe haber aprobado el acuerdo de no confidencialidad de idea!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
+        if ($update) {
+            Alert::success('Postulación exitosa!', 'La idea se ha postulado al nodo exitosamente!')->showConfirmButton('Ok', '#3085d6');
+            return redirect('idea');
+        } else {
+            Alert::error('Postulación errónea!', 'La idea no se ha postulado al nodo!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+    }
 
     public function detalle($id)
     {
@@ -357,7 +431,7 @@ class IdeaController extends Controller
     {
         $idea = Idea::ConsultarIdeaId($id)->first();
         $this->authorize('update', $idea);
-        if ($idea->estado_idea == EstadoIdea::IsInscrito()) {
+        if ($idea->estado_idea == EstadoIdea::IsRegistro()) {
             $this->ideaRepository->updateEstadoIdea($id, $estado);
             return response()->json([
                 'route' => route('idea.index'),

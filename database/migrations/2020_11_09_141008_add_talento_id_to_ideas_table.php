@@ -35,7 +35,7 @@ class AddTalentoIdToIdeasTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropIndex(['fk_talentos_ideas1_idx']);
+            // $table->dropIndex(['fk_talentos_ideas1_idx']);
             $table->dropColumn(['talento_id']);
         });
     }

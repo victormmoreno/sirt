@@ -14,7 +14,7 @@ class EstadosIdeasTableSeeder extends Seeder
     {
 
         EstadoIdea::create([
-            'nombre'      => 'Inscrito',
+            'nombre'      => 'En registro',
         ]);
 
         EstadoIdea::create([
@@ -26,7 +26,7 @@ class EstadosIdeasTableSeeder extends Seeder
         ]);
 
         EstadoIdea::create([
-            'nombre'      => 'No Admitido',
+            'nombre'      => 'Rechazado por comité',
         ]);
 
         EstadoIdea::create([
@@ -38,7 +38,7 @@ class EstadosIdeasTableSeeder extends Seeder
         ]);
 
         EstadoIdea::create([
-            'nombre'      => 'En Proyecto',
+            'nombre'      => 'En PBT',
         ]);
 
         EstadoIdea::create([
@@ -51,6 +51,14 @@ class EstadosIdeasTableSeeder extends Seeder
 
         EstadoIdea::create([
             'nombre'      => 'Reprogramado',
+        ]);
+
+        EstadoIdea::create([
+            'nombre'      => 'Postulado',
+        ]);
+
+        EstadoIdea::create([
+            'nombre'      => 'Rechazado por articulador',
         ]);
     }
 }

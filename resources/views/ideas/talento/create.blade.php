@@ -36,5 +36,13 @@
 
     </div>
   </div>
+  @include('ideas.modals')
 </main>
 @endsection
+@push('script')
+    <script>
+      $(document).ready(function () {
+        $('#modalRecordatorioDeRegistroDeIdea').openModal();
+      });
+    </script>
+@endpush

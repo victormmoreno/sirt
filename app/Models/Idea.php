@@ -81,6 +81,8 @@ class Idea extends Model
         'cantidad_prototipos',
         'recursos_necesarios',
         'si_recursos_necesarios',
+        'acuerdo_no_confidencialidad',
+        'fecha_acuerdo_no_confidencialidad',
     ];
 
     /**
@@ -165,7 +167,7 @@ class Idea extends Model
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->where('nodo_id', $id)
-            ->whereIn('estadosidea.nombre', [EstadoIdea::IsInscrito(), EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
+            ->whereIn('estadosidea.nombre', [EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
             ->groupBy('ideas.id')
             ->orderBy('nombre_proyecto');
     }
@@ -277,7 +279,7 @@ class Idea extends Model
         )
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_proyecto ')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-            ->where('estadosidea.nombre', EstadoIdea::IsInscrito())
+            ->where('estadosidea.nombre', EstadoIdea::IsRegistro())
             ->where('tipo_idea', $this->IsEmprendedor())
             ->where('nodo_id', $id)
             ->orderBy('nombre_proyecto');

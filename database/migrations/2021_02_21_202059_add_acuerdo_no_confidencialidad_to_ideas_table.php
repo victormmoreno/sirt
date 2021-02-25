@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterIdeasTable extends Migration
+class AddAcuerdoNoConfidencialidadToIdeasTable extends Migration
 {
+
     public $tableName = 'ideas';
     /**
      * Run the migrations.
@@ -15,15 +16,8 @@ class AlterIdeasTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->unsignedInteger('empresa_id')->nullable();
-
-            $table->index(["empresa_id"], 'fk_empresas_ideas1_idx');
-
-            $table->foreign('empresa_id', 'fk_empresas_ideas1_idx')
-            ->references('id')->on('empresas')
-            ->onDelete('no action')
-            ->onUpdate('no action');
-
+            $table->tinyInteger('acuerdo_no_confidencialidad')->default('0');
+            $table->date('fecha_acuerdo_no_confidencialidad')->nullable();
         });
     }
 
@@ -35,8 +29,7 @@ class AlterIdeasTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropIndex(['fk_empresas_ideas1_idx']);
-            $table->dropColumn(['empresa_id']);
+            $table->dropColumn(['acuerdo_no_confidencialidad', 'fecha_acuerdo_no_confidencialidad']);
         });
     }
 }

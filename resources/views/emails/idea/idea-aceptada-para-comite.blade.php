@@ -1,13 +1,15 @@
 @component('mail::message')
-# Su idea fue postulada | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Su idea ha sido aceptada para presentarse al comité de ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
 <b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
 Cordial Saludo.
 
-{{-- <p align="justify">El <b>SENA</b> te da la bienvenida a su programa {{config('app.name')}}, ahora podrás acceder a los servicios que la red ofrece para tí.</p> --}}
+<p align="justify">El tecnoparque <b>{{$idea->nodo->entidad->nombre}}</b> ha aceptado tu idea para presentar al comité de ideas.</p>
 
-Ha recibido este mensaje porque hemos recibido tu postulación de tu idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>
+Ha recibido este mensaje porque tecnoparque nodo {{$idea->nodo->entidad->nombre}} ha considerado que su idea está lista para pasar por el comité de ideas.<br>
+
+En los próximos días se le enviará un correo con los datos para asistir al comité de ideas.<br>
 
 @component('mail::panel')
 	
@@ -21,6 +23,8 @@ Ha recibido este mensaje porque hemos recibido tu postulación de tu idea, la cu
       <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
       <h3 class="subtittle">Nombre Idea de proyecto: </h3>
       <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
+      {{-- <h2>Descripción</h2>
+      <small align="justify"><strong>{{$idea->descripcion}}</strong></small> --}}
   </center>
 	
 @endcomponent
