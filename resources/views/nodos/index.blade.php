@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('meta-title', 'Nodos')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -26,23 +27,15 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <div class="col s12 m12 l10">
+                                <div class="col s12 m8 l8">
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             Nodos {{ config('app.name')}}
                                         </span>
                                     </div>
                                 </div>
-                                
-                                <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-                                    <a class="red" href="{{ route('nodo.create') }}">
-                                      <div class="card green">
-                                        <div class="card-content center">
-                                          <i class="left material-icons white-text">add_circle</i>
-                                          <span class="white-text">Nuevo Nodo</span>
-                                        </div>
-                                      </div>
-                                    </a>
+                                <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
+                                    <a  href="{{route('nodo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Nodo</a>
                                 </div>
                             </div>
                             <div class="divider">

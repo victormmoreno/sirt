@@ -83,12 +83,9 @@
                                 <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
                             @enderror
                         </div>
-                        
                     </div>
-                    
                 </div>
             </div>
-            
         </div>
         <div class="row">
             <div class="card stats-card">
@@ -102,7 +99,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12 m4 l4">
-                            @if(isset($nodo->entidad->ciudad->departamento->id))
+                            @if(isset($nodo->entidad->ciudad->departamento))
                                 <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="DepartamentsEdit.getCiudad()" style="width: 100%" tabindex="-1">
                                     <option value="">Seleccione departamento</option>
                                     @foreach($departamentos as $id =>$nombre)
@@ -172,11 +169,10 @@
                                 <li class="collection-header center">
                                     <h5><b>Lineas</b></h5>
                                     <p class="center">Seleccione lineas</p>
-                                     @error('txtlineas')
+                                    @error('txtlineas')
                                         <span class="red-text text-darken-1">{{ $message }}</span>
                                     @enderror
                                 </li>
-                              
                                 @forelse($lineas as $value)
                                     <li class="collection-item">
                                         <p class="p-v-xs">

@@ -290,7 +290,7 @@ class User extends Authenticatable implements JWTSubject
                     $subQuery->where('id', $nodo);
                 });
             }
-            if ($role == User::IsGestor()) {
+            if ($role == User::IsGestor() || $role == User::IsArticulador()) {
                 return $query->whereHas('gestor.nodo', function ($subQuery) use ($nodo) {
                     $subQuery->where('id', $nodo);
                 });

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title', 'Nodos')
+@section('meta-title', 'Nuevo Nodo')
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -11,10 +11,10 @@
                     <div class="col s8 m8 l9">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <a class="footer-text left-align" href="{{route('nodo.index')}}">
-                                  <i class="material-icons arrow-l">
-                                      arrow_back
-                                  </i>
-                              </a>
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
                             Nodos | Nuevo Nodo
                         </h5>
                     </div>
