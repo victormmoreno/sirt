@@ -328,7 +328,7 @@ class UserPresenter extends Presenter
 
     public function tipoContratista()
     {
-        if ($this->user->has('contratista') && isset($this->user->contratista->tipo_contratista) && $this->user->contratista->tipo_contratista == 1) {
+        if ($this->user->has('contratista') && isset($this->user->contratista->tipo_contratista) && $this->user->contratista->tipo_contratista == 0) {
             return "Contratista";
         }else{
             return "Planta";

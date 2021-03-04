@@ -1,7 +1,5 @@
-<div class="divider">
-</div>
 <div class="row">
-    <div class="col s12 m3 l3">
+    <div class="col s12 l3 show-on-large hide-on-med-and-down">
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
@@ -16,16 +14,14 @@
                         señor(a) usuario, si la asesoria fue acompañada por otro gestor agregue a este en la sección de gestores Asesores, pulsando el boton agregar gestor.
                     </p>
                 </li>
-
             </ul>
         </blockquote>
     </div>
-
-    <div class="col s12 m9 l9">
+    <div class="col s12 m12 l9">
         <fieldset>
             <legend>Paso 2</legend>
             <p class="center card-title orange-text text-darken-3">
-               <b> Asesorias</b>
+                <b> Asesorias</b>
             </p>
             <div class="divider"></div>
             <div class="row">
@@ -42,7 +38,7 @@
                                     Linea Tecnológica
                                 </th>
                                 <th>
-                                   Gestor
+                                    Gestor
                                 </th>
                                 <th>
                                     Asesoria Directa (Horas)
@@ -110,16 +106,12 @@
                                 Seleccione Gestor
                             </option>
                         @if(isset($usoinfraestructura->usogestores))
-
                             @foreach($gestores as $gestor)
                                 <option value="{{$gestor->id}}">
                                     {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                                 </option>
                                 @endforeach
-
-
                         @else
-
                                 @foreach($gestores as $gestor)
                                 <option value="{{$gestor->id}}">
                                     {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
@@ -158,7 +150,7 @@
                     <label class="error" for="txtasesoriaindirecta" id="txtasesoriaindirecta-error"></label>
                     <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
-                <div class="input-field col s2 m3 l3">
+                <div class="input-field col s12 m3 l3 offset-s3">
                     <a class="waves-effect waves-light btn blue m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">
                         Agregar gestor
                     </a>
@@ -168,15 +160,14 @@
                         <table class="striped centered responsive-table" id="tbldetallegestorAsesor">
                             <thead>
                                 <tr>
-
                                     <th>
-                                       Gestor
+                                        Gestor
                                     </th>
                                     <th>
                                         Asesoria Directa (Horas)
                                     </th>
                                     <th>
-                                      Asesoria Indirecta (Horas)
+                                        Asesoria Indirecta (Horas)
                                     </th>
                                     <th>
                                         Eliminar
@@ -216,33 +207,9 @@
                                     <td></td>
                                     <td></td>
                                 @endif
-
                             </tbody>
                         </table>
                     </div>
-
-                </div>
-
-            </div>
-
-            <div class="divider"></div>
-            <div class="row">
-                <div class="input-field col s12 m12 l8 offset-l2">
-                    <i class="material-icons prefix">
-                        create
-                    </i>
-                    @if(isset($usoinfraestructura->descripcion))
-                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
-                            {{$usoinfraestructura->descripcion}}
-                        </textarea>
-                    @else
-                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
-                        </textarea>
-                    @endif
-                    <label for="txtdescripcion">
-                        Descripción
-                    </label>
-                    <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
                 </div>
             </div>
         </fieldset>

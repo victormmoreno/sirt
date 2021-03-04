@@ -24,6 +24,7 @@ class UsoInfraestructura extends Model
         'tipo_usoinfraestructura',
         'fecha',
         'descripcion',
+        'compromisos',
         'estado',
     ];
 
@@ -41,6 +42,7 @@ class UsoInfraestructura extends Model
         'tipo_usoinfraestructura' => 'integer',
         'fecha'                   => 'date:Y-m-d',
         'descripcion'             => 'string',
+        'compromisos'             => 'string',
         'estado'                  => 'boolean',
     ];
 
