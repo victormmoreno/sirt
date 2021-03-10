@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col s12 m3 l3">
+    <div class="col s12 l3 show-on-large hide-on-med-and-down">
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
@@ -20,8 +20,7 @@
             </ul>
         </blockquote>
     </div>
-    <div class="col s12 m9 l9">
-
+    <div class="col s12 m12 l9">
         <fieldset>
             <legend>Paso 1</legend>
             {!! csrf_field() !!}
@@ -63,10 +62,7 @@
                                 <label for="IsArticulacion">
                                     Articulaciones
                                 </label>
-                                {{-- <input class="with-gap" id="IsEdt" name="txttipousoinfraestructura" type="radio" value="2"/>
-                                <label for="IsEdt">
-                                    EDT
-                                </label> --}}
+                                
                             @endif
                         @endif
                     </p>
@@ -252,7 +248,25 @@
                     </div>
                 </div>
             @endif
-       
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <i class="material-icons prefix">
+                        create
+                    </i>
+                    @if(isset($usoinfraestructura->descripcion))
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
+                            {{$usoinfraestructura->descripcion}}
+                        </textarea>
+                    @else
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
+                        </textarea>
+                    @endif
+                    <label for="txtdescripcion">
+                        Descripción
+                    </label>
+                    <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
+                </div>
+            </div>
         </fieldset>
     </div>
 </div>

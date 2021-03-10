@@ -83,7 +83,7 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = [User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+                $role = [User::IsGestor(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -96,7 +96,7 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsInfocenter():
-                $role = [User::IsGestor(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+                $role = [User::IsGestor(),User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -296,7 +296,22 @@ class UserController extends Controller
                 $user->restore();
                 return redirect()->back()->withSuccess('Acceso de usuario modificado');
             }
-        }else{
+        
+        }else if($user->has('talento') && isset($user->talento)){
+            if ($request->get('txtestado') == 'on') {
+                $user->update(['estado' => 0]);
+                $user->delete();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            } else {
+                $user->update([
+                    'estado' => User::IsActive(),
+                ]);
+                $user->restore();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            }
+        }
+        
+        else{
             return redirect()->back()->withError('No puedes cambiar el estado a este usuario. Primero asigna un rol y un nodo');
         }
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');

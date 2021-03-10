@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
 
 @section('content')
 
@@ -10,10 +11,10 @@
                     <div class="col s8 m8 l9">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
                             <a class="footer-text left-align" href="{{route('nodo.index')}}">
-                                  <i class="material-icons arrow-l">
-                                      arrow_back
-                                  </i>
-                              </a>
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
                             Nodos | Editar Nodo
                         </h5>
                     </div>
@@ -26,11 +27,11 @@
                     </div>
                 </div>
                 <form action="{{ route('nodo.update', $nodo->entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
-                    {!! method_field('PUT')!!}
+                {!! method_field('PUT')!!}
                     @include('nodos.form', [
-                          'btnText' => 'Guardar Cambios',
-                      ])
-                  </form>
+                        'btnText' => 'Guardar Cambios',
+                    ])
+                </form>
             </div>
         </div>
     </div>

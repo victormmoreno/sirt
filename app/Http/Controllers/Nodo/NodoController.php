@@ -184,6 +184,7 @@ class NodoController extends Controller
     public function show($nodo)
     {
         $nodo = $this->getNodoRepository()->findNodoForShow($nodo);
+
         $this->authorize('show', $nodo);
 
         return view('nodos.show', [

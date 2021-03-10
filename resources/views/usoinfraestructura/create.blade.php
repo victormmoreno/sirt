@@ -18,7 +18,7 @@
                             Asesoría y uso
                         </h5>
                     </div>
-                    <div class="col s12 m4 l4 push-m2 l2">
+                    <div class="col s12 m4 l4 push-m2 l2 show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li>
                                 <a href="{{route('home')}}">
@@ -1349,12 +1349,12 @@
                             $('#' + control + '-error').show();
                         }
                         Swal.fire({
-                          title: 'Registro Erróneo',
-                          html: "Estas ingresando mal los datos. " + errores,
-                          type: 'error',
-                          showCancelButton: false,
-                          confirmButtonColor: '#3085d6',
-                          confirmButtonText: 'Ok'
+                            title: 'Registro Erróneo',
+                            html: "Estas ingresando mal los datos. " + errores,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
                         });
                     }
 

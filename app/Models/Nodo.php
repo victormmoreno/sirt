@@ -65,7 +65,7 @@ class Nodo extends Model
 
     public function dinamizador()
     {
-        return $this->hasOne(Dinamizador::class, 'nodo_id', 'id');
+        return $this->hasMany(Dinamizador::class, 'nodo_id', 'id');
     }
 
     public function gestores()

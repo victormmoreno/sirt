@@ -149,7 +149,10 @@ class UserPresenter extends Presenter
 
     public function userGradoEscolaridad()
     {
-        return  $this->user->has('gradoescolaridad') ? $this->user->gradoescolaridad->nombre : 'No Registra';
+        if($this->user->has('gradoescolaridad') && isset($this->user->gradoescolaridad)){
+            return $this->user->gradoescolaridad->nombre;
+        }
+        return  'No Registra';
     }
 
     public function userFechaTerminacion()
@@ -325,7 +328,7 @@ class UserPresenter extends Presenter
 
     public function tipoContratista()
     {
-        if ($this->user->has('contratista') && isset($this->user->contratista->tipo_contratista) && $this->user->contratista->tipo_contratista == 1) {
+        if ($this->user->has('contratista') && isset($this->user->contratista->tipo_contratista) && $this->user->contratista->tipo_contratista == 0) {
             return "Contratista";
         }else{
             return "Planta";
