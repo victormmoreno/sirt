@@ -154,7 +154,7 @@ class IdeaRepository
         $viene_convocatoria = 1;
         $convocatoria = $request->input('txtconvocatoria');
         $aval_empresa = 1;
-        $empresa = $request->input('empresa');
+        $empresa = $request->input('txtempresa');
         $acuerdo_no_confidencialidad = 1;
         $fecha_acuerdo_no_confidencialidad = Carbon::now();
 
@@ -320,17 +320,16 @@ class IdeaRepository
                     $query->where('id', $idea->nodo_id);
                 }
             )->get();
-            // Envia un correo a los articuladores del nodo
-            // if (!$users->isEmpty()) {
-            //     Notification::send($users, new IdeaReceived($idea));
-            // }
 
             DB::commit();
-            return true;
+            return [
+                'state' => true,
+                'idea' => $idea
+            ];
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
-            return false;
+            return ['state' => false, 'idea' => null];
         }
 
     }

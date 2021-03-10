@@ -7,6 +7,7 @@
         <th>Nombre de la idea</th>
         <th>Estado</th>
         <th>Detalles</th>
+        <th>Postular</th>
         <th>Editar</th>
       </tr>
     </thead>

@@ -16,29 +16,36 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST" name="frmInicioDinamizador">
+              @include('proyectos.detalle_fase_inicio')
+              @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+              <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
                 {!! method_field('PUT')!!}
                 @csrf
-                @include('proyectos.detalle_fase_inicio')
                 <div class="divider"></div>
                 <center>
                   <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
                   <input type="hidden" type="text" name="decision" id="decision">
-                  <button type="submit" onclick="preguntaInicioRechazar(event)" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : ''}}
-                    class="waves-effect deep-orange darken-1 btn center-aling">
+                  <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
                     <i class="material-icons right">close</i>
-                    {{$proyecto->fase->nombre != 'Inicio' ? 'El Proyecto ya no se encuentra en fase de Inicio' : 'No aprobar la fase de Inicio'}}
+                    No aprobar la fase de Inicio
                   </button>
-                  <button type="submit" onclick="preguntaInicio(event)" {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : ''}}
-                    class="waves-effect cyan darken-1 btn center-aling">
+                  <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre != 'Inicio' ? 'El Proyecto ya no se encuentra en fase de Inicio' : 'Aprobar fase de inicio'}}
+                    Aprobar fase de inicio
                   </button>
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
               </form>
+              @else
+                  <center>
+                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Cancelar
+                    </a>
+                  </center>
+              @endif
+              <center>
             </div>
           </div>
         </div>

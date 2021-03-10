@@ -18,6 +18,7 @@ function consultarIdeasDelTalento () {
           name: 'codigo_idea',
         },
         {
+          width: '8%',
           data: 'nodo',
           name: 'nodo',
         },
@@ -37,10 +38,34 @@ function consultarIdeasDelTalento () {
         },
         {
           width: '8%',
+          data: 'postular',
+          name: 'postular',
+          orderable: false
+        },
+        {
+          width: '8%',
           data: 'edit',
           name: 'edit',
           orderable: false
         },
       ],
     });
+}
+
+function confirmacionPostulacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de postular esta idea de proyecto?',
+  text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmEnviarIdeaTalento.submit();
+    }
+  })
 }

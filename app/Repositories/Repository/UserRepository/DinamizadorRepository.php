@@ -19,5 +19,14 @@ class DinamizadorRepository
             ->where('nodos.id', '=', $nodo);
     }
 
+    public function getAllDinamizadorPorNodoArray($dinamizadoresEloquent)
+    {
+        $array = array();
+        foreach ($dinamizadoresEloquent as $id => $value) {
+            $array[$id] = array('email' => $value->email);
+          }
+        return $array;
+    }
+
     /*=====  End of metodo para constultar todos los dinamizadores por nodo  ======*/
 }

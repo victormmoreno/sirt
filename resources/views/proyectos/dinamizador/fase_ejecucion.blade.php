@@ -15,30 +15,36 @@
             <div class="row">
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
+              @include('proyectos.detalle_fase_ejecucion')
               <br />
-              <form action="{{route('proyecto.update.ejecucion', $proyecto->id)}}" method="POST" name="frmEjecucionDinamizador">
-                {!! method_field('PUT')!!}
-                @csrf
-                @include('proyectos.detalle_fase_ejecucion')
-                <div class="divider"></div>
-                <center>
-                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                  <input type="hidden" type="text" name="decision" id="decision">
-                  <button type="submit" onclick="preguntaEjecucionRechazar(event)" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? '' : 'disabled'}}
-                    class="waves-effect deep-orange darken-1 btn center-aling">
-                    <i class="material-icons right">close</i>
-                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? 'No aprobar la fase de Ejecución' : 'El Proyecto ya no se encuentra en fase de Ejecución'}}
-                  </button>
-                  <button type="submit" onclick="preguntaEjecucion(event)" value="send" {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? '' : 'disabled'}}
-                    class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    {{$proyecto->fase->nombre == 'Ejecución' && $proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0 ? 'Aprobar fase de ejecución' : 'Ya se ha aprobado esta fase del proyecto'}}
-                  </button>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                    <i class="material-icons right">backspace</i>Cancelar
-                  </a>
-                </center>
-              </form>
+              @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Ejecución" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+                <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Ejecución'])}}" method="POST" name="frmEjecucionDinamizador">
+                  {!! method_field('PUT')!!}
+                  @csrf
+                  <div class="divider"></div>
+                  <center>
+                    <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                    <input type="hidden" type="text" name="decision" id="decision">
+                    <button type="submit" onclick="preguntaEjecucionRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                      <i class="material-icons right">close</i>
+                      No aprobar la fase de ejecución
+                    </button>
+                    <button type="submit" onclick="preguntaEjecucion(event)" class="waves-effect cyan darken-1 btn center-aling">
+                      <i class="material-icons right">done</i>
+                      Aprobar fase de ejecución
+                    </button>
+                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Cancelar
+                    </a>
+                  </center>
+                </form>
+              @else
+                  <center>
+                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Cancelar
+                    </a>
+                  </center>
+              @endif
             </div>
           </div>
         </div>

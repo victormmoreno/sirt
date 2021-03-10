@@ -16,16 +16,18 @@
               @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
-                  @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
-                  <a href="{{route('proyecto.notificar.ejecucion', $proyecto->id)}}">
+                  @if ( ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $proyecto->fase->nombre == 'Ejecución') || 
+                  ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Ejecución') || 
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Ejecución') )
+                  <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Ejecución'])}}">
                     <div class="card-panel yellow accent-1 black-text">
-                      Solicitar al dinamizador que apruebe la fase de ejecución.
+                      Solicitar al talento que apruebe la fase de ejecución.
                     </div>
                   </a>
                   @else
                   <a disabled>
                     <div class="card-panel yellow accent-1 black-text">
-                      Esta fase ya ha sido aprobada por el dinamizador.
+                      Esta fase ya ha sido aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
                     </div>
                   </a>
                   @endif
@@ -135,7 +137,7 @@
         name: 'download',
         orderable: false,
       },
-      @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 0)
+      @if ($proyecto->fase->nombre == 'Ejecución')
       {
         data: 'delete',
         name: 'delete',

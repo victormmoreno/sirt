@@ -169,7 +169,9 @@ class ComiteRepository
             ]);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsConvocado())->first()->id]);
             $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
+            $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $comite->ideas()->sync($syncIdeas, true);
+            $comite->gestores()->sync($syncGestores, true);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             DB::commit();
             return true;

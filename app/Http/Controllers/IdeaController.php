@@ -77,9 +77,9 @@ class IdeaController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $result = $this->ideaRepository->Store($request);;
-            if ($result) {
-                return response()->json(['state' => 'registro']);
+            $result = $this->ideaRepository->Store($request);
+            if ($result['state']) {
+                return response()->json(['state' => 'registro', 'url' => route('idea.detalle', $result['idea']->id)]);
             } else {
                 return response()->json(['state' => 'no_registro']);
             }
@@ -88,98 +88,19 @@ class IdeaController extends Controller
 
 
     //metodo index para mostrar el listado de ideas
-    public function index(Request $request)
+    public function index()
     {
-
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $nodo = $request->filter_nodo;
-                break;
-            case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                break;
-            case User::IsGestor():
-                $nodo = auth()->user()->gestor->nodo_id;
-                break;
-            case User::IsInfocenter():
-                $nodo = auth()->user()->infocenter->nodo_id;
-                break;
-            case User::IsTalento():
-                $nodo = null;
-                break;
-            case User::IsArticulador():
-                $nodo = null;
-                break;
-            default:
-                return abort('403');
-                break;
-        }
-
-        if (request()->ajax()) {
-            $ideas = [];
-            if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
-
-                $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
-                    ->vieneConvocatoria($request->filter_vieneConvocatoria)
-                    ->state($request->filter_state)
-                    ->convocatoria($request->filter_convocatoria)
-                    ->nodo($nodo)
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-            }
-
-            return datatables()->of($ideas)
-                ->editColumn('estado', function ($data) {
-                    return $data->estadoIdea->nombre;
-                })->editColumn('persona', function ($data) {
-                    return "{$data->nombres_contacto} {$data->apellidos_contacto}";
-                })->editColumn('created_at', function ($data) {
-                    return isset($data->created_at) ? $data->created_at->isoFormat('DD/MM/YYYY') : 'No Registra';
-                })
-
-                ->addColumn('details', function ($data) {
-                    $button = '
-                    <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId(' . $data->id . ')">
-                        <i class="material-icons">info</i>
-                    </a>
-                    ';
-                    return $button;
-                })->addColumn('soft_delete', function ($data) {
-                    if (\Session::get('login_role') !== User::IsInfocenter()) {
-                        return '';
-                    } else {
-                        if ($data->estadoIdea->nombre != EstadoIdea::IsRegistro()) {
-                            $delete = '<a class="btn red lighten-3 m-b-xs" disabled><i class="material-icons">delete_sweep</i></a>';
-                        } else {
-                            $delete = '<a class="btn red lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'Inhabilitado\')"><i class="material-icons">delete_sweep</i></a>';
-                        }
-                        return $delete;
-                    }
-                })->addColumn('dont_apply', function ($data) {
-                    if ($data->estadoIdea->nombre != EstadoIdea::IsRegistro()) {
-                        $notapply = '<a class="btn brown lighten-3 m-b-xs" disabled><i class="material-icons">thumb_down</i></a>';
-                    } else {
-                        $notapply = '<a class="btn brown lighten-3 m-b-xs" onclick="cambiarEstadoIdeaDeProyecto(' . $data->id . ', \'No Aplica\')"><i class="material-icons">thumb_down</i></a>';
-                    }
-                    return $notapply;
-                })->addColumn('edit', function ($data) {
-                    $edit = '<a href="' . route("idea.edit", $data->id) . '" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
-                    return $edit;
-                })->rawColumns(['created_at', 'estado', 'persona', 'details', 'edit', 'soft_delete', 'dont_apply'])->make(true);
-        }
-
-        
+        $estadosIdeas = EstadoIdea::orderBy('id')->whereNotIn('nombre', [
+            EstadoIdea::IsNoConvocado(),
+            EstadoIdea::IsInhabilitado(),
+            EstadoIdea::IsNoAplica()
+        ])->pluck('nombre', 'id');
         if (\Session::get('login_role') == User::IsInfocenter()) {
-            $estadosIdeas = EstadoIdea::orderBy('id')->whereNotIn('nombre', [
-                EstadoIdea::IsNoConvocado(),
-                EstadoIdea::IsInhabilitado(),
-                EstadoIdea::IsNoAplica()
-            ])->pluck('nombre', 'id');
             return view('ideas.infocenter.index', ['estadosIdeas' => $estadosIdeas]);
         } else if (\Session::get('login_role') == User::IsTalento()) {
             return view('ideas.talento.index');
         } else if (\Session::get('login_role') == User::IsArticulador()) {
-            return view('ideas.articulador.index');
+            return view('ideas.articulador.index', ['estadosIdeas' => $estadosIdeas]);
         } else {
             $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
             $estadosIdeas = EstadoIdea::orderBy('id')->pluck('nombre', 'id');
@@ -203,12 +124,24 @@ class IdeaController extends Controller
         }
     }
 
+    /**
+     * Retorna el render de la vista con los datos de la consulta
+     * 
+     * @param $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     */
+    public function abrirModalIdeas($id)
+    {
+        $idea = Idea::findOrFail($id);
+        return response()->json([
+            'view' => view('ideas.detalle', ['idea' => $idea])->render()
+        ]);
+    }
+
     public function detallesIdeas($id)
     {
-        // dd($id);
         $idea = Idea::findOrFail($id);
-        // dd($idea);
-        // $this->authorize('show', $idea);
         return response()->json([
             'detalles' => $idea
         ]);
@@ -224,11 +157,8 @@ class IdeaController extends Controller
      **/    
     public function rechazarPostulacionIdea(Request $request, $id)
     {
-        // dd($request->txtmotivosRechazo);
-        // exit();
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('show', $idea);
-        // dd($id);
         $update = $this->ideaRepository->rechazarPostulacion($idea, $request);
         if ($update) {
             Alert::success('Postulación rechazada!', 'La postulación de la idea se ha rechazado en el nodo, se le ha enviado una notificación al talento!')->showConfirmButton('Ok', '#3085d6');
@@ -239,37 +169,86 @@ class IdeaController extends Controller
         }
     }
 
-    public function datatableIdeasTalento(Request $request)
+    public function datatableFiltros(Request $request)
     {
-        if (Session::get('login_role') == User::IsTalento()) {
-            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
-            ->whereHas('estadoIdea', 
-            function ($query){
-                $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRechazadoComite()]);
-            })->get();
-        } else {
-            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)
-            ->whereHas('estadoIdea', 
-            function ($query){
-                $query->where('nombre', EstadoIdea::IsPostulado());
-            }
-            )->get();
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $nodo = auth()->user()->infocenter->nodo_id;
+                break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
         }
-        return $this->datatableIdeas($request, $ideas);
+        $ideas = [];
+        if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
+
+            $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
+                ->vieneConvocatoria($request->filter_vieneConvocatoria)
+                ->state($request->filter_state)
+                ->convocatoria($request->filter_convocatoria)
+                ->nodo($nodo)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+        return $this->datatableIdeas($ideas);
     }
 
-    private function datatableIdeas($request, $ideas)
+    public function datatableIdeasTalento(Request $request)
+    {
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+        ->whereHas('estadoIdea', 
+        function ($query){
+            $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRechazadoComite()]);
+        })->get();
+        return $this->datatableIdeas($ideas);
+    }
+
+    private function datatableIdeas($ideas)
     {
         return datatables()->of($ideas)
         ->editColumn('estado', function ($data) {
+            return $data->estadoIdea->nombre;
+        })->editColumn('persona', function ($data) {
+            if (isset($data->talento->user->nombres)) {
+                return "{$data->talento->user->nombres} {$data->talento->user->apellidos}";
+            } else {
+                return "{$data->nombres_contacto} {$data->apellidos_contacto}";
+            }
+        })->editColumn('created_at', function ($data) {
+            return isset($data->created_at) ? $data->created_at->isoFormat('DD/MM/YYYY') : 'No Registra';
+        })->editColumn('correo_contacto', function ($data) {
+            if (isset($data->talento->user->email)) {
+                return "{$data->talento->user->email}";
+            } else {
+                return "{$data->correo_contacto}";
+            }
+        })->editColumn('telefono_contacto', function ($data) {
+            if (isset($data->talento->user->celular)) {
+                return "{$data->talento->user->celular}";
+            } else {
+                return "{$data->telefono_contacto}";
+            }
+        })->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
         })->editColumn('nombre_talento', function ($data) {
             return $data->talento->user->nombres . " " . $data->talento->user->apellidos;
         })->editColumn('nodo', function ($data) {
             return $data->nodo->entidad->nombre;
         })->addColumn('info', function ($data) {
-            $info = '<a class="btn light-blue m-b-xs modal-trigger" href='.route('idea.detalle', $data->id).'>
-            <i class="material-icons">info</i>
+            $info = '<a class="btn m-b-xs modal-trigger" href='.route('idea.detalle', $data->id).'>
+            <i class="material-icons">search</i>
             </a>';
                 return $info;
         })->addColumn('edit', function ($data) {
@@ -277,7 +256,31 @@ class IdeaController extends Controller
             <i class="material-icons">edit</i>
             </a>';
                 return $edit;
-        })->rawColumns(['info', 'edit'])->make(true);
+        })->addColumn('details', function ($data) {
+            $button = '
+            <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId(' . $data->id . ')">
+                <i class="material-icons">info</i>
+            </a>
+            ';
+            return $button;
+        })->addColumn('postular', function ($data) {
+            if ($data->estadoIdea->nombre == EstadoIdea::IsRegistro()) {
+                $button = '<form action='.route('idea.enviar', $data->id).' method="POST">
+                '.method_field("PUT") .' '.csrf_field().'
+                    <button class="btn light-blue m-b-xs" type="submit">
+                        <i class="material-icons">assignment_turned_in</i>
+                    </button>
+                </form>
+                ';
+            } else {
+                $button = '
+                <button class="btn light-blue m-b-xs" disabled>
+                        <i class="material-icons">assignment_turned_in</i>
+                    </button>
+                ';
+            }
+            return $button;
+        })->rawColumns(['created_at', 'estado', 'details', 'edit', 'info', 'postular'])->make(true);
     }
 
 

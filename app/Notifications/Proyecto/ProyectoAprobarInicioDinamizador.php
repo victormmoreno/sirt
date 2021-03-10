@@ -6,21 +6,23 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ProyectoAprobarInicio extends Notification implements ShouldQueue
+class ProyectoAprobarInicioDinamizador extends Notification implements ShouldQueue
 {
     use Queueable;
     private $proyecto;
-    private $fase;
+    private $talento;
+    private $movimiento;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($proyecto, $fase)
+    public function __construct($proyecto, $talento, $movimiento)
     {
-        $this->setProyecto($proyecto);
-        $this->setFase($fase);
+        $this->proyecto = $proyecto;
+        $this->talento = $talento;
+        $this->movimiento = $movimiento;
     }
 
     /**
@@ -46,14 +48,14 @@ class ProyectoAprobarInicio extends Notification implements ShouldQueue
             'link'  => route('proyecto.inicio', $this->getProyecto()->id),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->apellidos}",
-            'text'  => "El gestor ha solicitado aprobar la fase de {$this->getFase()} | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
+            'autor' => "{$this->talento->nombres} {$this->talento->apellidos}",
+            'text'  => "El {$this->getMovimiento()->rol} ha aprobado la fase de {$this->getMovimiento()->fase} | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
           ];
     }
 
-    public function setProyecto($proyecto)
+    public function getTalento()
     {
-        $this->proyecto = $proyecto;
+        return $this->talento;
     }
 
     public function getProyecto()
@@ -61,13 +63,9 @@ class ProyectoAprobarInicio extends Notification implements ShouldQueue
         return $this->proyecto;
     }
 
-    public function setFase($fase)
+    public function getMovimiento()
     {
-        $this->fase = $fase;
+        return $this->movimiento;
     }
 
-    public function getFase()
-    {
-        return $this->fase;
-    }
 }
