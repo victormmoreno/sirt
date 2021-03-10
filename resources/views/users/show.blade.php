@@ -53,7 +53,7 @@
                                                                     </b>
                                                                     {{$user->present()->userDinamizadorDireccionNodo()}}
                                                                 </small>
-                                                                
+
                                                             </p>
                                                         </li>
                                                     </ul>
@@ -64,12 +64,12 @@
                                             @if(isset($user->gestor) && (collect($user->getRoleNames())->contains(App\User::IsGestor()) || collect($user->getRoleNames())->contains(App\User::IsArticulador())))
                                             <div class="right zurich-bt-fonts green-complement-text">
                                                 <small>
-                                                    @if(collect($user->getRoleNames())->contains(App\User::IsGestor())))
+                                                    @if(collect($user->getRoleNames())->contains(App\User::IsGestor()))
                                                         Información {{App\User::IsGestor()}}
                                                     @else
                                                         Información {{App\User::IsArticulador()}}
                                                     @endif
-                                                    
+
                                                 </small>
                                             </div>
                                             <div class="divider mailbox-divider">
@@ -82,7 +82,7 @@
                                                             <span class="title">
                                                                 <b class="teal-text darken-2">Nodo:</b> {{$user->present()->userGestorNombreNodo()}}
                                                                 <br/>
-                                                                @if(collect($user->getRoleNames())->contains(App\User::IsGestor())))
+                                                                @if(collect($user->getRoleNames())->contains(App\User::IsGestor()))
                                                                 <b class="teal-text darken-2">Linea</b> {{$user->present()->userGestorNombreLinea()}}
                                                                 @endif
                                                                 <b class="teal-text darken-2">Honorario: </b> {{ $user->present()->userGestorHonorarios()}}
@@ -118,7 +118,7 @@
                                                                 <b class="teal-text darken-2">
                                                                     Extensión del {{App\User::IsInfocenter()}}:
                                                                 </b>
-                                                                {{$user->present()->userInfocenterExtension()}}   
+                                                                {{$user->present()->userInfocenterExtension()}}
                                                             </span>
                                                         </li>
                                                     </ul>
@@ -148,8 +148,12 @@
                                                                     <li>
                                                                         {!!$user->present()->userEditLink()!!}
                                                                     </li>
-                                                                    @if(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(),App\User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-
+                                                                    @if(isset($user)  && $user->hasAnyRole([App\User::IsArticulador(), App\User::IsGestor(),App\User::IsInfocenter(), App\User::IsIngreso(),App\User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                                                            <li>
+                                                                                <a href="{{route('usuario.usuarios.acceso', $user->documento)}}">
+                                                                                    Acceso a plataforma
+                                                                                </a>
+                                                                            </li>
                                                                     @elseif(isset($user)  && $user->hasAnyRole([App\User::IsAdministrador(), App\User::IsDinamizador(), App\User::IsGestor(),App\User::IsInfocenter(), App\User::IsIngreso() ]) && session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
 
                                                                     @else
@@ -198,7 +202,7 @@
                                                                 </span>
                                                                 <p>
                                                                     {{$user->present()->userLugarExpedicionDocumento() }} -
-                                                                    
+
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item avatar">
@@ -258,7 +262,7 @@
                                                                         </span>
                                                                         <br/>
                                                                         {{$user->present()->userGradoDiscapacidad()}}
-                                                                        
+
                                                                     </p>
                                                                 </div>
                                                                 @if($user->grado_discapacidad == 1)
@@ -284,7 +288,7 @@
                                                                     {{$user->present()->userEmail()}}
                                                                 </p>
                                                             </li>
-                                                            
+
                                                         </ul>
                                                     </div>
                                                     <div class="col s12 m6 l6">

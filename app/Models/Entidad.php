@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Presenters\EntidadPresenter;
 
 class Entidad extends Model
 {
@@ -150,4 +151,9 @@ class Entidad extends Model
     }
 
     /*=====  End of scope para consultar los grupos de investigacion  ======*/
+
+    public function present()
+    {
+        return new EntidadPresenter($this);
+    }
 }
