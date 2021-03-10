@@ -7,7 +7,7 @@ Cordial Saludo.
 
 {{-- <p align="justify">El <b>SENA</b> te da la bienvenida a su programa {{config('app.name')}}, ahora podrás acceder a los servicios que la red ofrece para tí.</p> --}}
 
-Ha recibido este mensaje porque hemos recibido tu postulación de tu idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>
+Ha recibido este mensaje porque hemos recibido la postulación de su idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>
 
 @component('mail::panel')
 	

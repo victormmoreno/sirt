@@ -1015,7 +1015,7 @@
                 <div class="row" id="avalEmpresa_content">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                        <input id="txtempresa" name="txtempresa" type="text" value="{{ $idea->empresa }}"">
+                        <input id="txtempresa" name="txtempresa" type="text" value="{{ $idea->empresa }}">
                         @else
                         <input id="txtempresa" name="txtempresa" type="text">
                         @endif

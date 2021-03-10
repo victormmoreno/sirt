@@ -24,3 +24,13 @@
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Entendido.</a>
     </div>
 </div>
+<div id="modalInformacionIdea" class="modal">
+  <div class="modal-content">
+    <center><h4 id="titulo" class="center-aling"></h4></center>
+    <div class="divider"></div>
+    <div id="detalle_idea"></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
+  </div>
+</div>

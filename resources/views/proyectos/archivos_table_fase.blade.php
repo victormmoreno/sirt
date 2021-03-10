@@ -12,6 +12,8 @@
             <th style="width: 10%">Eliminar</th>
           @elseif ($proyecto->fase->nombre == 'Suspendido')
             <th style="width: 10%">Eliminar</th>
+          @elseif ($proyecto->fase->nombre == 'Cierre')
+            <th style="width: 10%">Eliminar</th>
           @endif
         @endif
       </tr>

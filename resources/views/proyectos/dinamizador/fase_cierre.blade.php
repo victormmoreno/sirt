@@ -16,45 +16,35 @@
                             @include('proyectos.navegacion_fases')
                             <div class="divider"></div>
                             <br />
-                            <form action="{{route('proyecto.update.cierre', $proyecto->id)}}" method="POST" name="frmCierreDinamizador">
-                                {!! method_field('PUT')!!}
-                                @csrf
-                                @include('proyectos.detalle_fase_cierre')
-                                <div class="divider"></div>
-                                <center>
-                                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                                  <input type="hidden" type="text" name="decision" id="decision">
-                                  @if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1)
-                                    @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
-                                    <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling" disabled>
-                                      <i class="material-icons right">done</i>
-                                      Ya se ha aprobado la fase de cierre.
-                                    </button>
-                                    @else
-                                    <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                                      <i class="material-icons right">close</i>
-                                      No aprobar fase de cierre.
-                                    </button>
-                                    <button type="submit" onclick="preguntaCierre(event)" value="send" class="waves-effect cyan darken-1 btn center-aling">
-                                      <i class="material-icons right">done</i>
-                                      Aprobar fase de cierre.
-                                      </button>
-                                    @endif
-                                  @else
-                                  <button type="submit" class="waves-effect deep-orange darken-1 btn center-aling">
-                                    <i class="material-icons right">close</i>
-                                    El Dinamizador aún no ha dado su aprobación de la fase de Ejecución
-                                  </button>
-                                  <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
-                                      <i class="material-icons right">done</i>
-                                      El Dinamizador aún no ha dado su aprobación de la fase de Ejecución
-                                  </button>
-                                  @endif
-                                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                        <i class="material-icons right">backspace</i>Cancelar
-                                    </a>
-                                </center>
+                            @include('proyectos.detalle_fase_cierre')
+                            @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Cierre" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+                            <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Cierre'])}}" method="POST" name="frmCierreDinamizador">
+                              {!! method_field('PUT')!!}
+                              @csrf
+                              <div class="divider"></div>
+                              <center>
+                                <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                                <input type="hidden" type="text" name="decision" id="decision">
+                                <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                                  <i class="material-icons right">close</i>
+                                  No aprobar la fase de cierre
+                                </button>
+                                <button type="submit" onclick="preguntaCierre(event)" class="waves-effect cyan darken-1 btn center-aling">
+                                  <i class="material-icons right">done</i>
+                                  Aprobar fase de cierre
+                                </button>
+                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                  <i class="material-icons right">backspace</i>Cancelar
+                                </a>
+                              </center>
                             </form>
+                          @else
+                              <center>
+                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                  <i class="material-icons right">backspace</i>Cancelar
+                                </a>
+                              </center>
+                          @endif
                         </div>
                     </div>
                 </div>

@@ -32,16 +32,18 @@
                   </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                  @if ($proyecto->fase->nombre == 'Inicio')
-                  <a href="{{route('proyecto.notificar.inicio', $proyecto->id)}}">
+                  @if ( ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento == null) || 
+                  ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) || 
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) )
+                  <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Inicio'])}}">
                     <div class="card-panel yellow accent-1 black-text">
-                      Solicitar al dinamizador que apruebe la fase de inicio.
+                      Solicitar al talento interlocutor que apruebe la fase de inicio.
                     </div>
                   </a>
                   @else
                   <a disabled>
                     <div class="card-panel yellow accent-1 black-text">
-                      Esta fase ya ha sido aprobada por el dinamizador.
+                      Esta fase ya ha sido aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
                     </div>
                   </a>
                   @endif

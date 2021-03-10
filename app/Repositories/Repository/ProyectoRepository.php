@@ -5,9 +5,9 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarInicioDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
-use App\Events\Proyecto\ProyectoWasntApproved;
+use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested};
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 
@@ -811,6 +811,101 @@ class ProyectoRepository
     }
   }
 
+  /**
+   * Aprueba la fase según el rol y fase que se está aprobando
+   * 
+   * @param $request
+   * @param $id Id del proyecto
+   * @param $fase Fase que se está aprobando
+   */
+  public function aprobacionFaseInicio($request, $id, $fase)
+  {
+    DB::beginTransaction();
+    try {
+      
+      $comentario = null;
+      $movimiento = null;
+      $mensaje = null;
+      $title = null;
+  
+      $proyecto = Proyecto::findOrFail($id);
+      $dinamizadorRepository = new DinamizadorRepository;
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+      $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
+      array_push($destinatarios, ['email' => $proyecto->articulacion_proyecto->actividad->gestor->user->email]);
+      $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
+      $talento_lider = $talento_lider->user;
+      
+      if ($request->decision == 'rechazado') {
+        $title = 'Aprobación rechazada!';
+        $mensaje = 'Se le han notificado al experto los motivos por los cuales no se aprueba el cambio de fase del proyecto';
+        $comentario = $request->motivosNoAprueba;
+        $movimiento = Movimiento::IsNoAprobar();
+        
+        $this->crearMovimiento($proyecto, $fase, $movimiento, $comentario);
+        // Recuperar el útlimo registro de movimientos ya que el método attach no retorna nada
+        $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+        // Envio de un correo informando porque no se aprobó el cambio de fase
+        event(new ProyectoWasntApproved($proyecto, $regMovimiento));
+        Notification::send($proyecto->articulacion_proyecto->actividad->gestor->user, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
+        
+      } else {
+        $title = 'Aprobación Exitosa!';
+        $mensaje = 'Se ha aprobado la fase de ' . $fase . ' de este proyecto';
+        $movimiento = Movimiento::IsAprobar();
+  
+        $this->crearMovimiento($proyecto, $fase, $movimiento, $comentario);
+        $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+        
+        event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
+        // Notification::send([$proyecto->articulacion_proyecto->actividad->gestor->user, $dinamizadores], new ProyectoAprobarInicioDinamizador($proyecto, $talento_lider, $regMovimiento));
+        if (Session::get('login_role') == User::IsDinamizador() && $fase == "Inicio") {
+          // Cambiar el proyecto de fase
+          $proyecto->update([
+            'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
+          ]);
+        }
+        if (Session::get('login_role') == User::IsDinamizador() && $fase == "Planeación") {
+          // Cambiar el proyecto de fase
+          $proyecto->update([
+            'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
+          ]);
+        }
+        if (Session::get('login_role') == User::IsDinamizador() && $fase == "Ejecución") {
+          // Cambiar el proyecto de fase
+          $proyecto->update([
+            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+          ]);
+        }
+        if (Session::get('login_role') == User::IsDinamizador() && $fase == "Cierre") {
+          // Cambiar el proyecto de fase
+          $proyecto->update([
+            'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
+          ]);
+          // Asignar la fecha de cierre el día actuyal
+          $proyecto->articulacion_proyecto->actividad()->update([
+            'fecha_cierre' => Carbon::now()
+          ]);
+          // Crear el movimiento con el cierre del proyecto
+          $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
+        }
+      }
+      DB::commit();
+      return [
+        'state' => true,
+        'mensaje' => $mensaje,
+        'title' => $title
+      ];
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return [
+        'state' => false,
+        'mensaje' => 'No se ha aprobado la fase de inicio del proyecto',
+        'title' => 'Aprobación errónea'
+      ];
+    }
+  }
+
 
   /** 
    * Cambia un proyecto de fase
@@ -931,6 +1026,17 @@ class ProyectoRepository
     }
   }
 
+  private function crearMovimiento($proyecto, $fase, $movimiento, $comentario)
+  {
+    $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
+      'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+      'user_id' => auth()->user()->id,
+      'fase_id' => Fase::where('nombre', $fase)->first()->id,
+      'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+      'comentarios' => $comentario
+    ]);
+  }
+
   /**
    * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
    * 
@@ -938,14 +1044,16 @@ class ProyectoRepository
    * @return boolean
    * @author dum
    */
-  public function notificarAlDinamziador_Inicio(int $id)
+  public function notificarAlTalento_Inicio(int $id, string $fase)
   {
     DB::beginTransaction();
     try {
-      $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarInicio($proyecto));
+      $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
+      Notification::send($talento_lider->user, new ProyectoAprobarInicio($proyecto, $fase));
+      $this->crearMovimiento($proyecto, $fase, 'solicitó al talento', null);
+      $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+      event(new ProyectoApproveWasRequested($proyecto, $talento_lider->user, $movimiento));
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -1158,10 +1266,10 @@ class ProyectoRepository
       ->where(function ($q) use ($anho) {
         $q->where(function ($query) use ($anho) {
           $query->whereYear('actividades.fecha_cierre', '=', $anho)
-            ->whereIn('fases.nombre', ['Cierre', 'Suspendido']);
+            ->whereIn('fases.nombre', ['Finalizado', 'Suspendido']);
         })
           ->orWhere(function ($query) {
-            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución']);
+            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
           });
       })
       ->groupBy('proyectos.id');
