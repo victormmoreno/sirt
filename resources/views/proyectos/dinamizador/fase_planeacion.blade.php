@@ -16,28 +16,35 @@
               @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
-              <form action="{{route('proyecto.update.planeacion', $proyecto->id)}}" method="POST" name="frmPlaneacionDinamizador">
+              @include('proyectos.detalle_fase_planeacion')
+              @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Planeación" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+              <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Planeación'])}}" method="POST" name="frmPlaneacionDinamizador">
                 {!! method_field('PUT')!!}
                 @csrf
-                @include('proyectos.detalle_fase_planeacion')
                 <div class="divider"></div>
                 <center>
                   <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
                   <input type="hidden" type="text" name="decision" id="decision">
-                  <button type="submit" onclick="preguntaPlaneacionRechazar(event)" {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}}
-                    class="waves-effect deep-orange darken-1 btn center-aling">
+                  <button type="submit" onclick="preguntaPlaneacionRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
                     <i class="material-icons right">close</i>
-                    {{$proyecto->fase->nombre == 'Planeación' ? 'No aprobar la fase de Planeación' : 'El Proyecto ya no se encuentra en fase de Planeación'}}
+                    No aprobar la fase de planeación
                   </button>
-                  <button type="submit" onclick="preguntaPlaneacion(event)" value="send" {{$proyecto->fase->nombre == 'Planeación' ? '' : 'disabled'}} class="waves-effect cyan darken-1 btn center-aling">
-                      <i class="material-icons right">done</i>
-                      {{$proyecto->fase->nombre == 'Planeación' ? 'Aprobar fase de planeación' : 'El Proyecto no se encuentra en fase de Planeación'}}
+                  <button type="submit" onclick="preguntaPlaneacion(event)" class="waves-effect cyan darken-1 btn center-aling">
+                    <i class="material-icons right">done</i>
+                    Aprobar fase de planeación
                   </button>
                   <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>
               </form>
+              @else
+                  <center>
+                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Cancelar
+                    </a>
+                  </center>
+              @endif
             </div>
           </div>
         </div>

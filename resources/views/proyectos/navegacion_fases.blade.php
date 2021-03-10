@@ -50,3 +50,8 @@
         @include('proyectos.historial_cambios')
     </div>
 @endif
+@if (Session::get('login_role') == App\User::IsTalento())
+    <div class="col s12 m12 l12">
+        @include('proyectos.historial_cambios')
+    </div>
+@endif

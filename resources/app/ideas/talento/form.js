@@ -139,7 +139,7 @@ function ajaxSendFormIdea(form, data, url) {
 function pintarMensajeIdeaForm(title, text, type) {
     Swal.fire({
         title: title,
-        text: text,
+        html: text,
         type: type,
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
@@ -153,12 +153,12 @@ function mensajesIdeaForm(data) {
     let type = "error";
     if (data.state == 'registro') {
         title = "Registro Exitoso";
-        text = "La idea de proyecto ha sido registrada satisfactoriamente";
+        text = "La idea de proyecto ha sido registrada satisfactoriamente.<br>Aunque la idea se ha registrado, debe postularse para que se pueda iniciar el proceso de proyecto con tecnoparque";
         type = "success";
         pintarMensajeIdeaForm(title, text, type);
         setTimeout(function () {
-            window.location.replace("/idea");
-        }, 1000);
+            window.location.href = data.url;
+        }, 3000);
     }
     if (data.state == 'no_registro') {
         title = "Registro Erróneo";

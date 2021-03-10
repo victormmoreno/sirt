@@ -5,7 +5,7 @@ Señor(a)<br>
 <b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
 Cordial Saludo.
 
-<p align="justify">El tecnoparque <b>{{$idea->nodo->entidad->nombre}}</b> ha aceptado tu idea para presentar al comité de ideas.</p>
+<p align="justify">El tecnoparque <b>{{$idea->nodo->entidad->nombre}}</b> ha aceptado su idea para presentarse al comité de ideas.</p>
 
 Ha recibido este mensaje porque tecnoparque nodo {{$idea->nodo->entidad->nombre}} ha considerado que su idea está lista para pasar por el comité de ideas.<br>
 

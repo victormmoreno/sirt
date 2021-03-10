@@ -16,16 +16,18 @@
               @include('proyectos.navegacion_fases')
               <div class="row">
                 <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
-                  @if ($proyecto->fase->nombre == 'Planeación')
-                  <a href="{{route('proyecto.notificar.planeacion', $proyecto->id)}}">
+                  @if ( ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $proyecto->fase->nombre == 'Planeación') || 
+                  ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Planeación') || 
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Planeación') )
+                  <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Planeación'])}}">
                     <div class="card-panel yellow accent-1 black-text">
-                      Solicitar al dinamizador que apruebe la fase de planeación.
+                      Solicitar al talento que apruebe la fase de planeación.
                     </div>
                   </a>
                   @else
                     <a disabled>
                       <div class="card-panel yellow accent-1 black-text">
-                        Esta fase ya ha sido aprobada por el dinamizador.
+                        Esta fase ya ha sido aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
                       </div>
                     </a>
                   @endif

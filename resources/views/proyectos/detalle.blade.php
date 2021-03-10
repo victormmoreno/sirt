@@ -70,6 +70,11 @@
                 <div id="cierre" class="col s12 m12 l12">
                     @include('proyectos.detalle_fase_cierre')
                 </div>
+                <center>
+                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center">
+                        <i class="material-icons right">backspace</i>Volver
+                    </a>
+                </center>
               </div>
           </div>
         </div>
