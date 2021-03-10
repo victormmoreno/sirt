@@ -61,6 +61,7 @@ class UsoInfraestructuraRepository
             'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
             'fecha'                   => $request->txtfecha,
             'descripcion'             => $request->txtdescripcion,
+            'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
         ]);
     }
@@ -317,6 +318,7 @@ class UsoInfraestructuraRepository
             'asesoria_directa'        => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
             'asesoria_indirecta'      => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',
             'descripcion'             => $request->txtdescripcion,
+            'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
         ]);
         return $usoInfraestructura;

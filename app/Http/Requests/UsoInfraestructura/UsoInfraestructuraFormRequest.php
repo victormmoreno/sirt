@@ -35,6 +35,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
 
                 'txttipousoinfraestructura' => 'required',
                 'txtactividad'              => 'required',
+                'txtcompromisos'            => 'required|max:2400',
                 'txtdescripcion'            => 'nullable|max:2000',
                 'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
@@ -47,11 +48,10 @@ class UsoInfraestructuraFormRequest extends FormRequest
             return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',
                 'txtlinea'                  => 'required',
-
                 'txttipousoinfraestructura' => 'required',
                 'txtactividad'              => 'required',
                 'txtdescripcion'            => 'nullable|max:2000',
-
+                'txtcompromisos'            => 'required|max:2400',
                 'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
             ];
@@ -70,6 +70,8 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txttipousoinfraestructura.required' => 'por favor seleccione el tipo de uso de infraestructura',
             'txtactividad.required'              => 'El proyecto ó la articulación es obligatoria',
             'txtdescripcion.max'                 => 'La descripcion debe tener máximo 2000 caracteres',
+            'txtcompromisos.max'                 => 'El próximo compromiso debe tener máximo 2400 caracteres',
+            'txtcompromisos.required'                 => 'El próximo compromiso es obligatorio',
             'txtasesoriadirecta.numeric'         => 'La asesoria directa debe ser un valor numérico',
             'txtasesoriadirecta.min'             => 'La asesoria directa debe ser un valor numérico igual o mayor a 0.',
             'txtasesoriadirecta.max'             => 'La asesoria directa debe ser un valor numérico igual o menor a 99.',

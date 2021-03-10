@@ -175,7 +175,7 @@ class NodoRepository
      * mostar equipo humano de tecnoparque.
      *
      * @return array
-     * @author julian londoño
+     * @author julian londo単o
      */
     public function getTeamTecnoparque()
     {
@@ -200,10 +200,8 @@ class NodoRepository
             'ingresos',
             'ingresos.user',
         ]);
-        // ->orWhereHas('gestores.user', function ($query){
-        //     $query->where('estado', User::IsActive())
-        //             ->where('deleted_at',null);
-        // })
+            
+        
         // ->orWhereHas('infocenter.user', function ($query){
         //     $query->where('estado', User::IsActive())
         //             ->where('deleted_at',null);
@@ -221,7 +219,7 @@ class NodoRepository
     /**
      * metodo para consular la informacion del nodo por el slug
      * @param string nodo
-     * @author julian londoño
+     * @author julian londo単o
      * @return collection
      */
     public function findNodoForShow(string $nodo)

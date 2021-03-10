@@ -303,6 +303,20 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
+                                                            <div class="col s12 m12 l12">
+                                                                <ul class="collection">
+                                                                    <li class="collection-item ">
+                                                                        <span class="title cyan-text text-darken-3">
+                                                                            Próximos compromisos
+                                                                        </span>
+                                                                        <p>
+                                                                            {{isset($usoinfraestructura->compromisos) && $usoinfraestructura->compromisos != '' ? $usoinfraestructura->descripcion : 'No registra'}}
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
                                                             <div class="col s12 m6 l6 offset-l3 m3">
                                                                 <div class="center">
                                                                     <span class="mailbox-title green-complement-text">

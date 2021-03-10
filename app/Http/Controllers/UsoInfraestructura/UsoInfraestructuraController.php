@@ -447,7 +447,7 @@ class UsoInfraestructuraController extends Controller
 
         $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
         $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
+            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion','compromisos', 'estado', 'created_at')
             ->findOrFail($id);
 
 
