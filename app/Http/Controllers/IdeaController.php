@@ -243,7 +243,11 @@ class IdeaController extends Controller
         })->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
         })->editColumn('nombre_talento', function ($data) {
-            return $data->talento->user->nombres . " " . $data->talento->user->apellidos;
+            if (isset($data->talento->user->nombres)) {
+                return $data->talento->user->nombres . " " . $data->talento->user->apellidos;
+            } else {
+                return "{$data->nombres_contacto} {$data->apellidos_contacto}";
+            }
         })->editColumn('nodo', function ($data) {
             return $data->nodo->entidad->nombre;
         })->addColumn('info', function ($data) {
