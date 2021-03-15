@@ -245,7 +245,7 @@ class UsoInfraestructuraController extends Controller
 
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
                 $usos = UsoInfraestructura::nodoActividad($nodo)
-                    ->yearActividad($request->filter_year)
+                    ->yearAsesoria($request->filter_year)
                     ->actividad($actividad, $user)
                     ->gestorActividad($gestor)
                     ->orderBy('usoinfraestructuras.created_at', 'desc')
@@ -990,6 +990,15 @@ class UsoInfraestructuraController extends Controller
                         $query->whereYear('fecha_inicio', $anio)->orWhereYear('fecha_cierre', $anio);
                     })
                     ->pluck('nombre', 'id');
+                    // $activities =  Actividad::select('id')
+                    // ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+                    // ->whereHas('gestor', function ($query) use ($gestor) {
+                    //     $query->where('id', $gestor);
+                    // })->whereHas('usoinfraestructuras', function ($query) use ($anio) {
+                    //     $query->where(function ($subquery) use ($anio) {
+                    //         $subquery->whereYear('fecha', $anio)->orWhereYear('created_at', $anio);
+                    //     });
+                    // })->pluck('nombre', 'id');
             } elseif ((!empty($anio) && $anio != null && $anio == 'all')) {
                 $activities =  Actividad::select('id')
                     ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
