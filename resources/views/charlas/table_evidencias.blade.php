@@ -12,7 +12,7 @@
                   <tr>
                     <th>Archivo</th>
                     <th style="width: 10%">Descargar</th>
-                    @if ( \Session::get('login_role') == App\User::IsInfocenter() )
+                    @if ( \Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador() )
                       <th style="width: 10%">Eliminar</th>
                     @endif
                   </tr>

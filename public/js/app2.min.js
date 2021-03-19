@@ -256,10 +256,10 @@ $(document).ready(function () {
 function consultarEmpresaTecnoparque() {
     let nit = $('#txtnit').val();
     let field = 'nit';
-    if (nit.length != 9) {
+    if (nit.length < 9 || nit.length > 13) {
         Swal.fire({
             title: 'Advertencia!',
-            text: "El nit de la empresa debe tener 9 dígitos!",
+            text: "El nit de la empresa debe tener entre 9 y 13 dígitos!",
             type: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
@@ -301,6 +301,80 @@ function consultarEmpresaTecnoparque() {
     }
 }
 
+  $(document).on('click', '.btnModalIdeaCancelar', function(event) {
+    Swal.close();
+  });
+
+  $(document).on('click', '.btnModalIdeaGuardar', function(event) {
+    $('#txtopcionRegistro').val('guardar');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'create');
+  });
+
+  $(document).on('click', '.btnModalIdeaModificar', function(event) {
+    $('#txtopcionRegistro').val('guardar');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'update');
+  });
+  
+  $(document).on('click', '.btnModalIdeaPostular', function(event) {
+    $('#txtopcionRegistro').val('postular');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'create');
+  });
+  
+  $(document).on('click', '.btnModalIdeaPostularModificar', function(event) {
+    $('#txtopcionRegistro').val('postular');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'update');
+  });
+
+  function modalOpcionesFormulario(e) {
+    e.preventDefault();
+    Swal.fire({
+    title: 'Guardar información',
+    html: "¿Qué desea hacer?" +
+        "<br>" +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaGuardar swal2-guardar-custom">' + 'Guardar' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaPostular swal2-postular-custom">' + 'Postular' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    type: 'warning',
+    })
+  }
+
+  function modalOpcionesFormularioModificar(e) {
+    e.preventDefault();
+    Swal.fire({
+    title: 'Modificar información',
+    html: "¿Qué desea hacer?" +
+        "<br>" +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaModificar swal2-guardar-custom">' + 'Modificar' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaPostularModificar swal2-postular-custom">' + 'Postular' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    type: 'warning',
+    })
+  }
+
+function enviarIdeaRegistro(event, tipo) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = null;
+    var data = null;
+    if (tipo == 'create') {
+        form = $('#frmIdea_Inicio');
+        data = new FormData($('#frmIdea_Inicio')[0]);
+    } else {
+        form = $('#frmIdea_Update');
+        data = new FormData($('#frmIdea_Update')[0]);
+    }
+    var url = form.attr("action");
+    ajaxSendFormIdea(form, data, url);
+}
+
 function asignarValoresFRMIdeas(response) {
     $('#txtnombre_empresa_det').val(response.empresa.entidad.nombre);
     $("label[for='txtnombre_empresa_det']").addClass('active');
@@ -312,26 +386,6 @@ function asignarValoresFRMIdeas(response) {
     $("label[for='txtsector_empresa_det']").addClass('active');
     $('#txtnit_empresa').val(response.empresa.nit);
   }
-
-// Enviar formulario para registrar la idea de proyecto
-$(document).on('submit', 'form#frmIdea_Inicio', function (event) { // $('button[type="submit"]').prop("disabled", true);
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
-    ajaxSendFormIdea(form, data, url);
-});
-
-// Enviar formulairo para cambiar los datos de una idea de proyecto
-$(document).on('submit', 'form#frmIdea_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
-    ajaxSendFormIdea(form, data, url);
-});
 
 function ajaxSendFormIdea(form, data, url) {
     $.ajax({
@@ -369,36 +423,39 @@ function mensajesIdeaForm(data) {
     let title = "error";
     let text = "error";
     let type = "error";
-    if (data.state == 'registro') {
-        title = "Registro Exitoso";
-        text = "La idea de proyecto ha sido registrada satisfactoriamente.<br>Aunque la idea se ha registrado, debe postularse para que se pueda iniciar el proceso de proyecto con tecnoparque";
-        type = "success";
+    title = data.title;
+    text = data.msg;
+    type = data.type;
+    if (data.state != 'error_form') {
         pintarMensajeIdeaForm(title, text, type);
+    }
+
+    if (data.state == 'registro') {
         setTimeout(function () {
             window.location.href = data.url;
-        }, 3000);
+        }, 5000);
     }
-    if (data.state == 'no_registro') {
-        title = "Registro Erróneo";
-        text = "La idea de proyecto no se ha registrado, por favor inténtalo de nuevo";
-        type = "warning";
-        pintarMensajeIdeaForm(title, text, type);
-    }
+    // if (data.state == 'no_registro') {
+    //     title = "Registro Erróneo";
+    //     text = "La idea de proyecto no se ha registrado, por favor inténtalo de nuevo";
+    //     type = "warning";
+    //     pintarMensajeIdeaForm(title, text, type);
+    // }
     if (data.state == 'update') {
-        title = "Modificación Exitosa";
-        text = "La idea de proyecto ha sido modificada satisfactoriamente";
-        type = "success";
-        pintarMensajeIdeaForm(title, text, type);
+        // title = "Modificación Exitosa";
+        // text = "La idea de proyecto ha sido modificada satisfactoriamente.<br>Aunque la idea se ha modificado, debe postularse para que se pueda iniciar el proceso de proyecto con tecnoparque";
+        // type = "success";
+        // pintarMensajeIdeaForm(title, text, type);
         setTimeout(function () {
-            window.location.replace("/idea");
-        }, 1000);
+            window.location.href = data.url;
+        }, 5000);
     }
-    if (data.state == 'no_update') {
-        title = "Modificación Errónea";
-        text = "La idea de proyecto no ha sido modificada, por favor intentalo de nuevo";
-        type = "warning";
-        pintarMensajeIdeaForm(title, text, type);
-    }
+    // if (data.state == 'no_update') {
+    //     title = "Modificación Errónea";
+    //     text = "La idea de proyecto no ha sido modificada, por favor intentalo de nuevo";
+    //     type = "warning";
+    //     pintarMensajeIdeaForm(title, text, type);
+    // }
 };
 
 

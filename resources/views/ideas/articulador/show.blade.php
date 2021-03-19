@@ -19,42 +19,53 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                  <div class="col s12 m3 l3">
-                    <ul class="collection with-header">
-                      <li class="collection-header"><h5>Opciones</h5></li>
-                      <li class="collection-item">
-                        <form action="{{route('idea.aceptar.postulacion', $idea->id)}}" method="POST" name="frmAceptarPostulacionIdea">
-                        {{-- {!! method_field('PUT')!!}
-                        @csrf --}}
-                          <a href="" onclick="confirmacionAceptacionPostulacion(event)">
-                            <div class="card-panel teal lighten-2 black-text center">
-                              Aceptar idea de proyecto
-                            </div>
-                          </a>
-                        </form>
-                      </li>
-                      <li class="collection-item">
-                        <form action="{{route('idea.rechazar.postulacion', $idea->id)}}" method="POST" name="frmRechazarPostulacionIdea">
-                          {!! method_field('PUT')!!}
-                          @csrf
-                          <input type="hidden" name="txtmotivosRechazo" id="txtmotivosRechazo" value="">
-                          <a href="" onclick="confirmacionRechazoPostulacion(event)">
-                            <div class="card-panel red lighten-2 black-text center">
-                              Rechazar idea de proyecto
-                            </div>
-                          </a>
-                        </form>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col s12 m9 l9">
-                    @include('ideas.detalle')
-                    <center>
-                      <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                      </a>
-                    </center>
-                  </div>
+                @if ($idea->estadoIdea == 'Postulado')
+                <div class="col s12 m3 l3">
+                  <ul class="collection with-header">
+                    <li class="collection-header"><h5>Opciones</h5></li>
+                    <li class="collection-item">
+                      <form action="{{route('idea.aceptar.postulacion', $idea->id)}}" method="POST" name="frmAceptarPostulacionIdea">
+                      {{-- {!! method_field('PUT')!!}
+                      @csrf --}}
+                        <a href="" onclick="confirmacionAceptacionPostulacion(event)">
+                          <div class="card-panel teal lighten-2 black-text center">
+                            Aceptar idea de proyecto
+                          </div>
+                        </a>
+                      </form>
+                    </li>
+                    <li class="collection-item">
+                      <form action="{{route('idea.rechazar.postulacion', $idea->id)}}" method="POST" name="frmRechazarPostulacionIdea">
+                        {!! method_field('PUT')!!}
+                        @csrf
+                        <input type="hidden" name="txtmotivosRechazo" id="txtmotivosRechazo" value="">
+                        <a href="" onclick="confirmacionRechazoPostulacion(event)">
+                          <div class="card-panel red lighten-2 black-text center">
+                            Rechazar idea de proyecto
+                          </div>
+                        </a>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col s12 m9 l9">
+                  @include('ideas.detalle')
+                  <center>
+                    <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Cancelar
+                    </a>
+                  </center>
+                </div>
+                @else
+                <div class="col s12 m12 l12">
+                  @include('ideas.detalle')
+                  <center>
+                    <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Cancelar
+                    </a>
+                  </center>
+                </div>
+                @endif
               </div>
             </div>
           </div>

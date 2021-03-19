@@ -69,20 +69,50 @@ class IdeaController extends Controller
             }
         }
 
-        $req = new IdeaFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            $result = $this->ideaRepository->Store($request);
-            if ($result['state']) {
-                return response()->json(['state' => 'registro', 'url' => route('idea.detalle', $result['idea']->id)]);
-            } else {
-                return response()->json(['state' => 'no_registro']);
+        if ($request->input('txtopcionRegistro') == "guardar") {
+            $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'errors' => $validator->errors(),
+                ]);
             }
+            $result = $this->ideaRepository->Store($request);
+            // if ($result['state']) {
+            //     return response()->json(['state' => 'registro', 'url' => route('idea.detalle', $result['idea']->id)]);
+            // } else {
+            //     return response()->json(['state' => 'no_registro']);
+            // }
+        } else {
+            $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'errors' => $validator->errors(),
+                    'title' => 'Error',
+                    'msg' => 'Estas ingresando mal los datos',
+                    'type' => 'error'
+                ]);
+            }
+            $result = $this->ideaRepository->storeAndPostular($request);
+        }
+        if ($result['state']) {
+            return response()->json([
+                'state' => 'registro', 
+                'url' => route('idea.detalle', $result['idea']->id),
+                'title' => $result['title'],
+                'msg' => $result['msg'],
+                'type' => $result['type']
+                ]);
+        } else {
+            return response()->json([
+                'state' => 'no_registro', 
+                'title' => $result['title'],
+                'msg' => $result['msg'],
+                'type' => $result['type']
+            ]);
         }
     }
 
@@ -298,7 +328,6 @@ class IdeaController extends Controller
     public function edit($id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        // dd($idea->talento->id);
         $this->authorize('update', $idea);
         $nodos = $this->ideaRepository->getSelectNodo();
         return view('ideas.talento.edit', ['idea' => $idea, 
@@ -336,21 +365,35 @@ class IdeaController extends Controller
                 }
             }
         }
-
-        $req = new IdeaFormRequest;
+        $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
                 'state'   => 'error_form',
                 'errors' => $validator->errors(),
             ]);
-        } else {
+        }
+
+        if ($request->input('txtopcionRegistro') == "guardar") {
             $result = $this->ideaRepository->Update($request, $idea);
-            if ($result) {
-                return response()->json(['state' => 'update']);
-            } else {
-                return response()->json(['state' => 'no_update']);
-            }
+        } else {
+            $result = $this->ideaRepository->updateAndPostular($request, $idea);
+        }
+        if ($result['state']) {
+            return response()->json([
+                'state' => 'update', 
+                'url' => route('idea.detalle', $result['idea']->id),
+                'title' => $result['title'],
+                'msg' => $result['msg'],
+                'type' => $result['type']
+            ]);
+        } else {
+            return response()->json([
+                'state' => 'no_update', 
+                'title' => $result['title'],
+                'msg' => $result['msg'],
+                'type' => $result['type']
+            ]);
         }
     }
 
@@ -365,21 +408,11 @@ class IdeaController extends Controller
     public function enviarIdeaAlNodo(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        if ($idea->estadoIdea->nombre != EstadoIdea::IsRegistro()) {
-            Alert::warning('Postulación erróneo!', 'Para postular la idea al nodo, esta debe estar en el estado de "En registro"!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        
-        if ($idea->acuerdo_no_confidencialidad == 0) {
-            Alert::warning('Postulación erróneo!', 'Para postular la idea al nodo, se debe haber aprobado el acuerdo de no confidencialidad de idea!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
-        if ($update) {
-            Alert::success('Postulación exitosa!', 'La idea se ha postulado al nodo exitosamente!')->showConfirmButton('Ok', '#3085d6');
+        alert($update['title'], $update['msg'], $update['type'])->showConfirmButton('Ok', '#3085d6');;
+        if ($update['state']) {
             return redirect('idea');
         } else {
-            Alert::error('Postulación errónea!', 'La idea no se ha postulado al nodo!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
@@ -388,11 +421,12 @@ class IdeaController extends Controller
     {
         $idea = $this->ideaRepository->findByid($id);
         // dd($idea->empresa_relation);
+        $estadosIdea = EstadoIdea::all();
         $this->authorize('show', $idea);
         if (Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.talento.show', ['idea' => $idea]);
+            return view('ideas.talento.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
         } else {
-            return view('ideas.articulador.show', ['idea' => $idea]);
+            return view('ideas.articulador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
         }
     }
 
