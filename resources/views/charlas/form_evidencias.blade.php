@@ -18,24 +18,36 @@
 <div class="row">
   <div class="col s4 m4 l4">
     <p class="p-v-xs">
-      <input type="checkbox" name="txtprogramacion" {{ $charla->programacion == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsInfocenter() ? 'disabled' : '' }} id="txtprogramacion" value="1">
+      @if ( \Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador() )
+        <input type="checkbox" name="txtprogramacion" {{ $charla->programacion == 'No' ? '' : 'checked' }}  id="txtprogramacion" value="1">
+        @else
+        <input type="checkbox" name="txtprogramacion" {{ $charla->programacion == 'No' ? '' : 'checked' }} disabled  id="txtprogramacion" value="1">
+      @endif
       <label for="txtprogramacion">Programación de la Charla (Pantallazo del Envío de Correos) <span class="red-text">*</span></label>
     </p>
   </div>
   <div class="col s4 m4 l4">
     <p class="p-v-xs">
-      <input type="checkbox" name="txtevidencia_fotografica" {{ $charla->evidencia_fotografica == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsInfocenter() ? 'disabled' : '' }} id="txtevidencia_fotografica" value="1">
+      @if ( \Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador() )
+        <input type="checkbox" name="txtevidencia_fotografica" {{ $charla->evidencia_fotografica == 'No' ? '' : 'checked' }} id="txtevidencia_fotografica" value="1">
+      @else
+        <input type="checkbox" name="txtevidencia_fotografica" {{ $charla->evidencia_fotografica == 'No' ? '' : 'checked' }} disabled id="txtevidencia_fotografica" value="1">
+      @endif
       <label for="txtevidencia_fotografica">Evidencias Fotográficas <span class="red-text">*</span></label>
     </p>
   </div>
   <div class="col s4 m4 l4">
     <p class="p-v-xs">
-      <input type="checkbox" name="txtlistado_asistentes" {{ $charla->listado_asistentes == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsInfocenter() ? 'disabled' : '' }} id="txtlistado_asistentes" value="1">
+      @if (\Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador())
+        <input type="checkbox" name="txtlistado_asistentes" {{ $charla->listado_asistentes == 'No' ? '' : 'checked' }} id="txtlistado_asistentes" value="1">
+      @else
+        <input type="checkbox" name="txtlistado_asistentes" {{ $charla->listado_asistentes == 'No' ? '' : 'checked' }} disabled id="txtlistado_asistentes" value="1">
+      @endif
       <label for="txtlistado_asistentes">Listado de Asistentes <span class="red-text">*</span></label>
     </p>
   </div>
 </div>
-@if ( \Session::get('login_role') == App\User::IsInfocenter() )
+@if ( \Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador() )
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
       <li>

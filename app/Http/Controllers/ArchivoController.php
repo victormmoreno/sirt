@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
 use Carbon\Carbon;
 
@@ -76,6 +76,13 @@ class ArchivoController extends Controller
         'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
         'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
       ]);
+        $nodo_id = null;
+      if (Session::get('login_role') == User::IsInfocenter()) { 
+        $nodo_id = auth()->user()->infocenter->nodo_id;
+      } else {
+        $nodo_id = auth()->user()->gestor->nodo_id;
+      }
+
       $file = request()->file('nombreArchivo');
       $route = "";
       // La ruta con la se guardan los archivos de una es la siguiente:
@@ -84,7 +91,7 @@ class ArchivoController extends Controller
       $fileName = $idArchivoCharlaInformativa->max . '_' . $file->getClientOriginalName();
       // Creando la ruta
       $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
-      $nodo = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+      $nodo = sprintf("%02d", $nodo_id);
       $anho = Carbon::parse($charla->fecha)->isoFormat('YYYY');
       // $anho = $edt->fecha_inicio->isoFormat('YYYY');
       $route = 'public/' . $nodo . '/' . $anho . '/Charlas' . '/' . $id;

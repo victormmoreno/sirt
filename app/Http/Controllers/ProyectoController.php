@@ -693,62 +693,63 @@ class ProyectoController extends Controller
     public function cierre(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $ultimo_movimiento = $historico->last();
-        $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
-        switch (Session::get('login_role')) {
-            case User::IsGestor():
-                return view('proyectos.gestor.fase_cierre', [
-                    'proyecto' => $proyecto,
-                    'costo' => $costo,
-                    'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
-                ]);
-                break;
+        if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Ejecución') {
+            Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        } else {
+            $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+            $ultimo_movimiento = $historico->last();
+            $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+            switch (Session::get('login_role')) {
+                case User::IsGestor():
+                    return view('proyectos.gestor.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico,
+                        'ultimo_movimiento' => $ultimo_movimiento
+                    ]);
+                    break;
+    
+                case User::IsDinamizador():
+                    return view('proyectos.dinamizador.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico,
+                        'ultimo_movimiento' => $ultimo_movimiento
+                    ]);
+                    break;
+    
+                case User::IsTalento():
+                    return view('proyectos.talento.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico,
+                        'ultimo_movimiento' => $ultimo_movimiento
+                    ]);
+                    break;
+    
+                case User::IsAdministrador():
+                    return view('proyectos.administrador.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico
+                    ]);
+                    break;
+    
+                case User::IsInfocenter():
+                    return view('proyectos.infocenter.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico
+                    ]);
+                    break;
+    
+                default:
+                    return abort(Response::HTTP_FORBIDDEN);
+                    break;
+            }
 
-            case User::IsDinamizador():
-                return view('proyectos.dinamizador.fase_cierre', [
-                    'proyecto' => $proyecto,
-                    'costo' => $costo,
-                    'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
-                ]);
-                break;
-
-            case User::IsTalento():
-                return view('proyectos.talento.fase_cierre', [
-                    'proyecto' => $proyecto,
-                    'costo' => $costo,
-                    'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
-                ]);
-                break;
-
-            case User::IsAdministrador():
-                return view('proyectos.administrador.fase_cierre', [
-                    'proyecto' => $proyecto,
-                    'costo' => $costo,
-                    'historico' => $historico
-                ]);
-                break;
-
-            case User::IsInfocenter():
-                return view('proyectos.infocenter.fase_cierre', [
-                    'proyecto' => $proyecto,
-                    'costo' => $costo,
-                    'historico' => $historico
-                ]);
-                break;
-
-            default:
-                return abort(Response::HTTP_FORBIDDEN);
-                break;
         }
-        // if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
-        // } else {
-        //     Alert::error('Error!', 'El dinamizador aún no ha dado su aprobación en la fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
-        //     return back();
-        // }
     }
 
     /**

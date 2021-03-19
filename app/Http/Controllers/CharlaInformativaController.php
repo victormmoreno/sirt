@@ -70,6 +70,10 @@ class CharlaInformativaController extends Controller
       return view('charlas.infocenter.evidencia', [
         'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
       ]);
+    } else if ( Session::get('login_role') == User::IsArticulador() ) {
+      return view('charlas.articulador.evidencia', [
+        'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
+      ]);
     } else if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('charlas.dinamizador.evidencia', [
         'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
@@ -138,6 +142,8 @@ class CharlaInformativaController extends Controller
       return view('charlas.infocenter.index');
     } else if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('charlas.dinamizador.index');
+    } else if ( Session::get('login_role') == User::IsArticulador() ) {
+      return view('charlas.articulador.index');
     } else {
       return view('charlas.administrador.index', [
         'nodos' => Nodo::SelectNodo()->get()

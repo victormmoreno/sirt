@@ -17,7 +17,7 @@
               <div class="divider"></div>
               <br />
               @include('proyectos.detalle_fase_inicio')
-              @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+              @if ($ultimo_movimiento != null && $ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
               <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
                 {!! method_field('PUT')!!}
                 @csrf
@@ -46,6 +46,7 @@
                   </center>
               @endif
               <center>
+
             </div>
           </div>
         </div>

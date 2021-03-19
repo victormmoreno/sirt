@@ -5,6 +5,8 @@ namespace App\Repositories\Repository;
 use App\Models\{CharlaInformativa};
 use Illuminate\Support\Facades\{DB};
 use Carbon\Carbon;
+use App\User;
+use Illuminate\Support\Facades\{Session, Validator};
 
 class CharlaInformativaRepository
 {
@@ -71,15 +73,21 @@ class CharlaInformativaRepository
    */
   public function storeCharlaInformativaRepository($request)
   {
+    $nodo_id = null;
     $codigo_charla = "CI";
     $anho = Carbon::now()->isoFormat('YYYY');
-    $tecnoparque = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+    if (Session::get('login_role') == User::IsInfocenter()) {
+      $nodo_id = auth()->user()->infocenter->nodo_id;
+    } else {
+      $nodo_id = auth()->user()->gestor->nodo_id;
+    }
+    $tecnoparque = sprintf("%02d", $nodo_id);
     $idcharla = CharlaInformativa::selectRaw('MAX(id+1) AS max')->get()->last();
     $idcharla->max == null ? $idcharla->max = 1 : $idcharla->max = $idcharla->max;
     $idcharla->max = sprintf("%04d", $idcharla->max);
     $codigo_charla = $codigo_charla . $anho . '-' . $tecnoparque . $idcharla->max;
     $charla = CharlaInformativa::create([
-      'nodo_id' => auth()->user()->infocenter->nodo_id,
+      'nodo_id' => $nodo_id,
       'codigo_charla' => $codigo_charla,
       'fecha' => $request->txtfecha,
       'nro_asistentes' => $request->txtnro_asistentes,

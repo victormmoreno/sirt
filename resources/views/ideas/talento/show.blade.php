@@ -19,6 +19,7 @@
               </center>
               <div class="divider"></div>
               <div class="row">
+                @if ($idea->estadoIdea->nombre === "En registro")
                 <div class="col s12 m3 l3">
                   <ul class="collection with-header">
                     <li class="collection-header"><h5>Opciones</h5></li>
@@ -51,6 +52,16 @@
                     </a>
                   </center>
                 </div>
+                @else
+                <div class="col s12 m12 l12">
+                  @include('ideas.detalle')
+                  <center>
+                    <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
+                      <i class="material-icons right">backspace</i>Volver
+                    </a>
+                  </center>
+                </div>  
+                @endif
               </div>
             </div>
           </div>
