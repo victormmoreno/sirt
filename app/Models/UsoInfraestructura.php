@@ -265,6 +265,18 @@ class UsoInfraestructura extends Model
         return $query;
     }
 
+    public function scopeYearAsesoria($query, $year)
+    {
+        if (!empty($year) && $year != null && $year == 'all') {
+            return $query->has('actividad');
+        }
+
+        if ((!empty($year) && $year != null && $year != 'all')) {
+            return $query->whereYear('fecha', $year)->orWhereYear('created_at', $year)->has('actividad');
+        }
+        return $query;
+    }
+
     public function present()
     {
         return new UsoInfraestructuraPresenter($this);
