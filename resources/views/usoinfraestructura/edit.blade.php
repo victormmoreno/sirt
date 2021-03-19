@@ -114,13 +114,7 @@
 	                    usoInfraestructuraUpdate.removeDisableButtonTalento();
 	                    usoInfraestructuraUpdate.removeDisableButtonMaterial();
 	                    usoInfraestructuraUpdate.DatatableProjectsForUser();
-
-
-
 	                } else if ( $("#IsArticulacion").is(":checked") ) {
-
-
-
 	                    Swal.fire({
 	                        toast: true,
 	                        position: 'bottom-end',
@@ -329,14 +323,14 @@
                 type:'get',
                 url:'/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
-
+                console.log(response);
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();
                 $('#txtlineatecnologica').empty();
                 $('#txtmaterial').empty();
                 $('#txtlinea').removeAttr('value');
-                $('#detallesGestores').children("tr").remove();
+                // $('#detallesGestores').children("tr").remove();
 
 
                 $('#txttalento').append('<option value="">Seleccione el talento</option>');
@@ -346,13 +340,13 @@
 
                 if (response.proyecto.length != 0) {
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                        let cont;
-                        let a = document.getElementsByName("gestor[]");
-                        let fila ="";
+                        // let cont;
+                        // let a = document.getElementsByName("gestor[]");
+                        // let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="1"></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="1"></td></td><td></tr>';
-                        cont++;
-                        $('#detallesGestores').append(fila);
+                        // fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="'+response.proyecto+'"></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="1"></td></td><td></tr>';
+                        // cont++;
+                        // $('#detallesGestores').append(fila);
 
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
@@ -445,35 +439,34 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                  url: "/usoinfraestructura/articulacionesforuser",
-                  type: "get",
+                    url: "/usoinfraestructura/articulacionesforuser",
+                    type: "get",
                 },
                 select: true,
                 columns: [
-                  {
-                    title: 'Codigo de Articulación',
-                    data: 'codigo_actividad',
-                    name: 'codigo_actividad',
-                  },
-                  {
-                    title: 'Nombre del Proyecto',
-                    data: 'nombre',
-                    name: 'nombre',
-                  },
-                  {
-                    title: 'fase',
-                    data: 'fase',
-                        name: 'fase',
-                  },
-                  {
-                    width: '20%',
-                    data: 'checkbox',
-                    name: 'checkbox',
-                    orderable: false,
-                  },
+                    {
+                        title: 'Codigo de Articulación',
+                        data: 'codigo_actividad',
+                        name: 'codigo_actividad',
+                    },
+                    {
+                        title: 'Nombre del Proyecto',
+                        data: 'nombre',
+                        name: 'nombre',
+                    },
+                    {
+                        title: 'fase',
+                        data: 'fase',
+                            name: 'fase',
+                    },
+                    {
+                        width: '20%',
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                    },
                 ],
-              });
-
+            });
             $('#txttalento').empty();
             $('#txtequipo').empty();
 
@@ -601,7 +594,7 @@
 
             $('#usoinfraestrucutaEdtForUserTable').DataTable({
                 language: {
-                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
                 processing: true,
                 serverSide: true,
@@ -609,34 +602,34 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                  url: "/usoinfraestructura/edtsforuser",
-                  type: "get",
+                    url: "/usoinfraestructura/edtsforuser",
+                    type: "get",
                 },
                 select: true,
                 columns: [
-                  {
-                    title: 'Codigo de empresa',
-                    data: 'codigo_actividad',
-                    name: 'codigo_actividad',
-                  },
-                  {
-                    title: 'Nombre de la empresa',
-                    data: 'nombre',
-                    name: 'nombre',
-                  },
-                  {
-                    title: 'empresas',
-                    data: 'empresas',
-                    name: 'empresas',
-                  },
-                  {
-                    width: '20%',
-                    data: 'checkbox',
-                    name: 'checkbox',
-                    orderable: false,
-                  },
+                    {
+                        title: 'Codigo de empresa',
+                        data: 'codigo_actividad',
+                        name: 'codigo_actividad',
+                    },
+                    {
+                        title: 'Nombre de la empresa',
+                        data: 'nombre',
+                        name: 'nombre',
+                    },
+                    {
+                        title: 'empresas',
+                        data: 'empresas',
+                        name: 'empresas',
+                    },
+                    {
+                        width: '20%',
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                    },
                 ],
-              });
+            });
 
 
             $('#modalUsoIngraestrucuta_edt_modal').openModal({
@@ -855,12 +848,12 @@
     function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
             $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
             Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                type: 'success',
+                title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
 
 
@@ -897,14 +890,14 @@
             let nombreEquipo = $('#txtequipo option:selected').text();
 
             if ($("#txtequipo").val() == ""){
-                  Swal.fire({
+                Swal.fire({
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'warning',
                     title: 'Debe seleccionar un equipo.'
-                  });
+                });
 
             }else  if ($("#txttiempouso").val() == ""){
                 Swal.fire({
