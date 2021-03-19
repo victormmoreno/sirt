@@ -33,6 +33,7 @@
                 </div>
                 <div class="col s12 m4 l4 center">
                   @if ( ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento == null) || 
+                  ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsCambiar()) ||
                   ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) || 
                   ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) )
                   <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Inicio'])}}">

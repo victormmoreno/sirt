@@ -25,9 +25,19 @@
                 </div>
               </div>
               <br/>
-              <form id="frmIdea_Inicio" action="{{ route('idea.store') }}" method="POST">
+              <form id="frmIdea_Inicio" name="frmIdea_Inicio" action="{{ route('idea.store') }}" method="POST">
               @include('ideas.talento.form_inicio', [
               'btnText' => 'Guardar'])
+              <div class="divider"></div>
+              <center>
+                <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
+                    <i class="material-icons right">done_all</i>
+                    Guardar
+                </button>
+                <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
+                    <i class="material-icons right">backspace</i>Cancelar
+                </a>
+              </center>
               </form>
             </div>
           </div>
@@ -40,7 +50,7 @@
 </main>
 @endsection
 @push('script')
-    <script>
+<script>
       $(document).ready(function () {
         $('#modalRecordatorioDeRegistroDeIdea').openModal();
       });

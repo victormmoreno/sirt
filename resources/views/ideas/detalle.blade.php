@@ -87,7 +87,7 @@
                                                                     Nombres y apellidos
                                                                 </span>
                                                                 <p>
-                                                                    @if (isset($data->talento->user->nombres))
+                                                                    @if (isset($idea->talento->user->nombres))
                                                                     {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
                                                                     @else
                                                                     {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
@@ -484,7 +484,7 @@
                                                             </li>
                                                             <li class="collection-item">
                                                                 <span class="title cyan-text text-darken-3">
-                                                                    ¿La idea está avalada por una empresa?
+                                                                    ¿La idea está avalada por una entidad?
                                                                 </span>
                                                                 <p>
                                                                     @if ($idea->aval_empresa == 1)

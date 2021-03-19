@@ -118,6 +118,23 @@ class Idea extends Model
             ->where('tipo_idea', $this->IsEmprendedor());
     }
 
+    public function validarAcuerdoConfidencialidad()
+    {
+        // return $this;
+        if ($this->acuerdo_no_confidencialidad == 0) { 
+            return false;
+        }
+        return true;
+    }
+
+    public function validarIdeaEnEstadoRegistro()
+    {
+        if ($this->estadoIdea->nombre == EstadoIdea::IsRegistro()) {
+            return true;
+        }
+        return false;
+    }
+
     /*=====  End of metodos para conocer los tipos de ideas  ======*/
 
 
@@ -144,14 +161,7 @@ class Idea extends Model
             ->where('comite_idea.admitido', 1)
             ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
             ->where('tipo_idea', $this->IsEmprendedor())
-            ->where(function ($q) use ($idgestor) {
-                $q->where(function ($query) use ($idgestor) {
-                    $query->where('gestor_id', '=', $idgestor);
-                })
-                    ->orWhere(function ($query) {
-                        $query->where('gestor_id', '=', null);
-                    });
-            });
+            ->where('gestor_id', '=', $idgestor);
     }
 
     public function scopeConsultarIdeasConvocadasAComite($query, $id)

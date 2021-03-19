@@ -102,3 +102,47 @@ h5.breadcrumbs-header {
   width: 100%,
 }
 
+.swal2-cancelar-custom {
+    margin-right: 30px;
+    margin-left: 30px; 
+    border: 0;
+    border-radius: 0.25em;
+    background: initial;
+    background-color: #dd3333;
+    color: #fff;
+    font-size: 1.0625em;
+    margin: .3125em;
+    padding: .625em 2em;
+    font-weight: 500;
+    box-shadow: none;
+}
+
+.swal2-guardar-custom {
+    margin-right: 30px;
+    margin-left: 30px; 
+    border: 0;
+    border-radius: 0.25em;
+    background: initial;
+    background-color: #009688;
+    color: #fff;
+    font-size: 1.0625em;
+    margin: .3125em;
+    padding: .625em 2em;
+    font-weight: 500;
+    box-shadow: none;
+}
+
+.swal2-postular-custom {
+    margin-right: 30px;
+    margin-left: 30px; 
+    border: 0;
+    border-radius: 0.25em;
+    background: initial;
+    background-color: #03a9f4;
+    color: #fff;
+    font-size: 1.0625em;
+    margin: .3125em;
+    padding: .625em 2em;
+    font-weight: 500;
+    box-shadow: none;
+}

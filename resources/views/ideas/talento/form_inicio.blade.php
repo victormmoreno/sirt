@@ -11,6 +11,7 @@
                     Antes de empezar a registrar la idea de proyecto, es importante saber en que nodo se va a presentar.
                   </div>
             </div>
+            <input type="hidden" name="txtopcionRegistro" id="txtopcionRegistro" value="-1">
             <div class="input-field col s12 m8 l8">
                 <i class="material-icons prefix">
                     domain
@@ -993,7 +994,7 @@
             <div class="col s12 m6 l6">
                 <div class="row">
                     <span class="black-text text-black">
-                        ¿La idea está avalada por una empresa?
+                        ¿La idea está avalada por una entidad?
                     </span>
                     <div class="switch m-b-md">
                         <label>
@@ -1019,21 +1020,27 @@
                         @else
                         <input id="txtempresa" name="txtempresa" type="text">
                         @endif
-                        <label for="txtempresa">Indique el nombre de la empresa <span class="red-text">*</span></label>
+                        <label for="txtempresa">Indique el nombre de la entidad <span class="red-text">*</span></label>
                         <small id="txtempresa-error" class="error red-text"></small>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="divider"></div>
-        <center>
-            <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-                <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
+        {{-- <center>
+            @if ($btnText == 'Modificar')
+            <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
+                <i class="material-icons right">done</i>
                 {{$btnText}}
-            </button>   
+            </button>
+            @else
+            <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
+                <i class="material-icons right">done_all</i>
+                {{$btnText}}
+            </button>
+            @endif
             <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
                 <i class="material-icons right">backspace</i>Cancelar
             </a>
-        </center>
+        </center> --}}
     </div>
 </div>
