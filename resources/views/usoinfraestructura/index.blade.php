@@ -61,7 +61,7 @@
                         <div class=" mailbox-view mailbox-text">
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
                                 <div class="input-field col s12 m2 l2">
-                                    <label class="active" for="filter_year">Año actividad <span class="red-text">*</span></label>
+                                    <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
                                     <select name="filter_year" id="filter_year" @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento())) onchange="usoinfraestructuraIndex.queryActivitiesByAnio()" @endif>
                                         @for ($i=$year; $i >= 2016; $i--)
                                             <option value="{{$i}}" >{{$i}}</option>
@@ -94,7 +94,7 @@
 
                                 <div class="col s12 m6 l4 offset-m3 right">
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Buscar</button>
+                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">

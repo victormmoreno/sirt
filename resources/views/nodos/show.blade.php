@@ -10,7 +10,6 @@
                 <div class="row">
                     <div class="col s12 m8 l7">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-
                             Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}
                         </h5>
                     </div>
