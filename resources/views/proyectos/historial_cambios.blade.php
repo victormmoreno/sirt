@@ -23,6 +23,9 @@
                   @elseif($historico[$i]->movimiento == 'no aprobó')
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->created_at}} por los siguientes motivos: {{$historico[$i]->comentarios}}.
+                  @elseif($historico[$i]->movimiento == 'solicitó al talento')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                  {{$historico[$i]->movimiento}} aprobar la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->created_at}}.
                   @else
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.

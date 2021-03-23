@@ -81,6 +81,8 @@ class Idea extends Model
         'cantidad_prototipos',
         'recursos_necesarios',
         'si_recursos_necesarios',
+        'acuerdo_no_confidencialidad',
+        'fecha_acuerdo_no_confidencialidad',
     ];
 
     /**
@@ -116,6 +118,23 @@ class Idea extends Model
             ->where('tipo_idea', $this->IsEmprendedor());
     }
 
+    public function validarAcuerdoConfidencialidad()
+    {
+        // return $this;
+        if ($this->acuerdo_no_confidencialidad == 0) { 
+            return false;
+        }
+        return true;
+    }
+
+    public function validarIdeaEnEstadoRegistro()
+    {
+        if ($this->estadoIdea->nombre == EstadoIdea::IsRegistro()) {
+            return true;
+        }
+        return false;
+    }
+
     /*=====  End of metodos para conocer los tipos de ideas  ======*/
 
 
@@ -127,25 +146,22 @@ class Idea extends Model
             'nombre_proyecto',
             'tipo_idea',
             'viene_convocatoria',
-            'convocatoria'
+            'convocatoria',
+            'ideas.talento_id'
         )
             ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+            ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
             ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
             ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
             ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+            ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
+            ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
             ->where('nodos.id', $idnodo)
             ->where('comite_idea.admitido', 1)
             ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
             ->where('tipo_idea', $this->IsEmprendedor())
-            ->where(function ($q) use ($idgestor) {
-                $q->where(function ($query) use ($idgestor) {
-                    $query->where('gestor_id', '=', $idgestor);
-                })
-                    ->orWhere(function ($query) {
-                        $query->where('gestor_id', '=', null);
-                    });
-            });
+            ->where('gestor_id', '=', $idgestor);
     }
 
     public function scopeConsultarIdeasConvocadasAComite($query, $id)
@@ -165,7 +181,7 @@ class Idea extends Model
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->where('nodo_id', $id)
-            ->whereIn('estadosidea.nombre', [EstadoIdea::IsInscrito(), EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
+            ->whereIn('estadosidea.nombre', [EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
             ->groupBy('ideas.id')
             ->orderBy('nombre_proyecto');
     }
@@ -187,7 +203,7 @@ class Idea extends Model
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->where('nodo_id', $id)
             ->where('tipo_idea', $this->IsEmprendedor())
-            ->where('estadosidea.nombre', '!=', EstadoIdea::IsProyecto())
+            ->where('estadosidea.nombre', '!=', EstadoIdea::IsPBT())
             ->orderBy('ideas.id', 'desc')
             ->groupBy('ideas.id');
     }
@@ -203,7 +219,7 @@ class Idea extends Model
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->where('nodo_id', $id)
             ->where('tipo_idea', '!=', $this->IsEmprendedor())
-            ->where('estadosidea.nombre', '!=', EstadoIdea::IsProyecto())
+            ->where('estadosidea.nombre', '!=', EstadoIdea::IsPBT())
             ->orderBy('ideas.id', 'desc');
     }
 
@@ -277,7 +293,7 @@ class Idea extends Model
         )
             ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_proyecto ')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-            ->where('estadosidea.nombre', EstadoIdea::IsInscrito())
+            ->where('estadosidea.nombre', EstadoIdea::IsRegistro())
             ->where('tipo_idea', $this->IsEmprendedor())
             ->where('nodo_id', $id)
             ->orderBy('nombre_proyecto');

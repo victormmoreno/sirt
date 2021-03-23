@@ -365,12 +365,17 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IdeaController@index')->name('idea.index');
+        Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros')->middleware('role_session:Articulador|Infocenter|Dinamizador|Administrador|Gestir');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
-        Route::get('/datatableIdeasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento|Articulador');
+        Route::get('/datatableIdeasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
         // Route::get('/datatableIdeasEnviadasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Talento']);
+        Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
+        Route::get('/modalIdeas/{id}', 'IdeaController@abrirModalIdeas')->name('idea.modal');
         Route::get('/{id}/detalle', 'IdeaController@detalle')->name('idea.detalle');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
+        Route::get('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
+        Route::put('/rechazar_postulacion/{idea}', 'IdeaController@rechazarPostulacionIdea')->name('idea.rechazar.postulacion')->middleware('role_session:Articulador');
         Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar')->middleware('role_session:Talento');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Talento']);
         Route::post('/', 'IdeaController@store')->name('idea.store')->middleware(['auth', 'role_session:Talento']);
@@ -453,9 +458,9 @@ Route::group(
     ],
     function () {
         Route::get('/', 'EmpresaController@index')->name('empresa');
-        Route::get('/create', 'EmpresaController@create')->name('empresa.create');
+        Route::get('/create', 'EmpresaController@create')->name('empresa.create')->middleware('role_session:Talento');
         Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
-        Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit');
+        Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit')->middleware('role_session:Desarrollador|Administrador');
         Route::get('/ajaxDetallesDeUnaEmpresa/{value}/{field}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
         Route::get('/ajaxContactosDeUnaEntidad/{identidad}', 'EmpresaController@contactosDeLaEmpresaPorNodo')->name('empresa.contactos.nodo');
         Route::get('/ajaxConsultarEmpresaPorIdEntidad/{identidad}', 'EmpresaController@consultarEmpresaPorIdEntidad')->name('empresa.detalle.entidad');
@@ -493,7 +498,7 @@ Route::group(
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Infocenter'],
     ],
     function () {
-        Route::get('/notificar_inicio/{id}', 'ArticulacionController@notificar_inicio')->name('articulacion.notificar.inicio')->middleware('role_session:Gestor');
+        Route::get('/notificar_inicio/{id}/{rol}', 'ArticulacionController@notificar_inicio')->name('articulacion.notificar.inicio')->middleware('role_session:Gestor');
         Route::get('/notificar_planeacion/{id}', 'ArticulacionController@notificar_planeacion')->name('articulacion.notificar.planeacion')->middleware('role_session:Gestor');
         Route::get('/notificar_ejecucion/{id}', 'ArticulacionController@notificar_ejecucion')->name('articulacion.notificar.ejecucion')->middleware('role_session:Gestor');
         Route::get('/notificar_cierre/{id}', 'ArticulacionController@notificar_cierre')->name('articulacion.notificar.cierre')->middleware('role_session:Gestor');
@@ -544,10 +549,7 @@ Route::group(
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
     ],
     function () {
-        Route::get('/notificar_inicio/{id}', 'ProyectoController@notificar_inicio')->name('proyecto.notificar.inicio')->middleware('role_session:Gestor');
-        Route::get('/notificar_planeacion/{id}', 'ProyectoController@notificar_planeacion')->name('proyecto.notificar.planeacion')->middleware('role_session:Gestor');
-        Route::get('/notificar_ejecucion/{id}', 'ProyectoController@notificar_ejecucion')->name('proyecto.notificar.ejecucion')->middleware('role_session:Gestor');
-        Route::get('/notificar_cierre/{id}', 'ProyectoController@notificar_cierre')->name('proyecto.notificar.cierre')->middleware('role_session:Gestor');
+        Route::get('/notificar_inicio/{id}/{fase}', 'ProyectoController@solicitar_aprobacion')->name('proyecto.solicitar.aprobacion')->middleware('role_session:Gestor');
         Route::get('/notificar_suspendido/{id}', 'ProyectoController@notificar_suspendido')->name('proyecto.notificar.suspension')->middleware('role_session:Gestor');
 
         // Route::get('/informacion-proyecto/{id}', 'ProyectoController@informacionProyectoById')->name('proyecto.informacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador');
@@ -578,10 +580,11 @@ Route::group(
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
         Route::get('/archivosDeUnProyecto/{id}/{fase}', 'ArchivoController@datatableArchivosDeUnProyecto')->name('proyecto.files');
         Route::get('/eliminarProyecto/{id}', 'ProyectoController@eliminarProyecto_Controller')->name('proyecto.delete')->middleware('role_session:Dinamizador');
-        Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Gestor|Dinamizador');
-        Route::put('/planeacion/{id}', 'ProyectoController@updatePlaneacion')->name('proyecto.update.planeacion')->middleware('role_session:Gestor|Dinamizador');
-        Route::put('/ejecucion/{id}', 'ProyectoController@updateEjecucion')->name('proyecto.update.ejecucion')->middleware('role_session:Gestor|Dinamizador');
-        Route::put('/cierre/{id}', 'ProyectoController@updateCierre')->name('proyecto.update.cierre')->middleware('role_session:Gestor|Dinamizador');
+        Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Gestor');
+        Route::put('/gestionar_aprobacion/{id}/{fase}', 'ProyectoController@gestionarAprobacion')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento');
+        Route::put('/planeacion/{id}', 'ProyectoController@updatePlaneacion')->name('proyecto.update.planeacion')->middleware('role_session:Gestor');
+        Route::put('/ejecucion/{id}', 'ProyectoController@updateEjecucion')->name('proyecto.update.ejecucion')->middleware('role_session:Gestor');
+        Route::put('/cierre/{id}', 'ProyectoController@updateCierre')->name('proyecto.update.cierre')->middleware('role_session:Gestor');
         Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables/{id}', 'ProyectoController@updateEntregables')->name('proyecto.update.entregables.inicio')->middleware('role_session:Gestor|Dinamizador');
         Route::put('/updateEntregables_Cierre/{id}', 'ProyectoController@updateEntregables_Cierre')->name('proyecto.update.entregables.cierre')->middleware('role_session:Gestor|Dinamizador');
@@ -673,22 +676,22 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'charla',
-        'middleware' => ['auth', 'role_session:Infocenter|Dinamizador|Administrador'],
+        'middleware' => ['auth', 'role_session:Infocenter|Dinamizador|Administrador|Articulador'],
     ],
     function () {
         Route::get('/', 'CharlaInformativaController@index')->name('charla');
-        Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter');
+        Route::get('/create', 'CharlaInformativaController@create')->name('charla.create')->middleware('role_session:Infocenter|Articulador');
         Route::get('/consultarCharlasInformativasPorNodo/{id}', 'CharlaInformativaController@datatableCharlasInformativosDeUnNodo')->name('charla.nodo');
         Route::get('/{id}/evidencias', 'CharlaInformativaController@evidencias')->name('charla.evidencias');
         Route::get('/consultarDetallesDeUnaCharlaInformativa/{id}', 'CharlaInformativaController@detallesDeUnaCharlaInformativa')->name('charla.detalle');
         Route::get('/archivosDeUnaCharlaInformartiva/{id}', 'ArchivoController@datatableArchivosDeUnaCharlaInformatva')->name('charla.files');
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileCharlaInformativa')->name('charla.files.download');
-        Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter');
-        Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter');
-        Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter');
-        Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter');
+        Route::get('/{id}/edit', 'CharlaInformativaController@edit')->name('charla.edit')->middleware('role_session:Infocenter|Articulador');
+        Route::put('/{id}', 'CharlaInformativaController@update')->name('charla.update')->middleware('role_session:Infocenter|Articulador');
+        Route::put('/updateEvidencias/{id}', 'CharlaInformativaController@updateEvidencias')->name('charla.update.evidencias')->middleware('role_session:Infocenter|Articulador');
+        Route::post('/', 'CharlaInformativaController@store')->name('charla.store')->middleware('role_session:Infocenter|Articulador');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileCharlaInformartiva')->name('charla.files.upload')->middleware('role_session:Infocenter|Articulador');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileCharlaInformartiva')->name('charla.files.destroy')->middleware('role_session:Infocenter|Articulador');
     }
 );
 

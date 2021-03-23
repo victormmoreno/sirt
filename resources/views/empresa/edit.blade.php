@@ -28,10 +28,13 @@
                             <label for="txtnit_empresa">Nit de la Empresa (Sin puntos ni dígito de verificación) <span class="red-text">*</span></label>
                             <small id="txtnit_empresa-error" class="error red-text"></small>
                         </div>
-                        <div class="input-field col s12 m6 l6">
+                        <div class="input-field col s12 m5 l5">
                             <input type="text" name="txtcodigo_ciiu_empresa" id="txtcodigo_ciiu_empresa" value="{{old('txtcodigo_ciiu_empresa', $empresa->codigo_ciiu)}}">
                             <label for="txtcodigo_ciiu_empresa">Código CIIU de la Empresa</label>
                             <small id="txtcodigo_ciiu_empresa-error" class="error red-text"></small>
+                        </div>
+                        <div class="input-field col s1 m1 l1">
+                            <a href="https://www.ccb.org.co/Inscripciones-y-renovaciones/Todo-sobre-el-Codigo-CIIU" target="_blank"><i class="material-icons left">help</i></a>
                         </div>
                     </div>
                     <div class="row">

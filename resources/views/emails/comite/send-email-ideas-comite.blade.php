@@ -2,7 +2,7 @@
 # Resultados del Comité de Selección de Ideas | Tecnoparque Nodo {{$datosIdea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
-<b>_{{$datosIdea->nombres_contacto }} {{$datosIdea->apellidos_contacto }}_</b><br>
+<b>_{{$datosIdea->talento->user->nombres }} {{$datosIdea->talento->user->apellidos }}_</b><br>
 Cordial Saludo.
 
 @component('mail::panel')

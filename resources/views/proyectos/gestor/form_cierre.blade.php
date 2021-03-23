@@ -126,7 +126,7 @@
         </div>
     </div>
 </div>
-@if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
+{{-- @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
 <div class="divider"></div>
 <div class="row">
     <h5 class="center">Cierre del Proyecto</h5>
@@ -140,17 +140,13 @@
           </div>
     </div>
 </div>
-@endif
+@endif --}}
 <div class="divider"></div>
 <center>
-    @if ($proyecto->fase->nombre != 'Cierre')
+    @if ($proyecto->fase->nombre == 'Cierre')
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
         <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
-        @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1)
-        Cerrar Proyecto
-        @else
-        {{isset($btnText) ? $btnText : 'error'}}
-        @endif
+        Guardar
     </button>
     @endif
     <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">

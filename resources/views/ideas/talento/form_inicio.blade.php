@@ -11,6 +11,7 @@
                     Antes de empezar a registrar la idea de proyecto, es importante saber en que nodo se va a presentar.
                   </div>
             </div>
+            <input type="hidden" name="txtopcionRegistro" id="txtopcionRegistro" value="-1">
             <div class="input-field col s12 m8 l8">
                 <i class="material-icons prefix">
                     domain
@@ -34,6 +35,29 @@
                 <label class="truncate" for="txtnodo">Seleccione el nodo donde se presentará la idea <span class="red-text">*</span></label>
                 <small id="txtnodo-error" class="error red-text"></small>
             </div>
+        </div>
+        <div class="row">
+            <div class="card-panel grey lighten-1 black-text center">
+                <i class="material-icons left">info_outline</i>
+                A su vez, es importante para nosotros saber si usted está de acuerdo con el acuerdo de no confidencialidad de la idea.
+            </div>
+        </div>
+        <div class="row center">
+            <div class="form-check">
+                @if ($existe)
+                    @if ($idea->acuerdo_no_confidencialidad == 1)
+                    <input class="form-check-input" type="checkbox" name="txtacuerdo_no_confidencialidad" id="txtacuerdo_no_confidencialidad" checked value="1">
+                    @else
+                    <input class="form-check-input" type="checkbox" name="txtacuerdo_no_confidencialidad" id="txtacuerdo_no_confidencialidad" value="1">
+                    @endif
+                @else
+                <input class="form-check-input" type="checkbox" name="txtacuerdo_no_confidencialidad" id="txtacuerdo_no_confidencialidad" value="1">
+                @endif
+                <label class="form-check-label black-text text-black" for="txtacuerdo_no_confidencialidad">
+                    Acepto el <a class="m-t-sm blue-text text-light-blue accent-4 center-align modal-trigger" href="#modalAcuerdoNoConfidencialidad">acuerdo de no confidencialidad de la idea.</a>
+                </label>
+            </div>
+            <small id="txtacuerdo_no_confidencialidad-error" class="error red-text"></small>
         </div>
         <div class="divider"></div>
         <div class="row">
@@ -725,7 +749,11 @@
                     ondemand_video
                 </i>
                 @if ($existe)
-                <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{$idea->rutamodel->ruta}}">
+                    @if ($idea->rutamodel == null)
+                        <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="">
+                    @else
+                        <input id="txtlinkvideo" name="txtlinkvideo" type="text" value="{{$idea->rutamodel->ruta}}">
+                    @endif
                 @else
                 <input id="txtlinkvideo" name="txtlinkvideo" type="text">
                 @endif
@@ -966,7 +994,7 @@
             <div class="col s12 m6 l6">
                 <div class="row">
                     <span class="black-text text-black">
-                        ¿La idea está avalada por una empresa?
+                        ¿La idea está avalada por una entidad?
                     </span>
                     <div class="switch m-b-md">
                         <label>
@@ -988,25 +1016,31 @@
                 <div class="row" id="avalEmpresa_content">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                        <input id="txtempresa" name="txtempresa" type="text" value="{{ $idea->empresa }}"">
+                        <input id="txtempresa" name="txtempresa" type="text" value="{{ $idea->empresa }}">
                         @else
                         <input id="txtempresa" name="txtempresa" type="text">
                         @endif
-                        <label for="txtempresa">Indique el nombre de la empresa <span class="red-text">*</span></label>
+                        <label for="txtempresa">Indique el nombre de la entidad <span class="red-text">*</span></label>
                         <small id="txtempresa-error" class="error red-text"></small>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="divider"></div>
-        <center>
-            <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-                <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
+        {{-- <center>
+            @if ($btnText == 'Modificar')
+            <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
+                <i class="material-icons right">done</i>
                 {{$btnText}}
-            </button>   
+            </button>
+            @else
+            <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
+                <i class="material-icons right">done_all</i>
+                {{$btnText}}
+            </button>
+            @endif
             <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
                 <i class="material-icons right">backspace</i>Cancelar
             </a>
-        </center>
+        </center> --}}
     </div>
 </div>

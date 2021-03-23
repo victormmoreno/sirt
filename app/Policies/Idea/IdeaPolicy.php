@@ -3,7 +3,7 @@
 namespace App\Policies\Idea;
 
 use App\User;
-use App\Models\Idea;
+use App\Models\{Idea, EstadoIdea};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class IdeaPolicy
@@ -42,7 +42,7 @@ class IdeaPolicy
      */
     public function update(User $user, Idea $idea)
     {
-        return (bool) $user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id;
+        return (bool) $user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id && $idea->estadoIdea->nombre == EstadoIdea::IsRegistro();
     }
 
     /**
@@ -54,7 +54,12 @@ class IdeaPolicy
      */
     public function show(User $user, Idea $idea)
     {
-        return (bool) ($user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id) || ($user->hasAnyRole([User::IsInfocenter()]) && $user->infocenter->nodo_id == $idea->nodo->id) || ($user->hasAnyRole([User::IsArticulador()]) && $user->gestor->nodo_id == $idea->nodo_id);    }
+        if ($idea->talento_id === null) {
+            return (bool) $user->gestor->nodo_id == $idea->nodo_id;
+        } else {
+            return (bool) ($user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id) || ($user->hasAnyRole([User::IsInfocenter()]) && $user->infocenter->nodo_id == $idea->nodo->id) || ($user->hasAnyRole([User::IsArticulador()]) && $user->gestor->nodo_id == $idea->nodo_id);
+        }
+    }
 
     /**
      * Determine whether the user can restore the idea.

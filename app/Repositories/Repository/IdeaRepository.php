@@ -6,9 +6,10 @@ use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Gestor};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use App\Events\Idea\IdeaHasReceived;
+use App\Events\Idea\{IdeaHasReceived, IdeasWasAccepted, IdeasWasRejected};
 use App\User;
-use App\Notifications\Idea\IdeaReceived;
+use App\Notifications\Idea\{IdeaReceived, IdeaAceptadaParaComite};
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class IdeaRepository
 {
@@ -34,6 +35,80 @@ class IdeaRepository
             ->last();
     }
 
+    /**
+     * El articulador aceptó la postulación de una idea de proyecto para que se presente en el comité
+     *
+     * @param Idea $idea Idea que se está aceptando para el comité
+     * @return boolean
+     * @author dum
+     **/
+    public function aceptarPostulacion($idea)
+    {
+        DB::beginTransaction();
+        try {
+            $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsConvocado())->first()->id]);
+            $infocenters = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
+                'infocenter.nodo',
+                function ($query) use ($idea) {
+                    $query->where('id', $idea->nodo_id);
+                }
+            )->get();
+            $emails_infocenter = array();
+            foreach ($infocenters as $key => $infocenter) {
+                $emails_infocenter[$key+1] = $infocenter->email;
+            }
+            event(new IdeasWasAccepted($idea, $infocenters));
+
+            if (!$infocenters->isEmpty()) {
+                Notification::send($infocenters, new IdeaAceptadaParaComite($idea, auth()->user()));
+            }
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    /**
+     * El articulador rechaza la postulación de la idea de proyecto en el nodo
+     *
+     * @param Idea $idea Idea que se está rechazando
+     * @param Request $request
+     * @return boolean
+     * @author dum
+     **/
+    public function rechazarPostulacion(Idea $idea, $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Crea un registro espejo de la idea de proyecto
+            // dd($idea->rutamodel);
+            $espejo = $idea->replicate();
+            $espejo->codigo_idea = $this->generarCodigoIdea($idea->nodo_id);
+            $espejo->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+            // dd($espejo->rutamodel);
+            $espejo->push();
+            if ($idea->rutamodel != null) {
+                $espejo->rutamodel()->create([
+                    'ruta' => $idea->rutamodel->ruta,
+                ]);
+            }
+            // Cambiar el estado de la idea original a rechazado por el articulador
+            $idea->update([
+                'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRechazadoArticulador())->first()->id
+            ]);
+            // Envío de correo al talento y articulador con los motivos de porque se rechazó.
+            event(new IdeasWasRejected($espejo, $request->txtmotivosRechazo));
+
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
     public function consultarIdeasDeProyecto()
     {
         return Idea::with(['estadoIdea', 'nodo', 'nodo.entidad']);
@@ -41,7 +116,6 @@ class IdeaRepository
 
     /**
      * Función que genera el código de una idea de proyecto
-     * @param int $tipo Indica que tipo de idea de proyecto es.
      * @param int $idnodo Indica a que nodo se va a registrar la idea.
      * @return string
      */
@@ -81,7 +155,9 @@ class IdeaRepository
         $viene_convocatoria = 1;
         $convocatoria = $request->input('txtconvocatoria');
         $aval_empresa = 1;
-        $empresa = $request->input('empresa');
+        $empresa = $request->input('txtempresa');
+        $acuerdo_no_confidencialidad = 1;
+        $fecha_acuerdo_no_confidencialidad = Carbon::now();
 
         if ($request->input('txtproducto_parecido') === null) {
             $producto_parecido = 0;
@@ -118,6 +194,11 @@ class IdeaRepository
             $convocatoria = null;
         }
 
+        if ($request->input('txtacuerdo_no_confidencialidad') === null) {
+            $acuerdo_no_confidencialidad = 0;
+            $fecha_acuerdo_no_confidencialidad = null;
+        }
+
         if ($request->input('txtaval_empresa') === null) {
             $aval_empresa = 0;
             $empresa = null;
@@ -139,7 +220,9 @@ class IdeaRepository
             'viene_convocatoria' => $viene_convocatoria,
             'convocatoria' => $convocatoria,
             'aval_empresa' => $aval_empresa,
-            'empresa' => $empresa
+            'empresa' => $empresa,
+            'acuerdo_no_confidencialidad' => $acuerdo_no_confidencialidad,
+            'fecha_acuerdo_no_confidencialidad' => $fecha_acuerdo_no_confidencialidad
         ];
     }
 
@@ -217,19 +300,118 @@ class IdeaRepository
                 "empresa" => $valoresCondicionales['empresa'],
                 "codigo_idea" => $codigo_idea,
                 "tipo_idea" => Idea::IsEmprendedor(),
-                "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsInscrito())->first()->id,
+                "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsRegistro())->first()->id,
                 "talento_id" => auth()->user()->talento->id,
-                "empresa_id" => $empresa_id
+                "empresa_id" => $empresa_id,
+                "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
+                "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad']
             ]);
         
-            $idea->rutamodel()->create([
-                'ruta' => $request->input('txtlinkvideo'),
-            ]);
+            if ($request->input('txtlinkvideo') != null) {
+                $idea->rutamodel()->create([
+                    'ruta' => $request->input('txtlinkvideo'),
+                ]);
+            }
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha registrado exitosamente! Recuerde que aún debe postular su idea para iniciar un proceso de proyecto con tecnoparque',
+                'title' => 'Registro exitoso!',
+                'type' => 'success',
+                'idea' => $idea
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollback();
+            return ['state' => false, 'idea' => null];
+        }
 
+    }
+
+    public function storeAndPostular($request)
+    {
+        DB::beginTransaction();
+        try {
+            $idea = $this->Store($request);
+
+            if ( !$idea['idea']->validarAcuerdoConfidencialidad() ) {
+                return [
+                    'state' => false,
+                    'msg' => 'Para postular la idea al nodo, se debe haber aprobado el acuerdo de no confidencialidad de idea!',
+                    'title' => 'Postulación errónea!',
+                    'type' => 'warning',
+                    'idea' => $idea
+                ];
+            }
+
+
+            if ( !$idea['idea']->validarIdeaEnEstadoRegistro() ) {
+                return [
+                    'state' => false,
+                    'msg' => 'Para postular la idea al nodo, esta debe estar en el estado de "En registro"!',
+                    'title' => 'Postulación errónea!',
+                    'type' => 'warning',
+                    'idea' => $idea
+                ];
+            }
+
+            $enviar = $this->enviarIdeaAlNodo($request, $idea['idea']);
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha postulado al nodo exitosamente!',
+                'title' => 'Postulación exitosa!',
+                'type' => 'success',
+                'idea' => $idea['idea']
+            ];
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha postulado al nodo!',
+                'title' => 'Postulación errónea!',
+                'type' => 'error',
+                'idea' => null
+            ];
+        }
+    }
+
+    public function enviarIdeaAlNodo($request, $idea)
+    {
+        // dd($idea->validarAcuerdoConfidencialidad());
+        // exit();
+        DB::beginTransaction();
+        try {
+            if ( !$idea->validarAcuerdoConfidencialidad() ) {
+                return [
+                    'state' => false,
+                    'msg' => 'Para postular la idea al nodo, se debe haber aprobado el acuerdo de no confidencialidad de idea!',
+                    'title' => 'Postulación errónea!',
+                    'type' => 'warning',
+                    'idea' => $idea
+                ];
+            }
+
+
+            if ( !$idea->validarIdeaEnEstadoRegistro() ) {
+                return [
+                    'state' => false,
+                    'msg' => 'Para postular la idea al nodo, esta debe estar en el estado de "En registro"!',
+                    'title' => 'Postulación errónea!',
+                    'type' => 'warning',
+                    'idea' => $idea
+                ];
+            }
+
+            
+
+            // Cambia el estado de la idea
+            $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsPostulado())->first()->id]);
+            //Enviar correo al talento que inscribió la idea de proyecto
             event(new IdeaHasReceived($idea));
             // Busca los articuladores del nodo
-            $users = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
-                'infocenter.nodo',
+            $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
+                'gestor.nodo',
                 function ($query) use ($idea) {
                     $query->where('id', $idea->nodo_id);
                 }
@@ -238,44 +420,74 @@ class IdeaRepository
             if (!$users->isEmpty()) {
                 Notification::send($users, new IdeaReceived($idea));
             }
-
             DB::commit();
-            return true;
-        } catch (\Throwable $th) {
-            //throw $th;
-            DB::rollback();
-            return false;
-        }
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha postulado al nodo exitosamente!',
+                'title' => 'Postulación exitosa!',
+                'type' => 'success',
+                'idea' => $idea
+            ];
 
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha postulado al nodo!',
+                'title' => 'Postulación errónea!',
+                'type' => 'error',
+                'idea' => null
+            ];
+        }
     }
 
-    // public function enviarIdeaAlNodo($request, $idea)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-            
-    //         // Cambia el estado de la idea
-    //         $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsEnviado())->first()->id]);
-    //         //Enviar correo al talento que inscribió la idea de proyecto
-    //         event(new IdeaHasReceived($idea));
-    //         // Busca los articuladores del nodo
-    //         $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
-    //             'gestor.nodo',
-    //             function ($query) use ($idea) {
-    //                 $query->where('id', $idea->nodo_id);
-    //             }
-    //         )->get();
-    //         // Envia un correo a los articuladores del nodo
-    //         if (!$users->isEmpty()) {
-    //             Notification::send($users, new IdeaReceived($idea));
-    //         }
-    //         DB::commit();
-    //         return true;
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-    //         return false;
-    //     }
-    // }
+    public function updateAndPostular($request, $idea)
+    {
+        DB::beginTransaction();
+        try {
+            $ideaUpdate = $this->Update($request, $idea);
+
+            if ( !$ideaUpdate['idea']->validarAcuerdoConfidencialidad() ) {
+                return [
+                    'state' => false,
+                    'msg' => 'Para postular la idea al nodo, se debe haber aprobado el acuerdo de no confidencialidad de idea!',
+                    'title' => 'Postulación errónea!',
+                    'type' => 'warning',
+                    'idea' => $ideaUpdate
+                ];
+            }
+
+
+            if ( !$ideaUpdate['idea']->validarIdeaEnEstadoRegistro() ) {
+                return [
+                    'state' => false,
+                    'msg' => 'Para postular la idea al nodo, esta debe estar en el estado de "En registro"!',
+                    'title' => 'Postulación errónea!',
+                    'type' => 'warning',
+                    'idea' => $ideaUpdate
+                ];
+            }
+
+            $enviar = $this->enviarIdeaAlNodo($request, $ideaUpdate['idea']);
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha postulado al nodo exitosamente!',
+                'title' => 'Postulación exitosa!',
+                'type' => 'success',
+                'idea' => $ideaUpdate['idea']
+            ];
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha postulado al nodo!',
+                'title' => 'Postulación errónea!',
+                'type' => 'error',
+                'idea' => null
+            ];
+        }
+    }
 
     public function Update($request, $idea)
     {
@@ -346,16 +558,38 @@ class IdeaRepository
                 "convocatoria" => $valoresCondicionales['convocatoria'],
                 "aval_empresa" => $valoresCondicionales['aval_empresa'],
                 "empresa" => $valoresCondicionales['empresa'],
-                "empresa_id" => $empresa_id
+                "empresa_id" => $empresa_id,
+                "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
+                "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad']
             ]);
-            $idea->rutamodel()->update([
-                'ruta' => $request->input('txtlinkvideo'),
-            ]);
+            if ($request->input('txtlinkvideo') != null) {
+                if ($idea->rutamodel == null) {
+                    $idea->rutamodel()->create([
+                        'ruta' => $request->input('txtlinkvideo'),
+                    ]);
+                } else {
+                    $idea->rutamodel()->update([
+                        'ruta' => $request->input('txtlinkvideo'),
+                    ]);
+                }
+            }
             DB::commit();
-            return true;
+            return [
+                'state' => true,
+                'msg' => 'La idea de proyecto ha sido modificada satisfactoriamente! Aunque la idea se ha modificado, debe postularse para que se pueda iniciar el proceso de proyecto con tecnoparque',
+                'title' => 'Modificación exitosa!',
+                'type' => 'success',
+                'idea' => $idea
+            ];
         } catch (\Throwable $th) {
             DB::rollback();
-            return false;
+            return [
+                'state' => false,
+                'msg' => 'La idea de proyecto no se ha modificado!',
+                'title' => 'Modificación errónea!',
+                'type' => 'error',
+                'idea' => null
+            ];
         }
     }
 

@@ -25,10 +25,20 @@
                 </div>
               </div>
               <br/>
-              <form id="frmIdea_Update" action="{{ route('idea.update', $idea) }}" method="POST">
+              <form id="frmIdea_Update" name="frmIdea_Update" action="{{ route('idea.update', $idea) }}" method="POST">
                 {!! method_field('PUT')!!}
               @include('ideas.talento.form_inicio', [
               'btnText' => 'Modificar'])
+              <div class="divider"></div>
+                <center>
+                  <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormularioModificar(event)">
+                    <i class="material-icons right">done_all</i>
+                      Modificar
+                  </button>
+                  <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
+                    <i class="material-icons right">backspace</i>Cancelar
+                  </a>
+                </center>
               </form>
             </div>
           </div>
@@ -36,11 +46,13 @@
       </div>
     </div>
   </div>
+  @include('ideas.modals')
 </main>
 @endsection
 @push('script')
     <script>
       $(document).ready(function () {
+        $('#modalRecordatorioDeRegistroDeIdea').openModal();
         @if($idea->empresa_id != null)
         consultarEmpresaTecnoparque();
         @endif

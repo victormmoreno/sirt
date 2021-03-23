@@ -36,7 +36,7 @@ class NodoHelper
     public static function returnNameNodoUsuario()
     {
 
-        if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
+        if ( (\Session::get('login_role') == User::IsGestor() || \Session::get('login_role') == User::IsArticulador() ) && isset(auth()->user()->gestor->nodo_id)) {
             return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;

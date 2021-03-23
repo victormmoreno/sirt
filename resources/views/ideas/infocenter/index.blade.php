@@ -35,10 +35,6 @@
                       <span class="card-title center-align">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                     </div>
                   </div>
-                  <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                    <a target="_blank" href="{{ route('idea.create') }}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons">add</i> Nueva Idea de Proyecto</a>
-                  </div>
-
                 </div>
                 <div class="divider"></div>
                     <div class="row search-tabs-row search-tabs-header">
@@ -93,9 +89,6 @@
                         <th>Nombre de la Idea</th>
                         <th>Estado</th>
                         <th>Detalles</th>
-                        <th>Editar</th>
-                        <th>Inhabilitar</th>
-                        <th>No aplica</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -106,33 +99,9 @@
             </div>
           </div>
         </div>
-        <div id="modal1" class="modal modal-fixed-footer">
-          <div class="modal-content">
-            <center><h4 id="titulo" class="center-aling"></h4></center>
-            <div class="divider"></div>
-            <div id="detalle_idea"></div>
-          </div>
-          <div class="modal-footer  white-text">
-            <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-          </div>
-        </div>
       </div>
-      <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-            <a href="{{ route('idea.create') }}" target="_blank" class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nueva Idea">
-                <i class="material-icons">lightbulb</i>
-            </a>
-        </div>
     </div>
   </div>
 </main>
-<div id="modal1" class="modal">
-  <div class="modal-content">
-    <center><h4 id="titulo" class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div id="detalle_idea"></div>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
 @endsection
+@include('ideas.modals')

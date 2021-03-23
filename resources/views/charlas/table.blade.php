@@ -8,9 +8,9 @@
       <th>Encargado</th>
       <th>Número de Asistentes</th>
       <th>Detalles</th>
-      @if ( \Session::get('login_role') == App\User::IsInfocenter() )
+      @if ( \Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador() )
         <th>Editar</th>
-        {{-- <th>Inhabilitar</th> --}}
+        
       @endif
       <th>Evidencias</th>
     </tr>

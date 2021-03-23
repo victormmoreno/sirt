@@ -38,8 +38,20 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Proyecto\ProyectoWasntApproved' => [
             'App\Listeners\Proyecto\ProyectoWasntApprovedInPhase',
         ],
+        'App\Events\Proyecto\ProyectoWasApproved' => [
+            'App\Listeners\Proyecto\ProyectoWasApprovedInPhase',
+        ],
+        'App\Events\Proyecto\ProyectoApproveWasRequested' => [
+            'App\Listeners\Proyecto\ProyectoApproveWasRequestedInPhase',
+        ],
         'App\Events\Comite\GestoresWereRegistered' => [
             'App\Listeners\Comite\GestoresWereRegisteredInAgendamiento',
+        ],
+        'App\Events\Idea\IdeasWasAccepted' => [
+            'App\Listeners\Idea\IdeasWasAcceptedToComite',
+        ],
+        'App\Events\Idea\IdeasWasRejected' => [
+            'App\Listeners\Idea\IdeasWasRejectedToComite',
         ],
     ];
 

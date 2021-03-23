@@ -66,7 +66,6 @@
                   <div class="divider"></div>
                   <div class="dropzone"></div>
                   <div class="divider"></div>
-                  <div class="divider"></div>
                   <center>
                     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
                     <a href="{{route('csibt')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>

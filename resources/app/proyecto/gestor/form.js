@@ -210,9 +210,9 @@ function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (empresas) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
-    let idEmpresa = ajax.detalles.id;
-    let codigo = ajax.detalles.nit;
-    let nombre = ajax.detalles.nombre_empresa;
+    let idEmpresa = ajax.empresa.id;
+    let codigo = ajax.empresa.nit;
+    let nombre = ajax.empresa.entidad.nombre;
     let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idEmpresa + '>' + '<td><input type="hidden" name="propietarios_empresas[]" value="' + idEmpresa + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idEmpresa + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
@@ -254,11 +254,11 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
 }
 
 // Pinta el usuario en la tabla de las entidades (empresas) que son dueños de la propiedad intelectual
-function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(id) {
+function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(nit) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/empresa/ajaxDetallesDeUnaEmpresa/' + id
+        url: '/empresa/ajaxDetallesDeUnaEmpresa/' + nit + '/nit' 
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Empresa(ajax);
         $('#propiedadIntelectual_Empresas').append(fila);
@@ -377,12 +377,11 @@ function addPersonaPropiedad(user_id) {
 }
 
 // Método para agregar una empresa como dueño de una propiedad intelectual
-// El id recibido es el id de la tabla empresas
-function addEntidadEmpresa(id) {
-    if (noRepeat_Empresa(id) == false) {
+function addEntidadEmpresa(nit) {
+    if (noRepeat_Empresa(nit) == false) {
         empresaYaSeEncuentraAsociado_Propietario();
     } else {
-        pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(id);
+        pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(nit);
     }
 }
 

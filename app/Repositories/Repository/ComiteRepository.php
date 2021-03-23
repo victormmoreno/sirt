@@ -169,7 +169,9 @@ class ComiteRepository
             ]);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsConvocado())->first()->id]);
             $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
+            $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $comite->ideas()->sync($syncIdeas, true);
+            $comite->gestores()->sync($syncGestores, true);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             DB::commit();
             return true;
@@ -262,8 +264,34 @@ class ComiteRepository
      */
     private function updateEstadoIdeas(Comite $comite, $request)
     {
+        $estado_idea = null;
         foreach ($comite->ideas as $key => $value) {
-            $value->update(['estadoidea_id' => EstadoIdea::where('nombre', $request->get('txtestadoidea')[$key])->first()->id]);
+            $estado_idea = EstadoIdea::where('nombre', $request->get('txtestadoidea')[$key])->first();
+            $value->update(['estadoidea_id' => $estado_idea->id]);
+            if ($estado_idea->nombre == EstadoIdea::IsRechazadoComite()) {
+                $this->espejoIdeasRechazadasComite($value);
+            }
+        }
+    }
+
+    /**
+     *
+     * Espejo cuando la idea se rechaza por parte del comité
+     *
+     * @param Idea $idea
+     * @return void
+     * @author dum
+     **/
+    private function espejoIdeasRechazadasComite($idea)
+    {
+        $espejo = $idea->replicate();
+        $espejo->codigo_idea = $this->getIdeaRepository()->generarCodigoIdea($idea->nodo_id);
+        $espejo->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+        $espejo->push();
+        if ($idea->rutamodel != null) {
+            $espejo->rutamodel()->create([
+                'ruta' => $idea->rutamodel->ruta,
+            ]);
         }
     }
 

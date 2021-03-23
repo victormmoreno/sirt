@@ -11,7 +11,7 @@ class IdeaEnviadaEmprendedor extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $subject = 'Idea Recibida';
+    public $subject = 'Idea Postulada';
     public $idea;
 
     /**

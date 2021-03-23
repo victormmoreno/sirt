@@ -72,7 +72,7 @@
                             <td>{{ $value->pivot->observaciones }}</td>
                             <td>
                                 <label for="txtgestor_id{{$value->id}}">Gestor a cargo <span class="red-text">*</span></label>
-                                <select id="txtgestor_id{{$value->id}}" class="js-states browser-default select2" style="width: 100%;" name="txtgestores[]" onchange="setEstadoIdeaProyecto({{$value->id}})">
+                                <select id="txtgestor_id{{$value->id}}" class="js-states browser-default select2" style="width: 100%;" name="txtgestores[]">
                                     @if ($value->pivot->admitido == 1)
                                         <option value="">Seleccione el gestor a cargo de la idea de proyecto</option>
                                         @foreach($gestores as $id => $nombres_gestor)

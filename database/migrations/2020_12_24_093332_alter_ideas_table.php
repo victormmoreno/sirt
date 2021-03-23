@@ -43,6 +43,16 @@ class AlterIdeasTable extends Migration
             $table->text('cantidad_prototipos', 2100)->nullable()->default(null)->comment('Indica la cantidad y cuales prototipos se necesitan desarrollar con la red tecnoparque.');
             $table->tinyInteger('recursos_necesarios')->nullable()->default(null)->comment('Indica si se dispone de recursos para el desarrollo de los prototipos necesarios?  .');
             $table->text('si_recursos_necesarios', 2100)->nullable()->default(null)->comment('En caso de que recursos_necesarios sea SI(1) se específican los recursos necesarios.');
+
+            $table->unsignedInteger('empresa_id')->nullable();
+
+            $table->index(["empresa_id"], 'fk_empresas_ideas1_idx');
+
+            $table->foreign('empresa_id', 'fk_empresas_ideas1_idx')
+            ->references('id')->on('empresas')
+            ->onDelete('no action')
+            ->onUpdate('no action');
+
         });
     }
 
@@ -54,6 +64,7 @@ class AlterIdeasTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
+            // $table->dropIndex(['fk_empresas_ideas1_idx']);
             $table->dropColumn(['producto_parecido',
             'si_producto_parecido', 'reemplaza',
             'si_reemplaza', 'problema',
@@ -65,7 +76,8 @@ class AlterIdeasTable extends Migration
             'si_requisitos_legales', 'requiere_certificaciones',
             'si_requiere_certificaciones', 'forma_juridica',
             'version_beta', 'cantidad_prototipos',
-            'recursos_necesarios', 'si_recursos_necesarios']);
+            'recursos_necesarios', 'si_recursos_necesarios', 'empresa_id']);
+
         });
     }
 }

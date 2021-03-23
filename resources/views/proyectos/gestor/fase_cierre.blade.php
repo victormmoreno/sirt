@@ -32,18 +32,20 @@
                   </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                  @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
-                  <a href="{{route('proyecto.notificar.cierre', $proyecto->id)}}">
+                  @if ( ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $proyecto->fase->nombre == 'Cierre') || 
+                  ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Cierre') || 
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Cierre') )
+                  <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Cierre'])}}">
                     <div class="card-panel yellow accent-1 black-text">
-                      Solicitar al dinamizador que apruebe la fase de cierre.
+                      Solicitar al talento que apruebe la fase de cierre.
                     </div>
                   </a>
                   @else
-                    <a disabled>
-                      <div class="card-panel yellow accent-1 black-text">
-                        Esta fase ya ha sido aprobada por el dinamizador.
-                      </div>
-                    </a>
+                  <a disabled>
+                    <div class="card-panel yellow accent-1 black-text">
+                      Esta fase ya ha sido aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
+                    </div>
+                  </a>
                   @endif
                 </div>
               </div>

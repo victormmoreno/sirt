@@ -5,7 +5,7 @@ Señor(a)<br>
 <b>_{{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}_</b><br>
 Cordial Saludo.
 <br>
-Se ha enviado este correo para informarte que el dinamizador del nodo no aprobó una fase del proyecto.
+Se ha enviado este correo para informarte que el {{$movimiento->rol}} {{$movimiento->movimiento}} una fase del proyecto.
 <br>
 @component('mail::panel')
 	
@@ -21,6 +21,8 @@ Se ha enviado este correo para informarte que el dinamizador del nodo no aprobó
       <h3 class="subtittle-value">{{$movimiento->fase}}</h3>
       <h3 class="subtittle">Motivos por los que no se aprobó: </h3>
       <h3 class="subtittle-value">{{$movimiento->comentarios}}</h3>
+      <h3 class="subtittle">Persona que NO aprobó la fase: </h3>
+      <h3 class="subtittle-value">{{$movimiento->usuario}} ({{$movimiento->rol}})</h3>
   </center>
 	
 @endcomponent

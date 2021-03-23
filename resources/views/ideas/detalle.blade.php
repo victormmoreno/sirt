@@ -10,7 +10,7 @@
                                     <div class="col s12 m12 l12">
                                         <div class="center">
                                             <span class="mailbox-title">
-                                                Descripción de la idea
+                                                Estado de la idea de proyecto - {{$idea->estadoIdea->nombre}}
                                             </span>
                                         </div>
                                         <div class="divider mailbox-divider"></div>
@@ -22,10 +22,10 @@
                                                         <ul class="collection">
                                                             <li class="collection-item">
                                                                 <span class="title cyan-text text-darken-3">
-                                                                    Código de la idea de proyecto
+                                                                    Código y nombre de la idea de proyecto
                                                                 </span>
                                                                 <p>
-                                                                    {{$idea->codigo_idea}}
+                                                                    {{$idea->codigo_idea}} - {{$idea->nombre_proyecto}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -76,6 +76,81 @@
                                                     </div>
 
                                                 </li>
+                                            </ul>
+                                            <ul class="collection with-header">
+                                                <li class="collection-header"><h5>Usuario que registra la idea</h5></li>
+                                                <li class="collection-item">
+                                                    <div class="col s12 m6 l6">
+                                                        <ul class="collection">
+                                                            <li class="collection-item">
+                                                                <span class="title cyan-text text-darken-3">
+                                                                    Nombres y apellidos
+                                                                </span>
+                                                                <p>
+                                                                    @if (isset($idea->talento->user->nombres))
+                                                                    {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
+                                                                    @else
+                                                                    {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
+                                                                    @endif
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col s12 m6 l6">
+                                                        <ul class="collection">
+                                                            <li class="collection-item">
+                                                                <span class="title cyan-text text-darken-3">
+                                                                    Correo de contacto
+                                                                </span>
+                                                                <p>
+                                                                    @if (isset($idea->talento->user->email))
+                                                                    {{$idea->talento->user->email}}
+                                                                    @else
+                                                                    {{$idea->correo_contacto}}
+                                                                    @endif
+                                                                </p>
+                                                            </li>
+                                                            <li class="collection-item">
+                                                                <span class="title cyan-text text-darken-3">
+                                                                    Número de celular
+                                                                </span>
+                                                                <p>
+                                                                    @if (isset($idea->talento->user->celular))
+                                                                        {{$idea->talento->user->celular}}
+                                                                    @else
+                                                                        {{$idea->telefono_contacto}}                                                                    
+                                                                    @endif
+                                                                </p>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                </li>
+                                            </ul>
+                                            <ul class="collection with-header">
+                                                <li class="collection-header"><h5>Información de la aceptación del acuerdo de no confidencialidad de la idea</h5></li>
+                                                <li class="collection-item">
+                                                    <span class="title cyan-text text-darken-3">
+                                                        ¿El talento aceptó el acuerdo de no confidencialidad de la idea?
+                                                    </span>
+                                                    <p>
+                                                        @if ($idea->acuerdo_no_confidencialidad == 0)
+                                                            No.
+                                                        @else
+                                                            Si.
+                                                        @endif
+                                                    </p>
+                                                </li>
+                                                @if ($idea->acuerdo_no_confidencialidad == 1)
+                                                    <li class="collection-item">
+                                                        <span class="title cyan-text text-darken-3">
+                                                            Fecha en la que aceptó el acuerdo
+                                                        </span>
+                                                        <p>
+                                                            {{$idea->fecha_acuerdo_no_confidencialidad}}
+                                                        </p>
+                                                    </li>
+                                                @endif
                                             </ul>
                                             <ul class="collection with-header">
                                                 <li class="collection-header"><h5>Empresa con la que se registra la idea de proyecto</h5></li>
@@ -287,11 +362,10 @@
                                                                     Link de un video presentado la plataforma
                                                                 </span>
                                                                 <p>
-                                                                    {{$idea->rutamodel->ruta}}
-                                                                    @if ($idea->rutamodel->ruta == null)
+                                                                    @if ($idea->rutamodel == null)
                                                                         No hay información disponible
                                                                     @else
-                                                                        {{$idea->forma_juridica}}
+                                                                        {{$idea->rutamodel->ruta}}
                                                                     @endif    
                                                                 </p>
                                                             </li>
@@ -410,7 +484,7 @@
                                                             </li>
                                                             <li class="collection-item">
                                                                 <span class="title cyan-text text-darken-3">
-                                                                    ¿La idea está avalada por una empresa?
+                                                                    ¿La idea está avalada por una entidad?
                                                                 </span>
                                                                 <p>
                                                                     @if ($idea->aval_empresa == 1)
