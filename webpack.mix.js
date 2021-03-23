@@ -82,7 +82,7 @@ mix.scripts([
     'resources/app/comite/gestor/index.js',
     'resources/app/comite/administrador/index.js',
     'resources/app/empresa/index.js',
-    'resources/app/empresa/form.js',
+    'resources/app/empresa/create.js',
     'resources/app/grupoinvestigacion/index.js',
     'resources/app/user/search.js',
     'resources/app/user/infopersonal.js',
