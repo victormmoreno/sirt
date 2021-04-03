@@ -14,8 +14,8 @@ class IdeasExport extends FatherExport
     public function __construct($query)
     {
         $this->setQuery($query);
-        $this->setCount($this->getQuery()->count() + 7);
-        $this->setRangeHeadingCell('A7:S7');
+        $this->setCount($this->getQuery()->count() + 1);
+        $this->setRangeHeadingCell('A1:S1');
     }
 
     /**
@@ -38,17 +38,12 @@ class IdeasExport extends FatherExport
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $this->mergedCells($event);
                 $this->styledCells($event);
                 $this->setFilters($event);
             },
         ];
     }
 
-    private function mergedCells(AfterSheet $event)
-    {
-        $event->sheet->mergeCells('A1:S6');
-    }
 
     private function styledCells(AfterSheet $event)
     {
@@ -56,7 +51,7 @@ class IdeasExport extends FatherExport
         $init = 'A';
         for ($i = 0; $i < 19; $i++) {
             $temp = $init++;
-            $coordenadas = $temp . '7:' . $temp . $this->getCount();
+            $coordenadas = $temp . '1:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
             if ($i % 2 == 0) {
                 $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArrayColumnsPar());

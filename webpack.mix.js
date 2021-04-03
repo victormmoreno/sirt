@@ -90,6 +90,7 @@ mix.scripts([
     'resources/app/user/tipotalento.js',
     'resources/app/user/create.js',
     'resources/app/user/edit.js',
+    'resources/app/user/change-node-user.js',
     'resources/app/user/index-user.js',
     'resources/app/user/edit-profile.js',
     'resources/app/user/role/roleuser.js',

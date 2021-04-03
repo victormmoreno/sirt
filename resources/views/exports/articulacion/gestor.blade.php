@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <table>
     <thead>
     <tr>

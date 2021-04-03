@@ -1,25 +1,18 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
-    <tr>
-        <th>Código de la Articulación</th>
-        <th>Nombre</th>
-        <th>Tipo de Articulación</th>
-        <th>Articulación con: </th>
-        <th>Fecha de Inicio</th>
-        <th>Fecha de Cierre</th>
-        <th>Nodo</th>
-        <th>Gestor</th>
-        <th>Formato de Confidencialida y Compromiso</th>
-        <th>Acta de Cierre</th>
-        <th>Informe Final de la Asesoria</th>
-    </tr>
+        <tr>
+            <th>Código de la Articulación</th>
+            <th>Nombre</th>
+            <th>Tipo de Articulación</th>
+            <th>Articulación con: </th>
+            <th>Fecha de Inicio</th>
+            <th>Fecha de Cierre</th>
+            <th>Nodo</th>
+            <th>Gestor</th>
+            <th>Formato de Confidencialida y Compromiso</th>
+            <th>Acta de Cierre</th>
+            <th>Informe Final de la Asesoria</th>
+        </tr>
     </thead>
     <tbody>
     @foreach($articulaciones as $value)

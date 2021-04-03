@@ -1,48 +1,110 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
-    <tr>
-        <th>Documento de Identidad</th>
-        <th>Nombres y Apellidos</th>
-        <th>Fecha Nacimiento</th>
-        <th>Correo Electrónico</th>
-        <th>Teléfono</th>
-        <th>Celular</th>
-        <th>Cargo</th>
-    </tr>
+        <tr>
+            <th>Tipo Documento</th>
+            <th>Ciudad de Expedición Documento</th>
+            <th>Número de Documento</th>
+            <th>Nombre Completo</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Correo Electrónico</th>
+            <th>Celular</th>
+            <th>Género</th>
+            <th>Grupo sanguineo</th>
+            <th>Estrato Social</th>
+            <th>Dirección</th>
+            <th>Lugar de residencia</th>
+            <th>Etnia a la que pertenece</th>
+            <th>¿Tiene algún grado de discapacidad?</th>
+            <th>¿Cuál es el grado de discapacidad?</th>
+            <th>Eps</th>
+            <th>Otra eps</th>
+            <th>Grado de escolaridad</th>
+            <th>Institución</th>
+            <th>Título obtenido</th>
+            <th>Fecha de terminación</th>
+            <th>Ocupaciones</th>
+            <th>Extensión</th>
+            <th>Roles</th>
+            <th>Acceso sistema</th>
+        </tr>
     </thead>
     <tbody>
-      @foreach($infocenters as  $infocenter)
-      
+        @foreach($infocenters as  $infocenter)
         <tr>
             <td>
-                {{isset($infocenter) ? $infocenter->user->documento : 'No registra'}}
+                {{$infocenter->user->present()->userTipoDocuento()}}
             </td>
             <td>
-                {{ isset($infocenter) ? $infocenter->user->nombres : ''}} {{isset($infocenter) ? $infocenter->user->apellidos : 'No registra'}}
+                {{$infocenter->user->present()->userLugarExpedicionDocumento()}}
             </td>
             <td>
-                {{isset($infocenter->user->fechanacimiento) ? $infocenter->user->fechanacimiento->isoFormat('LL') : 'No registra'}}
+                {{$infocenter->user->present()->userDocumento()}}
             </td>
             <td>
-                {{isset($infocenter->user->email)? $infocenter->user->email: 'No registra'}}
+                {{$infocenter->user->present()->userFullName()}}
             </td>
             <td>
-                {{!empty($infocenter->user->telefono) ? $infocenter->user->telefono : 'No registra'}}
+                {{$infocenter->user->present()->userFechaNacimiento()}}
             </td>
             <td>
-                {{!empty($infocenter->user->celular) ? $infocenter->user->celular : 'No registra'}}
+                {{$infocenter->user->present()->userEmail()}}
             </td>
-          <td>{{ isset($infocenter) ? $infocenter->user->getRoleNames()->implode(', ') : 'No registra'}}</td>
-          
+            <td>
+                {{isset($infocenter->user->celular) ? $infocenter->user->celular : isset($infocenter->user->telefono) ? $infocenter->user->telefono : 'No registra'}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userGenero()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userGrupoSanguineo()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userEstrato()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userDireccion()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userLugarResidencia()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userEtnia()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userGradoDiscapacidad()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userDescripcionGradoDiscapacidad()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userEps()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userEps()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userOtraEps()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userInstitucion()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userTituloObtenido()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userFechaTerminacion()}}
+            </td>
+            <td>
+                {{$infocenter->user->present()->userOcupacionesNames()}}
+            </td>
+            <td>{{isset($infocenter->user->infocenter)? $infocenter->user->infocenter->extension : 'No registra'}}</td>
+            <td>
+                {{ $infocenter->user->present()->userRolesNames()}}
+            </td>
+            <td>
+                {{ $infocenter->user->present()->userAcceso()}}
+            </td>
         </tr>
-       
-      @endforeach
+        @endforeach
     </tbody>
 </table>

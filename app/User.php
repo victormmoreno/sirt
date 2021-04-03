@@ -438,6 +438,45 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
+    public function isUserAdministrador(): bool
+    {
+        return (bool) $this->hasRole(User::IsAdministrador());
+    }
+
+    public function isUserDinamizador(): bool
+    {
+        return (bool) $this->hasRole(User::IsDinamizador()) && $this->dinamizador() != null;
+    }
+
+    public function isUserExperto(): bool
+    {
+        return (bool) $this->hasRole(User::IsGestor()) && $this->gestor() != null;
+    }
+
+    public function isUserArticulador(): bool
+    {
+        return (bool) $this->hasRole(User::IsArticulador()) && $this->gestor() != null;
+    }
+
+    public function isUserIngreso(): bool
+    {
+        return (bool) $this->hasRole(User::IsIngreso()) && $this->ingreso() != null;
+    }
+    public function isUserInfocenter(): bool
+    {
+        return (bool) $this->hasRole(User::IsInfocenter()) && $this->infocenter() != null;
+    }
+
+    public function isUserTalento(): bool
+    {
+        return (bool) $this->hasRole(User::IsTalento()) && $this->talento() != null;
+    }
+
+    public function isAuthUser(): bool
+    {
+        return (bool) $this->documento == \Auth::user()->documento;
+    }
+
 
     public function present()
     {

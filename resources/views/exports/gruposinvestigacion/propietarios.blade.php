@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -19,17 +12,17 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($grupos as $value)
-        <tr>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->codigo_grupo }}</td>
-          <td>{{ $value->nombre_grupo }}</td>
-          <td>{{ $value->tipogrupo }}</td>
-          <td>{{ $value->institucion }}</td>
-          <td>{{ $value->nombre_clasificacion }}</td>
-          <td>{{ $value->email_entidad }}</td>
-          <td>{{ $value->ciudad }}</td>
-        </tr>
-      @endforeach
+        @foreach($grupos as $value)
+            <tr>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->codigo_grupo }}</td>
+            <td>{{ $value->nombre_grupo }}</td>
+            <td>{{ $value->tipogrupo }}</td>
+            <td>{{ $value->institucion }}</td>
+            <td>{{ $value->nombre_clasificacion }}</td>
+            <td>{{ $value->email_entidad }}</td>
+            <td>{{ $value->ciudad }}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
