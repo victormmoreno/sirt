@@ -95,16 +95,12 @@
                                                                 {{ $lineatecnologicas->links() }}
                                                             </div>
                                                         @endif
-
-
                                                         <ul class="collection with-header">
                                                             <li class="collection-header center">
                                                                 <h5 class=" orange-text text-darken-3"><b>Equipos ({{$nodo->equipos->count()}})</b></h5>
                                                             </li>
-
                                                             @forelse($equipos as $value)
                                                                 <li class="collection-item">
-
                                                                     <span class="title">
                                                                         {{$value->nombre}}
                                                                     </span>
@@ -114,14 +110,14 @@
                                                                 </li>
                                                             @empty
                                                             <div class="center">
-                                                               <i class="large material-icons center">
+                                                                <i class="large material-icons center">
                                                                     block
                                                                 </i>
                                                                 <p class="center-align">No tienes equipos registrados aún.</p>
                                                             </div>
                                                             @endforelse
                                                         </ul>
-                                                         @if(isset($equipos))
+                                                        @if(isset($equipos))
                                                             <div class="center">
                                                                 {{ $equipos->links() }}
                                                             </div>
@@ -285,9 +281,6 @@
                                                             </div>
                                                     </div>
 
-                                            </div>
-
-                                            <div class="divider mailbox-divider">
                                             </div>
                                         </div>
                                     </div>

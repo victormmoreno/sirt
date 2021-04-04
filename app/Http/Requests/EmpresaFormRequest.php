@@ -24,8 +24,8 @@ class EmpresaFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtnit_empresa' => 'required|numeric|digits_between:9,13|unique:empresas,nit,' . $this->route('id'),
-            'txtcodigo_ciiu_empresa' => 'max:15|required',
+            'txtnit_empresa' => 'required|numeric|digits_between:9,9|unique:empresas,nit,' . request()->route('id'),
+            'txtcodigo_ciiu_empresa' => 'max:15|nullable',
             'txtnombre_empresa' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
             'txtfecha_creacion_empresa' => 'date_format:Y-m-d|nullable',
             'txtsector_empresa' => 'required',

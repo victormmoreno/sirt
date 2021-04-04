@@ -75,7 +75,7 @@ class IndicadorController extends Controller
       $queryTalentosPropietarios = $this->getTalentoRepository()->talentosPropietarios($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
     }
 
-    return Excel::download(new Indicadores2020Export($query, $queryTalentos, $queryArticulacion, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios), 'Indicadores.xls');
+    return Excel::download(new Indicadores2020Export($query, $queryTalentos, $queryArticulacion, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios), 'Indicadores.xlsx');
   }
 
   private function setEmpresaRepository($empresaRepository)

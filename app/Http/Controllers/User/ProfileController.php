@@ -155,6 +155,7 @@ class ProfileController extends Controller
 
     public function downloadCertificatedPlataform($extennsion = '.pdf', $orientacion = 'portrait')
     {
+        $user = User::withTrashed()->where('documento', auth()->user()->documento)->firstOrFail();
         $this->authorize('downloadCertificatedPlataform', User::class);
 
 

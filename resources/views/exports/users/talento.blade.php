@@ -1,40 +1,33 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
-    <tr>
-        <th>Tipo Documento</th>
-        <th>Ciudad de Expedición Documento</th>
-        <th>Número de Documento</th>
-        <th>Nombre Completo</th>
-        <th>Fecha de Nacimiento</th>
-        <th>Correo Electrónico</th>
-        <th>Celular</th>
-        <th>Género</th>
-        <th>Grupo sanguineo</th>
-        <th>Estrato Social</th>
-        <th>Dirección</th>
-        <th>Lugar de residencia</th>
-        <th>Etnia a la que pertenece</th>
-        <th>¿Tiene algún grado de discapacidad?</th>
-        <th>¿Cuál es el grado de discapacidad?</th>
-        <th>Eps</th>
-        <th>Otra eps</th>
-        <th>Grado de escolaridad</th>
-        <th>Institución</th>
-        <th>Título obtenido</th>
-        <th>Fecha de terminación</th>
-        <th>Ocupaciones</th>
-        <th>Tipo Talento</th>
-        <th>Información Talento</th>
-        <th>Roles</th>
-        <th>Acceso sistema</th>
-    </tr>
+        <tr>
+            <th>Tipo Documento</th>
+            <th>Ciudad de Expedición Documento</th>
+            <th>Número de Documento</th>
+            <th>Nombre Completo</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Correo Electrónico</th>
+            <th>Celular</th>
+            <th>Género</th>
+            <th>Grupo sanguineo</th>
+            <th>Estrato Social</th>
+            <th>Dirección</th>
+            <th>Lugar de residencia</th>
+            <th>Etnia a la que pertenece</th>
+            <th>¿Tiene algún grado de discapacidad?</th>
+            <th>¿Cuál es el grado de discapacidad?</th>
+            <th>Eps</th>
+            <th>Otra eps</th>
+            <th>Grado de escolaridad</th>
+            <th>Institución</th>
+            <th>Título obtenido</th>
+            <th>Fecha de terminación</th>
+            <th>Ocupaciones</th>
+            <th>Tipo Talento</th>
+            <th>Información Talento</th>
+            <th>Roles</th>
+            <th>Acceso sistema</th>
+        </tr>
     </thead>
     <tbody>
         @forelse($users as $user)
@@ -52,7 +45,10 @@
                 {{$user->present()->userDocumento()}}
             </td>
             <td>
-                {{$user->present()->userFechaNacimiento()}} 
+                {{$user->present()->userFullName()}}
+            </td>
+            <td>
+                {{$user->present()->userFechaNacimiento()}}
             </td>
             <td>
                 {{$user->present()->userEmail()}}
@@ -120,7 +116,6 @@
         </tr>
     @empty
             No se encontraron resultados
-        
-      @endforelse
+    @endforelse
     </tbody>
 </table>

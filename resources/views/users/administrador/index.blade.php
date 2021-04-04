@@ -61,12 +61,13 @@
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                 <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
-                                    {{-- <option value="all" >todos</option> --}}
+                                    
                                     @forelse($nodos as $id => $name)
                                         <option value="{{$id}}">{{$name}}</option>
                                     @empty
                                         <option>No se encontraron Resultados</option>
                                     @endforelse
+                                    <option value="all" >todos</option>
                                 </select>
                             </div>
                             @endif
@@ -89,7 +90,7 @@
                             </div>
                             <div class="col s12 m8 l4 offset-s6 offset-m6 right">
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
-                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_user"><i class="material-icons">search</i>Buscar</button>
+                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_user"><i class="material-icons">search</i>Filtrar</button>
                             </div>
                         </div>
                         <table id="users_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">

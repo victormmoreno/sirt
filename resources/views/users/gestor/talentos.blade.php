@@ -44,7 +44,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </div> 
+                                </div>
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <span class="card-title hand-of-Sean-fonts orange-text text-darken-3">Mis talentos</span>
@@ -83,7 +83,7 @@
 
                                 <div class="col s12 m6 l4 offset-m3 right">
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_talentos"><i class="material-icons">cloud_download</i>Descargar</button>
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_talentos"><i class="material-icons">search</i>Buscar</button>
+                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_talentos"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table id="mytalento_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">

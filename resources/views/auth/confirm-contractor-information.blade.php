@@ -73,41 +73,42 @@
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
                                                     <div class="row">
+                                                        
                                                         <div class="col s12 m3 l3">
                                                             <div class="col s12 m12 l12">
-                                                                <ul class="collection with-header">
-                                                                    <li class="collection-header center"><h6><b>Roles</b></h6></li>
-
-                                                                    @forelse($roles as  $name)
-                                                                        <li class="collection-item">
-                                                                            <p class="p-v-xs">
-                                                                                @switch( \Session::get('login_role'))
-                                                                                    @case(App\User::IsAdministrador())
-                                                                                        @if(isset($user))
-                                                                                            <input type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                        @else
-                                                                                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                        @endif
-                                                                                    @break
-                                                                                    @case(App\User::IsDinamizador())
-                                                                                        @if(isset($user))
-                                                                                            <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                        @else
-                                                                                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
-                                                                                        @endif
-                                                                                    @break
-
-                                                                                    @default
-                                                                                    @break
-                                                                                @endswitch
-
-                                                                                <label for="test-{{$name}}">{{$name}}</label>
-                                                                            </p>
-                                                                        </li>
-                                                                    @empty
-                                                                    <p>No tienes roles asignados</p>
-                                                                    @endforelse
-                                                                </ul>
+                                                                @forelse($roles as  $name)
+                                                                    <p class="p-v-xs">
+                                                                        @switch( \Session::get('login_role'))
+                                                                            @case(App\User::IsAdministrador())
+                                                                                @if(isset($user))
+                                                                                    <input class="filled-in" type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                                @else
+                                                                                    <input class="filled-in" type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                                @endif
+                                                                            @break
+                                                                            @case(App\User::IsDinamizador())
+                                                                                @if(isset($user))
+                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                                @else
+                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
+                                                                                @endif
+                                                                            @break
+                                                                            @case(App\User::IsGestor())
+                                                                                @if(isset($user))
+                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name != App\User::IsTalento() ? 'onclick=this.checked=!this.checked;': '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                                @else
+                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name != App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
+                                                                                @endif
+                                                                            @break
+                                                                            @default
+                                                                            @break
+                                                                        @endswitch
+            
+                                                                        <label for="test-{{$name}}">{{$name}}</label>
+                                                                    </p>   
+                                                                @empty
+                                                                    <p class="p-v-xs">No tienes roles asignados</p>
+                                                                @endforelse
                                                                 @error('role')
                                                                     <div class="center">
                                                                         <label class="red-text error">{{ $message }}</label>
@@ -117,8 +118,6 @@
                                                             </div>
                                                         </div>
                                                         <div class="col s12 m9 l9 ">
-
-
                                                             @if(session()->has('status') || session()->has('error'))
                                                                 <div class="center">
                                                                     <div class="card  {{session('status') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
@@ -134,7 +133,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
+            
                                                             @endif
                                                             <div class="row">
                                                                 <div class="input-field col s12 m12 l12 valign-wrapper selectRole" style="display:block">
@@ -147,7 +146,7 @@
                                                                         <div class="card-content">
                                                                             <span class="card-title activator grey-text text-darken-4 center-align">Información Dinamizador</span>
                                                                             <div class="input-field col s12 m12 l12">
-
+            
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
                                                                                 " tabindex="-1">
                                                                                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
@@ -162,7 +161,6 @@
                                                                                     @else
                                                                                         @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
                                                                                             <option value="{{$user->dinamizador->nodo->id}}" selected>Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}</option>
-
                                                                                         @endif
                                                                                     @endif
                                                                                 </select>
@@ -170,10 +168,9 @@
                                                                                 <small id="txtnododinamizador-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
-
                                                                     </div>
                                                                 </div>
-                                                                <div id="gestor" class="input-field col s12 m6 l6 offset-l3 offset-m3">
+                                                                <div id="gestor" class="input-field col s12 m12 l6 offset-l3">
                                                                     <div  class="card mailbox-content">
                                                                         <div class="card-content">
                                                                             <span class="gestorarticulador card-title activator grey-text text-darken-4 center-align">Información Gestor</span>
@@ -199,8 +196,8 @@
                                                                                 <label for="txtnodogestor" class="active">Nodo Gestor<span class="red-text">*</span></label>
                                                                                 <small id="txtnodogestor-error" class="error red-text"></small>
                                                                             </div>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible" id="txtlinea" name="txtlinea" style="width: 100%" tabindex="-1">
+                                                                            <div class="input-field col s12 m12 l12 linea">
+                                                                                <select class="js-states browser-default select2" id="txtlinea" name="txtlinea" style="width: 100%" tabindex="-1">
                                                                                     @if(isset($user->gestor->lineatecnologica->id) && session()->get('login_role') == App\User::IsGestor() && collect($user->roles)->contains('name',App\User::IsGestor()))
                                                                                     <option value="{{$user->gestor->lineatecnologica->id}}" selected>{{$user->gestor->lineatecnologica->nombre}}</option>
                                                                                     @else
@@ -217,9 +214,7 @@
                                                                                 <small id="txtlinea-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m12 l12">
-                                                                                <i class="material-icons prefix">
-                                                                                    attach_money
-                                                                                </i>
+                                                                                
                                                                                 <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
                                                                                 <label for="txthonorario">Honorario <span class="red-text">*</span></label>
                                                                                 <small id="txthonorario-error" class="error red-text"></small>
@@ -227,7 +222,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div id="infocenter" class="input-field col s12 m6 l6 offset-l3 offset-m3">
+                                                                <div id="infocenter" class="input-field col s12 m12 l6 offset-l3">
                                                                     <div  class="card mailbox-content">
                                                                         <div class="card-content">
                                                                             <span class="card-title activator grey-text text-darken-4 center-align">Información Infocenter</span>
@@ -254,7 +249,7 @@
                                                                                         @endif
                                                                                 </select>
                                                                                 <label for="txtnodoinfocenter" class="active">Nodo Infocenter<span class="red-text">*</span></label>
-
+            
                                                                                 <small id="txtnodoinfocenter-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m12 l12">
@@ -266,7 +261,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div id="ingreso" class="input-field col s12 m6 l6 offset-l3 offset-m3">
+                                                            <div id="ingreso" class="input-field col s12 m12 l6 offset-l3">
                                                                 <div  class="card mailbox-content">
                                                                     <div class="card-content">
                                                                         <span class="card-title activator grey-text text-darken-4 center-align">Información Ingreso</span>
@@ -503,18 +498,20 @@
 @push('script')
 <script>
 $(document).ready(function() {
-
     roles.getRoleSeleted();
     @if(isset($user->talento->tipotalento->id))
-    tipoTalento.getSelectTipoTalento('{{$user->talento->tipotalento->id}}');
+        tipoTalento.getSelectTipoTalento('{{$user->talento->tipotalento->id}}');
     @endif
-
-
+    @if(isset($user->talento->entidad))
+        tipoTalento.getCentroFormacionAprendiz();
+        tipoTalento.getCentroFormacionEgresadoSena();
+        tipoTalento.getCentroFormacionFuncionarioSena();
+        tipoTalento.getCentroFormacionInstructorSena();
+    @endif
+    @if(isset($user->gestor->nodo->lineas->id))
+        linea.getSelectLineaForNodo();
+    @endif
 });
-
-
-
-
 
 var roles = {
     getRoleSeleted:function (idrol) {
@@ -559,9 +556,7 @@ var roles = {
                 $("#txtextension").val();
             @endif
             $("#txtnodoinfocenter").material_select();
-
         }
-
         if($('#ingreso').css('display') === 'block')
         {
             @if($errors->any())
@@ -571,7 +566,6 @@ var roles = {
             @endif
             $("#txtnodoingreso").material_select();
         }
-
         if ($('#section-talento').css('display') === 'block') {
             $("#txtperfil").val();
             $("#txtperfil").material_select();
@@ -591,7 +585,6 @@ var roles = {
             $('#otroTipoTalento').hide();
             $('.investigador').hide();
         }
-
         $('#dinamizador').hide();
         $('#gestor').hide();
         $('#infocenter').hide();
@@ -613,17 +606,24 @@ var roles = {
                 $("label[for*='txthonorario']").html("Honorario gestor");
                 $('#test-Articulador').prop('checked', false);
                 $('#test-Gestor').prop('checked', true);
+                $('.linea').show();
                 $('#gestor').show();
             }else if($(this).val() == '{{App\User::IsArticulador()}}'){
                 roles.hideSelectRole();
                 $('#gestor').hide();
+                $('#txtlinea').material_select('destroy');
                 $("label[for*='txtnodogestor']").html("Nodo Articulador");
                 $("span[class*='gestorarticulador']").html("Información Articulador");
+                $("label[for*='txtlinea']").hide();
+                $("#txtlinea").val(1);
+                
                 $("label[for*='txtlinea']").html("Línea Articulador");
                 $("label[for*='txthonorario']").html("Honorario Articulador");
                 $('#test-Articulador').prop('checked', true);
                 $('#test-Gestor').prop('checked', false);
-                $('#gestor').show()
+                $('#gestor').show();
+                $('.linea').hide();
+                
             }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
                 roles.hideSelectRole();
                 $('#infocenter').show();
@@ -636,12 +636,7 @@ var roles = {
             }else{
                 roles.showSelectRole();
             }
-
-
-
         });
-
-
     },
     hideSelectRole: function(){
         $(".selectRole").css("display", "none");
@@ -650,7 +645,6 @@ var roles = {
         $(".selectRole").css("display", "block");
     }
 };
-
 var linea = {
     getSelectLineaForNodo:function(){
         let nodo = $('#txtnodogestor').val();
@@ -659,41 +653,36 @@ var linea = {
             type:'get',
             url:'/lineas/getlineasnodo/'+nodo
         }).done(function(response){
-
-        $('#txtlinea').empty();
-        if (response.lineasForNodo.lineas == '') {
-            $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
-        }else{
-
-            $('#txtlinea').append('<option value="">Seleccione la linea</option>');
-
-            $.each(response.lineasForNodo.lineas, function(i, e) {
-                $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-            });
-            @if($errors->any())
-                $('#txtlinea').val("{{old('txtlinea')}}");
-            @endif
-        }
+            $('#txtlinea').empty();
+            if (response.lineasForNodo.lineas == '') {
+                $('#txtlinea').append('<option value="">No hay lineas disponibles</option>');
+            }else{
+                $('#txtlinea').append('<option value="">Seleccione la linea</option>');
+                $.each(response.lineasForNodo.lineas, function(i, e) {
+                    $('#txtlinea').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+                    @if(isset($user->gestor))
+                        $('#txtlinea').select2('val','{{$user->gestor->lineatecnologica_id}}');
+                    @endif
+                });
+                
+                @if($errors->any())
+                    $('#txtlinea').val("{{old('txtlinea')}}");
+                @endif
+            }
             $('#txtlinea').material_select();
         });
     },
-
 }
-
 var tipoTalento = {
     getSelectTipoTalento:function (idtipotalento) {
         let valor = $(idtipotalento).val();
         let nombretipotalento = $("#txttipotalento option:selected").text();
-
         if((nombretipotalento == '{{App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO }}' ||
-             nombretipotalento == '{{App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO }}') ){
-
+            nombretipotalento == '{{App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO }}') ){
             tipoTalento.showAprendizSena();
         }else if(nombretipotalento == '{{App\Models\TipoTalento::IS_EGRESADO_SENA }}' ){
-
             tipoTalento.showEgresadoSena();
         }
-
         else if(nombretipotalento == '{{App\Models\TipoTalento::IS_INSTRUCTOR_SENA }}' ){
             tipoTalento.showInstructorSena();
         }
@@ -726,9 +715,6 @@ var tipoTalento = {
         tipoTalento.hideUniversitario();
         tipoTalento.hideFuncionarioEmpresa();
         $(".aprendizSena").css("display", "block");
-
-
-
     },
     showEgresadoSena: function(){
         tipoTalento.hideSelectTipoTalento();
@@ -796,7 +782,6 @@ var tipoTalento = {
             <h5> Seleccionaste Emprendedor</h5>
         </div>`);
     },
-
     showUniversitario: function(){
         tipoTalento.hideSelectTipoTalento();
         tipoTalento.hideAprendizSena();
@@ -819,12 +804,9 @@ var tipoTalento = {
         tipoTalento.hideUniversitario();
         tipoTalento.hideEmprendedor();
         $(".funcionarioEmpresa").css("display", "block");
-
     },
-
     hideAprendizSena: function(){
         $(".aprendizSena").css("display", "none");
-
     },
     hideEgresadoSena: function(){
         $(".egresadoSena").hide();
@@ -832,7 +814,6 @@ var tipoTalento = {
     },
     hideInstructorSena: function(){
         $(".instructorSena").css("display", "none");
-
     },
     hideFuncionarioSena: function(){
         $(".funcionarioSena").css("display", "none");
@@ -842,20 +823,15 @@ var tipoTalento = {
         $(".selecttipotalento").css("display", "none");
     },
     hidePropietarioEmpresa: function(){
-
         $(".otherUser").css("display", "none");
     },
     hideUniversitario: function(){
-
         $(".universitario").css("display", "none");
     },
     hideFuncionarioEmpresa: function(){
-
         $(".funcionarioEmpresa").css("display", "none");
     },
-
     hideEmprendedor: function(){
-
         $(".otherUser").css("display", "none");
     },
     ShowSelectTipoTalento: function(){
@@ -877,18 +853,13 @@ var tipoTalento = {
 
                 @endif
             @else
-
             $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
             $.each(response.centros, function(id, nombre) {
                 $('#txtcentroformacion_aprendiz').append('<option  value="'+id+'">'+nombre+'</option>');
                 @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_aprendiz').select2('val','{{$user->talento->entidad->id}}');
-
                 @endif
-
-
                 $('#txtcentroformacion_aprendiz').material_select();
-
             });
             @endif
         });
@@ -904,12 +875,10 @@ var tipoTalento = {
             $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
             $.each(response.centros, function(id, nombre) {
                 $('#txtcentroformacion_egresado').append('<option  value="'+id+'">'+nombre+'</option>');
-
                 @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_egresado').select2('val','{{$user->talento->entidad->id}}');
                     @endif
                 $('#txtcentroformacion_egresado').material_select();
-
             });
         });
     },
@@ -928,7 +897,6 @@ var tipoTalento = {
                     $('#txtcentroformacion_funcionarioSena').select2('val','{{$user->talento->entidad->id}}');
                     @endif
                 $('#txtcentroformacion_funcionarioSena').material_select();
-
             });
         });
     },
@@ -942,25 +910,14 @@ var tipoTalento = {
             $('#txtcentroformacion_instructorSena').empty();
             $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')
             $.each(response.centros, function(id, nombre) {
-
-                    $('#txtcentroformacion_instructorSena').append('<option value="'+id+'">'+nombre+'</option>');
-
-                    @if(isset($user->talento->entidad))
+                $('#txtcentroformacion_instructorSena').append('<option value="'+id+'">'+nombre+'</option>');
+                @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_instructorSena').select2('val','{{$user->talento->entidad->id}}');
-
-                    @endif
-
-
+                @endif
                 $('#txtcentroformacion_instructorSena').material_select();
             });
-
         });
     },
-
 }
-
-
 </script>
 @endpush
-
-

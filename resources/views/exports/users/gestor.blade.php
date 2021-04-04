@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -44,86 +37,82 @@
                 {{isset($user->gestor->nodo->entidad)? $user->gestor->nodo->entidad->nombre : 'No registra'}}
             </td>
             <td>
-                {{isset($user->gestor->lineatecnologica)? "{$user->gestor->lineatecnologica->abreviatura} - {$user->gestor->lineatecnologica->nombre}" : 'No registra'}}
+                {{$gestor->user->present()->userTipoDocuento()}}
             </td>
             <td>
-                {{isset($user->tipodocumento)? $user->tipodocumento->nombre : 'No registra'}}
+                {{$gestor->user->present()->userLugarExpedicionDocumento()}}
             </td>
             <td>
-                {{!empty($user->ciudadexpedicion) ? "{$user->ciudadexpedicion->nombre} ({$user->ciudadexpedicion->departamento->nombre})" : 'No registra'}}
+                {{$gestor->user->present()->userDocumento()}}
             </td>
             <td>
-                {{isset($user->documento) ? $user->documento : 'No registra'}}
+                {{$gestor->user->present()->userFullName()}}
             </td>
             <td>
-                {{isset($user->nombres) && isset($user->apellidos)   ? "{$user->nombres} {$user->apellidos}": 'No Registra'}}
+                {{$gestor->user->present()->userFechaNacimiento()}}
             </td>
             <td>
-                {{isset($user->fechanacimiento) ?  $user->fechanacimiento->isoFormat('LL'): 'No registra'}} 
+                {{$gestor->user->present()->userEmail()}}
             </td>
             <td>
-                {{isset($user->email)? $user->email: 'No registra'}}
+                {{isset($gestor->user->celular) ? $gestor->user->celular : isset($gestor->user->telefono) ? $gestor->user->telefono : 'No registra'}}
             </td>
             <td>
-                {{isset($user->celular) ? $user->celular : isset($user->telefono) ? $user->telefono : 'No registra'}}
+                {{$gestor->user->present()->userGenero()}}
             </td>
             <td>
-                {{$user->genero == App\User::IsMasculino() ? 'Masculino' : 'Femenino'}}
+                {{$gestor->user->present()->userGrupoSanguineo()}}
             </td>
             <td>
-                {{!empty($user->grupoSanguineo) ? $user->grupoSanguineo->nombre : 'No registra'}}
+                {{$gestor->user->present()->userEstrato()}}
             </td>
             <td>
-                {{!empty($user->estrato) ? $user->estrato : 'No registra'}}
+                {{$gestor->user->present()->userDireccion()}}
             </td>
             <td>
-                {{!empty($user->direccion) ? $user->direccion : 'No registra'}}
+                {{$gestor->user->present()->userLugarResidencia()}}
             </td>
             <td>
-                {{!empty($user->ciudad) ? "{$user->ciudad->nombre} ({$user->ciudad->departamento->nombre})" : 'No registra'}}
+                {{$gestor->user->present()->userEtnia()}}
             </td>
             <td>
-                {{!empty($user->etnia) ? $user->etnia->nombre : 'No registra'}}
+                {{$gestor->user->present()->userGradoDiscapacidad()}}
             </td>
             <td>
-                {{isset($user->grado_discapacidad)  && $user->grado_discapacidad == 1 ? 'SI' : 'No '}}
+                {{$gestor->user->present()->userDescripcionGradoDiscapacidad()}}
             </td>
             <td>
-                {{isset($user->descripcion_grado_discapacidad) && $user->grado_discapacidad == 1 ? $user->descripcion_grado_discapacidad : 'No registra'}}
+                {{$gestor->user->present()->userEps()}}
             </td>
             <td>
-                {{isset($user->eps) ? $user->eps->nombre : 'No registra'}}
+                {{$gestor->user->present()->userEps()}}
             </td>
             <td>
-                {{!empty($user->otra_eps) ? $user->otra_eps : 'No Aplica'}}
+                {{$gestor->user->present()->userOtraEps()}}
             </td>
             <td>
-                {{isset($user->gradoEscolaridad) ? $user->gradoEscolaridad->nombre : 'No registra'}}
+                {{$gestor->user->present()->userInstitucion()}}
             </td>
             <td>
-                {{!empty($user->institucion) ? $user->institucion : 'No registra'}}
+                {{$gestor->user->present()->userTituloObtenido()}}
             </td>
             <td>
-                {{!empty($user->titulo_obtenido) ? $user->titulo_obtenido : 'No registra'}}
+                {{$gestor->user->present()->userFechaTerminacion()}}
             </td>
             <td>
-                {{!empty($user->fecha_terminacion) ? $user->fecha_terminacion->isoFormat('LL') : 'No registra'}}
+                {{$gestor->user->present()->userOcupacionesNames()}}
+            </td>
+            <td>{{ isset($gestor) ? $gestor->lineatecnologica->abreviatura : ''}} - {{ isset($gestor) ? $gestor->lineatecnologica->nombre : 'No registra'}}</td>
+            <td>$ {{isset($gestor->honorarios) ? number_format($gestor->honorarios) : 0}}</td>
+            <td>
+                {{ $gestor->user->present()->userRolesNames()}}
             </td>
             <td>
-                {{$user->getOcupacionesNames()->implode(', ') ? : 'No registra'}}
-            </td>
-            <td>
-                {{isset($user->gestor)? "$ {$user->gestor->honorarios}" : 'No registra'}}
-            </td>
-            <td>
-                {{ $user->getRoleNames()->implode(', ') ? : 'No registra'}}
-            </td>
-            <td>
-                {{ $user->estado == App\User::IsActive() && $user->deleted_at == null ? 'Habilitado' : 'Inhabilitado'}}
+                {{ $gestor->user->present()->userAcceso()}}
             </td>
         </tr>
-    @empty
-        No se encontraron resultados  
-    @endforelse
+        @empty
+            No se encontraron resultados
+        @endforelse
     </tbody>
 </table>

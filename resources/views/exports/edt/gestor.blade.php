@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -26,25 +19,24 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($edts as $value)
+        @foreach($edts as $value)
         <tr>
-          <td>{{ $value->codigo_edt }}</td>
-          <td>{{ $value->nombre }}</td>
-          <td>{{ $value->tipo_edt }}</td>
-          <td>{{ $value->area_conocimiento }}</td>
-          <td>{{ $value->fecha_inicio }}</td>
-          <td>{{ $value->fecha_cierre }}</td>
-          <td>{{ $value->gestor }}</td>
-          <td>{{ $value->empresas }}</td>
-          <td>{{ $value->empleados }}</td>
-          <td>{{ $value->instructores }}</td>
-          <td>{{ $value->aprendices }}</td>
-          <td>{{ $value->publico }}</td>
-          <td>{{ $value->fotografias == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->listado_asistencia == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->informe_final == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->codigo_edt }}</td>
+            <td>{{ $value->nombre }}</td>
+            <td>{{ $value->tipo_edt }}</td>
+            <td>{{ $value->area_conocimiento }}</td>
+            <td>{{ $value->fecha_inicio }}</td>
+            <td>{{ $value->fecha_cierre }}</td>
+            <td>{{ $value->gestor }}</td>
+            <td>{{ $value->empresas }}</td>
+            <td>{{ $value->empleados }}</td>
+            <td>{{ $value->instructores }}</td>
+            <td>{{ $value->aprendices }}</td>
+            <td>{{ $value->publico }}</td>
+            <td>{{ $value->fotografias == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->listado_asistencia == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->informe_final == 1 ? 'Si' : 'No' }}</td>
         </tr>
-      @endforeach
-
+        @endforeach
     </tbody>
 </table>

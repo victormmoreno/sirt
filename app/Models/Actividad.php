@@ -135,4 +135,17 @@ class Actividad extends Model
       return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
     }
 
+    public function scopeActivitiesGestor($query)
+    {
+        return $query->with(['articulacion_proyecto.proyecto', 'articulacion_proyecto.articulacion'])
+        ->wherehas('articulacion_proyecto.proyecto', function ($query)  {
+            $query->where(function($subquery){
+                $subquery->where('fase_id', Fase::IsInicio())
+                ->orwhere('fase_id', Fase::IsPlaneacion())
+                ->orwhere('fase_id', Fase::IsEjecucion());
+            });
+        })
+        ->orderBy('fecha_inicio', 'ASC')->pluck('nombre','codigo_actividad');
+    }
+
 }

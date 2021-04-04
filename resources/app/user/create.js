@@ -56,22 +56,22 @@ $(document).on('submit', 'form#formRegisterUser', function (event) {
   });
 
 var createUser = {
-  printErroresFormulario: function (data){
-    if (data.state == 'error_form') {
-      let errores = "";
-      for (control in data.errors) {
-          errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-          $('#' + control + '-error').html(data.errors[control]);
-          $('#' + control + '-error').show();
-      }
-      Swal.fire({
-          title: 'Advertencia!',
-          html: 'Estas ingresando mal los datos.' + errores,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-      });
-  }
-  }
+    printErroresFormulario: function (data){
+        if (data.state == 'error_form') {
+            let errores = "";
+            for (control in data.errors) {
+                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+                $('#' + control + '-error').html(data.errors[control]);
+                $('#' + control + '-error').show();
+            }
+            Swal.fire({
+                title: 'Advertencia!',
+                html: 'Estas ingresando mal los datos.' + errores,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            });
+        }
+    }
 }  

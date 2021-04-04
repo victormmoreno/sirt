@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -32,31 +25,30 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($proyectos as $value)
+    @foreach($proyectos as $value)
         <tr>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->nombre_proyecto }}</td>
-          <td>{{ $value->nombre_idea }}</td>
-          <td>{{ $value->nombre_sector }}</td>
-          <td>{{ $value->nombre_gestor }}</td>
-          <td>{{ $value->nombre_linea }}</td>
-          <td>{{ $value->nombre_sublinea }}</td>
-          <td>{{ $value->nombre_areaconocimiento }}</td>
-          <td>{{ $value->nombre_estado }}</td>
-          <td>{{ $value->nombre_tipoproyecto }}</td>
-          <td>{{ $value->fecha_inicio }}</td>
-          <td>{{ $value->fecha_cierre }}</td>
-          <td>{{ $value->economia_naranja == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->art_cti == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->nom_act_cti }}</td>
-          <td>{{ $value->diri_ar_emp == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->reci_ar_emp == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->acc == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->manual_uso_inf == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->estado_arte == 1 ? 'Si' : 'No' }}</td>
-          <td>{{ $value->acta_cierre == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nombre_proyecto }}</td>
+            <td>{{ $value->nombre_idea }}</td>
+            <td>{{ $value->nombre_sector }}</td>
+            <td>{{ $value->nombre_gestor }}</td>
+            <td>{{ $value->nombre_linea }}</td>
+            <td>{{ $value->nombre_sublinea }}</td>
+            <td>{{ $value->nombre_areaconocimiento }}</td>
+            <td>{{ $value->nombre_estado }}</td>
+            <td>{{ $value->nombre_tipoproyecto }}</td>
+            <td>{{ $value->fecha_inicio }}</td>
+            <td>{{ $value->fecha_cierre }}</td>
+            <td>{{ $value->economia_naranja == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->art_cti == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->nom_act_cti }}</td>
+            <td>{{ $value->diri_ar_emp == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->reci_ar_emp == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->acc == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->manual_uso_inf == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->estado_arte == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $value->acta_cierre == 1 ? 'Si' : 'No' }}</td>
         </tr>
-      @endforeach
-
+    @endforeach
     </tbody>
 </table>

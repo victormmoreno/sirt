@@ -123,14 +123,11 @@
                     <i class="material-icons prefix">
                         create
                     </i>
-                    @if(isset($usoinfraestructura->compromisos))
+                    
                         <textarea class="materialize-textarea" id="txtcompromisos" length="2400" name="txtcompromisos">
-                            {{$usoinfraestructura->compromisos}}
+                            {{isset($usoinfraestructura->compromisos) ? $usoinfraestructura->compromisos: '' }}
                         </textarea>
-                    @else
-                        <textarea class="materialize-textarea" id="txtcompromisos" length="2400" name="txtcompromisos">
-                        </textarea>
-                    @endif
+                    
                     <label for="txtcompromisos">
                         Próximos Compromisos <span class="red-text">*</span>
                     </label>

@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col s10 m10 l10">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                            <a class="footer-text left-align" href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
                                 <i class="material-icons arrow-l">
                                     arrow_back
                                 </i>

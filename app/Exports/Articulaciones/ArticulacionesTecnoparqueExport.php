@@ -21,8 +21,7 @@ class ArticulacionesTecnoparqueExport extends FatherExport implements FromView, 
     $this->id = $id;
     $this->query = $query;
     $this->setCount($this->getQuery()->count());
-    $this->setRangeHeadingCell('A7:P7');
-    $this->setRangeBodyCell('A7:P8');
+    $this->setRangeHeadingCell('A1:P1');
     $this->setObject(Articulacion::find($id));
   }
 
@@ -32,24 +31,6 @@ class ArticulacionesTecnoparqueExport extends FatherExport implements FromView, 
     return view('exports.articulacion.tecnoparque', [
       'articulacion' => $query
     ]);
-  }
-
-  /**
-  * Método para pinta imágenes en el archivo de Excel
-  * @return object
-  * @author dum
-  */
-  public function drawings()
-  {
-    $drawing = new Drawing();
-    $drawing->setName('Logo');
-    $drawing->setDescription('This is my logo');
-    $drawing->setPath(public_path('/img/logonacional_Negro.png'));
-    $drawing->setResizeProportional(false);
-    $drawing->setHeight(104);
-    $drawing->setWidth(120);
-    $drawing->setCoordinates('A1');
-    return $drawing;
   }
 
 }
