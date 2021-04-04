@@ -30,7 +30,7 @@
           <div class="card-content">
             <div class="row">
               <div class="col s12 m12 l12">
-                @include('charlas.infocenter.form_evidencias')
+                @include('charlas.form_evidencias')
                 <center>
                   <a href="{{route('charla')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                 </center>
