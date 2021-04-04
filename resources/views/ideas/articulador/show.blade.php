@@ -19,7 +19,7 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                @if ($idea->estadoIdea == 'Postulado')
+                @if ($idea->estadoIdea->nombre == 'Postulado')
                 <div class="col s12 m3 l3">
                   <ul class="collection with-header">
                     <li class="collection-header"><h5>Opciones</h5></li>
