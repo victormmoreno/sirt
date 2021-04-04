@@ -2,7 +2,6 @@
 
 namespace App\Exports\User;
 
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use Illuminate\Contracts\View\View;
 use App\Exports\FatherExport;
@@ -17,8 +16,8 @@ class InfocenterSheetExport extends FatherExport
     {
         $this->request = $request;
         $this->query = $query;
-        $this->setCount($this->query->count() + 7);
-        $this->setRangeHeadingCell('A7:Z7');
+        $this->setCount($this->query->count() + 1);
+        $this->setRangeHeadingCell('A1:Z1');
     }
 
     public function registerEvents(): array
@@ -27,7 +26,6 @@ class InfocenterSheetExport extends FatherExport
         $columnImPar = $this->styleArrayColumnsImPar();
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $this->mergedCells($event);
                 $this->styledCells($event);
                 $this->setFilters($event);
             },
@@ -48,7 +46,7 @@ class InfocenterSheetExport extends FatherExport
         $init = 'A';
         for ($i = 0; $i < 26; $i++) {
             $temp = $init++;
-            $coordenadas = $temp . '7:' . $temp . $this->getCount();
+            $coordenadas = $temp . '1:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
             if ($i % 2 == 0) {
                 $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArrayColumnsPar());
@@ -56,18 +54,6 @@ class InfocenterSheetExport extends FatherExport
                 $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArrayColumnsImPar());
             }
         }
-    }
-
-    /**
-     * Funcion para la combinación de celdas
-     * @param AfterSheet $event
-     * @return void
-     * @author devjul
-     */
-    private function mergedCells(AfterSheet $event)
-    {
-
-        $event->sheet->mergeCells('A1:Z6');
     }
 
     /**
@@ -91,22 +77,4 @@ class InfocenterSheetExport extends FatherExport
         return "Infocenters";
     }
 
-    /**
-     * Método para pinta imágenes en el archivo de Excel
-     * @return object
-     * @abstract
-     * @author dum
-     */
-    public function drawings()
-    {
-        $drawing = new Drawing();
-        $drawing->setName('Logo Tecnoparque');
-        $drawing->setPath(public_path('/img/logonacional_Negro.png'));
-        $drawing->setResizeProportional(false);
-        $drawing->setHeight(100);
-        $drawing->setWidth(150);
-        $drawing->setCoordinates('A1');
-
-        return $drawing;
-    }
 }

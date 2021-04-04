@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -14,12 +7,12 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($empresas as $value)
+        @foreach($empresas as $value)
         <tr>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->nit }}</td>
-          <td>{{ $value->nombre }}</td>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nit }}</td>
+            <td>{{ $value->nombre }}</td>
         </tr>
-      @endforeach
+        @endforeach
     </tbody>
 </table>

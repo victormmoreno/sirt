@@ -289,6 +289,11 @@ class UserRepository
         return Nodo::selectNodo()->pluck('nodos', 'id');
     }
 
+    public function getAllNodoPrueba()
+    {
+        return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->pluck('nodos', 'id');
+    }
+
     /*=====  End of metodo para consultar todos los nodos  ======*/
 
     /*=================================================================
@@ -1027,10 +1032,15 @@ class UserRepository
 
         if ($newRole != null && ($this->roleIsAssigned($newRole, User::IsGestor()) || $this->roleIsAssigned($newRole, User::IsArticulador())  ) && !isset($userUpdated->gestor) && ($this->notExistRoleInArray($request, $userUpdated, User::IsGestor()) || $this->notExistRoleInArray($request, $userUpdated, User::IsArticulador()))) {
 
+                if($userUpdated->isUserArticulador() || $request->input('txtlinea') == ""){
+                    $line = 1;
+                }else{
+                    $line = $request->input('txtlinea'); 
+                }
                 Gestor::create([
                     "user_id"             => $userUpdated->id,
                     "nodo_id"             => $request->input('txtnodogestor'),
-                    "lineatecnologica_id" => $request->input('txtlinea'),
+                    "lineatecnologica_id" => $line,
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
             
@@ -1085,15 +1095,25 @@ class UserRepository
 
         //update gestor
         if (isset($userUpdated->gestor) && ($this->roleIsAssigned($removeRole, User::IsGestor()) || $this->roleIsAssigned($removeRole, User::IsArticulador())) && $request->filled('txtnodogestor')) {
+            if($userUpdated->isUserArticulador() || $request->input('txtlinea') == ""){
+                $line = 1;
+            }else{
+                $line = $request->input('txtlinea'); 
+            }
             $gestor = Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
-                "lineatecnologica_id" => $request->input('txtlinea'),
+                "lineatecnologica_id" => $line,
                 "honorarios"          => $request->input('txthonorario'),
             ]);
         } else if (isset($userUpdated->gestor) && (!$this->roleIsAssigned($removeRole, User::IsGestor()) || !$this->roleIsAssigned($removeRole, User::IsArticulador())) && $request->filled('txtnodogestor')) {
+            if($userUpdated->isUserArticulador() || $request->input('txtlinea') == ""){
+                $line = 1;
+            }else{
+                $line = $request->input('txtlinea'); 
+            }
             $gestor = Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
-                "lineatecnologica_id" => $request->input('txtlinea'),
+                "lineatecnologica_id" => $line,
                 "honorarios"          => $request->input('txthonorario'),
             ]);
         }

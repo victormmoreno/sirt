@@ -209,9 +209,9 @@ class UserPolicy
         return false;
     }
 
-    public function acceso()
+    public function acceso(User $authuser, User $user)
     {
-        if (session()->get('login_role') == User::IsInfocenter() || auth()->user()->id == $this->user->id || $this->authUser->hasAnyRole([User::IsInfocenter(), User::IsTalento(), User::IsIngreso()])) {
+        if ($authuser->id == $user->id && (session()->get('login_role') == User::IsInfocenter() ||  $authuser->hasAnyRole([User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsArticulador()]))) {
             return false;
         }
         return true;

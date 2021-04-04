@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 <table>
     <thead>
         <tr>
@@ -21,7 +14,7 @@
                 Estado de idea
             </th>
             <th>
-                Nombre Completo 
+                Nombre Completo
             </th>
             <th>
                 Correo Electrónico
@@ -36,7 +29,7 @@
                 ¿En qué estado se encuentra su propuesta?
             </th>
             <th>
-                ¿Cómo está conformado su equipo de trabajo? 
+                ¿Cómo está conformado su equipo de trabajo?
 
             </th>
             <th>

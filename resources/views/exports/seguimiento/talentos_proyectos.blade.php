@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -17,15 +10,15 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($talentos as $value)
-        <tr>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->documento }}</td>
-          <td>{{ $value->nombres }}</td>
-          <td>{{ $value->apellidos }}</td>
-          <td>{{ $value->email }}</td>
-          <td>{{ $value->contactos }}</td>
-        </tr>
-      @endforeach
+        @foreach($talentos as $value)
+            <tr>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->documento }}</td>
+            <td>{{ $value->nombres }}</td>
+            <td>{{ $value->apellidos }}</td>
+            <td>{{ $value->email }}</td>
+            <td>{{ $value->contactos }}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>

@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -14,22 +7,18 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($lineas as  $linea)
-      
+    @foreach($lineas as  $linea)
         <tr>
             <td>
                 {{isset($linea) ? $linea->abreviatura : 'No registra'}}
             </td>
             <td>
-                {{ isset($linea) ? $linea->nombre : 'No registra'}} 
+                {{ isset($linea) ? $linea->nombre : 'No registra'}}
             </td>
             <td>
                 {{isset($linea)? $linea->descripcion: 'No registra'}}
             </td>
-            
-          
         </tr>
-       
-      @endforeach
+    @endforeach
     </tbody>
 </table>

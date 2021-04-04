@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -31,35 +24,35 @@
         <th>Título obtenido</th>
         <th>Fecha de terminación</th>
         <th>Tipo de talento</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      @foreach($talentos as $value)
+        @foreach($talentos as $value)
         <tr>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->documento }}</td>
-          <td>{{ $value->nombres }}</td>
-          <td>{{ $value->apellidos }}</td>
-          <td>{{ $value->email }}</td>
-          <td>{{ $value->contactos }}</td>
-          <td>{{ $value->genero }}</td>
-          <td>{{ $value->tipo_sangre }}</td>
-          <td>{{ $value->estrato }}</td>
-          <td>{{ $value->ciudad_residencia }}</td>
-          <td>{{ $value->direccion }}</td>
-          <td>{{ $value->barrio }}</td>
-          <td>{{ $value->fechanacimiento }}</td>
-          <td>{{ $value->nombre_eps }}</td>
-          <td>{{ $value->otra_eps }}</td>
-          <td>{{ $value->nombre_etnia }}</td>
-          <td>{{ $value->grado_discapacidad }}</td>
-          <td>{{ $value->descripcion_grado_discapacidad }}</td>
-          <td>{{ $value->nombre_gradoescolaridad }}</td>
-          <td>{{ $value->institucion }}</td>
-          <td>{{ $value->titulo_obtenido }}</td>
-          <td>{{ $value->fecha_terminacion }}</td>
-          <td>{{ $value->nombre_tipotalento }}</td>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->documento }}</td>
+            <td>{{ $value->nombres }}</td>
+            <td>{{ $value->apellidos }}</td>
+            <td>{{ $value->email }}</td>
+            <td>{{ $value->contactos }}</td>
+            <td>{{ $value->genero }}</td>
+            <td>{{ $value->tipo_sangre }}</td>
+            <td>{{ $value->estrato }}</td>
+            <td>{{ $value->ciudad_residencia }}</td>
+            <td>{{ $value->direccion }}</td>
+            <td>{{ $value->barrio }}</td>
+            <td>{{ $value->fechanacimiento }}</td>
+            <td>{{ $value->nombre_eps }}</td>
+            <td>{{ $value->otra_eps }}</td>
+            <td>{{ $value->nombre_etnia }}</td>
+            <td>{{ $value->grado_discapacidad }}</td>
+            <td>{{ $value->descripcion_grado_discapacidad }}</td>
+            <td>{{ $value->nombre_gradoescolaridad }}</td>
+            <td>{{ $value->institucion }}</td>
+            <td>{{ $value->titulo_obtenido }}</td>
+            <td>{{ $value->fecha_terminacion }}</td>
+            <td>{{ $value->nombre_tipotalento }}</td>
         </tr>
-      @endforeach
+        @endforeach
     </tbody>
 </table>

@@ -1,10 +1,4 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
 <table>
     <thead>
     <tr>
@@ -22,20 +16,20 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($empresas as $value)
-        <tr>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->nit }}</td>
-          <td>{{ $value->codigo_ciiu }}</td>
-          <td>{{ $value->nombre_empresa }}</td>
-          <td>{{ $value->fecha_creacion }}</td>
-          <td>{{ $value->nombre_sector }}</td>
-          <td>{{ $value->ciudad }}</td>
-          <td>{{ $value->direccion }}</td>
-          <td>{{ $value->email_entidad }}</td>
-          <td>{{ $value->tamanho_empresa }}</td>
-          <td>{{ $value->tipo_empresa }}</td>
-        </tr>
-      @endforeach
+        @foreach($empresas as $value)
+            <tr>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nit }}</td>
+            <td>{{ $value->codigo_ciiu }}</td>
+            <td>{{ $value->nombre_empresa }}</td>
+            <td>{{ $value->fecha_creacion }}</td>
+            <td>{{ $value->nombre_sector }}</td>
+            <td>{{ $value->ciudad }}</td>
+            <td>{{ $value->direccion }}</td>
+            <td>{{ $value->email_entidad }}</td>
+            <td>{{ $value->tamanho_empresa }}</td>
+            <td>{{ $value->tipo_empresa }}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>

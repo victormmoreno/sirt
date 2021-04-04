@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
-use App\Models\{Nodo, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
+use App\Models\{Nodo,Fase, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\User;
 use Illuminate\Http\Request;
@@ -12,6 +12,9 @@ use App\Datatables\UserDatatable;
 use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
 use App\Exports\User\UserExport;
+use App\Http\Requests\UsersRequests\ConfirmUserRequest;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\User\{NewContractor, RoleAssignedOfficer, NodeChanged};
 
 
 
@@ -123,7 +126,6 @@ class UserController extends Controller
 
     /*=====  End of metodo API para consultar las ciudades por departamento  ======*/
 
-
     /**
      * Display the specified resource.
      *
@@ -135,140 +137,6 @@ class UserController extends Controller
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
         return view('users.show', ['user' => $user]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($documento)
-    {
-        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        $this->authorize('edit', $user);
-        switch (session()->get('login_role')) {
-            case User::IsAdministrador():
-                return view('users.edit', [
-                    'etnias' => Etnia::pluck('nombre', 'id'),
-                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
-                    'user'              => $user,
-                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-                    'eps'               => $this->userRepository->getAllEpsActivas(),
-                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
-                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getAllRoles(),
-                    'nodos'             => $this->userRepository->getAllNodo(),
-                    'regionales'        => $this->userRepository->getAllRegionales(),
-                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
-                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
-                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-                    'view' => 'edit'
-                ]);
-                break;
-            case User::IsDinamizador():
-                if (isset(auth()->user()->dinamizador->nodo->id)) {
-                    $nodo = Nodo::nodoUserAthenticated(auth()->user()->dinamizador->nodo->id)->pluck('nombre', 'id');
-                } else {
-                    $nodo = [];
-                    return redirect()->route('home');
-                }
-                return view('users.edit', [
-                    'user'              => $user,
-                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-                    'eps'               => $this->userRepository->getAllEpsActivas(),
-                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
-                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getAllRoles(),
-                    'nodos'             => $this->userRepository->getAllNodo(),
-                    'regionales'        => $this->userRepository->getAllRegionales(),
-                    'etnias' => Etnia::pluck('nombre', 'id'),
-                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
-                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
-                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
-                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-                    'view' => 'edit'
-                ]);
-                break;
-            case User::IsGestor():
-                if (isset(auth()->user()->gestor->nodo->id)) {
-                    $nodo = Nodo::nodoUserAthenticated(auth()->user()->gestor->nodo->id)->pluck('nombre', 'id');
-                } else {
-                    $nodo = [];
-                    return redirect()->route('home');
-                }
-                return view('users.edit', [
-                    'user'              => $user,
-                    'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-                    'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-                    'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-                    'eps'               => $this->userRepository->getAllEpsActivas(),
-                    'departamentos'     => $this->userRepository->getAllDepartamentos(),
-                    'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-                    'roles'             => $this->userRepository->getAllRoles(),
-                    'nodos'             => $this->userRepository->getAllNodo(),
-                    'regionales'        => $this->userRepository->getAllRegionales(),
-                    'etnias' => Etnia::pluck('nombre', 'id'),
-                    'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
-                    'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
-                    'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
-                    'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-                    'view' => 'edit'
-                ]);
-                break;
-            default:
-                abort('404');
-                break;
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $user = User::withTrashed()->find($id);
-
-        $this->authorize('update', $user);
-
-        $req       = new UserFormEditRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
-
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'fail'   => true,
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            if ($user != null) {
-                $userUpdate = $this->userRepository->Update($request, $user);
-                return response()->json([
-                    'state'   => 'success',
-                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                    'url' => route('usuario.index'),
-                    'user' => $userUpdate,
-                ]);
-            } else {
-                return response()->json([
-                    'state'   => 'error',
-                    'message' => 'El Usuario no se ha modificado',
-                    'url' => false
-                ]);
-            }
-        }
-    }
-
-
-
 
     public function acceso($document)
     {
@@ -296,8 +164,9 @@ class UserController extends Controller
                 $user->restore();
                 return redirect()->back()->withSuccess('Acceso de usuario modificado');
             }
-        
-        }else if($user->has('talento') && isset($user->talento)){
+
+        }else if($user->has('talento') && isset($user->talento))
+        {
             if ($request->get('txtestado') == 'on') {
                 $user->update(['estado' => 0]);
                 $user->delete();
@@ -310,8 +179,8 @@ class UserController extends Controller
                 return redirect()->back()->withSuccess('Acceso de usuario modificado');
             }
         }
-        
-        else{
+        else
+        {
             return redirect()->back()->withError('No puedes cambiar el estado a este usuario. Primero asigna un rol y un nodo');
         }
         return redirect()->back()->with('error', 'error al actualizar, intentalo de nuevo');
@@ -444,16 +313,98 @@ class UserController extends Controller
         abort('403');
     }
 
-    /*=====  Método para controlar el formulario usuarios nuevos  ======*/
-    public function create()
+    public function changeNodeUser($document)
     {
-        return view('registro_usuarios.form',[
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ciudades'          => $this->userRepository->getAllCiudades(),
-            'view' => 'create'
+
+        $user = User::withTrashed()->where('documento', $document)->firstOrFail();
+
+        // $this->authorize('acceso', $user);
+        return view('users.permissions', [
+            'user' => $user,
+            'roles' => $this->userRepository->getRoleWhereNotInRole([User::IsDesarrollador()]),
+            'nodos'             => $this->userRepository->getAllNodo(),
+            'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
+            'regionales'        => $this->userRepository->getAllRegionales(),
+            'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
+            'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
+            'lineas' => LineaTecnologica::pluck('nombre', 'id')
         ]);
     }
 
-    /*=====  Fin Método para controlar el formulario usuarios nuevos  ======*/
+    public function updateNode(Request $request, int $documento)
+    {
+        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+        // $this->authorize('confirmContratorInformation', $user);
+
+        $req = new ConfirmUserRequest;
+
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            if ($user != null) {
+                
+                if(($user->isUserExperto() || $user->isUserArticulador()) && ($user->gestor->nodo_id != $request->input('txtnodogestor')  || $user->gestor->lineatecnologica_id != $request->input('txtlinea') ) )
+                {
+                    $activities = $user->gestor->actividades()->activitiesGestor();
+                    $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
+
+                    if($activities->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::UserGestor())))
+                    {
+                        return response()->json([
+                            'state'   => 'error',
+                            'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$activities->count()} atividades sin finalizar, para ello debe asignarlas a otro experto del nodo",
+                            'url' => false,
+                            'activities' => $activities,
+                            'count' => $activities->count()
+                        ]);
+                    }
+
+                    if($request->input('txtnodogestor') != $user->gestor->nodo_id){
+                        $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
+                        Notification::send($userUpdate, new NodeChanged($userUpdate));
+                        return response()->json([
+                            'state'   => 'success',
+                            'message' => 'El Usuario ha sido modificado satisfactoriamente',
+                            'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                            'user' => $userUpdate,
+                        ]);
+                    }
+                }
+                if(($user->isUserDinamizador() && ($user->dinamizador->nodo_id != $request->input('txtnododinamizador')))
+                    || ($user->isUserInfocenter() && ($user->infocenter->nodo_id != $request->input('txtnodoinfocenter')))
+                    || ($user->isUserIngreso() && ($user->ingreso->nodo_id != $request->input('txtnodoingreso')))
+                ){
+                    $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
+                    Notification::send($userUpdate, new NodeChanged($userUpdate));
+                    return response()->json([
+                        'state'   => 'success',
+                        'message' => 'El Usuario ha sido modificado satisfactoriamente',
+                        'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                        'user' => $userUpdate,
+                    ]);
+                }
+                    
+                $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
+                
+                return response()->json([
+                    'state'   => 'success',
+                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
+                    'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                    'user' => $userUpdate,
+                ]);
+            } else {
+                return response()->json([
+                    'state'   => 'error',
+                    'message' => 'El Usuario no se ha modificado',
+                    'url' => false
+                ]);
+            }
+        }
+    }
 }

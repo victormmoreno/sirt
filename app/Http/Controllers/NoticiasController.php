@@ -9,10 +9,6 @@ use LimitIterator;
 
 class NoticiasController extends Controller
 {
-    public function spa(){
-        $datos['noticias']=Noticias::orderBy('id','desc')->limit(1)->get();;
-        return view('spa',$datos);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -68,16 +64,6 @@ class NoticiasController extends Controller
         return redirect('noticias')->with('Mensaje','Noticia agregada con éxito');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Noticias  $noticias
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Noticias $noticias)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.

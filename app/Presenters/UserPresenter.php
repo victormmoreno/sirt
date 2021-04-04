@@ -19,13 +19,6 @@ class UserPresenter extends Presenter
         return "{$this->user->nombres} {$this->user->apellidos}";
     }
 
-    public function userEditLink()
-    {
-        return "<a href=\"" . route('usuario.usuarios.edit', $this->user->documento) . "\">
-            Cambiar Información
-        </a>";
-    }
-
     public function userGenero()
     {
         return $this->user->genero == User::IsMasculino() ? 'Masculino' : 'Femenino';
@@ -208,6 +201,11 @@ class UserPresenter extends Presenter
     public function userInfocenterExtension()
     {
         return $this->user->has('infocenter') ? $this->user->infocenter->extension : $this->message('No Registra');
+    }
+
+    public function userIngresoNombreNodo()
+    {
+        return $this->user->has('ingreso.nodo.entidad') ? "Tecnoparque Nodo {$this->user->ingreso->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
     public function userProfileUserImage()

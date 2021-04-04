@@ -19,6 +19,11 @@ class IdeaRepository
         return Nodo::SelectNodo()->get();
     }
 
+    public function getSelectNodoPrueba()
+    {
+        return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->get();
+    }
+
     /**
      * Consulta si una idea de proyecto está en registrada en un csibt
      *
