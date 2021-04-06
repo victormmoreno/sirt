@@ -33,7 +33,7 @@ class ConfirmUserRequest extends FormRequest
             'role'                      => 'required',
             'txtnododinamizador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsDinamizador())) . '|nullable',
             'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
-            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
             'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtextension'              => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',

@@ -709,7 +709,7 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-    
+
                 case User::IsDinamizador():
                     return view('proyectos.dinamizador.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -718,7 +718,7 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-    
+
                 case User::IsTalento():
                     return view('proyectos.talento.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -727,7 +727,7 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-    
+
                 case User::IsAdministrador():
                     return view('proyectos.administrador.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -735,7 +735,7 @@ class ProyectoController extends Controller
                         'historico' => $historico
                     ]);
                     break;
-    
+
                 case User::IsInfocenter():
                     return view('proyectos.infocenter.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -743,7 +743,7 @@ class ProyectoController extends Controller
                         'historico' => $historico
                     ]);
                     break;
-    
+
                 default:
                     return abort(Response::HTTP_FORBIDDEN);
                     break;

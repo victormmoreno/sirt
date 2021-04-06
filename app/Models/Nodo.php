@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class Nodo extends Model
 {
+
+    const NODO_PRUEBA = 'Prueba';
     // use SoftDeletes;
     protected $table = 'nodos';
 

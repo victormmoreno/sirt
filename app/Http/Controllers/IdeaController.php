@@ -34,7 +34,8 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        $nodos = $this->ideaRepository->getSelectNodo();
+        // $nodos = $this->ideaRepository->getSelectNodo();
+        $nodos = $this->ideaRepository->getSelectNodoPrueba();
         if (Session::get('login_role') == User::IsTalento()) {
             return view('ideas.talento.create', [
                 'nodos' => $nodos,
@@ -329,7 +330,8 @@ class IdeaController extends Controller
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
-        $nodos = $this->ideaRepository->getSelectNodo();
+        // $nodos = $this->ideaRepository->getSelectNodo();
+        $nodos = $this->ideaRepository->getSelectNodoPrueba();
         return view('ideas.talento.edit', ['idea' => $idea, 
         'nodos' => $nodos,
         'departamentos' => Departamento::all(),

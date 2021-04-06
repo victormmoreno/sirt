@@ -84,7 +84,7 @@ class CostoController extends Controller
     $gestor = $this->getGestorActividad($actividad);
     // Linea
     $linea = $this->getLineaActividad($actividad);
-    // Código
+    // C贸digo
     $codigo = $this->getCodigoActividad($actividad);
 
     return response()->json([
@@ -102,7 +102,7 @@ class CostoController extends Controller
   }
 
   /**
-  * Obtiene el código de la actividad
+  * Obtiene el c贸digo de la actividad
   *
   * @param Collection $actividad
   * @return string

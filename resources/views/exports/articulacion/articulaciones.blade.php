@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -21,19 +14,19 @@
     </tr>
     </thead>
     <tbody>
-      @foreach($articulaciones as $value)
-        <tr>
-          <td>{{ $value->nodo }}</td>
-          <td>{{ $value->gestor }}</td>
-          <td>{{ $value->nombre_linea }}</td>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->nombre }}</td>
-          <td>{{ $value->grupo }}</td>
-          <td>{{ $value->fecha_inicio }}</td>
-          <td>{{ $value->nombre_fase }}</td>
-          <td>{{ $value->fecha_cierre }}</td>
-          <td>{{ $value->producto_a_alcanzar == null ? 'No hay información disponible' : $value->producto_a_alcanzar }}</td>
-        </tr>
-      @endforeach
+        @foreach($articulaciones as $value)
+            <tr>
+            <td>{{ $value->nodo }}</td>
+            <td>{{ $value->gestor }}</td>
+            <td>{{ $value->nombre_linea }}</td>
+            <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nombre }}</td>
+            <td>{{ $value->grupo }}</td>
+            <td>{{ $value->fecha_inicio }}</td>
+            <td>{{ $value->nombre_fase }}</td>
+            <td>{{ $value->fecha_cierre }}</td>
+            <td>{{ $value->producto_a_alcanzar == null ? 'No hay información disponible' : $value->producto_a_alcanzar }}</td>
+            </tr>
+        @endforeach
     </tbody>
 </table>

@@ -14,7 +14,7 @@ class ProyectosExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:Z1');
+        $this->setRangeHeadingCell('A1:X1');
     }
 
     /**
@@ -37,16 +37,12 @@ class ProyectosExport extends FatherExport
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                // $this->mergedCells($event);
                 $this->styledCells($event);
                 $this->setFilters($event);
             },
         ];
     }
 
-    // private function mergedCells(AfterSheet $event) {
-    //     $event->sheet->mergeCells('A1:X6');
-    // }
 
     private function styledCells(AfterSheet $event) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);

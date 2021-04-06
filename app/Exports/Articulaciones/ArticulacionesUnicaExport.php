@@ -30,8 +30,7 @@ class ArticulacionesUnicaExport extends FatherExport implements FromView, Should
     $this->id = $id;
     $this->setQuery($query);
     $this->setCount(2);
-    $this->setRangeHeadingCell('A7:P7');
-    $this->setRangeBodyCell('A7:P8');
+    $this->setRangeHeadingCell('A1:P1');
     $this->setObject(Articulacion::find($id));
 
 
@@ -108,9 +107,6 @@ class ArticulacionesUnicaExport extends FatherExport implements FromView, Should
     return [
       AfterSheet::class => function(AfterSheet $event) use ($styles) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->applyFromArray($this->styleArray())->getFont()->setSize(14)->setBold(1);
-        $event->sheet->getStyle($this->getRangeBodyCell())->applyFromArray($this->styleArray());
-
-        $event->sheet->mergeCells('A1:B6');
 
         if ( $this->getQuery()->tipo_articulacion == 'Grupo de Investigación' ) {
           $event->sheet->mergeCells('D2:G2');
@@ -190,24 +186,6 @@ class ArticulacionesUnicaExport extends FatherExport implements FromView, Should
   public function title(): String
   {
     return 'Articulacion ' . $this->getQuery()->codigo_articulacion;
-  }
-
-  /**
-  * Método para pinta imágenes en el archivo de Excel
-  * @return object
-  * @author dum
-  */
-  public function drawings()
-  {
-    $drawing = new Drawing();
-    $drawing->setName('Logo');
-    $drawing->setDescription('This is my logo');
-    $drawing->setPath(public_path('/img/logonacional_Negro.png'));
-    $drawing->setResizeProportional(false);
-    $drawing->setHeight(104);
-    $drawing->setWidth(120);
-    $drawing->setCoordinates('A1');
-    return $drawing;
   }
 
 }

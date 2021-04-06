@@ -1,10 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -21,17 +14,17 @@
     </tr>
     </thead>
     <tbody>IF(tipo_articulacion != "Grupo de Investigación", IF(informe_final = 1, "Si", "No"), "No Aplica")
-      <tr>
-        <td>{{ $articulacion->codigo_articulacion }}</td>
-        <td>{{ $articulacion->nombre }}</td>
-        <td>{{ $articulacion->tipoArticulacion }}</td>
-        <td>{{ $articulacion->tipo_articulacion }}</td>
-        <td>{{ $articulacion->fecha_inicio->toDateString() }}</td>
-        <td>{{ $articulacion->fecha_cierre }}</td>
-        <td>{{ $articulacion->nombre_completo_gestor }}</td>
-        <td>{{ $articulacion->tipo_articulacion != 'Grupo de Investigación' ? $articulacion->acc == 1 ? 'Si' : 'No' : 'No Aplica' }}</td>
-        <td>{{ $articulacion->acta_cierre == 1 ? 'Si' : 'No' }}</td>
-        <td>{{ $articulacion->tipo_articulacion != 'Grupo de Investigación' ? $articulacion->informe_final == 1 ? 'Si' : 'No' : 'No Aplica' }}</td>
-      </tr>
+        <tr>
+            <td>{{ $articulacion->codigo_articulacion }}</td>
+            <td>{{ $articulacion->nombre }}</td>
+            <td>{{ $articulacion->tipoArticulacion }}</td>
+            <td>{{ $articulacion->tipo_articulacion }}</td>
+            <td>{{ $articulacion->fecha_inicio->toDateString() }}</td>
+            <td>{{ $articulacion->fecha_cierre }}</td>
+            <td>{{ $articulacion->nombre_completo_gestor }}</td>
+            <td>{{ $articulacion->tipo_articulacion != 'Grupo de Investigación' ? $articulacion->acc == 1 ? 'Si' : 'No' : 'No Aplica' }}</td>
+            <td>{{ $articulacion->acta_cierre == 1 ? 'Si' : 'No' }}</td>
+            <td>{{ $articulacion->tipo_articulacion != 'Grupo de Investigación' ? $articulacion->informe_final == 1 ? 'Si' : 'No' : 'No Aplica' }}</td>
+        </tr>
     </tbody>
 </table>

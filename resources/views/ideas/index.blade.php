@@ -126,6 +126,7 @@
       </div>
     </div>
   </div>
+  @include('ideas.modals')
 </main>
 @endsection
-@include('ideas.modals')
+

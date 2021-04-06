@@ -129,7 +129,7 @@ Route::group(
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
         
-        Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
+        // Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
         Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
 
@@ -145,14 +145,13 @@ Route::group(
 
         
         Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
-
+        Route::get('/{documento}/permisos', 'UserController@changeNodeUser')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
+        Route::put('/{documento}/updatenodo', 'UserController@updateNode')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
         Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
-        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'except' => 'index', 'create', 'store'])->names([
-            'update'  => 'usuario.usuarios.update',
-            'edit'    => 'usuario.usuarios.edit',
-            'destroy' => 'usuario.usuarios.destroy',
-            'show'    => 'usuario.usuarios.show',
 
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => 'show'])->names([
+            'update'  => 'usuario.usuarios.update',
+            'show'    => 'usuario.usuarios.show',
         ])->parameters([
             'usuarios' => 'id',
         ]);
@@ -865,16 +864,8 @@ Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
 
-
-//-----------------------Ruta para registro usuario nuevo---------------------------------
-
-Route::get('/registro-usuario', 'User\UserController@create')->name('persona.create');
-
-//-----------------------Fin ruta registro usuario nuevo-----------------------------------
-
 //-----------------------Ruta para sección de noticias---------------------------------
 
-Route::get('/spa', ['as' => 'spa','uses' => 'NoticiasController@spa']);
 
 Route::group([
     'prefix' => 'noticias',
@@ -887,7 +878,6 @@ Route::group([
     Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Administrador');
     Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Administrador');
     Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
-
 
 });
 

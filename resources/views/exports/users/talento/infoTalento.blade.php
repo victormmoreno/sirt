@@ -1,38 +1,31 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
-    <tr>
-        <th>Tipo Documento</th>
-        <th>Número de Documento</th>
-        <th>Nombre Completo</th>
-        <th>Fecha de Nacimiento</th>
-        <th>Correo Electrónico</th>
-        <th>Celular</th>
-        <th>Género</th>
-        <th>Grupo sanguineo</th>
-        <th>Estrato Social</th>
-        <th>Dirección</th>
-        <th>Ciudad de residencia</th>
-        <th>Etnia a la que pertenece</th>
-        <th>¿Tiene algún grado de discapacidad?</th>
-        <th>¿Cuál es el grado de discapacidad?</th>
-        <th>Eps</th>
-        <th>Otra eps</th>
-        <th>Grado de escolaridad</th>
-        <th>Institución</th>
-        <th>Título obtenido</th>
-        <th>Fecha de terminación</th>
-        <th>Tipo de talento</th>
-      </tr>
+        <tr>
+            <th>Tipo Documento</th>
+            <th>Número de Documento</th>
+            <th>Nombre Completo</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Correo Electrónico</th>
+            <th>Celular</th>
+            <th>Género</th>
+            <th>Grupo sanguineo</th>
+            <th>Estrato Social</th>
+            <th>Dirección</th>
+            <th>Ciudad de residencia</th>
+            <th>Etnia a la que pertenece</th>
+            <th>¿Tiene algún grado de discapacidad?</th>
+            <th>¿Cuál es el grado de discapacidad?</th>
+            <th>Eps</th>
+            <th>Otra eps</th>
+            <th>Grado de escolaridad</th>
+            <th>Institución</th>
+            <th>Título obtenido</th>
+            <th>Fecha de terminación</th>
+            <th>Tipo de talento</th>
+        </tr>
     </thead>
     <tbody>
-      @forelse($talentos as $user)
+        @forelse($talentos as $user)
         <tr>
             <td>
                 {{isset($user->tipodocumento)? $user->tipodocumento : 'No registra'}}
@@ -44,7 +37,7 @@
                 {{isset($user->nombre) ? $user->nombre: 'No Registra'}}
             </td>
             <td>
-                {{isset($user->fechanacimiento) ?  $user->fechanacimiento->isoFormat('LL'): 'No registra'}} 
+                {{isset($user->fechanacimiento) ?  $user->fechanacimiento->isoFormat('LL'): 'No registra'}}
             </td>
             <td>
                 {{isset($user->email)? $user->email: 'No registra'}}
@@ -98,9 +91,8 @@
                 {{!empty($user->tipotalento) ? $user->tipotalento : 'No registra'}}
             </td>
         </tr>
-    @empty
+        @empty
             No se encontraron resultados
-        
-      @endforelse
+        @endforelse
     </tbody>
 </table>

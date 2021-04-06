@@ -26,69 +26,67 @@ class Indicadores2020Export implements WithMultipleSheets
         $this->setQueryTalentosPropietarios($queryTalentosPropietarios);
         $this->setQueryGruposPropietarios($queryGruposPropietarios);
     }
-  /**
-   * @return array
-   */
-  public function sheets(): array
-  {
-      $sheets = [];
+    /**
+     * @return array
+     */
+    public function sheets(): array
+    {
+        $sheets = [];
 
-      $sheets[] = new ProyectosExport($this->getQueryProyectos());
-      $sheets[] = new TalentoUserExport($this->getQueryTalentos(), 'Ejecutores');
-      $sheets[] = new EmpresasExport($this->getQueryEmpresasPropietarias(), 'propietarias');
-      $sheets[] = new GruposExport($this->getQueryGruposPropietarios(), 'propietarios');
-      $sheets[] = new TalentoUserExport($this->getQueryTalentosPropietarios(), 'Propietarios');
-      $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
+        $sheets[] = new ProyectosExport($this->getQueryProyectos());
+        $sheets[] = new TalentoUserExport($this->getQueryTalentos(), 'Ejecutores');
+        $sheets[] = new EmpresasExport($this->getQueryEmpresasPropietarias(), 'propietarias');
+        $sheets[] = new GruposExport($this->getQueryGruposPropietarios(), 'propietarios');
+        $sheets[] = new TalentoUserExport($this->getQueryTalentosPropietarios(), 'Propietarios');
+        $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
+        return $sheets;
+    }
 
+    private function setQueryProyectos($queryProyectos) {
+        $this->queryProyectos = $queryProyectos;
+    }
 
-      return $sheets;
-  }
+    private function getQueryProyectos() {
+        return $this->queryProyectos;
+    }
 
-  private function setQueryProyectos($queryProyectos) {
-    $this->queryProyectos = $queryProyectos;
-  }
+    private function setQueryTalentos($queryTalentos) {
+        $this->queryTalentos = $queryTalentos;
+    }
 
-  private function getQueryProyectos() {
-    return $this->queryProyectos;
-  }
+    private function getQueryTalentos() {
+        return $this->queryTalentos;
+    }
 
-  private function setQueryTalentos($queryTalentos) {
-    $this->queryTalentos = $queryTalentos;
-  }
+    private function setQueryArticulacion($queryArticulacion) {
+        $this->queryArticulacion = $queryArticulacion;
+    }
 
-  private function getQueryTalentos() {
-    return $this->queryTalentos;
-  }
+    private function getQueryArticulacion() {
+        return $this->queryArticulacion;
+    }
 
-  private function setQueryArticulacion($queryArticulacion) {
-    $this->queryArticulacion = $queryArticulacion;
-  }
+    private function setQueryEmpresasPropietarias($queryEmpresasPropietarias) {
+        $this->queryEmpresasPropietarias = $queryEmpresasPropietarias;
+    }
 
-  private function getQueryArticulacion() {
-    return $this->queryArticulacion;
-  }
+    private function getQueryEmpresasPropietarias() {
+        return $this->queryEmpresasPropietarias;
+    }
 
-  private function setQueryEmpresasPropietarias($queryEmpresasPropietarias) {
-    $this->queryEmpresasPropietarias = $queryEmpresasPropietarias;
-  }
+    private function setQueryGruposPropietarios($queryGruposPropietarios) {
+        $this->queryGruposPropietarios = $queryGruposPropietarios;
+    }
 
-  private function getQueryEmpresasPropietarias() {
-    return $this->queryEmpresasPropietarias;
-  }
+    private function getQueryGruposPropietarios() {
+        return $this->queryGruposPropietarios;
+    }
 
-  private function setQueryGruposPropietarios($queryGruposPropietarios) {
-    $this->queryGruposPropietarios = $queryGruposPropietarios;
-  }
+    private function setQueryTalentosPropietarios($queryTalentosPropietarios) {
+        $this->queryTalentosPropietarios = $queryTalentosPropietarios;
+    }
 
-  private function getQueryGruposPropietarios() {
-    return $this->queryGruposPropietarios;
-  }
-
-  private function setQueryTalentosPropietarios($queryTalentosPropietarios) {
-    $this->queryTalentosPropietarios = $queryTalentosPropietarios;
-  }
-
-  private function getQueryTalentosPropietarios() {
-    return $this->queryTalentosPropietarios;
-  }
+    private function getQueryTalentosPropietarios() {
+        return $this->queryTalentosPropietarios;
+    }
 }
