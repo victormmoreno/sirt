@@ -1,16 +1,4 @@
 $(document).ready(function() {
-  entrenamiento.getIdeas();
-  $('#txtfecha_sesion2').bootstrapMaterialDatePicker({
-    time:false,
-    date:true,
-    shortTime:true,
-    format: 'YYYY-MM-DD',
-    // minDate : new Date(),
-    language: 'es',
-    weekStart : 1, cancelText : 'Cancelar',
-    okText: 'Guardar'
-  });
-
   $('#txtfecha_sesion1').bootstrapMaterialDatePicker({
     time:false,
     date:true,
@@ -25,112 +13,177 @@ $(document).ready(function() {
     $('#txtsegundasesion').bootstrapMaterialDatePicker('setMinDate', date);
   });
 });
-entrenamiento = {
-  addIdea:function(){
-    let Idea = $("#txtidea").val();
-    let token = $("#formEntrenamientos input[name=_token]").val();
 
-    $.ajax({
-      dataType:'json',
-      type:'post',
-      url:'/entrenamientos/addidea',
-      data: {
-        'Idea':Idea,
-        '_token':token
+$(document).on('submit', 'form#formEntrenamientosCreate', function (event) { // $('button[type="submit"]').prop("disabled", true);
+    event.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de guardar esta información?',
+        // text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, guardar'
+    }).then((result) => {
+        if (result.value) {
+            $('button[type="submit"]').attr('disabled', 'disabled');
+            event.preventDefault();
+            var form = $(this);
+            var data = new FormData($(this)[0]);
+            var url = form.attr("action");
+            ajaxSendFormEntrenamiento(form, data, url, 'create');
+        }
+    });
+});
+
+function ajaxSendFormEntrenamiento(form, data, url, fase) {
+  $.ajax({
+      type: form.attr('method'),
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      dataType: 'json',
+      processData: false,
+      success: function (data) {
+          $('button[type="submit"]').removeAttr('disabled');
+          $('.error').hide();
+          printErroresFormulario(data);
+          mensajesEntrenamientoCreate(data);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
       }
-    }).done(function(response){
-      if (response.data == 3) {
+  });
+};
+
+function mensajesEntrenamientoCreate(data) {
+  if (data.state != 'error_form') {
+    Swal.fire({
+      title: data.title,
+      html: data.msg,
+      type: data.type,
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Ok'
+    });
+  }
+  if (data.state == 'registro') {
+    setTimeout(function () {
+        window.location.href = data.url;
+    }, 1500);
+  }
+
+  if (data.state == 'update') {
+    setTimeout(function () {
+        window.location.href = data.url;
+    }, 1500);
+  }
+};
+
+function noRepeatIdeasTaller(id) {
+  let idIdea = id;
+  let retorno = true;
+  let a = document.getElementsByName("ideas_taller[]");
+  for (x = 0; x < a.length; x ++) {
+      if (a[x].value == idIdea) {
+          retorno = false;
+          break;
+      }
+  }
+  return retorno;
+};
+
+function getValorConfirmacion() {
+  if ($('#txtconfirmacion').is(':checked')) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function getValorAsistencia() {
+  if ($('#txtasistencia').is(':checked')) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function addIdeaToEntrenamiento() {
+  let id = $('#txtidea_taller').val();
+  let confirmacion = getValorConfirmacion();
+  let asistencia = getValorAsistencia();
+  if (id == 0) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      type: 'error',
+      title: 'Estás ingresando mal los datos'
+  })
+  } else {
+      if (noRepeatIdeasTaller(id) == false) {
         Swal.fire({
-          title: 'Error!',
-          text: 'La idea de proyecto ya está asociada al entrenamiento!',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
           type: 'warning',
-          confirmButtonText: 'Cool'
-        })
+          title: 'La idea de proyecto ya se encuentra asociada al taller!'
+      });
       } else {
-        entrenamiento.getIdeas();
+          pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia);
       }
-    })
+  }
+};
 
-  },
-  getIdeas:function(){
-    $.ajax({
-      dataType:'json',
-      type:'get',
-      url:'/entrenamientos/getideasEntrenamiento'
-    }).done(function(respuesta){
-      $('#tblIdeasEntrenamientoCreate').empty();
-      $.each(respuesta, function (i,elemento){
-        let confirm = elemento.Confirm == 1 ? "checked" : "";
-        let canvas = elemento.Canvas == 1 ? "checked" : "";
-        let assistf = elemento.AssistF == 1 ? "checked" : "";
-        let assists = elemento.AssistS == 1 ? "checked" : "";
-        let convocado = elemento.Convocado == 1 ? "checked" : "";
-        $('#tblIdeasEntrenamientoCreate').append('<tr>'
-        +'<td>'+elemento.codigo_idea+' - '+elemento.nombre_proyecto+'</td>'
-        +'<td>'+elemento.nombres_contacto+' '+elemento.apellidos_contacto+'</td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+confirm+' onclick="entrenamiento.getConfirm('+elemento.id+', '+(elemento.Confirm == 1 ? 1 : 0)+')" name="confirmacion" id="confirmacion'+elemento.id+'" value="1"/><label for="confirmacion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+canvas+' onclick="entrenamiento.getCanvas('+elemento.id+', '+(elemento.Canvas == 1 ? 1 : 0)+')" name="canvas" id="canvas'+elemento.id+'" value="1"/><label for="canvas'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+assistf+' onclick="entrenamiento.getAssistF('+elemento.id+', '+(elemento.AssistF == 1 ? 1 : 0)+')" name="asistencia_primera_sesion" id="asistencia_primera_sesion'+elemento.id+'" value="1"/><label for="asistencia_primera_sesion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+assists+' onclick="entrenamiento.getAssistS('+elemento.id+', '+(elemento.AssistS == 1 ? 1 : 0)+')" name="asistencia_segunda_sesion" id="asistencia_segunda_sesion'+elemento.id+'" value="1"/><label for="asistencia_segunda_sesion'+elemento.id+'"></label></p></td>'
-        +'<td><p class="center p-v-xs"><input type="checkbox" '+convocado+' onclick="entrenamiento.getConvocado('+elemento.id+', '+(elemento.Convocado == 1 ? 1 : 0)+')" name="csibt_convocado" id="csibt_convocado'+elemento.id+'" value="1"/><label for="csibt_convocado'+elemento.id+'"></label></p></td>'
-        +'<td><a class="waves-effect red lighten-3 btn" onclick="entrenamiento.getEliminar('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
-        +'</tr>');
-      })
-    })
-  },
-  // <p class="p-v-xs"><input type="checkbox" id="txtfotos" name="txtfotos" value="1"/><label for="txtfotos">Evidencias Fotográficas</label></p>
-  getEliminar:function (idIdea) {
-    $.ajax({
-      type:'get',
-      dataType:'json',
-      url:'/entrenamientos/eliminar/'+idIdea,
-    }).done(function(respuesta){
-      entrenamiento.getIdeas();
-    })
-  },
-  getConfirm:function (idIdea, estado) {
-    $.ajax({
-      type:'get',
-      dataType:'json',
-      url:'/entrenamientos/getConfirm/'+idIdea+'/'+estado,
-    }).done(function(respuesta){
-      entrenamiento.getIdeas();
-    });
-  },
-  getCanvas:function (idIdea, estado) {
-    $.ajax({
-      type:'get',
-      dataType:'json',
-      url:'/entrenamientos/getCanvas/'+idIdea+'/'+estado,
-    }).done(function(respuesta){
-      entrenamiento.getIdeas();
-    });
-  },
-  getAssistF:function (idIdea, estado) {
-    $.ajax({
-      type:'get',
-      dataType:'json',
-      url:'/entrenamientos/getAssistF/'+idIdea+'/'+estado,
-    }).done(function(respuesta){
-      entrenamiento.getIdeas();
-    });
-  },
-  getAssistS:function (idIdea, estado) {
-    $.ajax({
-      type:'get',
-      dataType:'json',
-      url:'/entrenamientos/getAssistS/'+idIdea+'/'+estado,
-    }).done(function(respuesta){
-      entrenamiento.getIdeas();
-    });
-  },
-  getConvocado:function (idIdea, estado) {
-    $.ajax({
-      type:'get',
-      dataType:'json',
-      url:'/entrenamientos/getConvocado/'+idIdea+'/'+estado,
-    }).done(function(respuesta){
-      entrenamiento.getIdeas();
-    });
+function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
+  $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/idea/detallesIdea/' + id
+  }).done(function (ajax) {
+      let fila = prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia);
+      $('#tblIdeasEntrenamientoForm').append(fila);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        type: 'success',
+        title: 'La idea de proyecto se asoció con éxito al taller'
+      });
+      reiniciarCamposTaller();
+  });
+}
+
+function reiniciarCamposTaller() {
+  $("#txtidea_taller").val('0');
+  $("#txtidea_taller").select2();
+  }
+
+function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
+  let idIdea = ajax.detalles.id;
+  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' + 
+      '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
+      '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
+      '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
+      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+      '</tr>';
+  return fila;
+}
+
+function eliminarIdeaDelTaller(index) {
+  $('#ideaAsociadaTaller' + index).remove();
+}
+
+function getYesOrNot(value) {
+  if (value == 0) {
+    return 'No';
+  } else {
+    return 'Si';
   }
 }

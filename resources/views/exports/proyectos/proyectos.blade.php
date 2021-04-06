@@ -1,10 +1,4 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <table>
     <thead>
     <tr>
@@ -20,6 +14,8 @@
         <th>Fecha de Inicio de Proyecto</th>
         <th>Fase actual del proyecto</th>
         <th>Fecha de Cierre de Proyecto</th>
+        <th>Año de cierre</th>
+        <th>Mes de cierre</th>
         <th>TRL esperado</th>
         <th>TRL obtenido</th>
         <th>¿Recibido a través de fábrica de productividad?</th>
@@ -49,6 +45,16 @@
           <td>{{ $value->fecha_inicio }}</td>
           <td>{{ $value->nombre_fase }}</td>
           <td>{{ $value->fecha_cierre }}</td>
+          @if ($value->nombre_fase == 'Finalizado' || $value->nombre_fase == 'Suspendido')
+          <td>{{ $value->anho }}</td>
+          @else
+          <td>El proyecto no se ha cerrado</td>
+          @endif
+          @if ($value->nombre_fase == 'Finalizado' || $value->nombre_fase == 'Suspendido')
+          <td>{{ $value->mes }}</td>
+          @else
+          <td>El proyecto no se ha cerrado</td>
+          @endif
           <td>{{ $value->trl_esperado }}</td>
           <td>{{ $value->trl_obtenido }}</td>
           <td>{{ $value->fabrica_productividad }}</td>

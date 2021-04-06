@@ -68,4 +68,47 @@ $(document).ready(function() {
       },
     ],
   });
+  $('#entrenamientos_nodo_table_articulador').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      type: "get",
+      data: {
+        nodo: null,
+      }
+    },
+    columns: [
+      {
+        title: 'Código del Entrenamiento',
+        data: 'codigo_entrenamiento',
+        name: 'codigo_entrenamiento',
+      },
+      {
+        data: 'fecha_sesion1',
+        name: 'fecha_sesion1',
+      },
+      {
+        width: '8%',
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'edit',
+        name: 'edit',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'evidencias',
+        name: 'evidencias',
+        orderable: false
+      },
+    ],
+  });
 });

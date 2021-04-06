@@ -19,6 +19,11 @@ class IdeaRepository
         return Nodo::SelectNodo()->get();
     }
 
+    public function consultarIdeas()
+    {
+        return Idea::where('tipo_idea', Idea::IsEmprendedor());
+    }
+
     /**
      * Consulta si una idea de proyecto está en registrada en un csibt
      *

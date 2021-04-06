@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Events\{AfterSheet};
 use Illuminate\Contracts\View\View;
 
 
-abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, WithDrawings
+abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
 {
 
   private $RangeHeadingCell;
@@ -166,24 +166,24 @@ abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAu
   * @abstract
   * @author dum
   */
-  public function drawings()
-  {
-    $drawing = new Drawing();
-    $drawing->setName('Logo Tecnoparque');
-    $drawing->setPath(public_path('/img/logonacional_Negro.png'));
-    $drawing->setResizeProportional(false);
-    $drawing->setHeight(104);
-    $drawing->setWidth(120);
-    $drawing->setCoordinates('A1');
+  // public function drawings()
+  // {
+  //   $drawing = new Drawing();
+  //   $drawing->setName('Logo Tecnoparque');
+  //   $drawing->setPath(public_path('/img/logonacional_Negro.png'));
+  //   $drawing->setResizeProportional(false);
+  //   $drawing->setHeight(104);
+  //   $drawing->setWidth(120);
+  //   $drawing->setCoordinates('A1');
 
-    $drawing2 = new Drawing();
-    $drawing2->setName('Logo Sennova');
-    $drawing2->setPath(public_path('/img/sennova.png'));
-    $drawing2->setResizeProportional(false);
-    $drawing2->setHeight(104);
-    $drawing2->setWidth(120);
-    $drawing2->setCoordinates('F1');
-    return [$drawing, $drawing2];
-  }
+  //   $drawing2 = new Drawing();
+  //   $drawing2->setName('Logo Sennova');
+  //   $drawing2->setPath(public_path('/img/sennova.png'));
+  //   $drawing2->setResizeProportional(false);
+  //   $drawing2->setHeight(104);
+  //   $drawing2->setWidth(120);
+  //   $drawing2->setCoordinates('F1');
+  //   return [$drawing, $drawing2];
+  // }
 
 }

@@ -10,6 +10,7 @@ use App\Models\Comite;
 use App\Models\Talento;
 use App\Models\Gestor;
 use App\Models\Empresa;
+use App\Models\Entrenamiento;
 
 trait IdeaTrait
 {
@@ -66,6 +67,13 @@ trait IdeaTrait
         return $this->belongsToMany(Comite::class, 'comite_idea')
             ->withTimestamps()
             ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
+    }
+
+    public function entrenamiento()
+    {
+        return $this->belongsToMany(Entrenamiento::class, 'entrenamiento_idea')
+            ->withTimestamps()
+            ->withPivot(['confirmacion', 'canvas', 'asistencia1', 'asistencia2', 'convocado_csibt']);
     }
 
     public function nodo()

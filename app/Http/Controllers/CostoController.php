@@ -134,7 +134,7 @@ class CostoController extends Controller
   */
   private function getGestorActividad($actividad)
   {
-    return $actividad->gestor->user->nombres . " " . $actividad->gestor->user->apellidos;
+    return $actividad->gestor->user()->withTrashed()->first()->nombres . " " . $actividad->gestor->user()->withTrashed()->first()->apellidos;
   }
 
   /**

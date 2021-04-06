@@ -31,7 +31,7 @@
                     <div class="row">
                     <div class="col s12 m10 l10">
                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                        <span class="card-title center-align">Entrenamientos de Tecnoparque nodo {{$nodo}}</span>
+                        <span class="card-title center-align">Entrenamientos de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                         </div>
                     </div>
                     <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
@@ -46,18 +46,13 @@
                     </div>
                     </div>
                     <div class="divider"></div>
-                    <table id="entrenamientos_nodo_table" class="display responsive-table datatable-example dataTable">
+                    <table id="entrenamientos_nodo_table_articulador" class="display responsive-table datatable-example dataTable">
                     <thead>
                         <tr>
-                        <th>Consecutivo</th>
-                        <th>Primera Sesion</th>
-                        <th>Segunda Sesion</th>
-                        <th>Correos</th>
-                        <th>Fotos</th>
-                        <th>Listado de Asistentes</th>
+                        <th>Código</th>
+                        <th>Fecha</th>
                         <th>Ideas</th>
                         <th>Editar</th>
-                        <th>Inhabilitar</th>
                         <th>Evidencias</th>
                         </tr>
                     </thead>

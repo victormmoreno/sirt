@@ -84,13 +84,25 @@
                 {{isset($idea->estadoIdea) ? $idea->estadoIdea->nombre : 'No registra'}}
             </td>
             <td>
-                {{isset($idea->nombres_contacto) && isset($idea->apellidos_contacto) ? "$idea->nombres_contacto $idea->apellidos_contacto" : 'No registra'}}
+                @if (isset($idea->talento->user->nombres))
+                    {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
+                @else
+                    {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
+                @endif
             </td>
             <td>
-                {{isset($idea->correo_contacto)? $idea->correo_contacto: 'No registra'}}
+                @if (isset($idea->talento->user->email))
+                    {{$idea->talento->user->email}}
+                @else
+                    {{$idea->correo_contacto}}
+                @endif
             </td>
             <td>
-                {{isset($idea->telefono_contacto)? $idea->telefono_contacto: 'No registra'}}
+                @if (isset($idea->talento->user->celular))
+                    {{$idea->talento->user->celular}}
+                @else
+                    {{$idea->telefono_contacto}}
+                @endif
             </td>
             <td>
                 {{$idea->aprendiz_sena == 1 ? 'Si': 'No'}}

@@ -13,7 +13,7 @@ class EntrenamientoFormRequest extends FormRequest
   */
   public function authorize()
   {
-    return true;
+    return false;
   }
 
   /**
@@ -25,27 +25,16 @@ class EntrenamientoFormRequest extends FormRequest
   {
     return [
       'txtfecha_sesion1' => 'required|date_format:"Y-m-d"',
-      'txtfecha_sesion2' => 'required|date_format:"Y-m-d"',
+      'ideas_taller' => 'required',
     ];
   }
   public function messages()
   {
     return $messages = [
-      // 'txtnodo_id.required'                => 'El :attribute es obligatorio.',
-
-      'txtfecha_sesion1.required' => 'La Fecha de la Primera Sesión es obligatorios.',
-      'txtfecha_sesion1.date_format' => 'La Fecha de la Primera Sesión no tiene un formato válido.',
-
-      'txtfecha_sesion2.required' => 'La Fecha de la Segunda Sesión es obligatorios.',
-      'txtfecha_sesion2.date_format' => 'La Fecha de la Segunda Sesión no tiene un formato válido.',
+      'txtfecha_sesion1.required' => 'La fecha del taller es obligatoria.',
+      'txtfecha_sesion1.date_format' => 'La fecha del taller no tiene un formato válido.',
+      'ideas_taller.required' => 'Se requiere asociar por lo menos de una idea de proyecto',
     ];
   }
 
-  public function attributes()
-  {
-    return [
-      'txtfecha_sesion1' => 'Fecha de la Primera Sesión',
-      'txtfecha_sesion2' => 'Fecha de la Segunda Sesión',
-    ];
-  }
 }

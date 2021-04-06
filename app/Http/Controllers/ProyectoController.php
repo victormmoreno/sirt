@@ -979,7 +979,7 @@ class ProyectoController extends Controller
     public function updateEntregables_Cierre(Request $request, $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
+        if ($proyecto->fase->nombre == "Cierre") {
             if (Session::get('login_role') == User::IsGestor()) {
                 $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);
                 if ($update) {
@@ -991,7 +991,7 @@ class ProyectoController extends Controller
                 }
             }
         } else {
-            Alert::error('Error!', 'El dinamizador aún no ha aprobado la fase de ejecución del proyecto!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('Error!', 'Este proyecto no está en fase de cierre!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }

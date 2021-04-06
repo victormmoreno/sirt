@@ -33,9 +33,11 @@ class Entrenamiento extends Model
         return $this->morphMany(RutaModel::class, 'model');
     }
 
-    public function entrenamientosideas()
+    public function ideas()
     {
-        return $this->hasMany(EntrenamientoIdea::class, 'entrenamiento_id', 'id');
+      return $this->belongsToMany(Idea::class, 'entrenamiento_idea')
+      ->withTimestamps()
+      ->withPivot(['confirmacion', 'canvas', 'asistencia1', 'asistencia2', 'convocado_csibt']);
     }
 
     /*=========================================
