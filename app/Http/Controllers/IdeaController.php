@@ -445,6 +445,9 @@ class IdeaController extends Controller
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
             case User::IsInfocenter():
                 $nodo = auth()->user()->infocenter->nodo_id;
                 break;

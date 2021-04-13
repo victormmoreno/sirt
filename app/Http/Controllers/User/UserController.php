@@ -354,7 +354,11 @@ class UserController extends Controller
                     $activities = $user->gestor->actividades()->activitiesGestor();
                     $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
 
-                    if($activities->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::UserGestor())))
+                    
+
+                    if($activities->count() > 0 
+                    // || ($removeRole != null && collect($removeRole)->contains(User::IsGestor()))
+                    )
                     {
                         return response()->json([
                             'state'   => 'error',

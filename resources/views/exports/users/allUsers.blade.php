@@ -37,9 +37,6 @@
                 {{$user->present()->userLugarExpedicionDocumento()}}
             </td>
             <td>
-                {{$user->present()->userLugarExpedicionDocumento()}}
-            </td>
-            <td>
                 {{$user->present()->userDocumento()}}
             </td>
             <td>
@@ -111,3 +108,7 @@
     @endforelse
     </tbody>
 </table>
+
+
+
+

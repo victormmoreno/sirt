@@ -103,5 +103,5 @@
     </div>
   </div>
 </main>
-@endsection
 @include('ideas.modals')
+@endsection
